@@ -60,7 +60,7 @@ const affiliationLoaderByUserId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` to ${amount} for: affiliationLoaderByUserId.`,
+        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: affiliationLoaderByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -100,21 +100,27 @@ const affiliationLoaderByUserId = (
           ${afterTemplate}
           ${beforeTemplate}
           ${limitTemplate}
-          RETURN affiliation
+          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+          RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
     )
     LET hasNextPage = (LENGTH(
       FOR aff IN affiliations
         FILTER aff._key IN affiliationKeys
         FILTER TO_NUMBER(aff._key) > TO_NUMBER(LAST(retrievedAffiliations)._key)
         SORT aff._key ${sortString} LIMIT 1
-        RETURN aff
+        LET orgKey = PARSE_IDENTIFIER(aff._from).key
+        LET userKey = PARSE_IDENTIFIER(aff._to).key
+        RETURN MERGE(aff, { orgKey: orgKey, userKey: userKey })
     ) > 0 ? true : false)
     LET hasPreviousPage = (LENGTH(
       FOR aff IN affiliations
         FILTER aff._key IN affiliationKeys
         FILTER TO_NUMBER(aff._key) < TO_NUMBER(FIRST(retrievedAffiliations)._key)
         SORT aff._key ${sortString} LIMIT 1
-        RETURN aff
+        LET orgKey = PARSE_IDENTIFIER(aff._from).key
+        LET userKey = PARSE_IDENTIFIER(aff._to).key
+        RETURN MERGE(aff, { orgKey: orgKey, userKey: userKey })
     ) > 0 ? true : false)
     RETURN {
       "affiliations": retrievedAffiliations,

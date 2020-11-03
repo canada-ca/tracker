@@ -9,7 +9,9 @@ module.exports.affiliationLoaderByKey = (query, i18n) =>
       cursor = await query`
         FOR affiliation IN affiliations
           FILTER ${ids}[** FILTER CURRENT == affiliation._key]
-          RETURN affiliation
+          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+          RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
       `
     } catch (err) {
       console.error(

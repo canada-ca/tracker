@@ -124,7 +124,9 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         const expectedCursor = await query`
           FOR affiliation IN affiliations
             FILTER affiliation._id == ${affOne._id}
-            RETURN affiliation
+            LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+            LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+            RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
         `
         const expectedAffiliation = await expectedCursor.next()
 
@@ -140,7 +142,9 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         const expectedAffiliations = []
         const expectedCursor = await query`
           FOR affiliation IN affiliations
-            RETURN affiliation
+            LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+            LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+            RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
         `
 
         while (expectedCursor.hasNext()) {
@@ -159,7 +163,9 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         const expectedCursor = await query`
         FOR affiliation IN affiliations
           FILTER affiliation._id == ${affOne._id}
-          RETURN affiliation
+          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+          RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
       `
         const expectedAffiliation = await expectedCursor.next()
 
@@ -186,7 +192,9 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         const expectedCursor = await query`
         FOR affiliation IN affiliations
           FILTER affiliation._id == ${affOne._id}
-          RETURN affiliation
+          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+          RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
       `
         const expectedAffiliation = await expectedCursor.next()
 
@@ -230,7 +238,9 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         const expectedCursor = await query`
           FOR affiliation IN affiliations
             FILTER affiliation._id == ${affOne._id}
-            RETURN affiliation
+            LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+            LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+            RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
         `
         const expectedAffiliation = await expectedCursor.next()
 
@@ -246,7 +256,9 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         const expectedAffiliations = []
         const expectedCursor = await query`
           FOR affiliation IN affiliations
-            RETURN affiliation
+            LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+            LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+            RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
         `
 
         while (expectedCursor.hasNext()) {
@@ -265,7 +277,9 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         const expectedCursor = await query`
         FOR affiliation IN affiliations
           FILTER affiliation._id == ${affOne._id}
-          RETURN affiliation
+          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+          RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
       `
         const expectedAffiliation = await expectedCursor.next()
 
@@ -290,7 +304,9 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         const expectedCursor = await query`
         FOR affiliation IN affiliations
           FILTER affiliation._id == ${affOne._id}
-          RETURN affiliation
+          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+          RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
       `
         const expectedAffiliation = await expectedCursor.next()
 

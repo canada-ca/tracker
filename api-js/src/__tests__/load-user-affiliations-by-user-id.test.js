@@ -12,23 +12,14 @@ const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
 const {
-  domainLoaderConnectionsByUserId,
-  domainLoaderByKey,
+  affiliationLoaderByUserId,
+  affiliationLoaderByKey,
 } = require('../loaders')
 
-describe('given the load domain connections by user id function', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    collections,
-    org,
-    i18n,
-    user,
-    domainOne,
-    domainTwo
+describe('given the load user affiliations by user id function', () => {
+  let query, drop, truncate, migrate, collections, user, orgOne, orgTwo, i18n
 
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   beforeAll(async () => {
@@ -42,14 +33,14 @@ describe('given the load domain connections by user id function', () => {
 
   beforeEach(async () => {
     await truncate()
-    await collections.users.save({
+    user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
       preferredLang: 'french',
       tfaValidated: false,
       emailValidated: false,
     })
-    org = await collections.organizations.save({
+    orgOne = await collections.organizations.save({
       orgDetails: {
         en: {
           slug: 'treasury-board-secretariat',
@@ -73,311 +64,38 @@ describe('given the load domain connections by user id function', () => {
         },
       },
     })
-    const userCursor = await query`
-    FOR user IN users
-      FILTER user.userName == "test.account@istio.actually.exists"
-      RETURN user
-  `
-    user = await userCursor.next()
-    await collections.affiliations.save({
-      _from: org._id,
-      _to: user._id,
-      permission: 'user',
+    orgTwo = await collections.organizations.save({
+      orgDetails: {
+        en: {
+          slug: 'not-treasury-board-secretariat',
+          acronym: 'NTBS',
+          name: 'Not Treasury Board of Canada Secretariat',
+          zone: 'NFED',
+          sector: 'NTBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+        fr: {
+          slug: 'ne-pas-secretariat-conseil-tresor',
+          acronym: 'NPSCT',
+          name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
+          zone: 'NPFED',
+          sector: 'NPTBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+      },
     })
-    domainOne = await collections.domains.save({
-      domain: 'test1.gc.ca',
-      lastRan: null,
-      selectors: ['selector1._domainkey', 'selector2._domainkey'],
-    })
-    domainTwo = await collections.domains.save({
-      domain: 'test2.gc.ca',
-      lastRan: null,
-      selectors: ['selector1._domainkey', 'selector2._domainkey'],
-    })
-    await collections.claims.save({
-      _to: domainOne._id,
-      _from: org._id,
-    })
-    await collections.claims.save({
-      _to: domainTwo._id,
-      _from: org._id,
-    })
-    consoleOutput = []
+
+    consoleOutput.length = 0
   })
-  afterEach(async () => {
-    await query`
-      LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-      LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-      RETURN true
-    `
-    await query`
-      FOR affiliation IN affiliations
-        REMOVE affiliation IN affiliations
-    `
-    await query`
-      LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-      LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-      RETURN true
-    `
-    await query`
-      FOR claim IN claims
-        REMOVE claim IN claims
-    `
-  })
+
   afterAll(async () => {
     await drop()
   })
 
-  describe('given a successful load', () => {
-    describe('given there are domain connections to be returned', () => {
-      describe('using no cursor', () => {
-        it('returns a domain', async () => {
-          const connectionLoader = domainLoaderConnectionsByUserId(
-            query,
-            user._key,
-            cleanseInput,
-          )
-
-          const connectionArgs = {
-            first: 10,
-          }
-          const domains = await connectionLoader({ ...connectionArgs })
-
-          const domainLoader = domainLoaderByKey(query)
-          const expectedDomains = await domainLoader.loadMany([
-            domainOne._key,
-            domainTwo._key,
-          ])
-
-          expectedDomains[0].id = expectedDomains[0]._key
-          expectedDomains[1].id = expectedDomains[1]._key
-
-          const expectedStructure = {
-            edges: [
-              {
-                cursor: toGlobalId('domains', expectedDomains[0]._key),
-                node: {
-                  ...expectedDomains[0],
-                },
-              },
-              {
-                cursor: toGlobalId('domains', expectedDomains[1]._key),
-                node: {
-                  ...expectedDomains[1],
-                },
-              },
-            ],
-            pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: false,
-              startCursor: toGlobalId('domains', expectedDomains[0]._key),
-              endCursor: toGlobalId('domains', expectedDomains[1]._key),
-            },
-          }
-
-          expect(domains).toEqual(expectedStructure)
-        })
-      })
-      describe('using after cursor', () => {
-        it('returns a domain', async () => {
-          const connectionLoader = domainLoaderConnectionsByUserId(
-            query,
-            user._key,
-            cleanseInput,
-          )
-
-          const domainLoader = domainLoaderByKey(query)
-          const expectedDomains = await domainLoader.loadMany([
-            domainOne._key,
-            domainTwo._key,
-          ])
-
-          expectedDomains[0].id = expectedDomains[0]._key
-          expectedDomains[1].id = expectedDomains[1]._key
-
-          const connectionArgs = {
-            first: 10,
-            after: toGlobalId('domains', expectedDomains[0].id),
-          }
-          const domains = await connectionLoader({ ...connectionArgs })
-
-          const expectedStructure = {
-            edges: [
-              {
-                cursor: toGlobalId('domains', expectedDomains[1]._key),
-                node: {
-                  ...expectedDomains[1],
-                },
-              },
-            ],
-            pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: true,
-              startCursor: toGlobalId('domains', expectedDomains[1]._key),
-              endCursor: toGlobalId('domains', expectedDomains[1]._key),
-            },
-          }
-
-          expect(domains).toEqual(expectedStructure)
-        })
-      })
-      describe('using before cursor', () => {
-        it('returns a domain', async () => {
-          const connectionLoader = domainLoaderConnectionsByUserId(
-            query,
-            user._key,
-            cleanseInput,
-          )
-
-          const domainLoader = domainLoaderByKey(query)
-          const expectedDomains = await domainLoader.loadMany([
-            domainOne._key,
-            domainTwo._key,
-          ])
-
-          expectedDomains[0].id = expectedDomains[0]._key
-          expectedDomains[1].id = expectedDomains[1]._key
-
-          const connectionArgs = {
-            first: 10,
-            before: toGlobalId('domains', expectedDomains[1].id),
-          }
-          const domains = await connectionLoader({ ...connectionArgs })
-
-          const expectedStructure = {
-            edges: [
-              {
-                cursor: toGlobalId('domains', expectedDomains[0]._key),
-                node: {
-                  ...expectedDomains[0],
-                },
-              },
-            ],
-            pageInfo: {
-              hasNextPage: true,
-              hasPreviousPage: false,
-              startCursor: toGlobalId('domains', expectedDomains[0]._key),
-              endCursor: toGlobalId('domains', expectedDomains[0]._key),
-            },
-          }
-
-          expect(domains).toEqual(expectedStructure)
-        })
-      })
-      describe('using first limit', () => {
-        it('returns a domain', async () => {
-          const connectionLoader = domainLoaderConnectionsByUserId(
-            query,
-            user._key,
-            cleanseInput,
-          )
-
-          const domainLoader = domainLoaderByKey(query)
-          const expectedDomains = await domainLoader.loadMany([
-            domainOne._key,
-            domainTwo._key,
-          ])
-
-          expectedDomains[0].id = expectedDomains[0]._key
-          expectedDomains[1].id = expectedDomains[1]._key
-
-          const connectionArgs = {
-            first: 1,
-          }
-          const domains = await connectionLoader({ ...connectionArgs })
-
-          const expectedStructure = {
-            edges: [
-              {
-                cursor: toGlobalId('domains', expectedDomains[0]._key),
-                node: {
-                  ...expectedDomains[0],
-                },
-              },
-            ],
-            pageInfo: {
-              hasNextPage: true,
-              hasPreviousPage: false,
-              startCursor: toGlobalId('domains', expectedDomains[0]._key),
-              endCursor: toGlobalId('domains', expectedDomains[0]._key),
-            },
-          }
-
-          expect(domains).toEqual(expectedStructure)
-        })
-      })
-      describe('using last limit', () => {
-        it('returns a domain', async () => {
-          const connectionLoader = domainLoaderConnectionsByUserId(
-            query,
-            user._key,
-            cleanseInput,
-          )
-
-          const domainLoader = domainLoaderByKey(query)
-          const expectedDomains = await domainLoader.loadMany([
-            domainOne._key,
-            domainTwo._key,
-          ])
-
-          expectedDomains[0].id = expectedDomains[0]._key
-          expectedDomains[1].id = expectedDomains[1]._key
-
-          const connectionArgs = {
-            last: 1,
-          }
-          const domains = await connectionLoader({ ...connectionArgs })
-
-          const expectedStructure = {
-            edges: [
-              {
-                cursor: toGlobalId('domains', expectedDomains[1]._key),
-                node: {
-                  ...expectedDomains[1],
-                },
-              },
-            ],
-            pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: true,
-              startCursor: toGlobalId('domains', expectedDomains[1]._key),
-              endCursor: toGlobalId('domains', expectedDomains[1]._key),
-            },
-          }
-
-          expect(domains).toEqual(expectedStructure)
-        })
-      })
-    })
-    describe('given there are no domain connections to be returned', () => {
-      it('returns no domain connections', async () => {
-        await truncate()
-
-        const connectionLoader = domainLoaderConnectionsByUserId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {
-          first: 10,
-        }
-        const domains = await connectionLoader({ ...connectionArgs })
-
-        const expectedStructure = {
-          edges: [],
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: '',
-            endCursor: '',
-          },
-        }
-
-        expect(domains).toEqual(expectedStructure)
-      })
-    })
-  })
   describe('users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -390,37 +108,295 @@ describe('given the load domain connections by user id function', () => {
         },
       })
     })
-    describe('given an unsuccessful load', () => {
-      describe('first and last arguments are not set', () => {
-        it('returns an error message', async () => {
-          const connectionLoader = domainLoaderConnectionsByUserId(
+    describe('given a successful load', () => {
+      describe('given there are user affiliations to be returned', () => {
+        let affOne, affTwo
+        beforeEach(async () => {
+          affOne = await collections.affiliations.save({
+            _from: orgOne._id,
+            _to: user._id,
+            permission: 'user',
+          })
+          affTwo = await collections.affiliations.save({
+            _from: orgTwo._id,
+            _to: user._id,
+            permission: 'user',
+          })
+        })
+        afterEach(async () => {
+          await query`
+            LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+            LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+            RETURN true
+          `
+          await query`
+            LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+            LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+            RETURN true
+          `
+          await query`
+            FOR affiliation IN affiliations
+              REMOVE affiliation IN affiliations
+          `
+        })
+        describe('using after cursor', () => {
+          it('returns an affiliation', async () => {
+            const affiliationLoader = affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const affLoader = affiliationLoaderByKey(query)
+            const expectedAffiliations = await affLoader.loadMany([
+              affOne._key,
+              affTwo._key,
+            ])
+
+            expectedAffiliations[0].id = expectedAffiliations[0]._key
+            expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+            const connectionArgs = {
+              first: 5,
+              after: toGlobalId('affiliations', expectedAffiliations[0].id),
+            }
+            const affiliations = await affiliationLoader({
+              uId: user._key,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[1]._key,
+                  ),
+                  node: {
+                    ...expectedAffiliations[1],
+                  },
+                },
+              ],
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: true,
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+              },
+            }
+
+            expect(affiliations).toEqual(expectedStructure)
+          })
+        })
+        describe('using before cursor', () => {
+          it('returns an affiliation', async () => {
+            const affiliationLoader = affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const affLoader = affiliationLoaderByKey(query)
+            const expectedAffiliations = await affLoader.loadMany([
+              affOne._key,
+              affTwo._key,
+            ])
+
+            expectedAffiliations[0].id = expectedAffiliations[0]._key
+            expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+            const connectionArgs = {
+              first: 5,
+              before: toGlobalId('affiliations', expectedAffiliations[1].id),
+            }
+            const affiliations = await affiliationLoader({
+              uId: user._key,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                  node: {
+                    ...expectedAffiliations[0],
+                  },
+                },
+              ],
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: false,
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+              },
+            }
+
+            expect(affiliations).toEqual(expectedStructure)
+          })
+        })
+        describe('using only first limit', () => {
+          it('returns an affiliation', async () => {
+            const affiliationLoader = affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const affLoader = affiliationLoaderByKey(query)
+            const expectedAffiliations = await affLoader.loadMany([
+              affOne._key,
+              affTwo._key,
+            ])
+
+            expectedAffiliations[0].id = expectedAffiliations[0]._key
+            expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+            const connectionArgs = {
+              first: 1,
+            }
+            const affiliations = await affiliationLoader({
+              uId: user._key,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                  node: {
+                    ...expectedAffiliations[0],
+                  },
+                },
+              ],
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: false,
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+              },
+            }
+
+            expect(affiliations).toEqual(expectedStructure)
+          })
+        })
+        describe('using only last limit', () => {
+          it('returns an affiliation', async () => {
+            const affiliationLoader = affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const affLoader = affiliationLoaderByKey(query)
+            const expectedAffiliations = await affLoader.loadMany([
+              affOne._key,
+              affTwo._key,
+            ])
+
+            expectedAffiliations[0].id = expectedAffiliations[0]._key
+            expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+            const connectionArgs = {
+              last: 1,
+            }
+            const affiliations = await affiliationLoader({
+              uId: user._key,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[1]._key,
+                  ),
+                  node: {
+                    ...expectedAffiliations[1],
+                  },
+                },
+              ],
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: true,
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+              },
+            }
+
+            expect(affiliations).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('given there are no user affiliations to be returned', () => {
+        it('returns no affiliations', async () => {
+          const affiliationLoader = affiliationLoaderByUserId(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const connectionArgs = {}
-          try {
-            await connectionLoader({
-              ...connectionArgs,
-            })
-          } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                `You must provide a \`first\` or \`last\` value to properly paginate the \`domain\` connection.`,
-              ),
-            )
+          const connectionArgs = {
+            first: 5,
+          }
+          const affiliations = await affiliationLoader({
+            uId: user._key,
+            ...connectionArgs,
+          })
+
+          const expectedStructure = {
+            edges: [],
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: '',
+              endCursor: '',
+            },
           }
 
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
-          ])
+          expect(affiliations).toEqual(expectedStructure)
         })
       })
+    })
+    describe('given an unsuccessful load', () => {
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = domainLoaderConnectionsByUserId(
+          const affiliationLoader = affiliationLoaderByUserId(
             query,
             user._key,
             cleanseInput,
@@ -432,86 +408,55 @@ describe('given the load domain connections by user id function', () => {
             last: 1,
           }
           try {
-            await connectionLoader({
+            await affiliationLoader({
+              uId: user._key,
               ...connectionArgs,
             })
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                `Passing both \`first\` and \`last\` to paginate the \`domain\` connection is not supported.`,
+                'Passing both `first` and `last` to paginate the `affiliation` is not supported.',
               ),
             )
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: affiliationLoaderByUserId.`,
           ])
         })
       })
-      describe('first or last argument exceeds maximum', () => {
-        describe('first argument set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByUserId(
-              query,
-              user._key,
-              cleanseInput,
-              i18n,
+      describe('neither first nor last arguments are set', () => {
+        it('returns an error message', async () => {
+          const affiliationLoader = affiliationLoaderByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await affiliationLoader({
+              uId: user._key,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                `You must provide a \`first\` or \`last\` value to properly paginate the \`affiliation\`.`,
+              ),
             )
+          }
 
-            const connectionArgs = {
-              first: 1000,
-            }
-            try {
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'Requesting `1000` records on the `domain` connection exceeds the `first` limit of 100 records.',
-                ),
-              )
-            }
-
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: domainLoaderConnectionsByUserId.`,
-            ])
-          })
-        })
-        describe('last argument set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByUserId(
-              query,
-              user._key,
-              cleanseInput,
-              i18n,
-            )
-
-            const connectionArgs = {
-              last: 1000,
-            }
-            try {
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'Requesting `1000` records on the `domain` connection exceeds the `last` limit of 100 records.',
-                ),
-              )
-            }
-
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 1000 for: domainLoaderConnectionsByUserId.`,
-            ])
-          })
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: affiliationLoaderByUserId.`,
+          ])
         })
       })
-      describe('first or last argument exceeds minimum', () => {
-        describe('first argument set', () => {
+      describe('limits are set below minimum', () => {
+        describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByUserId(
+            const connectionLoader = affiliationLoaderByUserId(
               query,
               user._key,
               cleanseInput,
@@ -521,26 +466,27 @@ describe('given the load domain connections by user id function', () => {
             const connectionArgs = {
               first: -1,
             }
+
             try {
               await connectionLoader({
+                uId: user._id,
                 ...connectionArgs,
               })
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `\`first\` on the \`domain\` connection cannot be less than zero.`,
+                  '`first` on the `affiliations` cannot be less than zero.',
                 ),
               )
             }
-
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: affiliationLoaderByUserId.`,
             ])
           })
         })
-        describe('last argument set', () => {
+        describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByUserId(
+            const connectionLoader = affiliationLoaderByUserId(
               query,
               user._key,
               cleanseInput,
@@ -548,22 +494,85 @@ describe('given the load domain connections by user id function', () => {
             )
 
             const connectionArgs = {
-              last: -1,
+              last: -2,
             }
+
             try {
               await connectionLoader({
+                uId: user._id,
                 ...connectionArgs,
               })
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `\`last\` on the \`domain\` connection cannot be less than zero.`,
+                  '`last` on the `affiliations` cannot be less than zero.',
                 ),
               )
             }
-
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: affiliationLoaderByUserId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are set above maximum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 1000,
+            }
+
+            try {
+              await connectionLoader({
+                uId: user._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting `1000` records on the `affiliations` exceeds the `first` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: affiliationLoaderByUserId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: 200,
+            }
+
+            try {
+              await connectionLoader({
+                uId: user._key,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting `200` records on the `affiliations` exceeds the `last` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 200 for: affiliationLoaderByUserId.`,
             ])
           })
         })
@@ -574,7 +583,7 @@ describe('given the load domain connections by user id function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = domainLoaderConnectionsByUserId(
+              const connectionLoader = affiliationLoaderByUserId(
                 query,
                 user._key,
                 cleanseInput,
@@ -599,7 +608,7 @@ describe('given the load domain connections by user id function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByUserId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: affiliationLoaderByUserId.`,
               ])
             })
           })
@@ -609,7 +618,7 @@ describe('given the load domain connections by user id function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = domainLoaderConnectionsByUserId(
+              const connectionLoader = affiliationLoaderByUserId(
                 query,
                 user._key,
                 cleanseInput,
@@ -634,7 +643,7 @@ describe('given the load domain connections by user id function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByUserId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: affiliationLoaderByUserId.`,
               ])
             })
           })
@@ -642,15 +651,15 @@ describe('given the load domain connections by user id function', () => {
       })
     })
     describe('given a database error', () => {
-      describe('while querying for domain information', () => {
+      describe('while querying domains', () => {
         it('returns an error message', async () => {
           const query = jest
             .fn()
             .mockRejectedValue(
-              new Error('Unable to query domains. Please try again.'),
+              new Error('Unable to query organizations. Please try again.'),
             )
 
-          const connectionLoader = domainLoaderConnectionsByUserId(
+          const affiliationLoader = affiliationLoaderByUserId(
             query,
             user._key,
             cleanseInput,
@@ -658,20 +667,21 @@ describe('given the load domain connections by user id function', () => {
           )
 
           const connectionArgs = {
-            first: 50,
+            first: 5,
           }
           try {
-            await connectionLoader({
+            await affiliationLoader({
+              uId: user._key,
               ...connectionArgs,
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to query domains. Please try again.'),
+              new Error('Unable to query affiliations. Please try again.'),
             )
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser.`,
+            `Database error occurred while user: ${user._key} was trying to query affiliations in affiliationLoaderByUserId.`,
           ])
         })
       })
@@ -681,15 +691,15 @@ describe('given the load domain connections by user id function', () => {
         it('returns an error message', async () => {
           const cursor = {
             next() {
-              throw new Error('Unable to load domains. Please try again.')
+              throw new Error('Unable to load affiliations. Please try again.')
             },
           }
           const query = jest
             .fn()
-            .mockReturnValueOnce([domainOne._id, domainTwo._id])
+            .mockReturnValueOnce([])
             .mockReturnValueOnce(cursor)
 
-          const connectionLoader = domainLoaderConnectionsByUserId(
+          const affiliationLoader = affiliationLoaderByUserId(
             query,
             user._key,
             cleanseInput,
@@ -697,20 +707,21 @@ describe('given the load domain connections by user id function', () => {
           )
 
           const connectionArgs = {
-            first: 50,
+            first: 5,
           }
           try {
-            await connectionLoader({
+            await affiliationLoader({
+              uId: user._key,
               ...connectionArgs,
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load domains. Please try again.'),
+              new Error('Unable to load affiliations. Please try again.'),
             )
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainsByUser.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather affiliations in affiliationLoaderByUserId.`,
           ])
         })
       })
@@ -728,33 +739,295 @@ describe('given the load domain connections by user id function', () => {
         },
       })
     })
-    describe('given an unsuccessful load', () => {
-      describe('first and last arguments are not set', () => {
-        it('returns an error message', async () => {
-          const connectionLoader = domainLoaderConnectionsByUserId(
+    describe('given a successful load', () => {
+      describe('given there are user affiliations to be returned', () => {
+        let affOne, affTwo
+        beforeEach(async () => {
+          affOne = await collections.affiliations.save({
+            _from: orgOne._id,
+            _to: user._id,
+            permission: 'user',
+          })
+          affTwo = await collections.affiliations.save({
+            _from: orgTwo._id,
+            _to: user._id,
+            permission: 'user',
+          })
+        })
+        afterEach(async () => {
+          await query`
+            LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+            LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+            RETURN true
+          `
+          await query`
+            LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+            LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+            RETURN true
+          `
+          await query`
+            FOR affiliation IN affiliations
+              REMOVE affiliation IN affiliations
+          `
+        })
+        describe('using after cursor', () => {
+          it('returns an affiliation', async () => {
+            const affiliationLoader = affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const affLoader = affiliationLoaderByKey(query)
+            const expectedAffiliations = await affLoader.loadMany([
+              affOne._key,
+              affTwo._key,
+            ])
+
+            expectedAffiliations[0].id = expectedAffiliations[0]._key
+            expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+            const connectionArgs = {
+              first: 5,
+              after: toGlobalId('affiliations', expectedAffiliations[0].id),
+            }
+            const affiliations = await affiliationLoader({
+              uId: user._key,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[1]._key,
+                  ),
+                  node: {
+                    ...expectedAffiliations[1],
+                  },
+                },
+              ],
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: true,
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+              },
+            }
+
+            expect(affiliations).toEqual(expectedStructure)
+          })
+        })
+        describe('using before cursor', () => {
+          it('returns an affiliation', async () => {
+            const affiliationLoader = affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const affLoader = affiliationLoaderByKey(query)
+            const expectedAffiliations = await affLoader.loadMany([
+              affOne._key,
+              affTwo._key,
+            ])
+
+            expectedAffiliations[0].id = expectedAffiliations[0]._key
+            expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+            const connectionArgs = {
+              first: 5,
+              before: toGlobalId('affiliations', expectedAffiliations[1].id),
+            }
+            const affiliations = await affiliationLoader({
+              uId: user._key,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                  node: {
+                    ...expectedAffiliations[0],
+                  },
+                },
+              ],
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: false,
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+              },
+            }
+
+            expect(affiliations).toEqual(expectedStructure)
+          })
+        })
+        describe('using only first limit', () => {
+          it('returns an affiliation', async () => {
+            const affiliationLoader = affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const affLoader = affiliationLoaderByKey(query)
+            const expectedAffiliations = await affLoader.loadMany([
+              affOne._key,
+              affTwo._key,
+            ])
+
+            expectedAffiliations[0].id = expectedAffiliations[0]._key
+            expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+            const connectionArgs = {
+              first: 1,
+            }
+            const affiliations = await affiliationLoader({
+              uId: user._key,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
+                  node: {
+                    ...expectedAffiliations[0],
+                  },
+                },
+              ],
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: false,
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+              },
+            }
+
+            expect(affiliations).toEqual(expectedStructure)
+          })
+        })
+        describe('using only last limit', () => {
+          it('returns an affiliation', async () => {
+            const affiliationLoader = affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const affLoader = affiliationLoaderByKey(query)
+            const expectedAffiliations = await affLoader.loadMany([
+              affOne._key,
+              affTwo._key,
+            ])
+
+            expectedAffiliations[0].id = expectedAffiliations[0]._key
+            expectedAffiliations[1].id = expectedAffiliations[1]._key
+
+            const connectionArgs = {
+              last: 1,
+            }
+            const affiliations = await affiliationLoader({
+              uId: user._key,
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[1]._key,
+                  ),
+                  node: {
+                    ...expectedAffiliations[1],
+                  },
+                },
+              ],
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: true,
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+              },
+            }
+
+            expect(affiliations).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('given there are no user affiliations to be returned', () => {
+        it('returns no affiliations', async () => {
+          const affiliationLoader = affiliationLoaderByUserId(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const connectionArgs = {}
-          try {
-            await connectionLoader({
-              ...connectionArgs,
-            })
-          } catch (err) {
-            expect(err).toEqual(new Error(`todo`))
+          const connectionArgs = {
+            first: 5,
+          }
+          const affiliations = await affiliationLoader({
+            uId: user._key,
+            ...connectionArgs,
+          })
+
+          const expectedStructure = {
+            edges: [],
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: '',
+              endCursor: '',
+            },
           }
 
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
-          ])
+          expect(affiliations).toEqual(expectedStructure)
         })
       })
+    })
+    describe('given an unsuccessful load', () => {
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = domainLoaderConnectionsByUserId(
+          const affiliationLoader = affiliationLoaderByUserId(
             query,
             user._key,
             cleanseInput,
@@ -766,184 +1039,42 @@ describe('given the load domain connections by user id function', () => {
             last: 1,
           }
           try {
-            await connectionLoader({
-              ...connectionArgs,
-            })
+            await affiliationLoader({ uId: user._key, ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(new Error(`todo`))
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: affiliationLoaderByUserId.`,
           ])
         })
       })
-      describe('first or last argument exceeds maximum', () => {
-        describe('first argument set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByUserId(
-              query,
-              user._key,
-              cleanseInput,
-              i18n,
-            )
+      describe('neither first nor last arguments are set', () => {
+        it('returns an error message', async () => {
+          const affiliationLoader = affiliationLoaderByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
 
-            const connectionArgs = {
-              first: 1000,
-            }
-            try {
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(new Error(`todo`))
-            }
-
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: domainLoaderConnectionsByUserId.`,
-            ])
-          })
-        })
-        describe('last argument set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByUserId(
-              query,
-              user._key,
-              cleanseInput,
-              i18n,
-            )
-
-            const connectionArgs = {
-              last: 1000,
-            }
-            try {
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(new Error(`todo`))
-            }
-
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 1000 for: domainLoaderConnectionsByUserId.`,
-            ])
-          })
-        })
-      })
-      describe('first or last argument exceeds minimum', () => {
-        describe('first argument set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByUserId(
-              query,
-              user._key,
-              cleanseInput,
-              i18n,
-            )
-
-            const connectionArgs = {
-              first: -1,
-            }
-            try {
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(new Error(`todo`))
-            }
-
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByUserId.`,
-            ])
-          })
-        })
-        describe('last argument set', () => {
-          it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByUserId(
-              query,
-              user._key,
-              cleanseInput,
-              i18n,
-            )
-
-            const connectionArgs = {
-              last: -1,
-            }
-            try {
-              await connectionLoader({
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(new Error(`todo`))
-            }
-
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByUserId.`,
-            ])
-          })
-        })
-      })
-      describe('limits are not set to numbers', () => {
-        describe('first limit is set', () => {
-          ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when first set to ${stringify(
-              invalidInput,
-            )}`, async () => {
-              const connectionLoader = domainLoaderConnectionsByUserId(
-                query,
-                user._key,
-                cleanseInput,
-                i18n,
-              )
-
-              const connectionArgs = {
-                first: invalidInput,
-              }
-
-              try {
-                await connectionLoader({
-                  ...connectionArgs,
-                })
-              } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
-              }
-              expect(consoleOutput).toEqual([
-                `User: ${
-                  user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByUserId.`,
-              ])
+          const connectionArgs = {}
+          try {
+            await affiliationLoader({
+              uId: user._key,
+              ...connectionArgs,
             })
-          })
-        })
-        describe('last limit is set', () => {
-          ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when last set to ${stringify(
-              invalidInput,
-            )}`, async () => {
-              const connectionLoader = domainLoaderConnectionsByUserId(
-                query,
-                user._key,
-                cleanseInput,
-                i18n,
-              )
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
+          }
 
-              const connectionArgs = {
-                last: invalidInput,
-              }
-
-              try {
-                await connectionLoader({
-                  ...connectionArgs,
-                })
-              } catch (err) {
-                expect(err).toEqual(new Error(`todo`))
-              }
-              expect(consoleOutput).toEqual([
-                `User: ${
-                  user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByUserId.`,
-              ])
-            })
-          })
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: affiliationLoaderByUserId.`,
+          ])
         })
       })
     })
@@ -953,10 +1084,10 @@ describe('given the load domain connections by user id function', () => {
           const query = jest
             .fn()
             .mockRejectedValue(
-              new Error('Unable to query domains. Please try again.'),
+              new Error('Unable to query organizations. Please try again.'),
             )
 
-          const connectionLoader = domainLoaderConnectionsByUserId(
+          const affiliationLoader = affiliationLoaderByUserId(
             query,
             user._key,
             cleanseInput,
@@ -964,18 +1095,16 @@ describe('given the load domain connections by user id function', () => {
           )
 
           const connectionArgs = {
-            first: 50,
+            first: 5,
           }
           try {
-            await connectionLoader({
-              ...connectionArgs,
-            })
+            await affiliationLoader({ uId: user._key, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser.`,
+            `Database error occurred while user: ${user._key} was trying to query affiliations in affiliationLoaderByUserId.`,
           ])
         })
       })
@@ -985,15 +1114,15 @@ describe('given the load domain connections by user id function', () => {
         it('returns an error message', async () => {
           const cursor = {
             next() {
-              throw new Error('Unable to load domains. Please try again.')
+              throw new Error('Unable to load affiliations. Please try again.')
             },
           }
           const query = jest
             .fn()
-            .mockReturnValueOnce([domainOne._id, domainTwo._id])
+            .mockReturnValueOnce([])
             .mockReturnValueOnce(cursor)
 
-          const connectionLoader = domainLoaderConnectionsByUserId(
+          const affiliationLoader = affiliationLoaderByUserId(
             query,
             user._key,
             cleanseInput,
@@ -1001,18 +1130,16 @@ describe('given the load domain connections by user id function', () => {
           )
 
           const connectionArgs = {
-            first: 50,
+            first: 5,
           }
           try {
-            await connectionLoader({
-              ...connectionArgs,
-            })
+            await affiliationLoader({ uId: user._key, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainsByUser.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather affiliations in affiliationLoaderByUserId.`,
           ])
         })
       })

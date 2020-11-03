@@ -2,6 +2,7 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const { stringify } = require('jest-matcher-utils')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
@@ -397,6 +398,230 @@ describe('given the load user affiliations by org id function', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: affiliationLoaderByOrgId.`,
           ])
+        })
+      })
+      describe('neither first nor last arguments are set', () => {
+        it('returns an error message', async () => {
+          const affiliationLoader = affiliationLoaderByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await affiliationLoader({
+              orgId: org._key,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                `You must provide a \`first\` or \`last\` value to properly paginate the \`affiliation\`.`,
+              ),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: affiliationLoaderByOrgId.`,
+          ])
+        })
+      })
+      describe('limits are set below minimum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = affiliationLoaderByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: -1,
+            }
+
+            try {
+              await connectionLoader({
+                orgId: org._key,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`first` on the `affiliations` cannot be less than zero.',
+                ),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: affiliationLoaderByOrgId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = affiliationLoaderByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: -2,
+            }
+
+            try {
+              await connectionLoader({
+                orgId: org._key,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`last` on the `affiliations` cannot be less than zero.',
+                ),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: affiliationLoaderByOrgId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are set above maximum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = affiliationLoaderByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 1000,
+            }
+
+            try {
+              await connectionLoader({
+                orgId: org._key,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting `1000` records on the `affiliations` exceeds the `first` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: affiliationLoaderByOrgId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = affiliationLoaderByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: 200,
+            }
+
+            try {
+              await connectionLoader({
+                orgId: org._key,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting `200` records on the `affiliations` exceeds the `last` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 200 for: affiliationLoaderByOrgId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = affiliationLoaderByOrgId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: affiliationLoaderByOrgId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = affiliationLoaderByOrgId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: affiliationLoaderByOrgId.`,
+              ])
+            })
+          })
         })
       })
     })
