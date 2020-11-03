@@ -816,12 +816,11 @@ const userAffiliationsType = new GraphQLObjectType({
       type: userType,
       description: 'The affiliated users information.',
       resolve: async (
-        { userId },
+        { userKey },
         args,
         { loaders: { userLoaderByKey } },
       ) => {
-        const userKey = userId.split('/')[1]
-        const user = await userLoaderByKey.load(domainKey)
+        const user = await userLoaderByKey.load(userKey)
         return user
       },
     },
@@ -829,11 +828,10 @@ const userAffiliationsType = new GraphQLObjectType({
       type: organizationType,
       description: 'The affiliated organizations information.',
       resolve: async (
-        { organizationId },
+        { orgKey },
         args,
         { loaders: { orgLoaderByKey } },
       ) => {
-        const orgKey = organizationId.split('/')[1]
         const org = await orgLoaderByKey.load(orgKey)
         return org
       },
