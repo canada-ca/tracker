@@ -37,7 +37,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           authorization: currentUser.jwt,
         },
       },
-      variables: { domainSlug: domainSlug },
+      variables: { domain: domainSlug },
     },
   )
 
@@ -146,11 +146,18 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     }
 
     const formattedBarData = {
-      periods: barData.dmarcReportSummaryList.map((entry) => {
+      periods: barData.findDomainByDomain.yearlyDmarcSummaries.map((entry) => {
         return { month: entry.month, year: entry.year, ...entry.categoryTotals }
       }),
     }
+    // const formattedBarData = {
+    //   periods: barData.dmarcReportSummaryList.map((entry) => {
+    //     return { month: entry.month, year: entry.year, ...entry.categoryTotals }
+    //   }),
+    // }
     formattedBarData.strengths = strengths
+
+    console.log(formattedBarData)
 
     barDisplay = (
       <DmarcTimeGraph
