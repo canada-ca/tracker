@@ -1,35 +1,35 @@
 {
     "dkim1": {
-        "tag_name": "DKIM-GC",
+        "tagName": "DKIM-GC",
         "guidance": "Government of Canada domains subject to TBS guidelines",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "IT PIN"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "dkim2": {
-        "tag_name": "DKIM-missing",
+        "tagName": "DKIM-missing",
         "guidance": "Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "A.3.4 Deploy DKIM for All Domains and Senders",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "dkim3": {
-        "tag_name": "DKIM-missing-mx-O365",
+        "tagName": "DKIM-missing-mx-O365",
         "guidance": "DKIM record missing but MX uses O365.  Follow cloud-specific guidance.",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "3.2.2 Third Parties and DKIM",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "Microsoft DKIM Guidance",
                 "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
@@ -37,15 +37,15 @@
         ]
     },
     "dkim4": {
-        "tag_name": "DKIM-missing-O365-misconfigured",
+        "tagName": "DKIM-missing-O365-misconfigured",
         "guidance": "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "3.2.2 Third Parties and DKIM",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "Microsoft DKIM Guidance",
                 "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
@@ -53,102 +53,102 @@
         ]
     },
     "dkim5": {
-        "tag_name": "P-sub1024",
+        "tagName": "P-sub1024",
         "guidance": "Public key RSA and key length <1024",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.2.2 Cryptographic Considerations",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "dkim6": {
-        "tag_name": "P-1024",
+        "tagName": "P-1024",
         "guidance": "Public key RSA and key length 1024",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.2.2 Cryptographic Considerations",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "dkim7": {
-        "tag_name": "P-2048",
+        "tagName": "P-2048",
         "guidance": "Public key RSA and key length 2048",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.2.2 Cryptographic Considerations",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "dkim8": {
-        "tag_name": "P-4096",
+        "tagName": "P-4096",
         "guidance": "Public key RSA and key length 4096 or higher",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.2.2 Cryptographic Considerations",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "dkim9": {
-        "tag_name": "P-invalid",
+        "tagName": "P-invalid",
         "guidance": "Invalid public key",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.2.1 DKIM Records",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "dkim10": {
-        "tag_name": "P-update-recommended",
+        "tagName": "P-update-recommended",
         "guidance": "Public key in use for longer than 1 year",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "A.5.3 Rotate DKIM Keys",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna53"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "dkim11": {
-        "tag_name": "DKIM-invalid-crypto",
+        "tagName": "DKIM-invalid-crypto",
         "guidance": "DKIM key does not use RSA",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.2.2 Cryptographic Considerations",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "dkim12": {
-        "tag_name": "DKIM-value-invalid",
+        "tagName": "DKIM-value-invalid",
         "guidance": "DKIM TXT record invalid",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.2.1 DKIM Records",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "dkim13": {
-        "tag_name": "T-enabled",
+        "tagName": "T-enabled",
         "guidance": "Testing enabled",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "DKIM Flag t"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.",
                 "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6.1"

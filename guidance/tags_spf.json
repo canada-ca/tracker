@@ -1,102 +1,102 @@
 { 
     "spf1": {
-        "tag_name": "SPF-GC",
+        "tagName": "SPF-GC",
         "guidance": "Government of Canada domains subject to TBS guidelines",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "IT PIN",
                 "ref_link": ""
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "spf2": {
-        "tag_name": "SPF-missing",
+        "tagName": "SPF-missing",
         "guidance": "Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "A.3.3 Deploy SPF for All Domains",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "spf3": {
-        "tag_name": "SPF-bad-path",
+        "tagName": "SPF-bad-path",
         "guidance": "SPF implemented in incorrect subdomain",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.1.1 SPF Records",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "spf4": {
-        "tag_name": "ALL-missing",
+        "tagName": "ALL-missing",
         "guidance": "Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.1.1 SPF Records",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "spf5": {
-        "tag_name": "ALL-allow",
+        "tagName": "ALL-allow",
         "guidance": "Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.1.1 SPF Records",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "spf6": {
-        "tag_name": "ALL-neutral",
+        "tagName": "ALL-neutral",
         "guidance": "Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.1.1 SPF Records",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "spf7": {
-        "tag_name": "ALL-softfail",
+        "tagName": "ALL-softfail",
         "guidance": "Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.1.1 SPF Records",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "spf8": {
-        "tag_name": "ALL-hardfail",
+        "tagName": "ALL-hardfail",
         "guidance": "Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.1.1 SPF Records",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "spf9": {
-        "tag_name": "ALL-redirect",
+        "tagName": "ALL-redirect",
         "guidance": "Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.1.1 SPF Records",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "RFC 6.1 redirect: Redirected Query",
                 "ref_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
@@ -104,26 +104,26 @@
         ]
     },
     "spf10": {
-        "tag_name": "A-all",
+        "tagName": "A-all",
         "guidance": "Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.1.1 SPF Records",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "spf11": {
-        "tag_name": "INCLUDE-limit",
+        "tagName": "INCLUDE-limit",
         "guidance": "More than 10 lookups -- Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "B.1.3 DNS Lookup Limit",
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb13"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "RFC 4.6.4 DNS Lookup Limits",
                 "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"

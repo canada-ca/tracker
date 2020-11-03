@@ -1,25 +1,25 @@
 {
     "ssl1": {
-        "tag_name": "SSL-GC",
+        "tagName": "SSL-GC",
         "guidance": "Government of Canada domains subject to TBS guidelines",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "ITPIN 2018-01",
                 "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html"
             }
         ],
-        "ref_links_technical": [""]
+        "refLinksTechnical": [""]
     },
     "ssl2": {
-        "tag_name": "SSL-missing",
+        "tagName": "SSL-missing",
         "guidance": "Follow implementation guide",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "6.1.3 Direction",
                 "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "See ITSP.40.062 for approved cipher list",
                 "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
@@ -27,15 +27,15 @@
         ]
     },
     "ssl3": {
-        "tag_name": "SSL-rc4",
+        "tagName": "SSL-rc4",
         "guidance": "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18.01",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "6.1.5 Direction",
                 "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "See ITSP.40.062 for approved cipher list",
                 "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
@@ -43,15 +43,15 @@
         ]
     },
     "ssl4": {
-        "tag_name": "SSL-3des",
+        "tagName": "SSL-3des",
         "guidance": "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "6.1.5 Direction",
                 "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "See ITSP.40.062 for approved cipher list",
                 "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
@@ -59,15 +59,15 @@
         ]
     },
     "ssl5": {
-        "tag_name": "SSL-acceptable-certificate",
+        "tagName": "SSL-acceptable-certificate",
         "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "6.1.3 Direction",
                 "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "See ITSP.40.062 for approved cipher list",
                 "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
@@ -75,15 +75,15 @@
         ]
     },
     "ssl6": {
-        "tag_name": "SSL-invalid-cipher",
+        "tagName": "SSL-invalid-cipher",
         "guidance": "One or more ciphers in use are not compliant with guidelines",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "6.1.3/6.1.4/6.1.5 Direction",
                 "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "See ITSP.40.062 for approved cipher list",
                 "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
@@ -91,15 +91,15 @@
         ]
     },
     "ssl7": {
-        "tag_name": "Vulnerability-heartbleed",
+        "tagName": "Vulnerability-heartbleed",
         "guidance": "Vulnerable to heartbleed bug",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "6.1.3/6.1.4 Direction",
                 "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "See ITSP.40.062 for approved cipher list",
                 "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
@@ -107,15 +107,15 @@
         ]
     },
     "ssl8": {
-        "tag_name": "Vulnerability-ccs-injection",
+        "tagName": "Vulnerability-ccs-injection",
         "guidance": "Vulnerable to OpenSSL CCS Injection",
-        "ref_links_guide": [
+        "refLinksGuide": [
             {
                 "description": "6.1.3/6.1.4 Direction",
                 "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
             }
         ],
-        "ref_links_technical": [
+        "refLinksTechnical": [
             {
                 "description": "See ITSP.40.062 for approved cipher list",
                 "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
