@@ -61,6 +61,9 @@ const {
   httpsLoaderConnectionsByDomainId,
   sslLoaderByKey,
   sslLoaderConnectionsByDomainId,
+  affiliationLoaderByKey,
+  affiliationLoaderByUserId,
+  affiliationLoaderByOrgId,
 } = require('./loaders')
 
 const createSchema = ({ language }) => new GraphQLSchema({
@@ -201,6 +204,19 @@ const createContext = ({context, request, response}) => {
       ),
       userLoaderByUserName: userLoaderByUserName(query, i18n),
       userLoaderByKey: userLoaderByKey(query, i18n),
+      affiliationLoaderByKey: affiliationLoaderByKey(query),
+      affiliationLoaderByUserId: affiliationLoaderByUserId(
+        query,
+        userId,
+        cleanseInput,
+        i18n,
+      ),
+      affiliationLoaderByOrgId: affiliationLoaderByOrgId(
+        query,
+        userId,
+        cleanseInput,
+        i18n,
+      ),
     },
   }
 }
