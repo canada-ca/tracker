@@ -1,13 +1,3 @@
-# Namespace
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: scanners
-  labels:
-      istio-injection: enabled
-
----
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
@@ -31,7 +21,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: https-scanner
-          image: gcr.io/track-compliance/scanners/https:master # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/https # The URL to the image of the app
           env:
             - name: DB_USER
               valueFrom:
@@ -81,7 +71,7 @@ spec:
       containerConcurrency: 1
       containers:
         - name: result-processor
-          image: gcr.io/track-compliance/scanners/results:master # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/results # The URL to the image of the app
           env:
             - name: DB_USER
               valueFrom:
@@ -131,7 +121,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: ssl-scanner
-          image: gcr.io/track-compliance/scanners/ssl:master # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/ssl # The URL to the image of the app
           env:
             - name: DB_USER
               valueFrom:
@@ -181,7 +171,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: dns-scanner
-          image: gcr.io/track-compliance/scanners/dns:master # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/dns # The URL to the image of the app
           env:
             - name: DB_USER
               valueFrom:

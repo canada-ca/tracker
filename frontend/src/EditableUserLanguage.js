@@ -7,7 +7,6 @@ import { Formik, Field } from 'formik'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useUserState } from './UserState'
-import { useLingui } from '@lingui/react'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
@@ -15,7 +14,6 @@ import { TrackerButton } from './TrackerButton'
 function EditableUserLanguage({ currentLang }) {
   const { currentUser } = useUserState()
   const toast = useToast()
-  const { i18n } = useLingui()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
     UPDATE_USER_PROFILE,
@@ -27,12 +25,12 @@ function EditableUserLanguage({ currentLang }) {
       },
       onError: ({ message }) => {
         toast({
-          title: i18n._(t`An error occurred while updating your language.`),
+          title: t`An error occurred while updating your language.`,
           description: message,
           status: 'error',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
       onCompleted() {
@@ -42,7 +40,7 @@ function EditableUserLanguage({ currentLang }) {
           status: 'success',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
     },
@@ -50,7 +48,7 @@ function EditableUserLanguage({ currentLang }) {
 
   const validationSchema = object().shape({
     lang: yupString()
-      .required(i18n._(fieldRequirements.lang.required.message))
+      .required(fieldRequirements.lang.required.message)
       .oneOf(fieldRequirements.lang.oneOf.types),
   })
 

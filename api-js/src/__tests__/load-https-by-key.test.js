@@ -159,9 +159,7 @@ describe('given the httpsLoaderByKey function', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
         expect(consoleErrorOutput).toEqual([
           `Database error occurred when running httpsLoaderByKey: Error: Database error occurred.`,
@@ -181,9 +179,7 @@ describe('given the httpsLoaderByKey function', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
         expect(consoleErrorOutput).toEqual([
           `Cursor error occurred when running httpsLoaderByKey: Error: Cursor error occurred.`,

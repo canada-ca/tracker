@@ -175,9 +175,7 @@ describe('given a domainLoaderByKey dataloader', () => {
         try {
           await loader.load(expectedDomain._key)
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
@@ -205,9 +203,7 @@ describe('given a domainLoaderByKey dataloader', () => {
         try {
           await loader.load(expectedDomain._key)
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([

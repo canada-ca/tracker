@@ -81,12 +81,12 @@ describe('given the sendPasswordResetEmail function', () => {
         const notifyClient = {
           sendEmail,
         }
-  
+
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
         }
-  
+
         try {
           const mockedSendPasswordResetEmail = sendPasswordResetEmail(i18n)
           await mockedSendPasswordResetEmail({
@@ -100,7 +100,7 @@ describe('given the sendPasswordResetEmail function', () => {
             new Error('Unable to send password reset email. Please try again.'),
           )
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending password reset email for ${user._key}: Error: Notification error occurred.`,
         ])
@@ -127,12 +127,12 @@ describe('given the sendPasswordResetEmail function', () => {
         const notifyClient = {
           sendEmail,
         }
-  
+
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
         }
-  
+
         try {
           const mockedSendPasswordResetEmail = sendPasswordResetEmail(i18n)
           await mockedSendPasswordResetEmail({
@@ -142,11 +142,9 @@ describe('given the sendPasswordResetEmail function', () => {
             notifyClient,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending password reset email for ${user._key}: Error: Notification error occurred.`,
         ])

@@ -173,7 +173,7 @@ describe('given findMyDomainsQuery', () => {
           schema,
           `
             query {
-              findMyDomains {
+              findMyDomains(first: 5) {
                 edges {
                   cursor
                   node {
@@ -216,10 +216,7 @@ describe('given findMyDomainsQuery', () => {
                     id: toGlobalId('domains', domainOne._key),
                     domain: 'test1.gc.ca',
                     lastRan: null,
-                    selectors: [
-                      'selector1._domainkey',
-                      'selector2._domainkey',
-                    ],
+                    selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   },
                 },
                 {
@@ -228,10 +225,7 @@ describe('given findMyDomainsQuery', () => {
                     id: toGlobalId('domains', domainTwo._key),
                     domain: 'test2.gc.ca',
                     lastRan: null,
-                    selectors: [
-                      'selector1._domainkey',
-                      'selector2._domainkey',
-                    ],
+                    selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   },
                 },
               ],
@@ -274,7 +268,7 @@ describe('given findMyDomainsQuery', () => {
             schema,
             `
               query {
-                findMyDomains {
+                findMyDomains(first: 5) {
                   edges {
                     cursor
                     node {
@@ -338,7 +332,7 @@ describe('given findMyDomainsQuery', () => {
             schema,
             `
               query {
-                findMyDomains {
+                findMyDomains(first: 5) {
                   edges {
                     cursor
                     node {
@@ -367,9 +361,7 @@ describe('given findMyDomainsQuery', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(`todo`),
-          ]
+          const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

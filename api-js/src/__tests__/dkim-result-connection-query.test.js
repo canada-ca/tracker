@@ -141,10 +141,10 @@ describe('given the dkimType object', () => {
               id
               domain
               email {
-                dkim {
+                dkim(first: 5) {
                   edges {
                     node {
-                      results {
+                      results(first: 5) {
                         edges {
                           node {
                             id
@@ -170,8 +170,14 @@ describe('given the dkimType object', () => {
           userId: user._key,
           query: query,
           auth: {
-            checkDomainPermission,
-            userRequired,
+            checkDomainPermission: checkDomainPermission({
+              query,
+              userId: user._key,
+            }),
+            userRequired: userRequired({
+              userId: user._key,
+              userLoaderByKey: userLoaderByKey(query),
+            }),
           },
           validators: {
             cleanseInput,

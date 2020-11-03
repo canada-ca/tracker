@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import {
   Stack,
   Text,
@@ -53,7 +52,6 @@ export function AdminDomains({ domainsData, orgName }) {
   const [domainSearch, setDomainSearch] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()
   const toast = useToast()
-  const { i18n } = useLingui()
   const {
     isOpen: updateIsOpen,
     onOpen: updateOnOpen,
@@ -79,7 +77,7 @@ export function AdminDomains({ domainsData, orgName }) {
   // Update domains list if domainsData changes (domain added, removed, updated)
   useEffect(() => {
     setDomainList(domains)
-  }, [domainsData])
+  }, [domainsData]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Set current page to last page when current page > total number of pages
   // (avoids "Page 17 of 16" for example)
@@ -88,7 +86,7 @@ export function AdminDomains({ domainsData, orgName }) {
     if (currentPage > totalDomainPages) {
       paginate(totalDomainPages)
     }
-  }, [domainList])
+  }, [domainList]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['Domains'],
@@ -99,22 +97,22 @@ export function AdminDomains({ domainsData, orgName }) {
     },
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
     onCompleted() {
       toast({
-        title: i18n._(t`Domain added`),
-        description: i18n._(t`Domain was added to ${orgName}`),
+        title: t`Domain added`,
+        description: t`Domain was added to ${orgName}`,
         status: 'info',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
       setDomainSearch('')
     },
@@ -131,23 +129,23 @@ export function AdminDomains({ domainsData, orgName }) {
       refetchQueries: ['Domains'],
       onError(error) {
         toast({
-          title: i18n._(t`An error occurred.`),
+          title: t`An error occurred.`,
           description: error.message,
           status: 'error',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
       onCompleted() {
         removeOnClose()
         toast({
-          title: i18n._(t`Domain removed`),
-          description: i18n._(t`Domain removed from ${orgName}`),
+          title: t`Domain removed`,
+          description: t`Domain removed from ${orgName}`,
           status: 'info',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
     },
@@ -162,22 +160,22 @@ export function AdminDomains({ domainsData, orgName }) {
     },
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
     onCompleted() {
       toast({
-        title: i18n._(t`Domain updated`),
-        description: i18n._(t`Domain from ${orgName} successfully updated`),
+        title: t`Domain updated`,
+        description: t`Domain from ${orgName} successfully updated`,
         status: 'info',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
       updateOnClose()
     },
@@ -185,7 +183,7 @@ export function AdminDomains({ domainsData, orgName }) {
 
   const updatedDomainValidationSchema = yupObject().shape({
     newDomainUrl: yupString().required(
-      i18n._(fieldRequirements.domainUrl.required.message),
+      fieldRequirements.domainUrl.required.message,
     ),
   })
 
@@ -200,7 +198,7 @@ export function AdminDomains({ domainsData, orgName }) {
         </InputLeftElement>
         <Input
           type="text"
-          placeholder={i18n._(t`Search for a domain`)}
+          placeholder={t`Search for a domain`}
           value={domainSearch}
           onChange={(e) => {
             setDomainSearch(e.target.value)
@@ -212,12 +210,12 @@ export function AdminDomains({ domainsData, orgName }) {
         onClick={() => {
           if (!domainSearch) {
             toast({
-              title: i18n._(t`An error occurred.`),
-              description: i18n._(t`New domain name cannot be empty`),
+              title: t`An error occurred.`,
+              description: t`New domain name cannot be empty`,
               status: 'error',
               duration: 9000,
               isClosable: true,
-              position: 'bottom-left',
+              position: 'top-left',
             })
           } else {
             createDomain({
@@ -348,7 +346,7 @@ export function AdminDomains({ domainsData, orgName }) {
                               <Input
                                 {...field}
                                 id="newDomainUrl"
-                                placeholder={i18n._(t`New Domain Url`)}
+                                placeholder={t`New Domain Url`}
                                 ref={initialFocusRef}
                               />
                               <FormErrorMessage>

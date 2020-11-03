@@ -23,28 +23,25 @@ import { TrackerButton } from './TrackerButton'
 export default function SignInPage() {
   const history = useHistory()
   const toast = useToast()
-  const { i18n } = useLingui()
 
   const validationSchema = object().shape({
     password: string().required(
-      i18n._(fieldRequirements.password.required.message),
+      fieldRequirements.password.required.message,
     ),
     email: string()
-      .required(i18n._(fieldRequirements.email.required.message))
-      .email(i18n._(fieldRequirements.email.email.message)),
+      .required(fieldRequirements.email.required.message)
+      .email(fieldRequirements.email.email.message),
   })
 
   const [signIn, { loading, error }] = useMutation(SIGN_IN, {
     onError() {
       toast({
-        title: i18n._(t`An error occurred.`),
-        description: i18n._(
-          t`Unable to sign in to your account, please try again.`,
-        ),
+        title: t`An error occurred.`,
+        description: t`Unable to sign in to your account, please try again.`,
         status: 'error',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
     onCompleted({ signIn }) {

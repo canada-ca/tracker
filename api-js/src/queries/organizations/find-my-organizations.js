@@ -21,7 +21,9 @@ const findMyOrganizations = {
       console.error(
         `Database error occurred while user: ${userId} was trying to gather organization connections in findMyOrganizations.`,
       )
-      throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to load organizations. Please try again.`),
+      )
     }
 
     console.info(`User ${userId} successfully retrieved their organizations.`)

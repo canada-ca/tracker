@@ -9,16 +9,16 @@ import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import { Box, Heading, IconButton, Select, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
-import { number } from 'prop-types'
 import { useLingui } from '@lingui/react'
+import { number } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { months } from './months'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
-  const { i18n } = useLingui()
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
+  const { i18n } = useLingui()
 
   const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState(period || 'LAST30DAYS')
@@ -70,7 +70,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       key="LAST30DAYS"
       value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
     >
-      {i18n._(t`Last 30 Days`)}
+      {t`Last 30 Days`}
     </option>,
   ]
 
@@ -81,9 +81,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       const value = `${months[months.length + i].toUpperCase()}, ${
         currentDate.getFullYear() - 1
       }`
-      const translatedValue = `${i18n
-        ._(months[months.length + i])
-        .toUpperCase()}, ${currentDate.getFullYear() - 1}`
+      const translatedValue = `${months[months.length + i].toUpperCase()}, ${
+        currentDate.getFullYear() - 1
+      }`
 
       options.push(
         <option key={value} value={value}>
@@ -94,9 +94,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     // handle current year
     else {
       const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${i18n
-        ._(months[i])
-        .toUpperCase()}, ${currentDate.getFullYear()}`
+      const translatedValue = `${months[
+        i
+      ].toUpperCase()}, ${currentDate.getFullYear()}`
 
       options.push(
         <option key={value} value={value}>
@@ -122,25 +122,25 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       strong: [
         {
           name: 'fullPass',
-          displayName: i18n._(t`Pass`),
+          displayName: t`Pass`,
         },
       ],
       moderate: [
         {
           name: 'passSpfOnly',
-          displayName: i18n._(t`Pass Only SPF`),
+          displayName: t`Pass Only SPF`,
         },
       ],
       moderateAlt: [
         {
           name: 'passDkimOnly',
-          displayName: i18n._(t`Pass Only DKIM`),
+          displayName: t`Pass Only DKIM`,
         },
       ],
       weak: [
         {
           name: 'fail',
-          displayName: i18n._(t`Fail`),
+          displayName: t`Fail`,
         },
       ],
     }
@@ -150,14 +150,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         return { month: entry.month, year: entry.year, ...entry.categoryTotals }
       }),
     }
-    // const formattedBarData = {
-    //   periods: barData.dmarcReportSummaryList.map((entry) => {
-    //     return { month: entry.month, year: entry.year, ...entry.categoryTotals }
-    //   }),
-    // }
     formattedBarData.strengths = strengths
-
-    console.log(formattedBarData)
 
     barDisplay = (
       <DmarcTimeGraph
@@ -184,11 +177,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   // Create report tables if no errors and message data exist
   let tableDisplay
-  if (
-    !tableError &&
-    !tableLoading &&
-    tableData.dmarcReportDetailTables.detailTables.fullPass.length > 0
-  ) {
+  if (!tableError && !tableLoading) {
     const detailTablesData = tableData.dmarcReportDetailTables.detailTables
 
     const fullPassData = detailTablesData.fullPass
@@ -251,7 +240,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     const fullPassColumns = [
       {
-        Header: i18n._(t`Fully Aligned by IP Address`),
+        Header: t`Fully Aligned by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -268,7 +257,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     const spfFailureColumns = [
       {
-        Header: i18n._(t`SPF Failures by IP Address`),
+        Header: t`SPF Failures by IP Address`,
         hidden: true,
         columns: [
           dnsHost,
@@ -302,7 +291,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     const dkimFailureColumns = [
       {
-        Header: i18n._(t`DKIM Failures by IP Address`),
+        Header: t`DKIM Failures by IP Address`,
         hidden: true,
         columns: [
           dkimAligned,
@@ -338,7 +327,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     const dmarcFailureColumns = [
       {
-        Header: i18n._(t`DMARC Failures by IP Address`),
+        Header: t`DMARC Failures by IP Address`,
         hidden: true,
         columns: [
           dkimDomains,
@@ -353,54 +342,66 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         ],
       },
     ]
+    const fullyAlignedTable = fullPassData.length ? (
+      <DmarcReportTable
+        data={fullPassData}
+        columns={fullPassColumns}
+        title={t`Fully Aligned by IP Address`}
+        initialSort={initialSort}
+        mb="8"
+      />
+    ) : (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the Fully Aligned by IP Address table</Trans> *
+      </Heading>
+    )
+    const spfFailureTable = spfFailureData.length ? (
+      <DmarcReportTable
+        data={spfFailureData}
+        columns={spfFailureColumns}
+        title={t`SPF Failures by IP Address`}
+        initialSort={initialSort}
+      />
+    ) : (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the SPF Failures by IP Address table</Trans> *
+      </Heading>
+    )
+    const dkimFailureTable = dkimFailureData.length ? (
+      <DmarcReportTable
+        data={dkimFailureData}
+        columns={dkimFailureColumns}
+        title={t`DKIM Failures by IP Address`}
+        initialSort={initialSort}
+      />
+    ) : (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the DKIM Failures by IP Address table</Trans> *
+      </Heading>
+    )
+    const dmarcFailureTable = dkimFailureData.length ? (
+      <DmarcReportTable
+        data={dmarcFailureData}
+        columns={dmarcFailureColumns}
+        title={t`DMARC Failures by IP Address`}
+        initialSort={initialSort}
+      />
+    ) : (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the DMARC Failures by IP Address table</Trans> *
+      </Heading>
+    )
+
     tableDisplay = (
-      <>
-        <DmarcReportTable
-          data={fullPassData}
-          columns={fullPassColumns}
-          title={i18n._(t`Fully Aligned by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        />
-        <DmarcReportTable
-          data={spfFailureData}
-          columns={spfFailureColumns}
-          title={i18n._(t`SPF Failures by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        />
-        {/* <DmarcReportTable
-          data={spfMisalignedData}
-          columns={spfMisalignedColumns}
-          title={i18n._(t`SPF Misalignment by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        /> */}
-        <DmarcReportTable
-          data={dkimFailureData}
-          columns={dkimFailureColumns}
-          title={i18n._(t`DKIM Failures by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        />
-        {/* <DmarcReportTable
-          data={dkimMisalignedData}
-          columns={dkimMisalignedColumns}
-          title={i18n._(t`DKIM Misalignment by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        /> */}
-        <DmarcReportTable
-          data={dmarcFailureData}
-          columns={dmarcFailureColumns}
-          title={i18n._(t`DMARC Failures by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        />
-      </>
+      <Stack spacing="30px">
+        {fullyAlignedTable}
+        {spfFailureTable}
+        {dkimFailureTable}
+        {dmarcFailureTable}
+      </Stack>
     )
   }
-  // handle errors / loading / no data
+  // handle errors / loading
   else
     tableDisplay = (
       <Heading as="h3" size="lg" textAlign="center">

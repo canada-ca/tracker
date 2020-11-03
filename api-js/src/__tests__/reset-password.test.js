@@ -134,7 +134,7 @@ describe('reset users password', () => {
             auth: {
               bcrypt,
               tokenize,
-              verifyToken,
+              verifyToken: verifyToken({}),
             },
             validators: {
               cleanseInput,
@@ -239,7 +239,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -289,7 +289,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -339,7 +339,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -399,7 +399,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -456,7 +456,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -513,7 +513,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -576,7 +576,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({ i18n }),
               },
               validators: {
                 cleanseInput,
@@ -640,7 +640,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -711,7 +711,7 @@ describe('reset users password', () => {
             auth: {
               bcrypt,
               tokenize,
-              verifyToken,
+              verifyToken: verifyToken({}),
             },
             validators: {
               cleanseInput,
@@ -815,7 +815,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -863,7 +863,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -911,7 +911,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -969,7 +969,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -1024,7 +1024,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -1079,7 +1079,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -1138,7 +1138,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({ i18n }),
               },
               validators: {
                 cleanseInput,
@@ -1150,9 +1150,7 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Invalid token, please request a new one.'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1202,7 +1200,7 @@ describe('reset users password', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,

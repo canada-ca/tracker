@@ -15,6 +15,16 @@ import { setupI18n } from '@lingui/core'
 import OrganizationDetails from '../OrganizationDetails'
 import matchMediaPolyfill from 'mq-polyfill'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 matchMediaPolyfill(window)
 
 window
@@ -88,50 +98,6 @@ describe('<OrganizationDetails />', () => {
         },
         {
           request: {
-            query: PAGINATED_DOMAINS,
-            variables: { first: 10 },
-          },
-          result: {
-            data: {
-              pagination: {
-                edges: [
-                  {
-                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                    node: {
-                      id: 'T3JnYW5pemF0aW9uczoyCg==',
-                      url: 'tbs-sct.gc.ca',
-                      slug: 'tbs-sct-gc-ca',
-                      lastRan: 'somedate',
-                      __typename: 'Domains',
-                    },
-                    __typename: 'DomainsEdge',
-                  },
-                  {
-                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                    node: {
-                      id: 'T3JnYW5pemF0aW9uczoxCg==',
-                      url: 'rcmp-grc.gc.ca',
-                      slug: 'rcmp-grc-gc-ca',
-                      lastRan: 'organization-two',
-                      __typename: 'Domains',
-                    },
-                    __typename: 'DomainsEdge',
-                  },
-                ],
-                pageInfo: {
-                  hasNextPage: true,
-                  endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                  hasPreviousPage: false,
-                  startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                  __typename: 'PageInfo',
-                },
-                __typename: 'DomainsConnection',
-              },
-            },
-          },
-        },
-        {
-          request: {
             query: WEB_AND_EMAIL_SUMMARIES,
           },
           result: {
@@ -178,7 +144,7 @@ describe('<OrganizationDetails />', () => {
 
       const { getByText } = render(
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <UserStateProvider
               initialState={{
                 userName: 'user@example.com',

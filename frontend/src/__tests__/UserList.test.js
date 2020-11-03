@@ -10,6 +10,16 @@ import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<UserList />', () => {
   const data = {
     pageInfo: {
@@ -40,7 +50,7 @@ describe('<UserList />', () => {
         }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']}>
               <MockedProvider>
                 <UserList userListData={data} />
@@ -77,7 +87,7 @@ describe('<UserList />', () => {
         }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <Router history={history}>
               <MockedProvider>
                 <UserList userListData={data} />
@@ -142,7 +152,7 @@ describe('<UserList />', () => {
           }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <Router history={history}>
                 <MockedProvider mocks={mocks} addTypename={false}>
                   <UserList

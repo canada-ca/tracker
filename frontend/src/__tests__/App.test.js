@@ -9,6 +9,16 @@ import App from '../App'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<App/>', () => {
   afterEach(cleanup)
 
@@ -66,7 +76,7 @@ describe('<App/>', () => {
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
             <ThemeProvider theme={theme}>
-              <I18nProvider i18n={setupI18n()}>
+              <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
                   <MockedProvider mocks={mocks} addTypename={false}>
                     <App />
@@ -113,7 +123,7 @@ describe('<App/>', () => {
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
             <ThemeProvider theme={theme}>
-              <I18nProvider i18n={setupI18n()}>
+              <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/sign-in']} initialIndex={0}>
                   <MockedProvider mocks={mocks} addTypename={false}>
                     <App />

@@ -135,7 +135,7 @@ describe('given the dmarcType object', () => {
               id
               domain
               email {
-                dmarc {
+                dmarc(first: 5) {
                   edges {
                     node {
                       id
@@ -161,8 +161,14 @@ describe('given the dmarcType object', () => {
           userId: user._key,
           query: query,
           auth: {
-            checkDomainPermission,
-            userRequired,
+            checkDomainPermission: checkDomainPermission({
+              query,
+              userId: user._key,
+            }),
+            userRequired: userRequired({
+              userId: user._key,
+              userLoaderByKey: userLoaderByKey(query),
+            }),
           },
           validators: {
             cleanseInput,

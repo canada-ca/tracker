@@ -83,14 +83,16 @@ describe('given the sendOrgInviteCreateAccount function', () => {
         const notifyClient = {
           sendEmail,
         }
-  
+
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
         }
-  
+
         try {
-          const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(i18n)
+          const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(
+            i18n,
+          )
           await mockedSendOrgInviteCreateAccount({
             templateId: 'test_id',
             user,
@@ -103,7 +105,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
             new Error('Unable to send org invite email. Please try again.'),
           )
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending org create account invite email for ${user._key}: Error: Notification error occurred.`,
         ])
@@ -130,14 +132,16 @@ describe('given the sendOrgInviteCreateAccount function', () => {
         const notifyClient = {
           sendEmail,
         }
-  
+
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
         }
-  
+
         try {
-          const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(i18n)
+          const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(
+            i18n,
+          )
           await mockedSendOrgInviteCreateAccount({
             templateId: 'test_id',
             user,
@@ -150,7 +154,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
             new Error('Unable to send org invite email. Please try again.'),
           )
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending org create account invite email for ${user._key}: Error: Notification error occurred.`,
         ])

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Stack, Text, Select, useToast } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
 import { USER_AFFILIATIONS } from './graphql/queries'
@@ -11,7 +10,6 @@ import { useUserState } from './UserState'
 export default function AdminPage() {
   const { currentUser } = useUserState()
   const [orgName, setOrgName] = useState()
-  const { i18n } = useLingui()
   // const toast = useToast()
 
   // const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
@@ -20,7 +18,7 @@ export default function AdminPage() {
   //       authorization: currentUser.jwt,
   //     },
   //   },
-  //   onError: error => {
+  //   onError: (error) => {
   //     const [_, message] = error.message.split(': ')
   //     toast({
   //       title: 'Error',
@@ -28,7 +26,7 @@ export default function AdminPage() {
   //       status: 'failure',
   //       duration: 9000,
   //       isClosable: true,
-  //       position: 'bottom-left',
+  //       position: 'top-left',
   //     })
   //   },
   // })
@@ -79,7 +77,7 @@ export default function AdminPage() {
 
   const options = [
     <option hidden key="default">
-      {i18n._(t`Select an organization`)}
+      {t`Select an organization`}
     </option>,
   ]
 

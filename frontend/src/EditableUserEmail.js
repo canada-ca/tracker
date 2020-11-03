@@ -23,7 +23,6 @@ import { t, Trans } from '@lingui/macro'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
-import { useLingui } from '@lingui/react'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EmailField from './EmailField'
@@ -33,7 +32,6 @@ function EditableUserEmail({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { currentUser } = useUserState()
   const toast = useToast()
-  const { i18n } = useLingui()
   const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
@@ -46,14 +44,12 @@ function EditableUserEmail({ detailValue }) {
       },
       onError: ({ message }) => {
         toast({
-          title: i18n._(
-            t`An error occurred while updating your email address.`,
-          ),
+          title: t`An error occurred while updating your email address.`,
           description: message,
           status: 'error',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
       onCompleted() {
@@ -63,7 +59,7 @@ function EditableUserEmail({ detailValue }) {
           status: 'success',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
         onClose()
       },
@@ -72,8 +68,8 @@ function EditableUserEmail({ detailValue }) {
 
   const validationSchema = object().shape({
     email: yupString()
-      .required(i18n._(fieldRequirements.email.required.message))
-      .email(i18n._(fieldRequirements.email.email.message)),
+      .required(fieldRequirements.email.required.message)
+      .email(fieldRequirements.email.email.message),
   })
 
   return (

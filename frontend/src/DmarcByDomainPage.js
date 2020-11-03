@@ -149,7 +149,7 @@ export default function DmarcByDomainPage() {
       key="LAST30DAYS"
       value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
     >
-      {i18n._(t`Last 30 Days`)}
+      {t`Last 30 Days`}
     </option>,
   ]
 
@@ -160,8 +160,7 @@ export default function DmarcByDomainPage() {
       const value = `${months[months.length + i].toUpperCase()}, ${
         currentDate.getFullYear() - 1
       }`
-      const translatedValue = `${i18n
-        ._(months[months.length + i])
+      const translatedValue = `${months[months.length + i]
         .toUpperCase()}, ${currentDate.getFullYear() - 1}`
 
       options.push(
@@ -173,8 +172,7 @@ export default function DmarcByDomainPage() {
     // handle current year
     else {
       const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${i18n
-        ._(months[i])
+      const translatedValue = `${months[i]
         .toUpperCase()}, ${currentDate.getFullYear()}`
 
       options.push(

@@ -31,33 +31,109 @@ const spfLoaderConnectionsByDomainId = (
   }
 
   let limitTemplate = aql``
-  if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT spfScan._key ASC LIMIT TO_NUMBER(${first + 1})`
-  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT spfScan._key DESC LIMIT TO_NUMBER(${last + 1})`
-  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
+  if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} had first and last arguments set when trying to gather spf scans for domain: ${domainId}`,
+      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
-        t`Unable to have both first, and last arguments set at the same time.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`spf\` connection.`,
       ),
+    )
+  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
+    console.warn(
+      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`Passing both \`first\` and \`last\` to paginate the \`spf\` connection is not supported.`,
+      ),
+    )
+  } else if (typeof first === 'number' || typeof last === 'number') {
+    /* istanbul ignore else */
+    if (first < 0 || last < 0) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` set below zero for: spfLoaderConnectionsByDomainId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`\`${argSet}\` on the \`spf\` connection cannot be less than zero.`,
+        ),
+      )
+    } else if (first > 100 || last > 100) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+      const amount = typeof first !== 'undefined' ? first : last
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: spfLoaderConnectionsByDomainId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`Requesting ${amount} records on the \`spf\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+        ),
+      )
+    } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
+      limitTemplate = aql`SORT spfScan._key ASC LIMIT TO_NUMBER(${first})`
+    } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
+      limitTemplate = aql`SORT spfScan._key DESC LIMIT TO_NUMBER(${last})`
+    }
+  } else {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: spfLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
     )
   }
 
-  let spfScanCursor
+  let sortString
+  if (typeof last !== 'undefined') {
+    sortString = aql`DESC`
+  } else {
+    sortString = aql`ASC`
+  }
+
+  let spfScanInfoCursor
   try {
-    spfScanCursor = await query`
-    LET spfIds = (FOR v, e IN 1 ANY ${domainId} domainsSPF RETURN e._to)
-    FOR spfScan IN spf
-      FILTER spfScan._id IN spfIds
-      ${afterTemplate}
-      ${beforeTemplate}
-      ${startDateTemplate}
-      ${endDateTemplate}
-      ${limitTemplate}
-      RETURN spfScan    
+    spfScanInfoCursor = await query`
+    LET spfKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF RETURN v._key)
+
+    LET retrievedSpfScans = (
+      FOR spfScan IN spf
+        FILTER spfScan._key IN spfKeys
+        ${afterTemplate}
+        ${beforeTemplate}
+        ${startDateTemplate}
+        ${endDateTemplate}
+        ${limitTemplate}
+        RETURN spfScan
+    )
+
+    LET hasNextPage = (LENGTH(
+      FOR spfScan IN spf
+        FILTER spfScan._key IN spfKeys
+        FILTER TO_NUMBER(spfScan._key) > TO_NUMBER(LAST(retrievedSpfScans)._key)
+        SORT spfScan._key ${sortString} LIMIT 1
+        RETURN spfScan
+    ) > 0 ? true : false)
+    
+    LET hasPreviousPage = (LENGTH(
+      FOR spfScan IN spf
+        FILTER spfScan._key IN spfKeys
+        FILTER TO_NUMBER(spfScan._key) < TO_NUMBER(FIRST(retrievedSpfScans)._key)
+        SORT spfScan._key ${sortString} LIMIT 1
+        RETURN spfScan
+    ) > 0 ? true : false)
+
+    RETURN { 
+      "spfScans": retrievedSpfScans, 
+      "hasNextPage": hasNextPage, 
+      "hasPreviousPage": hasPreviousPage, 
+      "startKey": FIRST(retrievedSpfScans)._key, 
+      "endKey": LAST(retrievedSpfScans)._key 
+    }
     `
   } catch (err) {
     console.error(
@@ -66,9 +142,9 @@ const spfLoaderConnectionsByDomainId = (
     throw new Error(i18n._(t`Unable to load spf scans. Please try again.`))
   }
 
-  let spfScans
+  let spfScanInfo
   try {
-    spfScans = await spfScanCursor.all()
+    spfScanInfo = await spfScanInfoCursor.next()
   } catch (err) {
     console.error(
       `Cursor error occurred while user: ${userId} was trying to get spf information for ${domainId}, error: ${err}`,
@@ -76,27 +152,7 @@ const spfLoaderConnectionsByDomainId = (
     throw new Error(i18n._(t`Unable to load spf scans. Please try again.`))
   }
 
-  const hasNextPage = !!(
-    typeof first !== 'undefined' && spfScans.length > first
-  )
-  const hasPreviousPage = !!(
-    typeof last !== 'undefined' && spfScans.length > last
-  )
-
-  if (spfScans.length > first || spfScans.length > last) {
-    spfScans.pop()
-  }
-
-  const edges = spfScans.map((spfScan) => {
-    spfScan.id = spfScan._key
-    spfScan.domainId = domainId
-    return {
-      cursor: toGlobalId('spf', spfScan._key),
-      node: spfScan,
-    }
-  })
-
-  if (edges.length === 0) {
+  if (spfScanInfo.spfScans.length === 0) {
     return {
       edges: [],
       pageInfo: {
@@ -108,16 +164,22 @@ const spfLoaderConnectionsByDomainId = (
     }
   }
 
-  const startCursor = toGlobalId('spf', spfScans[0]._key)
-  const endCursor = toGlobalId('spf', spfScans[spfScans.length - 1]._key)
+  const edges = spfScanInfo.spfScans.map((spfScan) => {
+    spfScan.id = spfScan._key
+    spfScan.domainId = domainId
+    return {
+      cursor: toGlobalId('spf', spfScan._key),
+      node: spfScan,
+    }
+  })
 
   return {
     edges,
     pageInfo: {
-      hasNextPage,
-      hasPreviousPage,
-      startCursor,
-      endCursor,
+      hasNextPage: spfScanInfo.hasNextPage,
+      hasPreviousPage: spfScanInfo.hasPreviousPage,
+      startCursor: toGlobalId('spf', spfScanInfo.startKey),
+      endCursor: toGlobalId('spf', spfScanInfo.endKey),
     },
   }
 }

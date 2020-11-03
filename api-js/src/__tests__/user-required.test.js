@@ -3,12 +3,16 @@ dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { setupI18n } = require('@lingui/core')
+
 const { makeMigrations } = require('../../migrations')
-let { userLoaderByKey } = require('../loaders')
+const { userLoaderByKey } = require('../loaders')
 const { userRequired } = require('../auth')
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 
 describe('given a userLoaderByKey dataloader', () => {
-  let query, drop, truncate, migrate, collections
+  let query, drop, truncate, migrate, collections, i18n
 
   let consoleOutput = []
   const mockedWarn = (output) => consoleOutput.push(output)
@@ -39,7 +43,7 @@ describe('given a userLoaderByKey dataloader', () => {
   })
 
   describe('provided a user id', () => {
-    it('throws the user', async () => {
+    it('returns the user', async () => {
       // Get User From db
       const expectedCursor = await query`
         FOR user IN users
@@ -48,58 +52,173 @@ describe('given a userLoaderByKey dataloader', () => {
       `
       const expectedUser = await expectedCursor.next()
 
-      const user = await userRequired(expectedUser._key, userLoaderByKey(query))
+      const testUserRequired = userRequired({
+        userId: expectedUser._key,
+        userLoaderByKey: userLoaderByKey(query),
+      })
+      const user = await testUserRequired()
 
       expect(user).toEqual(expectedUser)
     })
   })
-  describe('user id is undefined', () => {
-    it('throws an error', async () => {
-      try {
-        await userRequired(undefined, userLoaderByKey(query))
-      } catch (err) {
-        expect(err).toEqual(new Error('Authentication error. Please sign in.'))
-      }
-
-      expect(consoleOutput).toEqual([
-        `User attempted to access controlled content, but userId was undefined.`,
-      ])
+  describe('language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
     })
-  })
-  describe('user cannot be found in database', () => {
-    it('throws an error', async () => {
-      await truncate()
-
-      try {
-        await userRequired('1', userLoaderByKey(query))
-      } catch (err) {
-        expect(err).toEqual(new Error('Authentication error. Please sign in.'))
-      }
-
-      expect(consoleOutput).toEqual([
-        `User: 1 attempted to access controlled content, but no user is associated with that id.`,
-      ])
-    })
-  })
-  describe('database error occurs', () => {
-    it('throws an error', async () => {
-      userLoaderByKey = () => {
-        return {
-          load() {
-            throw new Error('Database error occurred.')
-          },
+    describe('user id is undefined', () => {
+      it('throws an error', async () => {
+        try {
+          const testUserRequired = userRequired({
+            i18n,
+            userId: undefined,
+            userLoaderByKey: userLoaderByKey(query),
+          })
+          await testUserRequired()
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Authentication error. Please sign in.'),
+          )
         }
-      }
 
-      try {
-        await userRequired('1', userLoaderByKey(query))
-      } catch (err) {
-        expect(err).toEqual(new Error('Authentication error. Please sign in.'))
-      }
+        expect(consoleOutput).toEqual([
+          `User attempted to access controlled content, but userId was undefined.`,
+        ])
+      })
+    })
+    describe('user cannot be found in database', () => {
+      it('throws an error', async () => {
+        await truncate()
 
-      expect(consoleOutput).toEqual([
-        `Database error occurred when running userRequired: Error: Database error occurred.`,
-      ])
+        try {
+          const testUserRequired = userRequired({
+            i18n,
+            userId: '1',
+            userLoaderByKey: userLoaderByKey(query),
+          })
+          await testUserRequired()
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Authentication error. Please sign in.'),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `User: 1 attempted to access controlled content, but no user is associated with that id.`,
+        ])
+      })
+    })
+    describe('database error occurs', () => {
+      it('throws an error', async () => {
+        const testLoader = () => {
+          return {
+            load() {
+              throw new Error('Database error occurred.')
+            },
+          }
+        }
+
+        try {
+          const testUserRequired = userRequired({
+            i18n,
+            userId: '1',
+            userLoaderByKey: testLoader(),
+          })
+          await testUserRequired()
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Authentication error. Please sign in.'),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error occurred when running userRequired: Error: Database error occurred.`,
+        ])
+      })
+    })
+  })
+  describe('language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('user id is undefined', () => {
+      it('throws an error', async () => {
+        try {
+          const testUserRequired = userRequired({
+            i18n,
+            userId: undefined,
+            userLoaderByKey: userLoaderByKey(query),
+          })
+          await testUserRequired()
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
+        }
+
+        expect(consoleOutput).toEqual([
+          `User attempted to access controlled content, but userId was undefined.`,
+        ])
+      })
+    })
+    describe('user cannot be found in database', () => {
+      it('throws an error', async () => {
+        await truncate()
+
+        try {
+          const testUserRequired = userRequired({
+            i18n,
+            userId: '1',
+            userLoaderByKey: userLoaderByKey(query),
+          })
+          await testUserRequired()
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
+        }
+
+        expect(consoleOutput).toEqual([
+          `User: 1 attempted to access controlled content, but no user is associated with that id.`,
+        ])
+      })
+    })
+    describe('database error occurs', () => {
+      it('throws an error', async () => {
+        const testLoader = () => {
+          return {
+            load() {
+              throw new Error('Database error occurred.')
+            },
+          }
+        }
+
+        try {
+          const testUserRequired = userRequired({
+            i18n,
+            userId: '1',
+            userLoaderByKey: testLoader(),
+          })
+          await testUserRequired()
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error occurred when running userRequired: Error: Database error occurred.`,
+        ])
+      })
     })
   })
 })

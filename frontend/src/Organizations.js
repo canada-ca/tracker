@@ -1,9 +1,19 @@
 import React from 'react'
 import { number } from 'prop-types'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
-import { Button, Heading, Stack, Box, Divider } from '@chakra-ui/core'
+import {
+  Button,
+  Heading,
+  Stack,
+  Box,
+  Divider,
+  InputGroup,
+  InputLeftElement,
+  Icon,
+  Input,
+} from '@chakra-ui/core'
 import {
   PAGINATED_ORGANIZATIONS as FORWARD,
   REVERSE_PAGINATED_ORGANIZATIONS as BACKWARD,
@@ -48,6 +58,15 @@ export default function Organisations({ orgsPerPage = 10 }) {
       <Heading as="h1" mb="4" textAlign={['center', 'left']}>
         <Trans>Organizations</Trans>
       </Heading>
+      <InputGroup width="100%" mb="8px">
+        <InputLeftElement>
+          <Icon name="search" color="gray.300" />
+        </InputLeftElement>
+        <Input
+          type="text"
+          placeholder={t`Search for an organization`}
+        />
+      </InputGroup>
       <ListOf
         elements={nodes}
         ifEmpty={() => <Trans>No Organizations</Trans>}
@@ -80,7 +99,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
       </Stack>
       <Trans>*All data represented is mocked for demonstration purposes</Trans>
     </Layout>
-  )
+  );
 }
 
 Organisations.propTypes = { orgsPerPage: number }

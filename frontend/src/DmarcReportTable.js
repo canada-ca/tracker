@@ -22,8 +22,6 @@ import {
 } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
-
 import WithPseudoBox from './withPseudoBox'
 import { slugify } from './slugify'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
@@ -125,7 +123,6 @@ function DmarcReportTable({ ...props }) {
     appendLink,
   } = props
   const [show, setShow] = React.useState(true)
-  const { i18n } = useLingui()
 
   const handleShow = () => setShow(!show)
 
@@ -337,12 +334,12 @@ function DmarcReportTable({ ...props }) {
               />
               <Stack isInline align="center" spacing="4px">
                 <Box>
-                  <label htmlFor="goTo">
+                  <label htmlFor={`${title}-goTo`}>
                     <Trans>Go to page:</Trans>
                   </label>
                 </Box>
                 <Input
-                  id="goTo"
+                  id={`${title}-goTo`}
                   width="6rem"
                   value={goToPageValue}
                   onChange={(event) => {
@@ -367,7 +364,7 @@ function DmarcReportTable({ ...props }) {
               >
                 {[5, 10, 20].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
-                    {i18n._(t`Show ${pageSize}`)}
+                    {t`Show ${pageSize}`}
                   </option>
                 ))}
               </Select>

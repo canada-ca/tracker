@@ -16,6 +16,16 @@ import { rawSummaryListData } from '../fixtures/summaryListData'
 import { rawDmarcReportDetailTablesData } from '../fixtures/dmarcReportDetailTablesData'
 import { rawSummaryCardData } from '../fixtures/summaryCardData'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const mocks = [
   {
     request: {
@@ -71,7 +81,7 @@ describe('<DmarcReportPage />', () => {
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter
               initialEntries={['/domains/test-domain-slug/dmarc-report']}
               initialIndex={0}
@@ -95,7 +105,7 @@ describe('<DmarcReportPage />', () => {
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter
               initialEntries={['/domains/test-domain-slug/dmarc-report']}
               initialIndex={0}
@@ -119,7 +129,7 @@ describe('<DmarcReportPage />', () => {
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter
               initialEntries={['/domains/test-domain-slug/dmarc-report']}
               initialIndex={0}
@@ -143,7 +153,7 @@ describe('<DmarcReportPage />', () => {
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter
               initialEntries={['/domains/test-domain-slug/dmarc-report']}
               initialIndex={0}

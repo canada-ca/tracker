@@ -201,7 +201,7 @@ describe('given findMyOrganizationsQuery', () => {
               schema,
               `
                 query {
-                  findMyOrganizations {
+                  findMyOrganizations(first: 5) {
                     edges {
                       cursor
                       node {
@@ -300,7 +300,7 @@ describe('given findMyOrganizationsQuery', () => {
           schema,
           `
             query {
-              findMyOrganizations {
+              findMyOrganizations(first: 5) {
                 edges {
                   cursor
                   node {
@@ -399,7 +399,7 @@ describe('given findMyOrganizationsQuery', () => {
               schema,
               `
                 query {
-                  findMyOrganizations {
+                  findMyOrganizations(first: 5) {
                     edges {
                       cursor
                       node {
@@ -498,7 +498,7 @@ describe('given findMyOrganizationsQuery', () => {
           schema,
           `
             query {
-              findMyOrganizations {
+              findMyOrganizations(first: 5) {
                 edges {
                   cursor
                   node {

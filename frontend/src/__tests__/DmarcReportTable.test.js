@@ -9,6 +9,16 @@ import {
   singleDmarcReportDetailTableColumns,
 } from '../fixtures/dmarcReportDetailTablesData'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
@@ -21,7 +31,7 @@ describe('<DmarcReportTable />', () => {
   it('renders correctly', async () => {
     const { getAllByText } = render(
       <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
+        <I18nProvider i18n={i18n}>
           <div>
             <DmarcReportTable
               data={singleDmarcReportDetailTableData}

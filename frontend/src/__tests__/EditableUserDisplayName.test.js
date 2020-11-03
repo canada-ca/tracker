@@ -9,6 +9,16 @@ import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<EditableUserDisplayName>', () => {
   it('renders', async () => {
     const { getByText } = render(
@@ -21,7 +31,7 @@ describe('<EditableUserDisplayName>', () => {
       >
         <MockedProvider addTypename={false}>
           <MemoryRouter initialEntries={['/']}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <ThemeProvider theme={theme}>
                 <EditableUserDisplayName />
               </ThemeProvider>
@@ -44,7 +54,7 @@ describe('<EditableUserDisplayName>', () => {
         >
           <MockedProvider addTypename={false}>
             <MemoryRouter initialEntries={['/']}>
-              <I18nProvider i18n={setupI18n()}>
+              <I18nProvider i18n={i18n}>
                 <ThemeProvider theme={theme}>
                   <EditableUserDisplayName />
                 </ThemeProvider>
@@ -75,7 +85,7 @@ describe('<EditableUserDisplayName>', () => {
             >
               <MockedProvider addTypename={false}>
                 <MemoryRouter initialEntries={['/']}>
-                  <I18nProvider i18n={setupI18n()}>
+                  <I18nProvider i18n={i18n}>
                     <ThemeProvider theme={theme}>
                       <EditableUserDisplayName />
                     </ThemeProvider>

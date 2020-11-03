@@ -4,6 +4,7 @@ require('dotenv-safe').config({
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const { stringify } = require('jest-matcher-utils')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
@@ -90,7 +91,9 @@ describe('when given the load dkim results connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         const dkimResults = await connectionLoader({
           dkimId: dkimScan._id,
@@ -157,6 +160,7 @@ describe('when given the load dkim results connection function', () => {
         expectedDkimResults[1].dkimId = dkimScan._id
 
         const connectionArgs = {
+          first: 5,
           after: toGlobalId('dkimResult', expectedDkimResults[0]._key),
         }
 
@@ -176,7 +180,7 @@ describe('when given the load dkim results connection function', () => {
           ],
           pageInfo: {
             hasNextPage: false,
-            hasPreviousPage: false,
+            hasPreviousPage: true,
             startCursor: toGlobalId('dkimResult', expectedDkimResults[1]._key),
             endCursor: toGlobalId('dkimResult', expectedDkimResults[1]._key),
           },
@@ -207,6 +211,7 @@ describe('when given the load dkim results connection function', () => {
         expectedDkimResults[1].dkimId = dkimScan._id
 
         const connectionArgs = {
+          first: 5,
           before: toGlobalId('dkimResult', expectedDkimResults[1]._key),
         }
 
@@ -225,64 +230,10 @@ describe('when given the load dkim results connection function', () => {
             },
           ],
           pageInfo: {
-            hasNextPage: false,
+            hasNextPage: true,
             hasPreviousPage: false,
             startCursor: toGlobalId('dkimResult', expectedDkimResults[0]._key),
             endCursor: toGlobalId('dkimResult', expectedDkimResults[0]._key),
-          },
-        }
-
-        expect(dkimResults).toEqual(expectedStructure)
-      })
-    })
-    describe('using no limit', () => {
-      it('returns multiple dmarc scans', async () => {
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
-
-        const connectionArgs = {}
-
-        const dkimResults = await connectionLoader({
-          dkimId: dkimScan._id,
-          ...connectionArgs,
-        })
-
-        const dkimResultLoader = dkimResultLoaderByKey(query)
-        const expectedDkimResults = await dkimResultLoader.loadMany([
-          dkimResult1._key,
-          dkimResult2._key,
-        ])
-
-        expectedDkimResults[0].id = expectedDkimResults[0]._key
-        expectedDkimResults[1].id = expectedDkimResults[1]._key
-
-        expectedDkimResults[0].dkimId = dkimScan._id
-        expectedDkimResults[1].dkimId = dkimScan._id
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('dkimResult', expectedDkimResults[0]._key),
-              node: {
-                ...expectedDkimResults[0],
-              },
-            },
-            {
-              cursor: toGlobalId('dkimResult', expectedDkimResults[1]._key),
-              node: {
-                ...expectedDkimResults[1],
-              },
-            },
-          ],
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('dkimResult', expectedDkimResults[0]._key),
-            endCursor: toGlobalId('dkimResult', expectedDkimResults[1]._key),
           },
         }
 
@@ -399,7 +350,9 @@ describe('when given the load dkim results connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         const dkimResults = await connectionLoader({
           dkimId: dkimScan._id,
@@ -433,8 +386,36 @@ describe('when given the load dkim results connection function', () => {
       })
     })
     describe('given a unsuccessful load', () => {
-      describe('first and last arguments are set', () => {
-        it('throws an error', async () => {
+      describe('both limits are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+
+          try {
+            await connectionLoader({
+              dkimId: dkimScan._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.',
+              ),
+            )
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+          ])
+        })
+      })
+      describe('both limits are set', () => {
+        it('returns an error message', async () => {
           const connectionLoader = dkimResultsLoaderConnectionByDkimId(
             query,
             user._key,
@@ -455,13 +436,209 @@ describe('when given the load dkim results connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Unable to have both first, and last arguments set at the same time.',
+                'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.',
               ),
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} had first and last arguments set when trying to gather dkim results for dkimScan: ${dkimScan._id}`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
           ])
+        })
+      })
+      describe('limits are below minimum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: -1,
+            }
+
+            try {
+              await connectionLoader({
+                dkimId: dkimScan._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`first` on the `dkimResults` connection cannot be less than zero.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: -5,
+            }
+
+            try {
+              await connectionLoader({
+                dkimId: dkimScan._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`last` on the `dkimResults` connection cannot be less than zero.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are above maximum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 1000,
+            }
+
+            try {
+              await connectionLoader({
+                dkimId: dkimScan._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting 1000 records on the `dkimResults` connection exceeds the `first` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: dkimResultsLoaderConnectionByDkimId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: 500,
+            }
+
+            try {
+              await connectionLoader({
+                dkimId: dkimScan._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting 500 records on the `dkimResults` connection exceeds the `last` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 500 for: dkimResultsLoaderConnectionByDkimId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimResultsLoaderConnectionByDkimId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimResultsLoaderConnectionByDkimId.`,
+              ])
+            })
+          })
         })
       })
     })
@@ -478,7 +655,9 @@ describe('when given the load dkim results connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
         try {
           await connectionLoader({
             dkimId: dkimScan._id,
@@ -498,7 +677,7 @@ describe('when given the load dkim results connection function', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const cursor = {
-          all() {
+          next() {
             throw new Error('Cursor Error Occurred.')
           },
         }
@@ -511,7 +690,9 @@ describe('when given the load dkim results connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
         try {
           await connectionLoader({
             dkimId: dkimScan._id,
@@ -542,8 +723,32 @@ describe('when given the load dkim results connection function', () => {
       })
     })
     describe('given a unsuccessful load', () => {
-      describe('first and last arguments are set', () => {
-        it('throws an error', async () => {
+      describe('both limits are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+
+          try {
+            await connectionLoader({
+              dkimId: dkimScan._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(new Error('todo'))
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+          ])
+        })
+      })
+      describe('both limits are set', () => {
+        it('returns an error message', async () => {
           const connectionLoader = dkimResultsLoaderConnectionByDkimId(
             query,
             user._key,
@@ -565,8 +770,180 @@ describe('when given the load dkim results connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} had first and last arguments set when trying to gather dkim results for dkimScan: ${dkimScan._id}`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
           ])
+        })
+      })
+      describe('limits are below minimum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: -1,
+            }
+
+            try {
+              await connectionLoader({
+                dkimId: dkimScan._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error('todo'))
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: -5,
+            }
+
+            try {
+              await connectionLoader({
+                dkimId: dkimScan._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error('todo'))
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are above maximum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 1000,
+            }
+
+            try {
+              await connectionLoader({
+                dkimId: dkimScan._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error('todo'))
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: dkimResultsLoaderConnectionByDkimId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: 500,
+            }
+
+            try {
+              await connectionLoader({
+                dkimId: dkimScan._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error('todo'))
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 500 for: dkimResultsLoaderConnectionByDkimId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error(`todo`))
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimResultsLoaderConnectionByDkimId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error(`todo`))
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimResultsLoaderConnectionByDkimId.`,
+              ])
+            })
+          })
         })
       })
     })
@@ -583,7 +960,9 @@ describe('when given the load dkim results connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
         try {
           await connectionLoader({
             dkimId: dkimScan._id,
@@ -601,7 +980,7 @@ describe('when given the load dkim results connection function', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const cursor = {
-          all() {
+          next() {
             throw new Error('Cursor Error Occurred.')
           },
         }
@@ -614,7 +993,9 @@ describe('when given the load dkim results connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
         try {
           await connectionLoader({
             dkimId: dkimScan._id,

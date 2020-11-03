@@ -38,9 +38,9 @@ const EmailField = WithPseudoBox(function EmailField({
           {...field}
           {...props}
           id="email"
+          type="email"
           ref={forwardedRef}
           placeholder={i18n._(t`Email`)}
-          type="email"
         />
       </InputGroup>
 

@@ -157,7 +157,7 @@ describe('create a domain', () => {
                     domain
                     lastRan
                     selectors
-                    organizations {
+                    organizations (first: 5) {
                       edges{ 
                         node {
                           id
@@ -178,7 +178,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -280,7 +286,7 @@ describe('create a domain', () => {
                     domain
                     lastRan
                     selectors
-                    organizations {
+                    organizations (first: 5) {
                       edges{ 
                         node {
                           id
@@ -301,7 +307,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -379,7 +391,7 @@ describe('create a domain', () => {
                   domain
                   lastRan
                   selectors
-                  organizations {
+                  organizations (first: 5) {
                     edges{ 
                       node {
                         id
@@ -400,7 +412,13 @@ describe('create a domain', () => {
             collections,
             transaction,
             userId: user._key,
-            auth: { checkPermission, userRequired },
+            auth: {
+              checkPermission: checkPermission({ userId: user._key, query }),
+              userRequired: userRequired({
+                userId: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
+            },
             loaders: {
               domainLoaderByDomain: domainLoaderByDomain(query),
               orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -477,7 +495,7 @@ describe('create a domain', () => {
                   domain
                   lastRan
                   selectors
-                  organizations {
+                  organizations (first: 5) {
                     edges{ 
                       node {
                         id
@@ -498,7 +516,13 @@ describe('create a domain', () => {
             collections,
             transaction,
             userId: user._key,
-            auth: { checkPermission, userRequired },
+            auth: {
+              checkPermission: checkPermission({ userId: user._key, query }),
+              userRequired: userRequired({
+                userId: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
+            },
             loaders: {
               domainLoaderByDomain: domainLoaderByDomain(query),
               orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -610,7 +634,7 @@ describe('create a domain', () => {
                   domain
                   lastRan
                   selectors
-                  organizations {
+                  organizations (first: 5) {
                     edges{ 
                       node {
                         id
@@ -631,7 +655,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -717,7 +747,7 @@ describe('create a domain', () => {
                   domain
                   lastRan
                   selectors
-                  organizations {
+                  organizations (first: 5) {
                     edges{ 
                       node {
                         id
@@ -738,7 +768,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -824,7 +860,7 @@ describe('create a domain', () => {
                   domain
                   lastRan
                   selectors
-                  organizations {
+                  organizations (first: 5) {
                     edges{ 
                       node {
                         id
@@ -845,7 +881,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -942,7 +984,7 @@ describe('create a domain', () => {
                     domain
                     lastRan
                     selectors
-                    organizations {
+                    organizations(first: 5) {
                       edges {
                         node {
                           id
@@ -964,7 +1006,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1008,7 +1056,7 @@ describe('create a domain', () => {
                     domain
                     lastRan
                     selectors
-                    organizations {
+                    organizations (first: 5) {
                       edges{ 
                         node {
                           id
@@ -1030,7 +1078,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1088,7 +1142,7 @@ describe('create a domain', () => {
                     domain
                     lastRan
                     selectors
-                    organizations {
+                    organizations (first: 5) {
                       edges{ 
                         node {
                           id
@@ -1110,7 +1164,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1186,7 +1246,7 @@ describe('create a domain', () => {
                       domain
                       lastRan
                       selectors
-                      organizations {
+                      organizations (first: 5) {
                         edges{ 
                           node {
                             id
@@ -1208,7 +1268,16 @@ describe('create a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userIdLoader,
+                  }),
+                },
                 loaders: {
                   domainLoaderByDomain: domainLoader,
                   orgLoaderByKey: orgIdLoader,
@@ -1273,7 +1342,7 @@ describe('create a domain', () => {
                       domain
                       lastRan
                       selectors
-                      organizations {
+                      organizations (first: 5) {
                         edges{ 
                           node {
                             id
@@ -1295,7 +1364,16 @@ describe('create a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 loaders: {
                   domainLoaderByDomain: domainLoader,
                   orgLoaderByKey: orgIdLoader,
@@ -1348,7 +1426,7 @@ describe('create a domain', () => {
                     domain
                     lastRan
                     selectors
-                    organizations {
+                    organizations(first: 5) {
                       edges {
                         node {
                           id
@@ -1370,7 +1448,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1412,7 +1496,7 @@ describe('create a domain', () => {
                     domain
                     lastRan
                     selectors
-                    organizations {
+                    organizations (first: 5) {
                       edges{ 
                         node {
                           id
@@ -1434,7 +1518,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1490,7 +1580,7 @@ describe('create a domain', () => {
                     domain
                     lastRan
                     selectors
-                    organizations {
+                    organizations (first: 5) {
                       edges{ 
                         node {
                           id
@@ -1512,7 +1602,13 @@ describe('create a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1586,7 +1682,7 @@ describe('create a domain', () => {
                       domain
                       lastRan
                       selectors
-                      organizations {
+                      organizations (first: 5) {
                         edges{ 
                           node {
                             id
@@ -1608,7 +1704,16 @@ describe('create a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userIdLoader,
+                  }),
+                },
                 loaders: {
                   domainLoaderByDomain: domainLoader,
                   orgLoaderByKey: orgIdLoader,
@@ -1671,7 +1776,7 @@ describe('create a domain', () => {
                       domain
                       lastRan
                       selectors
-                      organizations {
+                      organizations (first: 5) {
                         edges{ 
                           node {
                             id
@@ -1693,7 +1798,16 @@ describe('create a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 loaders: {
                   domainLoaderByDomain: domainLoader,
                   orgLoaderByKey: orgIdLoader,
