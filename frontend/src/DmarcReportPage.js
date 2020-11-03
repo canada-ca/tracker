@@ -193,35 +193,61 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     const fullPassData = detailTablesData.fullPass
     const spfFailureData = detailTablesData.spfFailure
-    const spfMisalignedData = detailTablesData.spfMisaligned
+    // const spfMisalignedData = detailTablesData.spfMisaligned
     const dkimFailureData = detailTablesData.dkimFailure
-    const dkimMisalignedData = detailTablesData.dkimMisaligned
+    // const dkimMisalignedData = detailTablesData.dkimMisaligned
     const dmarcFailureData = detailTablesData.dmarcFailure
 
     // Initial sorting category for detail tables
     const initialSort = [{ id: 'totalMessages', desc: true }]
 
-    const [
-      sourceIpAddress,
-      envelopeFrom,
-      dkimDomains,
-      dkimSelectors,
-      totalMessages,
-      countryCode,
-      prefixOrg,
-      dnsHost,
-      spfDomains,
-    ] = [
-      { Header: i18n._(t`Source IP Address`), accessor: 'sourceIpAddress' },
-      { Header: i18n._(t`Envelope From`), accessor: 'envelopeFrom' },
-      { Header: i18n._(t`DKIM Domains`), accessor: 'dkimDomains' },
-      { Header: i18n._(t`DKIM Selectors`), accessor: 'dkimSelectors' },
-      { Header: i18n._(t`Total Messages`), accessor: 'totalMessages' },
-      { Header: i18n._(t`Country Code`), accessor: 'countryCode' },
-      { Header: i18n._(t`Prefix Org`), accessor: 'prefixOrg' },
-      { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' },
-      { Header: i18n._(t`SPF Domains`), accessor: 'spfDomains' },
-    ]
+    const sourceIpAddress = {
+      Header: i18n._(t`Source IP Address`),
+      accessor: 'sourceIpAddress',
+    }
+    const envelopeFrom = {
+      Header: i18n._(t`Envelope From`),
+      accessor: 'envelopeFrom',
+    }
+    const dkimDomains = {
+      Header: i18n._(t`DKIM Domains`),
+      accessor: 'dkimDomains',
+    }
+    const dkimSelectors = {
+      Header: i18n._(t`DKIM Selectors`),
+      accessor: 'dkimSelectors',
+    }
+    const totalMessages = {
+      Header: i18n._(t`Total Messages`),
+      accessor: 'totalMessages',
+    }
+    const dnsHost = { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' }
+    const spfDomains = {
+      Header: i18n._(t`SPF Domains`),
+      accessor: 'spfDomains',
+    }
+    const headerFrom = { Header: i18n._(t`Head From`), accessor: 'headerFrom' }
+    const guidance = { Header: i18n._(t`Guidance`), accessor: 'guidance' }
+    const spfAligned = {
+      Header: i18n._(t`SPF Aligned`),
+      accessor: 'spfAligned',
+    }
+    const spfResults = {
+      Header: i18n._(t`SPF Results`),
+      accessor: 'spfResults',
+    }
+    const dkimAligned = {
+      Header: i18n._(t`DKIM Aligned`),
+      accessor: 'dkimAligned',
+    }
+    const dkimResults = {
+      Header: i18n._(t`DKIM Results`),
+      accessor: 'dkimResults',
+    }
+    const disposition = {
+      Header: i18n._(t`Disposition`),
+      accessor: 'disposition',
+    }
 
     const fullPassColumns = [
       {
@@ -230,12 +256,11 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         columns: [
           sourceIpAddress,
           envelopeFrom,
-          countryCode,
-          prefixOrg,
-          dnsHost,
-          spfDomains,
           dkimDomains,
           dkimSelectors,
+          dnsHost,
+          headerFrom,
+          spfDomains,
           totalMessages,
         ],
       },
@@ -246,80 +271,84 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: i18n._(t`SPF Failures by IP Address`),
         hidden: true,
         columns: [
-          sourceIpAddress,
-          envelopeFrom,
-          countryCode,
-          prefixOrg,
           dnsHost,
+          envelopeFrom,
+          guidance,
+          headerFrom,
+          sourceIpAddress,
+          spfAligned,
           spfDomains,
+          spfResults,
           totalMessages,
         ],
       },
     ]
 
-    const spfMisalignedColumns = [
-      {
-        Header: i18n._(t`SPF Misalignment by IP Address`),
-        hidden: true,
-        columns: [
-          sourceIpAddress,
-          envelopeFrom,
-          countryCode,
-          prefixOrg,
-          dnsHost,
-          spfDomains,
-          totalMessages,
-        ],
-      },
-    ]
+    // const spfMisalignedColumns = [
+    //   {
+    //     Header: i18n._(t`SPF Misalignment by IP Address`),
+    //     hidden: true,
+    //     columns: [
+    //       sourceIpAddress,
+    //       envelopeFrom,
+    //       countryCode,
+    //       prefixOrg,
+    //       dnsHost,
+    //       spfDomains,
+    //       totalMessages,
+    //     ],
+    //   },
+    // ]
 
     const dkimFailureColumns = [
       {
         Header: i18n._(t`DKIM Failures by IP Address`),
         hidden: true,
         columns: [
-          sourceIpAddress,
-          envelopeFrom,
-          countryCode,
-          prefixOrg,
-          dnsHost,
+          dkimAligned,
           dkimDomains,
+          dkimResults,
           dkimSelectors,
+          dnsHost,
+          envelopeFrom,
+          guidance,
+          headerFrom,
+          sourceIpAddress,
           totalMessages,
         ],
       },
     ]
 
-    const dkimMisalignedColumns = [
-      {
-        Header: i18n._(t`DKIM Misalignment by IP Address`),
-        hidden: true,
-        columns: [
-          sourceIpAddress,
-          envelopeFrom,
-          countryCode,
-          prefixOrg,
-          dnsHost,
-          dkimDomains,
-          dkimSelectors,
-          totalMessages,
-        ],
-      },
-    ]
+    // const dkimMisalignedColumns = [
+    //   {
+    //     Header: i18n._(t`DKIM Misalignment by IP Address`),
+    //     hidden: true,
+    //     columns: [
+    //       sourceIpAddress,
+    //       envelopeFrom,
+    //       countryCode,
+    //       prefixOrg,
+    //       dnsHost,
+    //       dkimDomains,
+    //       dkimSelectors,
+    //       totalMessages,
+    //     ],
+    //   },
+    // ]
 
     const dmarcFailureColumns = [
       {
         Header: i18n._(t`DMARC Failures by IP Address`),
         hidden: true,
         columns: [
-          sourceIpAddress,
-          envelopeFrom,
-          countryCode,
-          prefixOrg,
-          dnsHost,
-          spfDomains,
           dkimDomains,
           dkimSelectors,
+          disposition,
+          dnsHost,
+          envelopeFrom,
+          headerFrom,
+          sourceIpAddress,
+          spfDomains,
           totalMessages,
         ],
       },
@@ -340,13 +369,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           initialSort={initialSort}
           mb="8"
         />
-        <DmarcReportTable
+        {/* <DmarcReportTable
           data={spfMisalignedData}
           columns={spfMisalignedColumns}
           title={i18n._(t`SPF Misalignment by IP Address`)}
           initialSort={initialSort}
           mb="8"
-        />
+        /> */}
         <DmarcReportTable
           data={dkimFailureData}
           columns={dkimFailureColumns}
@@ -354,13 +383,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           initialSort={initialSort}
           mb="8"
         />
-        <DmarcReportTable
+        {/* <DmarcReportTable
           data={dkimMisalignedData}
           columns={dkimMisalignedColumns}
           title={i18n._(t`DKIM Misalignment by IP Address`)}
           initialSort={initialSort}
           mb="8"
-        />
+        /> */}
         <DmarcReportTable
           data={dmarcFailureData}
           columns={dmarcFailureColumns}
