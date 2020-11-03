@@ -348,16 +348,17 @@ export const QUERY_USER = gql`
 `
 
 export const DMARC_REPORT_SUMMARY_LIST = gql`
-  query DmarcReportSummaryList($domainSlug: Slug!) {
-    dmarcReportSummaryList(domainSlug: $domainSlug) {
-      month
-      year
-      categoryTotals {
-        fullPass
-        passSpfOnly
-        passDkimOnly
-        fail
-        total
+  query DmarcReportSummaryList($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      yearlyDmarcSummaries {
+        month
+        year
+        categoryTotals {
+          passSpfOnly
+          passDkimOnly
+          fullPass
+          fail
+        }
       }
     }
   }
@@ -582,17 +583,21 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
 `
 
 export const DMARC_REPORT_SUMMARY_TABLE = gql`
-  query DmarcReportSummaryTable($period: PeriodEnums!, $year: Year!) {
-    dmarcReportSummaryTable(period: $period, year: $year) {
-      month
-      year
-      domains {
-        domain
-        fullPassPercentage
-        passSpfOnlyPercentage
-        passDkimOnlyPercentage
-        failPercentage
-        totalMessages
+  query FindMyDomains($month: PeriodEnums!, $year: Year!) {
+    findMyDomains {
+      edges {
+        node {
+          domain
+          dmarcSummaryByPeriod(month: $month, year: $year) {
+            categoryPercentages {
+              failPercentage
+              fullPassPercentage
+              passDkimOnlyPercentage
+              passSpfOnlyPercentage
+              totalMessages
+            }
+          }
+        }
       }
     }
   }

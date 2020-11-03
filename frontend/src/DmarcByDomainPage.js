@@ -20,91 +20,129 @@ export default function DmarcByDomainPage() {
     `LAST30DAYS, ${currentDate.getFullYear()}`,
   )
 
-  const {
-    loading: tableLoading,
-    error: tableError,
-    data: tableData,
-  } = useQuery(DMARC_REPORT_SUMMARY_TABLE, {
+  const { loading, error, data } = useQuery(DMARC_REPORT_SUMMARY_TABLE, {
     context: {
       headers: {
         authorization: currentUser.jwt,
       },
     },
     variables: {
-      period: selectedPeriod,
+      month: selectedPeriod,
       year: selectedYear,
     },
+    fetchPolicy: 'cache-and-network',
   })
 
   // TODO: Properly handle these errors
-  if (tableError)
+  if (error)
     return (
       <Heading as="h3" size="lg" textAlign="center">
         <Trans>Error while querying for DMARC report summary table</Trans>
       </Heading>
     )
 
-  // Initial sorting category for detail tables
-  const initialSort = [{ id: 'totalMessages', desc: true }]
+  // default tableDisplay to loading, will change to actual display in the if(!loading) block
+  let tableDisplay = (
+    <Text>
+      <Trans>Loading...</Trans>
+    </Text>
+  )
+  if (loading) {
+    return 'laoding'
+  }
 
-  const [
-    domain,
-    totalMessages,
-    fullPassPercentage,
-    passSpfOnlyPercentage,
-    passDkimOnlyPercentage,
-    failPercentage,
-  ] = [
-    {
-      Header: i18n._(t`Domain`),
-      accessor: 'domain',
-    },
-    {
-      Header: i18n._(t`Total Messages`),
-      accessor: 'totalMessages',
-      Cell: ({ value }) => value.toLocaleString(i18n.locale),
-      style: { textAlign: 'right' },
-    },
-    {
-      Header: i18n._(t`Full Pass %`),
-      accessor: 'fullPassPercentage',
-      Cell: ({ value }) => `${value}%`,
-      style: { textAlign: 'right' },
-    },
-    {
-      Header: i18n._(t`Fail DKIM %`),
-      accessor: 'passSpfOnlyPercentage',
-      Cell: ({ value }) => `${value}%`,
-      style: { textAlign: 'right' },
-    },
-    {
-      Header: i18n._(t`Fail SPF %`),
-      accessor: 'passDkimOnlyPercentage',
-      Cell: ({ value }) => `${value}%`,
-      style: { textAlign: 'right' },
-    },
-    {
-      Header: i18n._(t`Full Fail %`),
-      accessor: 'failPercentage',
-      Cell: ({ value }) => `${value}%`,
-      style: { textAlign: 'right' },
-    },
-  ]
+  if (!loading) {
+    const formattedData = []
+    data.findMyDomains.edges.forEach((edge) => {
+      const domain = edge.node.domain
+      const percentages = edge.node.dmarcSummaryByPeriod.categoryPercentages
+      formattedData.push({ domain, ...percentages })
+    })
 
-  const percentageColumns = [
-    {
-      Header: i18n._(t`DMARC Messages`),
-      hidden: true,
-      columns: [
-        domain,
-        totalMessages,
-        fullPassPercentage,
-        passDkimOnlyPercentage,
-        passSpfOnlyPercentage,
-        failPercentage,
-      ],
-    },
-  ]
+    // Initial sorting category for detail tables
+    const initialSort = [{ id: 'totalMessages', desc: true }]
+
+    const [
+      domain,
+      totalMessages,
+      fullPassPercentage,
+      passSpfOnlyPercentage,
+      passDkimOnlyPercentage,
+      failPercentage,
+    ] = [
+      {
+        Header: i18n._(t`Domain`),
+        accessor: 'domain',
+      },
+      {
+        Header: i18n._(t`Total Messages`),
+        accessor: 'totalMessages',
+        Cell: ({ value }) => value.toLocaleString(i18n.locale),
+        style: { textAlign: 'right' },
+      },
+      {
+        Header: i18n._(t`Full Pass %`),
+        accessor: 'fullPassPercentage',
+        Cell: ({ value }) => `${value}%`,
+        style: { textAlign: 'right' },
+      },
+      {
+        Header: i18n._(t`Fail DKIM %`),
+        accessor: 'passSpfOnlyPercentage',
+        Cell: ({ value }) => `${value}%`,
+        style: { textAlign: 'right' },
+      },
+      {
+        Header: i18n._(t`Fail SPF %`),
+        accessor: 'passDkimOnlyPercentage',
+        Cell: ({ value }) => `${value}%`,
+        style: { textAlign: 'right' },
+      },
+      {
+        Header: i18n._(t`Full Fail %`),
+        accessor: 'failPercentage',
+        Cell: ({ value }) => `${value}%`,
+        style: { textAlign: 'right' },
+      },
+    ]
+
+    const percentageColumns = [
+      {
+        Header: i18n._(t`DMARC Messages`),
+        hidden: true,
+        columns: [
+          domain,
+          totalMessages,
+          fullPassPercentage,
+          passDkimOnlyPercentage,
+          passSpfOnlyPercentage,
+          failPercentage,
+        ],
+      },
+    ]
+
+    // Replace table with "Loading..." if waiting for query
+    tableDisplay = (
+      <DmarcReportTable
+        data={formattedData}
+        columns={percentageColumns}
+        title={i18n._(t`Pass/Fail Ratios by Domain`)}
+        initialSort={initialSort}
+        mb="30px"
+        hideTitleButton={true}
+        linkColumns={[{ column: 'domain', isExternal: false }]}
+        prependLink="domains/"
+        appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
+      />
+    )
+  }
+
+  const handleChange = (e) => {
+    setSelectedDate(e.target.value)
+    const [newPeriod, newYear] = e.target.value.split(', ')
+    setSelectedPeriod(newPeriod)
+    setSelectedYear(newYear)
+  }
 
   const options = [
     <option
@@ -146,32 +184,6 @@ export default function DmarcByDomainPage() {
       )
     }
   }
-
-  const handleChange = (e) => {
-    setSelectedDate(e.target.value)
-    const [newPeriod, newYear] = e.target.value.split(', ')
-    setSelectedPeriod(newPeriod)
-    setSelectedYear(newYear)
-  }
-
-  // Replace table with "Loading..." if waiting for query
-  const tableDisplay = tableLoading ? (
-    <Text>
-      <Trans>Loading...</Trans>
-    </Text>
-  ) : (
-    <DmarcReportTable
-      data={tableData.dmarcReportSummaryTable.domains}
-      columns={percentageColumns}
-      title={i18n._(t`Pass/Fail Ratios by Domain`)}
-      initialSort={initialSort}
-      mb="30px"
-      hideTitleButton={true}
-      linkColumns={[{ column: 'domain', isExternal: false }]}
-      prependLink="domains/"
-      appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
-    />
-  )
 
   return (
     <Box width="100%">
