@@ -81,7 +81,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
   const warningIcon = <Icon name="warning" color="weak" />
 
   return (
-    <Stack isInline align="center" px="2">
+    <Stack isInline align="center" px="2" pt={['2', '0']}>
       {!smallDevice && warningIcon}
       <Box>
         <Stack isInline>

@@ -45,7 +45,7 @@ function ScanCard({ scanType, scanData }) {
           <Heading as="h1" size="lg">
             {cardTitle}
           </Heading>
-          <Text fontSize="lg">{cardDescription}</Text>
+          <Text fontSize={['md', 'lg']}>{cardDescription}</Text>
         </Stack>
       </Box>
       <Box>
