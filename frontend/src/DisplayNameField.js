@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  elementType,
-  func,
-  oneOfType,
-  shape,
-  string,
-} from 'prop-types'
-import { useLingui } from '@lingui/react'
+import { elementType, func, oneOfType, shape, string } from 'prop-types'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
@@ -27,7 +20,6 @@ const DisplayNameField = WithPseudoBox(function DisplayNameField({
   ...props
 }) {
   const [field, meta] = useField(name)
-  const { i18n } = useLingui()
 
   const formLabel = label === undefined ? <Trans>Display Name:</Trans> : label
 
@@ -45,7 +37,7 @@ const DisplayNameField = WithPseudoBox(function DisplayNameField({
           {...props}
           ref={forwardedRef}
           id="displayName"
-          placeholder={i18n._(t`Display Name`)}
+          placeholder={t`Display Name`}
         />
       </InputGroup>
 

@@ -5,6 +5,16 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { DomainList } from '../DomainList'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<DomainList />', () => {
   it('executes a child function once for each passed domain', async () => {
     const domains = [
@@ -17,7 +27,7 @@ describe('<DomainList />', () => {
     ]
     const { getByTestId } = render(
       <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
+        <I18nProvider i18n={i18n}>
           <DomainList domains={domains}>
             {({ node }) => (
               <p data-testid="domain" key={node.url}>
@@ -38,7 +48,7 @@ describe('<DomainList />', () => {
   it(`gracefully handles a "no results" empty list`, async () => {
     const { getByText } = render(
       <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
+        <I18nProvider i18n={i18n}>
           <DomainList domains={[]} data-testid="list">
             {({ node }) => <p key={node.url}>{node.url}</p>}
           </DomainList>
@@ -55,7 +65,7 @@ describe('<DomainList />', () => {
   it('gracefully handles null', async () => {
     const { getByText } = render(
       <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
+        <I18nProvider i18n={i18n}>
           <DomainList domains={null} data-testid="list">
             {({ node }) => <p key={node.url}>{node.url}</p>}
           </DomainList>

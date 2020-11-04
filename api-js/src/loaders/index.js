@@ -4,6 +4,7 @@ const emailScanLoaders = require('./email-scan')
 const orgLoaders = require('./organizations')
 const userLoaders = require('./user')
 const webScanLoaders = require('./web-scan')
+const userAffiliationLoaders = require('./user-affiliations')
 
 module.exports = {
   // Dmarc Report Loaders
@@ -18,4 +19,6 @@ module.exports = {
   ...userLoaders,
   // Web Scan Loaders
   ...webScanLoaders,
+  // User Affiliation Loaders
+  ...userAffiliationLoaders,
 }

@@ -3,7 +3,6 @@ import { number } from 'prop-types'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
-import { useLingui } from '@lingui/react'
 import {
   Button,
   Heading,
@@ -28,7 +27,6 @@ import { LoadingMessage } from './LoadingMessage'
 
 export default function Organisations({ orgsPerPage = 10 }) {
   const { currentUser } = useUserState()
-  const { i18n } = useLingui()
   const {
     loading,
     error,
@@ -58,7 +56,6 @@ export default function Organisations({ orgsPerPage = 10 }) {
       <Heading as="h1" mb="4" textAlign={['center', 'left']}>
         <Trans>Organizations</Trans>
       </Heading>
-
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <InputGroup width="100%" mb="8px">
           <InputLeftElement>
@@ -66,7 +63,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
           </InputLeftElement>
           <Input
             type="text"
-            placeholder={i18n._(t`Search for an organization`)}
+            placeholder={t`Search for an organization`}
           />
         </InputGroup>
         <ListOf
@@ -107,7 +104,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
         </Trans>
       </ErrorBoundary>
     </Layout>
-  )
+  );
 }
 
 Organisations.propTypes = { orgsPerPage: number }

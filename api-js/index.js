@@ -17,7 +17,7 @@ const { makeMigrations } = require('./migrations')
     makeMigrations({ databaseName, rootPass }),
   )
 
-  Server({ query, collections, transaction }).listen(PORT, (err) => {
+  Server(PORT, { query, collections, transaction }).listen(PORT, (err) => {
     if (err) throw err
     console.log(`🚀 API listening on port ${PORT}`)
   })

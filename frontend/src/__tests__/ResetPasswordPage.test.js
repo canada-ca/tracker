@@ -9,6 +9,16 @@ import { UserStateProvider } from '../UserState'
 import ResetPasswordPage from '../ResetPasswordPage'
 import { UPDATE_PASSWORD } from '../graphql/mutations'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const mocks = [
   {
     request: {
@@ -32,7 +42,7 @@ describe('<ResetPasswordPage />', () => {
               initialState={{ userName: null, jwt: null, tfa: null }}
             >
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <MockedProvider mocks={mocks}>
                     <MemoryRouter
                       initialEntries={[
@@ -69,7 +79,7 @@ describe('<ResetPasswordPage />', () => {
               initialState={{ userName: null, jwt: null, tfa: null }}
             >
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <MockedProvider mocks={mocks}>
                     <MemoryRouter
                       initialEntries={[

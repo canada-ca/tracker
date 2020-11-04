@@ -3,14 +3,12 @@ import { Trans, t } from '@lingui/macro'
 import { TrackerButton } from './TrackerButton'
 import { Formik } from 'formik'
 import { Stack, Box, Input, Text } from '@chakra-ui/core'
-import { useLingui } from '@lingui/react'
 
 function scan(values) {
   window.alert(`Scanning ${values.domain}. . . `)
 }
 
 export function ScanDomain({ submitScan = scan }) {
-  const { i18n } = useLingui()
   return (
     <Box px="8" mx="auto" overflow="hidden">
       <Formik initialValues={{ domain: '' }} onSubmit={submitScan}>
@@ -32,7 +30,7 @@ export function ScanDomain({ submitScan = scan }) {
                   mr="4"
                   type="text"
                   onChange={handleChange}
-                  placeholder={i18n._(t`Enter a domain`)}
+                  placeholder={t`Enter a domain`}
                   value={values.domain}
                   name="domain"
                   id="domain"

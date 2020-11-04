@@ -22,6 +22,16 @@ const mocks = [
   },
 ]
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<ForgotPasswordPage />', () => {
   describe('given no input', () => {
     describe('when onBlur fires', () => {
@@ -32,7 +42,7 @@ describe('<ForgotPasswordPage />', () => {
               initialState={{ userName: null, jwt: null, tfa: null }}
             >
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <MockedProvider mocks={mocks}>
                       <ForgotPasswordPage />

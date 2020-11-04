@@ -38,8 +38,8 @@ msgstr "todo"
 msgid "Could not retrieve specified organization."
 msgstr "todo"
 
-#: src/auth/check-domain-ownership.js:19
-#: src/auth/check-domain-ownership.js:30
+#: src/auth/check-domain-ownership.js:22
+#: src/auth/check-domain-ownership.js:35
 msgid "Error when retrieving dmarc report information. Please try again."
 msgstr "todo"
 
@@ -51,7 +51,7 @@ msgstr "todo"
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "todo"
 
-#: src/auth/verify-jwt.js:12
+#: src/auth/verify-jwt.js:15
 msgid "Invalid token, please request a new one."
 msgstr "todo"
 
@@ -65,6 +65,11 @@ msgstr "todo"
 
 #: src/queries/organizations/find-organization-by-slug.js:39
 msgid "No organization with the provided slug could be found."
+msgstr "todo"
+
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:45
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:44
+msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:39
@@ -126,6 +131,11 @@ msgstr "todo"
 msgid "Profile successfully updated."
 msgstr "todo"
 
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:68
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:67
+msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
+msgstr "todo"
+
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:67
 #: src/loaders/domains/load-domain-connections-by-user-id.js:65
 msgid "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records."
@@ -160,7 +170,7 @@ msgstr "todo"
 msgid "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:183
+#: src/mutations/user-affiliations/invite-user-to-org.js:186
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "todo"
 
@@ -172,7 +182,7 @@ msgstr "todo"
 msgid "Successfully removed organization: {0}."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:125
+#: src/mutations/user-affiliations/invite-user-to-org.js:127
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "todo"
 
@@ -202,7 +212,7 @@ msgid "Unable to authenticate. Please try again."
 msgstr "todo"
 
 #: src/auth/check-permission.js:27
-#: src/auth/check-permission.js:51
+#: src/auth/check-permission.js:53
 msgid "Unable to check permission. Please try again."
 msgstr "todo"
 
@@ -266,6 +276,11 @@ msgstr "todo"
 msgid "Unable to find ssl scan. Please try again."
 msgstr "todo"
 
+#: src/loaders/user-affiliations/load-user-affiliations-by-key.js:19
+#: src/loaders/user-affiliations/load-user-affiliations-by-key.js:33
+msgid "Unable to find user affiliation(s). Please try again."
+msgstr "todo"
+
 #: src/loaders/user/load-user-by-key.js:18
 #: src/loaders/user/load-user-by-key.js:28
 #: src/loaders/user/load-user-by-username.js:18
@@ -273,15 +288,20 @@ msgstr "todo"
 msgid "Unable to find user. Please try again."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:77
-#: src/mutations/user-affiliations/invite-user-to-org.js:90
-#: src/mutations/user-affiliations/invite-user-to-org.js:152
-#: src/mutations/user-affiliations/invite-user-to-org.js:174
+#: src/mutations/user-affiliations/invite-user-to-org.js:79
+#: src/mutations/user-affiliations/invite-user-to-org.js:92
+#: src/mutations/user-affiliations/invite-user-to-org.js:155
+#: src/mutations/user-affiliations/invite-user-to-org.js:177
 msgid "Unable to invite user. Please try again."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:67
+#: src/mutations/user-affiliations/invite-user-to-org.js:68
 msgid "Unable to invite yourself to an org. Please try again."
+msgstr "todo"
+
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:142
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:141
+msgid "Unable to load affiliations. Please try again."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:130
@@ -302,7 +322,7 @@ msgstr "todo"
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:148
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:158
 #: src/loaders/domains/load-domain-connections-by-user-id.js:148
-#: src/queries/domains/find-my-domains.js:25
+#: src/queries/domains/find-my-domains.js:24
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
@@ -314,7 +334,7 @@ msgstr "todo"
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:140
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:150
 #: src/loaders/organizations/load-organization-connections-by-user-id.js:145
-#: src/queries/organizations/find-my-organizations.js:24
+#: src/queries/organizations/find-my-organizations.js:25
 msgid "Unable to load organizations. Please try again."
 msgstr "todo"
 
@@ -326,6 +346,11 @@ msgstr "todo"
 #: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:142
 #: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:152
 msgid "Unable to load ssl scans. Please try again."
+msgstr "todo"
+
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:132
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:131
+msgid "Unable to query affiliations. Please try again."
 msgstr "todo"
 
 #: src/loaders/domains/load-domain-connections-by-user-id.js:138
@@ -482,7 +507,7 @@ msgstr "todo"
 msgid "Unable to verify account. Please try again."
 msgstr "todo"
 
-#: src/queries/user/is-user-admin.js:32
+#: src/queries/user/is-user-admin.js:23
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "todo"
 
@@ -500,6 +525,11 @@ msgstr "todo"
 
 #: src/mutations/user/sign-in.js:127
 msgid "We've sent you an email with an authentication code to sign into Pulse."
+msgstr "todo"
+
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:36
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:35
+msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:30
@@ -544,9 +574,16 @@ msgstr "todo"
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:87
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:81
 #: src/loaders/organizations/load-organization-connections-by-user-id.js:81
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:83
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:82
 #: src/loaders/web-scan/load-https-connections-by-domain-id.js:87
 #: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:87
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
+msgstr "todo"
+
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:57
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:56
+msgid "`{argSet}` on the `affiliations` cannot be less than zero."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:51

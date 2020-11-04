@@ -14,6 +14,16 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { createCache } from '../client'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<Organisations />', () => {
   describe('given a list of organizations', () => {
     it('displays a list of organizations', async () => {
@@ -71,7 +81,7 @@ describe('<Organisations />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={['/organizations']}
                 initialIndex={0}
@@ -207,7 +217,7 @@ describe('<Organisations />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <MockedProvider mocks={mocks} cache={createCache()}>
                 <Router history={history}>
                   <Switch>
@@ -355,7 +365,7 @@ describe('<Organisations />', () => {
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
             <ThemeProvider theme={theme}>
-              <I18nProvider i18n={setupI18n()}>
+              <I18nProvider i18n={i18n}>
                 <MockedProvider mocks={mocks} cache={cache}>
                   <Router history={history}>
                     <Switch>
@@ -542,7 +552,7 @@ describe('<Organisations />', () => {
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
             <ThemeProvider theme={theme}>
-              <I18nProvider i18n={setupI18n()}>
+              <I18nProvider i18n={i18n}>
                 <MockedProvider mocks={mocks} cache={cache}>
                   <Router history={history}>
                     <Switch>

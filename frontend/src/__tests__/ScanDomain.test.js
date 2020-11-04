@@ -13,6 +13,16 @@ import { UserStateProvider } from '../UserState'
 import { createCache } from '../client'
 import { ScanDomain } from '../ScanDomain'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const fillIn = (element, { with: value }) =>
   fireEvent.change(element, { target: { value } })
 const clickOn = (element) => fireEvent.click(element)
@@ -119,7 +129,7 @@ describe('<ScanDomain />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                 <MockedProvider mocks={mocks} cache={createCache()}>
                   <ScanDomain submitScan={scanFn} />

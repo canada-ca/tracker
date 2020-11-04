@@ -1,14 +1,11 @@
 const { GraphQLObjectType } = require('graphql')
-// const { i18n: internationalization } = require('lingui-i18n')
-
 const domainMutations = require('./domain')
 const organizationMutations = require('./organizations')
 const scanMutations = require('./scans')
 const userMutations = require('./user')
 const userAffiliationMutations = require('./user-affiliations')
 
-// const createMutationSchema = i18n => {
-const createMutationSchema = () => {
+const createMutationSchema = (i18n) => {
   return new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({

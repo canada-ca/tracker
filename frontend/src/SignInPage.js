@@ -1,6 +1,5 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import PasswordField from './PasswordField'
 import { object, string } from 'yup'
 import {
@@ -26,24 +25,21 @@ export default function SignInPage() {
   const { login } = useUserState()
   const history = useHistory()
   const toast = useToast()
-  const { i18n } = useLingui()
 
   const validationSchema = object().shape({
     password: string().required(
-      i18n._(fieldRequirements.password.required.message),
+      fieldRequirements.password.required.message,
     ),
     email: string()
-      .required(i18n._(fieldRequirements.email.required.message))
-      .email(i18n._(fieldRequirements.email.email.message)),
+      .required(fieldRequirements.email.required.message)
+      .email(fieldRequirements.email.email.message),
   })
 
   const [authenticate, { loading }] = useMutation(AUTHENTICATE, {
     onError(error) {
       toast({
         title: error.message,
-        description: i18n._(
-          t`Unable to sign in to your account, please try again.`,
-        ),
+        description: t`Unable to sign in to your account, please try again.`,
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -60,8 +56,8 @@ export default function SignInPage() {
       history.push('/')
       // Display a welcome message
       toast({
-        title: i18n._(t`Sign In.`),
-        description: i18n._(t`Welcome, you are successfully signed in!`),
+        title: t`Sign In.`,
+        description: t`Welcome, you are successfully signed in!`,
         status: 'success',
         duration: 9000,
         isClosable: true,

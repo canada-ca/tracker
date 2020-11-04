@@ -8,6 +8,16 @@ import { UserStateProvider } from '../UserState'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 
 describe('<FloatingMenu>', () => {
   it('renders', async () => {
@@ -20,7 +30,7 @@ describe('<FloatingMenu>', () => {
         }}
       >
         <MemoryRouter initialEntries={['/']}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <ThemeProvider theme={theme}>
               <FloatingMenu />
             </ThemeProvider>
@@ -41,7 +51,7 @@ describe('<FloatingMenu>', () => {
           }}
         >
           <MemoryRouter initialEntries={['/']}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <ThemeProvider theme={theme}>
                 <FloatingMenu />
               </ThemeProvider>
@@ -69,7 +79,7 @@ describe('<FloatingMenu>', () => {
             }}
           >
             <MemoryRouter initialEntries={['/']}>
-              <I18nProvider i18n={setupI18n()}>
+              <I18nProvider i18n={i18n}>
                 <ThemeProvider theme={theme}>
                   <FloatingMenu />
                 </ThemeProvider>
@@ -109,7 +119,7 @@ describe('<FloatingMenu>', () => {
             }}
           >
             <MemoryRouter initialEntries={['/']}>
-              <I18nProvider i18n={setupI18n()}>
+              <I18nProvider i18n={i18n}>
                 <ThemeProvider theme={theme}>
                   <FloatingMenu />
                   <Route

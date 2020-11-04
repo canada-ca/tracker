@@ -8,6 +8,16 @@ import { UserStateProvider } from '../UserState'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<FloatingMenuLink>', () => {
   it('renders', async () => {
     const { getByText } = render(
@@ -19,7 +29,7 @@ describe('<FloatingMenuLink>', () => {
         }}
       >
         <MemoryRouter initialEntries={['/']}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <ThemeProvider theme={theme}>
               <FloatingMenuLink to="/sign-in" text="Sign In" />
             </ThemeProvider>
@@ -43,7 +53,7 @@ describe('<FloatingMenuLink>', () => {
           }}
         >
           <MemoryRouter initialEntries={['/']}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <ThemeProvider theme={theme}>
                 <FloatingMenuLink to="/sign-in" text="Sign In" />
                 <Route

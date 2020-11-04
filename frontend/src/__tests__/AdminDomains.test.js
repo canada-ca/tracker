@@ -9,6 +9,16 @@ import { AdminDomains } from '../AdminDomains'
 import { MockedProvider } from '@apollo/client/testing'
 import { SIGN_UP } from '../graphql/mutations'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
     const mocks = {
@@ -35,7 +45,7 @@ describe('<AdminDomains />', () => {
         }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']}>
               <MockedProvider>
                 <AdminDomains domainsData={mocks} />
@@ -62,7 +72,7 @@ describe('<AdminDomains />', () => {
         }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MockedProvider>
               <AdminDomains domainsData={null} />
             </MockedProvider>

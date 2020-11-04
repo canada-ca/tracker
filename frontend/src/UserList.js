@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useLingui } from '@lingui/react'
 import {
   FormLabel,
   Stack,
@@ -41,14 +40,13 @@ export default function UserList({
   const [currentPage, setCurrentPage] = useState(1)
   const [usersPerPage] = useState(4)
   const toast = useToast()
-  const { i18n } = useLingui()
   const { currentUser } = useUserState()
   const [addedUserName, setAddedUserName] = useState()
 
   const addUserValidationSchema = object().shape({
     userName: yupString()
-      .required(i18n._(fieldRequirements.email.required.message))
-      .email(i18n._(fieldRequirements.email.email.message)),
+      .required(fieldRequirements.email.required.message)
+      .email(fieldRequirements.email.email.message),
   })
 
   // Get current users
@@ -60,7 +58,7 @@ export default function UserList({
     onError(error) {
       toast({
         title: error.message,
-        description: i18n._(t`Unable to change user role, please try again.`),
+        description: t`Unable to change user role, please try again.`,
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -69,8 +67,8 @@ export default function UserList({
     },
     onCompleted() {
       toast({
-        title: i18n._(t`Role updated`),
-        description: i18n._(t`The user's role has been successfully updated`),
+        title: t`Role updated`,
+        description: t`The user's role has been successfully updated`,
         status: 'success',
         duration: 9000,
         isClosable: true,
@@ -89,7 +87,7 @@ export default function UserList({
       },
       onError(error) {
         toast({
-          title: i18n._(t`An error occurred.`),
+          title: t`An error occurred.`,
           description: error.message,
           status: 'error',
           duration: 9000,
@@ -99,8 +97,8 @@ export default function UserList({
       },
       onCompleted() {
         toast({
-          title: i18n._(t`User invited`),
-          description: i18n._(t`Email invitation sent to ${addedUserName}`),
+          title: t`User invited`,
+          description: t`Email invitation sent to ${addedUserName}`,
           status: 'info',
           duration: 9000,
           isClosable: true,
@@ -161,7 +159,7 @@ export default function UserList({
 
   const showErrorToast = (error) =>
     toast({
-      title: i18n._(t`An error occurred.`),
+      title: t`An error occurred.`,
       description: error,
       status: 'error',
       duration: 9000,
@@ -206,7 +204,7 @@ export default function UserList({
                   as={Field}
                   type="email"
                   name="userName"
-                  placeholder={i18n._(t`Search for a user`)}
+                  placeholder={t`Search for a user`}
                   isDisabled={addUserLoading}
                 />
               </InputGroup>
@@ -218,9 +216,9 @@ export default function UserList({
                 id="roleSelect"
                 name="roleSelect"
               >
-                <option value="USER_READ">{i18n._(t`READ`)}</option>
-                <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>
-                <option value="ADMIN">{i18n._(t`ADMIN`)}</option>
+                <option value="USER_READ">{t`READ`}</option>
+                <option value="USER_WRITE">{t`WRITE`}</option>
+                <option value="ADMIN">{t`ADMIN`}</option>
               </Field>
             </Stack>
 
@@ -287,9 +285,9 @@ export default function UserList({
                         defaultValue={userRole}
                         onChange={(e) => (userRole = e.target.value)}
                       >
-                        <option value="USER_READ">{i18n._(t`READ`)}</option>
-                        <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>
-                        <option value="ADMIN">{i18n._(t`ADMIN`)}</option>
+                        <option value="USER_READ">{t`READ`}</option>
+                        <option value="USER_WRITE">{t`WRITE`}</option>
+                        <option value="ADMIN">{t`ADMIN`}</option>
                       </Select>
                       <TrackerButton
                         onClick={() => handleClick(userRole, node.userName)}
@@ -303,7 +301,7 @@ export default function UserList({
                   </Box>
                 )}
               </Box>
-            )
+            );
           }
           return (
             <UserCard
@@ -326,7 +324,7 @@ export default function UserList({
         />
       )}
     </Stack>
-  )
+  );
 }
 
 /* -- Source code for adding organizations, not being used. --

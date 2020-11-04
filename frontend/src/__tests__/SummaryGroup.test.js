@@ -7,6 +7,16 @@ import { setupI18n } from '@lingui/core'
 import { SummaryGroup } from '../SummaryGroup'
 import { WEB_AND_EMAIL_SUMMARIES } from '../graphql/queries'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const mocks = [
   {
     request: {
@@ -58,7 +68,7 @@ describe('<SummaryGroup />', () => {
   describe('given the data for web and email summaries', () => {
     it('displays two summary cards', async () => {
       const { getAllByText } = render(
-        <I18nProvider i18n={setupI18n()}>
+        <I18nProvider i18n={i18n}>
           <ThemeProvider theme={theme}>
             <MockedProvider mocks={mocks} addTypename={false}>
               <SummaryGroup title="title" description="description" />

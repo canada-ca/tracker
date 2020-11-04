@@ -8,6 +8,16 @@ import { UserStateProvider } from '../UserState'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<EditableUserLanguage />', () => {
   it('renders', async () => {
     const { getByText } = render(
@@ -20,7 +30,7 @@ describe('<EditableUserLanguage />', () => {
       >
         <MockedProvider addTypename={false}>
           <MemoryRouter initialEntries={['/']}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <ThemeProvider theme={theme}>
                 <EditableUserLanguage />
               </ThemeProvider>

@@ -10,7 +10,6 @@ import { Box, Heading, IconButton, Select, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
-import { useLingui } from '@lingui/react'
 import { useParams, useHistory } from 'react-router-dom'
 import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -19,7 +18,6 @@ import { LoadingMessage } from './LoadingMessage'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
-  const { i18n } = useLingui()
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
 
@@ -73,7 +71,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       key="LAST30DAYS"
       value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
     >
-      {i18n._(t`Last 30 Days`)}
+      {t`Last 30 Days`}
     </option>,
   ]
 
@@ -84,9 +82,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       const value = `${months[months.length + i].toUpperCase()}, ${
         currentDate.getFullYear() - 1
       }`
-      const translatedValue = `${i18n
-        ._(months[months.length + i])
-        .toUpperCase()}, ${currentDate.getFullYear() - 1}`
+      const translatedValue = `${months[months.length + i].toUpperCase()}, ${
+        currentDate.getFullYear() - 1
+      }`
 
       options.push(
         <option key={value} value={value}>
@@ -97,9 +95,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     // handle current year
     else {
       const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${i18n
-        ._(months[i])
-        .toUpperCase()}, ${currentDate.getFullYear()}`
+      const translatedValue = `${months[
+        i
+      ].toUpperCase()}, ${currentDate.getFullYear()}`
 
       options.push(
         <option key={value} value={value}>
@@ -125,25 +123,25 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       strong: [
         {
           name: 'fullPass',
-          displayName: i18n._(t`Pass`),
+          displayName: t`Pass`,
         },
       ],
       moderate: [
         {
           name: 'passSpfOnly',
-          displayName: i18n._(t`Pass Only SPF`),
+          displayName: t`Pass Only SPF`,
         },
       ],
       moderateAlt: [
         {
           name: 'passDkimOnly',
-          displayName: i18n._(t`Pass Only DKIM`),
+          displayName: t`Pass Only DKIM`,
         },
       ],
       weak: [
         {
           name: 'fail',
-          displayName: i18n._(t`Fail`),
+          displayName: t`Fail`,
         },
       ],
     }
@@ -205,20 +203,20 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       dnsHost,
       spfDomains,
     ] = [
-      { Header: i18n._(t`Source IP Address`), accessor: 'sourceIpAddress' },
-      { Header: i18n._(t`Envelope From`), accessor: 'envelopeFrom' },
-      { Header: i18n._(t`DKIM Domains`), accessor: 'dkimDomains' },
-      { Header: i18n._(t`DKIM Selectors`), accessor: 'dkimSelectors' },
-      { Header: i18n._(t`Total Messages`), accessor: 'totalMessages' },
-      { Header: i18n._(t`Country Code`), accessor: 'countryCode' },
-      { Header: i18n._(t`Prefix Org`), accessor: 'prefixOrg' },
-      { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' },
-      { Header: i18n._(t`SPF Domains`), accessor: 'spfDomains' },
+      { Header: t`Source IP Address`, accessor: 'sourceIpAddress' },
+      { Header: t`Envelope From`, accessor: 'envelopeFrom' },
+      { Header: t`DKIM Domains`, accessor: 'dkimDomains' },
+      { Header: t`DKIM Selectors`, accessor: 'dkimSelectors' },
+      { Header: t`Total Messages`, accessor: 'totalMessages' },
+      { Header: t`Country Code`, accessor: 'countryCode' },
+      { Header: t`Prefix Org`, accessor: 'prefixOrg' },
+      { Header: t`DNS Host`, accessor: 'dnsHost' },
+      { Header: t`SPF Domains`, accessor: 'spfDomains' },
     ]
 
     const fullPassColumns = [
       {
-        Header: i18n._(t`Fully Aligned by IP Address`),
+        Header: t`Fully Aligned by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -236,7 +234,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     const spfFailureColumns = [
       {
-        Header: i18n._(t`SPF Failures by IP Address`),
+        Header: t`SPF Failures by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -252,7 +250,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     const spfMisalignedColumns = [
       {
-        Header: i18n._(t`SPF Misalignment by IP Address`),
+        Header: t`SPF Misalignment by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -268,7 +266,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     const dkimFailureColumns = [
       {
-        Header: i18n._(t`DKIM Failures by IP Address`),
+        Header: t`DKIM Failures by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -285,7 +283,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     const dkimMisalignedColumns = [
       {
-        Header: i18n._(t`DKIM Misalignment by IP Address`),
+        Header: t`DKIM Misalignment by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -302,7 +300,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
     const dmarcFailureColumns = [
       {
-        Header: i18n._(t`DMARC Failures by IP Address`),
+        Header: t`DMARC Failures by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -321,7 +319,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       <DmarcReportTable
         data={fullPassData}
         columns={fullPassColumns}
-        title={i18n._(t`Fully Aligned by IP Address`)}
+        title={t`Fully Aligned by IP Address`}
         initialSort={initialSort}
         mb="8"
       />
@@ -334,7 +332,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       <DmarcReportTable
         data={spfFailureData}
         columns={spfFailureColumns}
-        title={i18n._(t`SPF Failures by IP Address`)}
+        title={t`SPF Failures by IP Address`}
         initialSort={initialSort}
       />
     ) : (
@@ -346,7 +344,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       <DmarcReportTable
         data={spfMisalignedData}
         columns={spfMisalignedColumns}
-        title={i18n._(t`SPF Misalignment by IP Address`)}
+        title={t`SPF Misalignment by IP Address`}
         initialSort={initialSort}
       />
     ) : (
@@ -358,7 +356,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       <DmarcReportTable
         data={dkimFailureData}
         columns={dkimFailureColumns}
-        title={i18n._(t`DKIM Failures by IP Address`)}
+        title={t`DKIM Failures by IP Address`}
         initialSort={initialSort}
       />
     ) : (
@@ -370,7 +368,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       <DmarcReportTable
         data={dkimMisalignedData}
         columns={dkimMisalignedColumns}
-        title={i18n._(t`DKIM Misalignment by IP Address`)}
+        title={t`DKIM Misalignment by IP Address`}
         initialSort={initialSort}
       />
     ) : (
@@ -382,7 +380,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       <DmarcReportTable
         data={dmarcFailureData}
         columns={dmarcFailureColumns}
-        title={i18n._(t`DMARC Failures by IP Address`)}
+        title={t`DMARC Failures by IP Address`}
         initialSort={initialSort}
       />
     ) : (

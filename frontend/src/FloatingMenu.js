@@ -21,6 +21,9 @@ import {
 import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
 import wordmark from './images/canada-wordmark.svg'
+import personIcon from './images/person-icon.svg'
+import reportIcon from './images/report-icon.svg'
+import buildingIcon from './images/building-icon.svg'
 import { useLingui } from '@lingui/react'
 import { useUserState } from './UserState'
 
@@ -51,7 +54,7 @@ export const FloatingMenu = () => {
       <Stack isInline width="100%" rounded="md" spacing={0}>
         <Link as={RouteLink} to="/user" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-            <Image src="/src/images/person-icon.svg" height="16px" />
+            <Image src={personIcon} height="16px" />
           </TrackerButton>
         </Link>
         <Divider
@@ -62,7 +65,7 @@ export const FloatingMenu = () => {
         />
         <Link as={RouteLink} to="/dmarc-summaries" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-            <Image src="/src/images/report-icon.svg" size="16px" />
+            <Image src={reportIcon} size="16px" />
           </TrackerButton>
         </Link>
         <Divider
@@ -73,7 +76,7 @@ export const FloatingMenu = () => {
         />
         <Link as={RouteLink} to="/organizations" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-            <Image src="/src/images/building-icon.svg" size="16px" />
+            <Image src={buildingIcon} size="16px" />
           </TrackerButton>
         </Link>
         <Divider
@@ -121,11 +124,11 @@ export const FloatingMenu = () => {
 
               <DrawerBody px="24px" py="16px">
                 <Stack spacing="16px">
-                  <FloatingMenuLink to="/" text={i18n._(t`Home`)} />
+                  <FloatingMenuLink to="/" text={t`Home`} />
 
                   <FloatingMenuLink
                     to="/admin"
-                    text={i18n._(t`Admin Portal`)}
+                    text={t`Admin Portal`}
                   />
 
                   <Divider
@@ -139,14 +142,12 @@ export const FloatingMenu = () => {
                   {isLoggedIn() ? (
                     <FloatingMenuLink
                       to="/"
-                      text={i18n._(t`Sign Out`)}
+                      text={t`Sign Out`}
                       onClick={() => {
                         logout()
                         toast({
-                          title: i18n._(t`Sign Out.`),
-                          description: i18n._(
-                            t`You have successfully been signed out.`,
-                          ),
+                          title: t`Sign Out.`,
+                          description: t`You have successfully been signed out.`,
                           status: 'success',
                           duration: 9000,
                           isClosable: true,
@@ -155,7 +156,7 @@ export const FloatingMenu = () => {
                       }}
                     />
                   ) : (
-                    <FloatingMenuLink to="/sign-in" text={i18n._(t`Sign In`)} />
+                    <FloatingMenuLink to="/sign-in" text={t`Sign In`} />
                   )}
 
                   <Divider
@@ -172,7 +173,7 @@ export const FloatingMenu = () => {
                         ? 'https://www.canada.ca/en/transparency/privacy.html'
                         : 'https://www.canada.ca/fr/transparence/confidentialite.html'
                     }
-                    text={i18n._(t`Privacy`)}
+                    text={t`Privacy`}
                     isExternal
                   />
 
@@ -182,7 +183,7 @@ export const FloatingMenu = () => {
                         ? 'https://www.canada.ca/en/transparency/terms.html'
                         : 'https://www.canada.ca/fr/transparence/avis.html'
                     }
-                    text={i18n._(t`Terms & conditions`)}
+                    text={t`Terms & conditions`}
                     isExternal
                   />
                 </Stack>
@@ -226,7 +227,7 @@ export const FloatingMenu = () => {
         </Drawer>
       </Stack>
     </Box>
-  )
+  );
 }
 
 FloatingMenu.propTypes = {}
