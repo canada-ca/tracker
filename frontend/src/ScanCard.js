@@ -41,15 +41,15 @@ function ScanCard({ scanType, scanData }) {
   return (
     <Box bg="white" rounded="lg" overflow="hidden" boxShadow="medium">
       <Box bg="primary" color="gray.50">
-        <Stack px="3">
+        <Stack px="3" py="1">
           <Heading as="h1" size="lg">
             {cardTitle}
           </Heading>
-          <Text>{cardDescription}</Text>
+          <Text fontSize="lg">{cardDescription}</Text>
         </Stack>
       </Box>
       <Box>
-        <Stack spacing="30px" px="2" mt="1">
+        <Stack spacing="30px" px="1" mt="1">
           {categoryList}
         </Stack>
       </Box>

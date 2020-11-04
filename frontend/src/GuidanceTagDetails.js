@@ -16,7 +16,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
           <Trans>For in-depth CCCS implementation guidance:</Trans>
         </Text>
         <Link
-          color="teal.500"
+          color="teal.600"
           href={i18n._(
             guidanceTags[categoryName][guidanceTag].ref_links_guide.link,
           )}
@@ -47,7 +47,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
           <Trans>For technical implementation guidance:</Trans>
         </Text>
         <Link
-          color="teal.500"
+          color="teal.600"
           href={i18n._(
             guidanceTags[categoryName][guidanceTag].ref_links_technical.link,
           )}
