@@ -39,7 +39,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: build-if-master
   entrypoint: 'bash'
-  dir: .
+  dir: services/domain-ownership
   args:
     - '-c'
     - |
@@ -52,6 +52,7 @@ steps:
 
 - name: 'gcr.io/cloud-builders/docker'
   id: push-if-master
+  dir: services/domain-ownership
   entrypoint: 'bash'
   args:
     - '-c'
