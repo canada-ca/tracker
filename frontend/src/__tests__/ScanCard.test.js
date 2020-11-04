@@ -8,6 +8,16 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const scanType = 'web'
 const scanData = rawDmarcGuidancePageData.findDomainBySlug.web.edges[0].node
 
@@ -26,7 +36,7 @@ describe('<ScanCard />', () => {
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <ScanCard scanType={scanType} scanData={scanData} />
             </MemoryRouter>

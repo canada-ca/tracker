@@ -28,12 +28,12 @@ export const TopBanner = (props) => {
               pr={16}
               py={2}
               minHeight="41px"
-              alt={i18n._('Symbol of the Government of Canada')}
+              alt={'Symbol of the Government of Canada'}
             />
           </Box>
           <Image
             src={trackerLogo}
-            alt={i18n._(t`Tracker Logo`)}
+            alt={t`Tracker Logo`}
             h={41}
             ml="auto"
             mr={4}
@@ -44,5 +44,5 @@ export const TopBanner = (props) => {
         </Flex>
       </Layout>
     </Flex>
-  )
+  );
 }

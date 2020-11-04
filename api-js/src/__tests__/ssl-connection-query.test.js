@@ -132,7 +132,7 @@ describe('given the ssl gql object', () => {
               id
               domain
               web {
-                ssl {
+                ssl(first: 5) {
                   edges {
                     node {
                       id
@@ -153,8 +153,14 @@ describe('given the ssl gql object', () => {
           userId: user._key,
           query: query,
           auth: {
-            checkDomainPermission,
-            userRequired,
+            checkDomainPermission: checkDomainPermission({
+              query,
+              userId: user._key,
+            }),
+            userRequired: userRequired({
+              userId: user._key,
+              userLoaderByKey: userLoaderByKey(query),
+            }),
           },
           validators: {
             cleanseInput,

@@ -5,6 +5,16 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import SummaryTable from '../SummaryTable'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
@@ -18,7 +28,7 @@ describe('<SummaryTable />', () => {
     const columns = [{ Header: 'header', accessor: 'accessor' }]
     const data = [{ accessor: 'test' }]
     render(
-      <I18nProvider i18n={setupI18n()}>
+      <I18nProvider i18n={i18n}>
         <ThemeProvider theme={theme}>
           <SummaryTable data={data} columns={columns} />
         </ThemeProvider>

@@ -1,13 +1,11 @@
 const { GraphQLObjectType } = require('graphql')
 const { nodeField } = require('../types')
-// const { i18n: internationalization } = require('lingui-i18n')
 const domainQueries = require('./domains')
 const userQueries = require('./user')
 const organizationQueries = require('./organizations')
 const summaryQueries = require('./summaries')
 
-// const createQuerySchema = i18n => {
-const createQuerySchema = () => {
+const createQuerySchema = (i18n) => {
   return new GraphQLObjectType({
     name: 'Query',
     fields: () => ({

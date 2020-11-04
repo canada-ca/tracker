@@ -10,6 +10,16 @@ import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const mocks = [
   {
     request: {
@@ -63,7 +73,7 @@ describe('<TwoFactorPage />', () => {
       <MockedProvider mocks={mocks} addTypename={false}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <TwoFactorPage />
             </I18nProvider>
           </ThemeProvider>
@@ -87,7 +97,7 @@ describe('<TwoFactorPage />', () => {
       <MockedProvider mocks={mocks} addTypename={false}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <TwoFactorPage />
             </I18nProvider>
           </ThemeProvider>
@@ -117,7 +127,7 @@ describe('<TwoFactorPage />', () => {
       <MockedProvider mocks={mocks} addTypename={false}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <TwoFactorPage />
             </I18nProvider>
           </ThemeProvider>
@@ -152,7 +162,7 @@ describe('<TwoFactorPage />', () => {
         }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <MockedProvider mocks={mocks} addTypename={false}>
                 <App />
@@ -179,7 +189,7 @@ describe('<TwoFactorPage />', () => {
         }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <MockedProvider mocks={mocks} addTypename={false}>
                 <App />
@@ -201,7 +211,7 @@ describe('<TwoFactorPage />', () => {
       <MockedProvider mocks={mocks} addTypename={false}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <TwoFactorPage />
             </I18nProvider>
           </ThemeProvider>

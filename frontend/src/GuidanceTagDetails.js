@@ -3,11 +3,8 @@ import { string } from 'prop-types'
 import { guidanceTags } from './guidanceTagConstants'
 import { Box, Icon, Link, Stack, Text } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 
 export function GuidanceTagDetails({ guidanceTag, categoryName }) {
-  const { i18n } = useLingui()
-
   const cccsGuidance =
     guidanceTags[categoryName][guidanceTag].ref_links_guide !== null &&
     guidanceTags[categoryName][guidanceTag].ref_links_guide !== undefined ? (
@@ -17,9 +14,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
         </Text>
         <Link
           color="teal.600"
-          href={i18n._(
-            guidanceTags[categoryName][guidanceTag].ref_links_guide.link,
-          )}
+          href={guidanceTags[categoryName][guidanceTag].ref_links_guide.link}
           target="_blank"
         >
           <Stack isInline spacing="2px" align="center">
@@ -48,9 +43,9 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
         </Text>
         <Link
           color="teal.600"
-          href={i18n._(
-            guidanceTags[categoryName][guidanceTag].ref_links_technical.link,
-          )}
+          href={
+            guidanceTags[categoryName][guidanceTag].ref_links_technical.link
+          }
           target="_blank"
         >
           <Stack isInline spacing="2px" align="center">

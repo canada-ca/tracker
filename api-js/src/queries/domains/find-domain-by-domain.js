@@ -17,10 +17,8 @@ const findDomainByDomain = {
     args,
     {
       i18n,
-      userId: userKey,
-      query,
       auth: { checkDomainPermission, userRequired },
-      loaders: { domainLoaderByDomain, userLoaderByKey },
+      loaders: { domainLoaderByDomain },
       validators: { cleanseInput },
     },
   ) => {
@@ -28,7 +26,7 @@ const findDomainByDomain = {
     const domainInput = cleanseInput(args.domain)
 
     // Get User
-    const user = await userRequired(userKey, userLoaderByKey)
+    const user = await userRequired()
 
     // Retrieve domain by domain
     const domain = await domainLoaderByDomain.load(domainInput)
@@ -41,7 +39,7 @@ const findDomainByDomain = {
     }
 
     // Check user permission for domain access
-    const permitted = await checkDomainPermission(user._id, domain._id, query)
+    const permitted = await checkDomainPermission({ domainId: domain._id })
 
     if (!permitted) {
       console.warn(`User ${user._key} could not retrieve domain.`)

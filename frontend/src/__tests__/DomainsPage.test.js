@@ -1,7 +1,7 @@
 import React from 'react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import {
   PAGINATED_DOMAINS,
@@ -12,6 +12,16 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { createCache } from '../client'
 import DomainsPage from '../DomainsPage'
+
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
 
 describe('<DomainsPage />', () => {
   const mocks = [
@@ -112,7 +122,7 @@ describe('<DomainsPage />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                 <MockedProvider mocks={mocks} cache={createCache()}>
                   <DomainsPage domainsPerPage={2} />
@@ -126,48 +136,6 @@ describe('<DomainsPage />', () => {
       await waitFor(() =>
         expect(queryByText(/tbs-sct.gc.ca/i)).toBeInTheDocument(),
       )
-    })
-  })
-  describe('given the domain scan page', () => {
-    it('successfully submits a domain for scanning', async () => {
-      const values = { domain: 'cse-cst.gc.ca' }
-
-      const { container, getByRole, getByText, queryByText } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfa: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
-              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                <MockedProvider mocks={mocks} cache={createCache()}>
-                  <DomainsPage domainsPerPage={2} />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
-      )
-
-      await waitFor(() =>
-        expect(queryByText(/tbs-sct.gc.ca/i)).toBeInTheDocument(),
-      )
-      fireEvent.click(getByText('Scan'))
-
-      const domain = container.querySelector('#domain')
-      const form = getByRole('form')
-
-      fireEvent.change(domain, {
-        target: {
-          value: values.domain,
-        },
-      })
-
-      fireEvent.submit(form)
-
-      /* add in when mutation is hooked up */
-      // await waitFor(() => {
-      // expect(queryByText(values.domain)).toBeInTheDocument()
-      // })
     })
   })
 })

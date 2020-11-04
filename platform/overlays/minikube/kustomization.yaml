@@ -5,11 +5,6 @@ resources:
 - knative-istio-networking.yaml
 - knative-serving-core.yaml
 - selfsigned-issuer.yaml
-images:
-- name: gcr.io/track-compliance/api
-  newTag: master-eb7d789
-- name: gcr.io/track-compliance/frontend
-  newTag: master-030aabe
 secretGenerator:
 - envs:
   - postgres.env
@@ -23,5 +18,9 @@ secretGenerator:
   - kiali.env
   name: kiali
   namespace: istio-system
+- envs:
+  - scanners.env
+  name: scanners
+  namespace: scanners
 generatorOptions:
   disableNameSuffixHash: true

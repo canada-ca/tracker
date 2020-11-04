@@ -3,11 +3,6 @@ kind: Kustomization
 resources:
 - ../../bases
 - letsencrypt-issuer.yaml
-images:
-- name: gcr.io/track-compliance/api
-  newTag: master-4003aac
-- name: gcr.io/track-compliance/frontend
-  newTag: master-0182902
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml

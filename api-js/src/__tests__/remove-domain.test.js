@@ -252,7 +252,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -297,7 +306,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -337,7 +355,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -423,7 +450,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -468,7 +504,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -508,7 +553,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -570,7 +624,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -615,7 +678,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -655,7 +727,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -709,7 +790,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -754,7 +844,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -794,7 +893,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -962,7 +1070,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -1007,7 +1124,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -1047,7 +1173,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -1103,7 +1238,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -1148,7 +1292,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -1188,7 +1341,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -1255,7 +1417,13 @@ describe('removing a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               validators: { cleanseInput },
               loaders: {
                 domainLoaderByKey: domainLoaderByKey(query),
@@ -1305,7 +1473,13 @@ describe('removing a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               validators: { cleanseInput },
               loaders: {
                 domainLoaderByKey: domainLoaderByKey(query),
@@ -1393,7 +1567,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoaderByKey(query),
@@ -1443,7 +1626,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoaderByKey(query),
@@ -1486,7 +1678,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoaderByKey(query),
@@ -1575,7 +1776,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoaderByKey(query),
@@ -1618,7 +1828,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoaderByKey(query),
@@ -1724,7 +1943,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoader,
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoader,
@@ -1828,7 +2056,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoader,
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoader,
@@ -1895,7 +2132,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoader,
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoader,
@@ -1956,7 +2202,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoader,
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoader,
@@ -2013,7 +2268,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoader,
@@ -2197,7 +2461,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2242,7 +2515,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2282,7 +2564,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2368,7 +2659,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2413,7 +2713,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2453,7 +2762,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2515,7 +2833,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2560,7 +2887,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2600,7 +2936,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2654,7 +2999,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2699,7 +3053,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2739,7 +3102,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2907,7 +3279,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2952,7 +3333,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -2992,7 +3382,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -3048,7 +3447,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -3093,7 +3501,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -3133,7 +3550,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoaderByKey(query),
@@ -3199,7 +3625,13 @@ describe('removing a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               validators: { cleanseInput },
               loaders: {
                 domainLoaderByKey: domainLoaderByKey(query),
@@ -3247,7 +3679,13 @@ describe('removing a domain', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               validators: { cleanseInput },
               loaders: {
                 domainLoaderByKey: domainLoaderByKey(query),
@@ -3333,7 +3771,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoaderByKey(query),
@@ -3381,7 +3828,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoaderByKey(query),
@@ -3422,7 +3878,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoaderByKey(query),
@@ -3509,7 +3974,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoaderByKey(query),
@@ -3550,7 +4024,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoaderByKey(query),
@@ -3654,7 +4137,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoader,
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoader,
@@ -3756,7 +4248,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoader,
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoader,
@@ -3821,7 +4322,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoader,
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoader,
@@ -3880,7 +4390,16 @@ describe('removing a domain', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, userRequired },
+                  auth: {
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoader,
+                    }),
+                  },
                   validators: { cleanseInput },
                   loaders: {
                     domainLoaderByKey: domainLoader,
@@ -3935,7 +4454,16 @@ describe('removing a domain', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: {
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
                 validators: { cleanseInput },
                 loaders: {
                   domainLoaderByKey: domainLoader,

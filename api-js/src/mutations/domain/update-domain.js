@@ -47,7 +47,7 @@ const updateDomain = new mutationWithClientMutationId({
       userId,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
-      loaders: { domainLoaderByKey, orgLoaderByKey, userLoaderByKey },
+      loaders: { domainLoaderByKey, orgLoaderByKey },
     },
   ) => {
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
@@ -62,7 +62,7 @@ const updateDomain = new mutationWithClientMutationId({
     }
 
     // Get User
-    const user = await userRequired(userId, userLoaderByKey)
+    await userRequired()
 
     // Check to see if domain exists
     const domain = await domainLoaderByKey.load(domainId)
@@ -85,7 +85,7 @@ const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check permission
-    const permission = await checkPermission(user._id, org._id, query)
+    const permission = await checkPermission({ orgId: org._id })
 
     if (
       permission !== 'user' &&

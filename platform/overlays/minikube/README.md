@@ -51,13 +51,27 @@ POSTGRES_USER=track_dmarc
 POSTGRES_PASSWORD=somepassword
 ```
 
+## scanners.env
+
+For our scanners to work they need to insert results into the database, so we need credentials for them to do that too.
+
+```bash
+$ cat overlays/minikube/scanners.env 
+DB_USER=track_dmarc
+DB_PASS=somepassword
+DB_HOST=postgres
+DB_NAME=track_dmarc
+SA_USER_NAME=superadmin@somedomain.com
+SA_PASSWORD=averysecurepassword
+SA_DISPLAY_NAME=SuperUser
+```
+
 ## Running it
 
 With those files created you can start minikube and the app with the following commands in root directory. Both minikube and Istio require a lot of resources... so throw everything you can at it.
 
 ```bash
 minikube start --cpus 4 --memory 20480
-kustomize build platform/overlays/seed | kubectl apply -f -
 kustomize build platform/overlays/minikube | kubectl apply -f -
 minikube service list
 ```

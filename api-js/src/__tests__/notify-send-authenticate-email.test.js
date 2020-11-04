@@ -81,7 +81,7 @@ describe('given the sendAuthEmail function', () => {
           displayName: 'Test Account',
           tfaCode: 123456,
         }
-  
+
         try {
           const mockedSendAuthEmail = sendAuthEmail(i18n)
           await mockedSendAuthEmail({ user, notifyClient })
@@ -90,7 +90,7 @@ describe('given the sendAuthEmail function', () => {
             new Error('Unable to authenticate. Please try again.'),
           )
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending authentication code via email for ${user._key}: Error: Notification error occurred.`,
         ])
@@ -122,21 +122,18 @@ describe('given the sendAuthEmail function', () => {
           displayName: 'Test Account',
           tfaCode: 123456,
         }
-  
+
         try {
           const mockedSendAuthEmail = sendAuthEmail(i18n)
           await mockedSendAuthEmail({ user, notifyClient })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending authentication code via email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
   })
-
 })

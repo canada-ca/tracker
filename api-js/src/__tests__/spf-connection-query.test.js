@@ -133,7 +133,7 @@ describe('given the spfType object', () => {
               id
               domain
               email {
-                spf {
+                spf(first: 5) {
                   edges {
                     node {
                       id
@@ -157,8 +157,14 @@ describe('given the spfType object', () => {
           userId: user._key,
           query: query,
           auth: {
-            checkDomainPermission,
-            userRequired,
+            checkDomainPermission: checkDomainPermission({
+              query,
+              userId: user._key,
+            }),
+            userRequired: userRequired({
+              userId: user._key,
+              userLoaderByKey: userLoaderByKey(query),
+            }),
           },
           validators: {
             cleanseInput,

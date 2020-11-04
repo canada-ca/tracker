@@ -43,7 +43,7 @@ const updateUserRole = new mutationWithClientMutationId({
       transaction,
       userId,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderByKey, userLoaderByKey, userLoaderByUserName },
+      loaders: { orgLoaderByKey, userLoaderByUserName },
       validators: { cleanseInput },
     },
   ) => {
@@ -53,7 +53,7 @@ const updateUserRole = new mutationWithClientMutationId({
     const role = cleanseInput(args.role)
 
     // Get requesting user from db
-    const user = await userRequired(userId, userLoaderByKey)
+    const user = await userRequired()
 
     // Make sure user is not attempting to update their own role
     if (user.userName === userName) {
@@ -86,7 +86,7 @@ const updateUserRole = new mutationWithClientMutationId({
     }
 
     // Check requesting users permission
-    const permission = await checkPermission(user._id, org._id, query)
+    const permission = await checkPermission({ orgId: org._id })
 
     if (permission === 'user' || typeof permission === 'undefined') {
       console.warn(

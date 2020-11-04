@@ -56,35 +56,35 @@ export default function DmarcByDomainPage() {
     failPercentage,
   ] = [
     {
-      Header: i18n._(t`Domain`),
+      Header: t`Domain`,
       accessor: 'domain',
     },
     {
-      Header: i18n._(t`Total Messages`),
+      Header: t`Total Messages`,
       accessor: 'totalMessages',
       Cell: ({ value }) => value.toLocaleString(i18n.locale),
       style: { textAlign: 'right' },
     },
     {
-      Header: i18n._(t`Full Pass %`),
+      Header: t`Full Pass %`,
       accessor: 'fullPassPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
     },
     {
-      Header: i18n._(t`Fail DKIM %`),
+      Header: t`Fail DKIM %`,
       accessor: 'passSpfOnlyPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
     },
     {
-      Header: i18n._(t`Fail SPF %`),
+      Header: t`Fail SPF %`,
       accessor: 'passDkimOnlyPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
     },
     {
-      Header: i18n._(t`Full Fail %`),
+      Header: t`Full Fail %`,
       accessor: 'failPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
@@ -93,7 +93,7 @@ export default function DmarcByDomainPage() {
 
   const percentageColumns = [
     {
-      Header: i18n._(t`DMARC Messages`),
+      Header: t`DMARC Messages`,
       hidden: true,
       columns: [
         domain,
@@ -111,7 +111,7 @@ export default function DmarcByDomainPage() {
       key="LAST30DAYS"
       value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
     >
-      {i18n._(t`Last 30 Days`)}
+      {t`Last 30 Days`}
     </option>,
   ]
 
@@ -122,8 +122,7 @@ export default function DmarcByDomainPage() {
       const value = `${months[months.length + i].toUpperCase()}, ${
         currentDate.getFullYear() - 1
       }`
-      const translatedValue = `${i18n
-        ._(months[months.length + i])
+      const translatedValue = `${months[months.length + i]
         .toUpperCase()}, ${currentDate.getFullYear() - 1}`
 
       options.push(
@@ -135,8 +134,7 @@ export default function DmarcByDomainPage() {
     // handle current year
     else {
       const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${i18n
-        ._(months[i])
+      const translatedValue = `${months[i]
         .toUpperCase()}, ${currentDate.getFullYear()}`
 
       options.push(
@@ -163,7 +161,7 @@ export default function DmarcByDomainPage() {
     <DmarcReportTable
       data={tableData.dmarcReportSummaryTable.domains}
       columns={percentageColumns}
-      title={i18n._(t`Pass/Fail Ratios by Domain`)}
+      title={t`Pass/Fail Ratios by Domain`}
       initialSort={initialSort}
       mb="30px"
       hideTitleButton={true}

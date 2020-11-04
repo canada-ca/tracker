@@ -4,15 +4,17 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema } = require('graphql')
+const { setupI18n } = require('@lingui/core')
 const { makeMigrations } = require('../../migrations')
-const { checkPermission } = require('../auth')
-const { cleanseInput } = require('../validators')
+const { checkPermission, userRequired } = require('../auth')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
-const { userLoaderByKey, orgLoaderConnectionsByUserId } = require('../loaders')
+const { userLoaderByKey } = require('../loaders')
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 
 describe('given the isUserAdmin query', () => {
-  let query, drop, truncate, migrate, schema, collections, org
+  let query, drop, truncate, migrate, schema, collections, org, i18n, user
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -68,6 +70,12 @@ describe('given the isUserAdmin query', () => {
       },
     })
     consoleOutput = []
+    const userCursor = await query`
+      FOR user IN users
+        FILTER user.userName == "test.account@istio.actually.exists"
+        RETURN user
+    `
+    user = await userCursor.next()
   })
 
   afterEach(async () => {
@@ -79,15 +87,6 @@ describe('given the isUserAdmin query', () => {
   })
 
   describe('given a successful query', () => {
-    let user
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
-    })
     describe('if the user is a super admin for an organization', () => {
       beforeEach(async () => {
         await query`
@@ -96,17 +95,6 @@ describe('given the isUserAdmin query', () => {
             _to: ${user._id},
             permission: "super_admin"
           } INTO affiliations
-        `
-      })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
         `
       })
       it('will return true', async () => {
@@ -122,16 +110,14 @@ describe('given the isUserAdmin query', () => {
             userId: user._key,
             query: query,
             auth: {
-              checkPermission,
+              checkPermission: checkPermission({ userId: user._key, query }),
+              userRequired: userRequired({
+                userId: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
             },
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
-              orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
-                query,
-                user._key,
-                cleanseInput,
-                'en',
-              ),
             },
           },
         )
@@ -154,17 +140,6 @@ describe('given the isUserAdmin query', () => {
           } INTO affiliations
         `
       })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-      })
       it('will return true', async () => {
         const response = await graphql(
           schema,
@@ -178,16 +153,14 @@ describe('given the isUserAdmin query', () => {
             userId: user._key,
             query: query,
             auth: {
-              checkPermission,
+              checkPermission: checkPermission({ userId: user._key, query }),
+              userRequired: userRequired({
+                userId: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
             },
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
-              orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
-                query,
-                user._key,
-                cleanseInput,
-                'en',
-              ),
             },
           },
         )
@@ -210,17 +183,6 @@ describe('given the isUserAdmin query', () => {
           } INTO affiliations
         `
       })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-      })
       it('will return false', async () => {
         const response = await graphql(
           schema,
@@ -234,16 +196,14 @@ describe('given the isUserAdmin query', () => {
             userId: user._key,
             query: query,
             auth: {
-              checkPermission,
+              checkPermission: checkPermission({ userId: user._key, query }),
+              userRequired: userRequired({
+                userId: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
             },
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
-              orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
-                query,
-                user._key,
-                cleanseInput,
-                'en',
-              ),
             },
           },
         )
@@ -254,6 +214,116 @@ describe('given the isUserAdmin query', () => {
           },
         }
         expect(response).toEqual(expectedResponse)
+      })
+    })
+  })
+  describe('users language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('database error occurs', () => {
+      it('returns an error message', async () => {
+        const mockedQuery = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+
+        try {
+          await graphql(
+            schema,
+            `
+              query {
+                isUserAdmin
+              }
+            `,
+            null,
+            {
+              i18n,
+              userId: user._key,
+              query: mockedQuery,
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
+              loaders: {
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+        } catch (err) {
+          expect(err).toEqual(
+            new Error(
+              'Unable to verify if user is an admin, please try again.',
+            ),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error occurred when user: ${user._key} was seeing if they were an admin, err: Error: Database error occurred.`,
+        ])
+      })
+    })
+  })
+  describe('users language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('database error occurs', () => {
+      it('returns an error message', async () => {
+        const mockedQuery = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+
+        try {
+          await graphql(
+            schema,
+            `
+              query {
+                isUserAdmin
+              }
+            `,
+            null,
+            {
+              i18n,
+              userId: user._key,
+              query: mockedQuery,
+              auth: {
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
+              loaders: {
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error occurred when user: ${user._key} was seeing if they were an admin, err: Error: Database error occurred.`,
+        ])
       })
     })
   })

@@ -9,6 +9,16 @@ import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import { QUERY_USER } from '../graphql/queries'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<UserPage />', () => {
   const userName = 'testuser@testemail.gc.ca'
 
@@ -51,7 +61,7 @@ describe('<UserPage />', () => {
         <MockedProvider mocks={mocks} addTypename={false}>
           <MemoryRouter initialEntries={['/']}>
             <ThemeProvider theme={theme}>
-              <I18nProvider i18n={setupI18n()}>
+              <I18nProvider i18n={i18n}>
                 <UserPage />
               </I18nProvider>
             </ThemeProvider>

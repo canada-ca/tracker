@@ -9,6 +9,16 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const mocks = [
   {
     request: {
@@ -32,7 +42,7 @@ describe('<CreateUserPage />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <MemoryRouter
                 initialEntries={['/create-user/invited-token-test']}
                 initialIndex={0}
@@ -67,7 +77,7 @@ describe('<CreateUserPage />', () => {
               initialState={{ userName: null, jwt: null, tfa: null }}
             >
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <MockedProvider mocks={mocks}>
                       <CreateUserPage />
@@ -97,7 +107,7 @@ describe('<CreateUserPage />', () => {
               initialState={{ userName: null, jwt: null, tfa: null }}
             >
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <MockedProvider mocks={mocks}>
                       <CreateUserPage />
@@ -130,7 +140,7 @@ describe('<CreateUserPage />', () => {
               initialState={{ userName: null, jwt: null, tfa: null }}
             >
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <MockedProvider mocks={mocks}>
                       <CreateUserPage />
@@ -161,7 +171,7 @@ describe('<CreateUserPage />', () => {
               initialState={{ userName: null, jwt: null, tfa: null }}
             >
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <MockedProvider mocks={mocks}>
                       <CreateUserPage />
@@ -194,7 +204,7 @@ describe('<CreateUserPage />', () => {
               initialState={{ userName: null, jwt: null, tfa: null }}
             >
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <MockedProvider mocks={mocks}>
                       <CreateUserPage />
@@ -226,7 +236,7 @@ describe('<CreateUserPage />', () => {
               initialState={{ userName: null, jwt: null, tfa: null }}
             >
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <MockedProvider mocks={mocks}>
                       <CreateUserPage />

@@ -97,9 +97,11 @@ describe('given the dkimResultLoaderByKey function', () => {
     })
     describe('given a database error', () => {
       it('raises an error', async () => {
-        query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
         const loader = dkimResultLoaderByKey(query, i18n)
-  
+
         try {
           await loader.load('1')
         } catch (err) {
@@ -107,7 +109,7 @@ describe('given the dkimResultLoaderByKey function', () => {
             new Error('Unable to find dkim result. Please try again.'),
           )
         }
-  
+
         expect(consoleErrorOutput).toEqual([
           `Database error occurred when running dkimResultLoaderByKey: Error: Database error occurred.`,
         ])
@@ -122,7 +124,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         }
         query = jest.fn().mockReturnValue(cursor)
         const loader = dkimResultLoaderByKey(query, i18n)
-  
+
         try {
           await loader.load('1')
         } catch (err) {
@@ -130,7 +132,7 @@ describe('given the dkimResultLoaderByKey function', () => {
             new Error('Unable to find dkim result. Please try again.'),
           )
         }
-  
+
         expect(consoleErrorOutput).toEqual([
           `Cursor error occurred when running dkimResultLoaderByKey: Error: Cursor error occurred.`,
         ])
@@ -151,17 +153,17 @@ describe('given the dkimResultLoaderByKey function', () => {
     })
     describe('given a database error', () => {
       it('raises an error', async () => {
-        query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
         const loader = dkimResultLoaderByKey(query, i18n)
-  
+
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleErrorOutput).toEqual([
           `Database error occurred when running dkimResultLoaderByKey: Error: Database error occurred.`,
         ])
@@ -176,15 +178,13 @@ describe('given the dkimResultLoaderByKey function', () => {
         }
         query = jest.fn().mockReturnValue(cursor)
         const loader = dkimResultLoaderByKey(query, i18n)
-  
+
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleErrorOutput).toEqual([
           `Cursor error occurred when running dkimResultLoaderByKey: Error: Cursor error occurred.`,
         ])

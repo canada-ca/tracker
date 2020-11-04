@@ -105,7 +105,7 @@ describe('authenticate user account', () => {
           auth: {
             bcrypt,
             tokenize,
-            verifyToken,
+            verifyToken: verifyToken({}),
           },
           validators: {
             cleanseInput,
@@ -199,7 +199,7 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -257,7 +257,7 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -315,7 +315,7 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -390,7 +390,7 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -470,7 +470,7 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -541,7 +541,7 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -597,7 +597,7 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -653,7 +653,7 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -726,7 +726,7 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -804,7 +804,7 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,

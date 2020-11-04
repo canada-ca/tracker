@@ -8,6 +8,16 @@ import { MockedProvider } from '@apollo/client/testing'
 import { ADMIN_PANEL } from '../graphql/queries'
 import AdminPanel from '../AdminPanel'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<AdminPanel />', () => {
   it('renders both a domain list and user list', async () => {
     const mocks = [
@@ -63,7 +73,7 @@ describe('<AdminPanel />', () => {
           tfa: false,
         }}
       >
-        <I18nProvider i18n={setupI18n()}>
+        <I18nProvider i18n={i18n}>
           <ThemeProvider theme={theme}>
             <MockedProvider mocks={mocks} addTypename={false}>
               <AdminPanel orgName="testorgslug" />

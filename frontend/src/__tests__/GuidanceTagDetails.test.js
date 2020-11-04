@@ -8,6 +8,16 @@ import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { GuidanceTagDetails } from '../GuidanceTagDetails'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const guidanceTag =
   rawDmarcGuidancePageData.findDomainBySlug.email.edges[0].node.dkim
     .selectors[0].dkimGuidanceTags[0]
@@ -28,7 +38,7 @@ describe('<GuidanceTagDetails />', () => {
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <GuidanceTagDetails
                 guidanceTag={guidanceTag}

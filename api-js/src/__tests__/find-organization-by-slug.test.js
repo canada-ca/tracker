@@ -177,8 +177,11 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -248,8 +251,11 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -298,8 +304,11 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -387,8 +396,11 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -468,8 +480,11 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -481,9 +496,7 @@ describe('given findOrganizationBySlugQuery', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(`todo`),
-          ]
+          const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -518,8 +531,11 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -531,11 +547,7 @@ describe('given findOrganizationBySlugQuery', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              `todo`,
-            ),
-          ]
+          const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

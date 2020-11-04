@@ -24,7 +24,6 @@ import DisplayNameField from './DisplayNameField'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
-import { useLingui } from '@lingui/react'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
 import { TrackerButton } from './TrackerButton'
@@ -33,7 +32,6 @@ function EditableUserDisplayName({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { currentUser } = useUserState()
   const toast = useToast()
-  const { i18n } = useLingui()
   const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
@@ -46,7 +44,7 @@ function EditableUserDisplayName({ detailValue }) {
       },
       onError: ({ message }) => {
         toast({
-          title: i18n._(t`An error occurred while updating your display name.`),
+          title: t`An error occurred while updating your display name.`,
           description: message,
           status: 'error',
           duration: 9000,
@@ -70,7 +68,7 @@ function EditableUserDisplayName({ detailValue }) {
 
   const validationSchema = object().shape({
     displayName: yupString().required(
-      i18n._(fieldRequirements.displayName.required.message),
+      fieldRequirements.displayName.required.message,
     ),
   })
 

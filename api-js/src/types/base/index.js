@@ -88,18 +88,15 @@ const domainType = new GraphQLObjectType({
         { _id, _key, domain },
         __,
         {
-          query,
           userId,
-          loaders: { dmarcReportLoader, userLoaderByKey },
+          loaders: { dmarcReportLoader },
           auth: { checkDomainOwnership, userRequired, tokenize },
         },
         info,
       ) => {
-        const user = await userRequired(userId, userLoaderByKey)
+        await userRequired()
         const permitted = await checkDomainOwnership({
-          userId: user._id,
           domainId: _id,
-          query,
         })
 
         if (!permitted) {
@@ -124,18 +121,15 @@ const domainType = new GraphQLObjectType({
         { _id, _key, domain },
         __,
         {
-          query,
           userId,
-          loaders: { dmarcReportLoader, userLoaderByKey },
+          loaders: { dmarcReportLoader },
           auth: { checkDomainOwnership, userRequired, tokenize },
         },
         info,
       ) => {
-        const user = await userRequired(userId, userLoaderByKey)
+        await userRequired()
         const permitted = await checkDomainOwnership({
-          userId: user._id,
           domainId: _id,
-          query,
         })
 
         if (!permitted) {
@@ -706,6 +700,22 @@ const organizationType = new GraphQLObjectType({
         return connections
       },
     },
+    affiliations: {
+      type: userAffiliationsConnection.connectionType,
+      description: 'Organization affiliations to various users.',
+      args: connectionArgs,
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { affiliationLoaderByOrgId } },
+      ) => {
+        const affiliations = await affiliationLoaderByOrgId({
+          orgId: _id,
+          ...args,
+        })
+        return affiliations
+      },
+    },
   }),
   interfaces: [nodeInterface],
   description:
@@ -760,7 +770,17 @@ const userType = new GraphQLObjectType({
       type: userAffiliationsConnection.connectionType,
       description: 'Users affiliations to various organizations.',
       args: connectionArgs,
-      resolve: async () => {},
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { affiliationLoaderByUserId } },
+      ) => {
+        const affiliations = await affiliationLoaderByUserId({
+          uId: _id,
+          ...args,
+        })
+        return affiliations
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -781,22 +801,40 @@ const userAffiliationsType = new GraphQLObjectType({
     userId: {
       type: GraphQLID,
       description: "Affiliated user's ID",
-      resolve: async () => {},
+      resolve: async ({ userId }) => {
+        return userId
+      },
     },
     permission: {
       type: RoleEnums,
       description: "User's level of access to a given organization.",
-      resolve: async () => {},
+      resolve: async ({ permission }) => {
+        return permission
+      },
     },
     user: {
       type: userType,
       description: 'The affiliated users information.',
-      resolve: async () => {},
+      resolve: async (
+        { userKey },
+        args,
+        { loaders: { userLoaderByKey } },
+      ) => {
+        const user = await userLoaderByKey.load(userKey)
+        return user
+      },
     },
     organization: {
       type: organizationType,
       description: 'The affiliated organizations information.',
-      resolve: async () => {},
+      resolve: async (
+        { orgKey },
+        args,
+        { loaders: { orgLoaderByKey } },
+      ) => {
+        const org = await orgLoaderByKey.load(orgKey)
+        return org
+      },
     },
   }),
   interfaces: [nodeInterface],
