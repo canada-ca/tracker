@@ -109,18 +109,12 @@ const affiliationLoaderByUserId = (
         FILTER aff._key IN affiliationKeys
         FILTER TO_NUMBER(aff._key) > TO_NUMBER(LAST(retrievedAffiliations)._key)
         SORT aff._key ${sortString} LIMIT 1
-        LET orgKey = PARSE_IDENTIFIER(aff._from).key
-        LET userKey = PARSE_IDENTIFIER(aff._to).key
-        RETURN MERGE(aff, { orgKey: orgKey, userKey: userKey })
     ) > 0 ? true : false)
     LET hasPreviousPage = (LENGTH(
       FOR aff IN affiliations
         FILTER aff._key IN affiliationKeys
         FILTER TO_NUMBER(aff._key) < TO_NUMBER(FIRST(retrievedAffiliations)._key)
         SORT aff._key ${sortString} LIMIT 1
-        LET orgKey = PARSE_IDENTIFIER(aff._from).key
-        LET userKey = PARSE_IDENTIFIER(aff._to).key
-        RETURN MERGE(aff, { orgKey: orgKey, userKey: userKey })
     ) > 0 ? true : false)
     RETURN {
       "affiliations": retrievedAffiliations,
