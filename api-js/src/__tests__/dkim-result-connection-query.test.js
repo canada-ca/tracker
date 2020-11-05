@@ -157,6 +157,13 @@ describe('given the dkimType object', () => {
                             dkimGuidanceTags
                           }
                         }
+                        totalCount
+                        pageInfo {
+                          hasNextPage
+                          hasPreviousPage
+                          startCursor
+                          endCursor
+                        }
                       }
                     }
                   }
@@ -227,6 +234,13 @@ describe('given the dkimType object', () => {
                             },
                           },
                         ],
+                        totalCount: 1,
+                        pageInfo: {
+                          hasNextPage: false,
+                          hasPreviousPage: false,
+                          startCursor: toGlobalId('dkimResult', dkimResult._key),
+                          endCursor: toGlobalId('dkimResult', dkimResult._key),
+                        },
                       },
                     },
                   },

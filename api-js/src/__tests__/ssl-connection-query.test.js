@@ -143,6 +143,13 @@ describe('given the ssl gql object', () => {
                       }
                     }
                   }
+                  totalCount
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                  }
                 }
               }
             }
@@ -198,6 +205,13 @@ describe('given the ssl gql object', () => {
                     },
                   },
                 ],
+                totalCount: 1,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('ssl', ssl._key),
+                  endCursor: toGlobalId('ssl', ssl._key),
+                },
               },
             },
           },

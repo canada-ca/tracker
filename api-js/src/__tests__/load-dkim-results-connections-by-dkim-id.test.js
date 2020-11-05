@@ -127,6 +127,7 @@ describe('when given the load dkim results connection function', () => {
               },
             },
           ],
+          totalCount: 2,
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
@@ -178,6 +179,7 @@ describe('when given the load dkim results connection function', () => {
               },
             },
           ],
+          totalCount: 2,
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
@@ -229,6 +231,7 @@ describe('when given the load dkim results connection function', () => {
               },
             },
           ],
+          totalCount: 2,
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
@@ -279,6 +282,7 @@ describe('when given the load dkim results connection function', () => {
               },
             },
           ],
+          totalCount: 2,
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
@@ -329,6 +333,7 @@ describe('when given the load dkim results connection function', () => {
               },
             },
           ],
+          totalCount: 2,
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
@@ -361,6 +366,7 @@ describe('when given the load dkim results connection function', () => {
 
         const expectedStructure = {
           edges: [],
+          totalCount: 0,
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,

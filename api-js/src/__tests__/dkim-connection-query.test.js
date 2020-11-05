@@ -139,6 +139,13 @@ describe('given the dkimType object', () => {
                       timestamp
                     }
                   }
+                  totalCount
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                  }
                 }
               }
             }
@@ -193,6 +200,13 @@ describe('given the dkimType object', () => {
                     },
                   },
                 ],
+                totalCount: 1,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('dkim', dkim._key),
+                  endCursor: toGlobalId('dkim', dkim._key),
+                },
               },
             },
           },

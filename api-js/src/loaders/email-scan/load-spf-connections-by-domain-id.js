@@ -128,7 +128,8 @@ const spfLoaderConnectionsByDomainId = (
     ) > 0 ? true : false)
 
     RETURN { 
-      "spfScans": retrievedSpfScans, 
+      "spfScans": retrievedSpfScans,
+      "totalCount": LENGTH(spfKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedSpfScans)._key, 
@@ -155,6 +156,7 @@ const spfLoaderConnectionsByDomainId = (
   if (spfScanInfo.spfScans.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -175,6 +177,7 @@ const spfLoaderConnectionsByDomainId = (
 
   return {
     edges,
+    totalCount: spfScanInfo.totalCount,
     pageInfo: {
       hasNextPage: spfScanInfo.hasNextPage,
       hasPreviousPage: spfScanInfo.hasPreviousPage,

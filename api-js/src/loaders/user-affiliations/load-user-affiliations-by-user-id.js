@@ -94,6 +94,7 @@ const affiliationLoaderByUserId = (
   try {
     filteredAffiliationCursor = await query`
     LET affiliationKeys = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._key)
+
     LET retrievedAffiliations = (
       FOR affiliation IN affiliations
           FILTER affiliation._key IN affiliationKeys
@@ -104,20 +105,26 @@ const affiliationLoaderByUserId = (
           LET userKey = PARSE_IDENTIFIER(affiliation._to).key
           RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
     )
+
     LET hasNextPage = (LENGTH(
       FOR aff IN affiliations
         FILTER aff._key IN affiliationKeys
         FILTER TO_NUMBER(aff._key) > TO_NUMBER(LAST(retrievedAffiliations)._key)
         SORT aff._key ${sortString} LIMIT 1
+        RETURN aff
     ) > 0 ? true : false)
+
     LET hasPreviousPage = (LENGTH(
       FOR aff IN affiliations
         FILTER aff._key IN affiliationKeys
         FILTER TO_NUMBER(aff._key) < TO_NUMBER(FIRST(retrievedAffiliations)._key)
         SORT aff._key ${sortString} LIMIT 1
+        RETURN aff
     ) > 0 ? true : false)
+
     RETURN {
       "affiliations": retrievedAffiliations,
+      "totalCount": LENGTH(affiliationKeys),
       "hasNextPage": hasNextPage,
       "hasPreviousPage": hasPreviousPage,
       "startKey": FIRST(retrievedAffiliations)._key,
@@ -126,7 +133,7 @@ const affiliationLoaderByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to query affiliations in affiliationLoaderByUserId.`,
+      `Database error occurred while user: ${userId} was trying to query affiliations in affiliationLoaderByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to query affiliations. Please try again.`))
   }
@@ -136,7 +143,7 @@ const affiliationLoaderByUserId = (
     filteredAffiliations = await filteredAffiliationCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather affiliations in affiliationLoaderByUserId.`,
+      `Cursor error occurred while user: ${userId} was trying to gather affiliations in affiliationLoaderByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load affiliations. Please try again.`))
   }
@@ -144,6 +151,7 @@ const affiliationLoaderByUserId = (
   if (filteredAffiliations.affiliations.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -163,6 +171,7 @@ const affiliationLoaderByUserId = (
 
   return {
     edges,
+    totalCount: filteredAffiliations.totalCount,
     pageInfo: {
       hasNextPage: filteredAffiliations.hasNextPage,
       hasPreviousPage: filteredAffiliations.hasPreviousPage,
