@@ -111,11 +111,6 @@ const domainLoaderConnectionsByOrgId = (
         ${limitTemplate}
         RETURN domain
     )
-
-    LET testDomains = (
-      for domain in domains
-        return domain
-    )
     
     LET hasNextPage = (LENGTH(
       FOR domain IN domains
@@ -135,6 +130,7 @@ const domainLoaderConnectionsByOrgId = (
     
     RETURN { 
       "domains": retrievedDomains,
+      "totalCount": LENGTH(domainIds),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedDomains)._key, 
@@ -143,7 +139,7 @@ const domainLoaderConnectionsByOrgId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId: ${err}`,
+      `Database error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
@@ -153,7 +149,7 @@ const domainLoaderConnectionsByOrgId = (
     domainsInfo = await requestedDomainInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId: ${err}`,
+      `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
@@ -161,6 +157,7 @@ const domainLoaderConnectionsByOrgId = (
   if (domainsInfo.domains.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -180,6 +177,7 @@ const domainLoaderConnectionsByOrgId = (
 
   return {
     edges,
+    totalCount: domainsInfo.totalCount,
     pageInfo: {
       hasNextPage: domainsInfo.hasNextPage,
       hasPreviousPage: domainsInfo.hasPreviousPage,

@@ -128,7 +128,8 @@ const sslLoaderConnectionsByDomainId = (
     ) > 0 ? true : false)
 
     RETURN { 
-      "sslScans": retrievedSsl, 
+      "sslScans": retrievedSsl,
+      "totalCount": LENGTH(sslKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedSsl)._key, 
@@ -155,6 +156,7 @@ const sslLoaderConnectionsByDomainId = (
   if (sslScansInfo.sslScans.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -175,6 +177,7 @@ const sslLoaderConnectionsByDomainId = (
 
   return {
     edges,
+    totalCount: sslScansInfo.totalCount,
     pageInfo: {
       hasNextPage: sslScansInfo.hasNextPage,
       hasPreviousPage: sslScansInfo.hasPreviousPage,

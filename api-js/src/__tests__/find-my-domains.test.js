@@ -189,6 +189,7 @@ describe('given findMyDomainsQuery', () => {
                   startCursor
                   endCursor
                 }
+                totalCount
               }
             }
           `,
@@ -235,6 +236,7 @@ describe('given findMyDomainsQuery', () => {
                 hasPreviousPage: false,
                 startCursor: toGlobalId('domains', domainOne._key),
               },
+              totalCount: 2,
             },
           },
         }
@@ -284,6 +286,7 @@ describe('given findMyDomainsQuery', () => {
                     startCursor
                     endCursor
                   }
+                  totalCount
                 }
               }
             `,
@@ -348,6 +351,7 @@ describe('given findMyDomainsQuery', () => {
                     startCursor
                     endCursor
                   }
+                  totalCount
                 }
               }
             `,

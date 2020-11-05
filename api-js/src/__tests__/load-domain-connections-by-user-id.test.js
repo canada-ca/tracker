@@ -167,6 +167,7 @@ describe('given the load domain connections by user id function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
@@ -210,6 +211,7 @@ describe('given the load domain connections by user id function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
@@ -253,6 +255,7 @@ describe('given the load domain connections by user id function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
@@ -295,6 +298,7 @@ describe('given the load domain connections by user id function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
@@ -337,6 +341,7 @@ describe('given the load domain connections by user id function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
@@ -366,6 +371,7 @@ describe('given the load domain connections by user id function', () => {
 
         const expectedStructure = {
           edges: [],
+          totalCount: 0,
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
@@ -671,7 +677,7 @@ describe('given the load domain connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser.`,
+            `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser, error: Error: Unable to query domains. Please try again.`,
           ])
         })
       })
@@ -684,10 +690,7 @@ describe('given the load domain connections by user id function', () => {
               throw new Error('Unable to load domains. Please try again.')
             },
           }
-          const query = jest
-            .fn()
-            .mockReturnValueOnce([domainOne._id, domainTwo._id])
-            .mockReturnValueOnce(cursor)
+          const query = jest.fn().mockReturnValueOnce(cursor)
 
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
@@ -710,7 +713,7 @@ describe('given the load domain connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainsByUser.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainsByUser, error: Error: Unable to load domains. Please try again.`,
           ])
         })
       })
@@ -975,7 +978,7 @@ describe('given the load domain connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser.`,
+            `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser, error: Error: Unable to query domains. Please try again.`,
           ])
         })
       })
@@ -988,10 +991,7 @@ describe('given the load domain connections by user id function', () => {
               throw new Error('Unable to load domains. Please try again.')
             },
           }
-          const query = jest
-            .fn()
-            .mockReturnValueOnce([domainOne._id, domainTwo._id])
-            .mockReturnValueOnce(cursor)
+          const query = jest.fn().mockReturnValueOnce(cursor)
 
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
@@ -1012,7 +1012,7 @@ describe('given the load domain connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainsByUser.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainsByUser, error: Error: Unable to load domains. Please try again.`,
           ])
         })
       })

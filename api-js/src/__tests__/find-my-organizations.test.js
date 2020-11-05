@@ -216,6 +216,7 @@ describe('given findMyOrganizationsQuery', () => {
                         city
                       }
                     }
+                    totalCount
                     pageInfo {
                       hasNextPage
                       hasPreviousPage
@@ -273,6 +274,7 @@ describe('given findMyOrganizationsQuery', () => {
                       },
                     },
                   ],
+                  totalCount: 2,
                   pageInfo: {
                     endCursor: toGlobalId('organizations', orgTwo._key),
                     hasNextPage: false,
@@ -414,6 +416,7 @@ describe('given findMyOrganizationsQuery', () => {
                         city
                       }
                     }
+                    totalCount
                     pageInfo {
                       hasNextPage
                       hasPreviousPage
@@ -471,6 +474,7 @@ describe('given findMyOrganizationsQuery', () => {
                       },
                     },
                   ],
+                  totalCount: 2,
                   pageInfo: {
                     endCursor: toGlobalId('organizations', orgTwo._key),
                     hasNextPage: false,

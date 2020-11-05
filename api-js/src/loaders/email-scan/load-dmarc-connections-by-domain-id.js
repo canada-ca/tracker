@@ -129,7 +129,8 @@ const dmarcLoaderConnectionsByDomainId = (
     ) > 0 ? true : false)
 
     RETURN { 
-      "dmarcScans": retrievedDmarcScans, 
+      "dmarcScans": retrievedDmarcScans,
+      "totalCount": LENGTH(dmarcKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedDmarcScans)._key, 
@@ -157,6 +158,7 @@ const dmarcLoaderConnectionsByDomainId = (
   if (dmarcScanInfo.dmarcScans.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -177,6 +179,7 @@ const dmarcLoaderConnectionsByDomainId = (
 
   return {
     edges,
+    totalCount: dmarcScanInfo.totalCount,
     pageInfo: {
       hasNextPage: dmarcScanInfo.hasNextPage,
       hasPreviousPage: dmarcScanInfo.hasPreviousPage,

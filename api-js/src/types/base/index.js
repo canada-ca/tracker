@@ -155,6 +155,13 @@ const domainType = new GraphQLObjectType({
 const domainConnection = connectionDefinitions({
   name: 'Domain',
   nodeType: domainType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of domains the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const emailScanType = new GraphQLObjectType({
@@ -300,6 +307,13 @@ const dkimType = new GraphQLObjectType({
 const dkimConnection = connectionDefinitions({
   name: 'DKIM',
   nodeType: dkimType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dkim scans related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const dkimResultsType = new GraphQLObjectType({
@@ -344,6 +358,13 @@ const dkimResultsType = new GraphQLObjectType({
 const dkimResultsConnection = connectionDefinitions({
   name: 'DKIMResult',
   nodeType: dkimResultsType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dkim results related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const dmarcType = new GraphQLObjectType({
@@ -409,6 +430,13 @@ const dmarcType = new GraphQLObjectType({
 const dmarcConnection = connectionDefinitions({
   name: 'DMARC',
   nodeType: dmarcType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dmarc scans related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const spfType = new GraphQLObjectType({
@@ -464,6 +492,13 @@ const spfType = new GraphQLObjectType({
 const spfConnection = connectionDefinitions({
   name: 'SPF',
   nodeType: spfType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of spf scans related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const webScanType = new GraphQLObjectType({
@@ -592,6 +627,13 @@ const httpsType = new GraphQLObjectType({
 const httpsConnection = connectionDefinitions({
   name: 'HTTPS',
   nodeType: httpsType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of https scans for a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const sslType = new GraphQLObjectType({
@@ -626,6 +668,13 @@ const sslType = new GraphQLObjectType({
 const sslConnection = connectionDefinitions({
   name: 'SSL',
   nodeType: sslType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of https scans for a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 /* End domain related objects */
@@ -725,6 +774,13 @@ const organizationType = new GraphQLObjectType({
 const organizationConnection = connectionDefinitions({
   name: 'Organization',
   nodeType: organizationType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of organizations the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const userType = new GraphQLObjectType({
@@ -817,7 +873,7 @@ const userAffiliationsType = new GraphQLObjectType({
       description: 'The affiliated users information.',
       resolve: async (
         { userKey },
-        args,
+        _args,
         { loaders: { userLoaderByKey } },
       ) => {
         const user = await userLoaderByKey.load(userKey)
@@ -829,7 +885,7 @@ const userAffiliationsType = new GraphQLObjectType({
       description: 'The affiliated organizations information.',
       resolve: async (
         { orgKey },
-        args,
+        _args,
         { loaders: { orgLoaderByKey } },
       ) => {
         const org = await orgLoaderByKey.load(orgKey)
@@ -845,6 +901,13 @@ const userAffiliationsType = new GraphQLObjectType({
 const userAffiliationsConnection = connectionDefinitions({
   name: 'UserAffiliations',
   nodeType: userAffiliationsType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of affiliations the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 module.exports = {
