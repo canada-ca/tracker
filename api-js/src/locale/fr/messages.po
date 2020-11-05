@@ -276,8 +276,8 @@ msgstr "todo"
 msgid "Unable to find ssl scan. Please try again."
 msgstr "todo"
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-key.js:19
-#: src/loaders/user-affiliations/load-user-affiliations-by-key.js:33
+#: src/loaders/user-affiliations/load-user-affiliations-by-key.js:21
+#: src/loaders/user-affiliations/load-user-affiliations-by-key.js:35
 msgid "Unable to find user affiliation(s). Please try again."
 msgstr "todo"
 
@@ -359,6 +359,14 @@ msgstr "todo"
 
 #: src/loaders/organizations/load-organization-connections-by-user-id.js:135
 msgid "Unable to query organizations. Please try again."
+msgstr "todo"
+
+#: src/queries/user/find-user-by-username.js:37
+msgid "Unable to query user without a username, please try again."
+msgstr "todo"
+
+#: src/queries/user/find-user-by-username.js:54
+msgid "Unable to query user, please try again."
 msgstr "todo"
 
 #: src/mutations/domain/remove-domain.js:58
@@ -509,6 +517,10 @@ msgstr "todo"
 
 #: src/queries/user/is-user-admin.js:23
 msgid "Unable to verify if user is an admin, please try again."
+msgstr "todo"
+
+#: src/queries/user/find-user-by-username.js:65
+msgid "User could not be queried."
 msgstr "todo"
 
 #: src/mutations/user-affiliations/update-user-role.js:218
