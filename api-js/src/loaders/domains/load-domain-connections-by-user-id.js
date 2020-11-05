@@ -124,7 +124,8 @@ const domainLoaderConnectionsByUserId = (
     ) > 0 ? true : false)
     
     RETURN { 
-      "domains": retrievedDomains, 
+      "domains": retrievedDomains,
+      "totalCount": LENGTH(domainKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedDomains)._key, 
@@ -151,6 +152,7 @@ const domainLoaderConnectionsByUserId = (
   if (domainsInfo.domains.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -170,6 +172,7 @@ const domainLoaderConnectionsByUserId = (
 
   return {
     edges,
+    totalCount: domainsInfo.totalCount,
     pageInfo: {
       hasNextPage: domainsInfo.hasNextPage,
       hasPreviousPage: domainsInfo.hasPreviousPage,

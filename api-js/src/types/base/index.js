@@ -155,6 +155,13 @@ const domainType = new GraphQLObjectType({
 const domainConnection = connectionDefinitions({
   name: 'Domain',
   nodeType: domainType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of domains the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const emailScanType = new GraphQLObjectType({

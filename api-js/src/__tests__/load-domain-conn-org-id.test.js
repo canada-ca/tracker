@@ -145,6 +145,7 @@ describe('given the load domain connection using org id function', () => {
             startCursor: toGlobalId('domains', expectedDomains[0]._key),
             endCursor: toGlobalId('domains', expectedDomains[1]._key),
           },
+          totalCount: 2,
         }
 
         expect(domains).toEqual(expectedStructure)
@@ -191,6 +192,7 @@ describe('given the load domain connection using org id function', () => {
             startCursor: toGlobalId('domains', expectedDomains[1]._key),
             endCursor: toGlobalId('domains', expectedDomains[1]._key),
           },
+          totalCount: 2,
         }
 
         expect(domains).toEqual(expectedStructure)
@@ -237,6 +239,7 @@ describe('given the load domain connection using org id function', () => {
             startCursor: toGlobalId('domains', expectedDomains[0]._key),
             endCursor: toGlobalId('domains', expectedDomains[0]._key),
           },
+          totalCount: 2,
         }
 
         expect(domains).toEqual(expectedStructure)
@@ -282,6 +285,7 @@ describe('given the load domain connection using org id function', () => {
             startCursor: toGlobalId('domains', expectedDomains[0]._key),
             endCursor: toGlobalId('domains', expectedDomains[0]._key),
           },
+          totalCount: 2,
         }
 
         expect(domains).toEqual(expectedStructure)
@@ -327,6 +331,7 @@ describe('given the load domain connection using org id function', () => {
             startCursor: toGlobalId('domains', expectedDomains[1]._key),
             endCursor: toGlobalId('domains', expectedDomains[1]._key),
           },
+          totalCount: 2,
         }
 
         expect(domains).toEqual(expectedStructure)
@@ -357,6 +362,7 @@ describe('given the load domain connection using org id function', () => {
             startCursor: '',
             endCursor: '',
           },
+          totalCount: 0,
         }
 
         expect(domains).toEqual(expectedStructure)
