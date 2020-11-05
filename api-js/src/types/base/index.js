@@ -887,6 +887,13 @@ const userAffiliationsType = new GraphQLObjectType({
 const userAffiliationsConnection = connectionDefinitions({
   name: 'UserAffiliations',
   nodeType: userAffiliationsType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of affiliations the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 module.exports = {
