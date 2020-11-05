@@ -133,7 +133,7 @@ const affiliationLoaderByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to query affiliations in affiliationLoaderByUserId: ${err}`,
+      `Database error occurred while user: ${userId} was trying to query affiliations in affiliationLoaderByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to query affiliations. Please try again.`))
   }
@@ -143,7 +143,7 @@ const affiliationLoaderByUserId = (
     filteredAffiliations = await filteredAffiliationCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather affiliations in affiliationLoaderByUserId: ${err}`,
+      `Cursor error occurred while user: ${userId} was trying to gather affiliations in affiliationLoaderByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load affiliations. Please try again.`))
   }

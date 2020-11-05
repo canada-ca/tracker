@@ -131,7 +131,7 @@ const orgLoaderConnectionsByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to query organizations in orgLoaderConnectionsByUserId.`,
+      `Database error occurred while user: ${userId} was trying to query organizations in orgLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to query organizations. Please try again.`))
   }
@@ -141,7 +141,7 @@ const orgLoaderConnectionsByUserId = (
     organizationInfo = await organizationInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather organizations in orgLoaderConnectionsByUserId.`,
+      `Cursor error occurred while user: ${userId} was trying to gather organizations in orgLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }

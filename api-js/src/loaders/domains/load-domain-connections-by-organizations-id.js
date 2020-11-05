@@ -139,7 +139,7 @@ const domainLoaderConnectionsByOrgId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId: ${err}`,
+      `Database error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
@@ -149,7 +149,7 @@ const domainLoaderConnectionsByOrgId = (
     domainsInfo = await requestedDomainInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId: ${err}`,
+      `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }

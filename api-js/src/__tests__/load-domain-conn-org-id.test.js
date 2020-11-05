@@ -669,7 +669,7 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId: Error: Database Error Occurred.`,
+            `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId, error: Error: Database Error Occurred.`,
           ])
         })
       })
@@ -706,7 +706,7 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId: Error: Cursor error occurred.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId, error: Error: Cursor error occurred.`,
           ])
         })
       })
@@ -978,7 +978,7 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId: Error: Database Error Occurred.`,
+            `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId, error: Error: Database Error Occurred.`,
           ])
         })
       })
@@ -1013,7 +1013,7 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId: Error: Cursor error occurred.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId, error: Error: Cursor error occurred.`,
           ])
         })
       })

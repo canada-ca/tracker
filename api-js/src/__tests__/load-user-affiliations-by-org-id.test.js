@@ -658,7 +658,7 @@ describe('given the load user affiliations by org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query affiliations in affiliationLoaderByOrgId: Error: Unable to query organizations. Please try again.`,
+            `Database error occurred while user: ${user._key} was trying to query affiliations in affiliationLoaderByOrgId, error: Error: Unable to query organizations. Please try again.`,
           ])
         })
       })
@@ -692,7 +692,7 @@ describe('given the load user affiliations by org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather affiliations in affiliationLoaderByOrgId: Error: Unable to load affiliations. Please try again.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather affiliations in affiliationLoaderByOrgId, error: Error: Unable to load affiliations. Please try again.`,
           ])
         })
       })
@@ -990,7 +990,7 @@ describe('given the load user affiliations by org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query affiliations in affiliationLoaderByOrgId: Error: Unable to query organizations. Please try again.`,
+            `Database error occurred while user: ${user._key} was trying to query affiliations in affiliationLoaderByOrgId, error: Error: Unable to query organizations. Please try again.`,
           ])
         })
       })
@@ -1022,7 +1022,7 @@ describe('given the load user affiliations by org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather affiliations in affiliationLoaderByOrgId: Error: Unable to load affiliations. Please try again.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather affiliations in affiliationLoaderByOrgId, error: Error: Unable to load affiliations. Please try again.`,
           ])
         })
       })

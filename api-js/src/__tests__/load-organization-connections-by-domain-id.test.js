@@ -690,7 +690,7 @@ describe('given the load organizations connection function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
+            `Database error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: Error: Database error occurred.`,
           ])
         })
       })
@@ -727,7 +727,7 @@ describe('given the load organizations connection function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
+              `Cursor error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: Error: Cursor error occurred.`,
             ])
           })
         })
@@ -1265,7 +1265,7 @@ describe('given the load organizations connection function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
+            `Database error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: Error: Database error occurred.`,
           ])
         })
       })
@@ -1300,7 +1300,7 @@ describe('given the load organizations connection function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
+              `Cursor error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: Error: Cursor error occurred.`,
             ])
           })
         })
