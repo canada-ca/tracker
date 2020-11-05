@@ -177,6 +177,7 @@ describe('given the load organizations connection function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
@@ -222,6 +223,7 @@ describe('given the load organizations connection function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
@@ -267,6 +269,7 @@ describe('given the load organizations connection function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
@@ -311,6 +314,7 @@ describe('given the load organizations connection function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
@@ -355,6 +359,7 @@ describe('given the load organizations connection function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
@@ -386,6 +391,7 @@ describe('given the load organizations connection function', () => {
 
           const expectedStructure = {
             edges: [],
+            totalCount: 0,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
@@ -684,7 +690,7 @@ describe('given the load organizations connection function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
+            `Database error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: Error: Database error occurred.`,
           ])
         })
       })
@@ -721,7 +727,7 @@ describe('given the load organizations connection function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
+              `Cursor error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: Error: Cursor error occurred.`,
             ])
           })
         })
@@ -780,6 +786,7 @@ describe('given the load organizations connection function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
@@ -825,6 +832,7 @@ describe('given the load organizations connection function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
@@ -870,6 +878,7 @@ describe('given the load organizations connection function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
@@ -914,6 +923,7 @@ describe('given the load organizations connection function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
@@ -958,6 +968,7 @@ describe('given the load organizations connection function', () => {
                 },
               },
             ],
+            totalCount: 2,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
@@ -989,6 +1000,7 @@ describe('given the load organizations connection function', () => {
 
           const expectedStructure = {
             edges: [],
+            totalCount: 0,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
@@ -1253,7 +1265,7 @@ describe('given the load organizations connection function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
+            `Database error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: Error: Database error occurred.`,
           ])
         })
       })
@@ -1288,7 +1300,7 @@ describe('given the load organizations connection function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
+              `Cursor error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: Error: Cursor error occurred.`,
             ])
           })
         })

@@ -122,6 +122,7 @@ const orgLoaderConnectionsByUserId = (
     
     RETURN { 
       "organizations": retrievedOrgs,
+      "totalCount": LENGTH(orgKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedOrgs)._key, 
@@ -130,7 +131,7 @@ const orgLoaderConnectionsByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to query organizations in orgLoaderConnectionsByUserId.`,
+      `Database error occurred while user: ${userId} was trying to query organizations in orgLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to query organizations. Please try again.`))
   }
@@ -140,7 +141,7 @@ const orgLoaderConnectionsByUserId = (
     organizationInfo = await organizationInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather organizations in orgLoaderConnectionsByUserId.`,
+      `Cursor error occurred while user: ${userId} was trying to gather organizations in orgLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }
@@ -148,6 +149,7 @@ const orgLoaderConnectionsByUserId = (
   if (organizationInfo.organizations.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -167,6 +169,7 @@ const orgLoaderConnectionsByUserId = (
 
   return {
     edges,
+    totalCount: organizationInfo.totalCount,
     pageInfo: {
       hasNextPage: organizationInfo.hasNextPage,
       hasPreviousPage: organizationInfo.hasPreviousPage,

@@ -156,6 +156,7 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               ],
+              totalCount: 2,
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: false,
@@ -201,6 +202,7 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               ],
+              totalCount: 2,
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: true,
@@ -246,6 +248,7 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               ],
+              totalCount: 2,
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: false,
@@ -290,6 +293,7 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               ],
+              totalCount: 2,
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: false,
@@ -334,6 +338,7 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               ],
+              totalCount: 2,
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: true,
@@ -365,6 +370,7 @@ describe('given the load organization connections by user id function', () => {
 
           const expectedStructure = {
             edges: [],
+            totalCount: 0,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
@@ -667,7 +673,7 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query organizations in orgLoaderConnectionsByUserId.`,
+            `Database error occurred while user: ${user._key} was trying to query organizations in orgLoaderConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
           ])
         })
       })
@@ -682,7 +688,6 @@ describe('given the load organization connections by user id function', () => {
           }
           const query = jest
             .fn()
-            .mockReturnValueOnce([orgOne._id, orgTwo._id])
             .mockReturnValueOnce(cursor)
 
           const connectionLoader = orgLoaderConnectionsByUserId(
@@ -707,7 +712,7 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather organizations in orgLoaderConnectionsByUserId.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather organizations in orgLoaderConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
           ])
         })
       })
@@ -766,6 +771,7 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               ],
+              totalCount: 2,
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: false,
@@ -811,6 +817,7 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               ],
+              totalCount: 2,
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: true,
@@ -856,6 +863,7 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               ],
+              totalCount: 2,
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: false,
@@ -900,6 +908,7 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               ],
+              totalCount: 2,
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: false,
@@ -944,6 +953,7 @@ describe('given the load organization connections by user id function', () => {
                   },
                 },
               ],
+              totalCount: 2,
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: true,
@@ -975,6 +985,7 @@ describe('given the load organization connections by user id function', () => {
 
           const expectedStructure = {
             edges: [],
+            totalCount: 0,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
@@ -1243,7 +1254,7 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query organizations in orgLoaderConnectionsByUserId.`,
+            `Database error occurred while user: ${user._key} was trying to query organizations in orgLoaderConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
           ])
         })
       })
@@ -1258,7 +1269,6 @@ describe('given the load organization connections by user id function', () => {
           }
           const query = jest
             .fn()
-            .mockReturnValueOnce([orgOne._id, orgTwo._id])
             .mockReturnValueOnce(cursor)
 
           const connectionLoader = orgLoaderConnectionsByUserId(
@@ -1281,7 +1291,7 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather organizations in orgLoaderConnectionsByUserId.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather organizations in orgLoaderConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
           ])
         })
       })
