@@ -111,11 +111,6 @@ const domainLoaderConnectionsByOrgId = (
         ${limitTemplate}
         RETURN domain
     )
-
-    LET testDomains = (
-      for domain in domains
-        return domain
-    )
     
     LET hasNextPage = (LENGTH(
       FOR domain IN domains
