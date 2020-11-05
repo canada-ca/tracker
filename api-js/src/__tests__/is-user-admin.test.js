@@ -1,5 +1,3 @@
-const dotenv = require('dotenv-safe')
-dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')

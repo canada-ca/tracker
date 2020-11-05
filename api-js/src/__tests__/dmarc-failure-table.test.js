@@ -1,6 +1,3 @@
-const dotenv = require('dotenv-safe')
-dotenv.config()
-
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema } = require('graphql')
 const { makeMigrations } = require('../../migrations')

@@ -5,7 +5,7 @@ const userQueries = require('./user')
 const organizationQueries = require('./organizations')
 const summaryQueries = require('./summaries')
 
-const createQuerySchema = (i18n) => {
+const createQuerySchema = () => {
   return new GraphQLObjectType({
     name: 'Query',
     fields: () => ({

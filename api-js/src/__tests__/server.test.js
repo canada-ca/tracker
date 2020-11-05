@@ -1,6 +1,3 @@
-const dotenv = require('dotenv-safe')
-dotenv.config()
-
 const request = require('supertest')
 const { Server } = require('../server')
 

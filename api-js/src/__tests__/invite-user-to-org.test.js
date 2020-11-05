@@ -1,6 +1,3 @@
-const dotenv = require('dotenv-safe')
-dotenv.config()
-
 const { SIGN_IN_KEY } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
