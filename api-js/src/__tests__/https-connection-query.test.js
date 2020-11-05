@@ -153,6 +153,13 @@ describe('given the https gql object', () => {
                       }
                     }
                   }
+                  totalCount
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                  }
                 }
               }
             }
@@ -213,6 +220,13 @@ describe('given the https gql object', () => {
                     },
                   },
                 ],
+                totalCount: 1,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('https', https._key),
+                  endCursor: toGlobalId('https', https._key),
+                },
               },
             },
           },

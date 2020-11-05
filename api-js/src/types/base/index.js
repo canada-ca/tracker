@@ -627,6 +627,13 @@ const httpsType = new GraphQLObjectType({
 const httpsConnection = connectionDefinitions({
   name: 'HTTPS',
   nodeType: httpsType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of https scans for a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const sslType = new GraphQLObjectType({
@@ -661,6 +668,13 @@ const sslType = new GraphQLObjectType({
 const sslConnection = connectionDefinitions({
   name: 'SSL',
   nodeType: sslType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of https scans for a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 /* End domain related objects */
