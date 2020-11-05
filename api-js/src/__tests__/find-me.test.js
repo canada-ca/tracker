@@ -81,7 +81,7 @@ describe('given the findMe query', () => {
       const expectedResponse = {
         data: {
           findMe: {
-            id: toGlobalId('users', user._key).substring(0, 8),
+            id: toGlobalId('users', user._key),
             displayName: 'Test Account',
             emailValidated: false,
             preferredLang: 'FRENCH',

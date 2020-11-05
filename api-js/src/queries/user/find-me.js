@@ -7,6 +7,8 @@ const findMe = {
     // Get querying user
     const user = await userRequired()
 
+    user.id = user._key
+
     return user
   },
 }

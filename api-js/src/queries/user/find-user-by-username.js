@@ -53,6 +53,7 @@ const findUserByUsername = {
     if (userAdmin.count > 0) {
       // Retrieve user by userName
       const user = await userLoaderByUserName.load(userName)
+      user.id = user._key
       return user
     } else {
       console.warn(`User ${userId} is not permitted to query users.`)

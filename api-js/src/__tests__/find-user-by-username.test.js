@@ -159,7 +159,7 @@ describe('given the findUserByUsername query', () => {
             const expectedResponse = {
               data: {
                 findUserByUsername: {
-                  id: toGlobalId('users', userTwo._key).substring(0, 8),
+                  id: toGlobalId('users', userTwo._key),
                   displayName: 'Test Account Two',
                   emailValidated: false,
                   preferredLang: 'FRENCH',
@@ -221,7 +221,7 @@ describe('given the findUserByUsername query', () => {
             const expectedResponse = {
               data: {
                 findUserByUsername: {
-                  id: toGlobalId('users', userTwo._key).substring(0, 8),
+                  id: toGlobalId('users', userTwo._key),
                   displayName: 'Test Account Two',
                   emailValidated: false,
                   preferredLang: 'FRENCH',
@@ -458,7 +458,7 @@ describe('given the findUserByUsername query', () => {
             const expectedResponse = {
               data: {
                 findUserByUsername: {
-                  id: toGlobalId('users', userTwo._key).substring(0, 8),
+                  id: toGlobalId('users', userTwo._key),
                   displayName: 'Test Account Two',
                   emailValidated: false,
                   preferredLang: 'FRENCH',
@@ -520,7 +520,7 @@ describe('given the findUserByUsername query', () => {
             const expectedResponse = {
               data: {
                 findUserByUsername: {
-                  id: toGlobalId('users', userTwo._key).substring(0, 8),
+                  id: toGlobalId('users', userTwo._key),
                   displayName: 'Test Account Two',
                   emailValidated: false,
                   preferredLang: 'FRENCH',
