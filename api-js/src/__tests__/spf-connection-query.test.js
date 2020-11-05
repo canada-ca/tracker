@@ -147,6 +147,13 @@ describe('given the spfType object', () => {
                       spfGuidanceTags
                     }
                   }
+                  totalCount
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                  }
                 }
               }
             }
@@ -205,6 +212,13 @@ describe('given the spfType object', () => {
                     },
                   },
                 ],
+                totalCount: 1,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('spf', spf._key),
+                  endCursor: toGlobalId('spf', spf._key),
+                },
               },
             },
           },

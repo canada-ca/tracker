@@ -307,6 +307,13 @@ const dkimType = new GraphQLObjectType({
 const dkimConnection = connectionDefinitions({
   name: 'DKIM',
   nodeType: dkimType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dkim scans related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const dkimResultsType = new GraphQLObjectType({
@@ -351,6 +358,13 @@ const dkimResultsType = new GraphQLObjectType({
 const dkimResultsConnection = connectionDefinitions({
   name: 'DKIMResult',
   nodeType: dkimResultsType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dkim results related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const dmarcType = new GraphQLObjectType({
@@ -416,6 +430,13 @@ const dmarcType = new GraphQLObjectType({
 const dmarcConnection = connectionDefinitions({
   name: 'DMARC',
   nodeType: dmarcType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dmarc scans related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const spfType = new GraphQLObjectType({
@@ -471,6 +492,13 @@ const spfType = new GraphQLObjectType({
 const spfConnection = connectionDefinitions({
   name: 'SPF',
   nodeType: spfType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of spf scans related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const webScanType = new GraphQLObjectType({
@@ -824,7 +852,7 @@ const userAffiliationsType = new GraphQLObjectType({
       description: 'The affiliated users information.',
       resolve: async (
         { userKey },
-        args,
+        _args,
         { loaders: { userLoaderByKey } },
       ) => {
         const user = await userLoaderByKey.load(userKey)
@@ -836,7 +864,7 @@ const userAffiliationsType = new GraphQLObjectType({
       description: 'The affiliated organizations information.',
       resolve: async (
         { orgKey },
-        args,
+        _args,
         { loaders: { orgLoaderByKey } },
       ) => {
         const org = await orgLoaderByKey.load(orgKey)

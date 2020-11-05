@@ -151,6 +151,13 @@ describe('given the dmarcType object', () => {
                       dmarcGuidanceTags
                     }
                   }
+                  totalCount
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                  }
                 }
               }
             }
@@ -211,6 +218,13 @@ describe('given the dmarcType object', () => {
                     },
                   },
                 ],
+                totalCount: 1,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('dmarc', dmarc._key),
+                  endCursor: toGlobalId('dmarc', dmarc._key),
+                },
               },
             },
           },
