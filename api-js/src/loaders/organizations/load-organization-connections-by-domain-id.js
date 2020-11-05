@@ -127,6 +127,7 @@ const orgLoaderConnectionArgsByDomainId = (
     
     RETURN { 
       "organizations": retrievedOrgs,
+      "totalCount": LENGTH(orgKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedOrgs)._key, 
@@ -153,6 +154,7 @@ const orgLoaderConnectionArgsByDomainId = (
   if (organizationInfo.organizations.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -172,6 +174,7 @@ const orgLoaderConnectionArgsByDomainId = (
 
   return {
     edges,
+    totalCount: organizationInfo.totalCount,
     pageInfo: {
       hasNextPage: organizationInfo.hasNextPage,
       hasPreviousPage: organizationInfo.hasPreviousPage,

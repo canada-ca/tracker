@@ -760,6 +760,13 @@ const organizationType = new GraphQLObjectType({
 const organizationConnection = connectionDefinitions({
   name: 'Organization',
   nodeType: organizationType,
+  connectionFields: () =>({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of organizations the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const userType = new GraphQLObjectType({
