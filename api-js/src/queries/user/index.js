@@ -1,7 +1,9 @@
 const { isUserAdmin } = require('./is-user-admin')
-const { user } = require('./user')
+const { findUserByUsername } = require('./find-user-by-username')
+const { findMe } = require('./find-me')
 
 module.exports = {
   isUserAdmin,
-  user,
+  findUserByUsername,
+  findMe,
 }

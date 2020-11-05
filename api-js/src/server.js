@@ -3,8 +3,9 @@ const express = require('express')
 // const http = require('http')
 // const { createServer } = require('graphql-transport-ws')
 const { graphqlHTTP } = require('express-graphql')
-const { GraphQLSchema /*, execute, subscribe */} = require('graphql')
-const expressPlayground = require('graphql-playground-middleware-express').default
+const { GraphQLSchema /*, execute, subscribe */ } = require('graphql')
+const expressPlayground = require('graphql-playground-middleware-express')
+  .default
 const requestLanguage = require('express-request-language')
 const { setupI18n } = require('@lingui/core')
 const fetch = require('isomorphic-fetch')
@@ -66,22 +67,24 @@ const {
   affiliationLoaderByOrgId,
 } = require('./loaders')
 
-const createSchema = ({ language }) => new GraphQLSchema({
-  query: createQuerySchema(createI18n(language)),
-  mutation: createMutationSchema(createI18n(language)),
-})
+const createSchema = ({ language }) =>
+  new GraphQLSchema({
+    query: createQuerySchema(createI18n(language)),
+    mutation: createMutationSchema(createI18n(language)),
+  })
 
-const createI18n = (language) => setupI18n({
-  language: language,
-  locales: ['en', 'fr'],
-  missing: 'Traduction manquante',
-  catalogs: {
-    en: englishMessages,
-    fr: frenchMessages,
-  },
-})
+const createI18n = (language) =>
+  setupI18n({
+    language: language,
+    locales: ['en', 'fr'],
+    missing: 'Traduction manquante',
+    catalogs: {
+      en: englishMessages,
+      fr: frenchMessages,
+    },
+  })
 
-const createContext = ({context, request, response}) => {
+const createContext = ({ context, request, response }) => {
   const { query } = context
   // Get user id from token
   let userId
@@ -251,10 +254,10 @@ const Server = (_PORT, context = {}) => {
     '/graphql',
     graphqlHTTP(async (request, response, _graphQLParams) => ({
       graphiql: false,
-      schema: createSchema({ language: request.language}),
-      context: createContext({context, request, response}),
-    }),
-  ))
+      schema: createSchema({ language: request.language }),
+      context: createContext({ context, request, response }),
+    })),
+  )
 
   // const httpServer = http.createServer(app)
 
