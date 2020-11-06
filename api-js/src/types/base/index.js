@@ -871,7 +871,7 @@ const userAffiliationsType = new GraphQLObjectType({
     user: {
       type: userType,
       description: 'The affiliated users information.',
-      resolve: async ({ userKey }, args, { loaders: { userLoaderByKey } }) => {
+      resolve: async ({ userKey }, _args, { loaders: { userLoaderByKey } }) => {
         const user = await userLoaderByKey.load(userKey)
         return user
       },
@@ -879,7 +879,7 @@ const userAffiliationsType = new GraphQLObjectType({
     organization: {
       type: organizationType,
       description: 'The affiliated organizations information.',
-      resolve: async ({ orgKey }, args, { loaders: { orgLoaderByKey } }) => {
+      resolve: async ({ orgKey }, _args, { loaders: { orgLoaderByKey } }) => {
         const org = await orgLoaderByKey.load(orgKey)
         return org
       },
