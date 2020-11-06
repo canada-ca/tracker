@@ -6,6 +6,8 @@ import { string } from 'prop-types'
 import theme from './theme/canada'
 import { useQuery } from '@apollo/client'
 import { WEB_AND_EMAIL_SUMMARIES } from './graphql/queries'
+import { LoadingMessage } from './LoadingMessage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 const { colors } = theme
 
@@ -25,15 +27,13 @@ export function SummaryGroup() {
     },
   })
 
-  if (error) {
-    return <p>{String(error)}</p>
-  }
+  if (error) return <ErrorFallbackMessage error={error} />
 
   if (loading) {
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>Summary Cards</Trans>
+      </LoadingMessage>
     )
   }
 

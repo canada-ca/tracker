@@ -21,6 +21,9 @@ import {
 import { useUserState } from './UserState'
 import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function Organisations({ orgsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -39,18 +42,13 @@ export default function Organisations({ orgsPerPage = 10 }) {
     recordsPerPage: orgsPerPage,
   })
 
-  if (error)
-    return (
-      <p>
-        <Trans>error {error.message}</Trans>
-      </p>
-    )
+  if (error) return <ErrorFallbackMessage error={error} />
 
   if (loading)
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>Organizations</Trans>
+      </LoadingMessage>
     )
 
   return (
@@ -58,46 +56,53 @@ export default function Organisations({ orgsPerPage = 10 }) {
       <Heading as="h1" mb="4" textAlign={['center', 'left']}>
         <Trans>Organizations</Trans>
       </Heading>
-      <InputGroup width="100%" mb="8px">
-        <InputLeftElement>
-          <Icon name="search" color="gray.300" />
-        </InputLeftElement>
-        <Input
-          type="text"
-          placeholder={t`Search for an organization`}
-        />
-      </InputGroup>
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => <Trans>No Organizations</Trans>}
-        mb="4"
-      >
-        {({ name, slug, acronym, domainCount }, index) => (
-          <Box key={`${slug}:${index}`}>
-            <OrganizationCard
-              slug={slug}
-              name={name}
-              acronym={acronym}
-              domainCount={domainCount}
-            />
-            <Divider borderColor="gray.900" />
-          </Box>
-        )}
-      </ListOf>
-      <Stack isInline align="center" mb="4">
-        <Button
-          onClick={previous}
-          disable={!!hasPreviousPage}
-          aria-label="Previous page"
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <InputGroup width="100%" mb="8px">
+          <InputLeftElement>
+            <Icon name="search" color="gray.300" />
+          </InputLeftElement>
+          <Input
+            type="text"
+            placeholder={t`Search for an organization`}
+          />
+        </InputGroup>
+        <ListOf
+          elements={nodes}
+          ifEmpty={() => <Trans>No Organizations</Trans>}
+          mb="4"
         >
-          <Trans>Previous</Trans>
-        </Button>
+          {({ name, slug, acronym, domainCount }, index) => (
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <Box key={`${slug}:${index}`}>
+                <OrganizationCard
+                  slug={slug}
+                  name={name}
+                  acronym={acronym}
+                  domainCount={domainCount}
+                />
+                <Divider borderColor="gray.900" />
+              </Box>
+            </ErrorBoundary>
+          )}
+        </ListOf>
 
-        <Button onClick={next} disable={!!hasNextPage} aria-label="Next page">
-          <Trans>Next</Trans>
-        </Button>
-      </Stack>
-      <Trans>*All data represented is mocked for demonstration purposes</Trans>
+        <Stack isInline align="center" mb="4">
+          <Button
+            onClick={previous}
+            disable={!!hasPreviousPage}
+            aria-label="Previous page"
+          >
+            <Trans>Previous</Trans>
+          </Button>
+
+          <Button onClick={next} disable={!!hasNextPage} aria-label="Next page">
+            <Trans>Next</Trans>
+          </Button>
+        </Stack>
+        <Trans>
+          *All data represented is mocked for demonstration purposes
+        </Trans>
+      </ErrorBoundary>
     </Layout>
   );
 }

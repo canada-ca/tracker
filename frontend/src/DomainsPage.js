@@ -28,6 +28,9 @@ import { useUserState } from './UserState'
 import { DomainCard } from './DomainCard'
 import { ScanDomain } from './ScanDomain'
 import { usePaginatedCollection } from './usePaginatedCollection'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -46,18 +49,13 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
     recordsPerPage: domainsPerPage,
   })
 
-  if (error)
-    return (
-      <p>
-        <Trans>error {error.message}</Trans>
-      </p>
-    )
+  if (error) return <ErrorFallbackMessage error={error} />
 
   if (loading)
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>Domains</Trans>
+      </LoadingMessage>
     )
 
   return (
@@ -81,44 +79,54 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
             <Text fontSize="2xl" mb="2">
               <Trans>Search for any Government of Canada tracked domain:</Trans>
             </Text>
-            <InputGroup width="100%" mb="8px">
-              <InputLeftElement>
-                <Icon name="search" color="gray.300" />
-              </InputLeftElement>
-              <Input type="text" placeholder={t`Search for a domain`} />
-            </InputGroup>
-            <ListOf
-              elements={nodes}
-              ifEmpty={() => <Trans>No Domains</Trans>}
-              mb="4"
-            >
-              {({ id, url, slug, lastRan }, index) => (
-                <Box key={`${slug}:${id}:${index}`}>
-                  <DomainCard url={url} lastRan={lastRan} />
-                  <Divider borderColor="gray.900" />
-                </Box>
-              )}
-            </ListOf>
-            <Stack isInline align="center" mb="4">
-              <Button
-                onClick={previous}
-                disable={!!hasPreviousPage}
-                aria-label="Previous page"
-              >
-                <Trans>Previous</Trans>
-              </Button>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <InputGroup width="100%" mb="8px">
+                <InputLeftElement>
+                  <Icon name="search" color="gray.300" />
+                </InputLeftElement>
+                <Input
+                  type="text"
+                  placeholder={t`Search for a domain`}
+                />
+              </InputGroup>
 
-              <Button
-                onClick={next}
-                disable={!!hasNextPage}
-                aria-label="Next page"
+              <ListOf
+                elements={nodes}
+                ifEmpty={() => <Trans>No Domains</Trans>}
+                mb="4"
               >
-                <Trans>Next</Trans>
-              </Button>
-            </Stack>
-            <Trans>
-              *All data represented is mocked for demonstration purposes
-            </Trans>
+                {({ id, url, slug, lastRan }, index) => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <Box key={`${slug}:${id}:${index}`}>
+                      <DomainCard url={url} lastRan={lastRan} />
+                      <Divider borderColor="gray.900" />
+                    </Box>
+                  </ErrorBoundary>
+                )}
+              </ListOf>
+
+              <Stack isInline align="center" mb="4">
+                <Button
+                  onClick={previous}
+                  disable={!!hasPreviousPage}
+                  aria-label="Previous page"
+                >
+                  <Trans>Previous</Trans>
+                </Button>
+
+                <Button
+                  onClick={next}
+                  disable={!!hasNextPage}
+                  aria-label="Next page"
+                >
+                  <Trans>Next</Trans>
+                </Button>
+              </Stack>
+
+              <Trans>
+                *All data represented is mocked for demonstration purposes
+              </Trans>
+            </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ScanDomain />

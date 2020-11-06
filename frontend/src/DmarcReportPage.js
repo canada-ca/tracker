@@ -12,6 +12,9 @@ import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { months } from './months'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -58,9 +61,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   if (tableLoading && barLoading)
     return (
-      <Text>
-        <Trans>Loading...</Trans>
-      </Text>
+      <LoadingMessage>
+        <Trans>DMARC Report</Trans>
+      </LoadingMessage>
     )
 
   const options = [
@@ -163,7 +166,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     barDisplay = (
       <Heading as="h3" size="lg" textAlign="center">
         {barLoading ? (
-          <Trans>Loading...</Trans>
+          // <Trans>Loading...</Trans>
+          <LoadingMessage />
         ) : barError ? (
           <Trans>Error while querying for summary bar graph</Trans>
         ) : (
@@ -401,7 +405,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     tableDisplay = (
       <Heading as="h3" size="lg" textAlign="center">
         {tableLoading ? (
-          <Trans>Loading...</Trans>
+          // <Trans>Loading...</Trans>
+          <LoadingMessage />
         ) : tableError ? (
           <Trans>Error while querying for summary tables</Trans>
         ) : (
@@ -425,9 +430,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           {domainSlug.toUpperCase()}
         </Heading>
       </Stack>
-
-      {barDisplay}
-
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        {barDisplay}
+      </ErrorBoundary>
       <Stack isInline align="center" mb="16px">
         <Text fontWeight="bold" textAlign="center">
           <Trans>Showing data for period: </Trans>
@@ -440,8 +445,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           {options}
         </Select>
       </Stack>
-
-      {tableDisplay}
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        {tableDisplay}
+      </ErrorBoundary>
     </Box>
   )
 }

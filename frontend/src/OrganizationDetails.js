@@ -20,6 +20,9 @@ import { useUserState } from './UserState'
 import { useParams, useHistory } from 'react-router-dom'
 import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 import { DomainCard } from './DomainCard'
 import { ListOf } from './ListOf'
 import { PaginationButtons } from './PaginationButtons'
@@ -72,9 +75,9 @@ export default function OrganizationDetails() {
 
   if (loading) {
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>Organization Details</Trans>
+      </LoadingMessage>
     )
   }
 
@@ -109,40 +112,48 @@ export default function OrganizationDetails() {
 
         <TabPanels>
           <TabPanel>
-            <OrganizationSummary />
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <OrganizationSummary />
+            </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <ListOf
-              elements={currentDomains}
-              ifEmpty={() => <Trans>No Domains</Trans>}
-              mb="4"
-            >
-              {({ id, url, lastRan }, index) => (
-                <Box key={`${id}:${index}`}>
-                  <DomainCard url={url} lastRan={lastRan} />
-                  <Divider borderColor="gray.900" />
-                </Box>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <ListOf
+                elements={currentDomains}
+                ifEmpty={() => <Trans>No Domains</Trans>}
+                mb="4"
+              >
+                {({ id, url, lastRan }, index) => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <Box key={`${id}:${index}`}>
+                      <DomainCard url={url} lastRan={lastRan} />
+                      <Divider borderColor="gray.900" />
+                    </Box>
+                  </ErrorBoundary>
+                )}
+              </ListOf>
+              {domains.length > 0 && (
+                <PaginationButtons
+                  perPage={domainsPerPage}
+                  total={domains.length}
+                  paginate={paginate}
+                  currentPage={currentPage}
+                />
               )}
-            </ListOf>
-            {domains.length > 0 && (
-              <PaginationButtons
-                perPage={domainsPerPage}
-                total={domains.length}
-                paginate={paginate}
-                currentPage={currentPage}
-              />
-            )}
-            <Trans>
-              *All data represented is mocked for demonstration purposes
-            </Trans>
+              <Trans>
+                *All data represented is mocked for demonstration purposes
+              </Trans>
+            </ErrorBoundary>
           </TabPanel>
           {isLoggedIn() && (
             <TabPanel>
-              <UserList
-                userListData={data.userList}
-                orgName={orgName}
-                orgSlug={orgSlug}
-              />
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                <UserList
+                  userListData={data.userList}
+                  orgName={orgName}
+                  orgSlug={orgSlug}
+                />
+              </ErrorBoundary>
             </TabPanel>
           )}
         </TabPanels>

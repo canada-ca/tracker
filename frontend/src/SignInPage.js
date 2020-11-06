@@ -19,6 +19,7 @@ import { AUTHENTICATE } from './graphql/mutations'
 import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function SignInPage() {
   const { login } = useUserState()
@@ -34,10 +35,10 @@ export default function SignInPage() {
       .email(fieldRequirements.email.email.message),
   })
 
-  const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {
-    onError() {
+  const [authenticate, { loading }] = useMutation(AUTHENTICATE, {
+    onError(error) {
       toast({
-        title: t`An error occurred.`,
+        title: error.message,
         description: t`Unable to sign in to your account, please try again.`,
         status: 'error',
         duration: 9000,
@@ -65,13 +66,7 @@ export default function SignInPage() {
     },
   })
 
-  if (loading)
-    return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
-    )
-  if (error) return <p>{String(error)}</p>
+  if (loading) return <LoadingMessage />
 
   return (
     <Box px="8" mx="auto" overflow="hidden">

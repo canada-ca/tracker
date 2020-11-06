@@ -8,6 +8,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { UPDATE_PASSWORD } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function ResetPasswordPage() {
   const history = useHistory()
@@ -23,7 +24,7 @@ export default function ResetPasswordPage() {
       .oneOf([ref('password')], t`Passwords must match`),
   })
 
-  const [updatePassword, { loading, error }] = useMutation(UPDATE_PASSWORD, {
+  const [updatePassword, { loading }] = useMutation(UPDATE_PASSWORD, {
     onError(error) {
       toast({
         title: error.message,
@@ -47,13 +48,7 @@ export default function ResetPasswordPage() {
     },
   })
 
-  if (loading)
-    return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
-    )
-  if (error) return <p>{String(error)}</p>
+  if (loading) return <LoadingMessage />
 
   return (
     <Box px="8" mx="auto" overflow="hidden">
