@@ -79,8 +79,8 @@ describe('given the dmarcGuidanceTagLoader function', () => {
       }
 
       const loader = dmarcGuidanceTagLoader(query, i18n)
-      const dkimTags = await loader.loadMany(dmarcTagKeys)
-      expect(dkimTags).toEqual(expectedDmarcTags)
+      const dmarcTags = await loader.loadMany(dmarcTagKeys)
+      expect(dmarcTags).toEqual(expectedDmarcTags)
     })
   })
   describe('users language is set to english', () => {
