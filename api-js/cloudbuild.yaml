@@ -1,40 +1,63 @@
 steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: start_arango
+  entrypoint: /bin/sh
+  args:
+    [
+      '-c',
+      'docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$_DB_PASS --name=arangodb arangodb',
+    ]
 
-  - name: node:alpine
-    id: install
-    dir: api-js
-    entrypoint: npm
-    args: ['ci', '--no-optional']
+- name: mikewilliamson/wait-for
+  id: wait
+  args: ['arangodb:8529']
+- name: node:alpine
+  id: install
+  dir: api-js
+  entrypoint: npm
+  args: ['ci', '--no-optional']
 
-  - name: node:alpine
-    id: lint
-    dir: api-js
-    entrypoint: npm
-    args: ['run', lint]
+- name: node:alpine
+  id: lint
+  dir: api-js
+  entrypoint: npm
+  args: ['run', lint]
 
-  - name: node:alpine
-    id: test
-    dir: api-js
-    entrypoint: npm
-    args: ['test']
+- name: node:alpine
+  id: test
+  dir: api-js
+  entrypoint: npm
+  args: ['test']
+  env:
+  - DB_PASS=$_DB_PASS
+  - DB_URL=$_DB_URL
+  - DB_NAME=$_DB_NAME
+  - AUTHENTICATED_KEY=$_AUTHENTICATED_KEY
+  - SIGN_IN_KEY=$_SIGN_IN_KEY
+  - NOTIFICATION_API_KEY=$_NOTIFICATION_API_KEY
+  - NOTIFICATION_API_URL=$_NOTIFICATION_API_URL
+  - DMARC_REPORT_API_SECRET=$_DMARC_REPORT_API_SECRET
+  - TOKEN_HASH=$_TOKEN_HASH
+  - DMARC_REPORT_API_TOKEN=$_DMARC_REPORT_API_TOKEN
+  - DMARC_REPORT_API_URL=$_DMARC_REPORT_API_URL
 
-  - name: node:alpine
-    id: lingui-extract
-    dir: api-js
-    entrypoint: npm
-    args: ['run', 'extract']
+- name: node:alpine
+  id: lingui-extract
+  dir: api-js
+  entrypoint: npm
+  args: ['run', 'extract']
 
-  - name: node:alpine
-    id: lingui-compile
-    dir: api-js
-    entrypoint: npm
-    args: ['run', 'compile']
+- name: node:alpine
+  id: lingui-compile
+  dir: api-js
+  entrypoint: npm
+  args: ['run', 'compile']
 
-  - name: 'gcr.io/cloud-builders/docker'
-    id: build-if-master
-    entrypoint: 'bash'
-    dir: api-js
-    args:
+- name: 'gcr.io/cloud-builders/docker'
+  id: build-if-master
+  entrypoint: 'bash'
+  dir: api-js
+  args:
     - '-c'
     - |
       if [[ "$BRANCH_NAME" == "master" ]]
@@ -44,10 +67,10 @@ steps:
         exit 0
       fi
 
-  - name: 'gcr.io/cloud-builders/docker'
-    id: push-if-master
-    entrypoint: 'bash'
-    args:
+- name: 'gcr.io/cloud-builders/docker'
+  id: push-if-master
+  entrypoint: 'bash'
+  args:
     - '-c'
     - |
       if [[ "$BRANCH_NAME" == "master" ]]

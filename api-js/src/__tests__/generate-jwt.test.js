@@ -1,6 +1,3 @@
-const dotenv = require('dotenv-safe')
-dotenv.config()
-
 const { AUTHENTICATED_KEY } = process.env
 
 const jwt = require('jsonwebtoken')

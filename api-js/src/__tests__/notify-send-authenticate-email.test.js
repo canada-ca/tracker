@@ -1,6 +1,3 @@
-const dotenv = require('dotenv-safe')
-dotenv.config()
-
 const { setupI18n } = require('@lingui/core')
 
 const englishMessages = require('../locale/en/messages')
