@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { number } from 'prop-types'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -27,6 +27,7 @@ import { LoadingMessage } from './LoadingMessage'
 
 export default function Organisations({ orgsPerPage = 10 }) {
   const { currentUser } = useUserState()
+  const [searchTerm, setSearchTerm] = useState('')
   const {
     loading,
     error,
@@ -51,6 +52,10 @@ export default function Organisations({ orgsPerPage = 10 }) {
       </LoadingMessage>
     )
 
+  const filterOrgs = nodes.filter((node) => {
+    return node.name.toLowerCase().includes(searchTerm.toLowerCase())
+  })
+
   return (
     <Layout>
       <Heading as="h1" mb="4" textAlign={['center', 'left']}>
@@ -64,10 +69,11 @@ export default function Organisations({ orgsPerPage = 10 }) {
           <Input
             type="text"
             placeholder={t`Search for an organization`}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </InputGroup>
         <ListOf
-          elements={nodes}
+          elements={searchTerm === '' ? nodes : filterOrgs}
           ifEmpty={() => <Trans>No Organizations</Trans>}
           mb="4"
         >
@@ -104,7 +110,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
         </Trans>
       </ErrorBoundary>
     </Layout>
-  );
+  )
 }
 
 Organisations.propTypes = { orgsPerPage: number }

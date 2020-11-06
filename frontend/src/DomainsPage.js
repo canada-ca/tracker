@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { number } from 'prop-types'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -34,6 +34,7 @@ import { LoadingMessage } from './LoadingMessage'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
+  const [searchTerm, setSearchTerm] = useState('')
   const {
     loading,
     error,
@@ -57,6 +58,10 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
         <Trans>Domains</Trans>
       </LoadingMessage>
     )
+
+  const filterDomains = nodes.filter((node) => {
+    return node.url.toLowerCase().includes(searchTerm.toLowerCase())
+  })
 
   return (
     <Layout>
@@ -87,11 +92,12 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                 <Input
                   type="text"
                   placeholder={t`Search for a domain`}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </InputGroup>
 
               <ListOf
-                elements={nodes}
+                elements={searchTerm === '' ? nodes : filterDomains}
                 ifEmpty={() => <Trans>No Domains</Trans>}
                 mb="4"
               >
