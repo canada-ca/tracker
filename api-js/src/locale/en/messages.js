@@ -191,20 +191,30 @@
       'Unable to create domain. Please try again.',
     'Unable to create organization. Please try again.':
       'Unable to create organization. Please try again.',
+    'Unable to find dkim guidance tags. Please try again.':
+      'Unable to find dkim guidance tags. Please try again.',
     'Unable to find dkim result. Please try again.':
       'Unable to find dkim result. Please try again.',
     'Unable to find dkim scan. Please try again.':
       'Unable to find dkim scan. Please try again.',
+    'Unable to find dmarc guidance tags. Please try again.':
+      'Unable to find dmarc guidance tags. Please try again.',
     'Unable to find dmarc scan. Please try again.':
       'Unable to find dmarc scan. Please try again.',
     'Unable to find domain. Please try again.':
       'Unable to find domain. Please try again.',
+    'Unable to find https guidance tags. Please try again.':
+      'Unable to find https guidance tags. Please try again.',
     'Unable to find https scan. Please try again.':
       'Unable to find https scan. Please try again.',
     'Unable to find organization. Please try again.':
       'Unable to find organization. Please try again.',
+    'Unable to find spf guidance tags. Please try again.':
+      'Unable to find spf guidance tags. Please try again.',
     'Unable to find spf scan. Please try again.':
       'Unable to find spf scan. Please try again.',
+    'Unable to find ssl guidance tags. Please try again.':
+      'Unable to find ssl guidance tags. Please try again.',
     'Unable to find ssl scan. Please try again.':
       'Unable to find ssl scan. Please try again.',
     'Unable to find user affiliation(s). Please try again.':

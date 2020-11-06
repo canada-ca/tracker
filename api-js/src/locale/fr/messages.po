@@ -231,6 +231,11 @@ msgstr "todo"
 msgid "Unable to create organization. Please try again."
 msgstr "todo"
 
+#: src/loaders/guidance-tags/load-dkim-guidance-tags.js:18
+#: src/loaders/guidance-tags/load-dkim-guidance-tags.js:32
+msgid "Unable to find dkim guidance tags. Please try again."
+msgstr "todo"
+
 #: src/loaders/email-scan/load-dkim-result-by-key.js:18
 #: src/loaders/email-scan/load-dkim-result-by-key.js:30
 msgid "Unable to find dkim result. Please try again."
@@ -239,6 +244,11 @@ msgstr "todo"
 #: src/loaders/email-scan/load-dkim-by-key.js:18
 #: src/loaders/email-scan/load-dkim-by-key.js:30
 msgid "Unable to find dkim scan. Please try again."
+msgstr "todo"
+
+#: src/loaders/guidance-tags/load-dmarc-guidance-tags.js:18
+#: src/loaders/guidance-tags/load-dmarc-guidance-tags.js:32
+msgid "Unable to find dmarc guidance tags. Please try again."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-dmarc-by-key.js:18
@@ -254,6 +264,11 @@ msgstr "todo"
 msgid "Unable to find domain. Please try again."
 msgstr "todo"
 
+#: src/loaders/guidance-tags/load-https-guidance-tags.js:18
+#: src/loaders/guidance-tags/load-https-guidance-tags.js:32
+msgid "Unable to find https guidance tags. Please try again."
+msgstr "todo"
+
 #: src/loaders/web-scan/load-https-by-key.js:17
 #: src/loaders/web-scan/load-https-by-key.js:29
 msgid "Unable to find https scan. Please try again."
@@ -266,9 +281,19 @@ msgstr "todo"
 msgid "Unable to find organization. Please try again."
 msgstr "todo"
 
+#: src/loaders/guidance-tags/load-spf-guidance-tags.js:18
+#: src/loaders/guidance-tags/load-spf-guidance-tags.js:32
+msgid "Unable to find spf guidance tags. Please try again."
+msgstr "todo"
+
 #: src/loaders/email-scan/load-spf-by-key.js:18
 #: src/loaders/email-scan/load-spf-by-key.js:28
 msgid "Unable to find spf scan. Please try again."
+msgstr "todo"
+
+#: src/loaders/guidance-tags/load-ssl-guidance-tags.js:18
+#: src/loaders/guidance-tags/load-ssl-guidance-tags.js:32
+msgid "Unable to find ssl guidance tags. Please try again."
 msgstr "todo"
 
 #: src/loaders/web-scan/load-ssl-by-key.js:17
@@ -299,73 +324,73 @@ msgstr "todo"
 msgid "Unable to invite yourself to an org. Please try again."
 msgstr "todo"
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:142
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:141
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:149
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:148
 msgid "Unable to load affiliations. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:130
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:140
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:131
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:141
 msgid "Unable to load dkim results. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:151
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:161
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:152
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:162
 msgid "Unable to load dkim scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:144
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:154
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:145
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:155
 msgid "Unable to load dmarc scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:148
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:158
-#: src/loaders/domains/load-domain-connections-by-user-id.js:148
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:144
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:154
+#: src/loaders/domains/load-domain-connections-by-user-id.js:149
 #: src/queries/domains/find-my-domains.js:24
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:142
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:152
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:143
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:153
 msgid "Unable to load https scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:140
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:150
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:145
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:141
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:151
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:146
 #: src/queries/organizations/find-my-organizations.js:25
 msgid "Unable to load organizations. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:142
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:152
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:143
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:153
 msgid "Unable to load spf scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:142
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:152
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:143
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:153
 msgid "Unable to load ssl scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:132
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:131
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:139
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:138
 msgid "Unable to query affiliations. Please try again."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-user-id.js:138
+#: src/loaders/domains/load-domain-connections-by-user-id.js:139
 msgid "Unable to query domains. Please try again."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:135
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:136
 msgid "Unable to query organizations. Please try again."
 msgstr "todo"
 
-#: src/queries/user/find-user-by-username.js:37
+#: src/queries/user/find-user-by-username.js:34
 msgid "Unable to query user without a username, please try again."
 msgstr "todo"
 
-#: src/queries/user/find-user-by-username.js:54
+#: src/queries/user/find-user-by-username.js:50
 msgid "Unable to query user, please try again."
 msgstr "todo"
 
@@ -519,7 +544,7 @@ msgstr "todo"
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "todo"
 
-#: src/queries/user/find-user-by-username.js:65
+#: src/queries/user/find-user-by-username.js:60
 msgid "User could not be queried."
 msgstr "todo"
 
