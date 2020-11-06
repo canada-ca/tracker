@@ -355,9 +355,12 @@ const dkimResultsType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         _args,
-        { loaders: { dkimGuidanceTagLoader } },
+        { loaders: { dkimGuidanceTagConnectionsLoader } },
       ) => {
-        const dkimTags = await dkimGuidanceTagLoader.loadMany(guidanceTags)
+        const dkimTags = await dkimGuidanceTagConnectionsLoader({
+          dkimGuidanceTags: guidanceTags,
+          ...connectionArgs,
+        })
         return dkimTags
       },
     },
@@ -434,9 +437,12 @@ const dmarcType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         _args,
-        { loaders: { dmarcGuidanceTagLoader } },
+        { loaders: { dmarcGuidanceTagConnectionsLoader } },
       ) => {
-        const dmarcTags = await dmarcGuidanceTagLoader.loadMany(guidanceTags)
+        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+          dmarcGuidanceTags: guidanceTags,
+          ...connectionArgs,
+        })
         return dmarcTags
       },
     },
@@ -504,9 +510,12 @@ const spfType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         _args,
-        { loaders: { spfGuidanceTagLoader } },
+        { loaders: { spfGuidanceTagConnectionsLoader } },
       ) => {
-        const spfTags = await spfGuidanceTagLoader.loadMany(guidanceTags)
+        const spfTags = await spfGuidanceTagConnectionsLoader({
+          spfGuidanceTags: guidanceTags,
+          ...connectionArgs,
+        })
         return spfTags
       },
     },
@@ -655,9 +664,12 @@ const httpsType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         _args,
-        { loaders: { httpsGuidanceTagLoader } },
+        { loaders: { httpsGuidanceTagConnectionsLoader } },
       ) => {
-        const httpsTags = await httpsGuidanceTagLoader.loadMany(guidanceTags)
+        const httpsTags = await httpsGuidanceTagConnectionsLoader({
+          httpsGuidanceTags: guidanceTags,
+          ...connectionArgs,
+        })
         return httpsTags
       },
     },
@@ -706,9 +718,12 @@ const sslType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         _args,
-        { loaders: { sslGuidanceTagLoader } },
+        { loaders: { sslGuidanceTagConnectionsLoader } },
       ) => {
-        const sslTags = await sslGuidanceTagLoader.loadMany(guidanceTags)
+        const sslTags = await sslGuidanceTagConnectionsLoader({
+          sslGuidanceTags: guidanceTags,
+          ...connectionArgs,
+        })
         return sslTags
       },
     },
