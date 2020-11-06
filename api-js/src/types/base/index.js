@@ -732,6 +732,13 @@ const sslConnection = connectionDefinitions({
 const guidanceTagConnection = connectionDefinitions({
   name: 'GuidanceTag',
   nodeType: guidanceTagType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of guidance tags for a given scan type.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 /* End domain related objects */
