@@ -1,0 +1,20 @@
+{
+  "name": "codemods",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/preset-env": "^7.12.1",
+    "jscodeshift": "^0.11.0",
+    "jscodeshift-helper": "^1.1.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.1.2"
+  }
+}
