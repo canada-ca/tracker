@@ -19,6 +19,7 @@ const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
 const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
 const { nodeInterface } = require('../node')
 const { periodType } = require('./dmarc-report')
+const { guidanceTagType } = require('./guidance-tag')
 
 /* Domain related objects */
 const domainType = new GraphQLObjectType({
@@ -155,7 +156,7 @@ const domainType = new GraphQLObjectType({
 const domainConnection = connectionDefinitions({
   name: 'Domain',
   nodeType: domainType,
-  connectionFields: () =>({
+  connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of domains the user has access to.',
@@ -298,16 +299,16 @@ const dkimType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: `DomainKeys Identified Mail (DKIM) permits a person, role, or
-    organization that owns the signing domain to claim some
-    responsibility for a message by associating the domain with the
-    message.  This can be an author's organization, an operational relay,
-    or one of their agents.`,
+organization that owns the signing domain to claim some
+responsibility for a message by associating the domain with the
+message.  This can be an author's organization, an operational relay,
+or one of their agents.`,
 })
 
 const dkimConnection = connectionDefinitions({
   name: 'DKIM',
   nodeType: dkimType,
-  connectionFields: () =>({
+  connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of dkim scans related to a given domain.',
@@ -345,10 +346,10 @@ const dkimResultsType = new GraphQLObjectType({
       description: 'Size of the Public Key in bits',
       resolve: async ({ keyLength }) => keyLength,
     },
-    dkimGuidanceTags: {
-      type: new GraphQLList(GraphQLString),
+    guidanceTags: {
+      type: new GraphQLList(guidanceTagType),
       description: 'Key tags found during scan.',
-      resolve: async ({ dkimGuidanceTags }) => dkimGuidanceTags,
+      resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],
@@ -358,10 +359,11 @@ const dkimResultsType = new GraphQLObjectType({
 const dkimResultsConnection = connectionDefinitions({
   name: 'DKIMResult',
   nodeType: dkimResultsType,
-  connectionFields: () =>({
+  connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
-      description: 'The total amount of dkim results related to a given domain.',
+      description:
+        'The total amount of dkim results related to a given domain.',
       resolve: ({ totalCount }) => totalCount,
     },
   }),
@@ -413,24 +415,24 @@ const dmarcType = new GraphQLObjectType({
       description: `The percentage of messages to which the DMARC policy is to be applied.`,
       resolve: async ({ pct }) => pct,
     },
-    dmarcGuidanceTags: {
-      type: GraphQLList(GraphQLString),
+    guidanceTags: {
+      type: GraphQLList(guidanceTagType),
       description: `Key tags found during DMARC Scan.`,
-      resolve: async ({ dmarcGuidanceTags }) => dmarcGuidanceTags,
+      resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],
   description: `Domain-based Message Authentication, Reporting, and Conformance
-    (DMARC) is a scalable mechanism by which a mail-originating
-    organization can express domain-level policies and preferences for
-    message validation, disposition, and reporting, that a mail-receiving
-    organization can use to improve mail handling.`,
+(DMARC) is a scalable mechanism by which a mail-originating
+organization can express domain-level policies and preferences for
+message validation, disposition, and reporting, that a mail-receiving
+organization can use to improve mail handling.`,
 })
 
 const dmarcConnection = connectionDefinitions({
   name: 'DMARC',
   nodeType: dmarcType,
-  connectionFields: () =>({
+  connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of dmarc scans related to a given domain.',
@@ -473,26 +475,26 @@ const spfType = new GraphQLObjectType({
       description: `Instruction of what a recipient should do if there is not a match to your SPF record.`,
       resolve: async ({ spfDefault }) => spfDefault,
     },
-    spfGuidanceTags: {
-      type: GraphQLList(GraphQLString),
+    guidanceTags: {
+      type: GraphQLList(guidanceTagType),
       description: `Key tags found during scan.`,
-      resolve: async ({ spfGuidanceTags }) => spfGuidanceTags,
+      resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],
   description: `Email on the Internet can be forged in a number of ways.  In
-  particular, existing protocols place no restriction on what a sending
-  host can use as the "MAIL FROM" of a message or the domain given on
-  the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
-  protocol is where ADministrative Management Domains (ADMDs) can explicitly
-  authorize the hosts that are allowed to use their domain names, and a
-  receiving host can check such authorization.`,
+particular, existing protocols place no restriction on what a sending
+host can use as the "MAIL FROM" of a message or the domain given on
+the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
+protocol is where ADministrative Management Domains (ADMDs) can explicitly
+authorize the hosts that are allowed to use their domain names, and a
+receiving host can check such authorization.`,
 })
 
 const spfConnection = connectionDefinitions({
   name: 'SPF',
   nodeType: spfType,
-  connectionFields: () =>({
+  connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of spf scans related to a given domain.',
@@ -614,10 +616,10 @@ const httpsType = new GraphQLObjectType({
       description: `Denotes whether the domain has been submitted and included within HSTS preload list.`,
       resolve: async ({ preloaded }) => preloaded,
     },
-    httpsGuidanceTags: {
-      type: GraphQLList(GraphQLString),
+    guidanceTags: {
+      type: GraphQLList(guidanceTagType),
       description: `Key tags found during scan.`,
-      resolve: async ({ httpsGuidanceTags }) => httpsGuidanceTags,
+      resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],
@@ -627,7 +629,7 @@ const httpsType = new GraphQLObjectType({
 const httpsConnection = connectionDefinitions({
   name: 'HTTPS',
   nodeType: httpsType,
-  connectionFields: () =>({
+  connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of https scans for a given domain.',
@@ -655,10 +657,10 @@ const sslType = new GraphQLObjectType({
       description: `The time when the scan was initiated.`,
       resolve: async ({ timestamp }) => timestamp,
     },
-    sslGuidanceTags: {
-      type: GraphQLList(GraphQLString),
+    guidanceTags: {
+      type: GraphQLList(guidanceTagType),
       description: `Key tags found during scan.`,
-      resolve: async ({ sslGuidanceTags }) => sslGuidanceTags,
+      resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],
@@ -668,7 +670,7 @@ const sslType = new GraphQLObjectType({
 const sslConnection = connectionDefinitions({
   name: 'SSL',
   nodeType: sslType,
-  connectionFields: () =>({
+  connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of https scans for a given domain.',
@@ -774,7 +776,7 @@ const organizationType = new GraphQLObjectType({
 const organizationConnection = connectionDefinitions({
   name: 'Organization',
   nodeType: organizationType,
-  connectionFields: () =>({
+  connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of organizations the user has access to.',
@@ -841,8 +843,8 @@ const userType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: `This object can be queried to retrieve the current logged in users
-    information or if the user is an org or super admin they can query a user
-    by their user name`,
+information or if the user is an org or super admin they can query a user
+by their user name`,
 })
 
 const userConnection = connectionDefinitions({
@@ -893,7 +895,7 @@ const userAffiliationsType = new GraphQLObjectType({
 const userAffiliationsConnection = connectionDefinitions({
   name: 'UserAffiliations',
   nodeType: userAffiliationsType,
-  connectionFields: () =>({
+  connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of affiliations the user has access to.',
