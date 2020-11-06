@@ -354,12 +354,12 @@ const dkimResultsType = new GraphQLObjectType({
       description: 'Key tags found during scan.',
       resolve: async (
         { guidanceTags },
-        _args,
+        args,
         { loaders: { dkimGuidanceTagConnectionsLoader } },
       ) => {
         const dkimTags = await dkimGuidanceTagConnectionsLoader({
           dkimGuidanceTags: guidanceTags,
-          ...connectionArgs,
+          ...args,
         })
         return dkimTags
       },
@@ -436,12 +436,12 @@ const dmarcType = new GraphQLObjectType({
       description: `Key tags found during DMARC Scan.`,
       resolve: async (
         { guidanceTags },
-        _args,
+        args,
         { loaders: { dmarcGuidanceTagConnectionsLoader } },
       ) => {
         const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
           dmarcGuidanceTags: guidanceTags,
-          ...connectionArgs,
+          ...args,
         })
         return dmarcTags
       },
@@ -509,12 +509,12 @@ const spfType = new GraphQLObjectType({
       description: `Key tags found during scan.`,
       resolve: async (
         { guidanceTags },
-        _args,
+        args,
         { loaders: { spfGuidanceTagConnectionsLoader } },
       ) => {
         const spfTags = await spfGuidanceTagConnectionsLoader({
           spfGuidanceTags: guidanceTags,
-          ...connectionArgs,
+          ...args,
         })
         return spfTags
       },
@@ -663,12 +663,12 @@ const httpsType = new GraphQLObjectType({
       description: `Key tags found during scan.`,
       resolve: async (
         { guidanceTags },
-        _args,
+        args,
         { loaders: { httpsGuidanceTagConnectionsLoader } },
       ) => {
         const httpsTags = await httpsGuidanceTagConnectionsLoader({
           httpsGuidanceTags: guidanceTags,
-          ...connectionArgs,
+          ...args,
         })
         return httpsTags
       },
@@ -717,12 +717,12 @@ const sslType = new GraphQLObjectType({
       description: `Key tags found during scan.`,
       resolve: async (
         { guidanceTags },
-        _args,
+        args,
         { loaders: { sslGuidanceTagConnectionsLoader } },
       ) => {
         const sslTags = await sslGuidanceTagConnectionsLoader({
           sslGuidanceTags: guidanceTags,
-          ...connectionArgs,
+          ...args,
         })
         return sslTags
       },
