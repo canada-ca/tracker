@@ -53,7 +53,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
       const expectedCursor = await query`
         FOR tag IN dkimGuidanceTags
           SORT tag._key ASC LIMIT 1
-          RETURN tag
+          RETURN MERGE(tag, { tagId: tag._key })
       `
       const expectedDkimTag = await expectedCursor.next()
 
@@ -69,7 +69,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
       const expectedDkimTags = []
       const expectedCursor = await query`
         FOR tag IN dkimGuidanceTags
-          RETURN tag
+          RETURN MERGE(tag, { tagId: tag._key })
       `
 
       while (expectedCursor.hasNext()) {

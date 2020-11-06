@@ -53,7 +53,7 @@ describe('given the dmarcGuidanceTagLoader function', () => {
       const expectedCursor = await query`
         FOR tag IN dmarcGuidanceTags
           SORT tag._key ASC LIMIT 1
-          RETURN tag
+          RETURN MERGE(tag, { tagId: tag._key })
       `
       const expectedDmarcTag = await expectedCursor.next()
 
@@ -69,7 +69,7 @@ describe('given the dmarcGuidanceTagLoader function', () => {
       const expectedDmarcTags = []
       const expectedCursor = await query`
         FOR tag IN dmarcGuidanceTags
-          RETURN tag
+          RETURN MERGE(tag, { tagId: tag._key })
       `
 
       while (expectedCursor.hasNext()) {

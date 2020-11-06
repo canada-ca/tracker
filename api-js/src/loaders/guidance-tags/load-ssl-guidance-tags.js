@@ -8,7 +8,7 @@ const sslGuidanceTagLoader = (query, i18n) =>
       cursor = await query`
         FOR tag IN sslGuidanceTags
           FILTER ${tags}[** FILTER CURRENT == tag._key]
-          RETURN tag
+          RETURN MERGE(tag, { tagId: tag._key })
       `
     } catch (err) {
       console.error(

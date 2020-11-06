@@ -8,7 +8,7 @@ const dmarcGuidanceTagLoader = (query, i18n) =>
       cursor = await query`
         FOR tag IN dmarcGuidanceTags
           FILTER ${tags}[** FILTER CURRENT == tag._key]
-          RETURN tag
+          RETURN MERGE(tag, { tagId: tag._key })
       `
     } catch (err) {
       console.error(
