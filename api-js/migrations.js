@@ -52,7 +52,27 @@ const makeMigrations = ({ databaseName, rootPass }) => [
   {
     type: 'documentcollection',
     databaseName,
-    name: 'guidanceTags',
+    name: 'dkimGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'dmarcGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'spfGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'httpsGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'sslGuidanceTags',
   },
   {
     type: 'edgecollection',
