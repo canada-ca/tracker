@@ -8,7 +8,7 @@ const spfGuidanceTagLoader = (query, i18n) =>
       cursor = await query`
         FOR tag IN spfGuidanceTags
           FILTER ${tags}[** FILTER CURRENT == tag._key]
-          RETURN MERGE(tag, { tagId: tag._key })
+          RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
       `
     } catch (err) {
       console.error(

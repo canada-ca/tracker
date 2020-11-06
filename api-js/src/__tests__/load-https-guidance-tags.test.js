@@ -53,7 +53,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
       const expectedCursor = await query`
         FOR tag IN httpsGuidanceTags
           SORT tag._key ASC LIMIT 1
-            RETURN MERGE(tag, { tagId: tag._key })
+          RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
       `
       const expectedHttpsTag = await expectedCursor.next()
 
@@ -69,7 +69,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
       const expectedHttpsTags = []
       const expectedCursor = await query`
         FOR tag IN httpsGuidanceTags
-          RETURN MERGE(tag, { tagId: tag._key })
+          RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
       `
 
       while (expectedCursor.hasNext()) {
