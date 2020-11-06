@@ -347,7 +347,10 @@ const dkimResultsType = new GraphQLObjectType({
       resolve: async ({ keyLength }) => keyLength,
     },
     guidanceTags: {
-      type: new GraphQLList(guidanceTagType),
+      type: guidanceTagConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       description: 'Key tags found during scan.',
       resolve: async (
         { guidanceTags },
@@ -423,7 +426,10 @@ const dmarcType = new GraphQLObjectType({
       resolve: async ({ pct }) => pct,
     },
     guidanceTags: {
-      type: GraphQLList(guidanceTagType),
+      type: guidanceTagConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       description: `Key tags found during DMARC Scan.`,
       resolve: async (
         { guidanceTags },
@@ -490,7 +496,10 @@ const spfType = new GraphQLObjectType({
       resolve: async ({ spfDefault }) => spfDefault,
     },
     guidanceTags: {
-      type: GraphQLList(guidanceTagType),
+      type: guidanceTagConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       description: `Key tags found during scan.`,
       resolve: async (
         { guidanceTags },
@@ -638,7 +647,10 @@ const httpsType = new GraphQLObjectType({
       resolve: async ({ preloaded }) => preloaded,
     },
     guidanceTags: {
-      type: GraphQLList(guidanceTagType),
+      type: guidanceTagConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       description: `Key tags found during scan.`,
       resolve: async (
         { guidanceTags },
@@ -686,7 +698,10 @@ const sslType = new GraphQLObjectType({
       resolve: async ({ timestamp }) => timestamp,
     },
     guidanceTags: {
-      type: GraphQLList(guidanceTagType),
+      type: guidanceTagConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       description: `Key tags found during scan.`,
       resolve: async (
         { guidanceTags },
@@ -712,6 +727,11 @@ const sslConnection = connectionDefinitions({
       resolve: ({ totalCount }) => totalCount,
     },
   }),
+})
+
+const guidanceTagConnection = connectionDefinitions({
+  name: 'GuidanceTag',
+  nodeType: guidanceTagType,
 })
 
 /* End domain related objects */
