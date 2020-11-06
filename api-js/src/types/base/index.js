@@ -19,7 +19,7 @@ const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
 const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
 const { nodeInterface } = require('../node')
 const { periodType } = require('./dmarc-report')
-const { guidanceTagType } = require('./guidance-tag')
+const { guidanceTagType } = require('./guidance-tags')
 
 /* Domain related objects */
 const domainType = new GraphQLObjectType({
@@ -349,7 +349,14 @@ const dkimResultsType = new GraphQLObjectType({
     guidanceTags: {
       type: new GraphQLList(guidanceTagType),
       description: 'Key tags found during scan.',
-      resolve: async () => {},
+      resolve: async (
+        { guidanceTags },
+        _args,
+        { loaders: { dkimGuidanceTagLoader } },
+      ) => {
+        const dkimTags = await dkimGuidanceTagLoader.loadMany(guidanceTags)
+        return dkimTags
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -418,7 +425,14 @@ const dmarcType = new GraphQLObjectType({
     guidanceTags: {
       type: GraphQLList(guidanceTagType),
       description: `Key tags found during DMARC Scan.`,
-      resolve: async () => {},
+      resolve: async (
+        { guidanceTags },
+        _args,
+        { loaders: { dmarcGuidanceTagLoader } },
+      ) => {
+        const dmarcTags = await dmarcGuidanceTagLoader.loadMany(guidanceTags)
+        return dmarcTags
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -478,7 +492,14 @@ const spfType = new GraphQLObjectType({
     guidanceTags: {
       type: GraphQLList(guidanceTagType),
       description: `Key tags found during scan.`,
-      resolve: async () => {},
+      resolve: async (
+        { guidanceTags },
+        _args,
+        { loaders: { spfGuidanceTagLoader } },
+      ) => {
+        const spfTags = await spfGuidanceTagLoader.loadMany(guidanceTags)
+        return spfTags
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -619,7 +640,14 @@ const httpsType = new GraphQLObjectType({
     guidanceTags: {
       type: GraphQLList(guidanceTagType),
       description: `Key tags found during scan.`,
-      resolve: async () => {},
+      resolve: async (
+        { guidanceTags },
+        _args,
+        { loaders: { httpsGuidanceTagLoader } },
+      ) => {
+        const httpsTags = await httpsGuidanceTagLoader.loadMany(guidanceTags)
+        return httpsTags
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -660,7 +688,14 @@ const sslType = new GraphQLObjectType({
     guidanceTags: {
       type: GraphQLList(guidanceTagType),
       description: `Key tags found during scan.`,
-      resolve: async () => {},
+      resolve: async (
+        { guidanceTags },
+        _args,
+        { loaders: { sslGuidanceTagLoader } },
+      ) => {
+        const sslTags = await sslGuidanceTagLoader.loadMany(guidanceTags)
+        return sslTags
+      },
     },
   }),
   interfaces: [nodeInterface],
