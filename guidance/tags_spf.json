@@ -129,5 +129,16 @@
                 "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
             }
         ]
+    },
+    "spf12": {
+        "tagName": "SPF-valid",
+        "guidance": "SPF record is properly formed",
+        "refLinksGuide": [
+            {
+                "description": "Implementation Guidance: Email Domain Protection",
+                "guide_link": "https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection"
+            }
+        ],
+        "refLinksTechnical":[""]
     }
 }
