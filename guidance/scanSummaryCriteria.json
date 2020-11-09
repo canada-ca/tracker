@@ -1,5 +1,5 @@
 {
-    "httpScanSummary": {
+    "httpScanSummaryCriteria": {
         "pass": [""],
         "fail": [
             "https2",
@@ -18,7 +18,7 @@
         ],
         "info": ["https1"]
     },
-    "sslScanSummary": {
+    "sslScanSummaryCriteria": {
         "pass": ["ssl5"],
         "fail": [
             "ssl2",
@@ -30,7 +30,7 @@
         ],
         "info": ["ssl1"]
     },
-    "dkimScanSummary": {
+    "dkimScanSummaryCriteria": {
         "pass": ["dkim7",
                  "dkim8"],
         "fail": [
@@ -47,10 +47,10 @@
                     "dkim13"],
         "info": ["dkim1"]
     },
-    "spfScanSummary": {
+    "spfScanSummaryCriteria": {
         "pass": "spf12"
     },
-    "dmarcScanSummary": {
+    "dmarcScanSummaryCriteria": {
         "pass": "dmarc23"
     }
 }
