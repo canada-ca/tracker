@@ -12,6 +12,8 @@ const { checkDomainPermission, userRequired } = require('../auth')
 const {
   sslLoaderByKey,
   sslLoaderConnectionsByDomainId,
+  sslGuidanceTagLoader,
+  sslGuidanceTagConnectionsLoader,
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
@@ -106,11 +108,28 @@ describe('given the ssl gql object', () => {
     })
     ssl = await collections.ssl.save({
       timestamp: '2020-10-02T12:43:39Z',
-      sslGuidanceTags: ['ssl1', 'ssl2'],
+      guidanceTags: ['ssl1'],
     })
     await collections.domainsSSL.save({
       _from: domain._id,
       _to: ssl._id,
+    })
+    await collections.sslGuidanceTags.save({
+      _key: 'ssl1',
+      tagName: 'SSL-TAG',
+      guidance: 'Some Interesting Guidance',
+      refLinksGuide: [
+        {
+          description: 'refLinksGuide Description',
+          ref_link: 'www.refLinksGuide.ca',
+        },
+      ],
+      refLinksTechnical: [
+        {
+          description: 'refLinksTechnical Description',
+          ref_link: 'www.refLinksTechnical.ca',
+        },
+      ],
     })
   })
 
@@ -132,10 +151,33 @@ describe('given the ssl gql object', () => {
                   edges {
                     node {
                       id
-                      timestamp
-                      sslGuidanceTags
                       domain {
                         id
+                      }
+                      timestamp
+                      guidanceTags(first: 5) {
+                        edges {
+                          node {
+                            id
+                            tagId
+                            tagName
+                            refLinks {
+                              description
+                              refLink
+                            }
+                            refLinksTech {
+                              description
+                              refLink
+                            }
+                          }
+                        }
+                        totalCount
+                        pageInfo {
+                          hasNextPage
+                          hasPreviousPage
+                          startCursor
+                          endCursor
+                        }
                       }
                     }
                   }
@@ -175,6 +217,12 @@ describe('given the ssl gql object', () => {
               cleanseInput,
             ),
             sslLoaderByKey: sslLoaderByKey(query),
+            sslGuidanceTagLoader: sslGuidanceTagLoader(query),
+            sslGuidanceTagConnectionsLoader: sslGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+            ),
             domainLoaderByDomain: domainLoaderByDomain(query),
             domainLoaderByKey: domainLoaderByKey(query),
             userLoaderByKey: userLoaderByKey(query),
@@ -193,10 +241,39 @@ describe('given the ssl gql object', () => {
                   {
                     node: {
                       id: toGlobalId('ssl', ssl._key),
-                      timestamp: new Date('2020-10-02T12:43:39Z'),
-                      sslGuidanceTags: ['ssl1', 'ssl2'],
                       domain: {
                         id: toGlobalId('domains', domain._key),
+                      },
+                      timestamp: new Date('2020-10-02T12:43:39Z'),
+                      guidanceTags: {
+                        edges: [
+                          {
+                            node: {
+                              id: toGlobalId('guidanceTags', 'ssl1'),
+                              tagId: 'ssl1',
+                              tagName: 'SSL-TAG',
+                              refLinks: [
+                                {
+                                  description: 'refLinksGuide Description',
+                                  refLink: 'www.refLinksGuide.ca',
+                                },
+                              ],
+                              refLinksTech: [
+                                {
+                                  description: 'refLinksTechnical Description',
+                                  refLink: 'www.refLinksTechnical.ca',
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        totalCount: 1,
+                        pageInfo: {
+                          hasNextPage: false,
+                          hasPreviousPage: false,
+                          startCursor: toGlobalId('guidanceTags', 'ssl1'),
+                          endCursor: toGlobalId('guidanceTags', 'ssl1'),
+                        },
                       },
                     },
                   },

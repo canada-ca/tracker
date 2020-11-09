@@ -12,6 +12,8 @@ const { checkDomainPermission, userRequired } = require('../auth')
 const {
   httpsLoaderByKey,
   httpsLoaderConnectionsByDomainId,
+  httpsGuidanceTagLoader,
+  httpsGuidanceTagConnectionsLoader,
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
@@ -111,11 +113,28 @@ describe('given the https gql object', () => {
       hsts: 'HSTS Max Age Too Short',
       hstsAge: '31622400',
       preloaded: 'HSTS Preloaded',
-      httpsGuidanceTags: ['https1', 'https2'],
+      guidanceTags: ['https1'],
     })
     await collections.domainsHTTPS.save({
       _from: domain._id,
       _to: https._id,
+    })
+    await collections.httpsGuidanceTags.save({
+      _key: 'https1',
+      tagName: 'HTTPS-TAG',
+      guidance: 'Some Interesting Guidance',
+      refLinksGuide: [
+        {
+          description: 'refLinksGuide Description',
+          ref_link: 'www.refLinksGuide.ca',
+        },
+      ],
+      refLinksTechnical: [
+        {
+          description: 'refLinksTechnical Description',
+          ref_link: 'www.refLinksTechnical.ca',
+        },
+      ],
     })
   })
 
@@ -125,6 +144,17 @@ describe('given the https gql object', () => {
 
   describe('all fields can be queried', () => {
     it('resolves all fields', async () => {
+      const { setupI18n } = require('@lingui/core')
+      const englishMessages = require('../locale/en/messages')
+      const i18n = setupI18n({
+        language: 'en',
+        locales: ['en'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+        },
+      })
+
       const response = await graphql(
         schema,
         `
@@ -137,15 +167,38 @@ describe('given the https gql object', () => {
                   edges {
                     node {
                       id
+                      domain {
+                        id
+                      }
                       timestamp
                       implementation
                       enforced
                       hsts
                       hstsAge
                       preloaded
-                      httpsGuidanceTags
-                      domain {
-                        id
+                      guidanceTags(first: 5) {
+                        edges {
+                          node {
+                            id
+                            tagId
+                            tagName
+                            refLinks {
+                              description
+                              refLink
+                            }
+                            refLinksTech {
+                              description
+                              refLink
+                            }
+                          }
+                        }
+                        totalCount
+                        pageInfo {
+                          hasNextPage
+                          hasPreviousPage
+                          startCursor
+                          endCursor
+                        }
                       }
                     }
                   }
@@ -185,6 +238,13 @@ describe('given the https gql object', () => {
               cleanseInput,
             ),
             httpsLoaderByKey: httpsLoaderByKey(query),
+            httpsGuidanceTagLoader: httpsGuidanceTagLoader(query),
+            httpsGuidanceTagConnectionsLoader: httpsGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            ),
             domainLoaderByDomain: domainLoaderByDomain(query),
             domainLoaderByKey: domainLoaderByKey(query),
             userLoaderByKey: userLoaderByKey(query),
@@ -203,15 +263,44 @@ describe('given the https gql object', () => {
                   {
                     node: {
                       id: toGlobalId('https', https._key),
+                      domain: {
+                        id: toGlobalId('domains', domain._key),
+                      },
                       timestamp: new Date('2020-10-02T12:43:39Z'),
                       implementation: 'Valid HTTPS',
                       enforced: 'Strict',
                       hsts: 'HSTS Max Age Too Short',
                       hstsAge: '31622400',
                       preloaded: 'HSTS Preloaded',
-                      httpsGuidanceTags: ['https1', 'https2'],
-                      domain: {
-                        id: toGlobalId('domains', domain._key),
+                      guidanceTags: {
+                        edges: [
+                          {
+                            node: {
+                              id: toGlobalId('guidanceTags', 'https1'),
+                              tagId: 'https1',
+                              tagName: 'HTTPS-TAG',
+                              refLinks: [
+                                {
+                                  description: 'refLinksGuide Description',
+                                  refLink: 'www.refLinksGuide.ca',
+                                },
+                              ],
+                              refLinksTech: [
+                                {
+                                  description: 'refLinksTechnical Description',
+                                  refLink: 'www.refLinksTechnical.ca',
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        totalCount: 1,
+                        pageInfo: {
+                          hasNextPage: false,
+                          hasPreviousPage: false,
+                          startCursor: toGlobalId('guidanceTags', 'https1'),
+                          endCursor: toGlobalId('guidanceTags', 'https1'),
+                        },
                       },
                     },
                   },

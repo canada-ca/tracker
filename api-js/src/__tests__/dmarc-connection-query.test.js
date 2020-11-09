@@ -12,6 +12,8 @@ const { checkDomainPermission, userRequired } = require('../auth')
 const {
   dmarcLoaderConnectionsByDomainId,
   dmarcLoaderByKey,
+  dmarcGuidanceTagLoader,
+  dmarcGuidanceTagConnectionsLoader,
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
@@ -109,11 +111,28 @@ describe('given the dmarcType object', () => {
       pPolicy: 'pPolicy',
       spPolicy: 'spPolicy',
       pct: 100,
-      dmarcGuidanceTags: ['dmarc1', 'dmarc2'],
+      guidanceTags: ['dmarc1'],
     })
     await collections.domainsDMARC.save({
       _from: domain._id,
       _to: dmarc._id,
+    })
+    await collections.dmarcGuidanceTags.save({
+      _key: 'dmarc1',
+      tagName: 'DMARC-TAG',
+      guidance: 'Some Interesting Guidance',
+      refLinksGuide: [
+        {
+          description: 'refLinksGuide Description',
+          ref_link: 'www.refLinksGuide.ca',
+        },
+      ],
+      refLinksTechnical: [
+        {
+          description: 'refLinksTechnical Description',
+          ref_link: 'www.refLinksTechnical.ca',
+        },
+      ],
     })
   })
 
@@ -136,7 +155,7 @@ describe('given the dmarcType object', () => {
                     node {
                       id
                       domain {
-                        domain
+                        id
                       }
                       timestamp
                       dmarcPhase
@@ -144,7 +163,30 @@ describe('given the dmarcType object', () => {
                       pPolicy
                       spPolicy
                       pct
-                      dmarcGuidanceTags
+                      guidanceTags(first: 5) {
+                        edges {
+                          node {
+                            id
+                            tagId
+                            tagName
+                            refLinks {
+                              description
+                              refLink
+                            }
+                            refLinksTech {
+                              description
+                              refLink
+                            }
+                          }
+                        }
+                        totalCount
+                        pageInfo {
+                          hasNextPage
+                          hasPreviousPage
+                          startCursor
+                          endCursor
+                        }
+                      }
                     }
                   }
                   totalCount
@@ -183,6 +225,12 @@ describe('given the dmarcType object', () => {
               cleanseInput,
             ),
             dmarcLoaderByKey: dmarcLoaderByKey(query),
+            dmarcGuidanceTagLoader: dmarcGuidanceTagLoader(query),
+            dmarcGuidanceTagConnectionsLoader: dmarcGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+            ),
             domainLoaderByDomain: domainLoaderByDomain(query),
             domainLoaderByKey: domainLoaderByKey(query),
             userLoaderByKey: userLoaderByKey(query),
@@ -202,7 +250,7 @@ describe('given the dmarcType object', () => {
                     node: {
                       id: toGlobalId('dmarc', dmarc._key),
                       domain: {
-                        domain: 'test.domain.gc.ca',
+                        id: toGlobalId('domains', domain._key),
                       },
                       timestamp: new Date('2020-10-02T12:43:39Z'),
                       dmarcPhase: 1,
@@ -210,7 +258,36 @@ describe('given the dmarcType object', () => {
                       pPolicy: 'pPolicy',
                       spPolicy: 'spPolicy',
                       pct: 100,
-                      dmarcGuidanceTags: ['dmarc1', 'dmarc2'],
+                      guidanceTags: {
+                        edges: [
+                          {
+                            node: {
+                              id: toGlobalId('guidanceTags', 'dmarc1'),
+                              tagId: 'dmarc1',
+                              tagName: 'DMARC-TAG',
+                              refLinks: [
+                                {
+                                  description: 'refLinksGuide Description',
+                                  refLink: 'www.refLinksGuide.ca',
+                                },
+                              ],
+                              refLinksTech: [
+                                {
+                                  description: 'refLinksTechnical Description',
+                                  refLink: 'www.refLinksTechnical.ca',
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        totalCount: 1,
+                        pageInfo: {
+                          hasNextPage: false,
+                          hasPreviousPage: false,
+                          startCursor: toGlobalId('guidanceTags', 'dmarc1'),
+                          endCursor: toGlobalId('guidanceTags', 'dmarc1'),
+                        },
+                      },
                     },
                   },
                 ],
