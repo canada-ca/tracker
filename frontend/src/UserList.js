@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   FormLabel,
   Stack,
@@ -10,6 +10,15 @@ import {
   useToast,
   Select,
   Box,
+  useDisclosure,
+  SlideIn,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { PaginationButtons } from './PaginationButtons'
@@ -41,8 +50,14 @@ export default function UserList({
   const [usersPerPage] = useState(4)
   const toast = useToast()
   const { currentUser } = useUserState()
+  const [searchTerm, setSearchTerm] = useState('')
   const [addedUserName, setAddedUserName] = useState()
-
+  const {
+    isOpen: inviteIsOpen,
+    onOpen: inviteOnOpen,
+    onClose: inviteOnClose,
+  } = useDisclosure()
+  const initialFocusRef = useRef()
   const addUserValidationSchema = object().shape({
     userName: yupString()
       .required(fieldRequirements.email.required.message)
@@ -116,6 +131,10 @@ export default function UserList({
     )
   if (error) return <ErrorFallbackMessage error={error} />
 
+  // const filterUsers = userList.filter((node) => {
+  //   return node.username.toLowerCase().includes(searchTerm.toLowerCase())
+  // })
+
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
@@ -173,70 +192,34 @@ export default function UserList({
         <Trans>User List</Trans>
       </Text>
 
-      <Formik
-        validationSchema={addUserValidationSchema}
-        initialValues={{ userName: '', roleSelect: 'USER_READ' }}
-        initialErrors={{ userName: 'Email cannot be empty' }}
-        onSubmit={(values) => {
-          addUser({
-            variables: {
-              userName: values.userName,
-              requestedRole: values.roleSelect,
-              orgSlug: orgSlug,
-              preferredLanguage: 'ENGLISH',
-            },
-          })
-        }}
+      <Stack
+        mb="8px"
+        // alignItems="center"
+        w={permission ? '100%' : ['100%', '50%']}
+        // isInline
       >
-        {({ handleSubmit, values, errors }) => (
-          <form id="form" onSubmit={handleSubmit} noValidate>
-            <Stack
-              mb="8px"
-              alignItems="center"
-              w={permission ? '100%' : ['100%', '50%']}
-              isInline
-            >
-              <InputGroup flexGrow={1}>
-                <InputLeftElement>
-                  <Icon name="search" color="gray.300" />
-                </InputLeftElement>
-                <Input
-                  as={Field}
-                  type="email"
-                  name="userName"
-                  placeholder={t`Search for a user`}
-                  isDisabled={addUserLoading}
-                />
-              </InputGroup>
+        <InputGroup flexGrow={1}>
+          <InputLeftElement>
+            <Icon name="search" color="gray.300" />
+          </InputLeftElement>
+          <Input
+            placeholder={t`Search for a user`}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </InputGroup>
 
-              <Field
-                as={Select}
-                flexBasis="7rem"
-                flexShrink={0}
-                id="roleSelect"
-                name="roleSelect"
-              >
-                <option value="USER_READ">{t`READ`}</option>
-                <option value="USER_WRITE">{t`WRITE`}</option>
-                <option value="ADMIN">{t`ADMIN`}</option>
-              </Field>
-            </Stack>
-
-            <TrackerButton
-              w={permission ? '100%' : ['100%', '50%']}
-              variant="primary"
-              type="submit"
-              onClick={() => {
-                setAddedUserName(values.userName)
-                if (errors.userName) showErrorToast(errors.userName)
-              }}
-            >
-              <Icon name="add" />
-              <Trans>Invite User</Trans>
-            </TrackerButton>
-          </form>
-        )}
-      </Formik>
+        <TrackerButton
+          // w={permission ? '100%' : ['100%', '50%']}
+          variant="primary"
+          type="submit"
+          onClick={() => {
+            inviteOnOpen()
+          }}
+        >
+          <Icon name="add" />
+          <Trans>Invite User</Trans>
+        </TrackerButton>
+      </Stack>
 
       {userList.length === 0 ? (
         <Text fontSize="2xl" fontWeight="bold" textAlign="center">
@@ -301,7 +284,7 @@ export default function UserList({
                   </Box>
                 )}
               </Box>
-            );
+            )
           }
           return (
             <UserCard
@@ -323,8 +306,90 @@ export default function UserList({
           currentPage={currentPage}
         />
       )}
+
+      <SlideIn in={inviteIsOpen}>
+        {(styles) => (
+          <Modal
+            isOpen={true}
+            onClose={inviteOnClose}
+            initialFocusRef={initialFocusRef}
+          >
+            <ModalOverlay opacity={styles.opacity} />
+            <ModalContent pb={4} {...styles}>
+              <Formik
+                initialValues={{ userName: '', roleSelect: 'USER_READ' }}
+                initialErrors={{ userName: 'Email cannot be empty' }}
+                validationSchema={addUserValidationSchema}
+                onSubmit={async (values) => {
+                  // Submit add user mutation
+                  await addUser({
+                    variables: {
+                      userName: values.userName,
+                      requestedRole: values.roleSelect,
+                      orgSlug: orgSlug,
+                      preferredLanguage: 'ENGLISH',
+                    },
+                  })
+                  inviteOnClose()
+                }}
+              >
+                {({ handleSubmit, values, errors }) => (
+                  <form id="form" onSubmit={handleSubmit}>
+                    <ModalHeader>
+                      <Trans>Invite User</Trans>
+                    </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                      <Stack mb="8px" alignItems="center" isInline>
+                        <InputGroup flexGrow={1}>
+                          <InputLeftElement>
+                            <Icon name="email" color="gray.300" />
+                          </InputLeftElement>
+                          <Input
+                            as={Field}
+                            type="email"
+                            name="userName"
+                            placeholder={t`User Email Address`}
+                            isDisabled={addUserLoading}
+                          />
+                        </InputGroup>
+
+                        <Field
+                          as={Select}
+                          flexBasis="7rem"
+                          flexShrink={0}
+                          id="roleSelect"
+                          name="roleSelect"
+                        >
+                          <option value="USER_READ">{t`READ`}</option>
+                          <option value="USER_WRITE">{t`WRITE`}</option>
+                          <option value="ADMIN">{t`ADMIN`}</option>
+                        </Field>
+                      </Stack>
+                    </ModalBody>
+
+                    <ModalFooter>
+                      <TrackerButton
+                        variant="primary"
+                        type="submit"
+                        onClick={() => {
+                          setAddedUserName(values.userName)
+                          if (errors.userName) showErrorToast(errors.userName)
+                        }}
+                        mr="4"
+                      >
+                        <Trans>Confirm</Trans>
+                      </TrackerButton>
+                    </ModalFooter>
+                  </form>
+                )}
+              </Formik>
+            </ModalContent>
+          </Modal>
+        )}
+      </SlideIn>
     </Stack>
-  );
+  )
 }
 
 /* -- Source code for adding organizations, not being used. --

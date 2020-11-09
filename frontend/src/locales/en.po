@@ -2284,3 +2284,6 @@ msgstr "Enter a domain"
 msgid "Scan Domain"
 msgstr "Scan Domain"
 
+#: src/UserList.js:352
+msgid "User Email Address"
+msgstr "User Email Address"

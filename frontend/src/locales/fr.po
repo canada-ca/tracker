@@ -2222,3 +2222,7 @@ msgstr "Entrez un domaine"
 #: src/DomainsPage.js:141
 msgid "Scan Domain"
 msgstr "Domaine de balayage"
+
+#: src/UserList.js:352
+msgid "User Email Address"
+msgstr "Adresse électronique de l'utilisateur"
