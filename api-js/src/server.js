@@ -353,14 +353,14 @@ const Server = (_PORT, context = {}) => {
       graphiql: false,
       schema: createSchema({ language: request.language }),
       context: createContext({ context, request, response }),
-      validationRules:[
-        depthLimit(10),
-        createComplexityLimitRule(1000, {
-          scalarCost: 1,
-          objectCost: 20,
-          listFactor: 100,
-        }),
-      ],
+      // validationRules:[
+      //   depthLimit(20),
+      //   createComplexityLimitRule(5000, {
+      //     scalarCost: 1,
+      //     objectCost: 20,
+      //     listFactor: 50,
+      //   }),
+      // ],
     })),
   )
 
