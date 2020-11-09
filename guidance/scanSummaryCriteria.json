@@ -1,5 +1,5 @@
 {
-    "httpScanSummaryCriteria": {
+    "httpsScanSummaryCriteria": {
         "pass": [""],
         "fail": [
             "https2",
