@@ -17,6 +17,8 @@ const {
   userLoaderByKey,
   dkimResultsLoaderConnectionByDkimId,
   dkimResultLoaderByKey,
+  dkimGuidanceTagLoader,
+  dkimGuidanceTagConnectionsLoader,
 } = require('../loaders')
 
 describe('given the dkimType object', () => {
@@ -116,11 +118,28 @@ describe('given the dkimType object', () => {
       selector: 'selector._dkim1',
       record: 'txtRecord',
       keyLength: '2048',
-      dkimGuidanceTags: ['dkim1', 'dkim2'],
+      guidanceTags: ['dkim1'],
     })
     await collections.dkimToDkimResults.save({
       _to: dkimResult._id,
       _from: dkim._id,
+    })
+    await collections.dkimGuidanceTags.save({
+      _key: 'dkim1',
+      tagName: 'DKIM-TAG',
+      guidance: 'Some Interesting Guidance',
+      refLinksGuide: [
+        {
+          description: 'refLinksGuide Description',
+          ref_link: 'www.refLinksGuide.ca',
+        },
+      ],
+      refLinksTechnical: [
+        {
+          description: 'refLinksTechnical Description',
+          ref_link: 'www.refLinksTechnical.ca',
+        },
+      ],
     })
   })
 
@@ -150,7 +169,30 @@ describe('given the dkimType object', () => {
                             selector
                             record
                             keyLength
-                            dkimGuidanceTags
+                            guidanceTags(first: 5) {
+                              edges {
+                                node {
+                                  id
+                                  tagId
+                                  tagName
+                                  refLinks {
+                                    description
+                                    refLink
+                                  }
+                                  refLinksTech {
+                                    description
+                                    refLink
+                                  }
+                                }
+                              }
+                              totalCount
+                              pageInfo {
+                                hasNextPage
+                                hasPreviousPage
+                                startCursor
+                                endCursor
+                              }
+                            }
                           }
                         }
                         totalCount
@@ -198,6 +240,12 @@ describe('given the dkimType object', () => {
               cleanseInput,
             ),
             dkimResultLoaderByKey: dkimResultLoaderByKey(query),
+            dkimGuidanceTagLoader: dkimGuidanceTagLoader(query),
+            dkimGuidanceTagConnectionsLoader: dkimGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+            ),
             domainLoaderByDomain: domainLoaderByDomain(query),
             domainLoaderByKey: domainLoaderByKey(query),
             userLoaderByKey: userLoaderByKey(query),
@@ -226,7 +274,44 @@ describe('given the dkimType object', () => {
                               selector: 'selector._dkim1',
                               record: 'txtRecord',
                               keyLength: '2048',
-                              dkimGuidanceTags: ['dkim1', 'dkim2'],
+                              guidanceTags: {
+                                edges: [
+                                  {
+                                    node: {
+                                      id: toGlobalId('guidanceTags', 'dkim1'),
+                                      tagId: 'dkim1',
+                                      tagName: 'DKIM-TAG',
+                                      refLinks: [
+                                        {
+                                          description:
+                                            'refLinksGuide Description',
+                                          refLink: 'www.refLinksGuide.ca',
+                                        },
+                                      ],
+                                      refLinksTech: [
+                                        {
+                                          description:
+                                            'refLinksTechnical Description',
+                                          refLink: 'www.refLinksTechnical.ca',
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                                totalCount: 1,
+                                pageInfo: {
+                                  hasNextPage: false,
+                                  hasPreviousPage: false,
+                                  startCursor: toGlobalId(
+                                    'guidanceTags',
+                                    'dkim1',
+                                  ),
+                                  endCursor: toGlobalId(
+                                    'guidanceTags',
+                                    'dkim1',
+                                  ),
+                                },
+                              },
                             },
                           },
                         ],
@@ -234,7 +319,10 @@ describe('given the dkimType object', () => {
                         pageInfo: {
                           hasNextPage: false,
                           hasPreviousPage: false,
-                          startCursor: toGlobalId('dkimResult', dkimResult._key),
+                          startCursor: toGlobalId(
+                            'dkimResult',
+                            dkimResult._key,
+                          ),
                           endCursor: toGlobalId('dkimResult', dkimResult._key),
                         },
                       },

@@ -30,6 +30,8 @@
       'todo',
     'Passing both `first` and `last` to paginate the `domain` connection is not supported.':
       'todo',
+    'Passing both `first` and `last` to paginate the `guidanceTag` connection is not supported.':
+      'todo',
     'Passing both `first` and `last` to paginate the `https` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
@@ -47,6 +49,8 @@
     'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting `{amount}` records on the `guidanceTag` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -77,26 +81,36 @@
     'Unable to check permission. Please try again.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
+    'Unable to find dkim guidance tags. Please try again.': 'todo',
     'Unable to find dkim result. Please try again.': 'todo',
     'Unable to find dkim scan. Please try again.': 'todo',
+    'Unable to find dmarc guidance tags. Please try again.': 'todo',
     'Unable to find dmarc scan. Please try again.': 'todo',
     'Unable to find domain. Please try again.': 'todo',
+    'Unable to find https guidance tags. Please try again.': 'todo',
     'Unable to find https scan. Please try again.': 'todo',
     'Unable to find organization. Please try again.': 'todo',
+    'Unable to find spf guidance tags. Please try again.': 'todo',
     'Unable to find spf scan. Please try again.': 'todo',
+    'Unable to find ssl guidance tags. Please try again.': 'todo',
     'Unable to find ssl scan. Please try again.': 'todo',
     'Unable to find user affiliation(s). Please try again.': 'todo',
     'Unable to find user. Please try again.': 'todo',
     'Unable to invite user. Please try again.': 'todo',
     'Unable to invite yourself to an org. Please try again.': 'todo',
     'Unable to load affiliations. Please try again.': 'todo',
+    'Unable to load dkim guidance tags. Please try again.': 'todo',
     'Unable to load dkim results. Please try again.': 'todo',
     'Unable to load dkim scans. Please try again.': 'todo',
+    'Unable to load dmarc guidance tags. Please try again.': 'todo',
     'Unable to load dmarc scans. Please try again.': 'todo',
     'Unable to load domains. Please try again.': 'todo',
+    'Unable to load https guidance tags. Please try again.': 'todo',
     'Unable to load https scans. Please try again.': 'todo',
     'Unable to load organizations. Please try again.': 'todo',
+    'Unable to load spf guidance tags. Please try again.': 'todo',
     'Unable to load spf scans. Please try again.': 'todo',
+    'Unable to load ssl guidance tags. Please try again.': 'todo',
     'Unable to load ssl scans. Please try again.': 'todo',
     'Unable to query affiliations. Please try again.': 'todo',
     'Unable to query domains. Please try again.': 'todo',
@@ -150,6 +164,8 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `guidanceTag` connection.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `https` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
@@ -165,6 +181,8 @@
     '`{argSet}` on the `dkim` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `dmarc` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `domain` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `guidanceTag` connection cannot be less than zero.':
+      'todo',
     '`{argSet}` on the `https` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `organization` connection cannot be less than zero.':
       'todo',

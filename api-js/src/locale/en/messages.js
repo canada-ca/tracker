@@ -52,6 +52,8 @@
       'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.',
     'Passing both `first` and `last` to paginate the `domain` connection is not supported.':
       'Passing both `first` and `last` to paginate the `domain` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `guidanceTag` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `guidanceTag` connection is not supported.',
     'Passing both `first` and `last` to paginate the `https` connection is not supported.':
       'Passing both `first` and `last` to paginate the `https` connection is not supported.',
     'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
@@ -85,6 +87,17 @@
         'Requesting `',
         a('amount'),
         '` records on the `domain` connection exceeds the `',
+        a('argSet'),
+        '` limit of 100 records.',
+      ]
+    },
+    'Requesting `{amount}` records on the `guidanceTag` connection exceeds the `{argSet}` limit of 100 records.': function (
+      a,
+    ) {
+      return [
+        'Requesting `',
+        a('amount'),
+        '` records on the `guidanceTag` connection exceeds the `',
         a('argSet'),
         '` limit of 100 records.',
       ]
@@ -191,20 +204,30 @@
       'Unable to create domain. Please try again.',
     'Unable to create organization. Please try again.':
       'Unable to create organization. Please try again.',
+    'Unable to find dkim guidance tags. Please try again.':
+      'Unable to find dkim guidance tags. Please try again.',
     'Unable to find dkim result. Please try again.':
       'Unable to find dkim result. Please try again.',
     'Unable to find dkim scan. Please try again.':
       'Unable to find dkim scan. Please try again.',
+    'Unable to find dmarc guidance tags. Please try again.':
+      'Unable to find dmarc guidance tags. Please try again.',
     'Unable to find dmarc scan. Please try again.':
       'Unable to find dmarc scan. Please try again.',
     'Unable to find domain. Please try again.':
       'Unable to find domain. Please try again.',
+    'Unable to find https guidance tags. Please try again.':
+      'Unable to find https guidance tags. Please try again.',
     'Unable to find https scan. Please try again.':
       'Unable to find https scan. Please try again.',
     'Unable to find organization. Please try again.':
       'Unable to find organization. Please try again.',
+    'Unable to find spf guidance tags. Please try again.':
+      'Unable to find spf guidance tags. Please try again.',
     'Unable to find spf scan. Please try again.':
       'Unable to find spf scan. Please try again.',
+    'Unable to find ssl guidance tags. Please try again.':
+      'Unable to find ssl guidance tags. Please try again.',
     'Unable to find ssl scan. Please try again.':
       'Unable to find ssl scan. Please try again.',
     'Unable to find user affiliation(s). Please try again.':
@@ -217,20 +240,30 @@
       'Unable to invite yourself to an org. Please try again.',
     'Unable to load affiliations. Please try again.':
       'Unable to load affiliations. Please try again.',
+    'Unable to load dkim guidance tags. Please try again.':
+      'Unable to load dkim guidance tags. Please try again.',
     'Unable to load dkim results. Please try again.':
       'Unable to load dkim results. Please try again.',
     'Unable to load dkim scans. Please try again.':
       'Unable to load dkim scans. Please try again.',
+    'Unable to load dmarc guidance tags. Please try again.':
+      'Unable to load dmarc guidance tags. Please try again.',
     'Unable to load dmarc scans. Please try again.':
       'Unable to load dmarc scans. Please try again.',
     'Unable to load domains. Please try again.':
       'Unable to load domains. Please try again.',
+    'Unable to load https guidance tags. Please try again.':
+      'Unable to load https guidance tags. Please try again.',
     'Unable to load https scans. Please try again.':
       'Unable to load https scans. Please try again.',
     'Unable to load organizations. Please try again.':
       'Unable to load organizations. Please try again.',
+    'Unable to load spf guidance tags. Please try again.':
+      'Unable to load spf guidance tags. Please try again.',
     'Unable to load spf scans. Please try again.':
       'Unable to load spf scans. Please try again.',
+    'Unable to load ssl guidance tags. Please try again.':
+      'Unable to load ssl guidance tags. Please try again.',
     'Unable to load ssl scans. Please try again.':
       'Unable to load ssl scans. Please try again.',
     'Unable to query affiliations. Please try again.':
@@ -312,6 +345,8 @@
       'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.',
     'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
       'You must provide a `first` or `last` value to properly paginate the `domain` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `guidanceTag` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `guidanceTag` connection.',
     'You must provide a `first` or `last` value to properly paginate the `https` connection.':
       'You must provide a `first` or `last` value to properly paginate the `https` connection.',
     'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
@@ -370,6 +405,15 @@
         '`',
         a('argSet'),
         '` on the `domain` connection cannot be less than zero.',
+      ]
+    },
+    '`{argSet}` on the `guidanceTag` connection cannot be less than zero.': function (
+      a,
+    ) {
+      return [
+        '`',
+        a('argSet'),
+        '` on the `guidanceTag` connection cannot be less than zero.',
       ]
     },
     '`{argSet}` on the `https` connection cannot be less than zero.': function (

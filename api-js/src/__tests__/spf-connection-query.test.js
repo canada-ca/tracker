@@ -15,6 +15,8 @@ const {
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
+  spfGuidanceTagLoader,
+  spfGuidanceTagConnectionsLoader,
 } = require('../loaders')
 
 describe('given the spfType object', () => {
@@ -107,11 +109,28 @@ describe('given the spfType object', () => {
       lookups: 5,
       record: 'txtRecord',
       spfDefault: 'default',
-      spfGuidanceTags: ['spf1', 'spf2'],
+      guidanceTags: ['spf1'],
     })
     await collections.domainsSPF.save({
       _from: domain._id,
       _to: spf._id,
+    })
+    await collections.spfGuidanceTags.save({
+      _key: 'spf1',
+      tagName: 'SPF-TAG',
+      guidance: 'Some Interesting Guidance',
+      refLinksGuide: [
+        {
+          description: 'refLinksGuide Description',
+          ref_link: 'www.refLinksGuide.ca',
+        },
+      ],
+      refLinksTechnical: [
+        {
+          description: 'refLinksTechnical Description',
+          ref_link: 'www.refLinksTechnical.ca',
+        },
+      ],
     })
   })
 
@@ -129,18 +148,41 @@ describe('given the spfType object', () => {
               id
               domain
               email {
-                spf(first: 5) {
+                spf (first: 5) {
                   edges {
                     node {
                       id
                       domain {
-                        domain
+                        id
                       }
                       timestamp
                       lookups
                       record
                       spfDefault
-                      spfGuidanceTags
+                      guidanceTags (first: 5) {
+                        edges {
+                          node {
+                            id
+                            tagId
+                            tagName
+                            refLinks {
+                              description
+                              refLink
+                            }
+                            refLinksTech {
+                              description
+                              refLink
+                            }
+                          }
+                        }
+                        totalCount
+                        pageInfo {
+                          hasNextPage
+                          hasPreviousPage
+                          startCursor
+                          endCursor
+                        }
+                      }
                     }
                   }
                   totalCount
@@ -179,6 +221,12 @@ describe('given the spfType object', () => {
               cleanseInput,
             ),
             spfLoaderByKey: spfLoaderByKey(query),
+            spfGuidanceTagLoader: spfGuidanceTagLoader(query),
+            spfGuidanceTagConnectionsLoader: spfGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+            ),
             domainLoaderByDomain: domainLoaderByDomain(query),
             domainLoaderByKey: domainLoaderByKey(query),
             userLoaderByKey: userLoaderByKey(query),
@@ -198,13 +246,42 @@ describe('given the spfType object', () => {
                     node: {
                       id: toGlobalId('spf', spf._key),
                       domain: {
-                        domain: 'test.domain.gc.ca',
+                        id: toGlobalId('domains', domain._key),
                       },
                       timestamp: new Date('2020-10-02T12:43:39.000Z'),
                       lookups: 5,
                       record: 'txtRecord',
                       spfDefault: 'default',
-                      spfGuidanceTags: ['spf1', 'spf2'],
+                      guidanceTags: {
+                        edges: [
+                          {
+                            node: {
+                              id: toGlobalId('guidanceTags', 'spf1'),
+                              tagId: 'spf1',
+                              tagName: 'SPF-TAG',
+                              refLinks: [
+                                {
+                                  description: 'refLinksGuide Description',
+                                  refLink: 'www.refLinksGuide.ca',
+                                },
+                              ],
+                              refLinksTech: [
+                                {
+                                  description: 'refLinksTechnical Description',
+                                  refLink: 'www.refLinksTechnical.ca',
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        totalCount: 1,
+                        pageInfo: {
+                          hasNextPage: false,
+                          hasPreviousPage: false,
+                          startCursor: toGlobalId('guidanceTags', 'spf1'),
+                          endCursor: toGlobalId('guidanceTags', 'spf1'),
+                        },
+                      },
                     },
                   },
                 ],

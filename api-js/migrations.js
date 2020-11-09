@@ -50,6 +50,31 @@ const makeMigrations = ({ databaseName, rootPass }) => [
     name: 'ssl',
   },
   {
+    type: 'documentcollection',
+    databaseName,
+    name: 'dkimGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'dmarcGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'spfGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'httpsGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'sslGuidanceTags',
+  },
+  {
     type: 'edgecollection',
     databaseName,
     name: 'affiliations',
