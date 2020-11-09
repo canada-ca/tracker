@@ -14,8 +14,8 @@ const { Domain, Acronym, Slug } = require('../../scalars')
 const { nodeInterface } = require('../node')
 
 /* Domain related objects */
-const blueCheckDomainType = new GraphQLObjectType({
-  name: 'BlueCheckDomain',
+const verifiedDomainType = new GraphQLObjectType({
+  name: 'VerifiedDomain',
   fields: () => ({
     id: globalIdField('domains'),
     domain: {
@@ -29,23 +29,33 @@ const blueCheckDomainType = new GraphQLObjectType({
       resolve: ({ lastRan }) => lastRan,
     },
     organizations: {
-      type: blueCheckOrganizationConnections.connectionType,
+      type: verifiedOrganizationConnections.connectionType,
       args: connectionArgs,
       description: 'The organization that this domain belongs to.',
-      resolve: async () => {},
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { verifiedOrgLoaderConnectionsByDomainId } },
+      ) => {
+        const orgs = await verifiedOrgLoaderConnectionsByDomainId({
+          domainId: _id,
+          ...args,
+        })
+        return orgs
+      },
     },
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',
 })
 
-const blueCheckDomainConnection = connectionDefinitions({
-  name: 'BlueCheckDomain',
-  nodeType: blueCheckDomainType,
+const verifiedDomainConnection = connectionDefinitions({
+  name: 'VerifiedDomain',
+  nodeType: verifiedDomainType,
   connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
-      description: 'The total amount of blue check domains.',
+      description: 'The total amount of verified domains.',
       resolve: ({ totalCount }) => totalCount,
     },
   }),
@@ -53,8 +63,8 @@ const blueCheckDomainConnection = connectionDefinitions({
 
 /* End domain related objects */
 
-const blueCheckOrganizationType = new GraphQLObjectType({
-  name: 'BlueCheckOrganization',
+const verifiedOrganizationType = new GraphQLObjectType({
+  name: 'VerifiedOrganization',
   fields: () => ({
     id: globalIdField('organizations'),
     acronym: {
@@ -108,10 +118,20 @@ const blueCheckOrganizationType = new GraphQLObjectType({
       resolve: ({ domainCount }) => domainCount,
     },
     domains: {
-      type: blueCheckDomainConnection.connectionType,
+      type: verifiedDomainConnection.connectionType,
       description: 'The domains which are associated with this organization.',
       args: connectionArgs,
-      resolve: async () => {},
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { verifiedDomainLoaderConnectionsByOrgId } },
+      ) => {
+        const domains = await verifiedDomainLoaderConnectionsByOrgId({
+          orgId: _id,
+          ...args,
+        })
+        return domains
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -119,21 +139,21 @@ const blueCheckOrganizationType = new GraphQLObjectType({
     'BlueCheck Organization object containing information for a given Organization.',
 })
 
-const blueCheckOrganizationConnections = connectionDefinitions({
-  name: 'BlueCheckOrganization',
-  nodeType: blueCheckOrganizationType,
+const verifiedOrganizationConnections = connectionDefinitions({
+  name: 'VerifiedOrganization',
+  nodeType: verifiedOrganizationType,
   connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
-      description: 'The total amount of blue check organizations.',
+      description: 'The total amount of verified organizations.',
       resolve: ({ totalCount }) => totalCount,
     },
   }),
 })
 
 module.exports = {
-  blueCheckDomainType,
-  blueCheckDomainConnection,
-  blueCheckOrganizationType,
-  blueCheckOrganizationConnections,
+  verifiedDomainType,
+  verifiedDomainConnection,
+  verifiedOrganizationType,
+  verifiedOrganizationConnections,
 }
