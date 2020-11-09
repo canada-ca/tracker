@@ -1,5 +1,7 @@
 const cors = require('cors')
 const express = require('express')
+const bcrypt = require('bcrypt')
+const moment = require('moment')
 // const http = require('http')
 // const { createServer } = require('graphql-transport-ws')
 const { graphqlHTTP } = require('express-graphql')
@@ -9,8 +11,8 @@ const expressPlayground = require('graphql-playground-middleware-express')
 const requestLanguage = require('express-request-language')
 const { setupI18n } = require('@lingui/core')
 const fetch = require('isomorphic-fetch')
-const bcrypt = require('bcrypt')
-const moment = require('moment')
+const depthLimit = require('graphql-depth-limit')
+const { createComplexityLimitRule } = require('graphql-validation-complexity')
 
 const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
@@ -351,6 +353,14 @@ const Server = (_PORT, context = {}) => {
       graphiql: false,
       schema: createSchema({ language: request.language }),
       context: createContext({ context, request, response }),
+      validationRules:[
+        depthLimit(10),
+        createComplexityLimitRule(1000, {
+          scalarCost: 1,
+          objectCost: 20,
+          listFactor: 100,
+        }),
+      ],
     })),
   )
 
