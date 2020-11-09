@@ -11,13 +11,13 @@ const dmarcGuidanceTagConnectionsLoader = (
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[A-Za-z]+")[1]) > TO_NUMBER(REGEX_SPLIT(${afterId}, "[A-Za-z]+")[1])`
+    afterTemplate = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) > TO_NUMBER(REGEX_SPLIT(${afterId}, "[a-z]+")[1])`
   }
 
   let beforeTemplate = aql``
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    beforeTemplate = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[A-Za-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(${beforeId}, "[A-Za-z]+")[1])`
+    beforeTemplate = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(${beforeId}, "[a-z]+")[1])`
   }
 
   let limitTemplate = aql``
@@ -63,9 +63,9 @@ const dmarcGuidanceTagConnectionsLoader = (
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-      limitTemplate = aql`SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[A-Za-z]+")[1]) ASC LIMIT TO_NUMBER(${first})`
+      limitTemplate = aql`SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) ASC LIMIT TO_NUMBER(${first})`
     } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-      limitTemplate = aql`SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[A-Za-z]+")[1]) DESC LIMIT TO_NUMBER(${last})`
+      limitTemplate = aql`SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) DESC LIMIT TO_NUMBER(${last})`
     }
   } else {
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -100,16 +100,16 @@ const dmarcGuidanceTagConnectionsLoader = (
       LET hasNextPage = (LENGTH(
         FOR tag IN dmarcGuidanceTags
           FILTER tag._key IN ${dmarcGuidanceTags}
-          FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[A-Za-z]+")[1]) > TO_NUMBER(REGEX_SPLIT(LAST(retrievedDmarcGuidanceTags)._key, "[A-Za-z]+")[1])
-          SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[A-Za-z]+")[1]) ${sortString} LIMIT 1
+          FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) > TO_NUMBER(REGEX_SPLIT(LAST(retrievedDmarcGuidanceTags)._key, "[a-z]+")[1])
+          SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) ${sortString} LIMIT 1
           RETURN tag
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
         FOR tag IN dmarcGuidanceTags
           FILTER tag._key IN ${dmarcGuidanceTags}
-          FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[A-Za-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(FIRST(retrievedDmarcGuidanceTags)._key, "[A-Za-z]+")[1])
-          SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[A-Za-z]+")[1]) ${sortString} LIMIT 1
+          FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(FIRST(retrievedDmarcGuidanceTags)._key, "[a-z]+")[1])
+          SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) ${sortString} LIMIT 1
           RETURN tag
       ) > 0 ? true : false)
       
