@@ -1,0 +1,91 @@
+{
+    "agg1": {
+        "tagName": "agg-spf-no-record",
+        "guidance": "No SPF record for envelope-from domain",
+        "refLinksGuide": [
+            {
+                "description": "SPF record"
+            }
+        ],
+        "refLinksTechnical": [""]
+    },
+    "agg2": {
+        "tagName": "agg-spf-invalid",
+        "guidance": "SPF record is invalid",
+        "refLinksGuide": [
+            {
+                "description": "SPF record"
+            }
+        ],
+        "refLinksTechnical": [""]
+    },
+    "agg3": {
+        "tagName": "agg-spf-failed",
+        "guidance": "IP address not authorized for envelope-from or header-from domain",
+        "refLinksGuide": [
+            {
+                "description": "SPF record"
+            }
+        ],
+        "refLinksTechnical": [""]
+    },
+    "agg4": {
+        "tagName": "agg-spf-mismatch",
+        "guidance": "Header-from and envelope-from are different public domains",
+        "refLinksGuide": [""],
+        "refLinksTechnical": [""]
+    },
+    "agg5": {
+        "tagName": "agg-spf-strict",
+        "guidance": "Header-from and envelope-from domains are not strictly aligned",
+        "refLinksLuide": [
+            {
+                "description": "DMARC record"
+            }
+        ],
+        "refLinksTechnical": [""]
+    },
+    "agg6": {
+        "tagName": "agg-dkim-unsigned",
+        "guidance": "No DKIM signature was applied",
+        "refLinksGuide": [""],
+        "refLinksTechnical": [""]
+    },
+    "agg7": {
+        "tagName": "agg-dkim-invalid",
+        "guidance": "DKIM record is invalid",
+        "refLinksGuide": [
+            {
+                "description": "DKIM record"
+            }
+        ],
+        "refLinksTechnical": [""]
+    },
+    "agg8": {
+        "tagName": "agg-dkim-failed",
+        "guidance": "DKIM signature verification failed",
+        "refLinksGuide": [
+            {
+                "description": "DKIM record"
+            }
+        ],
+        "refLinksTechnical": [""]
+    },
+    "agg9": {
+        "tagName": "agg-dkim-mismatch",
+        "guidance": "DKIM header and envelope-from are different public domains",
+        "refLinksGuide": [""],
+        "refLinksTechnical": [""]
+    },
+    "agg10": {
+        "tagName": "agg-dkim-strict",
+        "guidance": "DKIM header and envelope-from are not strictly aligned",
+        "refLinksGuide": [
+            {
+                "description": "DMARC record"
+            }
+        ],
+        "refLinksTechnical": [""]
+    }
+
+}
