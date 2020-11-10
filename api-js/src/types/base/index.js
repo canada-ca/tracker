@@ -13,8 +13,11 @@ const {
   globalIdField,
   connectionDefinitions,
   connectionArgs,
+  toGlobalId,
 } = require('graphql-relay')
 const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
+const { t } = require('@lingui/macro')
+
 const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
 const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
 const { nodeInterface } = require('../node')
@@ -841,13 +844,19 @@ const organizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { affiliationLoaderByOrgId } },
+        { i18n, auth: { checkPermission }, loaders: { affiliationLoaderByOrgId } },
       ) => {
-        const affiliations = await affiliationLoaderByOrgId({
-          orgId: _id,
-          ...args,
-        })
-        return affiliations
+        const permission = await checkPermission({ orgId: _id })
+        if (permission === 'admin' || permission === 'super_admin') {
+          const affiliations = await affiliationLoaderByOrgId({
+            orgId: _id,
+            ...args,
+          })
+          return affiliations
+        }
+        throw new Error(
+          i18n._(t`Cannot query affiliations on organization without admin permission or higher.`),
+        )
       },
     },
   }),
@@ -932,7 +941,9 @@ const userAffiliationsType = new GraphQLObjectType({
     userId: {
       type: GraphQLID,
       description: "Affiliated user's ID",
-      resolve: ({ userId }) => userId,
+      resolve: ({ _to }) => {
+        return toGlobalId('users', _to.split('/')[1])
+      },
     },
     permission: {
       type: RoleEnums,
@@ -942,16 +953,20 @@ const userAffiliationsType = new GraphQLObjectType({
     user: {
       type: userType,
       description: 'The affiliated users information.',
-      resolve: async ({ userKey }, _args, { loaders: { userLoaderByKey } }) => {
+      resolve: async ({ _to }, _args, { loaders: { userLoaderByKey } }) => {
+        const userKey = _to.split('/')[1]
         const user = await userLoaderByKey.load(userKey)
+        user.id = user._key
         return user
       },
     },
     organization: {
       type: organizationType,
       description: 'The affiliated organizations information.',
-      resolve: async ({ orgKey }, _args, { loaders: { orgLoaderByKey } }) => {
+      resolve: async ({ _from }, _args, { loaders: { orgLoaderByKey } }) => {
+        const orgKey = _from.split('/')[1]
         const org = await orgLoaderByKey.load(orgKey)
+        org.id = org._key
         return org
       },
     },
