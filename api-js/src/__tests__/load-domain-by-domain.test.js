@@ -37,7 +37,7 @@ describe('given a domainLoaderByDomain dataloader', () => {
   })
 
   describe('provided a single id', () => {
-    it('returns a single user', async () => {
+    it('returns a single domain', async () => {
       // Get Domain From db
       const expectedCursor = await query`
         FOR domain IN domains
@@ -47,13 +47,13 @@ describe('given a domainLoaderByDomain dataloader', () => {
       const expectedDomain = await expectedCursor.next()
 
       const loader = domainLoaderByDomain(query)
-      const user = await loader.load(expectedDomain.domain)
+      const domain = await loader.load(expectedDomain.domain)
 
-      expect(user).toEqual(expectedDomain)
+      expect(domain).toEqual(expectedDomain)
     })
   })
   describe('provided a list of ids', () => {
-    it('returns a list of users', async () => {
+    it('returns a list of domains', async () => {
       const domainDomains = []
       const expectedDomains = []
       const expectedCursor = await query`
@@ -62,14 +62,14 @@ describe('given a domainLoaderByDomain dataloader', () => {
       `
 
       while (expectedCursor.hasNext()) {
-        const tempUser = await expectedCursor.next()
-        domainDomains.push(tempUser.domain)
-        expectedDomains.push(tempUser)
+        const tempDomain = await expectedCursor.next()
+        domainDomains.push(tempDomain.domain)
+        expectedDomains.push(tempDomain)
       }
 
       const loader = domainLoaderByDomain(query)
-      const users = await loader.loadMany(domainDomains)
-      expect(users).toEqual(expectedDomains)
+      const domains = await loader.loadMany(domainDomains)
+      expect(domains).toEqual(expectedDomains)
     })
   })
   describe('users language is set to english', () => {
@@ -96,7 +96,7 @@ describe('given a domainLoaderByDomain dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = domainLoaderByDomain(query, i18n)
+        const loader = domainLoaderByDomain(query, '1234', i18n)
 
         try {
           await loader.load(expectedDomain.domain)
@@ -107,7 +107,7 @@ describe('given a domainLoaderByDomain dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running domainLoaderByDomain: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running domainLoaderByDomain: Error: Database error occurred.`,
         ])
       })
     })
@@ -126,7 +126,7 @@ describe('given a domainLoaderByDomain dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = domainLoaderByDomain(query, i18n)
+        const loader = domainLoaderByDomain(query, '1234', i18n)
 
         try {
           await loader.load(expectedDomain.domain)
@@ -137,7 +137,7 @@ describe('given a domainLoaderByDomain dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during domainLoaderByDomain: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running domainLoaderByDomain: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -166,7 +166,7 @@ describe('given a domainLoaderByDomain dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = domainLoaderByDomain(query, i18n)
+        const loader = domainLoaderByDomain(query, '1234', i18n)
 
         try {
           await loader.load(expectedDomain.domain)
@@ -175,7 +175,7 @@ describe('given a domainLoaderByDomain dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running domainLoaderByDomain: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running domainLoaderByDomain: Error: Database error occurred.`,
         ])
       })
     })
@@ -194,7 +194,7 @@ describe('given a domainLoaderByDomain dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = domainLoaderByDomain(query, i18n)
+        const loader = domainLoaderByDomain(query, '1234', i18n)
 
         try {
           await loader.load(expectedDomain.domain)
@@ -203,7 +203,7 @@ describe('given a domainLoaderByDomain dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during domainLoaderByDomain: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running domainLoaderByDomain: Error: Cursor error occurred.`,
         ])
       })
     })

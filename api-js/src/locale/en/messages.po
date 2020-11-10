@@ -299,9 +299,9 @@ msgstr "Unable to find dmarc scan. Please try again."
 
 #: src/auth/check-domain-permission.js:29
 #: src/loaders/domains/load-domain-by-domain.js:18
-#: src/loaders/domains/load-domain-by-domain.js:28
+#: src/loaders/domains/load-domain-by-domain.js:30
 #: src/loaders/domains/load-domain-by-key.js:18
-#: src/loaders/domains/load-domain-by-key.js:28
+#: src/loaders/domains/load-domain-by-key.js:30
 msgid "Unable to find domain. Please try again."
 msgstr "Unable to find domain. Please try again."
 

@@ -153,8 +153,8 @@ const createContext = ({ context, request, response }) => {
         fetch,
         i18n,
       }),
-      domainLoaderByDomain: domainLoaderByDomain(query, i18n),
-      domainLoaderByKey: domainLoaderByKey(query, i18n),
+      domainLoaderByDomain: domainLoaderByDomain(query, userId, i18n),
+      domainLoaderByKey: domainLoaderByKey(query, userId, i18n),
       domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
         query,
         userId,
