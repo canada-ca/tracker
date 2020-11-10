@@ -684,9 +684,7 @@ describe('given the load organization connections by user id function', () => {
               throw new Error('Unable to load organizations. Please try again.')
             },
           }
-          const query = jest
-            .fn()
-            .mockReturnValueOnce(cursor)
+          const query = jest.fn().mockReturnValueOnce(cursor)
 
           const connectionLoader = orgLoaderConnectionsByUserId(
             query,
@@ -1265,9 +1263,7 @@ describe('given the load organization connections by user id function', () => {
               throw new Error('Unable to load organizations. Please try again.')
             },
           }
-          const query = jest
-            .fn()
-            .mockReturnValueOnce(cursor)
+          const query = jest.fn().mockReturnValueOnce(cursor)
 
           const connectionLoader = orgLoaderConnectionsByUserId(
             query,

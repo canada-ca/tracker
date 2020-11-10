@@ -60,7 +60,6 @@ describe('when given the load https guidance tag connection function', () => {
     await collections.httpsGuidanceTags.save({
       _key: 'https2',
     })
-
   })
 
   afterAll(async () => {
@@ -88,7 +87,9 @@ describe('when given the load https guidance tag connection function', () => {
         })
 
         const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(httpsGuidanceTags)
+        const expectedHttpsTags = await httpsTagLoader.loadMany(
+          httpsGuidanceTags,
+        )
 
         const expectedStructure = {
           edges: [
@@ -129,7 +130,9 @@ describe('when given the load https guidance tag connection function', () => {
         const httpsGuidanceTags = ['https1', 'https2']
 
         const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(httpsGuidanceTags)
+        const expectedHttpsTags = await httpsTagLoader.loadMany(
+          httpsGuidanceTags,
+        )
 
         const connectionArgs = {
           first: 5,
@@ -174,7 +177,9 @@ describe('when given the load https guidance tag connection function', () => {
         const httpsGuidanceTags = ['https1', 'https2']
 
         const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(httpsGuidanceTags)
+        const expectedHttpsTags = await httpsTagLoader.loadMany(
+          httpsGuidanceTags,
+        )
 
         const connectionArgs = {
           first: 5,
@@ -219,7 +224,9 @@ describe('when given the load https guidance tag connection function', () => {
         const httpsGuidanceTags = ['https1', 'https2']
 
         const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(httpsGuidanceTags)
+        const expectedHttpsTags = await httpsTagLoader.loadMany(
+          httpsGuidanceTags,
+        )
 
         const connectionArgs = {
           first: 1,
@@ -263,7 +270,9 @@ describe('when given the load https guidance tag connection function', () => {
         const httpsGuidanceTags = ['https1', 'https2']
 
         const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(httpsGuidanceTags)
+        const expectedHttpsTags = await httpsTagLoader.loadMany(
+          httpsGuidanceTags,
+        )
 
         const connectionArgs = {
           last: 1,
@@ -354,7 +363,7 @@ describe('when given the load https guidance tag connection function', () => {
 
           const httpsGuidanceTags = ['https1', 'https2']
           const connectionArgs = {}
-          
+
           try {
             await connectionLoader({
               httpsGuidanceTags,
@@ -703,18 +712,14 @@ describe('when given the load https guidance tag connection function', () => {
 
           const httpsGuidanceTags = ['https1', 'https2']
           const connectionArgs = {}
-          
+
           try {
             await connectionLoader({
               httpsGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
@@ -742,11 +747,7 @@ describe('when given the load https guidance tag connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
@@ -774,11 +775,7 @@ describe('when given the load https guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
@@ -805,11 +802,7 @@ describe('when given the load https guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
@@ -838,11 +831,7 @@ describe('when given the load https guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: httpsGuidanceTagConnectionsLoader.`,
@@ -869,11 +858,7 @@ describe('when given the load https guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: httpsGuidanceTagConnectionsLoader.`,
@@ -905,11 +890,7 @@ describe('when given the load https guidance tag connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -942,11 +923,7 @@ describe('when given the load https guidance tag connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -981,9 +958,7 @@ describe('when given the load https guidance tag connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -1017,9 +992,7 @@ describe('when given the load https guidance tag connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([

@@ -60,7 +60,6 @@ describe('when given the load ssl guidance tag connection function', () => {
     await collections.sslGuidanceTags.save({
       _key: 'ssl2',
     })
-
   })
 
   afterAll(async () => {
@@ -354,7 +353,7 @@ describe('when given the load ssl guidance tag connection function', () => {
 
           const sslGuidanceTags = ['ssl1', 'ssl2']
           const connectionArgs = {}
-          
+
           try {
             await connectionLoader({
               sslGuidanceTags,
@@ -703,18 +702,14 @@ describe('when given the load ssl guidance tag connection function', () => {
 
           const sslGuidanceTags = ['ssl1', 'ssl2']
           const connectionArgs = {}
-          
+
           try {
             await connectionLoader({
               sslGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
@@ -742,11 +737,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
@@ -774,11 +765,7 @@ describe('when given the load ssl guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: sslGuidanceTagConnectionsLoader.`,
@@ -805,11 +792,7 @@ describe('when given the load ssl guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: sslGuidanceTagConnectionsLoader.`,
@@ -838,11 +821,7 @@ describe('when given the load ssl guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: sslGuidanceTagConnectionsLoader.`,
@@ -869,11 +848,7 @@ describe('when given the load ssl guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: sslGuidanceTagConnectionsLoader.`,
@@ -905,11 +880,7 @@ describe('when given the load ssl guidance tag connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -942,11 +913,7 @@ describe('when given the load ssl guidance tag connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -981,9 +948,7 @@ describe('when given the load ssl guidance tag connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -1017,9 +982,7 @@ describe('when given the load ssl guidance tag connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([
