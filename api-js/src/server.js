@@ -260,7 +260,7 @@ const createContext = ({ context, request, response }) => {
       ),
       userLoaderByUserName: userLoaderByUserName(query, userId, i18n),
       userLoaderByKey: userLoaderByKey(query, userId, i18n),
-      affiliationLoaderByKey: affiliationLoaderByKey(query),
+      affiliationLoaderByKey: affiliationLoaderByKey(query, userId, i18n),
       affiliationLoaderByUserId: affiliationLoaderByUserId(
         query,
         userId,

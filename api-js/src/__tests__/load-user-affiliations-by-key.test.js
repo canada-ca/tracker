@@ -170,7 +170,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = affiliationLoaderByKey(query, i18n)
+        const loader = affiliationLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load(expectedAffiliation._key)
@@ -181,7 +181,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running affiliationLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running affiliationLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -202,7 +202,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = affiliationLoaderByKey(query, i18n)
+        const loader = affiliationLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load(expectedAffiliation._key)
@@ -213,7 +213,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during affiliationLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running affiliationLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -284,7 +284,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = affiliationLoaderByKey(query, i18n)
+        const loader = affiliationLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load(expectedAffiliation._key)
@@ -293,7 +293,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running affiliationLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running affiliationLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -314,7 +314,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = affiliationLoaderByKey(query, i18n)
+        const loader = affiliationLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load(expectedAffiliation._key)
@@ -323,7 +323,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during affiliationLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running affiliationLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })
