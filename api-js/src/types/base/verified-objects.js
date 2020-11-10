@@ -107,10 +107,10 @@ const verifiedOrganizationType = new GraphQLObjectType({
       description: 'The city in which the organization resides.',
       resolve: ({ city }) => city,
     },
-    blueCheck: {
+    verified: {
       type: GraphQLBoolean,
       description: 'Wether the organization is a verified organization.',
-      resolve: ({ blueCheck }) => blueCheck,
+      resolve: ({ verified }) => verified,
     },
     domainCount: {
       type: GraphQLInt,
@@ -136,7 +136,7 @@ const verifiedOrganizationType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description:
-    'BlueCheck Organization object containing information for a given Organization.',
+    'Verified Organization object containing information for a given Organization.',
 })
 
 const verifiedOrganizationConnections = connectionDefinitions({
