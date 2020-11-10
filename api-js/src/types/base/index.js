@@ -20,6 +20,7 @@ const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
 const { nodeInterface } = require('../node')
 const { periodType } = require('./dmarc-report')
 const { guidanceTagType } = require('./guidance-tags')
+const { domainStatus } = require('./domain-status')
 
 /* Domain related objects */
 const domainType = new GraphQLObjectType({
@@ -41,6 +42,11 @@ const domainType = new GraphQLObjectType({
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
       resolve: ({ selectors }) => selectors,
+    },
+    status: {
+      type: domainStatus,
+      description: 'The domains scan status, based on the latest scan data.',
+      resolve: ({ status }) => status,
     },
     organizations: {
       type: organizationConnection.connectionType,
