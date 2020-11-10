@@ -64,10 +64,16 @@ export default function UserList({
       .email(fieldRequirements.email.email.message),
   })
 
+  const filterUsers = userList.filter((user) => {
+    return user.node.displayName
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  })
+
   // Get current users
   const indexOfLastUser = currentPage * usersPerPage
   const indexOfFirstUser = indexOfLastUser - usersPerPage
-  const currentUsers = userList.slice(indexOfFirstUser, indexOfLastUser)
+  const currentUsers = filterUsers.slice(indexOfFirstUser, indexOfLastUser)
 
   const [updateUserRoles, { loading, error }] = useMutation(UPDATE_USER_ROLES, {
     onError(error) {
@@ -131,10 +137,6 @@ export default function UserList({
     )
   if (error) return <ErrorFallbackMessage error={error} />
 
-  // const filterUsers = userList.filter((node) => {
-  //   return node.username.toLowerCase().includes(searchTerm.toLowerCase())
-  // })
-
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
@@ -192,12 +194,7 @@ export default function UserList({
         <Trans>User List</Trans>
       </Text>
 
-      <Stack
-        mb="8px"
-        // alignItems="center"
-        w={permission ? '100%' : ['100%', '50%']}
-        // isInline
-      >
+      <Stack mb="8px" w={permission ? '100%' : ['100%', '50%']}>
         <InputGroup flexGrow={1}>
           <InputLeftElement>
             <Icon name="search" color="gray.300" />
@@ -209,7 +206,6 @@ export default function UserList({
         </InputGroup>
 
         <TrackerButton
-          // w={permission ? '100%' : ['100%', '50%']}
           variant="primary"
           type="submit"
           onClick={() => {
@@ -391,29 +387,6 @@ export default function UserList({
     </Stack>
   )
 }
-
-/* -- Source code for adding organizations, not being used. --
-
-<Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="25%">
-  <Box mt={2} color="gray.500">
-    Orgs:&nbsp;
-    {// Populate the user-orgs list.
-    edge.node.user.affiliations.edges.map((edge, i, arr) => {
-      if (arr.length - 1 === i) {
-        return (
-          <Text display="inline" key={edge.node.id + i}>
-            {edge.node.organization.acronym}
-          </Text>
-        )
-      }
-      return (
-        <Text display="inline" key={edge.node.id + i}>
-          {edge.node.organization.acronym + ' | '}
-        </Text>
-      )
-    })}
-  </Box>
-</Box> */
 
 UserList.propTypes = {
   userListData: shape({

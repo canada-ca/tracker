@@ -21,7 +21,7 @@ export function UserCard({ userName, displayName, tfa, role }) {
       p="8"
     >
       <Box flexShrink="0" minW="10%">
-        <Text mt="1" fontSize="md" fontWeight="semibold">
+        <Text fontSize="md" fontWeight="semibold">
           {displayName}
         </Text>
       </Box>

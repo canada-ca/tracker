@@ -65,10 +65,17 @@ export function AdminDomains({ domainsData, orgName }) {
   const initialFocusRef = useRef()
   const { currentUser } = useUserState()
 
+  const filterDomains = domainList.filter((domain) => {
+    return domain.url.toLowerCase().includes(domainSearch.toLowerCase())
+  })
+
   // Get current domains
   const indexOfLastDomain = currentPage * domainsPerPage
   const indexOfFirstDomain = indexOfLastDomain - domainsPerPage
-  const currentDomains = domainList.slice(indexOfFirstDomain, indexOfLastDomain)
+  const currentDomains = filterDomains.slice(
+    indexOfFirstDomain,
+    indexOfLastDomain,
+  )
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
