@@ -338,7 +338,7 @@ msgid "Unable to find ssl guidance tags. Please try again."
 msgstr "Unable to find ssl guidance tags. Please try again."
 
 #: src/loaders/web-scan/load-ssl-by-key.js:17
-#: src/loaders/web-scan/load-ssl-by-key.js:27
+#: src/loaders/web-scan/load-ssl-by-key.js:29
 msgid "Unable to find ssl scan. Please try again."
 msgstr "Unable to find ssl scan. Please try again."
 

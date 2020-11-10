@@ -195,13 +195,13 @@ const createContext = ({ context, request, response }) => {
         cleanseInput,
         i18n,
       ),
-      httpsLoaderByKey: httpsLoaderByKey(query, i18n),
+      httpsLoaderByKey: httpsLoaderByKey(query, userId, i18n),
       httpsLoaderConnectionsByDomainId: httpsLoaderConnectionsByDomainId(
         query,
         userId,
         cleanseInput,
       ),
-      sslLoaderByKey: sslLoaderByKey(query, i18n),
+      sslLoaderByKey: sslLoaderByKey(query, userId, i18n),
       sslLoaderConnectionsByDomainId: sslLoaderConnectionsByDomainId(
         query,
         userId,
