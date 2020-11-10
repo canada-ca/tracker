@@ -1,7 +1,7 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-module.exports.dkimResultLoaderByKey = (query, i18n) =>
+module.exports.dkimResultLoaderByKey = (query, userId, i18n) =>
   new DataLoader(async (keys) => {
     let cursor
 
@@ -13,7 +13,7 @@ module.exports.dkimResultLoaderByKey = (query, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when running dkimResultLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userId} running dkimResultLoaderByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find dkim result. Please try again.`))
     }
@@ -25,7 +25,7 @@ module.exports.dkimResultLoaderByKey = (query, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when running dkimResultLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userId} running dkimResultLoaderByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find dkim result. Please try again.`))
     }

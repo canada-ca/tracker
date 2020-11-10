@@ -328,7 +328,7 @@ msgid "Unable to find spf guidance tags. Please try again."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-spf-by-key.js:18
-#: src/loaders/email-scan/load-spf-by-key.js:28
+#: src/loaders/email-scan/load-spf-by-key.js:30
 msgid "Unable to find spf scan. Please try again."
 msgstr "todo"
 
