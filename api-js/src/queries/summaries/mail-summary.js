@@ -1,15 +1,15 @@
 const { categorizedSummaryType } = require('../../types')
 const { t } = require('@lingui/macro')
 
-const webSummary = {
+const mailSummary = {
   type: categorizedSummaryType,
-  description: 'Web summary computed values, used to build summary cards.',
+  description: 'Email summary computed values, used to build summary cards.',
   resolve: async (_, __, { i18n, loaders: { chartSummaryLoaderByKey } }) => {
-    const summary = await chartSummaryLoaderByKey.load('web')
+    const summary = await chartSummaryLoaderByKey.load('mail')
 
     if (typeof summary === 'undefined') {
-      console.warn(`User could not retrieve web summary.`)
-      throw new Error(i18n._(t`Unable to load web summary. Please try again.`))
+      console.warn(`User could not retrieve mail summary.`)
+      throw new Error(i18n._(t`Unable to load mail summary. Please try again.`))
     }
 
     const categories = [
@@ -33,5 +33,5 @@ const webSummary = {
 }
 
 module.exports = {
-  webSummary,
+  mailSummary,
 }
