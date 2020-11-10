@@ -802,10 +802,10 @@ const organizationType = new GraphQLObjectType({
       description: 'The city in which the organization resides.',
       resolve: async ({ city }) => city,
     },
-    blueCheck: {
+    verified: {
       type: GraphQLBoolean,
       description: 'Wether the organization is a verified organization.',
-      resolve: async ({ blueCheck }) => blueCheck,
+      resolve: async ({ verified }) => verified,
     },
     domainCount: {
       type: GraphQLInt,

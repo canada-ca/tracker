@@ -942,7 +942,7 @@ describe('updating a domain', () => {
         let org, user, domain, secondOrg
         beforeEach(async () => {
           secondOrg = await collections.organizations.save({
-            blueCheck: true,
+            verified: true,
             orgDetails: {
               en: {
                 slug: 'communications-security-establishment',
@@ -1746,7 +1746,7 @@ describe('updating a domain', () => {
         let org, user, domain, secondOrg
         beforeEach(async () => {
           secondOrg = await collections.organizations.save({
-            blueCheck: true,
+            verified: true,
             orgDetails: {
               en: {
                 slug: 'communications-security-establishment',

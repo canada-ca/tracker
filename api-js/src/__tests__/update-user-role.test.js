@@ -755,7 +755,7 @@ describe('update a users role', () => {
         let secondaryOrg
         beforeEach(async () => {
           secondaryOrg = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'communications-security-establishment',
@@ -2156,7 +2156,7 @@ describe('update a users role', () => {
         let secondaryOrg
         beforeEach(async () => {
           secondaryOrg = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'communications-security-establishment',

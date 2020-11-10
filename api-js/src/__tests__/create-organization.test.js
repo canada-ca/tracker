@@ -131,7 +131,7 @@ describe('create an organization', () => {
                   country
                   province
                   city
-                  blueCheck
+                  verified
                 }
               }
             }
@@ -165,7 +165,7 @@ describe('create an organization', () => {
         const orgCursor = await query`
           FOR org IN organizations
             FILTER (LOWER("treasury-board-of-canada-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("en", org.orgDetails))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, verified: org.verified }, TRANSLATE("en", org.orgDetails))
         `
 
         const org = await orgCursor.next()
@@ -183,7 +183,7 @@ describe('create an organization', () => {
                 country: org.country,
                 province: org.province,
                 city: org.city,
-                blueCheck: org.blueCheck,
+                verified: org.verified,
               },
             },
           },
@@ -236,7 +236,7 @@ describe('create an organization', () => {
                   country
                   province
                   city
-                  blueCheck
+                  verified
                 }
               }
             }
@@ -270,7 +270,7 @@ describe('create an organization', () => {
         const orgCursor = await query`
           FOR org IN organizations
             FILTER (LOWER("secretariat-du-conseil-tresor-du-canada") == LOWER(TRANSLATE("fr", org.orgDetails).slug))
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("fr", org.orgDetails))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, verified: org.verified }, TRANSLATE("fr", org.orgDetails))
         `
 
         const org = await orgCursor.next()
@@ -288,7 +288,7 @@ describe('create an organization', () => {
                 country: org.country,
                 province: org.province,
                 city: org.city,
-                blueCheck: org.blueCheck,
+                verified: org.verified,
               },
             },
           },
