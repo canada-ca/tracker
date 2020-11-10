@@ -16,7 +16,11 @@ const findVerifiedOrganizationBySlug = {
   resolve: async (
     _,
     args,
-    { i18n, loaders: { verifiedOrgLoaderBySlug }, validators: { cleanseInput } },
+    {
+      i18n,
+      loaders: { verifiedOrgLoaderBySlug },
+      validators: { cleanseInput },
+    },
   ) => {
     // Cleanse input
     const orgSlug = cleanseInput(args.orgSlug)

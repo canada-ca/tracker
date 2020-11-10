@@ -14,8 +14,12 @@ module.exports.verifiedOrgLoaderBySlug = (query, language, i18n) =>
           RETURN MERGE({ _id: org._id, _key: org._key, id: org._key, _rev: org._rev, verified: org.verified, domainCount: COUNT(domains) }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
-      console.error(`Database error when running verifiedOrgLoaderBySlug: ${err}`)
-      throw new Error(i18n._(t`Unable to find verified organization. Please try again.`))
+      console.error(
+        `Database error when running verifiedOrgLoaderBySlug: ${err}`,
+      )
+      throw new Error(
+        i18n._(t`Unable to find verified organization. Please try again.`),
+      )
     }
 
     const orgMap = {}
@@ -25,7 +29,9 @@ module.exports.verifiedOrgLoaderBySlug = (query, language, i18n) =>
       })
     } catch (err) {
       console.error(`Cursor error during verifiedOrgLoaderBySlug: ${err}`)
-      throw new Error(i18n._(t`Unable to find verified organization. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to find verified organization. Please try again.`),
+      )
     }
 
     return slugs.map((slug) => orgMap[slug])

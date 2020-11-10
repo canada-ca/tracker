@@ -1,10 +1,7 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-module.exports.verifiedDomainLoaderByDomain = (
-  query,
-  i18n,
-) =>
+module.exports.verifiedDomainLoaderByDomain = (query, i18n) =>
   new DataLoader(async (domains) => {
     let cursor
 

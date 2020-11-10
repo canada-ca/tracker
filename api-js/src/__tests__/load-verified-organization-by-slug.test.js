@@ -141,7 +141,9 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
           await loader.load('slug')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find verified organization. Please try again.'),
+            new Error(
+              'Unable to find verified organization. Please try again.',
+            ),
           )
         }
 
@@ -164,7 +166,9 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
           await loader.load('slug')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find verified organization. Please try again.'),
+            new Error(
+              'Unable to find verified organization. Please try again.',
+            ),
           )
         }
 

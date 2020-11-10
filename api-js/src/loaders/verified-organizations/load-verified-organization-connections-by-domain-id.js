@@ -175,7 +175,10 @@ const verifiedOrgLoaderConnectionsByDomainId = (
     pageInfo: {
       hasNextPage: organizationInfo.hasNextPage,
       hasPreviousPage: organizationInfo.hasPreviousPage,
-      startCursor: toGlobalId('verifiedOrganizations', organizationInfo.startKey),
+      startCursor: toGlobalId(
+        'verifiedOrganizations',
+        organizationInfo.startKey,
+      ),
       endCursor: toGlobalId('verifiedOrganizations', organizationInfo.endKey),
     },
   }

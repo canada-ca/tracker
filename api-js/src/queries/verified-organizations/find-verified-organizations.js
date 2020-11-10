@@ -7,11 +7,7 @@ const findVerifiedOrganizations = {
   args: {
     ...connectionArgs,
   },
-  resolve: async (
-    _,
-    args,
-    { loaders: { verifiedOrgLoaderConnections } },
-  ) => {
+  resolve: async (_, args, { loaders: { verifiedOrgLoaderConnections } }) => {
     const orgConnections = await verifiedOrgLoaderConnections(args)
     return orgConnections
   },
