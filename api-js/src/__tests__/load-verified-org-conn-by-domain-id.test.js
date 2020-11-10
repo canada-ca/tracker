@@ -20,7 +20,6 @@ describe('given the load organizations connection function', () => {
     truncate,
     migrate,
     collections,
-    user,
     org,
     orgTwo,
     domain,
@@ -40,13 +39,6 @@ describe('given the load organizations connection function', () => {
 
   beforeEach(async () => {
     await truncate()
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
     org = await collections.organizations.save({
       verified: true,
       orgDetails: {
@@ -96,16 +88,6 @@ describe('given the load organizations connection function', () => {
           city: 'Ottawa',
         },
       },
-    })
-    await collections.affiliations.save({
-      _from: org._id,
-      _to: user._id,
-      permission: 'user',
-    })
-    await collections.affiliations.save({
-      _from: orgTwo._id,
-      _to: user._id,
-      permission: 'user',
     })
     domain = await collections.domains.save({
       domain: 'test.domain.gc.ca',
