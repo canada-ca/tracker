@@ -8,22 +8,22 @@ const categoryTotalsType = new GraphQLObjectType({
     passSpfOnly: {
       type: GraphQLInt,
       description: 'Amount of messages that are passing SPF, but failing DKIM.',
-      resolve: async ({ passSpfOnly }) => passSpfOnly,
+      resolve: ({ passSpfOnly }) => passSpfOnly,
     },
     passDkimOnly: {
       type: GraphQLInt,
       description: 'Amount of messages that are passing DKIM, but failing SPF.',
-      resolve: async ({ passDkimOnly }) => passDkimOnly,
+      resolve: ({ passDkimOnly }) => passDkimOnly,
     },
     fullPass: {
       type: GraphQLInt,
       description: 'Amount of messages that are passing SPF and DKIM.',
-      resolve: async ({ fullPass }) => fullPass,
+      resolve: ({ fullPass }) => fullPass,
     },
     fail: {
       type: GraphQLInt,
       description: 'Amount of messages that fail both SPF and DKIM.',
-      resolve: async ({ fail }) => fail,
+      resolve: ({ fail }) => fail,
     },
   }),
 })
