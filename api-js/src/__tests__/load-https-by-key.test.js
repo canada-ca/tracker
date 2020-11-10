@@ -96,7 +96,7 @@ describe('given the httpsLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsLoaderByKey(query, i18n)
+        const loader = httpsLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -106,7 +106,7 @@ describe('given the httpsLoaderByKey function', () => {
           )
         }
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when running httpsLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running httpsLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -118,7 +118,7 @@ describe('given the httpsLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsLoaderByKey(query, i18n)
+        const loader = httpsLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -128,7 +128,7 @@ describe('given the httpsLoaderByKey function', () => {
           )
         }
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when running httpsLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running httpsLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -150,7 +150,7 @@ describe('given the httpsLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsLoaderByKey(query, i18n)
+        const loader = httpsLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -158,7 +158,7 @@ describe('given the httpsLoaderByKey function', () => {
           expect(err).toEqual(new Error('todo'))
         }
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when running httpsLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running httpsLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -170,7 +170,7 @@ describe('given the httpsLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsLoaderByKey(query, i18n)
+        const loader = httpsLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -178,7 +178,7 @@ describe('given the httpsLoaderByKey function', () => {
           expect(err).toEqual(new Error('todo'))
         }
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when running httpsLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running httpsLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })

@@ -135,7 +135,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = orgLoaderBySlug(mockedQuery, 'en', i18n)
+        const loader = orgLoaderBySlug(mockedQuery, 'en', '1234', i18n)
 
         try {
           await loader.load('slug')
@@ -146,7 +146,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error when running orgLoaderBySlug: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running orgLoaderBySlug: Error: Database error occurred.`,
         ])
       })
     })
@@ -158,7 +158,7 @@ describe('given a orgLoaderByKey dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = orgLoaderBySlug(mockedQuery, 'fr', i18n)
+        const loader = orgLoaderBySlug(mockedQuery, 'en', '1234', i18n)
 
         try {
           await loader.load('slug')
@@ -169,7 +169,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error during orgLoaderBySlug: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running orgLoaderBySlug: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -229,7 +229,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = orgLoaderBySlug(mockedQuery, 'en', i18n)
+        const loader = orgLoaderBySlug(mockedQuery, 'fr', '1234', i18n)
 
         try {
           await loader.load('slug')
@@ -238,7 +238,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error when running orgLoaderBySlug: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running orgLoaderBySlug: Error: Database error occurred.`,
         ])
       })
     })
@@ -250,7 +250,7 @@ describe('given a orgLoaderByKey dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = orgLoaderBySlug(mockedQuery, 'fr', i18n)
+        const loader = orgLoaderBySlug(mockedQuery, 'fr', '1234', i18n)
 
         try {
           await loader.load('slug')
@@ -259,7 +259,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error during orgLoaderBySlug: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running orgLoaderBySlug: Error: Cursor error occurred.`,
         ])
       })
     })

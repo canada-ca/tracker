@@ -95,7 +95,7 @@ describe('given the spfLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = spfLoaderByKey(query, i18n)
+        const loader = spfLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -106,7 +106,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when running spfLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running spfLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -118,7 +118,7 @@ describe('given the spfLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = spfLoaderByKey(query, i18n)
+        const loader = spfLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -129,7 +129,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when running spfLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running spfLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -151,7 +151,7 @@ describe('given the spfLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = spfLoaderByKey(query, i18n)
+        const loader = spfLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -160,7 +160,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when running spfLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running spfLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -172,7 +172,7 @@ describe('given the spfLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = spfLoaderByKey(query, i18n)
+        const loader = spfLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -181,7 +181,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when running spfLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running spfLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })

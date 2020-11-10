@@ -96,7 +96,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsGuidanceTagLoader(query, i18n)
+        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -107,7 +107,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when running httpsGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Database error occurred.`,
         ])
       })
     })
@@ -119,7 +119,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsGuidanceTagLoader(query, i18n)
+        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -130,7 +130,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when running httpsGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -152,7 +152,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsGuidanceTagLoader(query, i18n)
+        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -161,7 +161,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when running httpsGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Database error occurred.`,
         ])
       })
     })
@@ -173,7 +173,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsGuidanceTagLoader(query, i18n)
+        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -182,7 +182,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when running httpsGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Cursor error occurred.`,
         ])
       })
     })
