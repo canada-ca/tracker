@@ -1,18 +1,18 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-const sslGuidanceTagLoader = (query, i18n) =>
+const sslGuidanceTagLoader = (query, userId, i18n) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
       cursor = await query`
         FOR tag IN sslGuidanceTags
-          FILTER ${tags}[** FILTER CURRENT == tag._key]
+          FILTER tag._key IN ${tags}
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
       `
     } catch (err) {
       console.error(
-        `Database error occurred when running sslGuidanceTagLoader: ${err}`,
+        `Database error occurred when user: ${userId} running sslGuidanceTagLoader: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find ssl guidance tags. Please try again.`),
@@ -26,7 +26,7 @@ const sslGuidanceTagLoader = (query, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when running sslGuidanceTagLoader: ${err}`,
+        `Cursor error occurred when user: ${userId} running sslGuidanceTagLoader: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find ssl guidance tags. Please try again.`),

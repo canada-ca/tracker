@@ -1,18 +1,18 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-const dmarcGuidanceTagLoader = (query, i18n) =>
+const dmarcGuidanceTagLoader = (query, userId, i18n) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
       cursor = await query`
         FOR tag IN dmarcGuidanceTags
-          FILTER ${tags}[** FILTER CURRENT == tag._key]
+          FILTER tag._key IN ${tags}
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
       `
     } catch (err) {
       console.error(
-        `Database error occurred when running dmarcGuidanceTagLoader: ${err}`,
+        `Database error occurred when user: ${userId} running dmarcGuidanceTagLoader: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find dmarc guidance tags. Please try again.`),
@@ -26,7 +26,7 @@ const dmarcGuidanceTagLoader = (query, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when running dmarcGuidanceTagLoader: ${err}`,
+        `Cursor error occurred when user: ${userId} running dmarcGuidanceTagLoader: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find dmarc guidance tags. Please try again.`),
