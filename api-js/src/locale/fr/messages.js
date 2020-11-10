@@ -20,6 +20,7 @@
     'New passwords do not match. Please try again.': 'todo',
     'No domain with the provided domain could be found.': 'todo',
     'No organization with the provided slug could be found.': 'todo',
+    'No verified domain with the provided domain could be found.': 'todo',
     'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.':
@@ -40,6 +41,10 @@
       'todo',
     'Passing both `first` and `last` to paginate the `ssl` connection is not supported.':
       'todo',
+    'Passing both `first` and `last` to paginate the `verifiedDomain` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported.':
+      'todo',
     'Password is not strong enough. Please try again.': 'todo',
     'Password is too short.': 'todo',
     'Password was successfully reset.': 'todo',
@@ -53,6 +58,10 @@
     'Requesting `{amount}` records on the `guidanceTag` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting `{amount}` records on the `verifiedDomain` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -96,6 +105,8 @@
     'Unable to find ssl scan. Please try again.': 'todo',
     'Unable to find user affiliation(s). Please try again.': 'todo',
     'Unable to find user. Please try again.': 'todo',
+    'Unable to find verified domain. Please try again.': 'todo',
+    'Unable to find verified organization. Please try again.': 'todo',
     'Unable to invite user. Please try again.': 'todo',
     'Unable to invite yourself to an org. Please try again.': 'todo',
     'Unable to load affiliations. Please try again.': 'todo',
@@ -112,6 +123,8 @@
     'Unable to load spf scans. Please try again.': 'todo',
     'Unable to load ssl guidance tags. Please try again.': 'todo',
     'Unable to load ssl scans. Please try again.': 'todo',
+    'Unable to load verified domains. Please try again.': 'todo',
+    'Unable to load verified organizations. Please try again.': 'todo',
     'Unable to query affiliations. Please try again.': 'todo',
     'Unable to query domains. Please try again.': 'todo',
     'Unable to query organizations. Please try again.': 'todo',
@@ -174,6 +187,10 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `verifiedDomain` connection.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection.':
+      'todo',
     '`{argSet}` must be of type `number` not `{typeSet}`.': 'todo',
     '`{argSet}` on the `affiliations` cannot be less than zero.': 'todo',
     '`{argSet}` on the `dkimResults` connection cannot be less than zero.':
@@ -188,5 +205,9 @@
       'todo',
     '`{argSet}` on the `spf` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `ssl` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `verifiedDomain` connection cannot be less than zero.':
+      'todo',
+    '`{argSet}` on the `verifiedOrganization` connection cannot be less than zero.':
+      'todo',
   },
 }
