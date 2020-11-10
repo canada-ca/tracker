@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lingui/core": "^2.9.2",
+    "@lingui/core": "^3.1.0",
     "arango-tools": "0.0.9",
     "arangojs": "^7.1.0",
     "bcrypt": "^5.0.0",
