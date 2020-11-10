@@ -315,10 +315,10 @@ msgstr "todo"
 msgid "Unable to find https scan. Please try again."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-by-key.js:17
-#: src/loaders/organizations/load-organization-by-key.js:27
-#: src/loaders/organizations/load-organization-by-slug.js:17
-#: src/loaders/organizations/load-organization-by-slug.js:27
+#: src/loaders/organizations/load-organization-by-key.js:19
+#: src/loaders/organizations/load-organization-by-key.js:31
+#: src/loaders/organizations/load-organization-by-slug.js:19
+#: src/loaders/organizations/load-organization-by-slug.js:31
 msgid "Unable to find organization. Please try again."
 msgstr "todo"
 

@@ -242,8 +242,8 @@ const createContext = ({ context, request, response }) => {
         cleanseInput,
         i18n,
       ),
-      orgLoaderByKey: orgLoaderByKey(query, request.language, i18n),
-      orgLoaderBySlug: orgLoaderBySlug(query, request.language, i18n),
+      orgLoaderByKey: orgLoaderByKey(query, request.language, userId, i18n),
+      orgLoaderBySlug: orgLoaderBySlug(query, request.language, userId, i18n),
       orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
         query,
         request.language,
