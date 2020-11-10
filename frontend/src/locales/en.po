@@ -2287,3 +2287,19 @@ msgstr "Scan Domain"
 #: src/UserList.js:352
 msgid "User Email Address"
 msgstr "User Email Address"
+
+#:src/UserList.js:404
+msgid "Remove User"
+msgstr "Remove User"
+
+#:src/UserList.js:410
+msgid "Confirm removal of user:"
+msgstr "Confirm removal of user:"
+
+#:src/AdminDomains.js:422
+msgid "Confirm addition of domain:"
+msgstr "Confirm addition of domain:"
+
+#:src/AdminDomains.js:425
+msgid "Enter new domain URL"
+msgstr "Enter new domain URL"

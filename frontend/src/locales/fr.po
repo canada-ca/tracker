@@ -2226,3 +2226,19 @@ msgstr "Domaine de balayage"
 #: src/UserList.js:352
 msgid "User Email Address"
 msgstr "Adresse électronique de l'utilisateur"
+
+#:src/UserList.js:404
+msgid "Remove User"
+msgstr "Supprimer un utilisateur"
+
+#:src/UserList.js:410
+msgid "Confirm removal of user:"
+msgstr "Confirmer la suppression de l'utilisateur:"
+
+#:src/AdminDomains.js:422
+msgid "Confirm addition of domain:"
+msgstr "Confirmer l'ajout du domaine:"
+
+#:src/AdminDomains.js:425
+msgid "Enter new domain URL"
+msgstr "Entrez l'URL du nouveau domaine"

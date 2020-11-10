@@ -52,6 +52,11 @@ export function AdminDomains({ domainsData, orgName }) {
   const [editingDomainUrl, setEditingDomainUrl] = useState()
   const toast = useToast()
   const {
+    isOpen: createIsOpen,
+    onOpen: createOnOpen,
+    onClose: createOnClose,
+  } = useDisclosure()
+  const {
     isOpen: updateIsOpen,
     onOpen: updateOnOpen,
     onClose: updateOnClose,
@@ -214,24 +219,7 @@ export function AdminDomains({ domainsData, orgName }) {
       <TrackerButton
         width="100%"
         onClick={() => {
-          if (!domainSearch) {
-            toast({
-              title: t`An error occurred.`,
-              description: t`New domain name cannot be empty`,
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-              position: 'top-left',
-            })
-          } else {
-            createDomain({
-              variables: {
-                orgSlug: slugify(orgName),
-                url: domainSearch,
-                selectors: [],
-              },
-            })
-          }
+          createOnOpen()
         }}
         variant="primary"
       >
@@ -410,6 +398,63 @@ export function AdminDomains({ domainsData, orgName }) {
                       variables: { url: selectedRemoveDomain },
                     })
                   }
+                >
+                  <Trans>Confirm</Trans>
+                </TrackerButton>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        )}
+      </SlideIn>
+
+      <SlideIn in={createIsOpen}>
+        {(styles) => (
+          <Modal isOpen={true} onClose={createOnClose}>
+            <ModalOverlay opacity={styles.opacity} />
+            <ModalContent pb={4} {...styles}>
+              <ModalHeader>
+                <Trans>Add Domain</Trans>
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Stack spacing={4} p={25}>
+                  <Text fontWeight="bold">
+                    <Trans>Confirm addition of domain:</Trans>
+                  </Text>
+                  <Input
+                    placeholder={t`Enter new domain URL`}
+                    defaultValue={domainSearch}
+                    onChange={(e) => setDomainSearch(e.target.value)}
+                  />
+                </Stack>
+              </ModalBody>
+
+              <ModalFooter>
+                <TrackerButton
+                  variant="primary"
+                  isLoading={removeDomainLoading}
+                  mr={4}
+                  onClick={() => {
+                    if (!domainSearch) {
+                      toast({
+                        title: t`An error occurred.`,
+                        description: t`New domain name cannot be empty`,
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                        position: 'top-left',
+                      })
+                    } else {
+                      createDomain({
+                        variables: {
+                          orgSlug: slugify(orgName),
+                          url: domainSearch,
+                          selectors: [],
+                        },
+                      })
+                      createOnClose()
+                    }
+                  }}
                 >
                   <Trans>Confirm</Trans>
                 </TrackerButton>
