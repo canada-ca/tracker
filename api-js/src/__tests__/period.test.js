@@ -155,8 +155,8 @@ describe('given findDomainByDomain query', () => {
     })
     it('returns month and end', async () => {
       const moment = jest.fn().mockReturnValue({
-        month() {
-          return '0'
+        format() {
+          return 'september'
         },
         year() {
           return '2020'
@@ -218,7 +218,7 @@ describe('given findDomainByDomain query', () => {
         data: {
           findDomainByDomain: {
             dmarcSummaryByPeriod: {
-              month: '1',
+              month: 'SEPTEMBER',
               year: '2020',
             },
           },
