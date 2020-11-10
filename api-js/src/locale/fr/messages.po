@@ -239,7 +239,7 @@ msgstr "todo"
 msgid "Successfully verified account."
 msgstr "todo"
 
-#: src/mutations/organizations/verify-organization.js:117
+#: src/mutations/organizations/verify-organization.js:118
 msgid "Successfully verified organization: {0}."
 msgstr "todo"
 
@@ -350,6 +350,11 @@ msgstr "todo"
 msgid "Unable to find ssl scan. Please try again."
 msgstr "todo"
 
+#: src/loaders/chart-summaries/load-chart-summary-by-key.js:18
+#: src/loaders/chart-summaries/load-chart-summary-by-key.js:30
+msgid "Unable to find summary. Please try again."
+msgstr "todo"
+
 #: src/loaders/user-affiliations/load-user-affiliations-by-key.js:21
 #: src/loaders/user-affiliations/load-user-affiliations-by-key.js:35
 msgid "Unable to find user affiliation(s). Please try again."
@@ -436,6 +441,10 @@ msgstr "todo"
 msgid "Unable to load https scans. Please try again."
 msgstr "todo"
 
+#: src/queries/summaries/mail-summary.js:12
+msgid "Unable to load mail summary. Please try again."
+msgstr "todo"
+
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:141
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:151
 #: src/loaders/organizations/load-organization-connections-by-user-id.js:146
@@ -473,6 +482,10 @@ msgstr "todo"
 #: src/loaders/verified-organizations/load-verified-organizations-connections.js:138
 #: src/loaders/verified-organizations/load-verified-organizations-connections.js:150
 msgid "Unable to load verified organizations. Please try again."
+msgstr "todo"
+
+#: src/queries/summaries/web-summary.js:12
+msgid "Unable to load web summary. Please try again."
 msgstr "todo"
 
 #: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:139
@@ -809,4 +822,14 @@ msgstr "todo"
 #: src/loaders/verified-organizations/load-verified-organization-connections-by-domain-id.js:51
 #: src/loaders/verified-organizations/load-verified-organizations-connections.js:52
 msgid "`{argSet}` on the `verifiedOrganization` connection cannot be less than zero."
+msgstr "todo"
+
+#: src/queries/summaries/mail-summary.js:22
+#: src/queries/summaries/web-summary.js:22
+msgid "fail"
+msgstr "todo"
+
+#: src/queries/summaries/mail-summary.js:17
+#: src/queries/summaries/web-summary.js:17
+msgid "pass"
 msgstr "todo"

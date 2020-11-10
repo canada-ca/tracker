@@ -105,6 +105,7 @@
     'Unable to find spf scan. Please try again.': 'todo',
     'Unable to find ssl guidance tags. Please try again.': 'todo',
     'Unable to find ssl scan. Please try again.': 'todo',
+    'Unable to find summary. Please try again.': 'todo',
     'Unable to find user affiliation(s). Please try again.': 'todo',
     'Unable to find user. Please try again.': 'todo',
     'Unable to find verified domain. Please try again.': 'todo',
@@ -120,6 +121,7 @@
     'Unable to load domains. Please try again.': 'todo',
     'Unable to load https guidance tags. Please try again.': 'todo',
     'Unable to load https scans. Please try again.': 'todo',
+    'Unable to load mail summary. Please try again.': 'todo',
     'Unable to load organizations. Please try again.': 'todo',
     'Unable to load spf guidance tags. Please try again.': 'todo',
     'Unable to load spf scans. Please try again.': 'todo',
@@ -127,6 +129,7 @@
     'Unable to load ssl scans. Please try again.': 'todo',
     'Unable to load verified domains. Please try again.': 'todo',
     'Unable to load verified organizations. Please try again.': 'todo',
+    'Unable to load web summary. Please try again.': 'todo',
     'Unable to query affiliations. Please try again.': 'todo',
     'Unable to query domains. Please try again.': 'todo',
     'Unable to query organizations. Please try again.': 'todo',
@@ -212,5 +215,7 @@
       'todo',
     '`{argSet}` on the `verifiedOrganization` connection cannot be less than zero.':
       'todo',
+    fail: 'todo',
+    pass: 'todo',
   },
 }
