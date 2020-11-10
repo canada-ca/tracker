@@ -126,13 +126,13 @@ describe('given the load organizations connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
                 node: {
                   ...expectedOrgs[0],
                 },
               },
               {
-                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
                 node: {
                   ...expectedOrgs[1],
                 },
@@ -142,8 +142,8 @@ describe('given the load organizations connection function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
-              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              startCursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
+              endCursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
             },
           }
 
@@ -167,7 +167,7 @@ describe('given the load organizations connection function', () => {
 
           const connectionArgs = {
             first: 5,
-            after: toGlobalId('organizations', expectedOrgs[0].id),
+            after: toGlobalId('verifiedOrganizations', expectedOrgs[0].id),
           }
           const orgs = await connectionLoader({
             ...connectionArgs,
@@ -176,7 +176,7 @@ describe('given the load organizations connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
                 node: {
                   ...expectedOrgs[1],
                 },
@@ -186,8 +186,8 @@ describe('given the load organizations connection function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
-              startCursor: toGlobalId('organizations', expectedOrgs[1]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              startCursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
+              endCursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
             },
           }
 
@@ -211,7 +211,7 @@ describe('given the load organizations connection function', () => {
 
           const connectionArgs = {
             first: 5,
-            before: toGlobalId('organizations', expectedOrgs[1].id),
+            before: toGlobalId('verifiedOrganizations', expectedOrgs[1].id),
           }
           const orgs = await connectionLoader({
             ...connectionArgs,
@@ -220,7 +220,7 @@ describe('given the load organizations connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
                 node: {
                   ...expectedOrgs[0],
                 },
@@ -230,8 +230,8 @@ describe('given the load organizations connection function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
-              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+              startCursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
+              endCursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
             },
           }
 
@@ -263,7 +263,7 @@ describe('given the load organizations connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
                 node: {
                   ...expectedOrgs[0],
                 },
@@ -273,8 +273,8 @@ describe('given the load organizations connection function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
-              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+              startCursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
+              endCursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
             },
           }
 
@@ -306,7 +306,7 @@ describe('given the load organizations connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
                 node: {
                   ...expectedOrgs[1],
                 },
@@ -316,8 +316,8 @@ describe('given the load organizations connection function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
-              startCursor: toGlobalId('organizations', expectedOrgs[1]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              startCursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
+              endCursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
             },
           }
 
@@ -710,13 +710,13 @@ describe('given the load organizations connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
                 node: {
                   ...expectedOrgs[0],
                 },
               },
               {
-                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
                 node: {
                   ...expectedOrgs[1],
                 },
@@ -726,8 +726,8 @@ describe('given the load organizations connection function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
-              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              startCursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
+              endCursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
             },
           }
 
@@ -751,7 +751,7 @@ describe('given the load organizations connection function', () => {
 
           const connectionArgs = {
             first: 5,
-            after: toGlobalId('organizations', expectedOrgs[0].id),
+            after: toGlobalId('verifiedOrganizations', expectedOrgs[0].id),
           }
           const orgs = await connectionLoader({
             ...connectionArgs,
@@ -760,7 +760,7 @@ describe('given the load organizations connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
                 node: {
                   ...expectedOrgs[1],
                 },
@@ -770,8 +770,8 @@ describe('given the load organizations connection function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
-              startCursor: toGlobalId('organizations', expectedOrgs[1]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              startCursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
+              endCursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
             },
           }
 
@@ -795,7 +795,7 @@ describe('given the load organizations connection function', () => {
 
           const connectionArgs = {
             first: 5,
-            before: toGlobalId('organizations', expectedOrgs[1].id),
+            before: toGlobalId('verifiedOrganizations', expectedOrgs[1].id),
           }
           const orgs = await connectionLoader({
             ...connectionArgs,
@@ -804,7 +804,7 @@ describe('given the load organizations connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
                 node: {
                   ...expectedOrgs[0],
                 },
@@ -814,8 +814,8 @@ describe('given the load organizations connection function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
-              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+              startCursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
+              endCursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
             },
           }
 
@@ -847,7 +847,7 @@ describe('given the load organizations connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
                 node: {
                   ...expectedOrgs[0],
                 },
@@ -857,8 +857,8 @@ describe('given the load organizations connection function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
-              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+              startCursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
+              endCursor: toGlobalId('verifiedOrganizations', expectedOrgs[0]._key),
             },
           }
 
@@ -890,7 +890,7 @@ describe('given the load organizations connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                cursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
                 node: {
                   ...expectedOrgs[1],
                 },
@@ -900,8 +900,8 @@ describe('given the load organizations connection function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
-              startCursor: toGlobalId('organizations', expectedOrgs[1]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              startCursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
+              endCursor: toGlobalId('verifiedOrganizations', expectedOrgs[1]._key),
             },
           }
 

@@ -125,13 +125,13 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('domains', expectedDomains[0]._key),
+              cursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
               node: {
                 ...expectedDomains[0],
               },
             },
             {
-              cursor: toGlobalId('domains', expectedDomains[1]._key),
+              cursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
               node: {
                 ...expectedDomains[1],
               },
@@ -140,8 +140,8 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('domains', expectedDomains[0]._key),
-            endCursor: toGlobalId('domains', expectedDomains[1]._key),
+            startCursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
+            endCursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
           },
           totalCount: 2,
         }
@@ -167,7 +167,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
 
         const connectionArgs = {
           first: 10,
-          after: toGlobalId('domains', expectedDomains[0]._key),
+          after: toGlobalId('verifiedDomains', expectedDomains[0]._key),
         }
         const domains = await connectionLoader({
           orgId: org._id,
@@ -177,7 +177,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('domains', expectedDomains[1]._key),
+              cursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
               node: {
                 ...expectedDomains[1],
               },
@@ -186,8 +186,8 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('domains', expectedDomains[1]._key),
-            endCursor: toGlobalId('domains', expectedDomains[1]._key),
+            startCursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
+            endCursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
           },
           totalCount: 2,
         }
@@ -213,7 +213,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
 
         const connectionArgs = {
           first: 10,
-          before: toGlobalId('domains', expectedDomains[1]._key),
+          before: toGlobalId('verifiedDomains', expectedDomains[1]._key),
         }
         const domains = await connectionLoader({
           orgId: org._id,
@@ -223,7 +223,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('domains', expectedDomains[0]._key),
+              cursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
               node: {
                 ...expectedDomains[0],
               },
@@ -232,8 +232,8 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('domains', expectedDomains[0]._key),
-            endCursor: toGlobalId('domains', expectedDomains[0]._key),
+            startCursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
+            endCursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
           },
           totalCount: 2,
         }
@@ -268,7 +268,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('domains', expectedDomains[0]._key),
+              cursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
               node: {
                 ...expectedDomains[0],
               },
@@ -277,8 +277,8 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('domains', expectedDomains[0]._key),
-            endCursor: toGlobalId('domains', expectedDomains[0]._key),
+            startCursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
+            endCursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
           },
           totalCount: 2,
         }
@@ -313,7 +313,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('domains', expectedDomains[1]._key),
+              cursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
               node: {
                 ...expectedDomains[1],
               },
@@ -322,8 +322,8 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('domains', expectedDomains[1]._key),
-            endCursor: toGlobalId('domains', expectedDomains[1]._key),
+            startCursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
+            endCursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
           },
           totalCount: 2,
         }

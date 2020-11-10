@@ -17,7 +17,7 @@ const { nodeInterface } = require('../node')
 const verifiedDomainType = new GraphQLObjectType({
   name: 'VerifiedDomain',
   fields: () => ({
-    id: globalIdField('domains'),
+    id: globalIdField('verifiedDomains'),
     domain: {
       type: Domain,
       description: 'Domain that scans will be ran on.',
@@ -66,7 +66,7 @@ const verifiedDomainConnection = connectionDefinitions({
 const verifiedOrganizationType = new GraphQLObjectType({
   name: 'VerifiedOrganization',
   fields: () => ({
-    id: globalIdField('organizations'),
+    id: globalIdField('verifiedOrganizations'),
     acronym: {
       type: Acronym,
       description: 'The organizations acronym.',
