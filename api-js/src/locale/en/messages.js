@@ -263,6 +263,8 @@
       'Unable to find ssl guidance tags. Please try again.',
     'Unable to find ssl scan. Please try again.':
       'Unable to find ssl scan. Please try again.',
+    'Unable to find summary. Please try again.':
+      'Unable to find summary. Please try again.',
     'Unable to find user affiliation(s). Please try again.':
       'Unable to find user affiliation(s). Please try again.',
     'Unable to find user. Please try again.':
@@ -293,6 +295,8 @@
       'Unable to load https guidance tags. Please try again.',
     'Unable to load https scans. Please try again.':
       'Unable to load https scans. Please try again.',
+    'Unable to load mail summary. Please try again.':
+      'Unable to load mail summary. Please try again.',
     'Unable to load organizations. Please try again.':
       'Unable to load organizations. Please try again.',
     'Unable to load spf guidance tags. Please try again.':
@@ -307,6 +311,8 @@
       'Unable to load verified domains. Please try again.',
     'Unable to load verified organizations. Please try again.':
       'Unable to load verified organizations. Please try again.',
+    'Unable to load web summary. Please try again.':
+      'Unable to load web summary. Please try again.',
     'Unable to query affiliations. Please try again.':
       'Unable to query affiliations. Please try again.',
     'Unable to query domains. Please try again.':
@@ -517,5 +523,7 @@
         '` on the `verifiedOrganization` connection cannot be less than zero.',
       ]
     },
+    fail: 'fail',
+    pass: 'pass',
   },
 }

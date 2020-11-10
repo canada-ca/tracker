@@ -37,6 +37,7 @@ const {
 } = require('./notify')
 
 const {
+  chartSummaryLoaderByKey,
   generateDetailTableFields,
   generateGqlQuery,
   dmarcReportLoader,
@@ -147,6 +148,7 @@ const createContext = ({ context, request, response }) => {
       sendVerificationEmail: sendVerificationEmail(i18n),
     },
     loaders: {
+      chartSummaryLoaderByKey: chartSummaryLoaderByKey(query, userId, i18n),
       dmarcReportLoader: dmarcReportLoader({
         generateGqlQuery,
         generateDetailTableFields,
