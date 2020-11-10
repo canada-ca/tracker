@@ -8,7 +8,7 @@ module.exports.dmarcLoaderByKey = (query, userId, i18n) =>
     try {
       cursor = await query`
         FOR dmarcScan IN dmarc
-          FILTER ${keys}[** FILTER CURRENT == dmarcScan._key]
+          FILTER dmarcScan._key IN ${keys}
           RETURN dmarcScan   
       `
     } catch (err) {

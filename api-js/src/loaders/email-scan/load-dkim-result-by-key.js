@@ -8,7 +8,7 @@ module.exports.dkimResultLoaderByKey = (query, userId, i18n) =>
     try {
       cursor = await query`
         FOR dkimResult IN dkimResults
-          FILTER ${keys}[** FILTER CURRENT == dkimResult._key]
+          FILTER dkimResult._key IN ${keys}
           RETURN dkimResult
       `
     } catch (err) {

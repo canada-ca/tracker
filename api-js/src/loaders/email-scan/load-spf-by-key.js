@@ -8,7 +8,7 @@ module.exports.spfLoaderByKey = (query, userId, i18n) =>
     try {
       cursor = await query`
         FOR spfScan IN spf
-          FILTER ${keys}[** FILTER CURRENT == spfScan._key]
+          FILTER spfScan._key IN ${keys} 
           RETURN spfScan
       `
     } catch (err) {
