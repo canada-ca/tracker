@@ -75,6 +75,11 @@ const makeMigrations = ({ databaseName, rootPass }) => [
     name: 'sslGuidanceTags',
   },
   {
+    type: 'documentcollection',
+    databaseName,
+    name: 'chartSummaries',
+  },
+  {
     type: 'edgecollection',
     databaseName,
     name: 'affiliations',
