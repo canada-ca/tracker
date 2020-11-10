@@ -161,6 +161,7 @@ describe('given the ssl gql object', () => {
                             id
                             tagId
                             tagName
+                            guidance
                             refLinks {
                               description
                               refLink
@@ -252,6 +253,7 @@ describe('given the ssl gql object', () => {
                               id: toGlobalId('guidanceTags', 'ssl1'),
                               tagId: 'ssl1',
                               tagName: 'SSL-TAG',
+                              guidance: 'Some Interesting Guidance',
                               refLinks: [
                                 {
                                   description: 'refLinksGuide Description',

@@ -175,6 +175,7 @@ describe('given the dkimType object', () => {
                                   id
                                   tagId
                                   tagName
+                                  guidance
                                   refLinks {
                                     description
                                     refLink
@@ -281,6 +282,7 @@ describe('given the dkimType object', () => {
                                       id: toGlobalId('guidanceTags', 'dkim1'),
                                       tagId: 'dkim1',
                                       tagName: 'DKIM-TAG',
+                                      guidance: 'Some Interesting Guidance',
                                       refLinks: [
                                         {
                                           description:
