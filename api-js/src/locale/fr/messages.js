@@ -21,6 +21,7 @@
     'No domain with the provided domain could be found.': 'todo',
     'No organization with the provided slug could be found.': 'todo',
     'No verified domain with the provided domain could be found.': 'todo',
+    'Organization has already been verified.': 'todo',
     'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.':
@@ -82,6 +83,7 @@
     'Successfully sent invitation to service, and organization email.': 'todo',
     'Successfully two factor authenticated.': 'todo',
     'Successfully verified account.': 'todo',
+    'Successfully verified organization: {0}.': 'todo',
     'Too many failed login attempts, please reset your password, and try again.':
       'todo',
     'Two factor code has been successfully sent, you will receive a text message shortly.':
@@ -160,6 +162,7 @@
     'Unable to verify account. Please request a new email.': 'todo',
     'Unable to verify account. Please try again.': 'todo',
     'Unable to verify if user is an admin, please try again.': 'todo',
+    'Unable to verify organization. Please try again.': 'todo',
     'User could not be queried.': 'todo',
     'User role was updated successfully.': 'todo',
     'Username already in use.': 'todo',

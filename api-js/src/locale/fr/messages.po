@@ -64,12 +64,16 @@ msgid "No domain with the provided domain could be found."
 msgstr "todo"
 
 #: src/queries/organizations/find-organization-by-slug.js:39
-#: src/queries/verified-organizations/find-verified-organization-by-slug.js:30
+#: src/queries/verified-organizations/find-verified-organization-by-slug.js:34
 msgid "No organization with the provided slug could be found."
 msgstr "todo"
 
 #: src/queries/verified-domains/find-verified-domain-by-domain.js:33
 msgid "No verified domain with the provided domain could be found."
+msgstr "todo"
+
+#: src/mutations/organizations/verify-organization.js:68
+msgid "Organization has already been verified."
 msgstr "todo"
 
 #: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:45
@@ -235,6 +239,10 @@ msgstr "todo"
 msgid "Successfully verified account."
 msgstr "todo"
 
+#: src/mutations/organizations/verify-organization.js:117
+msgid "Successfully verified organization: {0}."
+msgstr "todo"
+
 #: src/mutations/user/sign-in.js:71
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "todo"
@@ -354,8 +362,8 @@ msgstr "todo"
 msgid "Unable to find user. Please try again."
 msgstr "todo"
 
-#: src/loaders/verified-domains/load-verified-domain-by-domain.js:26
-#: src/loaders/verified-domains/load-verified-domain-by-domain.js:40
+#: src/loaders/verified-domains/load-verified-domain-by-domain.js:23
+#: src/loaders/verified-domains/load-verified-domain-by-domain.js:37
 #: src/loaders/verified-domains/load-verified-domain-by-key.js:23
 #: src/loaders/verified-domains/load-verified-domain-by-key.js:37
 msgid "Unable to find verified domain. Please try again."
@@ -363,8 +371,8 @@ msgstr "todo"
 
 #: src/loaders/verified-organizations/load-verified-organization-by-key.js:21
 #: src/loaders/verified-organizations/load-verified-organization-by-key.js:35
-#: src/loaders/verified-organizations/load-verified-organization-by-slug.js:18
-#: src/loaders/verified-organizations/load-verified-organization-by-slug.js:28
+#: src/loaders/verified-organizations/load-verified-organization-by-slug.js:21
+#: src/loaders/verified-organizations/load-verified-organization-by-slug.js:33
 msgid "Unable to find verified organization. Please try again."
 msgstr "todo"
 
@@ -636,6 +644,13 @@ msgstr "todo"
 
 #: src/queries/user/is-user-admin.js:23
 msgid "Unable to verify if user is an admin, please try again."
+msgstr "todo"
+
+#: src/mutations/organizations/verify-organization.js:47
+#: src/mutations/organizations/verify-organization.js:59
+#: src/mutations/organizations/verify-organization.js:99
+#: src/mutations/organizations/verify-organization.js:110
+msgid "Unable to verify organization. Please try again."
 msgstr "todo"
 
 #: src/queries/user/find-user-by-username.js:60

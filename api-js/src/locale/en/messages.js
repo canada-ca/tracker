@@ -44,6 +44,8 @@
       'No organization with the provided slug could be found.',
     'No verified domain with the provided domain could be found.':
       'No verified domain with the provided domain could be found.',
+    'Organization has already been verified.':
+      'Organization has already been verified.',
     'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
       'Passing both `first` and `last` to paginate the `affiliation` is not supported.',
     'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.':
@@ -220,6 +222,9 @@
     'Successfully two factor authenticated.':
       'Successfully two factor authenticated.',
     'Successfully verified account.': 'Successfully verified account.',
+    'Successfully verified organization: {0}.': function (a) {
+      return ['Successfully verified organization: ', a('0'), '.']
+    },
     'Too many failed login attempts, please reset your password, and try again.':
       'Too many failed login attempts, please reset your password, and try again.',
     'Two factor code has been successfully sent, you will receive a text message shortly.':
@@ -363,6 +368,8 @@
       'Unable to verify account. Please try again.',
     'Unable to verify if user is an admin, please try again.':
       'Unable to verify if user is an admin, please try again.',
+    'Unable to verify organization. Please try again.':
+      'Unable to verify organization. Please try again.',
     'User could not be queried.': 'User could not be queried.',
     'User role was updated successfully.':
       'User role was updated successfully.',
