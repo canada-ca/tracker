@@ -12,8 +12,6 @@ const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
-  const orgDBId = `organizations/${orgId}`
-
   let afterId
   if (typeof after !== 'undefined') {
     afterId = fromGlobalId(cleanseInput(after)).id
@@ -94,7 +92,7 @@ const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
   let filteredAffiliationCursor
   try {
     filteredAffiliationCursor = await query`
-    LET affiliationKeys = (FOR v, e IN 1..1 ANY ${orgDBId} affiliations RETURN e._key)
+    LET affiliationKeys = (FOR v, e IN 1..1 ANY ${orgId} affiliations RETURN e._key)
     
     LET retrievedAffiliations = (
       FOR affiliation IN affiliations

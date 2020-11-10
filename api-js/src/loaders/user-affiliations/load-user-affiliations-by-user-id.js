@@ -11,8 +11,6 @@ const affiliationLoaderByUserId = (
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
-  const userDBId = `users/${uId}`
-
   let afterId
   if (typeof after !== 'undefined') {
     afterId = fromGlobalId(cleanseInput(after)).id
@@ -93,7 +91,7 @@ const affiliationLoaderByUserId = (
   let filteredAffiliationCursor
   try {
     filteredAffiliationCursor = await query`
-    LET affiliationKeys = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._key)
+    LET affiliationKeys = (FOR v, e IN 1..1 ANY ${uId} affiliations RETURN e._key)
 
     LET retrievedAffiliations = (
       FOR affiliation IN affiliations

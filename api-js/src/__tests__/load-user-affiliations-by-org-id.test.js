@@ -126,7 +126,7 @@ describe('given the load user affiliations by org id function', () => {
             after: toGlobalId('affiliations', expectedAffiliations[0].id),
           }
           const affiliations = await affiliationLoader({
-            orgId: org._key,
+            orgId: org._id,
             ...connectionArgs,
           })
 
@@ -183,7 +183,7 @@ describe('given the load user affiliations by org id function', () => {
             before: toGlobalId('affiliations', expectedAffiliations[1].id),
           }
           const affiliations = await affiliationLoader({
-            orgId: org._key,
+            orgId: org._id,
             ...connectionArgs,
           })
 
@@ -239,7 +239,7 @@ describe('given the load user affiliations by org id function', () => {
             first: 1,
           }
           const affiliations = await affiliationLoader({
-            orgId: org._key,
+            orgId: org._id,
             ...connectionArgs,
           })
 
@@ -295,7 +295,7 @@ describe('given the load user affiliations by org id function', () => {
             last: 1,
           }
           const affiliations = await affiliationLoader({
-            orgId: org._key,
+            orgId: org._id,
             ...connectionArgs,
           })
 
@@ -343,7 +343,7 @@ describe('given the load user affiliations by org id function', () => {
           first: 5,
         }
         const affiliations = await affiliationLoader({
-          orgId: org._key,
+          orgId: org._id,
           ...connectionArgs,
         })
 
@@ -389,7 +389,7 @@ describe('given the load user affiliations by org id function', () => {
             last: 1,
           }
           try {
-            await affiliationLoader({ orgId: org._key, ...connectionArgs })
+            await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -415,7 +415,7 @@ describe('given the load user affiliations by org id function', () => {
           const connectionArgs = {}
           try {
             await affiliationLoader({
-              orgId: org._key,
+              orgId: org._id,
               ...connectionArgs,
             })
           } catch (err) {
@@ -447,7 +447,7 @@ describe('given the load user affiliations by org id function', () => {
 
             try {
               await connectionLoader({
-                orgId: org._key,
+                orgId: org._id,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -477,7 +477,7 @@ describe('given the load user affiliations by org id function', () => {
 
             try {
               await connectionLoader({
-                orgId: org._key,
+                orgId: org._id,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -509,7 +509,7 @@ describe('given the load user affiliations by org id function', () => {
 
             try {
               await connectionLoader({
-                orgId: org._key,
+                orgId: org._id,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -539,7 +539,7 @@ describe('given the load user affiliations by org id function', () => {
 
             try {
               await connectionLoader({
-                orgId: org._key,
+                orgId: org._id,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -648,7 +648,7 @@ describe('given the load user affiliations by org id function', () => {
             first: 5,
           }
           try {
-            await affiliationLoader({ orgId: org._key, ...connectionArgs })
+            await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(
               new Error('Unable to query affiliations. Please try again.'),
@@ -682,7 +682,7 @@ describe('given the load user affiliations by org id function', () => {
             first: 5,
           }
           try {
-            await affiliationLoader({ orgId: org._key, ...connectionArgs })
+            await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(
               new Error('Unable to load affiliations. Please try again.'),
@@ -723,7 +723,7 @@ describe('given the load user affiliations by org id function', () => {
             last: 1,
           }
           try {
-            await affiliationLoader({ orgId: org._key, ...connectionArgs })
+            await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
@@ -745,7 +745,7 @@ describe('given the load user affiliations by org id function', () => {
           const connectionArgs = {}
           try {
             await affiliationLoader({
-              orgId: org._key,
+              orgId: org._id,
               ...connectionArgs,
             })
           } catch (err) {
@@ -773,7 +773,7 @@ describe('given the load user affiliations by org id function', () => {
 
             try {
               await connectionLoader({
-                orgId: org._key,
+                orgId: org._id,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -799,7 +799,7 @@ describe('given the load user affiliations by org id function', () => {
 
             try {
               await connectionLoader({
-                orgId: org._key,
+                orgId: org._id,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -827,7 +827,7 @@ describe('given the load user affiliations by org id function', () => {
 
             try {
               await connectionLoader({
-                orgId: org._key,
+                orgId: org._id,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -853,7 +853,7 @@ describe('given the load user affiliations by org id function', () => {
 
             try {
               await connectionLoader({
-                orgId: org._key,
+                orgId: org._id,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -950,7 +950,7 @@ describe('given the load user affiliations by org id function', () => {
             first: 5,
           }
           try {
-            await affiliationLoader({ orgId: org._key, ...connectionArgs })
+            await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
@@ -982,7 +982,7 @@ describe('given the load user affiliations by org id function', () => {
             first: 5,
           }
           try {
-            await affiliationLoader({ orgId: org._key, ...connectionArgs })
+            await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
