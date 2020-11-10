@@ -3,7 +3,7 @@ const { verifiedDomainConnection } = require('../../types')
 
 const findVerifiedDomains = {
   type: verifiedDomainConnection.connectionType,
-  description: 'Select blue check domains',
+  description: 'Select verified check domains',
   args: {
     ...connectionArgs,
   },

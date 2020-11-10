@@ -56,8 +56,8 @@ const removeOrganization = new mutationWithClientMutationId({
     // Get users permission
     const permission = await checkPermission({ orgId: organization._id })
 
-    // Check to see if org is blue check, and the user is super admin
-    if (organization.blueCheck && permission !== 'super_admin') {
+    // Check to see if org is verified check, and the user is super admin
+    if (organization.verified && permission !== 'super_admin') {
       console.warn(
         `User: ${userId} attempted to remove ${organization._key}, however the user is not a super admin.`,
       )

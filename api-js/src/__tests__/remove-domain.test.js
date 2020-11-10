@@ -105,7 +105,7 @@ describe('removing a domain', () => {
         let org, domain, user, secondOrg, superAdminOrg
         beforeEach(async () => {
           superAdminOrg = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'super-admin',
@@ -118,7 +118,7 @@ describe('removing a domain', () => {
             },
           })
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -194,10 +194,10 @@ describe('removing a domain', () => {
           })
         })
         describe('domain belongs to multiple orgs', () => {
-          describe('domain belongs to a blue check org', () => {
+          describe('domain belongs to a verified check org', () => {
             beforeEach(async () => {
               secondOrg = await collections.organizations.save({
-                blueCheck: true,
+                verified: true,
                 orgDetails: {
                   en: {
                     slug: 'communications-security-establishment',
@@ -392,10 +392,10 @@ describe('removing a domain', () => {
               expect(testSsl).toEqual(true)
             })
           })
-          describe('domain does not belong to a blue check org', () => {
+          describe('domain does not belong to a verified check org', () => {
             beforeEach(async () => {
               secondOrg = await collections.organizations.save({
-                blueCheck: false,
+                verified: false,
                 orgDetails: {
                   en: {
                     slug: 'communications-security-establishment',
@@ -592,11 +592,11 @@ describe('removing a domain', () => {
           })
         })
         describe('domain only belongs to one org', () => {
-          describe('domain belongs to a blue check org', () => {
+          describe('domain belongs to a verified check org', () => {
             beforeEach(async () => {
               await query`
               FOR org IN organizations
-                UPDATE ${org._key} WITH { blueCheck: true } IN organizations
+                UPDATE ${org._key} WITH { verified: true } IN organizations
             `
             })
             it('returns a status message', async () => {
@@ -764,7 +764,7 @@ describe('removing a domain', () => {
               expect(testSsl).toEqual(undefined)
             })
           })
-          describe('domain does not belong to a blue check org', () => {
+          describe('domain does not belong to a verified check org', () => {
             it('returns a status message', async () => {
               const response = await graphql(
                 schema,
@@ -936,7 +936,7 @@ describe('removing a domain', () => {
         let org, domain, user, secondOrg
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -1012,10 +1012,10 @@ describe('removing a domain', () => {
           })
         })
         describe('domain belongs to multiple orgs', () => {
-          describe('domain does not belong to a blue check org', () => {
+          describe('domain does not belong to a verified check org', () => {
             beforeEach(async () => {
               secondOrg = await collections.organizations.save({
-                blueCheck: false,
+                verified: false,
                 orgDetails: {
                   en: {
                     slug: 'communications-security-establishment',
@@ -1212,7 +1212,7 @@ describe('removing a domain', () => {
           })
         })
         describe('domain only belongs to one org', () => {
-          describe('domain does not belong to a blue check org', () => {
+          describe('domain does not belong to a verified check org', () => {
             it('returns a status message', async () => {
               const response = await graphql(
                 schema,
@@ -1496,11 +1496,11 @@ describe('removing a domain', () => {
           ])
         })
       })
-      describe('user attempts to remove domain from blue check org', () => {
+      describe('user attempts to remove domain from verified check org', () => {
         let org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: true,
+            verified: true,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -1589,7 +1589,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a blue check org.`,
+              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -1648,7 +1648,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a blue check org.`,
+              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -1700,7 +1700,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a blue check org.`,
+              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -1709,7 +1709,7 @@ describe('removing a domain', () => {
         let org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -1859,7 +1859,7 @@ describe('removing a domain', () => {
         let user, org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -1974,7 +1974,7 @@ describe('removing a domain', () => {
         let user, org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -2314,7 +2314,7 @@ describe('removing a domain', () => {
         let org, domain, user, secondOrg, superAdminOrg
         beforeEach(async () => {
           superAdminOrg = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'super-admin',
@@ -2327,7 +2327,7 @@ describe('removing a domain', () => {
             },
           })
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -2403,10 +2403,10 @@ describe('removing a domain', () => {
           })
         })
         describe('domain belongs to multiple orgs', () => {
-          describe('domain belongs to a blue check org', () => {
+          describe('domain belongs to a verified check org', () => {
             beforeEach(async () => {
               secondOrg = await collections.organizations.save({
-                blueCheck: true,
+                verified: true,
                 orgDetails: {
                   en: {
                     slug: 'communications-security-establishment',
@@ -2601,10 +2601,10 @@ describe('removing a domain', () => {
               expect(testSsl).toEqual(true)
             })
           })
-          describe('domain does not belong to a blue check org', () => {
+          describe('domain does not belong to a verified check org', () => {
             beforeEach(async () => {
               secondOrg = await collections.organizations.save({
-                blueCheck: false,
+                verified: false,
                 orgDetails: {
                   en: {
                     slug: 'communications-security-establishment',
@@ -2801,11 +2801,11 @@ describe('removing a domain', () => {
           })
         })
         describe('domain only belongs to one org', () => {
-          describe('domain belongs to a blue check org', () => {
+          describe('domain belongs to a verified check org', () => {
             beforeEach(async () => {
               await query`
               FOR org IN organizations
-                UPDATE ${org._key} WITH { blueCheck: true } IN organizations
+                UPDATE ${org._key} WITH { verified: true } IN organizations
             `
             })
             it('returns a status message', async () => {
@@ -2973,7 +2973,7 @@ describe('removing a domain', () => {
               expect(testSsl).toEqual(undefined)
             })
           })
-          describe('domain does not belong to a blue check org', () => {
+          describe('domain does not belong to a verified check org', () => {
             it('returns a status message', async () => {
               const response = await graphql(
                 schema,
@@ -3145,7 +3145,7 @@ describe('removing a domain', () => {
         let org, domain, user, secondOrg
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -3221,10 +3221,10 @@ describe('removing a domain', () => {
           })
         })
         describe('domain belongs to multiple orgs', () => {
-          describe('domain does not belong to a blue check org', () => {
+          describe('domain does not belong to a verified check org', () => {
             beforeEach(async () => {
               secondOrg = await collections.organizations.save({
-                blueCheck: false,
+                verified: false,
                 orgDetails: {
                   en: {
                     slug: 'communications-security-establishment',
@@ -3421,7 +3421,7 @@ describe('removing a domain', () => {
           })
         })
         describe('domain only belongs to one org', () => {
-          describe('domain does not belong to a blue check org', () => {
+          describe('domain does not belong to a verified check org', () => {
             it('returns a status message', async () => {
               const response = await graphql(
                 schema,
@@ -3700,11 +3700,11 @@ describe('removing a domain', () => {
           ])
         })
       })
-      describe('user attempts to remove domain from blue check org', () => {
+      describe('user attempts to remove domain from verified check org', () => {
         let org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: true,
+            verified: true,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -3791,7 +3791,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a blue check org.`,
+              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -3848,7 +3848,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a blue check org.`,
+              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -3898,7 +3898,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a blue check org.`,
+              `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -3907,7 +3907,7 @@ describe('removing a domain', () => {
         let org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -4053,7 +4053,7 @@ describe('removing a domain', () => {
         let user, org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -4166,7 +4166,7 @@ describe('removing a domain', () => {
         let user, org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',

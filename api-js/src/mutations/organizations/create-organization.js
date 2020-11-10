@@ -136,7 +136,7 @@ const createOrganization = new mutationWithClientMutationId({
 
     // Create new organization
     const organizationDetails = {
-      blueCheck: false,
+      verified: false,
       orgDetails: {
         en: {
           slug: slugEN,
@@ -176,7 +176,7 @@ const createOrganization = new mutationWithClientMutationId({
         async () =>
           await query`
             INSERT ${organizationDetails} INTO organizations 
-            RETURN MERGE({ _id: NEW._id, _key: NEW._key, _rev: NEW._rev, blueCheck: NEW.blueCheck }, TRANSLATE(${request.language}, NEW.orgDetails))
+            RETURN MERGE({ _id: NEW._id, _key: NEW._key, _rev: NEW._rev, verified: NEW.verified }, TRANSLATE(${request.language}, NEW.orgDetails))
           `,
       )
     } catch (err) {

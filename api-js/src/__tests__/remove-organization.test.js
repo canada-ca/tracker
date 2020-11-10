@@ -92,7 +92,7 @@ describe('removing an organization', () => {
     let org, domain, user, i18n
     beforeEach(async () => {
       org = await collections.organizations.save({
-        blueCheck: false,
+        verified: false,
         orgDetails: {
           en: {
             slug: 'treasury-board-secretariat',
@@ -181,12 +181,12 @@ describe('removing an organization', () => {
             permission: 'super_admin',
           })
         })
-        describe('org is a blue check', () => {
+        describe('org is a verified check', () => {
           beforeEach(async () => {
             await query`
               UPSERT { _key: ${org._key} }
-                INSERT { blueCheck: true }
-                UPDATE { blueCheck: true }
+                INSERT { verified: true }
+                UPDATE { verified: true }
                 IN organizations
             `
           })
@@ -588,12 +588,12 @@ describe('removing an organization', () => {
             permission: 'super_admin',
           })
         })
-        describe('org is a blue check', () => {
+        describe('org is a verified check', () => {
           beforeEach(async () => {
             await query`
               UPSERT { _key: ${org._key} }
-                INSERT { blueCheck: true }
-                UPDATE { blueCheck: true }
+                INSERT { verified: true }
+                UPDATE { verified: true }
                 IN organizations
             `
           })
@@ -1041,7 +1041,7 @@ describe('removing an organization', () => {
         let org, user, secondOrg
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: true,
+            verified: true,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -1066,7 +1066,7 @@ describe('removing an organization', () => {
             },
           })
           secondOrg = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'communications-security-establishment',
@@ -1091,7 +1091,7 @@ describe('removing an organization', () => {
             },
           })
         })
-        describe('org to be removed is blue check', () => {
+        describe('org to be removed is verified check', () => {
           beforeEach(async () => {
             const userCursor = await query`
               FOR user IN users
@@ -1224,7 +1224,7 @@ describe('removing an organization', () => {
         let user, org
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -1526,7 +1526,7 @@ describe('removing an organization', () => {
         let org, user, secondOrg
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: true,
+            verified: true,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -1551,7 +1551,7 @@ describe('removing an organization', () => {
             },
           })
           secondOrg = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'communications-security-establishment',
@@ -1576,7 +1576,7 @@ describe('removing an organization', () => {
             },
           })
         })
-        describe('org to be removed is blue check', () => {
+        describe('org to be removed is verified check', () => {
           beforeEach(async () => {
             const userCursor = await query`
               FOR user IN users
@@ -1701,7 +1701,7 @@ describe('removing an organization', () => {
         let user, org
         beforeEach(async () => {
           org = await collections.organizations.save({
-            blueCheck: false,
+            verified: false,
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
