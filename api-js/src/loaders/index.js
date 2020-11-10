@@ -6,6 +6,8 @@ const orgLoaders = require('./organizations')
 const userLoaders = require('./user')
 const webScanLoaders = require('./web-scan')
 const userAffiliationLoaders = require('./user-affiliations')
+const verifiedDomainLoaders = require('./verified-domains')
+const verifiedOrgLoaders = require('./verified-organizations')
 
 module.exports = {
   // Dmarc Report Loaders
@@ -24,4 +26,8 @@ module.exports = {
   ...webScanLoaders,
   // User Affiliation Loaders
   ...userAffiliationLoaders,
+  // Verified Domain Loaders
+  ...verifiedDomainLoaders,
+  // Verified Org Loaders
+  ...verifiedOrgLoaders,
 }
