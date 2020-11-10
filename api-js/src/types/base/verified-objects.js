@@ -12,6 +12,7 @@ const {
 const { GraphQLDateTime } = require('graphql-scalars')
 const { Domain, Acronym, Slug } = require('../../scalars')
 const { nodeInterface } = require('../node')
+const { domainStatus } = require('./domain-status')
 
 /* Domain related objects */
 const verifiedDomainType = new GraphQLObjectType({
@@ -27,6 +28,11 @@ const verifiedDomainType = new GraphQLObjectType({
       type: GraphQLDateTime,
       description: 'The last time that a scan was ran on this domain.',
       resolve: ({ lastRan }) => lastRan,
+    },
+    status: {
+      type: domainStatus,
+      description: 'The domains scan status, based on the latest scan data.',
+      resolve: ({ status }) => status,
     },
     organizations: {
       type: verifiedOrganizationConnections.connectionType,
