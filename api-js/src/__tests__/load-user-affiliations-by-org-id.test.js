@@ -725,11 +725,7 @@ describe('given the load user affiliations by org id function', () => {
           try {
             await affiliationLoader({ orgId: org._key, ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -753,11 +749,7 @@ describe('given the load user affiliations by org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                `todo`,
-              ),
-            )
+            expect(err).toEqual(new Error(`todo`))
           }
 
           expect(consoleOutput).toEqual([
@@ -785,11 +777,7 @@ describe('given the load user affiliations by org id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: affiliationLoaderByOrgId.`,
@@ -815,11 +803,7 @@ describe('given the load user affiliations by org id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: affiliationLoaderByOrgId.`,
@@ -847,11 +831,7 @@ describe('given the load user affiliations by org id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: affiliationLoaderByOrgId.`,
@@ -877,11 +857,7 @@ describe('given the load user affiliations by org id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 200 for: affiliationLoaderByOrgId.`,
@@ -911,11 +887,7 @@ describe('given the load user affiliations by org id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -946,11 +918,7 @@ describe('given the load user affiliations by org id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleOutput).toEqual([
                 `User: ${

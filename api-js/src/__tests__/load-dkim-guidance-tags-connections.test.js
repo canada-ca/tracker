@@ -60,7 +60,6 @@ describe('when given the load dkim guidance tag connection function', () => {
     await collections.dkimGuidanceTags.save({
       _key: 'dkim2',
     })
-
   })
 
   afterAll(async () => {
@@ -354,7 +353,7 @@ describe('when given the load dkim guidance tag connection function', () => {
 
           const dkimGuidanceTags = ['dkim1', 'dkim2']
           const connectionArgs = {}
-          
+
           try {
             await connectionLoader({
               dkimGuidanceTags,
@@ -703,18 +702,14 @@ describe('when given the load dkim guidance tag connection function', () => {
 
           const dkimGuidanceTags = ['dkim1', 'dkim2']
           const connectionArgs = {}
-          
+
           try {
             await connectionLoader({
               dkimGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
@@ -742,11 +737,7 @@ describe('when given the load dkim guidance tag connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
@@ -774,11 +765,7 @@ describe('when given the load dkim guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
@@ -805,11 +792,7 @@ describe('when given the load dkim guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
@@ -838,11 +821,7 @@ describe('when given the load dkim guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: dkimGuidanceTagConnectionsLoader.`,
@@ -869,11 +848,7 @@ describe('when given the load dkim guidance tag connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: dkimGuidanceTagConnectionsLoader.`,
@@ -905,11 +880,7 @@ describe('when given the load dkim guidance tag connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -942,11 +913,7 @@ describe('when given the load dkim guidance tag connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -981,9 +948,7 @@ describe('when given the load dkim guidance tag connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -1017,9 +982,7 @@ describe('when given the load dkim guidance tag connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([

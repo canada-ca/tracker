@@ -1,7 +1,7 @@
 const {
   DMARC_REPORT_API_TOKEN,
   DMARC_REPORT_API_SECRET,
-  DMARC_REPORT_API_URL = 'http://localhost:4001/graphql',
+  DMARC_REPORT_API_URL,
 } = process.env
 
 const { t } = require('@lingui/macro')

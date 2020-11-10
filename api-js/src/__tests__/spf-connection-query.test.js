@@ -148,7 +148,7 @@ describe('given the spfType object', () => {
               id
               domain
               email {
-                spf (first: 5) {
+                spf(first: 5) {
                   edges {
                     node {
                       id
@@ -159,7 +159,7 @@ describe('given the spfType object', () => {
                       lookups
                       record
                       spfDefault
-                      guidanceTags (first: 5) {
+                      guidanceTags(first: 5) {
                         edges {
                           node {
                             id
