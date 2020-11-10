@@ -75,6 +75,14 @@ const {
   affiliationLoaderByKey,
   affiliationLoaderByUserId,
   affiliationLoaderByOrgId,
+  verifiedDomainLoaderByDomain,
+  verifiedDomainLoaderByKey,
+  verifiedDomainLoaderConnections,
+  verifiedDomainLoaderConnectionsByOrgId,
+  verifiedOrgLoaderByKey,
+  verifiedOrgLoaderBySlug,
+  verifiedOrgLoaderConnectionsByDomainId,
+  verifiedOrgLoaderConnections,
 } = require('./loaders')
 
 const createSchema = ({ language }) =>
@@ -262,6 +270,40 @@ const createContext = ({ context, request, response }) => {
       affiliationLoaderByOrgId: affiliationLoaderByOrgId(
         query,
         userId,
+        cleanseInput,
+        i18n,
+      ),
+      verifiedDomainLoaderByDomain: verifiedDomainLoaderByDomain(query, i18n),
+      verifiedDomainLoaderByKey: verifiedDomainLoaderByKey(query, i18n),
+      verifiedDomainLoaderConnections: verifiedDomainLoaderConnections(
+        query,
+        cleanseInput,
+        i18n,
+      ),
+      verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
+        query,
+        cleanseInput,
+        i18n,
+      ),
+      verifiedOrgLoaderByKey: verifiedOrgLoaderByKey(
+        query,
+        request.language,
+        i18n,
+      ),
+      verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
+        query,
+        request.language,
+        i18n,
+      ),
+      verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
+        query,
+        request.language,
+        cleanseInput,
+        i18n,
+      ),
+      verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
+        query,
+        request.language,
         cleanseInput,
         i18n,
       ),

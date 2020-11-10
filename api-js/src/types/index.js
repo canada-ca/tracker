@@ -1,14 +1,5 @@
-const {
-  domainType,
-  domainConnection,
-  organizationType,
-  organizationConnection,
-  userType,
-  userConnection,
-  userAffiliationsType,
-  userAffiliationsConnection,
-} = require('./base')
-
+const baseTypes = require('./base')
+const verifiedTypes = require('./base/verified-objects')
 const { authResultType } = require('./auth-result')
 const { categorizedSummaryType } = require('./categorized-summary')
 const { nodeField, nodeInterface } = require('./node')
@@ -20,12 +11,7 @@ module.exports = {
   // Base Types
   authResultType,
   categorizedSummaryType,
-  domainType,
-  domainConnection,
-  organizationType,
-  organizationConnection,
-  userType,
-  userConnection,
-  userAffiliationsType,
-  userAffiliationsConnection,
+  ...baseTypes,
+  // Verified Types
+  ...verifiedTypes,
 }
