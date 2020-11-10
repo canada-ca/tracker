@@ -52,10 +52,16 @@ export default function UserList({
   const { currentUser } = useUserState()
   const [searchTerm, setSearchTerm] = useState('')
   const [addedUserName, setAddedUserName] = useState()
+  const [selectedRemoveUser, setSelectedRemoveUser] = useState()
   const {
     isOpen: inviteIsOpen,
     onOpen: inviteOnOpen,
     onClose: inviteOnClose,
+  } = useDisclosure()
+  const {
+    isOpen: removeIsOpen,
+    onOpen: removeOnOpen,
+    onClose: removeOnClose,
   } = useDisclosure()
   const initialFocusRef = useRef()
   const addUserValidationSchema = object().shape({
@@ -154,6 +160,7 @@ export default function UserList({
         isClosable: true,
         position: 'top-left',
       })
+      removeOnClose()
     } else {
       toast({
         title: 'An error occurred.',
@@ -242,7 +249,10 @@ export default function UserList({
                     <Stack isInline align="center">
                       <TrackerButton
                         variant="danger"
-                        onClick={() => removeUser(node)}
+                        onClick={() => {
+                          setSelectedRemoveUser(node)
+                          removeOnOpen()
+                        }}
                         px="3"
                       >
                         <Icon name="minus" />
@@ -380,6 +390,38 @@ export default function UserList({
                   </form>
                 )}
               </Formik>
+            </ModalContent>
+          </Modal>
+        )}
+      </SlideIn>
+
+      <SlideIn in={removeIsOpen}>
+        {(styles) => (
+          <Modal isOpen={true} onClose={removeOnClose}>
+            <ModalOverlay opacity={styles.opacity} />
+            <ModalContent pb={4} {...styles}>
+              <ModalHeader>
+                <Trans>Remove User</Trans>
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Stack spacing={4} p={25}>
+                  <Text>
+                    <Trans>Confirm removal of user:</Trans>
+                  </Text>
+                  <Text fontWeight="bold">{selectedRemoveUser.userName}</Text>
+                </Stack>
+              </ModalBody>
+
+              <ModalFooter>
+                <TrackerButton
+                  variant="primary"
+                  mr={4}
+                  onClick={() => removeUser(selectedRemoveUser)}
+                >
+                  <Trans>Confirm</Trans>
+                </TrackerButton>
+              </ModalFooter>
             </ModalContent>
           </Modal>
         )}
