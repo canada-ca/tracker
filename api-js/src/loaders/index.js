@@ -1,3 +1,4 @@
+const chartSummaryLoaders = require('./chart-summaries')
 const dmarcReportLoaders = require('./dmarc-report')
 const domainLoaders = require('./domains')
 const emailScanLoaders = require('./email-scan')
@@ -10,6 +11,8 @@ const verifiedDomainLoaders = require('./verified-domains')
 const verifiedOrgLoaders = require('./verified-organizations')
 
 module.exports = {
+  // Chart Summary Loaders
+  ...chartSummaryLoaders,
   // Dmarc Report Loaders
   ...dmarcReportLoaders,
   // Domain loaders
