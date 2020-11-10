@@ -7,10 +7,19 @@ const { makeMigrations } = require('../../migrations')
 const { userRequired } = require('../auth')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
-const { userLoaderByKey } = require('../loaders')
+const { userLoaderByKey, affiliationLoaderByUserId } = require('../loaders')
+const { cleanseInput } = require('../validators')
 
 describe('given the findMe query', () => {
-  let query, drop, truncate, migrate, schema, collections, user
+  let query,
+    drop,
+    truncate,
+    migrate,
+    schema,
+    collections,
+    user,
+    org,
+    affiliation
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -42,6 +51,35 @@ describe('given the findMe query', () => {
       tfaValidated: false,
       emailValidated: false,
     })
+    org = await collections.organizations.save({
+      orgDetails: {
+        en: {
+          slug: 'treasury-board-secretariat',
+          acronym: 'TBS',
+          name: 'Treasury Board of Canada Secretariat',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+        fr: {
+          slug: 'secretariat-conseil-tresor',
+          acronym: 'SCT',
+          name: 'Secrétariat du Conseil Trésor du Canada',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+      },
+    })
+    affiliation = await collections.affiliations.save({
+      _from: org._id,
+      _to: user._id,
+      permission: 'user',
+    })
     consoleOutput = []
   })
 
@@ -62,6 +100,13 @@ describe('given the findMe query', () => {
               preferredLang
               tfaValidated
               emailValidated
+              affiliations(first: 5) {
+                edges {
+                  node {
+                    id
+                  }
+                }
+              }
             }
           }
         `,
@@ -72,6 +117,13 @@ describe('given the findMe query', () => {
               userId: user._key,
               userLoaderByKey: userLoaderByKey(query),
             }),
+          },
+          loaders: {
+            affiliationLoaderByUserId: affiliationLoaderByUserId(
+              query,
+              user._key,
+              cleanseInput,
+            ),
           },
         },
       )
@@ -85,6 +137,15 @@ describe('given the findMe query', () => {
             preferredLang: 'FRENCH',
             tfaValidated: false,
             userName: 'test.account@istio.actually.exists',
+            affiliations: {
+              edges: [
+                {
+                  node: {
+                    id: toGlobalId('affiliations', affiliation._key),
+                  },
+                },
+              ],
+            },
           },
         },
       }
