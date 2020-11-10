@@ -166,7 +166,7 @@ const verifiedOrgLoaderConnections = (
 
   const edges = organizationInfo.organizations.map((organization) => {
     return {
-      cursor: toGlobalId('organizations', organization._key),
+      cursor: toGlobalId('verifiedOrganizations', organization._key),
       node: organization,
     }
   })
@@ -177,8 +177,8 @@ const verifiedOrgLoaderConnections = (
     pageInfo: {
       hasNextPage: organizationInfo.hasNextPage,
       hasPreviousPage: organizationInfo.hasPreviousPage,
-      startCursor: toGlobalId('organizations', organizationInfo.startKey),
-      endCursor: toGlobalId('organizations', organizationInfo.endKey),
+      startCursor: toGlobalId('verifiedOrganizations', organizationInfo.startKey),
+      endCursor: toGlobalId('verifiedOrganizations', organizationInfo.endKey),
     },
   }
 }

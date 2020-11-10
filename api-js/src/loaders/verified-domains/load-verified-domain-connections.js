@@ -167,7 +167,7 @@ const verifiedDomainLoaderConnections = (query, cleanseInput, i18n) => async ({
 
   const edges = domainsInfo.domains.map((domain) => {
     return {
-      cursor: toGlobalId('domains', domain._key),
+      cursor: toGlobalId('verifiedDomains', domain._key),
       node: domain,
     }
   })
@@ -178,8 +178,8 @@ const verifiedDomainLoaderConnections = (query, cleanseInput, i18n) => async ({
     pageInfo: {
       hasNextPage: domainsInfo.hasNextPage,
       hasPreviousPage: domainsInfo.hasPreviousPage,
-      startCursor: toGlobalId('domains', domainsInfo.startKey),
-      endCursor: toGlobalId('domains', domainsInfo.endKey),
+      startCursor: toGlobalId('verifiedDomains', domainsInfo.startKey),
+      endCursor: toGlobalId('verifiedDomains', domainsInfo.endKey),
     },
   }
 }
