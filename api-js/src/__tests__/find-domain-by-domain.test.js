@@ -110,6 +110,13 @@ describe('given findDomainByDomain query', () => {
       domain: 'test.gc.ca',
       lastRan: null,
       selectors: ['selector1._domainkey', 'selector2._domainkey'],
+      status: {
+        dkim: 'pass',
+        dmarc: 'pass',
+        https: 'info',
+        spf: 'fail',
+        ssl: 'fail',
+      },
     })
     await collections.claims.save({
       _to: domain._id,
@@ -170,6 +177,13 @@ describe('given findDomainByDomain query', () => {
                   domain
                   lastRan
                   selectors
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                 }
               }
             `,
@@ -205,6 +219,13 @@ describe('given findDomainByDomain query', () => {
                 domain: 'test.gc.ca',
                 lastRan: null,
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                status: {
+                  dkim: 'PASS',
+                  dmarc: 'PASS',
+                  https: 'INFO',
+                  spf: 'FAIL',
+                  ssl: 'FAIL',
+                },
               },
             },
           }
@@ -237,6 +258,13 @@ describe('given findDomainByDomain query', () => {
                   domain
                   lastRan
                   selectors
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                 }
               }
             `,
@@ -331,6 +359,13 @@ describe('given findDomainByDomain query', () => {
                   domain
                   lastRan
                   selectors
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                 }
               }
             `,
@@ -420,6 +455,13 @@ describe('given findDomainByDomain query', () => {
                   domain
                   lastRan
                   selectors
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                 }
               }
             `,
@@ -455,6 +497,13 @@ describe('given findDomainByDomain query', () => {
                 domain: 'test.gc.ca',
                 lastRan: null,
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                status: {
+                  dkim: 'PASS',
+                  dmarc: 'PASS',
+                  https: 'INFO',
+                  spf: 'FAIL',
+                  ssl: 'FAIL',
+                },
               },
             },
           }
@@ -577,6 +626,13 @@ describe('given findDomainByDomain query', () => {
                   domain
                   lastRan
                   selectors
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                 }
               }
             `,

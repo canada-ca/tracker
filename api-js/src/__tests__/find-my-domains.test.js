@@ -129,11 +129,25 @@ describe('given findMyDomainsQuery', () => {
         domain: 'test1.gc.ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        status: {
+          dkim: 'pass',
+          dmarc: 'pass',
+          https: 'info',
+          spf: 'fail',
+          ssl: 'fail',
+        },
       })
       domainTwo = await collections.domains.save({
         domain: 'test2.gc.ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        status: {
+          dkim: 'pass',
+          dmarc: 'pass',
+          https: 'info',
+          spf: 'fail',
+          ssl: 'fail',
+        },
       })
       await collections.claims.save({
         _to: domainOne._id,
@@ -178,6 +192,13 @@ describe('given findMyDomainsQuery', () => {
                     domain
                     lastRan
                     selectors
+                    status {
+                      dkim
+                      dmarc
+                      https
+                      spf
+                      ssl
+                    }
                   }
                 }
                 pageInfo {
@@ -215,6 +236,13 @@ describe('given findMyDomainsQuery', () => {
                     domain: 'test1.gc.ca',
                     lastRan: null,
                     selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                    status: {
+                      dkim: 'PASS',
+                      dmarc: 'PASS',
+                      https: 'INFO',
+                      spf: 'FAIL',
+                      ssl: 'FAIL',
+                    },
                   },
                 },
                 {
@@ -224,6 +252,13 @@ describe('given findMyDomainsQuery', () => {
                     domain: 'test2.gc.ca',
                     lastRan: null,
                     selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                    status: {
+                      dkim: 'PASS',
+                      dmarc: 'PASS',
+                      https: 'INFO',
+                      spf: 'FAIL',
+                      ssl: 'FAIL',
+                    },
                   },
                 },
               ],

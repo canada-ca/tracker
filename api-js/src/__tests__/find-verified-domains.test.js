@@ -80,6 +80,13 @@ describe('given findVerifiedDomains query', () => {
       domain: 'test.gc.ca',
       lastRan: null,
       selectors: ['selector1._domainkey', 'selector2._domainkey'],
+      status: {
+        dkim: 'pass',
+        dmarc: 'pass',
+        https: 'info',
+        spf: 'fail',
+        ssl: 'fail',
+      },
     })
     await collections.claims.save({
       _to: domain._id,
@@ -104,6 +111,13 @@ describe('given findVerifiedDomains query', () => {
                   id
                   domain
                   lastRan
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                   organizations(first: 5) {
                     edges {
                       node {
@@ -154,6 +168,13 @@ describe('given findVerifiedDomains query', () => {
                   id: toGlobalId('verifiedDomains', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
+                  status: {
+                    dkim: 'PASS',
+                    dmarc: 'PASS',
+                    https: 'INFO',
+                    spf: 'FAIL',
+                    ssl: 'FAIL',
+                  },
                   organizations: {
                     edges: [
                       {
