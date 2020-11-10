@@ -30,6 +30,10 @@ msgstr "Authentication error. Please sign in again."
 msgid "Authentication error. Please sign in."
 msgstr "Authentication error. Please sign in."
 
+#: src/types/base/index.js:857
+msgid "Cannot query affiliations on organization without admin permission or higher."
+msgstr "Cannot query affiliations on organization without admin permission or higher."
+
 #: src/queries/domains/find-domain-by-domain.js:46
 msgid "Could not retrieve specified domain."
 msgstr "Could not retrieve specified domain."
@@ -76,8 +80,8 @@ msgstr "No verified domain with the provided domain could be found."
 msgid "Organization has already been verified."
 msgstr "Organization has already been verified."
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:45
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:44
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:43
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:42
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 msgstr "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 
@@ -158,8 +162,8 @@ msgstr "Passwords do not match."
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:68
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:67
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:66
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:65
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 
@@ -392,8 +396,8 @@ msgstr "Unable to invite user. Please try again."
 msgid "Unable to invite yourself to an org. Please try again."
 msgstr "Unable to invite yourself to an org. Please try again."
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:149
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:148
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:147
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:146
 msgid "Unable to load affiliations. Please try again."
 msgstr "Unable to load affiliations. Please try again."
 
@@ -488,8 +492,8 @@ msgstr "Unable to load verified organizations. Please try again."
 msgid "Unable to load web summary. Please try again."
 msgstr "Unable to load web summary. Please try again."
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:139
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:138
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:137
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:136
 msgid "Unable to query affiliations. Please try again."
 msgstr "Unable to query affiliations. Please try again."
 
@@ -686,8 +690,8 @@ msgstr "We've sent you a text message with an authentication code to sign into P
 msgid "We've sent you an email with an authentication code to sign into Pulse."
 msgstr "We've sent you an email with an authentication code to sign into Pulse."
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:36
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:35
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:34
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:33
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 msgstr "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 
@@ -756,8 +760,8 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `ver
 #: src/loaders/guidance-tags/load-ssl-guidance-tags-connections.js:77
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:81
 #: src/loaders/organizations/load-organization-connections-by-user-id.js:81
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:83
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:82
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:81
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:80
 #: src/loaders/verified-domains/load-verified-domain-connections-by-organization-id.js:79
 #: src/loaders/verified-domains/load-verified-domain-connections.js:80
 #: src/loaders/verified-organizations/load-verified-organization-connections-by-domain-id.js:77
@@ -767,8 +771,8 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `ver
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
 msgstr "`{argSet}` must be of type `number` not `{typeSet}`."
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:57
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:56
+#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:55
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:54
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
 msgstr "`{argSet}` on the `affiliations` cannot be less than zero."
 
