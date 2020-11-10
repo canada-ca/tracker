@@ -29,18 +29,18 @@ const domainType = new GraphQLObjectType({
     domain: {
       type: Domain,
       description: 'Domain that scans will be ran on.',
-      resolve: async ({ domain }) => domain,
+      resolve: ({ domain }) => domain,
     },
     lastRan: {
       type: GraphQLDateTime,
       description: 'The last time that a scan was ran on this domain.',
-      resolve: async ({ lastRan }) => lastRan,
+      resolve: ({ lastRan }) => lastRan,
     },
     selectors: {
       type: new GraphQLList(Selectors),
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: async ({ selectors }) => selectors,
+      resolve: ({ selectors }) => selectors,
     },
     organizations: {
       type: organizationConnection.connectionType,
@@ -61,14 +61,14 @@ const domainType = new GraphQLObjectType({
     email: {
       type: emailScanType,
       description: 'DKIM, DMARC, and SPF scan results.',
-      resolve: async ({ _id, _key }) => {
+      resolve: ({ _id, _key }) => {
         return { _id, _key }
       },
     },
     web: {
       type: webScanType,
       description: 'HTTPS, and SSL scan results.',
-      resolve: async ({ _id, _key }) => {
+      resolve: ({ _id, _key }) => {
         return { _id, _key }
       },
     },
@@ -276,7 +276,7 @@ const dkimType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
-      resolve: async ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => timestamp,
     },
     results: {
       type: dkimResultsConnection.connectionType,
@@ -334,17 +334,17 @@ const dkimResultsType = new GraphQLObjectType({
     selector: {
       type: GraphQLString,
       description: 'The selector the scan was ran on.',
-      resolve: async ({ selector }) => selector,
+      resolve: ({ selector }) => selector,
     },
     record: {
       type: GraphQLString,
       description: 'DKIM record retrieved during the scan of the domain.',
-      resolve: async ({ record }) => record,
+      resolve: ({ record }) => record,
     },
     keyLength: {
       type: GraphQLString,
       description: 'Size of the Public Key in bits',
-      resolve: async ({ keyLength }) => keyLength,
+      resolve: ({ keyLength }) => keyLength,
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
@@ -399,34 +399,34 @@ const dmarcType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
-      resolve: async ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => timestamp,
     },
     dmarcPhase: {
       type: GraphQLInt,
       description: `DMARC phase found during scan.`,
-      resolve: async ({ dmarcPhase }) => dmarcPhase,
+      resolve: ({ dmarcPhase }) => dmarcPhase,
     },
     record: {
       type: GraphQLString,
       description: `DMARC record retrieved during scan.`,
-      resolve: async ({ record }) => record,
+      resolve: ({ record }) => record,
     },
     pPolicy: {
       type: GraphQLString,
       description: `The requested policy you wish mailbox providers to apply
-            when your email fails DMARC authentication and alignment checks. `,
-      resolve: async ({ pPolicy }) => pPolicy,
+when your email fails DMARC authentication and alignment checks. `,
+      resolve: ({ pPolicy }) => pPolicy,
     },
     spPolicy: {
       type: GraphQLString,
       description: `This tag is used to indicate a requested policy for all
-            subdomains where mail is failing the DMARC authentication and alignment checks.`,
-      resolve: async ({ spPolicy }) => spPolicy,
+subdomains where mail is failing the DMARC authentication and alignment checks.`,
+      resolve: ({ spPolicy }) => spPolicy,
     },
     pct: {
       type: GraphQLInt,
       description: `The percentage of messages to which the DMARC policy is to be applied.`,
-      resolve: async ({ pct }) => pct,
+      resolve: ({ pct }) => pct,
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
@@ -484,22 +484,22 @@ const spfType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time the scan was initiated.`,
-      resolve: async ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => timestamp,
     },
     lookups: {
       type: GraphQLInt,
       description: `The amount of DNS lookups.`,
-      resolve: async ({ lookups }) => lookups,
+      resolve: ({ lookups }) => lookups,
     },
     record: {
       type: GraphQLString,
       description: `SPF record retrieved during the scan of the given domain.`,
-      resolve: async ({ record }) => record,
+      resolve: ({ record }) => record,
     },
     spfDefault: {
       type: GraphQLString,
       description: `Instruction of what a recipient should do if there is not a match to your SPF record.`,
-      resolve: async ({ spfDefault }) => spfDefault,
+      resolve: ({ spfDefault }) => spfDefault,
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
@@ -628,32 +628,32 @@ const httpsType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time the scan was initiated.`,
-      resolve: async ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => timestamp,
     },
     implementation: {
       type: GraphQLString,
       description: `State of the HTTPS implementation on the server and any issues therein.`,
-      resolve: async ({ implementation }) => implementation,
+      resolve: ({ implementation }) => implementation,
     },
     enforced: {
       type: GraphQLString,
       description: `Degree to which HTTPS is enforced on the server based on behaviour.`,
-      resolve: async ({ enforced }) => enforced,
+      resolve: ({ enforced }) => enforced,
     },
     hsts: {
       type: GraphQLString,
       description: `Presence and completeness of HSTS implementation.`,
-      resolve: async ({ hsts }) => hsts,
+      resolve: ({ hsts }) => hsts,
     },
     hstsAge: {
       type: GraphQLString,
       description: `Denotes how long the domain should only be accessed using HTTPS`,
-      resolve: async ({ hstsAge }) => hstsAge,
+      resolve: ({ hstsAge }) => hstsAge,
     },
     preloaded: {
       type: GraphQLString,
       description: `Denotes whether the domain has been submitted and included within HSTS preload list.`,
-      resolve: async ({ preloaded }) => preloaded,
+      resolve: ({ preloaded }) => preloaded,
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
@@ -707,7 +707,7 @@ const sslType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
-      resolve: async ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => timestamp,
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
@@ -765,52 +765,52 @@ const organizationType = new GraphQLObjectType({
     acronym: {
       type: Acronym,
       description: 'The organizations acronym.',
-      resolve: async ({ acronym }) => acronym,
+      resolve: ({ acronym }) => acronym,
     },
     name: {
       type: GraphQLString,
       description: 'The full name of the organization.',
-      resolve: async ({ name }) => name,
+      resolve: ({ name }) => name,
     },
     slug: {
       type: Slug,
       description: 'Slugified name of the organization.',
-      resolve: async ({ slug }) => slug,
+      resolve: ({ slug }) => slug,
     },
     zone: {
       type: GraphQLString,
       description: 'The zone which the organization belongs to.',
-      resolve: async ({ zone }) => zone,
+      resolve: ({ zone }) => zone,
     },
     sector: {
       type: GraphQLString,
       description: 'The sector which the organization belongs to.',
-      resolve: async ({ sector }) => sector,
+      resolve: ({ sector }) => sector,
     },
     country: {
       type: GraphQLString,
       description: 'The country in which the organization resides.',
-      resolve: async ({ country }) => country,
+      resolve: ({ country }) => country,
     },
     province: {
       type: GraphQLString,
       description: 'The province in which the organization resides.',
-      resolve: async ({ province }) => province,
+      resolve: ({ province }) => province,
     },
     city: {
       type: GraphQLString,
       description: 'The city in which the organization resides.',
-      resolve: async ({ city }) => city,
+      resolve: ({ city }) => city,
     },
     verified: {
       type: GraphQLBoolean,
       description: 'Wether the organization is a verified organization.',
-      resolve: async ({ verified }) => verified,
+      resolve: ({ verified }) => verified,
     },
     domainCount: {
       type: GraphQLInt,
       description: 'The number of domains associated with this organization.',
-      resolve: async ({ domainCount }) => domainCount,
+      resolve: ({ domainCount }) => domainCount,
     },
     domains: {
       type: domainConnection.connectionType,
@@ -869,37 +869,27 @@ const userType = new GraphQLObjectType({
     userName: {
       type: GraphQLEmailAddress,
       description: 'Users email address.',
-      resolve: async ({ userName }) => {
-        return userName
-      },
+      resolve: ({ userName }) => userName,
     },
     displayName: {
       type: GraphQLString,
       description: 'Name displayed to other users.',
-      resolve: async ({ displayName }) => {
-        return displayName
-      },
+      resolve: ({ displayName }) => displayName,
     },
     preferredLang: {
       type: LanguageEnums,
       description: 'Users preferred language.',
-      resolve: async ({ preferredLang }) => {
-        return preferredLang
-      },
+      resolve: ({ preferredLang }) => preferredLang,
     },
     tfaValidated: {
       type: GraphQLBoolean,
       description: 'Has the user completed two factor authentication.',
-      resolve: async ({ tfaValidated }) => {
-        return tfaValidated
-      },
+      resolve: ({ tfaValidated }) => tfaValidated,
     },
     emailValidated: {
       type: GraphQLBoolean,
       description: 'Has the user email verified their account.',
-      resolve: async ({ emailValidated }) => {
-        return emailValidated
-      },
+      resolve: ({ emailValidated }) => emailValidated,
     },
     affiliations: {
       type: userAffiliationsConnection.connectionType,
@@ -936,16 +926,12 @@ const userAffiliationsType = new GraphQLObjectType({
     userId: {
       type: GraphQLID,
       description: "Affiliated user's ID",
-      resolve: async ({ userId }) => {
-        return userId
-      },
+      resolve: ({ userId }) => userId,
     },
     permission: {
       type: RoleEnums,
       description: "User's level of access to a given organization.",
-      resolve: async ({ permission }) => {
-        return permission
-      },
+      resolve: ({ permission }) => permission,
     },
     user: {
       type: userType,
