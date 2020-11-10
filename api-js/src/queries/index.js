@@ -4,6 +4,8 @@ const domainQueries = require('./domains')
 const userQueries = require('./user')
 const organizationQueries = require('./organizations')
 const summaryQueries = require('./summaries')
+const verifiedDomainQueries = require('./verified-domains')
+const verifiedOrganizationsQueries = require('./verified-organizations')
 
 const createQuerySchema = () => {
   return new GraphQLObjectType({
@@ -19,6 +21,10 @@ const createQuerySchema = () => {
       ...summaryQueries,
       // User Queries
       ...userQueries,
+      // Verified Domain Queries
+      ...verifiedDomainQueries,
+      // Verified Organization Queries
+      ...verifiedOrganizationsQueries,
     }),
   })
 }
