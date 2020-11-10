@@ -264,55 +264,55 @@ describe('given findDomainByDomain query', () => {
             findDomainByDomain: {
               yearlyDmarcSummaries: [
                 {
-                  month: '1',
+                  month: 'JANUARY',
                   year: '2019',
                 },
                 {
-                  month: '2',
+                  month: 'FEBRUARY',
                   year: '2019',
                 },
                 {
-                  month: '3',
+                  month: 'MARCH',
                   year: '2019',
                 },
                 {
-                  month: '4',
+                  month: 'APRIL',
                   year: '2019',
                 },
                 {
-                  month: '5',
+                  month: 'MAY',
                   year: '2019',
                 },
                 {
-                  month: '6',
+                  month: 'JUNE',
                   year: '2019',
                 },
                 {
-                  month: '7',
+                  month: 'JULY',
                   year: '2019',
                 },
                 {
-                  month: '8',
+                  month: 'AUGUST',
                   year: '2019',
                 },
                 {
-                  month: '9',
+                  month: 'SEPTEMBER',
                   year: '2019',
                 },
                 {
-                  month: '10',
+                  month: 'OCTOBER',
                   year: '2019',
                 },
                 {
-                  month: '11',
+                  month: 'NOVEMBER',
                   year: '2019',
                 },
                 {
-                  month: '12',
+                  month: 'DECEMBER',
                   year: '2019',
                 },
                 {
-                  month: '1',
+                  month: 'JANUARY',
                   year: '2020',
                 },
               ],

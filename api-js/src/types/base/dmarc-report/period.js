@@ -1,7 +1,9 @@
-const { GraphQLObjectType, GraphQLString } = require('graphql')
+const { GraphQLObjectType } = require('graphql')
 const { categoryPercentagesType } = require('./category-percentages')
 const { categoryTotalsType } = require('./category-totals')
 const { detailTablesType } = require('./detail-tables')
+const { PeriodEnums } = require('../../../enums')
+const { Year } = require('../../../scalars')
 
 const periodType = new GraphQLObjectType({
   name: 'Period',
@@ -9,15 +11,16 @@ const periodType = new GraphQLObjectType({
     'Object that contains information for each data collection period.',
   fields: () => ({
     month: {
-      type: GraphQLString,
+      type: PeriodEnums,
       description: 'Start date of data collection.',
       resolve: ({ startDate }, _, { moment }) =>
-        Number(moment(startDate).month()) + 1,
+        String(moment(startDate).format('MMMM')).toLowerCase(),
     },
     year: {
-      type: GraphQLString,
+      type: Year,
       description: 'End date of data collection.',
-      resolve: ({ startDate }, _, { moment }) => moment(startDate).year(),
+      resolve: ({ startDate }, _, { moment }) =>
+        String(moment(startDate).year()),
     },
     categoryPercentages: {
       type: categoryPercentagesType,

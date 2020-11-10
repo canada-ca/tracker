@@ -213,7 +213,7 @@ describe('given findDomainByDomain query', () => {
           data: {
             findDomainByDomain: {
               dmarcSummaryByPeriod: {
-                month: '1',
+                month: 'JANUARY',
                 year: '2020',
               },
             },
