@@ -122,7 +122,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByUserName(query, i18n)
+        const loader = userLoaderByUserName(query, '1234', i18n)
 
         try {
           await loader.load(userName)
@@ -133,7 +133,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running userLoaderByUserName: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running userLoaderByUserName: Error: Database error occurred.`,
         ])
       })
     })
@@ -147,7 +147,7 @@ describe('given a userLoaderByUserName dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByUserName(query, i18n)
+        const loader = userLoaderByUserName(query, '1234', i18n)
 
         try {
           await loader.load(userName)
@@ -158,7 +158,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during userLoaderByUserName: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running userLoaderByUserName: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -182,7 +182,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByUserName(query, i18n)
+        const loader = userLoaderByUserName(query, '1234', i18n)
 
         try {
           await loader.load(userName)
@@ -191,7 +191,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running userLoaderByUserName: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running userLoaderByUserName: Error: Database error occurred.`,
         ])
       })
     })
@@ -205,7 +205,7 @@ describe('given a userLoaderByUserName dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByUserName(query, i18n)
+        const loader = userLoaderByUserName(query, '1234', i18n)
 
         try {
           await loader.load(userName)
@@ -214,7 +214,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during userLoaderByUserName: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running userLoaderByUserName: Error: Cursor error occurred.`,
         ])
       })
     })

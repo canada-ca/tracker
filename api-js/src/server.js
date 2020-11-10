@@ -258,8 +258,8 @@ const createContext = ({ context, request, response }) => {
         request.language,
         i18n,
       ),
-      userLoaderByUserName: userLoaderByUserName(query, i18n),
-      userLoaderByKey: userLoaderByKey(query, i18n),
+      userLoaderByUserName: userLoaderByUserName(query, userId, i18n),
+      userLoaderByKey: userLoaderByKey(query, userId, i18n),
       affiliationLoaderByKey: affiliationLoaderByKey(query),
       affiliationLoaderByUserId: affiliationLoaderByUserId(
         query,

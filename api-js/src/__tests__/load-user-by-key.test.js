@@ -113,7 +113,7 @@ describe('given a userLoaderByKey dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByKey(query, i18n)
+        const loader = userLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load(expectedUser._key)
@@ -124,7 +124,7 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running userLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running userLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -143,7 +143,7 @@ describe('given a userLoaderByKey dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByKey(query, i18n)
+        const loader = userLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load(expectedUser._key)
@@ -154,7 +154,7 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during userLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 funning userLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -183,7 +183,7 @@ describe('given a userLoaderByKey dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByKey(query, i18n)
+        const loader = userLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load(expectedUser._key)
@@ -192,7 +192,7 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running userLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running userLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -211,7 +211,7 @@ describe('given a userLoaderByKey dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByKey(query, i18n)
+        const loader = userLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load(expectedUser._key)
@@ -220,7 +220,7 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during userLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 funning userLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })
