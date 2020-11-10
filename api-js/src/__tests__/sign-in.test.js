@@ -148,17 +148,12 @@ describe('authenticate user account', () => {
             },
           )
 
-          const token = tokenize({
-            parameters: { userId: user._key },
-            secret: String(SIGN_IN_KEY),
-          })
-
           const expectedResponse = {
             data: {
               signIn: {
                 status:
                   "We've sent you a text message with an authentication code to sign into Pulse.",
-                authenticateToken: token,
+                authenticateToken: response.data.signIn.authenticateToken,
               },
             },
           }
@@ -226,17 +221,12 @@ describe('authenticate user account', () => {
             },
           )
 
-          const token = tokenize({
-            parameters: { userId: user._key },
-            secret: String(SIGN_IN_KEY),
-          })
-
           const expectedResponse = {
             data: {
               signIn: {
                 status:
                   "We've sent you an email with an authentication code to sign into Pulse.",
-                authenticateToken: token,
+                authenticateToken: response.data.signIn.authenticateToken,
               },
             },
           }
@@ -792,16 +782,11 @@ describe('authenticate user account', () => {
             },
           )
 
-          const token = tokenize({
-            parameters: { userId: user._key },
-            secret: String(SIGN_IN_KEY),
-          })
-
           const expectedResponse = {
             data: {
               signIn: {
                 status: 'todo',
-                authenticateToken: token,
+                authenticateToken: response.data.signIn.authenticateToken,
               },
             },
           }
@@ -869,16 +854,11 @@ describe('authenticate user account', () => {
             },
           )
 
-          const token = tokenize({
-            parameters: { userId: user._key },
-            secret: String(SIGN_IN_KEY),
-          })
-
           const expectedResponse = {
             data: {
               signIn: {
                 status: 'todo',
-                authenticateToken: token,
+                authenticateToken: response.data.signIn.authenticateToken,
               },
             },
           }
