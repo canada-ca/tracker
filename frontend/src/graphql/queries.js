@@ -400,6 +400,91 @@ export const DMARC_REPORT_SUMMARY = gql`
   }
 `
 
+export const DMARC_REPORT_PAGE = gql`
+  query DmarcReportPage(
+    $domain: DomainScalar!
+    $month: PeriodEnums!
+    $year: Year!
+  ) {
+    findDomainByDomain(domain: $domain) {
+      yearlyDmarcSummaries {
+        month
+        year
+        categoryTotals {
+          passSpfOnly
+          passDkimOnly
+          fullPass
+          fail
+        }
+      }
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        detailTables {
+          dkimFailure {
+            edges {
+              node {
+                dkimAligned
+                dkimDomains
+                dkimResults
+                dkimSelectors
+                dnsHost
+                envelopeFrom
+                guidance
+                headerFrom
+                sourceIpAddress
+                totalMessages
+              }
+            }
+          }
+          dmarcFailure {
+            edges {
+              node {
+                dkimDomains
+                dkimSelectors
+                disposition
+                dnsHost
+                envelopeFrom
+                headerFrom
+                sourceIpAddress
+                spfDomains
+                totalMessages
+              }
+            }
+          }
+          fullPass {
+            edges {
+              node {
+                sourceIpAddress
+                envelopeFrom
+                dkimDomains
+                dkimSelectors
+                dnsHost
+                headerFrom
+                spfDomains
+                totalMessages
+              }
+            }
+          }
+          spfFailure {
+            edges {
+              node {
+                dnsHost
+                envelopeFrom
+                guidance
+                headerFrom
+                sourceIpAddress
+                spfAligned
+                spfDomains
+                spfResults
+                totalMessages
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const DEMO_DMARC_REPORT_SUMMARY = gql`
   query DmarcReportSummary(
     $domainSlug: Slug!
@@ -426,77 +511,73 @@ export const DEMO_DMARC_REPORT_SUMMARY = gql`
 
 export const DMARC_REPORT_DETAIL_TABLES = gql`
   query DmarcReportDetailTables(
-    $domainSlug: Slug!
-    $period: PeriodEnums!
+    $domain: DomainScalar!
+    $month: PeriodEnums!
     $year: Year!
   ) {
-    dmarcReportDetailTables(
-      domainSlug: $domainSlug
-      period: $period
-      year: $year
-    ) {
-      month
-      year
-      detailTables {
-        fullPass {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-          dkimDomains
-          dkimSelectors
-        }
-        spfFailure {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-        }
-        spfMisaligned {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-        }
-        dkimFailure {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          dkimDomains
-          dkimSelectors
-        }
-        dkimMisaligned {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          dkimDomains
-          dkimSelectors
-        }
-        dmarcFailure {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-          dkimDomains
-          dkimSelectors
+    findDomainByDomain(domain: $domain) {
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        detailTables {
+          dkimFailure {
+            edges {
+              node {
+                dkimAligned
+                dkimDomains
+                dkimResults
+                dkimSelectors
+                dnsHost
+                envelopeFrom
+                guidance
+                headerFrom
+                sourceIpAddress
+                totalMessages
+              }
+            }
+          }
+          dmarcFailure {
+            edges {
+              node {
+                dkimDomains
+                dkimSelectors
+                disposition
+                dnsHost
+                envelopeFrom
+                headerFrom
+                sourceIpAddress
+                spfDomains
+                totalMessages
+              }
+            }
+          }
+          fullPass {
+            edges {
+              node {
+                sourceIpAddress
+                envelopeFrom
+                dkimDomains
+                dkimSelectors
+                dnsHost
+                headerFrom
+                spfDomains
+                totalMessages
+              }
+            }
+          }
+          spfFailure {
+            edges {
+              node {
+                dnsHost
+                envelopeFrom
+                guidance
+                headerFrom
+                sourceIpAddress
+                spfAligned
+                spfDomains
+                spfResults
+                totalMessages
+              }
+            }
+          }
         }
       }
     }

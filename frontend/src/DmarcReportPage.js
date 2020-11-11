@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useUserState } from './UserState'
-import { useQuery } from '@apollo/client'
+import { useQuery, useLazyQuery } from '@apollo/client'
 import {
   DMARC_REPORT_DETAIL_TABLES,
-  DMARC_REPORT_SUMMARY_LIST,
+  DMARC_REPORT_PAGE,
 } from './graphql/queries'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import { Box, Heading, IconButton, Select, Stack, Text } from '@chakra-ui/core'
@@ -21,49 +21,77 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { i18n } = useLingui()
 
   const currentDate = new Date()
-  const [selectedPeriod, setSelectedPeriod] = useState(period || 'LAST30DAYS')
-  const [selectedYear, setSelectedYear] = useState(
-    year || currentDate.getFullYear().toString(),
-  )
+  const [originalPeriod] = useState(period)
+  const [originalYear] = useState(year)
+  const [selectedPeriod, setSelectedPeriod] = useState(period)
+  const [selectedYear, setSelectedYear] = useState(year)
   const [selectedDate, setSelectedDate] = useState(
     `${selectedPeriod}, ${selectedYear}`,
   )
+  const [graphData, setGraphData] = useState()
+  const [tableData, setTableData] = useState()
+  const [reportCalled, setReportCalled] = useState(false)
 
-  const { loading: barLoading, error: barError, data: barData } = useQuery(
-    DMARC_REPORT_SUMMARY_LIST,
-    {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
-      variables: { domain: domainSlug },
-    },
-  )
+  // Allows the use of forward/backward navigation
+  if (selectedPeriod !== period) setSelectedPeriod(period)
+  if (selectedYear !== year) setSelectedPeriod(year)
+  if (selectedDate !== `${period}, ${year}`)
+    setSelectedDate(`${period}, ${year}`)
 
   const {
-    loading: tableLoading,
-    error: tableError,
-    data: tableData,
-  } = useQuery(DMARC_REPORT_DETAIL_TABLES, {
+    loading: reportLoading,
+    error: reportError,
+    data: reportData,
+  } = useQuery(DMARC_REPORT_PAGE, {
     context: {
       headers: {
         authorization: currentUser.jwt,
       },
     },
     variables: {
-      domainSlug: domainSlug,
-      period: selectedPeriod,
-      year: selectedYear,
+      domain: domainSlug,
+      month: originalPeriod,
+      year: originalYear,
+    },
+    skip: reportCalled,
+    onCompleted() {
+      setReportCalled(true)
+      setTableData(
+        reportData.findDomainByDomain.dmarcSummaryByPeriod.detailTables,
+      )
+      setGraphData(reportData.findDomainByDomain.yearlyDmarcSummaries)
+    },
+    onError() {
+      setReportCalled(true)
     },
   })
 
-  if (tableLoading && barLoading)
-    return (
-      <Text>
-        <Trans>Loading...</Trans>
-      </Text>
-    )
+  const [
+    getTables,
+    { loading: tableLoading, error: tableError, data: tableReturnData },
+  ] = useLazyQuery(DMARC_REPORT_DETAIL_TABLES, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
+    variables: {
+      domain: domainSlug,
+      month: selectedPeriod,
+      year: selectedYear,
+    },
+    onCompleted() {
+      setTableData(
+        tableReturnData.findDomainByDomain.dmarcSummaryByPeriod.detailTables,
+      )
+    },
+  })
+
+  useEffect(() => {
+    if (reportCalled) getTables()
+  }, [selectedPeriod, selectedYear, getTables])
+
+  if (reportLoading) return <Text>Loading</Text>
 
   const options = [
     <option
@@ -112,12 +140,14 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     const [newPeriod, newYear] = e.target.value.split(', ')
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
-    history.push(`/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`)
+    history.replace(
+      `/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`,
+    )
   }
 
   // Create dmarc bar graph if not loading and no errors
-  let barDisplay
-  if (!barLoading && !barError) {
+  let graphDisplay
+  if (graphData) {
     const strengths = {
       strong: [
         {
@@ -144,48 +174,41 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         },
       ],
     }
-
-    const formattedBarData = {
-      periods: barData.findDomainByDomain.yearlyDmarcSummaries.map((entry) => {
+    const formattedGraphData = {
+      periods: graphData.map((entry) => {
         return { month: entry.month, year: entry.year, ...entry.categoryTotals }
       }),
     }
-    formattedBarData.strengths = strengths
-
-    barDisplay = (
+    formattedGraphData.strengths = strengths
+    graphDisplay = (
       <DmarcTimeGraph
-        data={formattedBarData}
+        data={formattedGraphData}
         width="100%"
         mr="400px"
         responsiveWidth={summaryListResponsiveWidth}
       />
     )
-  } else {
-    // handle errors / loading
-    barDisplay = (
-      <Heading as="h3" size="lg" textAlign="center">
-        {barLoading ? (
-          <Trans>Loading...</Trans>
-        ) : barError ? (
-          <Trans>Error while querying for summary bar graph</Trans>
-        ) : (
-          ''
-        )}
-      </Heading>
-    )
   }
 
   // Create report tables if no errors and message data exist
   let tableDisplay
-  if (!tableError && !tableLoading) {
-    const detailTablesData = tableData.dmarcReportDetailTables.detailTables
-
-    const fullPassData = detailTablesData.fullPass
-    const spfFailureData = detailTablesData.spfFailure
-    // const spfMisalignedData = detailTablesData.spfMisaligned
-    const dkimFailureData = detailTablesData.dkimFailure
-    // const dkimMisalignedData = detailTablesData.dkimMisaligned
-    const dmarcFailureData = detailTablesData.dmarcFailure
+  if (tableData) {
+    const fullPassData = []
+    tableData.fullPass.edges.forEach((edge) => {
+      fullPassData.push(edge.node)
+    })
+    const spfFailureData = []
+    tableData.spfFailure.edges.forEach((edge) => {
+      spfFailureData.push(edge.node)
+    })
+    const dkimFailureData = []
+    tableData.dkimFailure.edges.forEach((edge) => {
+      dkimFailureData.push(edge.node)
+    })
+    const dmarcFailureData = []
+    tableData.dmarcFailure.edges.forEach((edge) => {
+      dmarcFailureData.push(edge.node)
+    })
 
     // Initial sorting category for detail tables
     const initialSort = [{ id: 'totalMessages', desc: true }]
@@ -273,22 +296,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       },
     ]
 
-    // const spfMisalignedColumns = [
-    //   {
-    //     Header: i18n._(t`SPF Misalignment by IP Address`),
-    //     hidden: true,
-    //     columns: [
-    //       sourceIpAddress,
-    //       envelopeFrom,
-    //       countryCode,
-    //       prefixOrg,
-    //       dnsHost,
-    //       spfDomains,
-    //       totalMessages,
-    //     ],
-    //   },
-    // ]
-
     const dkimFailureColumns = [
       {
         Header: t`DKIM Failures by IP Address`,
@@ -307,23 +314,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         ],
       },
     ]
-
-    // const dkimMisalignedColumns = [
-    //   {
-    //     Header: i18n._(t`DKIM Misalignment by IP Address`),
-    //     hidden: true,
-    //     columns: [
-    //       sourceIpAddress,
-    //       envelopeFrom,
-    //       countryCode,
-    //       prefixOrg,
-    //       dnsHost,
-    //       dkimDomains,
-    //       dkimSelectors,
-    //       totalMessages,
-    //     ],
-    //   },
-    // ]
 
     const dmarcFailureColumns = [
       {
@@ -401,19 +391,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       </Stack>
     )
   }
-  // handle errors / loading
-  else
-    tableDisplay = (
-      <Heading as="h3" size="lg" textAlign="center">
-        {tableLoading ? (
-          <Trans>Loading...</Trans>
-        ) : tableError ? (
-          <Trans>Error while querying for summary tables</Trans>
-        ) : (
-          ''
-        )}
-      </Heading>
-    )
 
   return (
     <Box width="100%" px="4" mx="auto" overflow="hidden">
@@ -431,7 +408,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         </Heading>
       </Stack>
 
-      {barDisplay}
+      {graphDisplay}
 
       <Stack isInline align="center" mb="16px">
         <Text fontWeight="bold" textAlign="center">
