@@ -2,15 +2,15 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { chartSummaryLoaderByKey } = require('../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { createQuerySchema } = require('../..')
+const { createMutationSchema } = require('../../../mutations')
+const { chartSummaryLoaderByKey } = require('../../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given webSummary query', () => {
+describe('given mailSummary query', () => {
   let query, drop, truncate, migrate, schema, collections, i18n
 
   beforeAll(async () => {
@@ -52,21 +52,21 @@ describe('given webSummary query', () => {
     await drop()
   })
 
-  describe('given successful web summary retrieval', () => {
+  describe('given successful mail summary retrieval', () => {
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'web',
+        _key: 'mail',
         total: 1000,
         fail: 500,
         pass: 500,
       })
     })
-    it('returns web summary', async () => {
+    it('returns mail summary', async () => {
       const response = await graphql(
         schema,
         `
           query {
-            webSummary {
+            mailSummary {
               total
               categories {
                 name
@@ -87,7 +87,7 @@ describe('given webSummary query', () => {
 
       const expectedResponse = {
         data: {
-          webSummary: {
+          mailSummary: {
             total: 1000,
             categories: [
               {
@@ -120,7 +120,7 @@ describe('given webSummary query', () => {
         },
       })
     })
-    describe('given unsuccessful web summary retrieval', () => {
+    describe('given unsuccessful mail summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
           await truncate()
@@ -129,7 +129,7 @@ describe('given webSummary query', () => {
             schema,
             `
               query {
-                webSummary {
+                mailSummary {
                   total
                   categories {
                     name
@@ -153,12 +153,12 @@ describe('given webSummary query', () => {
           )
 
           const error = [
-            new GraphQLError(`Unable to load web summary. Please try again.`),
+            new GraphQLError(`Unable to load mail summary. Please try again.`),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User could not retrieve web summary.`,
+            `User could not retrieve mail summary.`,
           ])
         })
       })
@@ -176,7 +176,7 @@ describe('given webSummary query', () => {
         },
       })
     })
-    describe('given unsuccessful web summary retrieval', () => {
+    describe('given unsuccessful mail summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
           await truncate()
@@ -185,7 +185,7 @@ describe('given webSummary query', () => {
             schema,
             `
               query {
-                webSummary {
+                mailSummary {
                   total
                   categories {
                     name
@@ -212,7 +212,7 @@ describe('given webSummary query', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User could not retrieve web summary.`,
+            `User could not retrieve mail summary.`,
           ])
         })
       })
