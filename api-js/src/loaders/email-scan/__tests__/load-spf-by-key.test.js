@@ -3,12 +3,12 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { dkimResultLoaderByKey } = require('../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { spfLoaderByKey } = require('../..')
 
-describe('given the dkimResultLoaderByKey function', () => {
+describe('given the spfLoaderByKey function', () => {
   let query, drop, truncate, migrate, collections, i18n
 
   const consoleErrorOutput = []
@@ -35,8 +35,8 @@ describe('given the dkimResultLoaderByKey function', () => {
     consoleErrorOutput.length = 0
 
     await truncate()
-    await collections.dkimResults.save({})
-    await collections.dkimResults.save({})
+    await collections.spf.save({})
+    await collections.spf.save({})
   })
 
   afterAll(async () => {
@@ -44,39 +44,38 @@ describe('given the dkimResultLoaderByKey function', () => {
   })
 
   describe('given a single id', () => {
-    it('returns a single dkim result', async () => {
-      // Get dkim result from db
+    it('returns a single spf scan', async () => {
       const expectedCursor = await query`
-        FOR dkimResult IN dkimResults
-          SORT dkimResult._key ASC LIMIT 1
-          RETURN dkimResult
-      `
-      const expectedDkimResult = await expectedCursor.next()
+      FOR spfScan IN spf
+        SORT spfScan._key ASC LIMIT 1
+        RETURN spfScan
+    `
+      const expectedSpf = await expectedCursor.next()
 
-      const loader = dkimResultLoaderByKey(query, i18n)
-      const dkimResult = await loader.load(expectedDkimResult._key)
+      const loader = spfLoaderByKey(query, i18n)
+      const spf = await loader.load(expectedSpf._key)
 
-      expect(dkimResult).toEqual(expectedDkimResult)
+      expect(spf).toEqual(expectedSpf)
     })
   })
   describe('given multiple ids', () => {
-    it('returns multiple dkim results', async () => {
-      const dkimResultKeys = []
-      const expectedDkimResults = []
+    it('returns multiple spf scans', async () => {
+      const spfKeys = []
+      const expectedSpfScans = []
       const expectedCursor = await query`
-        FOR dkimResult IN dkimResults
-          RETURN dkimResult
+        FOR spfScan IN spf
+          RETURN spfScan
       `
 
       while (expectedCursor.hasNext()) {
-        const tempDkimResult = await expectedCursor.next()
-        dkimResultKeys.push(tempDkimResult._key)
-        expectedDkimResults.push(tempDkimResult)
+        const tempSpf = await expectedCursor.next()
+        spfKeys.push(tempSpf._key)
+        expectedSpfScans.push(tempSpf)
       }
 
-      const loader = dkimResultLoaderByKey(query, i18n)
-      const dkimResults = await loader.loadMany(dkimResultKeys)
-      expect(dkimResults).toEqual(expectedDkimResults)
+      const loader = spfLoaderByKey(query, i18n)
+      const dkimScans = await loader.loadMany(spfKeys)
+      expect(dkimScans).toEqual(expectedSpfScans)
     })
   })
   describe('users language is set to english', () => {
@@ -96,18 +95,18 @@ describe('given the dkimResultLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dkimResultLoaderByKey(query, '1234', i18n)
+        const loader = spfLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find dkim result. Please try again.'),
+            new Error('Unable to find spf scan. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dkimResultLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running spfLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -119,18 +118,18 @@ describe('given the dkimResultLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dkimResultLoaderByKey(query, '1234', i18n)
+        const loader = spfLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find dkim result. Please try again.'),
+            new Error('Unable to find spf scan. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dkimResultLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running spfLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -152,7 +151,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dkimResultLoaderByKey(query, '1234', i18n)
+        const loader = spfLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -161,7 +160,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dkimResultLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running spfLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -173,7 +172,7 @@ describe('given the dkimResultLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dkimResultLoaderByKey(query, '1234', i18n)
+        const loader = spfLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -182,7 +181,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dkimResultLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running spfLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })

@@ -5,16 +5,16 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
 const {
-  dkimLoaderConnectionsByDomainId,
-  dkimLoaderByKey,
-} = require('../loaders')
+  dmarcLoaderConnectionsByDomainId,
+  dmarcLoaderByKey,
+} = require('../..')
 
-describe('when given the load dkim connection function', () => {
+describe('when given the load dmarc connection function', () => {
   let query, drop, truncate, migrate, collections, user, domain, i18n
 
   const consoleWarnOutput = []
@@ -64,26 +64,26 @@ describe('when given the load dkim connection function', () => {
   })
 
   describe('given a successful load', () => {
-    let dkimScan1, dkimScan2
+    let dmarcScan1, dmarcScan2
     beforeEach(async () => {
-      dkimScan1 = await collections.dkim.save({
+      dmarcScan1 = await collections.dmarc.save({
         timestamp: '2020-10-02T12:43:39Z',
       })
-      dkimScan2 = await collections.dkim.save({
+      dmarcScan2 = await collections.dmarc.save({
         timestamp: '2020-10-03T12:43:39Z',
       })
-      await collections.domainsDKIM.save({
-        _to: dkimScan1._id,
+      await collections.domainsDMARC.save({
+        _to: dmarcScan1._id,
         _from: domain._id,
       })
-      await collections.domainsDKIM.save({
-        _to: dkimScan2._id,
+      await collections.domainsDMARC.save({
+        _to: dmarcScan2._id,
         _from: domain._id,
       })
     })
     describe('using no cursor', () => {
-      it('returns multiple dkim scans', async () => {
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
+      it('returns multiple dmarc scans', async () => {
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -94,35 +94,35 @@ describe('when given the load dkim connection function', () => {
           first: 5,
         }
 
-        const dkimScans = await connectionLoader({
+        const dmarcScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
 
-        const dkimLoader = dkimLoaderByKey(query)
-        const expectedDkimScans = await dkimLoader.loadMany([
-          dkimScan1._key,
-          dkimScan2._key,
+        const dkimLoader = dmarcLoaderByKey(query)
+        const expectedDmarcScans = await dkimLoader.loadMany([
+          dmarcScan1._key,
+          dmarcScan2._key,
         ])
 
-        expectedDkimScans[0].id = expectedDkimScans[0]._key
-        expectedDkimScans[1].id = expectedDkimScans[1]._key
+        expectedDmarcScans[0].id = expectedDmarcScans[0]._key
+        expectedDmarcScans[1].id = expectedDmarcScans[1]._key
 
-        expectedDkimScans[0].domainId = domain._id
-        expectedDkimScans[1].domainId = domain._id
+        expectedDmarcScans[0].domainId = domain._id
+        expectedDmarcScans[1].domainId = domain._id
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dkim', expectedDkimScans[0]._key),
+              cursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
               node: {
-                ...expectedDkimScans[0],
+                ...expectedDmarcScans[0],
               },
             },
             {
-              cursor: toGlobalId('dkim', expectedDkimScans[1]._key),
+              cursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
               node: {
-                ...expectedDkimScans[1],
+                ...expectedDmarcScans[1],
               },
             },
           ],
@@ -130,41 +130,41 @@ describe('when given the load dkim connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('dkim', expectedDkimScans[0]._key),
-            endCursor: toGlobalId('dkim', expectedDkimScans[1]._key),
+            startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
+            endCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
           },
         }
 
-        expect(dkimScans).toEqual(expectedStructure)
+        expect(dmarcScans).toEqual(expectedStructure)
       })
     })
     describe('using after cursor', () => {
-      it('returns dkim scan(s) after a given node id', async () => {
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
+      it('returns dmarc scan(s) after a given node id', async () => {
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const dkimLoader = dkimLoaderByKey(query)
-        const expectedDkimScans = await dkimLoader.loadMany([
-          dkimScan1._key,
-          dkimScan2._key,
+        const dkimLoader = dmarcLoaderByKey(query)
+        const expectedDmarcScans = await dkimLoader.loadMany([
+          dmarcScan1._key,
+          dmarcScan2._key,
         ])
 
-        expectedDkimScans[0].id = expectedDkimScans[0]._key
-        expectedDkimScans[0].domainId = domain._id
+        expectedDmarcScans[0].id = expectedDmarcScans[0]._key
+        expectedDmarcScans[0].domainId = domain._id
 
-        expectedDkimScans[1].id = expectedDkimScans[1]._key
-        expectedDkimScans[1].domainId = domain._id
+        expectedDmarcScans[1].id = expectedDmarcScans[1]._key
+        expectedDmarcScans[1].domainId = domain._id
 
         const connectionArgs = {
           first: 5,
-          after: toGlobalId('dkim', expectedDkimScans[0]._key),
+          after: toGlobalId('dmarc', expectedDmarcScans[0]._key),
         }
 
-        const dkimScans = await connectionLoader({
+        const dmarcScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -172,9 +172,9 @@ describe('when given the load dkim connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dkim', expectedDkimScans[1]._key),
+              cursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
               node: {
-                ...expectedDkimScans[1],
+                ...expectedDmarcScans[1],
               },
             },
           ],
@@ -182,41 +182,41 @@ describe('when given the load dkim connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('dkim', expectedDkimScans[1]._key),
-            endCursor: toGlobalId('dkim', expectedDkimScans[1]._key),
+            startCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
+            endCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
           },
         }
 
-        expect(dkimScans).toEqual(expectedStructure)
+        expect(dmarcScans).toEqual(expectedStructure)
       })
     })
     describe('using before cursor', () => {
-      it('returns dkim scan(s) before a given node id', async () => {
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
+      it('returns dmarc scan(s) before a given node id', async () => {
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const dkimLoader = dkimLoaderByKey(query)
-        const expectedDkimScans = await dkimLoader.loadMany([
-          dkimScan1._key,
-          dkimScan2._key,
+        const dkimLoader = dmarcLoaderByKey(query)
+        const expectedDmarcScans = await dkimLoader.loadMany([
+          dmarcScan1._key,
+          dmarcScan2._key,
         ])
 
-        expectedDkimScans[0].id = expectedDkimScans[0]._key
-        expectedDkimScans[0].domainId = domain._id
+        expectedDmarcScans[0].id = expectedDmarcScans[0]._key
+        expectedDmarcScans[0].domainId = domain._id
 
-        expectedDkimScans[1].id = expectedDkimScans[1]._key
-        expectedDkimScans[1].domainId = domain._id
+        expectedDmarcScans[1].id = expectedDmarcScans[1]._key
+        expectedDmarcScans[1].domainId = domain._id
 
         const connectionArgs = {
           first: 5,
-          before: toGlobalId('dkim', expectedDkimScans[1]._key),
+          before: toGlobalId('dmarc', expectedDmarcScans[1]._key),
         }
 
-        const dkimScans = await connectionLoader({
+        const dmarcScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -224,9 +224,9 @@ describe('when given the load dkim connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dkim', expectedDkimScans[0]._key),
+              cursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
               node: {
-                ...expectedDkimScans[0],
+                ...expectedDmarcScans[0],
               },
             },
           ],
@@ -234,40 +234,40 @@ describe('when given the load dkim connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('dkim', expectedDkimScans[0]._key),
-            endCursor: toGlobalId('dkim', expectedDkimScans[0]._key),
+            startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
+            endCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
           },
         }
 
-        expect(dkimScans).toEqual(expectedStructure)
+        expect(dmarcScans).toEqual(expectedStructure)
       })
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const dkimLoader = dkimLoaderByKey(query)
-        const expectedDkimScans = await dkimLoader.loadMany([
-          dkimScan1._key,
-          dkimScan2._key,
+        const dkimLoader = dmarcLoaderByKey(query)
+        const expectedDmarcScans = await dkimLoader.loadMany([
+          dmarcScan1._key,
+          dmarcScan2._key,
         ])
 
-        expectedDkimScans[0].id = expectedDkimScans[0]._key
-        expectedDkimScans[0].domainId = domain._id
+        expectedDmarcScans[0].id = expectedDmarcScans[0]._key
+        expectedDmarcScans[0].domainId = domain._id
 
-        expectedDkimScans[1].id = expectedDkimScans[1]._key
-        expectedDkimScans[1].domainId = domain._id
+        expectedDmarcScans[1].id = expectedDmarcScans[1]._key
+        expectedDmarcScans[1].domainId = domain._id
 
         const connectionArgs = {
           first: 1,
         }
 
-        const dkimScans = await connectionLoader({
+        const dmarcScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -275,9 +275,9 @@ describe('when given the load dkim connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dkim', expectedDkimScans[0]._key),
+              cursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
               node: {
-                ...expectedDkimScans[0],
+                ...expectedDmarcScans[0],
               },
             },
           ],
@@ -285,37 +285,40 @@ describe('when given the load dkim connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('dkim', expectedDkimScans[0]._key),
-            endCursor: toGlobalId('dkim', expectedDkimScans[0]._key),
+            startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
+            endCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
           },
         }
 
-        expect(dkimScans).toEqual(expectedStructure)
+        expect(dmarcScans).toEqual(expectedStructure)
       })
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const dkimLoader = dkimLoaderByKey(query)
-        const expectedDkimScans = await dkimLoader.loadMany([
-          dkimScan1._key,
-          dkimScan2._key,
+        const dkimLoader = dmarcLoaderByKey(query)
+        const expectedDmarcScans = await dkimLoader.loadMany([
+          dmarcScan1._key,
+          dmarcScan2._key,
         ])
 
-        expectedDkimScans[1].id = expectedDkimScans[1]._key
-        expectedDkimScans[1].domainId = domain._id
+        expectedDmarcScans[0].id = expectedDmarcScans[0]._key
+        expectedDmarcScans[0].domainId = domain._id
+
+        expectedDmarcScans[1].id = expectedDmarcScans[1]._key
+        expectedDmarcScans[1].domainId = domain._id
 
         const connectionArgs = {
           last: 1,
         }
 
-        const dkimScans = await connectionLoader({
+        const dmarcScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -323,9 +326,9 @@ describe('when given the load dkim connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('dkim', expectedDkimScans[1]._key),
+              cursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
               node: {
-                ...expectedDkimScans[1],
+                ...expectedDmarcScans[1],
               },
             },
           ],
@@ -333,52 +336,52 @@ describe('when given the load dkim connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('dkim', expectedDkimScans[1]._key),
-            endCursor: toGlobalId('dkim', expectedDkimScans[1]._key),
+            startCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
+            endCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
           },
         }
 
-        expect(dkimScans).toEqual(expectedStructure)
+        expect(dmarcScans).toEqual(expectedStructure)
       })
     })
     describe('use date filters', () => {
-      let dkimScan3
+      let dmarcScan3
       beforeEach(async () => {
-        dkimScan3 = await collections.dkim.save({
+        dmarcScan3 = await collections.dmarc.save({
           timestamp: '2020-10-04T12:43:39Z',
         })
-        await collections.domainsDKIM.save({
-          _to: dkimScan3._id,
+        await collections.domainsDMARC.save({
+          _to: dmarcScan3._id,
           _from: domain._id,
         })
       })
       describe('using start date filter', () => {
         it('returns dkim scans at and after the start date', async () => {
-          const connectionLoader = dkimLoaderConnectionsByDomainId(
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const dkimLoader = dkimLoaderByKey(query)
-          const expectedDkimScans = await dkimLoader.loadMany([
-            dkimScan2._key,
-            dkimScan3._key,
+          const dmarcLoader = dmarcLoaderByKey(query)
+          const expectedDmarcScans = await dmarcLoader.loadMany([
+            dmarcScan2._key,
+            dmarcScan3._key,
           ])
 
-          expectedDkimScans[0].id = expectedDkimScans[0]._key
-          expectedDkimScans[0].domainId = domain._id
+          expectedDmarcScans[0].id = expectedDmarcScans[0]._key
+          expectedDmarcScans[0].domainId = domain._id
 
-          expectedDkimScans[1].id = expectedDkimScans[1]._key
-          expectedDkimScans[1].domainId = domain._id
+          expectedDmarcScans[1].id = expectedDmarcScans[1]._key
+          expectedDmarcScans[1].domainId = domain._id
 
           const connectionArgs = {
             first: 5,
             startDate: '2020-10-03',
           }
 
-          const dkimScans = await connectionLoader({
+          const dmarcScans = await connectionLoader({
             domainId: domain._id,
             ...connectionArgs,
           })
@@ -386,15 +389,15 @@ describe('when given the load dkim connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('dkim', expectedDkimScans[0]._key),
+                cursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
                 node: {
-                  ...expectedDkimScans[0],
+                  ...expectedDmarcScans[0],
                 },
               },
               {
-                cursor: toGlobalId('dkim', expectedDkimScans[1]._key),
+                cursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
                 node: {
-                  ...expectedDkimScans[1],
+                  ...expectedDmarcScans[1],
                 },
               },
             ],
@@ -402,41 +405,41 @@ describe('when given the load dkim connection function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
-              startCursor: toGlobalId('dkim', expectedDkimScans[0]._key),
-              endCursor: toGlobalId('dkim', expectedDkimScans[1]._key),
+              startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
+              endCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
             },
           }
 
-          expect(dkimScans).toEqual(expectedStructure)
+          expect(dmarcScans).toEqual(expectedStructure)
         })
       })
       describe('using end date filter', () => {
         it('returns dkim scans at and before the end date', async () => {
-          const connectionLoader = dkimLoaderConnectionsByDomainId(
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const dkimLoader = dkimLoaderByKey(query)
-          const expectedDkimScans = await dkimLoader.loadMany([
-            dkimScan1._key,
-            dkimScan2._key,
+          const dmarcLoader = dmarcLoaderByKey(query)
+          const expectedDmarcScans = await dmarcLoader.loadMany([
+            dmarcScan1._key,
+            dmarcScan2._key,
           ])
 
-          expectedDkimScans[0].id = expectedDkimScans[0]._key
-          expectedDkimScans[0].domainId = domain._id
+          expectedDmarcScans[0].id = expectedDmarcScans[0]._key
+          expectedDmarcScans[0].domainId = domain._id
 
-          expectedDkimScans[1].id = expectedDkimScans[1]._key
-          expectedDkimScans[1].domainId = domain._id
+          expectedDmarcScans[1].id = expectedDmarcScans[1]._key
+          expectedDmarcScans[1].domainId = domain._id
 
           const connectionArgs = {
             first: 5,
             endDate: '2020-10-03T13:50:00Z',
           }
 
-          const dkimScans = await connectionLoader({
+          const dmarcScans = await connectionLoader({
             domainId: domain._id,
             ...connectionArgs,
           })
@@ -444,15 +447,15 @@ describe('when given the load dkim connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('dkim', expectedDkimScans[0]._key),
+                cursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
                 node: {
-                  ...expectedDkimScans[0],
+                  ...expectedDmarcScans[0],
                 },
               },
               {
-                cursor: toGlobalId('dkim', expectedDkimScans[1]._key),
+                cursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
                 node: {
-                  ...expectedDkimScans[1],
+                  ...expectedDmarcScans[1],
                 },
               },
             ],
@@ -460,28 +463,30 @@ describe('when given the load dkim connection function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
-              startCursor: toGlobalId('dkim', expectedDkimScans[0]._key),
-              endCursor: toGlobalId('dkim', expectedDkimScans[1]._key),
+              startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
+              endCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
             },
           }
 
-          expect(dkimScans).toEqual(expectedStructure)
+          expect(dmarcScans).toEqual(expectedStructure)
         })
       })
       describe('using start and end date filters', () => {
         it('returns dkim scan on a specific date', async () => {
-          const connectionLoader = dkimLoaderConnectionsByDomainId(
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const dkimLoader = dkimLoaderByKey(query)
-          const expectedDkimScans = await dkimLoader.loadMany([dkimScan2._key])
+          const dmarcLoader = dmarcLoaderByKey(query)
+          const expectedDmarcScans = await dmarcLoader.loadMany([
+            dmarcScan2._key,
+          ])
 
-          expectedDkimScans[0].id = expectedDkimScans[0]._key
-          expectedDkimScans[0].domainId = domain._id
+          expectedDmarcScans[0].id = expectedDmarcScans[0]._key
+          expectedDmarcScans[0].domainId = domain._id
 
           const connectionArgs = {
             first: 5,
@@ -489,7 +494,7 @@ describe('when given the load dkim connection function', () => {
             endDate: '2020-10-03T23:59:59Z',
           }
 
-          const dkimScans = await connectionLoader({
+          const dmarcScans = await connectionLoader({
             domainId: domain._id,
             ...connectionArgs,
           })
@@ -497,9 +502,9 @@ describe('when given the load dkim connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('dkim', expectedDkimScans[0]._key),
+                cursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
                 node: {
-                  ...expectedDkimScans[0],
+                  ...expectedDmarcScans[0],
                 },
               },
             ],
@@ -507,19 +512,19 @@ describe('when given the load dkim connection function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: true,
-              startCursor: toGlobalId('dkim', expectedDkimScans[0]._key),
-              endCursor: toGlobalId('dkim', expectedDkimScans[0]._key),
+              startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
+              endCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
             },
           }
 
-          expect(dkimScans).toEqual(expectedStructure)
+          expect(dmarcScans).toEqual(expectedStructure)
         })
       })
     })
-    describe('no dkim scans are found', () => {
+    describe('no dmarc scans are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -530,7 +535,7 @@ describe('when given the load dkim connection function', () => {
           first: 5,
         }
 
-        const dkimScans = await connectionLoader({
+        const dmarcScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -546,7 +551,7 @@ describe('when given the load dkim connection function', () => {
           },
         }
 
-        expect(dkimScans).toEqual(expectedStructure)
+        expect(dmarcScans).toEqual(expectedStructure)
       })
     })
   })
@@ -563,9 +568,9 @@ describe('when given the load dkim connection function', () => {
       })
     })
     describe('given a unsuccessful load', () => {
-      describe('limits are not set', () => {
-        it('throws an error', async () => {
-          const connectionLoader = dkimLoaderConnectionsByDomainId(
+      describe('first and last arguments are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
@@ -582,19 +587,18 @@ describe('when given the load dkim connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `dkim` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.',
               ),
             )
           }
-
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
           ])
         })
       })
-      describe('both limits are set', () => {
+      describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimLoaderConnectionsByDomainId(
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
@@ -603,7 +607,7 @@ describe('when given the load dkim connection function', () => {
 
           const connectionArgs = {
             first: 1,
-            last: 5,
+            last: 2,
           }
 
           try {
@@ -614,20 +618,19 @@ describe('when given the load dkim connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `dkim` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.',
               ),
             )
           }
-
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
           ])
         })
       })
       describe('limits are set below minimum', () => {
-        describe('first limit is set', () => {
+        describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimLoaderConnectionsByDomainId(
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -635,7 +638,7 @@ describe('when given the load dkim connection function', () => {
             )
 
             const connectionArgs = {
-              first: -5,
+              first: -1,
             }
 
             try {
@@ -646,19 +649,18 @@ describe('when given the load dkim connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `dkim` connection cannot be less than zero.',
+                  '`first` on the `dmarc` connection cannot be less than zero.',
                 ),
               )
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dkimLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
             ])
           })
         })
-        describe('last limit is set', () => {
+        describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimLoaderConnectionsByDomainId(
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -666,7 +668,7 @@ describe('when given the load dkim connection function', () => {
             )
 
             const connectionArgs = {
-              last: -5,
+              last: -2,
             }
 
             try {
@@ -677,21 +679,20 @@ describe('when given the load dkim connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `dkim` connection cannot be less than zero.',
+                  '`last` on the `dmarc` connection cannot be less than zero.',
                 ),
               )
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dkimLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
             ])
           })
         })
       })
       describe('limits are set above maximum', () => {
-        describe('first limit is set', () => {
+        describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimLoaderConnectionsByDomainId(
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -699,7 +700,7 @@ describe('when given the load dkim connection function', () => {
             )
 
             const connectionArgs = {
-              first: 500,
+              first: 1000,
             }
 
             try {
@@ -710,19 +711,18 @@ describe('when given the load dkim connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 500 records on the `dkim` connection exceeds the `first` limit of 100 records.',
+                  'Requesting 1000 records on the `dmarc` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 500 for: dkimLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: dmarcLoaderConnectionsByDomainId.`,
             ])
           })
         })
-        describe('last limit is set', () => {
+        describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimLoaderConnectionsByDomainId(
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -730,7 +730,7 @@ describe('when given the load dkim connection function', () => {
             )
 
             const connectionArgs = {
-              last: 500,
+              last: 200,
             }
 
             try {
@@ -741,13 +741,12 @@ describe('when given the load dkim connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 500 records on the `dkim` connection exceeds the `last` limit of 100 records.',
+                  'Requesting 200 records on the `dmarc` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: dkimLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set to 200 for: dmarcLoaderConnectionsByDomainId.`,
             ])
           })
         })
@@ -758,7 +757,7 @@ describe('when given the load dkim connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimLoaderConnectionsByDomainId(
+              const connectionLoader = dmarcLoaderConnectionsByDomainId(
                 query,
                 user._key,
                 cleanseInput,
@@ -783,7 +782,7 @@ describe('when given the load dkim connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimLoaderConnectionsByDomainId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: dmarcLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -793,7 +792,7 @@ describe('when given the load dkim connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimLoaderConnectionsByDomainId(
+              const connectionLoader = dmarcLoaderConnectionsByDomainId(
                 query,
                 user._key,
                 cleanseInput,
@@ -818,7 +817,7 @@ describe('when given the load dkim connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimLoaderConnectionsByDomainId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: dmarcLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -831,7 +830,7 @@ describe('when given the load dkim connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -841,6 +840,7 @@ describe('when given the load dkim connection function', () => {
         const connectionArgs = {
           first: 5,
         }
+
         try {
           await connectionLoader({
             domainId: domain._id,
@@ -848,12 +848,12 @@ describe('when given the load dkim connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load dkim scans. Please try again.'),
+            new Error('Unable to load dmarc scans. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to get dkim information for ${domain._id}, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to get dmarc information for ${domain._id}, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -866,7 +866,7 @@ describe('when given the load dkim connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -876,6 +876,7 @@ describe('when given the load dkim connection function', () => {
         const connectionArgs = {
           first: 5,
         }
+
         try {
           await connectionLoader({
             domainId: domain._id,
@@ -883,12 +884,12 @@ describe('when given the load dkim connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load dkim scans. Please try again.'),
+            new Error('Unable to load dmarc scans. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to get dkim information for ${domain._id}, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to get dmarc information for ${domain._id}, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
@@ -906,9 +907,9 @@ describe('when given the load dkim connection function', () => {
       })
     })
     describe('given a unsuccessful load', () => {
-      describe('limits are not set', () => {
-        it('throws an error', async () => {
-          const connectionLoader = dkimLoaderConnectionsByDomainId(
+      describe('first and last arguments are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
@@ -925,15 +926,14 @@ describe('when given the load dkim connection function', () => {
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
-
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
           ])
         })
       })
-      describe('both limits are set', () => {
+      describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimLoaderConnectionsByDomainId(
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
@@ -942,7 +942,7 @@ describe('when given the load dkim connection function', () => {
 
           const connectionArgs = {
             first: 1,
-            last: 5,
+            last: 2,
           }
 
           try {
@@ -953,16 +953,15 @@ describe('when given the load dkim connection function', () => {
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
-
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
           ])
         })
       })
       describe('limits are set below minimum', () => {
-        describe('first limit is set', () => {
+        describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimLoaderConnectionsByDomainId(
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -970,7 +969,7 @@ describe('when given the load dkim connection function', () => {
             )
 
             const connectionArgs = {
-              first: -5,
+              first: -1,
             }
 
             try {
@@ -981,15 +980,14 @@ describe('when given the load dkim connection function', () => {
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dkimLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
             ])
           })
         })
-        describe('last limit is set', () => {
+        describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimLoaderConnectionsByDomainId(
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -997,7 +995,7 @@ describe('when given the load dkim connection function', () => {
             )
 
             const connectionArgs = {
-              last: -5,
+              last: -2,
             }
 
             try {
@@ -1008,17 +1006,16 @@ describe('when given the load dkim connection function', () => {
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dkimLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
             ])
           })
         })
       })
       describe('limits are set above maximum', () => {
-        describe('first limit is set', () => {
+        describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimLoaderConnectionsByDomainId(
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -1026,7 +1023,7 @@ describe('when given the load dkim connection function', () => {
             )
 
             const connectionArgs = {
-              first: 500,
+              first: 1000,
             }
 
             try {
@@ -1037,15 +1034,14 @@ describe('when given the load dkim connection function', () => {
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 500 for: dkimLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: dmarcLoaderConnectionsByDomainId.`,
             ])
           })
         })
-        describe('last limit is set', () => {
+        describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimLoaderConnectionsByDomainId(
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -1053,7 +1049,7 @@ describe('when given the load dkim connection function', () => {
             )
 
             const connectionArgs = {
-              last: 500,
+              last: 200,
             }
 
             try {
@@ -1064,9 +1060,8 @@ describe('when given the load dkim connection function', () => {
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: dkimLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set to 200 for: dmarcLoaderConnectionsByDomainId.`,
             ])
           })
         })
@@ -1077,7 +1072,7 @@ describe('when given the load dkim connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimLoaderConnectionsByDomainId(
+              const connectionLoader = dmarcLoaderConnectionsByDomainId(
                 query,
                 user._key,
                 cleanseInput,
@@ -1098,7 +1093,7 @@ describe('when given the load dkim connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimLoaderConnectionsByDomainId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: dmarcLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -1108,7 +1103,7 @@ describe('when given the load dkim connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimLoaderConnectionsByDomainId(
+              const connectionLoader = dmarcLoaderConnectionsByDomainId(
                 query,
                 user._key,
                 cleanseInput,
@@ -1129,7 +1124,7 @@ describe('when given the load dkim connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimLoaderConnectionsByDomainId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: dmarcLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -1142,7 +1137,7 @@ describe('when given the load dkim connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -1152,6 +1147,7 @@ describe('when given the load dkim connection function', () => {
         const connectionArgs = {
           first: 5,
         }
+
         try {
           await connectionLoader({
             domainId: domain._id,
@@ -1162,7 +1158,7 @@ describe('when given the load dkim connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to get dkim information for ${domain._id}, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to get dmarc information for ${domain._id}, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -1175,7 +1171,7 @@ describe('when given the load dkim connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -1185,6 +1181,7 @@ describe('when given the load dkim connection function', () => {
         const connectionArgs = {
           first: 5,
         }
+
         try {
           await connectionLoader({
             domainId: domain._id,
@@ -1195,7 +1192,7 @@ describe('when given the load dkim connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to get dkim information for ${domain._id}, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to get dmarc information for ${domain._id}, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
