@@ -1,22 +1,22 @@
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema } = require('graphql')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
+const { makeMigrations } = require('../../../../../../migrations')
+const { createQuerySchema } = require('../../../../../queries')
+const { createMutationSchema } = require('../../../../../mutations')
 const bcrypt = require('bcrypt')
 
-const { cleanseInput } = require('../validators')
+const { cleanseInput } = require('../../../../../validators')
 const {
   checkDomainPermission,
   checkDomainOwnership,
   tokenize,
   userRequired,
-} = require('../auth')
+} = require('../../../../../auth')
 const {
   domainLoaderByDomain,
   userLoaderByUserName,
   userLoaderByKey,
-} = require('../loaders')
+} = require('../../../../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findDomainByDomain query', () => {
@@ -126,7 +126,7 @@ describe('given findDomainByDomain query', () => {
     await drop()
   })
 
-  describe('find the dmarc report dmarc fail information', () => {
+  describe('find the dmarc report full pass information', () => {
     let user
     beforeEach(async () => {
       const userCursor = await query`
@@ -153,32 +153,31 @@ describe('given findDomainByDomain query', () => {
           REMOVE affiliation IN affiliations
       `
     })
-    it('returns dmarc fail data', async () => {
+    it('returns full pass data', async () => {
       const dmarcReportLoader = jest.fn().mockReturnValue({
         data: {
           dmarcSummaryByPeriod: {
             detailTables: {
-              dmarcFailure: {
+              fullPass: {
                 edges: [
                   {
-                    cursor: 'ZmFpbERtYXJjOjE=',
+                    cursor: 'ZnVsbFBhc3M6MQ==',
                     node: {
-                      disposition: 'none',
-                      dkimDomains: '',
-                      dkimSelectors: '',
-                      dnsHost: 'test.dns.gc.ca',
-                      envelopeFrom: 'test.domain.canada.ca',
-                      headerFrom: 'test.domain.canada.ca',
-                      id: 'ZmFpbERtYXJjOjE=',
+                      dkimDomains: 'test.gc.ca',
+                      dkimSelectors: 'selector1',
+                      dnsHost: 'test.canada.ca',
+                      envelopeFrom: 'test.gc.ca',
+                      headerFrom: 'test.gc.ca',
+                      id: 'ZnVsbFBhc3M6MQ==',
                       sourceIpAddress: '123.456.78.91',
-                      spfDomains: 'test.domain.gc.ca',
-                      totalMessages: 30,
+                      spfDomains: 'test.gc.ca',
+                      totalMessages: 50,
                     },
                   },
                 ],
                 pageInfo: {
-                  startCursor: 'ZmFpbERtYXJjOjE=',
-                  endCursor: 'ZmFpbERtYXJjOjE=',
+                  startCursor: 'ZnVsbFBhc3M6MQ==',
+                  endCursor: 'ZnVsbFBhc3M6MQ==',
                   hasNextPage: true,
                   hasPreviousPage: false,
                 },
@@ -195,14 +194,13 @@ describe('given findDomainByDomain query', () => {
             findDomainByDomain(domain: "test.gc.ca") {
               dmarcSummaryByPeriod(month: SEPTEMBER, year: "2020") {
                 detailTables {
-                  dmarcFailure(first: 1) {
+                  fullPass(first: 1) {
                     edges {
                       cursor
                       node {
                         id
                         dkimDomains
                         dkimSelectors
-                        disposition
                         dnsHost
                         envelopeFrom
                         headerFrom
@@ -258,27 +256,26 @@ describe('given findDomainByDomain query', () => {
           findDomainByDomain: {
             dmarcSummaryByPeriod: {
               detailTables: {
-                dmarcFailure: {
+                fullPass: {
                   edges: [
                     {
-                      cursor: 'ZmFpbERtYXJjOjE=',
+                      cursor: 'ZnVsbFBhc3M6MQ==',
                       node: {
-                        disposition: 'none',
-                        dkimDomains: '',
-                        dkimSelectors: '',
-                        dnsHost: 'test.dns.gc.ca',
-                        envelopeFrom: 'test.domain.canada.ca',
-                        headerFrom: 'test.domain.canada.ca',
-                        id: 'ZmFpbERtYXJjOjE=',
+                        dkimDomains: 'test.gc.ca',
+                        dkimSelectors: 'selector1',
+                        dnsHost: 'test.canada.ca',
+                        envelopeFrom: 'test.gc.ca',
+                        headerFrom: 'test.gc.ca',
+                        id: 'ZnVsbFBhc3M6MQ==',
                         sourceIpAddress: '123.456.78.91',
-                        spfDomains: 'test.domain.gc.ca',
-                        totalMessages: 30,
+                        spfDomains: 'test.gc.ca',
+                        totalMessages: 50,
                       },
                     },
                   ],
                   pageInfo: {
-                    startCursor: 'ZmFpbERtYXJjOjE=',
-                    endCursor: 'ZmFpbERtYXJjOjE=',
+                    startCursor: 'ZnVsbFBhc3M6MQ==',
+                    endCursor: 'ZnVsbFBhc3M6MQ==',
                     hasNextPage: true,
                     hasPreviousPage: false,
                   },

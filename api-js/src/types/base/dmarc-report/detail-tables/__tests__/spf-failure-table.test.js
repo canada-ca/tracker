@@ -1,22 +1,22 @@
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema } = require('graphql')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
+const { makeMigrations } = require('../../../../../../migrations')
+const { createQuerySchema } = require('../../../../../queries')
+const { createMutationSchema } = require('../../../../../mutations')
 const bcrypt = require('bcrypt')
 
-const { cleanseInput } = require('../validators')
+const { cleanseInput } = require('../../../../../validators')
 const {
   checkDomainPermission,
   checkDomainOwnership,
   tokenize,
   userRequired,
-} = require('../auth')
+} = require('../../../../../auth')
 const {
   domainLoaderByDomain,
   userLoaderByUserName,
   userLoaderByKey,
-} = require('../loaders')
+} = require('../../../../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findDomainByDomain query', () => {
@@ -126,7 +126,7 @@ describe('given findDomainByDomain query', () => {
     await drop()
   })
 
-  describe('find the dmarc report dkim fail information', () => {
+  describe('find the dmarc report spf fail information', () => {
     let user
     beforeEach(async () => {
       const userCursor = await query`
@@ -153,33 +153,32 @@ describe('given findDomainByDomain query', () => {
           REMOVE affiliation IN affiliations
       `
     })
-    it('returns dkim fail data', async () => {
+    it('returns spf fail data', async () => {
       const dmarcReportLoader = jest.fn().mockReturnValue({
         data: {
           dmarcSummaryByPeriod: {
             detailTables: {
-              dkimFailure: {
+              spfFailure: {
                 edges: [
                   {
-                    cursor: 'ZmFpbERraW06MQ==',
+                    cursor: 'c3BmRmFpbDox',
                     node: {
-                      dkimAligned: false,
-                      dkimDomains: '',
-                      dkimResults: '',
-                      dkimSelectors: '',
-                      dnsHost: 'test.dns.gc.ca',
-                      envelopeFrom: 'test.domain.canada.ca',
+                      dnsHost: 'test.dns.canada.ca',
+                      envelopeFrom: 'test.gc.ca',
                       guidance: '',
                       headerFrom: 'test.gc.ca',
-                      id: 'ZmFpbERraW06MQ==',
-                      sourceIpAddress: '123.456.78.99',
+                      id: 'c3BmRmFpbDox',
+                      sourceIpAddress: '123.456.78.91',
+                      spfAligned: false,
+                      spfDomains: 'test.gc.ca',
+                      spfResults: '',
                       totalMessages: 30,
                     },
                   },
                 ],
                 pageInfo: {
-                  startCursor: 'ZmFpbERraW06MQ==',
-                  endCursor: 'ZmFpbERraW06MQ==',
+                  startCursor: 'c3BmRmFpbDox',
+                  endCursor: 'c3BmRmFpbDox',
                   hasNextPage: true,
                   hasPreviousPage: false,
                 },
@@ -196,20 +195,19 @@ describe('given findDomainByDomain query', () => {
             findDomainByDomain(domain: "test.gc.ca") {
               dmarcSummaryByPeriod(month: SEPTEMBER, year: "2020") {
                 detailTables {
-                  dkimFailure(first: 1) {
+                  spfFailure(first: 1) {
                     edges {
                       cursor
                       node {
                         id
-                        dkimAligned
-                        dkimDomains
-                        dkimResults
-                        dkimSelectors
                         dnsHost
                         envelopeFrom
                         guidance
                         headerFrom
                         sourceIpAddress
+                        spfAligned
+                        spfDomains
+                        spfResults
                         totalMessages
                       }
                     }
@@ -260,28 +258,27 @@ describe('given findDomainByDomain query', () => {
           findDomainByDomain: {
             dmarcSummaryByPeriod: {
               detailTables: {
-                dkimFailure: {
+                spfFailure: {
                   edges: [
                     {
-                      cursor: 'ZmFpbERraW06MQ==',
+                      cursor: 'c3BmRmFpbDox',
                       node: {
-                        dkimAligned: false,
-                        dkimDomains: '',
-                        dkimResults: '',
-                        dkimSelectors: '',
-                        dnsHost: 'test.dns.gc.ca',
-                        envelopeFrom: 'test.domain.canada.ca',
+                        dnsHost: 'test.dns.canada.ca',
+                        envelopeFrom: 'test.gc.ca',
                         guidance: '',
                         headerFrom: 'test.gc.ca',
-                        id: 'ZmFpbERraW06MQ==',
-                        sourceIpAddress: '123.456.78.99',
+                        id: 'c3BmRmFpbDox',
+                        sourceIpAddress: '123.456.78.91',
+                        spfAligned: false,
+                        spfDomains: 'test.gc.ca',
+                        spfResults: '',
                         totalMessages: 30,
                       },
                     },
                   ],
                   pageInfo: {
-                    startCursor: 'ZmFpbERraW06MQ==',
-                    endCursor: 'ZmFpbERraW06MQ==',
+                    startCursor: 'c3BmRmFpbDox',
+                    endCursor: 'c3BmRmFpbDox',
                     hasNextPage: true,
                     hasPreviousPage: false,
                   },
