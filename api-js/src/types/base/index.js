@@ -24,6 +24,7 @@ const { nodeInterface } = require('../node')
 const { periodType } = require('./dmarc-report')
 const { guidanceTagType } = require('./guidance-tags')
 const { domainStatus } = require('./domain-status')
+const { organizationSummaryType } = require('./organization-summary')
 
 /* Domain related objects */
 const domainType = new GraphQLObjectType({
@@ -816,6 +817,12 @@ const organizationType = new GraphQLObjectType({
       description: 'Wether the organization is a verified organization.',
       resolve: ({ verified }) => verified,
     },
+    summaries: {
+      type: organizationSummaryType,
+      description:
+        'Summaries based on scan types that are preformed on the given organizations domains.',
+      resolve: ({ summaries }) => summaries,
+    },
     domainCount: {
       type: GraphQLInt,
       description: 'The number of domains associated with this organization.',
@@ -844,7 +851,11 @@ const organizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { i18n, auth: { checkPermission }, loaders: { affiliationLoaderByOrgId } },
+        {
+          i18n,
+          auth: { checkPermission },
+          loaders: { affiliationLoaderByOrgId },
+        },
       ) => {
         const permission = await checkPermission({ orgId: _id })
         if (permission === 'admin' || permission === 'super_admin') {
@@ -855,7 +866,9 @@ const organizationType = new GraphQLObjectType({
           return affiliations
         }
         throw new Error(
-          i18n._(t`Cannot query affiliations on organization without admin permission or higher.`),
+          i18n._(
+            t`Cannot query affiliations on organization without admin permission or higher.`,
+          ),
         )
       },
     },

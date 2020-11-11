@@ -25,6 +25,18 @@ describe('given a orgLoaderByKey dataloader', () => {
     await truncate()
     await collections.organizations.save({
       verified: true,
+      summaries: {
+        web: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+        mail: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+      },
       orgDetails: {
         en: {
           slug: 'communications-security-establishment',
@@ -50,6 +62,18 @@ describe('given a orgLoaderByKey dataloader', () => {
     })
     await collections.organizations.save({
       verified: true,
+      summaries: {
+        web: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+        mail: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+      },
       orgDetails: {
         en: {
           slug: 'treasury-board-secretariat',
@@ -99,7 +123,7 @@ describe('given a orgLoaderByKey dataloader', () => {
           FOR org IN organizations
             FILTER org.orgDetails.en.slug == "communications-security-establishment"
             LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, verified: org.verified, domainCount: COUNT(domains) }, TRANSLATE("en", org.orgDetails))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("en", org.orgDetails))
         `
         const expectedOrg = await expectedCursor.next()
 
@@ -116,7 +140,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         const expectedCursor = await query`
           FOR org IN organizations
             LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, verified: org.verified, domainCount: COUNT(domains) }, TRANSLATE("en", org.orgDetails))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("en", org.orgDetails))
         `
 
         while (expectedCursor.hasNext()) {
@@ -193,7 +217,7 @@ describe('given a orgLoaderByKey dataloader', () => {
           FOR org IN organizations
             FILTER org.orgDetails.fr.slug == "centre-de-la-securite-des-telecommunications"
             LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, verified: org.verified, domainCount: COUNT(domains) }, TRANSLATE("fr", org.orgDetails))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("fr", org.orgDetails))
         `
         const expectedOrg = await expectedCursor.next()
 
@@ -210,7 +234,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         const expectedCursor = await query`
             FOR org IN organizations
               LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, verified: org.verified, domainCount: COUNT(domains) }, TRANSLATE("fr", org.orgDetails))
+              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("fr", org.orgDetails))
           `
 
         while (expectedCursor.hasNext()) {
