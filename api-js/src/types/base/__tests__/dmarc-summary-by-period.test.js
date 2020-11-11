@@ -1,24 +1,24 @@
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
+const { makeMigrations } = require('../../../../migrations')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../../../mutations')
 
 const bcrypt = require('bcrypt')
 const moment = require('moment')
 
-const { cleanseInput } = require('../validators')
+const { cleanseInput } = require('../../../validators')
 const {
   checkDomainPermission,
   checkDomainOwnership,
   tokenize,
   userRequired,
-} = require('../auth')
+} = require('../../../auth')
 const {
   domainLoaderByDomain,
   userLoaderByUserName,
   userLoaderByKey,
-} = require('../loaders')
+} = require('../../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findDomainByDomain query', () => {
@@ -124,7 +124,7 @@ describe('given findDomainByDomain query', () => {
     await drop()
   })
 
-  describe('get the yearly dmarc report information', () => {
+  describe('get the dmarc report data by dmarcSummaryByPeriod', () => {
     describe('org has ownership to the domain', () => {
       let user
       beforeEach(async () => {
@@ -159,60 +159,10 @@ describe('given findDomainByDomain query', () => {
       it('returns month and end', async () => {
         const dmarcReportLoader = jest.fn().mockReturnValue({
           data: {
-            yearlyDmarcSummaries: [
-              {
-                startDate: '2019-01-01',
-                endDate: '2019-01-31',
-              },
-              {
-                startDate: '2019-02-01',
-                endDate: '2019-02-28',
-              },
-              {
-                startDate: '2019-03-01',
-                endDate: '2019-03-31',
-              },
-              {
-                startDate: '2019-04-01',
-                endDate: '2019-04-30',
-              },
-              {
-                startDate: '2019-05-01',
-                endDate: '2019-01-31',
-              },
-              {
-                startDate: '2019-06-01',
-                endDate: '2019-06-30',
-              },
-              {
-                startDate: '2019-07-01',
-                endDate: '2019-07-31',
-              },
-              {
-                startDate: '2019-08-01',
-                endDate: '2019-08-31',
-              },
-              {
-                startDate: '2019-09-01',
-                endDate: '2019-09-30',
-              },
-              {
-                startDate: '2019-10-01',
-                endDate: '2019-10-31',
-              },
-              {
-                startDate: '2019-11-01',
-                endDate: '2019-11-30',
-              },
-              {
-                startDate: '2019-12-01',
-                endDate: '2019-12-31',
-              },
-              {
-                startDate: '2020-01-01',
-                endDate: '2020-01-31',
-              },
-            ],
+            dmarcSummaryByPeriod: {
+              startDate: '2020-01-01',
+              endDate: '2020-01-31',
+            },
           },
         })
 
@@ -221,7 +171,7 @@ describe('given findDomainByDomain query', () => {
           `
             query {
               findDomainByDomain(domain: "test.gc.ca") {
-                yearlyDmarcSummaries {
+                dmarcSummaryByPeriod(month: JANUARY, year: "2020") {
                   month
                   year
                 }
@@ -262,60 +212,10 @@ describe('given findDomainByDomain query', () => {
         const expectedResponse = {
           data: {
             findDomainByDomain: {
-              yearlyDmarcSummaries: [
-                {
-                  month: 'JANUARY',
-                  year: '2019',
-                },
-                {
-                  month: 'FEBRUARY',
-                  year: '2019',
-                },
-                {
-                  month: 'MARCH',
-                  year: '2019',
-                },
-                {
-                  month: 'APRIL',
-                  year: '2019',
-                },
-                {
-                  month: 'MAY',
-                  year: '2019',
-                },
-                {
-                  month: 'JUNE',
-                  year: '2019',
-                },
-                {
-                  month: 'JULY',
-                  year: '2019',
-                },
-                {
-                  month: 'AUGUST',
-                  year: '2019',
-                },
-                {
-                  month: 'SEPTEMBER',
-                  year: '2019',
-                },
-                {
-                  month: 'OCTOBER',
-                  year: '2019',
-                },
-                {
-                  month: 'NOVEMBER',
-                  year: '2019',
-                },
-                {
-                  month: 'DECEMBER',
-                  year: '2019',
-                },
-                {
-                  month: 'JANUARY',
-                  year: '2020',
-                },
-              ],
+              dmarcSummaryByPeriod: {
+                month: 'JANUARY',
+                year: '2020',
+              },
             },
           },
         }
@@ -344,8 +244,8 @@ describe('given findDomainByDomain query', () => {
         const dmarcReportLoader = jest.fn().mockReturnValue({
           data: {
             dmarcSummaryByPeriod: {
-              startDate: '',
-              endDate: '',
+              startDate: '2020-01-01',
+              endDate: '2020-01-01',
             },
           },
         })
@@ -355,7 +255,7 @@ describe('given findDomainByDomain query', () => {
           `
             query {
               findDomainByDomain(domain: "test.gc.ca") {
-                yearlyDmarcSummaries {
+                dmarcSummaryByPeriod(month: JANUARY, year: "2020") {
                   month
                   year
                 }

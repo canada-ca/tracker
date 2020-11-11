@@ -4,22 +4,22 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { graphql, GraphQLSchema } = require('graphql')
 
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
-const { checkDomainPermission, userRequired } = require('../auth')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../../../mutations')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
+const { checkDomainPermission, userRequired } = require('../../../auth')
 const {
-  spfLoaderConnectionsByDomainId,
-  spfLoaderByKey,
+  sslLoaderByKey,
+  sslLoaderConnectionsByDomainId,
+  sslGuidanceTagLoader,
+  sslGuidanceTagConnectionsLoader,
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
-  spfGuidanceTagLoader,
-  spfGuidanceTagConnectionsLoader,
-} = require('../loaders')
+} = require('../../../loaders')
 
-describe('given the spfType object', () => {
+describe('given the ssl gql object', () => {
   let query,
     drop,
     truncate,
@@ -29,7 +29,7 @@ describe('given the spfType object', () => {
     domain,
     schema,
     org,
-    spf
+    ssl
 
   const consoleInfoOutput = []
   const mockedInfo = (output) => consoleInfoOutput.push(output)
@@ -56,6 +56,7 @@ describe('given the spfType object', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
     consoleInfoOutput.length = 0
@@ -67,6 +68,7 @@ describe('given the spfType object', () => {
       tfaValidated: false,
       emailValidated: false,
     })
+
     org = await collections.organizations.save({
       orgDetails: {
         en: {
@@ -104,20 +106,17 @@ describe('given the spfType object', () => {
       _from: org._id,
       _to: domain._id,
     })
-    spf = await collections.spf.save({
+    ssl = await collections.ssl.save({
       timestamp: '2020-10-02T12:43:39Z',
-      lookups: 5,
-      record: 'txtRecord',
-      spfDefault: 'default',
-      guidanceTags: ['spf1'],
+      guidanceTags: ['ssl1'],
     })
-    await collections.domainsSPF.save({
+    await collections.domainsSSL.save({
       _from: domain._id,
-      _to: spf._id,
+      _to: ssl._id,
     })
-    await collections.spfGuidanceTags.save({
-      _key: 'spf1',
-      tagName: 'SPF-TAG',
+    await collections.sslGuidanceTags.save({
+      _key: 'ssl1',
+      tagName: 'SSL-TAG',
       guidance: 'Some Interesting Guidance',
       refLinksGuide: [
         {
@@ -147,8 +146,8 @@ describe('given the spfType object', () => {
             findDomainByDomain(domain: "test.domain.gc.ca") {
               id
               domain
-              email {
-                spf(first: 5) {
+              web {
+                ssl(first: 5) {
                   edges {
                     node {
                       id
@@ -156,9 +155,6 @@ describe('given the spfType object', () => {
                         id
                       }
                       timestamp
-                      lookups
-                      record
-                      spfDefault
                       guidanceTags(first: 5) {
                         edges {
                           node {
@@ -216,14 +212,14 @@ describe('given the spfType object', () => {
             cleanseInput,
           },
           loaders: {
-            spfLoaderConnectionsByDomainId: spfLoaderConnectionsByDomainId(
+            sslLoaderConnectionsByDomainId: sslLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
             ),
-            spfLoaderByKey: spfLoaderByKey(query),
-            spfGuidanceTagLoader: spfGuidanceTagLoader(query),
-            spfGuidanceTagConnectionsLoader: spfGuidanceTagConnectionsLoader(
+            sslLoaderByKey: sslLoaderByKey(query),
+            sslGuidanceTagLoader: sslGuidanceTagLoader(query),
+            sslGuidanceTagConnectionsLoader: sslGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
@@ -240,26 +236,23 @@ describe('given the spfType object', () => {
           findDomainByDomain: {
             id: toGlobalId('domains', domain._key),
             domain: 'test.domain.gc.ca',
-            email: {
-              spf: {
+            web: {
+              ssl: {
                 edges: [
                   {
                     node: {
-                      id: toGlobalId('spf', spf._key),
+                      id: toGlobalId('ssl', ssl._key),
                       domain: {
                         id: toGlobalId('domains', domain._key),
                       },
-                      timestamp: new Date('2020-10-02T12:43:39.000Z'),
-                      lookups: 5,
-                      record: 'txtRecord',
-                      spfDefault: 'default',
+                      timestamp: new Date('2020-10-02T12:43:39Z'),
                       guidanceTags: {
                         edges: [
                           {
                             node: {
-                              id: toGlobalId('guidanceTags', 'spf1'),
-                              tagId: 'spf1',
-                              tagName: 'SPF-TAG',
+                              id: toGlobalId('guidanceTags', 'ssl1'),
+                              tagId: 'ssl1',
+                              tagName: 'SSL-TAG',
                               guidance: 'Some Interesting Guidance',
                               refLinks: [
                                 {
@@ -280,8 +273,8 @@ describe('given the spfType object', () => {
                         pageInfo: {
                           hasNextPage: false,
                           hasPreviousPage: false,
-                          startCursor: toGlobalId('guidanceTags', 'spf1'),
-                          endCursor: toGlobalId('guidanceTags', 'spf1'),
+                          startCursor: toGlobalId('guidanceTags', 'ssl1'),
+                          endCursor: toGlobalId('guidanceTags', 'ssl1'),
                         },
                       },
                     },
@@ -291,14 +284,15 @@ describe('given the spfType object', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId('spf', spf._key),
-                  endCursor: toGlobalId('spf', spf._key),
+                  startCursor: toGlobalId('ssl', ssl._key),
+                  endCursor: toGlobalId('ssl', ssl._key),
                 },
               },
             },
           },
         },
       }
+
       expect(response).toEqual(expectedResponse)
       expect(consoleInfoOutput).toEqual([
         `User ${user._key} successfully retrieved domain ${domain._key}.`,

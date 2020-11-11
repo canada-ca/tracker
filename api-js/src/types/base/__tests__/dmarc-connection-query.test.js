@@ -4,24 +4,22 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { graphql, GraphQLSchema } = require('graphql')
 
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
-const { checkDomainPermission, userRequired } = require('../auth')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../../../mutations')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
+const { checkDomainPermission, userRequired } = require('../../../auth')
 const {
-  dkimLoaderConnectionsByDomainId,
-  dkimLoaderByKey,
+  dmarcLoaderConnectionsByDomainId,
+  dmarcLoaderByKey,
+  dmarcGuidanceTagLoader,
+  dmarcGuidanceTagConnectionsLoader,
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
-  dkimResultsLoaderConnectionByDkimId,
-  dkimResultLoaderByKey,
-  dkimGuidanceTagLoader,
-  dkimGuidanceTagConnectionsLoader,
-} = require('../loaders')
+} = require('../../../loaders')
 
-describe('given the dkimType object', () => {
+describe('given the dmarcType object', () => {
   let query,
     drop,
     truncate,
@@ -31,8 +29,7 @@ describe('given the dkimType object', () => {
     domain,
     schema,
     org,
-    dkim,
-    dkimResult
+    dmarc
 
   const consoleInfoOutput = []
   const mockedInfo = (output) => consoleInfoOutput.push(output)
@@ -107,26 +104,22 @@ describe('given the dkimType object', () => {
       _from: org._id,
       _to: domain._id,
     })
-    dkim = await collections.dkim.save({
+    dmarc = await collections.dmarc.save({
       timestamp: '2020-10-02T12:43:39Z',
-    })
-    await collections.domainsDKIM.save({
-      _from: domain._id,
-      _to: dkim._id,
-    })
-    dkimResult = await collections.dkimResults.save({
-      selector: 'selector._dkim1',
+      dmarcPhase: 1,
       record: 'txtRecord',
-      keyLength: '2048',
-      guidanceTags: ['dkim1'],
+      pPolicy: 'pPolicy',
+      spPolicy: 'spPolicy',
+      pct: 100,
+      guidanceTags: ['dmarc1'],
     })
-    await collections.dkimToDkimResults.save({
-      _to: dkimResult._id,
-      _from: dkim._id,
+    await collections.domainsDMARC.save({
+      _from: domain._id,
+      _to: dmarc._id,
     })
-    await collections.dkimGuidanceTags.save({
-      _key: 'dkim1',
-      tagName: 'DKIM-TAG',
+    await collections.dmarcGuidanceTags.save({
+      _key: 'dmarc1',
+      tagName: 'DMARC-TAG',
       guidance: 'Some Interesting Guidance',
       refLinksGuide: [
         {
@@ -146,6 +139,7 @@ describe('given the dkimType object', () => {
   afterAll(async () => {
     await drop()
   })
+
   describe('all fields can be queried', () => {
     it('resolves all fields', async () => {
       const response = await graphql(
@@ -156,43 +150,33 @@ describe('given the dkimType object', () => {
               id
               domain
               email {
-                dkim(first: 5) {
+                dmarc(first: 5) {
                   edges {
                     node {
-                      results(first: 5) {
+                      id
+                      domain {
+                        id
+                      }
+                      timestamp
+                      dmarcPhase
+                      record
+                      pPolicy
+                      spPolicy
+                      pct
+                      guidanceTags(first: 5) {
                         edges {
                           node {
                             id
-                            dkim {
-                              id
+                            tagId
+                            tagName
+                            guidance
+                            refLinks {
+                              description
+                              refLink
                             }
-                            selector
-                            record
-                            keyLength
-                            guidanceTags(first: 5) {
-                              edges {
-                                node {
-                                  id
-                                  tagId
-                                  tagName
-                                  guidance
-                                  refLinks {
-                                    description
-                                    refLink
-                                  }
-                                  refLinksTech {
-                                    description
-                                    refLink
-                                  }
-                                }
-                              }
-                              totalCount
-                              pageInfo {
-                                hasNextPage
-                                hasPreviousPage
-                                startCursor
-                                endCursor
-                              }
+                            refLinksTech {
+                              description
+                              refLink
                             }
                           }
                         }
@@ -205,6 +189,13 @@ describe('given the dkimType object', () => {
                         }
                       }
                     }
+                  }
+                  totalCount
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
                   }
                 }
               }
@@ -229,20 +220,14 @@ describe('given the dkimType object', () => {
             cleanseInput,
           },
           loaders: {
-            dkimLoaderConnectionsByDomainId: dkimLoaderConnectionsByDomainId(
+            dmarcLoaderConnectionsByDomainId: dmarcLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
             ),
-            dkimLoaderByKey: dkimLoaderByKey(query),
-            dkimResultsLoaderConnectionByDkimId: dkimResultsLoaderConnectionByDkimId(
-              query,
-              user._key,
-              cleanseInput,
-            ),
-            dkimResultLoaderByKey: dkimResultLoaderByKey(query),
-            dkimGuidanceTagLoader: dkimGuidanceTagLoader(query),
-            dkimGuidanceTagConnectionsLoader: dkimGuidanceTagConnectionsLoader(
+            dmarcLoaderByKey: dmarcLoaderByKey(query),
+            dmarcGuidanceTagLoader: dmarcGuidanceTagLoader(query),
+            dmarcGuidanceTagConnectionsLoader: dmarcGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
@@ -260,60 +245,40 @@ describe('given the dkimType object', () => {
             id: toGlobalId('domains', domain._key),
             domain: 'test.domain.gc.ca',
             email: {
-              dkim: {
+              dmarc: {
                 edges: [
                   {
                     node: {
-                      results: {
+                      id: toGlobalId('dmarc', dmarc._key),
+                      domain: {
+                        id: toGlobalId('domains', domain._key),
+                      },
+                      timestamp: new Date('2020-10-02T12:43:39Z'),
+                      dmarcPhase: 1,
+                      record: 'txtRecord',
+                      pPolicy: 'pPolicy',
+                      spPolicy: 'spPolicy',
+                      pct: 100,
+                      guidanceTags: {
                         edges: [
                           {
                             node: {
-                              id: toGlobalId('dkimResult', dkimResult._key),
-                              dkim: {
-                                id: toGlobalId('dkim', dkim._key),
-                              },
-                              selector: 'selector._dkim1',
-                              record: 'txtRecord',
-                              keyLength: '2048',
-                              guidanceTags: {
-                                edges: [
-                                  {
-                                    node: {
-                                      id: toGlobalId('guidanceTags', 'dkim1'),
-                                      tagId: 'dkim1',
-                                      tagName: 'DKIM-TAG',
-                                      guidance: 'Some Interesting Guidance',
-                                      refLinks: [
-                                        {
-                                          description:
-                                            'refLinksGuide Description',
-                                          refLink: 'www.refLinksGuide.ca',
-                                        },
-                                      ],
-                                      refLinksTech: [
-                                        {
-                                          description:
-                                            'refLinksTechnical Description',
-                                          refLink: 'www.refLinksTechnical.ca',
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                                totalCount: 1,
-                                pageInfo: {
-                                  hasNextPage: false,
-                                  hasPreviousPage: false,
-                                  startCursor: toGlobalId(
-                                    'guidanceTags',
-                                    'dkim1',
-                                  ),
-                                  endCursor: toGlobalId(
-                                    'guidanceTags',
-                                    'dkim1',
-                                  ),
+                              id: toGlobalId('guidanceTags', 'dmarc1'),
+                              tagId: 'dmarc1',
+                              tagName: 'DMARC-TAG',
+                              guidance: 'Some Interesting Guidance',
+                              refLinks: [
+                                {
+                                  description: 'refLinksGuide Description',
+                                  refLink: 'www.refLinksGuide.ca',
                                 },
-                              },
+                              ],
+                              refLinksTech: [
+                                {
+                                  description: 'refLinksTechnical Description',
+                                  refLink: 'www.refLinksTechnical.ca',
+                                },
+                              ],
                             },
                           },
                         ],
@@ -321,16 +286,20 @@ describe('given the dkimType object', () => {
                         pageInfo: {
                           hasNextPage: false,
                           hasPreviousPage: false,
-                          startCursor: toGlobalId(
-                            'dkimResult',
-                            dkimResult._key,
-                          ),
-                          endCursor: toGlobalId('dkimResult', dkimResult._key),
+                          startCursor: toGlobalId('guidanceTags', 'dmarc1'),
+                          endCursor: toGlobalId('guidanceTags', 'dmarc1'),
                         },
                       },
                     },
                   },
                 ],
+                totalCount: 1,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('dmarc', dmarc._key),
+                  endCursor: toGlobalId('dmarc', dmarc._key),
+                },
               },
             },
           },

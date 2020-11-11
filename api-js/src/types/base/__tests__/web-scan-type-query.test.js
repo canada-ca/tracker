@@ -4,16 +4,16 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { graphql, GraphQLSchema } = require('graphql')
 
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
-const { checkDomainPermission, userRequired } = require('../auth')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../../../mutations')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
+const { checkDomainPermission, userRequired } = require('../../../auth')
 const {
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
-} = require('../loaders')
+} = require('../../../loaders')
 
 describe('given the web scan gql object', () => {
   let query, drop, truncate, migrate, collections, user, domain, schema, org

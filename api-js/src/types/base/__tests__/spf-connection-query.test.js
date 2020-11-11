@@ -4,22 +4,22 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { graphql, GraphQLSchema } = require('graphql')
 
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
-const { checkDomainPermission, userRequired } = require('../auth')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../../../mutations')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
+const { checkDomainPermission, userRequired } = require('../../../auth')
 const {
-  httpsLoaderByKey,
-  httpsLoaderConnectionsByDomainId,
-  httpsGuidanceTagLoader,
-  httpsGuidanceTagConnectionsLoader,
+  spfLoaderConnectionsByDomainId,
+  spfLoaderByKey,
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
-} = require('../loaders')
+  spfGuidanceTagLoader,
+  spfGuidanceTagConnectionsLoader,
+} = require('../../../loaders')
 
-describe('given the https gql object', () => {
+describe('given the spfType object', () => {
   let query,
     drop,
     truncate,
@@ -29,7 +29,7 @@ describe('given the https gql object', () => {
     domain,
     schema,
     org,
-    https
+    spf
 
   const consoleInfoOutput = []
   const mockedInfo = (output) => consoleInfoOutput.push(output)
@@ -56,7 +56,6 @@ describe('given the https gql object', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
     consoleInfoOutput.length = 0
@@ -68,7 +67,6 @@ describe('given the https gql object', () => {
       tfaValidated: false,
       emailValidated: false,
     })
-
     org = await collections.organizations.save({
       orgDetails: {
         en: {
@@ -106,22 +104,20 @@ describe('given the https gql object', () => {
       _from: org._id,
       _to: domain._id,
     })
-    https = await collections.https.save({
+    spf = await collections.spf.save({
       timestamp: '2020-10-02T12:43:39Z',
-      implementation: 'Valid HTTPS',
-      enforced: 'Strict',
-      hsts: 'HSTS Max Age Too Short',
-      hstsAge: '31622400',
-      preloaded: 'HSTS Preloaded',
-      guidanceTags: ['https1'],
+      lookups: 5,
+      record: 'txtRecord',
+      spfDefault: 'default',
+      guidanceTags: ['spf1'],
     })
-    await collections.domainsHTTPS.save({
+    await collections.domainsSPF.save({
       _from: domain._id,
-      _to: https._id,
+      _to: spf._id,
     })
-    await collections.httpsGuidanceTags.save({
-      _key: 'https1',
-      tagName: 'HTTPS-TAG',
+    await collections.spfGuidanceTags.save({
+      _key: 'spf1',
+      tagName: 'SPF-TAG',
       guidance: 'Some Interesting Guidance',
       refLinksGuide: [
         {
@@ -144,17 +140,6 @@ describe('given the https gql object', () => {
 
   describe('all fields can be queried', () => {
     it('resolves all fields', async () => {
-      const { setupI18n } = require('@lingui/core')
-      const englishMessages = require('../locale/en/messages')
-      const i18n = setupI18n({
-        language: 'en',
-        locales: ['en'],
-        missing: 'Traduction manquante',
-        catalogs: {
-          en: englishMessages,
-        },
-      })
-
       const response = await graphql(
         schema,
         `
@@ -162,8 +147,8 @@ describe('given the https gql object', () => {
             findDomainByDomain(domain: "test.domain.gc.ca") {
               id
               domain
-              web {
-                https(first: 5) {
+              email {
+                spf(first: 5) {
                   edges {
                     node {
                       id
@@ -171,11 +156,9 @@ describe('given the https gql object', () => {
                         id
                       }
                       timestamp
-                      implementation
-                      enforced
-                      hsts
-                      hstsAge
-                      preloaded
+                      lookups
+                      record
+                      spfDefault
                       guidanceTags(first: 5) {
                         edges {
                           node {
@@ -233,18 +216,17 @@ describe('given the https gql object', () => {
             cleanseInput,
           },
           loaders: {
-            httpsLoaderConnectionsByDomainId: httpsLoaderConnectionsByDomainId(
+            spfLoaderConnectionsByDomainId: spfLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
             ),
-            httpsLoaderByKey: httpsLoaderByKey(query),
-            httpsGuidanceTagLoader: httpsGuidanceTagLoader(query),
-            httpsGuidanceTagConnectionsLoader: httpsGuidanceTagConnectionsLoader(
+            spfLoaderByKey: spfLoaderByKey(query),
+            spfGuidanceTagLoader: spfGuidanceTagLoader(query),
+            spfGuidanceTagConnectionsLoader: spfGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
-              i18n,
             ),
             domainLoaderByDomain: domainLoaderByDomain(query),
             domainLoaderByKey: domainLoaderByKey(query),
@@ -258,28 +240,26 @@ describe('given the https gql object', () => {
           findDomainByDomain: {
             id: toGlobalId('domains', domain._key),
             domain: 'test.domain.gc.ca',
-            web: {
-              https: {
+            email: {
+              spf: {
                 edges: [
                   {
                     node: {
-                      id: toGlobalId('https', https._key),
+                      id: toGlobalId('spf', spf._key),
                       domain: {
                         id: toGlobalId('domains', domain._key),
                       },
-                      timestamp: new Date('2020-10-02T12:43:39Z'),
-                      implementation: 'Valid HTTPS',
-                      enforced: 'Strict',
-                      hsts: 'HSTS Max Age Too Short',
-                      hstsAge: '31622400',
-                      preloaded: 'HSTS Preloaded',
+                      timestamp: new Date('2020-10-02T12:43:39.000Z'),
+                      lookups: 5,
+                      record: 'txtRecord',
+                      spfDefault: 'default',
                       guidanceTags: {
                         edges: [
                           {
                             node: {
-                              id: toGlobalId('guidanceTags', 'https1'),
-                              tagId: 'https1',
-                              tagName: 'HTTPS-TAG',
+                              id: toGlobalId('guidanceTags', 'spf1'),
+                              tagId: 'spf1',
+                              tagName: 'SPF-TAG',
                               guidance: 'Some Interesting Guidance',
                               refLinks: [
                                 {
@@ -300,8 +280,8 @@ describe('given the https gql object', () => {
                         pageInfo: {
                           hasNextPage: false,
                           hasPreviousPage: false,
-                          startCursor: toGlobalId('guidanceTags', 'https1'),
-                          endCursor: toGlobalId('guidanceTags', 'https1'),
+                          startCursor: toGlobalId('guidanceTags', 'spf1'),
+                          endCursor: toGlobalId('guidanceTags', 'spf1'),
                         },
                       },
                     },
@@ -311,15 +291,14 @@ describe('given the https gql object', () => {
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
-                  startCursor: toGlobalId('https', https._key),
-                  endCursor: toGlobalId('https', https._key),
+                  startCursor: toGlobalId('spf', spf._key),
+                  endCursor: toGlobalId('spf', spf._key),
                 },
               },
             },
           },
         },
       }
-
       expect(response).toEqual(expectedResponse)
       expect(consoleInfoOutput).toEqual([
         `User ${user._key} successfully retrieved domain ${domain._key}.`,

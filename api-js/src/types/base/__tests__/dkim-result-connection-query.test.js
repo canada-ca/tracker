@@ -4,22 +4,24 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { graphql, GraphQLSchema } = require('graphql')
 
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
-const { checkDomainPermission, userRequired } = require('../auth')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../../../mutations')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
+const { checkDomainPermission, userRequired } = require('../../../auth')
 const {
-  sslLoaderByKey,
-  sslLoaderConnectionsByDomainId,
-  sslGuidanceTagLoader,
-  sslGuidanceTagConnectionsLoader,
+  dkimLoaderConnectionsByDomainId,
+  dkimLoaderByKey,
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
-} = require('../loaders')
+  dkimResultsLoaderConnectionByDkimId,
+  dkimResultLoaderByKey,
+  dkimGuidanceTagLoader,
+  dkimGuidanceTagConnectionsLoader,
+} = require('../../../loaders')
 
-describe('given the ssl gql object', () => {
+describe('given the dkimType object', () => {
   let query,
     drop,
     truncate,
@@ -29,7 +31,8 @@ describe('given the ssl gql object', () => {
     domain,
     schema,
     org,
-    ssl
+    dkim,
+    dkimResult
 
   const consoleInfoOutput = []
   const mockedInfo = (output) => consoleInfoOutput.push(output)
@@ -56,7 +59,6 @@ describe('given the ssl gql object', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
     consoleInfoOutput.length = 0
@@ -68,7 +70,6 @@ describe('given the ssl gql object', () => {
       tfaValidated: false,
       emailValidated: false,
     })
-
     org = await collections.organizations.save({
       orgDetails: {
         en: {
@@ -106,17 +107,26 @@ describe('given the ssl gql object', () => {
       _from: org._id,
       _to: domain._id,
     })
-    ssl = await collections.ssl.save({
+    dkim = await collections.dkim.save({
       timestamp: '2020-10-02T12:43:39Z',
-      guidanceTags: ['ssl1'],
     })
-    await collections.domainsSSL.save({
+    await collections.domainsDKIM.save({
       _from: domain._id,
-      _to: ssl._id,
+      _to: dkim._id,
     })
-    await collections.sslGuidanceTags.save({
-      _key: 'ssl1',
-      tagName: 'SSL-TAG',
+    dkimResult = await collections.dkimResults.save({
+      selector: 'selector._dkim1',
+      record: 'txtRecord',
+      keyLength: '2048',
+      guidanceTags: ['dkim1'],
+    })
+    await collections.dkimToDkimResults.save({
+      _to: dkimResult._id,
+      _from: dkim._id,
+    })
+    await collections.dkimGuidanceTags.save({
+      _key: 'dkim1',
+      tagName: 'DKIM-TAG',
       guidance: 'Some Interesting Guidance',
       refLinksGuide: [
         {
@@ -136,7 +146,6 @@ describe('given the ssl gql object', () => {
   afterAll(async () => {
     await drop()
   })
-
   describe('all fields can be queried', () => {
     it('resolves all fields', async () => {
       const response = await graphql(
@@ -146,29 +155,44 @@ describe('given the ssl gql object', () => {
             findDomainByDomain(domain: "test.domain.gc.ca") {
               id
               domain
-              web {
-                ssl(first: 5) {
+              email {
+                dkim(first: 5) {
                   edges {
                     node {
-                      id
-                      domain {
-                        id
-                      }
-                      timestamp
-                      guidanceTags(first: 5) {
+                      results(first: 5) {
                         edges {
                           node {
                             id
-                            tagId
-                            tagName
-                            guidance
-                            refLinks {
-                              description
-                              refLink
+                            dkim {
+                              id
                             }
-                            refLinksTech {
-                              description
-                              refLink
+                            selector
+                            record
+                            keyLength
+                            guidanceTags(first: 5) {
+                              edges {
+                                node {
+                                  id
+                                  tagId
+                                  tagName
+                                  guidance
+                                  refLinks {
+                                    description
+                                    refLink
+                                  }
+                                  refLinksTech {
+                                    description
+                                    refLink
+                                  }
+                                }
+                              }
+                              totalCount
+                              pageInfo {
+                                hasNextPage
+                                hasPreviousPage
+                                startCursor
+                                endCursor
+                              }
                             }
                           }
                         }
@@ -181,13 +205,6 @@ describe('given the ssl gql object', () => {
                         }
                       }
                     }
-                  }
-                  totalCount
-                  pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    startCursor
-                    endCursor
                   }
                 }
               }
@@ -212,14 +229,20 @@ describe('given the ssl gql object', () => {
             cleanseInput,
           },
           loaders: {
-            sslLoaderConnectionsByDomainId: sslLoaderConnectionsByDomainId(
+            dkimLoaderConnectionsByDomainId: dkimLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
             ),
-            sslLoaderByKey: sslLoaderByKey(query),
-            sslGuidanceTagLoader: sslGuidanceTagLoader(query),
-            sslGuidanceTagConnectionsLoader: sslGuidanceTagConnectionsLoader(
+            dkimLoaderByKey: dkimLoaderByKey(query),
+            dkimResultsLoaderConnectionByDkimId: dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+            ),
+            dkimResultLoaderByKey: dkimResultLoaderByKey(query),
+            dkimGuidanceTagLoader: dkimGuidanceTagLoader(query),
+            dkimGuidanceTagConnectionsLoader: dkimGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
@@ -236,36 +259,61 @@ describe('given the ssl gql object', () => {
           findDomainByDomain: {
             id: toGlobalId('domains', domain._key),
             domain: 'test.domain.gc.ca',
-            web: {
-              ssl: {
+            email: {
+              dkim: {
                 edges: [
                   {
                     node: {
-                      id: toGlobalId('ssl', ssl._key),
-                      domain: {
-                        id: toGlobalId('domains', domain._key),
-                      },
-                      timestamp: new Date('2020-10-02T12:43:39Z'),
-                      guidanceTags: {
+                      results: {
                         edges: [
                           {
                             node: {
-                              id: toGlobalId('guidanceTags', 'ssl1'),
-                              tagId: 'ssl1',
-                              tagName: 'SSL-TAG',
-                              guidance: 'Some Interesting Guidance',
-                              refLinks: [
-                                {
-                                  description: 'refLinksGuide Description',
-                                  refLink: 'www.refLinksGuide.ca',
+                              id: toGlobalId('dkimResult', dkimResult._key),
+                              dkim: {
+                                id: toGlobalId('dkim', dkim._key),
+                              },
+                              selector: 'selector._dkim1',
+                              record: 'txtRecord',
+                              keyLength: '2048',
+                              guidanceTags: {
+                                edges: [
+                                  {
+                                    node: {
+                                      id: toGlobalId('guidanceTags', 'dkim1'),
+                                      tagId: 'dkim1',
+                                      tagName: 'DKIM-TAG',
+                                      guidance: 'Some Interesting Guidance',
+                                      refLinks: [
+                                        {
+                                          description:
+                                            'refLinksGuide Description',
+                                          refLink: 'www.refLinksGuide.ca',
+                                        },
+                                      ],
+                                      refLinksTech: [
+                                        {
+                                          description:
+                                            'refLinksTechnical Description',
+                                          refLink: 'www.refLinksTechnical.ca',
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                                totalCount: 1,
+                                pageInfo: {
+                                  hasNextPage: false,
+                                  hasPreviousPage: false,
+                                  startCursor: toGlobalId(
+                                    'guidanceTags',
+                                    'dkim1',
+                                  ),
+                                  endCursor: toGlobalId(
+                                    'guidanceTags',
+                                    'dkim1',
+                                  ),
                                 },
-                              ],
-                              refLinksTech: [
-                                {
-                                  description: 'refLinksTechnical Description',
-                                  refLink: 'www.refLinksTechnical.ca',
-                                },
-                              ],
+                              },
                             },
                           },
                         ],
@@ -273,26 +321,21 @@ describe('given the ssl gql object', () => {
                         pageInfo: {
                           hasNextPage: false,
                           hasPreviousPage: false,
-                          startCursor: toGlobalId('guidanceTags', 'ssl1'),
-                          endCursor: toGlobalId('guidanceTags', 'ssl1'),
+                          startCursor: toGlobalId(
+                            'dkimResult',
+                            dkimResult._key,
+                          ),
+                          endCursor: toGlobalId('dkimResult', dkimResult._key),
                         },
                       },
                     },
                   },
                 ],
-                totalCount: 1,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  startCursor: toGlobalId('ssl', ssl._key),
-                  endCursor: toGlobalId('ssl', ssl._key),
-                },
               },
             },
           },
         },
       }
-
       expect(response).toEqual(expectedResponse)
       expect(consoleInfoOutput).toEqual([
         `User ${user._key} successfully retrieved domain ${domain._key}.`,
