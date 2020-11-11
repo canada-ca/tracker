@@ -148,7 +148,7 @@ describe('given the load user affiliations by user id function', () => {
             after: toGlobalId('affiliations', expectedAffiliations[0].id),
           }
           const affiliations = await affiliationLoader({
-            uId: user._key,
+            uId: user._id,
             ...connectionArgs,
           })
 
@@ -205,7 +205,7 @@ describe('given the load user affiliations by user id function', () => {
             before: toGlobalId('affiliations', expectedAffiliations[1].id),
           }
           const affiliations = await affiliationLoader({
-            uId: user._key,
+            uId: user._id,
             ...connectionArgs,
           })
 
@@ -261,7 +261,7 @@ describe('given the load user affiliations by user id function', () => {
             first: 1,
           }
           const affiliations = await affiliationLoader({
-            uId: user._key,
+            uId: user._id,
             ...connectionArgs,
           })
 
@@ -317,7 +317,7 @@ describe('given the load user affiliations by user id function', () => {
             last: 1,
           }
           const affiliations = await affiliationLoader({
-            uId: user._key,
+            uId: user._id,
             ...connectionArgs,
           })
 
@@ -365,7 +365,7 @@ describe('given the load user affiliations by user id function', () => {
           first: 5,
         }
         const affiliations = await affiliationLoader({
-          uId: user._key,
+          uId: user._id,
           ...connectionArgs,
         })
 
@@ -412,7 +412,7 @@ describe('given the load user affiliations by user id function', () => {
           }
           try {
             await affiliationLoader({
-              uId: user._key,
+              uId: user._id,
               ...connectionArgs,
             })
           } catch (err) {
@@ -440,7 +440,7 @@ describe('given the load user affiliations by user id function', () => {
           const connectionArgs = {}
           try {
             await affiliationLoader({
-              uId: user._key,
+              uId: user._id,
               ...connectionArgs,
             })
           } catch (err) {
@@ -564,7 +564,7 @@ describe('given the load user affiliations by user id function', () => {
 
             try {
               await connectionLoader({
-                uId: user._key,
+                uId: user._id,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -674,7 +674,7 @@ describe('given the load user affiliations by user id function', () => {
           }
           try {
             await affiliationLoader({
-              uId: user._key,
+              uId: user._id,
               ...connectionArgs,
             })
           } catch (err) {
@@ -711,7 +711,7 @@ describe('given the load user affiliations by user id function', () => {
           }
           try {
             await affiliationLoader({
-              uId: user._key,
+              uId: user._id,
               ...connectionArgs,
             })
           } catch (err) {
@@ -755,7 +755,7 @@ describe('given the load user affiliations by user id function', () => {
           }
           try {
             await affiliationLoader({
-              uId: user._key,
+              uId: user._id,
               ...connectionArgs,
             })
           } catch (err) {
@@ -779,7 +779,7 @@ describe('given the load user affiliations by user id function', () => {
           const connectionArgs = {}
           try {
             await affiliationLoader({
-              uId: user._key,
+              uId: user._id,
               ...connectionArgs,
             })
           } catch (err) {
@@ -887,7 +887,7 @@ describe('given the load user affiliations by user id function', () => {
 
             try {
               await connectionLoader({
-                uId: user._key,
+                uId: user._id,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -984,7 +984,7 @@ describe('given the load user affiliations by user id function', () => {
             first: 5,
           }
           try {
-            await affiliationLoader({ uId: user._key, ...connectionArgs })
+            await affiliationLoader({ uId: user._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
@@ -1016,7 +1016,7 @@ describe('given the load user affiliations by user id function', () => {
             first: 5,
           }
           try {
-            await affiliationLoader({ uId: user._key, ...connectionArgs })
+            await affiliationLoader({ uId: user._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }

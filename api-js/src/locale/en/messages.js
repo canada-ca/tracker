@@ -24,6 +24,8 @@
       'Authentication error. Please sign in again.',
     'Authentication error. Please sign in.':
       'Authentication error. Please sign in.',
+    'Cannot query affiliations on organization without admin permission or higher.':
+      'Cannot query affiliations on organization without admin permission or higher.',
     'Could not retrieve specified domain.':
       'Could not retrieve specified domain.',
     'Could not retrieve specified organization.':

@@ -182,6 +182,7 @@ describe('given the https gql object', () => {
                             id
                             tagId
                             tagName
+                            guidance
                             refLinks {
                               description
                               refLink
@@ -279,6 +280,7 @@ describe('given the https gql object', () => {
                               id: toGlobalId('guidanceTags', 'https1'),
                               tagId: 'https1',
                               tagName: 'HTTPS-TAG',
+                              guidance: 'Some Interesting Guidance',
                               refLinks: [
                                 {
                                   description: 'refLinksGuide Description',

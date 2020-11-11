@@ -169,6 +169,7 @@ describe('given the dmarcType object', () => {
                             id
                             tagId
                             tagName
+                            guidance
                             refLinks {
                               description
                               refLink
@@ -265,6 +266,7 @@ describe('given the dmarcType object', () => {
                               id: toGlobalId('guidanceTags', 'dmarc1'),
                               tagId: 'dmarc1',
                               tagName: 'DMARC-TAG',
+                              guidance: 'Some Interesting Guidance',
                               refLinks: [
                                 {
                                   description: 'refLinksGuide Description',

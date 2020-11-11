@@ -9,6 +9,8 @@
     'Authentication error, please sign in again.': 'todo',
     'Authentication error. Please sign in again.': 'todo',
     'Authentication error. Please sign in.': 'todo',
+    'Cannot query affiliations on organization without admin permission or higher.':
+      'todo',
     'Could not retrieve specified domain.': 'todo',
     'Could not retrieve specified organization.': 'todo',
     'Error when retrieving dmarc report information. Please try again.': 'todo',

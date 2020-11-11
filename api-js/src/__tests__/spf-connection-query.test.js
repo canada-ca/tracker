@@ -165,6 +165,7 @@ describe('given the spfType object', () => {
                             id
                             tagId
                             tagName
+                            guidance
                             refLinks {
                               description
                               refLink
@@ -259,6 +260,7 @@ describe('given the spfType object', () => {
                               id: toGlobalId('guidanceTags', 'spf1'),
                               tagId: 'spf1',
                               tagName: 'SPF-TAG',
+                              guidance: 'Some Interesting Guidance',
                               refLinks: [
                                 {
                                   description: 'refLinksGuide Description',
