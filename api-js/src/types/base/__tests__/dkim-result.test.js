@@ -21,7 +21,7 @@ const {
   dkimGuidanceTagConnectionsLoader,
 } = require('../../../loaders')
 
-describe('given the dkimType object', () => {
+describe('given the dkim result object', () => {
   let query,
     drop,
     truncate,
