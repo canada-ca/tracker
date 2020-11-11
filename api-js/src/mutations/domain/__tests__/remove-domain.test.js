@@ -1,22 +1,22 @@
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
+const { makeMigrations } = require('../../../../migrations')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../..')
 const { toGlobalId } = require('graphql-relay')
 const bcrypt = require('bcrypt')
 const { setupI18n } = require('@lingui/core')
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
 
-const { cleanseInput } = require('../validators')
-const { checkPermission, tokenize, userRequired } = require('../auth')
+const { cleanseInput } = require('../../../validators')
+const { checkPermission, tokenize, userRequired } = require('../../../auth')
 const {
   domainLoaderByKey,
   orgLoaderByKey,
   userLoaderByKey,
   userLoaderByUserName,
-} = require('../loaders')
+} = require('../../../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
