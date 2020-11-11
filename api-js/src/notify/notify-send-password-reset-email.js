@@ -1,11 +1,9 @@
 const { t } = require('@lingui/macro')
-const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendPasswordResetEmail = (i18n) => async ({
+const sendPasswordResetEmail = (notifyClient, i18n) => async ({
   templateId,
   user,
   resetUrl,
-  notifyClient = defaultClient,
 }) => {
   try {
     await notifyClient.sendEmail(templateId, user.userName, {

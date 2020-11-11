@@ -27,6 +27,7 @@ const {
   verifyToken,
 } = require('./auth')
 const {
+  notifyClient,
   sendAuthEmail,
   sendAuthTextMsg,
   sendOrgInviteCreateAccount,
@@ -139,13 +140,16 @@ const createContext = ({ context, request, response }) => {
       slugify,
     },
     notify: {
-      sendAuthEmail: sendAuthEmail(i18n),
-      sendAuthTextMsg: sendAuthTextMsg(i18n),
-      sendOrgInviteCreateAccount: sendOrgInviteCreateAccount(i18n),
-      sendOrgInviteEmail: sendOrgInviteEmail(i18n),
-      sendPasswordResetEmail: sendPasswordResetEmail(i18n),
-      sendTfaTextMsg: sendTfaTextMsg(i18n),
-      sendVerificationEmail: sendVerificationEmail(i18n),
+      sendAuthEmail: sendAuthEmail(notifyClient, i18n),
+      sendAuthTextMsg: sendAuthTextMsg(notifyClient, i18n),
+      sendOrgInviteCreateAccount: sendOrgInviteCreateAccount(
+        notifyClient,
+        i18n,
+      ),
+      sendOrgInviteEmail: sendOrgInviteEmail(notifyClient, i18n),
+      sendPasswordResetEmail: sendPasswordResetEmail(notifyClient, i18n),
+      sendTfaTextMsg: sendTfaTextMsg(notifyClient, i18n),
+      sendVerificationEmail: sendVerificationEmail(notifyClient, i18n),
     },
     loaders: {
       chartSummaryLoaderByKey: chartSummaryLoaderByKey(query, userId, i18n),

@@ -1,11 +1,9 @@
 const { t } = require('@lingui/macro')
-const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendOrgInviteEmail = (i18n) => async ({
+const sendOrgInviteEmail = (notifyClient, i18n) => async ({
   templateId,
   user,
   orgName,
-  notifyClient = defaultClient,
 }) => {
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
