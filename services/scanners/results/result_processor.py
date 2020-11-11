@@ -334,41 +334,27 @@ def process_ssl(results):
         return tags
 
     # SSL-rc4
-    ssl_rc4 = results.get("rc4", False)
-    if ssl_rc4 is True:
+    ssl_rc4 = results["rc4"]
         tags.append("ssl3")
 
     # SSL-3des
-    ssl_3des = results.get("3des", False)
-    if ssl_3des is True:
+    ssl_3des = results["3des"]
         tags.append("ssl4")
 
-    # Signature Algorithm
-    signature_algorithm = results.get("signature_algorithm", None)
+    # Acceptable certificate (e.g. SHA256, SHA384, AEAD)
+    if results["acceptable_certificate"]:
+        tags.append("ssl5")
 
-    if signature_algorithm is not None:
-        if isinstance(signature_algorithm, str):
-            signature_algorithm = signature_algorithm.lower()
-
-        if (
-            signature_algorithm == "sha-256"
-            or signature_algorithm == "sha-384"
-            or signature_algorithm == "aead"
-        ):
-            tags.append("ssl5")
-        else:
-            tags.append("ssl6")
-    else:
+    if len(results["weak_ciphers"]) > 0:
         tags.append("ssl6")
 
     # Heartbleed
-    heart_bleed = results.get("heartbleed", False)
+    heart_bleed = results["heartbleed"]
     if heart_bleed is True:
         tags.append("ssl7")
 
     # openssl ccs injection
-    openssl_ccs_injection = results.get("ssl", {}).get("openssl_ccs_injection", False)
-    if openssl_ccs_injection is True:
+    if results["openssl_ccs_injection"]
         tags.append("ssl8")
 
     return tags
@@ -423,14 +409,14 @@ def process_dns(results):
 
             # Testing Enabled
             t_enabled = data.get("t_value", None)
-            if t_enabled is not None:
+            if t_enabled not in [None, "null", ""]:
                 tags["dkim"].append("dkim13")
 
     if results["dmarc"].get("missing", None) is not None:
         tags["dmarc"].append("dmarc2")
     else:
 
-        if results["dmarc"].get("valid", False) == True:
+        if results["dmarc"]["valid"]:
             tags["dmarc"].append("dmarc23")
 
         # Check P Policy Tag
@@ -477,60 +463,61 @@ def process_dns(results):
                 else:
                     tags["dmarc"].append("dmarc21")
 
-        # Check RUA Tag
-        rua_tag = (
+        # Check RUA Tags
+        rua_tags = (
             results["dmarc"]
             .get("tags", {})
             .get("rua", {})
-            .get("value", None)
+            .get("value", [])
         )
 
-        # Check if external reporting arrangement has been authorized
-        rua_accepting = (
-            results["dmarc"]
-            .get("tags", {})
-            .get("rua", {})
-            .get("accepting", None)
-        )
-
-        if rua_accepting is not None and rua_accepting is False:
-            tags["dmarc"].append("dmarc22")
-
-        if rua_tag is None or not rua_tag:
+        if len(rua_tags) == 0:
             tags["dmarc"].append("dmarc12")
-        else:
-            if isinstance(rua_tag, str):
-                rua_tag = rua_tag.lower()
-            for value in rua_tag:
-                if value["address"] == "dmarc@cyber.gc.ca":
-                    tags["dmarc"].append("dmarc10")
-                else:
-                    tags["dmarc"].append("dmarc12")
 
-        # Check RUF Tag
-        ruf_tag = (
+        for rua in rua_tags:
+            for key, val in rua.items():
+                if key == "address" and val == "dmarc@cyber.gc.ca":
+                    tags["dmarc"].append("dmarc10")
+
+            # Check if external reporting arrangement has been authorized
+            rua_accepting = (
+                rua.get("accepting", None)
+            )
+
+            if rua_accepting is not None:
+                if rua_accepting is False:
+                    if "dmarc22" not in tags["dmarc"]:
+                        tags["dmarc"].append("dmarc22")
+                    if "dmarc15" not in tags["dmarc"]:
+                        tags["dmarc"].append("dmarc15")
+
+        # Check RUF Tags
+        ruf_tags = (
             results["dmarc"]
             .get("tags", {})
             .get("ruf", {})
-            .get("value", None)
+            .get("value", [])
         )
 
-        if ruf_tag is None or not ruf_tag:
+        if len(ruf_tags) == 0:
             tags["dmarc"].append("dmarc13")
-        else:
-            if isinstance(ruf_tag, str):
-                ruf_tag = ruf_tag.lower()
-            for value in ruf_tag:
-                if value["address"] == "dmarc@cyber.gc.ca":
-                    tags["dmarc"].append("dmarc11")
-                else:
-                    tags["dmarc"].append("dmarc13")
 
-        # TXT DMARC
-        record_tag = results["dmarc"].get("dmarc", {}).get("record", None)
-        if record_tag == "" or record_tag is None:
-            tags["dmarc"].append("dmarc15")
-        else:
+        for ruf in ruf_tags:
+            for key, val in ruf.items():
+                if key == "address" and val == "dmarc@cyber.gc.ca":
+                    tags["dmarc"].append("dmarc11")
+
+            # Check if external reporting arrangement has been authorized
+            ruf_accepting = (
+                ruf.get("accepting", None)
+            )
+
+            if ruf_accepting is not None:
+                if ruf_accepting is False:
+                    if "dmarc15" not in tags["dmarc"]:
+                        tags["dmarc"].append("dmarc15")
+
+        if "dmarc15" not in tags["dmarc"] and (len(ruf_tags)>0 or len(rua_tags)>0):
             tags["dmarc"].append("dmarc14")
 
         # Check SP tag
@@ -558,7 +545,7 @@ def process_dns(results):
         tags["spf"].append("spf2")
         return tags
 
-    if results["spf"].get("valid", False) == True:
+    if results["spf"]["valid"]:
         tags["spf"].append("spf12")
 
     for selector, data in results["dkim"].items():
