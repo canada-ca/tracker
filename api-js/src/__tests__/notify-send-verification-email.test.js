@@ -37,12 +37,14 @@ describe('given the sendVerificationEmail function', () => {
         displayName: 'Test Account',
       }
 
-      const mockedSendVerificationEmail = sendVerificationEmail(i18n)
+      const mockedSendVerificationEmail = sendVerificationEmail(
+        notifyClient,
+        i18n,
+      )
       await mockedSendVerificationEmail({
         templateId: 'test-id',
         verifyUrl: 'verify.url',
         user,
-        notifyClient,
       })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
@@ -83,12 +85,14 @@ describe('given the sendVerificationEmail function', () => {
         }
 
         try {
-          const mockedSendVerificationEmail = sendVerificationEmail(i18n)
+          const mockedSendVerificationEmail = sendVerificationEmail(
+            notifyClient,
+            i18n,
+          )
           await mockedSendVerificationEmail({
             templateId: 'test-id',
             verifyUrl: 'verify.url',
             user,
-            notifyClient,
           })
         } catch (err) {
           expect(err).toEqual(
@@ -128,12 +132,14 @@ describe('given the sendVerificationEmail function', () => {
         }
 
         try {
-          const mockedSendVerificationEmail = sendVerificationEmail(i18n)
+          const mockedSendVerificationEmail = sendVerificationEmail(
+            notifyClient,
+            i18n,
+          )
           await mockedSendVerificationEmail({
             templateId: 'test-id',
             verifyUrl: 'verify.url',
             user,
-            notifyClient,
           })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))

@@ -38,12 +38,11 @@ describe('given the sendOrgInviteEmail function', () => {
         displayName: 'Test Account',
       }
 
-      const mockedSendOrgInviteEmail = sendOrgInviteEmail(i18n)
+      const mockedSendOrgInviteEmail = sendOrgInviteEmail(notifyClient, i18n)
       await mockedSendOrgInviteEmail({
         templateId: 'test_id',
         user,
         orgName: 'Test Org',
-        notifyClient,
       })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
@@ -85,12 +84,14 @@ describe('given the sendOrgInviteEmail function', () => {
         }
 
         try {
-          const mockedSendOrgInviteEmail = sendOrgInviteEmail(i18n)
+          const mockedSendOrgInviteEmail = sendOrgInviteEmail(
+            notifyClient,
+            i18n,
+          )
           await mockedSendOrgInviteEmail({
             templateId: 'test_id',
             user,
             orgName: 'Test Org',
-            notifyClient,
           })
         } catch (err) {
           expect(err).toEqual(
@@ -131,12 +132,14 @@ describe('given the sendOrgInviteEmail function', () => {
         }
 
         try {
-          const mockedSendOrgInviteEmail = sendOrgInviteEmail(i18n)
+          const mockedSendOrgInviteEmail = sendOrgInviteEmail(
+            notifyClient,
+            i18n,
+          )
           await mockedSendOrgInviteEmail({
             templateId: 'test_id',
             user,
             orgName: 'Test Org',
-            notifyClient,
           })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))

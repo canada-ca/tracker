@@ -38,8 +38,8 @@ describe('given the sendAuthEmail function', () => {
         tfaCode: 123456,
       }
 
-      const mockedSendAuthEmail = sendAuthEmail(i18n)
-      await mockedSendAuthEmail({ user, notifyClient })
+      const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
+      await mockedSendAuthEmail({ user })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
         'a517d99f-ddb2-4494-87e1-d5ae6ca53090',
@@ -80,8 +80,8 @@ describe('given the sendAuthEmail function', () => {
         }
 
         try {
-          const mockedSendAuthEmail = sendAuthEmail(i18n)
-          await mockedSendAuthEmail({ user, notifyClient })
+          const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
+          await mockedSendAuthEmail({ user })
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to authenticate. Please try again.'),
@@ -121,8 +121,8 @@ describe('given the sendAuthEmail function', () => {
         }
 
         try {
-          const mockedSendAuthEmail = sendAuthEmail(i18n)
-          await mockedSendAuthEmail({ user, notifyClient })
+          const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
+          await mockedSendAuthEmail({ user })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }

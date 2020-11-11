@@ -1,11 +1,9 @@
 const { t } = require('@lingui/macro')
-const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendTfaTextMsg = (i18n) => async ({
+const sendTfaTextMsg = (notifyClient, i18n) => async ({
   templateId,
   phoneNumber,
   user,
-  notifyClient = defaultClient,
 }) => {
   try {
     await notifyClient.sendSms(templateId, phoneNumber, {

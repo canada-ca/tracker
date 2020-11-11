@@ -1,10 +1,6 @@
 const { t } = require('@lingui/macro')
-const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendAuthTextMsg = (i18n) => async ({
-  user,
-  notifyClient = defaultClient,
-}) => {
+const sendAuthTextMsg = (notifyClient, i18n) => async ({ user }) => {
   const templateId = 'bccda53c-278f-4d8c-a8d1-7b58cade2bd8'
 
   try {
