@@ -11,7 +11,6 @@ const { makeMigrations } = require('../../../../migrations')
 const { createQuerySchema } = require('../../../queries')
 const { createMutationSchema } = require('../..')
 const { cleanseInput } = require('../../../validators')
-const { tokenize } = require('../../../auth')
 const { userLoaderByUserName } = require('../../../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -19,7 +18,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, migrate, schema, i18n
+  let query, drop, truncate, migrate, schema, i18n, tokenize
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -27,6 +26,8 @@ describe('authenticate user account', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+
+    tokenize = jest.fn().mockReturnValue('token')
   })
 
   let consoleOutput = []
@@ -153,7 +154,7 @@ describe('authenticate user account', () => {
               signIn: {
                 status:
                   "We've sent you a text message with an authentication code to sign into Pulse.",
-                authenticateToken: response.data.signIn.authenticateToken,
+                authenticateToken: 'token',
               },
             },
           }
@@ -226,7 +227,7 @@ describe('authenticate user account', () => {
               signIn: {
                 status:
                   "We've sent you an email with an authentication code to sign into Pulse.",
-                authenticateToken: response.data.signIn.authenticateToken,
+                authenticateToken: 'token',
               },
             },
           }
@@ -242,137 +243,6 @@ describe('authenticate user account', () => {
           expect(mockNotify).toHaveBeenCalledWith({ user })
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
-          ])
-        })
-      })
-      describe('database error occurs when failed logins are being reset', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
-          await query`
-            FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false } IN users
-          `
-
-          const userNameLoader = userLoaderByUserName(query)
-
-          query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  status
-                  authenticateToken
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userNameLoader,
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError('Unable to sign in, please try again.'),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: Error: Database error occurred.`,
-          ])
-        })
-      })
-      describe('database error occurs when setting tfa code', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
-          await query`
-            FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false } IN users
-          `
-
-          const userNameLoader = userLoaderByUserName(query)
-
-          query = jest
-            .fn()
-            .mockResolvedValueOnce(query)
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  status
-                  authenticateToken
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userNameLoader,
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError('Unable to sign in, please try again.'),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
           ])
         })
       })
@@ -718,6 +588,137 @@ describe('authenticate user account', () => {
           ])
         })
       })
+      describe('database error occurs when failed logins are being reset', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { phoneValidated: false } IN users
+          `
+
+          const userNameLoader = userLoaderByUserName(query)
+
+          query = jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred.'))
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  status
+                  authenticateToken
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userNameLoader,
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable to sign in, please try again.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('database error occurs when setting tfa code', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { phoneValidated: false } IN users
+          `
+
+          const userNameLoader = userLoaderByUserName(query)
+
+          query = jest
+            .fn()
+            .mockResolvedValueOnce(query)
+            .mockRejectedValue(new Error('Database error occurred.'))
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  status
+                  authenticateToken
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userNameLoader,
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable to sign in, please try again.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
+          ])
+        })
+      })
     })
   })
   describe('users language is set to french', () => {
@@ -786,7 +787,7 @@ describe('authenticate user account', () => {
             data: {
               signIn: {
                 status: 'todo',
-                authenticateToken: response.data.signIn.authenticateToken,
+                authenticateToken: 'token',
               },
             },
           }
@@ -858,7 +859,7 @@ describe('authenticate user account', () => {
             data: {
               signIn: {
                 status: 'todo',
-                authenticateToken: response.data.signIn.authenticateToken,
+                authenticateToken: 'token',
               },
             },
           }
@@ -874,133 +875,6 @@ describe('authenticate user account', () => {
           expect(mockNotify).toHaveBeenCalledWith({ user })
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
-          ])
-        })
-      })
-      describe('database error occurs when failed logins are being reset', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
-          await query`
-            FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false } IN users
-          `
-
-          const userNameLoader = userLoaderByUserName(query)
-
-          query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  status
-                  authenticateToken
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userNameLoader,
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
-
-          const error = [new GraphQLError('todo')]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: Error: Database error occurred.`,
-          ])
-        })
-      })
-      describe('database error occurs when setting tfa code', () => {
-        it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
-          await query`
-            FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false } IN users
-          `
-
-          const userNameLoader = userLoaderByUserName(query)
-
-          query = jest
-            .fn()
-            .mockResolvedValueOnce(query)
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                signIn(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  status
-                  authenticateToken
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userNameLoader,
-              },
-              notify: {
-                sendAuthEmail: mockNotify,
-              },
-            },
-          )
-
-          const error = [new GraphQLError('todo')]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
           ])
         })
       })
@@ -1333,6 +1207,133 @@ describe('authenticate user account', () => {
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Database error ocurred when incrementing user: ${user._key} failed login attempts: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('database error occurs when failed logins are being reset', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { phoneValidated: false } IN users
+          `
+
+          const userNameLoader = userLoaderByUserName(query)
+
+          query = jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred.'))
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  status
+                  authenticateToken
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userNameLoader,
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('database error occurs when setting tfa code', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { phoneValidated: false } IN users
+          `
+
+          const userNameLoader = userLoaderByUserName(query)
+
+          query = jest
+            .fn()
+            .mockResolvedValueOnce(query)
+            .mockRejectedValue(new Error('Database error occurred.'))
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  status
+                  authenticateToken
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userNameLoader,
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
           ])
         })
       })

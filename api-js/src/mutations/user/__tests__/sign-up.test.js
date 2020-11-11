@@ -11,19 +11,20 @@ const { makeMigrations } = require('../../../../migrations')
 const { createQuerySchema } = require('../../../queries')
 const { createMutationSchema } = require('../..')
 const { cleanseInput } = require('../../../validators')
-const { tokenize } = require('../../../auth')
 const { userLoaderByUserName } = require('../../../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('user sign up', () => {
-  let query, drop, truncate, migrate, collections, schema, i18n
+  let query, drop, truncate, migrate, collections, schema, i18n, tokenize
 
   beforeAll(async () => {
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+
+    tokenize = jest.fn().mockReturnValue('token')
   })
 
   let consoleOutput = []
@@ -66,6 +67,7 @@ describe('user sign up', () => {
                 }
               ) {
                 authResult {
+                  authToken
                   user {
                     id
                     userName
@@ -106,6 +108,7 @@ describe('user sign up', () => {
           data: {
             signUp: {
               authResult: {
+                authToken: 'token',
                 user: {
                   id: `${toGlobalId('users', users[0]._key)}`,
                   userName: 'test.account@istio.actually.exists',
@@ -125,7 +128,6 @@ describe('user sign up', () => {
         ])
       })
     })
-
     describe('when the users preferred language is french', () => {
       it('returns auth result with user info', async () => {
         const response = await graphql(
@@ -142,6 +144,7 @@ describe('user sign up', () => {
                 }
               ) {
                 authResult {
+                  authToken
                   user {
                     id
                     userName
@@ -181,6 +184,7 @@ describe('user sign up', () => {
           data: {
             signUp: {
               authResult: {
+                authToken: 'token',
                 user: {
                   id: `${toGlobalId('users', user._key)}`,
                   userName: 'test.account@istio.actually.exists',
@@ -330,7 +334,6 @@ describe('user sign up', () => {
             emailValidated: false,
           })
         })
-
         it('returns a user name already in use error', async () => {
           const response = await graphql(
             schema,
@@ -639,7 +642,6 @@ describe('user sign up', () => {
             emailValidated: false,
           })
         })
-
         it('returns a user name already in use error', async () => {
           const response = await graphql(
             schema,
