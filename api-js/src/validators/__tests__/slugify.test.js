@@ -1,5 +1,5 @@
 const { stringify } = require('jest-matcher-utils')
-const { slugify } = require('../validators')
+const { slugify } = require('..')
 
 describe('given a string', () => {
   it('lowers all characters', () => {

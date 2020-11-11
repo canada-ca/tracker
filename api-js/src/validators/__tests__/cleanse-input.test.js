@@ -1,4 +1,4 @@
-const { cleanseInput } = require('../validators')
+const { cleanseInput } = require('..')
 
 describe('given an input validate it', () => {
   describe('string contains symbols', () => {
