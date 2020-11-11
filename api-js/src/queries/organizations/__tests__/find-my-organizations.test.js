@@ -4,17 +4,17 @@ const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { cleanseInput } = require('../validators')
-const { tokenize } = require('../auth')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { createQuerySchema } = require('../..')
+const { createMutationSchema } = require('../../../mutations')
+const { cleanseInput } = require('../../../validators')
+const { tokenize } = require('../../../auth')
 const {
   orgLoaderConnectionsByUserId,
   userLoaderByUserName,
-} = require('../loaders')
+} = require('../../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findMyOrganizationsQuery', () => {
