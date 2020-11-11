@@ -111,20 +111,6 @@ describe('given findVerifiedDomains query', () => {
                   id
                   domain
                   lastRan
-                  status {
-                    dkim
-                    dmarc
-                    https
-                    spf
-                    ssl
-                  }
-                  organizations(first: 5) {
-                    edges {
-                      node {
-                        id
-                      }
-                    }
-                  }
                 }
               }
               totalCount
@@ -168,22 +154,6 @@ describe('given findVerifiedDomains query', () => {
                   id: toGlobalId('verifiedDomains', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-                  status: {
-                    dkim: 'PASS',
-                    dmarc: 'PASS',
-                    https: 'INFO',
-                    spf: 'FAIL',
-                    ssl: 'FAIL',
-                  },
-                  organizations: {
-                    edges: [
-                      {
-                        node: {
-                          id: toGlobalId('verifiedOrganizations', org._key),
-                        },
-                      },
-                    ],
-                  },
                 },
               },
             ],
@@ -229,13 +199,6 @@ describe('given findVerifiedDomains query', () => {
                       id
                       domain
                       lastRan
-                      organizations(first: 5) {
-                        edges {
-                          node {
-                            id
-                          }
-                        }
-                      }
                     }
                   }
                   totalCount
@@ -317,13 +280,6 @@ describe('given findVerifiedDomains query', () => {
                       id
                       domain
                       lastRan
-                      organizations(first: 5) {
-                        edges {
-                          node {
-                            id
-                          }
-                        }
-                      }
                     }
                   }
                   totalCount
