@@ -1,10 +1,10 @@
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { sendAuthTextMsg } = require('../notify')
+const englishMessages = require('../../locale/en/messages')
+const frenchMessages = require('../../locale/fr/messages')
+const { sendOrgInviteEmail } = require('..')
 
-describe('given the sendAuthTextMsg function', () => {
+describe('given the sendOrgInviteEmail function', () => {
   let i18n
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -26,26 +26,32 @@ describe('given the sendAuthTextMsg function', () => {
     consoleOutput = []
   })
 
-  describe('text message successfully sent', () => {
+  describe('email successfully sent', () => {
     it('returns nothing', async () => {
-      const sendSms = jest.fn()
+      const sendEmail = jest.fn()
       const notifyClient = {
-        sendSms,
+        sendEmail,
       }
+
       const user = {
-        phoneNumber: '+12345678901',
-        tfaCode: 123456,
+        userName: 'test@email.ca',
+        displayName: 'Test Account',
       }
 
-      const mockedSendAuthTextMsg = sendAuthTextMsg(notifyClient, i18n)
-      await mockedSendAuthTextMsg({ user })
+      const mockedSendOrgInviteEmail = sendOrgInviteEmail(notifyClient, i18n)
+      await mockedSendOrgInviteEmail({
+        templateId: 'test_id',
+        user,
+        orgName: 'Test Org',
+      })
 
-      expect(notifyClient.sendSms).toHaveBeenCalledWith(
-        'bccda53c-278f-4d8c-a8d1-7b58cade2bd8',
-        user.phoneNumber,
+      expect(notifyClient.sendEmail).toHaveBeenCalledWith(
+        'test_id',
+        user.userName,
         {
           personalisation: {
-            tfa_code: user.tfaCode,
+            display_name: user.displayName,
+            organization_name: 'Test Org',
           },
         },
       )
@@ -63,30 +69,38 @@ describe('given the sendAuthTextMsg function', () => {
         },
       })
     })
-    describe('an error occurs while sending text message', () => {
+    describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
-        const sendSms = jest
+        const sendEmail = jest
           .fn()
           .mockRejectedValue(new Error('Notification error occurred.'))
         const notifyClient = {
-          sendSms,
+          sendEmail,
         }
+
         const user = {
-          phoneNumber: '+12345678901',
-          tfaCode: 123456,
+          userName: 'test@email.ca',
+          displayName: 'Test Account',
         }
 
         try {
-          const mockedSendAuthTextMsg = sendAuthTextMsg(notifyClient, i18n)
-          await mockedSendAuthTextMsg({ user })
+          const mockedSendOrgInviteEmail = sendOrgInviteEmail(
+            notifyClient,
+            i18n,
+          )
+          await mockedSendOrgInviteEmail({
+            templateId: 'test_id',
+            user,
+            orgName: 'Test Org',
+          })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to authenticate. Please try again.'),
+            new Error('Unable to send org invite email. Please try again.'),
           )
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending authentication code via text for ${user._key}: Error: Notification error occurred.`,
+          `Error ocurred when sending org invite email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -103,28 +117,36 @@ describe('given the sendAuthTextMsg function', () => {
         },
       })
     })
-    describe('an error occurs while sending text message', () => {
+    describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
-        const sendSms = jest
+        const sendEmail = jest
           .fn()
           .mockRejectedValue(new Error('Notification error occurred.'))
         const notifyClient = {
-          sendSms,
+          sendEmail,
         }
+
         const user = {
-          phoneNumber: '+12345678901',
-          tfaCode: 123456,
+          userName: 'test@email.ca',
+          displayName: 'Test Account',
         }
 
         try {
-          const mockedSendAuthTextMsg = sendAuthTextMsg(notifyClient, i18n)
-          await mockedSendAuthTextMsg({ user })
+          const mockedSendOrgInviteEmail = sendOrgInviteEmail(
+            notifyClient,
+            i18n,
+          )
+          await mockedSendOrgInviteEmail({
+            templateId: 'test_id',
+            user,
+            orgName: 'Test Org',
+          })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending authentication code via text for ${user._key}: Error: Notification error occurred.`,
+          `Error ocurred when sending org invite email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })

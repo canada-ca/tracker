@@ -1,16 +1,20 @@
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { sendOrgInviteEmail } = require('../notify')
+const englishMessages = require('../../locale/en/messages')
+const frenchMessages = require('../../locale/fr/messages')
+const { sendOrgInviteCreateAccount } = require('..')
 
-describe('given the sendOrgInviteEmail function', () => {
+describe('given the sendOrgInviteCreateAccount function', () => {
   let i18n
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
 
   beforeAll(async () => {
     console.error = mockedError
+  })
+
+  beforeEach(async () => {
+    consoleOutput = []
     i18n = setupI18n({
       language: 'en',
       locales: ['en', 'fr'],
@@ -20,10 +24,6 @@ describe('given the sendOrgInviteEmail function', () => {
         fr: frenchMessages,
       },
     })
-  })
-
-  beforeEach(async () => {
-    consoleOutput = []
   })
 
   describe('email successfully sent', () => {
@@ -38,11 +38,15 @@ describe('given the sendOrgInviteEmail function', () => {
         displayName: 'Test Account',
       }
 
-      const mockedSendOrgInviteEmail = sendOrgInviteEmail(notifyClient, i18n)
-      await mockedSendOrgInviteEmail({
+      const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(
+        notifyClient,
+        i18n,
+      )
+      await mockedSendOrgInviteCreateAccount({
         templateId: 'test_id',
         user,
         orgName: 'Test Org',
+        createAccountLink: 'TestLink.ca',
       })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
@@ -50,7 +54,8 @@ describe('given the sendOrgInviteEmail function', () => {
         user.userName,
         {
           personalisation: {
-            display_name: user.displayName,
+            create_account_link: 'TestLink.ca',
+            display_name: user.userName,
             organization_name: 'Test Org',
           },
         },
@@ -84,14 +89,15 @@ describe('given the sendOrgInviteEmail function', () => {
         }
 
         try {
-          const mockedSendOrgInviteEmail = sendOrgInviteEmail(
+          const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(
             notifyClient,
             i18n,
           )
-          await mockedSendOrgInviteEmail({
+          await mockedSendOrgInviteCreateAccount({
             templateId: 'test_id',
             user,
             orgName: 'Test Org',
+            createAccountLink: 'TestLink.ca',
           })
         } catch (err) {
           expect(err).toEqual(
@@ -100,7 +106,7 @@ describe('given the sendOrgInviteEmail function', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending org invite email for ${user._key}: Error: Notification error occurred.`,
+          `Error ocurred when sending org create account invite email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -132,21 +138,24 @@ describe('given the sendOrgInviteEmail function', () => {
         }
 
         try {
-          const mockedSendOrgInviteEmail = sendOrgInviteEmail(
+          const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(
             notifyClient,
             i18n,
           )
-          await mockedSendOrgInviteEmail({
+          await mockedSendOrgInviteCreateAccount({
             templateId: 'test_id',
             user,
             orgName: 'Test Org',
+            createAccountLink: 'TestLink.ca',
           })
         } catch (err) {
-          expect(err).toEqual(new Error('todo'))
+          expect(err).toEqual(
+            new Error('Unable to send org invite email. Please try again.'),
+          )
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending org invite email for ${user._key}: Error: Notification error occurred.`,
+          `Error ocurred when sending org create account invite email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })

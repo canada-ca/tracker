@@ -1,10 +1,10 @@
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { sendVerificationEmail } = require('../notify')
+const englishMessages = require('../../locale/en/messages')
+const frenchMessages = require('../../locale/fr/messages')
+const { sendAuthEmail } = require('..')
 
-describe('given the sendVerificationEmail function', () => {
+describe('given the sendAuthEmail function', () => {
   let i18n
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -35,25 +35,19 @@ describe('given the sendVerificationEmail function', () => {
       const user = {
         userName: 'test.email@email.ca',
         displayName: 'Test Account',
+        tfaCode: 123456,
       }
 
-      const mockedSendVerificationEmail = sendVerificationEmail(
-        notifyClient,
-        i18n,
-      )
-      await mockedSendVerificationEmail({
-        templateId: 'test-id',
-        verifyUrl: 'verify.url',
-        user,
-      })
+      const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
+      await mockedSendAuthEmail({ user })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-        'test-id',
+        'a517d99f-ddb2-4494-87e1-d5ae6ca53090',
         user.userName,
         {
           personalisation: {
             user: user.displayName,
-            verify_email_url: 'verify.url',
+            tfa_code: user.tfaCode,
           },
         },
       )
@@ -82,26 +76,20 @@ describe('given the sendVerificationEmail function', () => {
         const user = {
           userName: 'test.email@email.ca',
           displayName: 'Test Account',
+          tfaCode: 123456,
         }
 
         try {
-          const mockedSendVerificationEmail = sendVerificationEmail(
-            notifyClient,
-            i18n,
-          )
-          await mockedSendVerificationEmail({
-            templateId: 'test-id',
-            verifyUrl: 'verify.url',
-            user,
-          })
+          const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
+          await mockedSendAuthEmail({ user })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to send verification email. Please try again.'),
+            new Error('Unable to authenticate. Please try again.'),
           )
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending verification email for ${user._key}: Error: Notification error occurred.`,
+          `Error ocurred when sending authentication code via email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -129,24 +117,18 @@ describe('given the sendVerificationEmail function', () => {
         const user = {
           userName: 'test.email@email.ca',
           displayName: 'Test Account',
+          tfaCode: 123456,
         }
 
         try {
-          const mockedSendVerificationEmail = sendVerificationEmail(
-            notifyClient,
-            i18n,
-          )
-          await mockedSendVerificationEmail({
-            templateId: 'test-id',
-            verifyUrl: 'verify.url',
-            user,
-          })
+          const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
+          await mockedSendAuthEmail({ user })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending verification email for ${user._key}: Error: Notification error occurred.`,
+          `Error ocurred when sending authentication code via email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })

@@ -1,10 +1,10 @@
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { sendAuthEmail } = require('../notify')
+const englishMessages = require('../../locale/en/messages')
+const frenchMessages = require('../../locale/fr/messages')
+const { sendPasswordResetEmail } = require('..')
 
-describe('given the sendAuthEmail function', () => {
+describe('given the sendPasswordResetEmail function', () => {
   let i18n
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -32,22 +32,29 @@ describe('given the sendAuthEmail function', () => {
       const notifyClient = {
         sendEmail,
       }
+
       const user = {
-        userName: 'test.email@email.ca',
+        userName: 'test@email.ca',
         displayName: 'Test Account',
-        tfaCode: 123456,
       }
 
-      const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
-      await mockedSendAuthEmail({ user })
+      const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+        notifyClient,
+        i18n,
+      )
+      await mockedSendPasswordResetEmail({
+        templateId: 'test_id',
+        user,
+        resetUrl: 'reset.url',
+      })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-        'a517d99f-ddb2-4494-87e1-d5ae6ca53090',
+        'test_id',
         user.userName,
         {
           personalisation: {
             user: user.displayName,
-            tfa_code: user.tfaCode,
+            password_reset_url: 'reset.url',
           },
         },
       )
@@ -73,23 +80,30 @@ describe('given the sendAuthEmail function', () => {
         const notifyClient = {
           sendEmail,
         }
+
         const user = {
-          userName: 'test.email@email.ca',
+          userName: 'test@email.ca',
           displayName: 'Test Account',
-          tfaCode: 123456,
         }
 
         try {
-          const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
-          await mockedSendAuthEmail({ user })
+          const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+            notifyClient,
+            i18n,
+          )
+          await mockedSendPasswordResetEmail({
+            templateId: 'test_id',
+            user,
+            resetUrl: 'reset.url',
+          })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to authenticate. Please try again.'),
+            new Error('Unable to send password reset email. Please try again.'),
           )
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending authentication code via email for ${user._key}: Error: Notification error occurred.`,
+          `Error ocurred when sending password reset email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -114,21 +128,28 @@ describe('given the sendAuthEmail function', () => {
         const notifyClient = {
           sendEmail,
         }
+
         const user = {
-          userName: 'test.email@email.ca',
+          userName: 'test@email.ca',
           displayName: 'Test Account',
-          tfaCode: 123456,
         }
 
         try {
-          const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
-          await mockedSendAuthEmail({ user })
+          const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+            notifyClient,
+            i18n,
+          )
+          await mockedSendPasswordResetEmail({
+            templateId: 'test_id',
+            user,
+            resetUrl: 'reset.url',
+          })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending authentication code via email for ${user._key}: Error: Notification error occurred.`,
+          `Error ocurred when sending password reset email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })

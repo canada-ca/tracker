@@ -1,8 +1,8 @@
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { sendTfaTextMsg } = require('../notify')
+const englishMessages = require('../../locale/en/messages')
+const frenchMessages = require('../../locale/fr/messages')
+const { sendTfaTextMsg } = require('..')
 
 describe('given the sendTfaTextMsg function', () => {
   let i18n

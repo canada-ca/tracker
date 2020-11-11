@@ -1,10 +1,10 @@
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { sendPasswordResetEmail } = require('../notify')
+const englishMessages = require('../../locale/en/messages')
+const frenchMessages = require('../../locale/fr/messages')
+const { sendVerificationEmail } = require('..')
 
-describe('given the sendPasswordResetEmail function', () => {
+describe('given the sendVerificationEmail function', () => {
   let i18n
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -32,29 +32,28 @@ describe('given the sendPasswordResetEmail function', () => {
       const notifyClient = {
         sendEmail,
       }
-
       const user = {
-        userName: 'test@email.ca',
+        userName: 'test.email@email.ca',
         displayName: 'Test Account',
       }
 
-      const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+      const mockedSendVerificationEmail = sendVerificationEmail(
         notifyClient,
         i18n,
       )
-      await mockedSendPasswordResetEmail({
-        templateId: 'test_id',
+      await mockedSendVerificationEmail({
+        templateId: 'test-id',
+        verifyUrl: 'verify.url',
         user,
-        resetUrl: 'reset.url',
       })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-        'test_id',
+        'test-id',
         user.userName,
         {
           personalisation: {
             user: user.displayName,
-            password_reset_url: 'reset.url',
+            verify_email_url: 'verify.url',
           },
         },
       )
@@ -80,30 +79,29 @@ describe('given the sendPasswordResetEmail function', () => {
         const notifyClient = {
           sendEmail,
         }
-
         const user = {
-          userName: 'test@email.ca',
+          userName: 'test.email@email.ca',
           displayName: 'Test Account',
         }
 
         try {
-          const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+          const mockedSendVerificationEmail = sendVerificationEmail(
             notifyClient,
             i18n,
           )
-          await mockedSendPasswordResetEmail({
-            templateId: 'test_id',
+          await mockedSendVerificationEmail({
+            templateId: 'test-id',
+            verifyUrl: 'verify.url',
             user,
-            resetUrl: 'reset.url',
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to send password reset email. Please try again.'),
+            new Error('Unable to send verification email. Please try again.'),
           )
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending password reset email for ${user._key}: Error: Notification error occurred.`,
+          `Error ocurred when sending verification email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
@@ -128,28 +126,27 @@ describe('given the sendPasswordResetEmail function', () => {
         const notifyClient = {
           sendEmail,
         }
-
         const user = {
-          userName: 'test@email.ca',
+          userName: 'test.email@email.ca',
           displayName: 'Test Account',
         }
 
         try {
-          const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+          const mockedSendVerificationEmail = sendVerificationEmail(
             notifyClient,
             i18n,
           )
-          await mockedSendPasswordResetEmail({
-            templateId: 'test_id',
+          await mockedSendVerificationEmail({
+            templateId: 'test-id',
+            verifyUrl: 'verify.url',
             user,
-            resetUrl: 'reset.url',
           })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
-          `Error ocurred when sending password reset email for ${user._key}: Error: Notification error occurred.`,
+          `Error ocurred when sending verification email for ${user._key}: Error: Notification error occurred.`,
         ])
       })
     })
