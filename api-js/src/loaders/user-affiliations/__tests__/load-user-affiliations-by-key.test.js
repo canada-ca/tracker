@@ -1,12 +1,12 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { makeMigrations } = require('../../migrations')
-const { affiliationLoaderByKey } = require('../loaders')
+const { makeMigrations } = require('../../../../migrations')
+const { affiliationLoaderByKey } = require('../..')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
 
 describe('given a affiliationLoaderByKey dataloader', () => {
   let query,
