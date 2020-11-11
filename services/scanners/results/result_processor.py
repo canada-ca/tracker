@@ -324,12 +324,12 @@ def process_https(results):
         tags.append("https14")
 
     for tag in ["https2", "https3", "https4", "https5", "https6", "https7", "https8", "https9", "https10", "https11", "https12", "https13", "https14"]:
-        if tag in tags["https"]:
-            if not "https-fail" in tags["https"]:
-                tags["https"].append("https-fail")
+        if tag in tags:
+            if not "https-fail" in tags:
+                tags.append("https-fail")
 
-    if not "https-fail" in tags["https"]:
-            tags["https"].append("https-pass")
+    if not "https-fail" in tags:
+            tags.append("https-pass")
 
     return tags
 
@@ -365,12 +365,12 @@ def process_ssl(results):
         tags.append("ssl8")
 
     for tag in ["ssl2", "ssl3", "ssl4", "ssl6", "ssl7", "ssl8"]:
-        if tag in tags["ssl"]:
-            if not "ssl-fail" in tags["ssl"]:
-                tags["ssl"].append("ssl-fail")
+        if tag in tags:
+            if not "ssl-fail" in tags:
+                tags.append("ssl-fail")
 
-    if not "ssl-fail" in tags["ssl"] and "ssl5" in tags["ssl"]:
-            tags["ssl"].append("ssl-pass")
+    if not "ssl-fail" in tags and "ssl5" in tags:
+            tags.append("ssl-pass")
 
     return tags
 
