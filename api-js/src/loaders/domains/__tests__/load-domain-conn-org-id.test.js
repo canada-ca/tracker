@@ -4,14 +4,14 @@ const { stringify } = require('jest-matcher-utils')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
 const {
   domainLoaderConnectionsByOrgId,
   domainLoaderByKey,
-} = require('../loaders')
+} = require('../..')
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the load domain connection using org id function', () => {
