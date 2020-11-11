@@ -10,6 +10,7 @@ const expressPlayground = require('graphql-playground-middleware-express')
   .default
 const requestLanguage = require('express-request-language')
 const { setupI18n } = require('@lingui/core')
+const { t } = require('@lingui/macro')
 const fetch = require('isomorphic-fetch')
 const depthLimit = require('graphql-depth-limit')
 const { createComplexityLimitRule } = require('graphql-validation-complexity')
@@ -321,7 +322,39 @@ const createContext = ({ context, request, response }) => {
   }
 }
 
-const Server = (_PORT, context = {}) => {
+const createValidationRules = (
+  language,
+  maxDepth,
+  complexityCost,
+  scalarCost,
+  objectCost,
+  listFactor,
+) => {
+  const i18n = createI18n(language)
+
+  return [
+    depthLimit(maxDepth),
+    createComplexityLimitRule(complexityCost, {
+      scalarCost,
+      objectCost,
+      listFactor,
+      formatErrorMessage: (cost) => {
+        console.warn(`User attempted a costly request: ${cost}`)
+        return i18n._(t`Query error, query is too complex.`)
+      },
+    }),
+  ]
+}
+
+const Server = (
+  _PORT,
+  maxDepth,
+  complexityCost,
+  scalarCost,
+  objectCost,
+  listFactor,
+  context = {},
+) => {
   const app = express()
 
   app.use('*', cors())
@@ -340,27 +373,27 @@ const Server = (_PORT, context = {}) => {
     res.json({ ok: 'yes' })
   })
 
-  app.get(
-    '/graphql',
-    expressPlayground({
-      endpoint: '/graphql',
-    }),
-  )
+  // app.get(
+  //   '/graphql',
+  //   expressPlayground({
+  //     endpoint: '/graphql',
+  //   }),
+  // )
 
   app.use(
     '/graphql',
     graphqlHTTP(async (request, response, _graphQLParams) => ({
-      graphiql: false,
+      graphiql: true,
       schema: createSchema({ language: request.language }),
       context: createContext({ context, request, response }),
-      // validationRules:[
-      //   depthLimit(20),
-      //   createComplexityLimitRule(5000, {
-      //     scalarCost: 1,
-      //     objectCost: 20,
-      //     listFactor: 50,
-      //   }),
-      // ],
+      validationRules: createValidationRules(
+        request.language,
+        maxDepth,
+        complexityCost,
+        scalarCost,
+        objectCost,
+        listFactor,
+      ),
     })),
   )
 

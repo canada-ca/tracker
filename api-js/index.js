@@ -5,6 +5,11 @@ const {
   DB_PASS: rootPass,
   DB_URL: url,
   DB_NAME: databaseName,
+  DEPTH_LIMIT: maxDepth,
+  COST_LIMIT: complexityCost,
+  SCALAR_COST: scalarCost,
+  OBJECT_COST: objectCost,
+  LIST_FACTOR: listFactor,
 } = process.env
 
 const { ArangoTools } = require('arango-tools')
@@ -17,7 +22,11 @@ const { makeMigrations } = require('./migrations')
     makeMigrations({ databaseName, rootPass }),
   )
 
-  Server(PORT, { query, collections, transaction }).listen(PORT, (err) => {
+  Server(PORT, maxDepth, complexityCost, scalarCost, objectCost, listFactor, {
+    query,
+    collections,
+    transaction,
+  }).listen(PORT, (err) => {
     if (err) throw err
     console.log(`🚀 API listening on port ${PORT}`)
   })

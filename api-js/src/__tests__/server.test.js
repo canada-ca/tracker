@@ -17,4 +17,8 @@ describe('parse server', () => {
       expect(response.status).toEqual(200)
     })
   })
+  
+  describe('/graphql', () => {
+    
+  })
 })
