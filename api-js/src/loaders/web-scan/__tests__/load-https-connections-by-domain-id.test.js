@@ -5,13 +5,16 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
-const { sslLoaderByKey, sslLoaderConnectionsByDomainId } = require('../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
+const {
+  httpsLoaderConnectionsByDomainId,
+  httpsLoaderByKey,
+} = require('../..')
 
-describe('given the load ssl connection function', () => {
+describe('given the load https connection function', () => {
   let query, drop, truncate, migrate, collections, user, domain, i18n
 
   const consoleWarnOutput = []
@@ -61,49 +64,49 @@ describe('given the load ssl connection function', () => {
   })
 
   describe('given a successful load', () => {
-    let sslScan1, sslScan2
+    let httpsScan1, httpsScan2
     beforeEach(async () => {
-      sslScan1 = await collections.ssl.save({
+      httpsScan1 = await collections.https.save({
         timestamp: '2020-10-02T12:43:39Z',
       })
-      sslScan2 = await collections.ssl.save({
+      httpsScan2 = await collections.https.save({
         timestamp: '2020-10-03T12:43:39Z',
       })
-      await collections.domainsSSL.save({
-        _to: sslScan1._id,
+      await collections.domainsHTTPS.save({
+        _to: httpsScan1._id,
         _from: domain._id,
       })
-      await collections.domainsSSL.save({
-        _to: sslScan2._id,
+      await collections.domainsHTTPS.save({
+        _to: httpsScan2._id,
         _from: domain._id,
       })
     })
     describe('using no cursor', () => {
-      it('returns multiple ssl scans', async () => {
-        const connectionLoader = sslLoaderConnectionsByDomainId(
+      it('returns multiple https scans', async () => {
+        const connectionLoader = httpsLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslLoader = sslLoaderByKey(query, i18n)
-        const expectedSslScans = await sslLoader.loadMany([
-          sslScan1._key,
-          sslScan2._key,
+        const httpsLoader = httpsLoaderByKey(query, i18n)
+        const expectedHttpsScans = await httpsLoader.loadMany([
+          httpsScan1._key,
+          httpsScan2._key,
         ])
 
-        expectedSslScans[0].id = expectedSslScans[0]._key
-        expectedSslScans[0].domainId = domain._id
+        expectedHttpsScans[0].id = expectedHttpsScans[0]._key
+        expectedHttpsScans[0].domainId = domain._id
 
-        expectedSslScans[1].id = expectedSslScans[1]._key
-        expectedSslScans[1].domainId = domain._id
+        expectedHttpsScans[1].id = expectedHttpsScans[1]._key
+        expectedHttpsScans[1].domainId = domain._id
 
         const connectionArgs = {
           first: 5,
         }
 
-        const sslScans = await connectionLoader({
+        const httpsScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -111,15 +114,15 @@ describe('given the load ssl connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('ssl', expectedSslScans[0]._key),
+              cursor: toGlobalId('https', expectedHttpsScans[0]._key),
               node: {
-                ...expectedSslScans[0],
+                ...expectedHttpsScans[0],
               },
             },
             {
-              cursor: toGlobalId('ssl', expectedSslScans[1]._key),
+              cursor: toGlobalId('https', expectedHttpsScans[1]._key),
               node: {
-                ...expectedSslScans[1],
+                ...expectedHttpsScans[1],
               },
             },
           ],
@@ -127,41 +130,41 @@ describe('given the load ssl connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('ssl', expectedSslScans[0]._key),
-            endCursor: toGlobalId('ssl', expectedSslScans[1]._key),
+            startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
+            endCursor: toGlobalId('https', expectedHttpsScans[1]._key),
           },
         }
 
-        expect(sslScans).toEqual(expectedStructure)
+        expect(httpsScans).toEqual(expectedStructure)
       })
     })
     describe('using after cursor', () => {
-      it('returns ssl scan(s) after a given node id', async () => {
-        const connectionLoader = sslLoaderConnectionsByDomainId(
+      it('returns https scan(s) after a given node id', async () => {
+        const connectionLoader = httpsLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslLoader = sslLoaderByKey(query, i18n)
-        const expectedSslScans = await sslLoader.loadMany([
-          sslScan1._key,
-          sslScan2._key,
+        const httpsLoader = httpsLoaderByKey(query, i18n)
+        const expectedHttpsScans = await httpsLoader.loadMany([
+          httpsScan1._key,
+          httpsScan2._key,
         ])
 
-        expectedSslScans[0].id = expectedSslScans[0]._key
-        expectedSslScans[0].domainId = domain._id
+        expectedHttpsScans[0].id = expectedHttpsScans[0]._key
+        expectedHttpsScans[0].domainId = domain._id
 
-        expectedSslScans[1].id = expectedSslScans[1]._key
-        expectedSslScans[1].domainId = domain._id
+        expectedHttpsScans[1].id = expectedHttpsScans[1]._key
+        expectedHttpsScans[1].domainId = domain._id
 
         const connectionArgs = {
           first: 5,
-          after: toGlobalId('ssl', expectedSslScans[0]._key),
+          after: toGlobalId('https', expectedHttpsScans[0]._key),
         }
 
-        const sslScans = await connectionLoader({
+        const httpsScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -169,9 +172,9 @@ describe('given the load ssl connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('ssl', expectedSslScans[1]._key),
+              cursor: toGlobalId('https', expectedHttpsScans[1]._key),
               node: {
-                ...expectedSslScans[1],
+                ...expectedHttpsScans[1],
               },
             },
           ],
@@ -179,41 +182,41 @@ describe('given the load ssl connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('ssl', expectedSslScans[1]._key),
-            endCursor: toGlobalId('ssl', expectedSslScans[1]._key),
+            startCursor: toGlobalId('https', expectedHttpsScans[1]._key),
+            endCursor: toGlobalId('https', expectedHttpsScans[1]._key),
           },
         }
 
-        expect(sslScans).toEqual(expectedStructure)
+        expect(httpsScans).toEqual(expectedStructure)
       })
     })
     describe('using before cursor', () => {
-      it('returns ssl scan(s) before a given node id', async () => {
-        const connectionLoader = sslLoaderConnectionsByDomainId(
+      it('returns https scan(s) before a given node id', async () => {
+        const connectionLoader = httpsLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslLoader = sslLoaderByKey(query, i18n)
-        const expectedSslScans = await sslLoader.loadMany([
-          sslScan1._key,
-          sslScan2._key,
+        const httpsLoader = httpsLoaderByKey(query, i18n)
+        const expectedHttpsScans = await httpsLoader.loadMany([
+          httpsScan1._key,
+          httpsScan2._key,
         ])
 
-        expectedSslScans[0].id = expectedSslScans[0]._key
-        expectedSslScans[0].domainId = domain._id
+        expectedHttpsScans[0].id = expectedHttpsScans[0]._key
+        expectedHttpsScans[0].domainId = domain._id
 
-        expectedSslScans[1].id = expectedSslScans[1]._key
-        expectedSslScans[1].domainId = domain._id
+        expectedHttpsScans[1].id = expectedHttpsScans[1]._key
+        expectedHttpsScans[1].domainId = domain._id
 
         const connectionArgs = {
           first: 5,
-          before: toGlobalId('ssl', expectedSslScans[1]._key),
+          before: toGlobalId('https', expectedHttpsScans[1]._key),
         }
 
-        const sslScans = await connectionLoader({
+        const httpsScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -221,9 +224,9 @@ describe('given the load ssl connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('ssl', expectedSslScans[0]._key),
+              cursor: toGlobalId('https', expectedHttpsScans[0]._key),
               node: {
-                ...expectedSslScans[0],
+                ...expectedHttpsScans[0],
               },
             },
           ],
@@ -231,40 +234,40 @@ describe('given the load ssl connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('ssl', expectedSslScans[0]._key),
-            endCursor: toGlobalId('ssl', expectedSslScans[0]._key),
+            startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
+            endCursor: toGlobalId('https', expectedHttpsScans[0]._key),
           },
         }
 
-        expect(sslScans).toEqual(expectedStructure)
+        expect(httpsScans).toEqual(expectedStructure)
       })
     })
     describe('using first limit', () => {
-      it('returns the first n amount of ssl scan(s)', async () => {
-        const connectionLoader = sslLoaderConnectionsByDomainId(
+      it('returns the first n amount of https scan(s)', async () => {
+        const connectionLoader = httpsLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslLoader = sslLoaderByKey(query, i18n)
-        const expectedSslScans = await sslLoader.loadMany([
-          sslScan1._key,
-          sslScan2._key,
+        const httpsLoader = httpsLoaderByKey(query, i18n)
+        const expectedHttpsScans = await httpsLoader.loadMany([
+          httpsScan1._key,
+          httpsScan2._key,
         ])
 
-        expectedSslScans[0].id = expectedSslScans[0]._key
-        expectedSslScans[0].domainId = domain._id
+        expectedHttpsScans[0].id = expectedHttpsScans[0]._key
+        expectedHttpsScans[0].domainId = domain._id
 
-        expectedSslScans[1].id = expectedSslScans[1]._key
-        expectedSslScans[1].domainId = domain._id
+        expectedHttpsScans[1].id = expectedHttpsScans[1]._key
+        expectedHttpsScans[1].domainId = domain._id
 
         const connectionArgs = {
           first: 1,
         }
 
-        const sslScans = await connectionLoader({
+        const httpsScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -272,9 +275,9 @@ describe('given the load ssl connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('ssl', expectedSslScans[0]._key),
+              cursor: toGlobalId('https', expectedHttpsScans[0]._key),
               node: {
-                ...expectedSslScans[0],
+                ...expectedHttpsScans[0],
               },
             },
           ],
@@ -282,40 +285,40 @@ describe('given the load ssl connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('ssl', expectedSslScans[0]._key),
-            endCursor: toGlobalId('ssl', expectedSslScans[0]._key),
+            startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
+            endCursor: toGlobalId('https', expectedHttpsScans[0]._key),
           },
         }
 
-        expect(sslScans).toEqual(expectedStructure)
+        expect(httpsScans).toEqual(expectedStructure)
       })
     })
     describe('using last limit', () => {
-      it('returns the last n amount of ssl scan(s)', async () => {
-        const connectionLoader = sslLoaderConnectionsByDomainId(
+      it('returns the last n amount of https scan(s)', async () => {
+        const connectionLoader = httpsLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslLoader = sslLoaderByKey(query, i18n)
-        const expectedSslScans = await sslLoader.loadMany([
-          sslScan1._key,
-          sslScan2._key,
+        const httpsLoader = httpsLoaderByKey(query, i18n)
+        const expectedHttpsScans = await httpsLoader.loadMany([
+          httpsScan1._key,
+          httpsScan2._key,
         ])
 
-        expectedSslScans[0].id = expectedSslScans[0]._key
-        expectedSslScans[0].domainId = domain._id
+        expectedHttpsScans[0].id = expectedHttpsScans[0]._key
+        expectedHttpsScans[0].domainId = domain._id
 
-        expectedSslScans[1].id = expectedSslScans[1]._key
-        expectedSslScans[1].domainId = domain._id
+        expectedHttpsScans[1].id = expectedHttpsScans[1]._key
+        expectedHttpsScans[1].domainId = domain._id
 
         const connectionArgs = {
           last: 1,
         }
 
-        const sslScans = await connectionLoader({
+        const httpsScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -323,9 +326,9 @@ describe('given the load ssl connection function', () => {
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('ssl', expectedSslScans[1]._key),
+              cursor: toGlobalId('https', expectedHttpsScans[1]._key),
               node: {
-                ...expectedSslScans[1],
+                ...expectedHttpsScans[1],
               },
             },
           ],
@@ -333,52 +336,52 @@ describe('given the load ssl connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('ssl', expectedSslScans[1]._key),
-            endCursor: toGlobalId('ssl', expectedSslScans[1]._key),
+            startCursor: toGlobalId('https', expectedHttpsScans[1]._key),
+            endCursor: toGlobalId('https', expectedHttpsScans[1]._key),
           },
         }
 
-        expect(sslScans).toEqual(expectedStructure)
+        expect(httpsScans).toEqual(expectedStructure)
       })
     })
     describe('using date filter', () => {
-      let sslScan3
+      let httpsScan3
       beforeEach(async () => {
-        sslScan3 = await collections.ssl.save({
+        httpsScan3 = await collections.https.save({
           timestamp: '2020-10-04T12:43:39Z',
         })
-        await collections.domainsSSL.save({
-          _to: sslScan3._id,
+        await collections.domainsHTTPS.save({
+          _to: httpsScan3._id,
           _from: domain._id,
         })
       })
       describe('using start date filter', () => {
-        it('returns ssl scans at and after the start date', async () => {
-          const connectionLoader = sslLoaderConnectionsByDomainId(
+        it('returns https scans at and after the start date', async () => {
+          const connectionLoader = httpsLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const sslLoader = sslLoaderByKey(query)
-          const expectedSslScans = await sslLoader.loadMany([
-            sslScan2._key,
-            sslScan3._key,
+          const httpsLoader = httpsLoaderByKey(query, i18n)
+          const expectedHttpsScans = await httpsLoader.loadMany([
+            httpsScan2._key,
+            httpsScan3._key,
           ])
 
-          expectedSslScans[0].id = expectedSslScans[0]._key
-          expectedSslScans[0].domainId = domain._id
+          expectedHttpsScans[0].id = expectedHttpsScans[0]._key
+          expectedHttpsScans[0].domainId = domain._id
 
-          expectedSslScans[1].id = expectedSslScans[1]._key
-          expectedSslScans[1].domainId = domain._id
+          expectedHttpsScans[1].id = expectedHttpsScans[1]._key
+          expectedHttpsScans[1].domainId = domain._id
 
           const connectionArgs = {
             first: 5,
             startDate: '2020-10-03',
           }
 
-          const sslScans = await connectionLoader({
+          const httpsScans = await connectionLoader({
             domainId: domain._id,
             ...connectionArgs,
           })
@@ -386,15 +389,15 @@ describe('given the load ssl connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('ssl', expectedSslScans[0]._key),
+                cursor: toGlobalId('https', expectedHttpsScans[0]._key),
                 node: {
-                  ...expectedSslScans[0],
+                  ...expectedHttpsScans[0],
                 },
               },
               {
-                cursor: toGlobalId('ssl', expectedSslScans[1]._key),
+                cursor: toGlobalId('https', expectedHttpsScans[1]._key),
                 node: {
-                  ...expectedSslScans[1],
+                  ...expectedHttpsScans[1],
                 },
               },
             ],
@@ -402,41 +405,41 @@ describe('given the load ssl connection function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
-              startCursor: toGlobalId('ssl', expectedSslScans[0]._key),
-              endCursor: toGlobalId('ssl', expectedSslScans[1]._key),
+              startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
+              endCursor: toGlobalId('https', expectedHttpsScans[1]._key),
             },
           }
 
-          expect(sslScans).toEqual(expectedStructure)
+          expect(httpsScans).toEqual(expectedStructure)
         })
       })
       describe('using end date filter', () => {
-        it('returns ssl scans at and before the end date', async () => {
-          const connectionLoader = sslLoaderConnectionsByDomainId(
+        it('returns https scans at and before the end date', async () => {
+          const connectionLoader = httpsLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const sslLoader = sslLoaderByKey(query, i18n)
-          const expectedSslScans = await sslLoader.loadMany([
-            sslScan1._key,
-            sslScan2._key,
+          const httpsLoader = await httpsLoaderByKey(query, i18n)
+          const expectedHttpsScans = await httpsLoader.loadMany([
+            httpsScan1._key,
+            httpsScan2._key,
           ])
 
-          expectedSslScans[0].id = expectedSslScans[0]._key
-          expectedSslScans[0].domainId = domain._id
+          expectedHttpsScans[0].id = expectedHttpsScans[0]._key
+          expectedHttpsScans[0].domainId = domain._id
 
-          expectedSslScans[1].id = expectedSslScans[1]._key
-          expectedSslScans[1].domainId = domain._id
+          expectedHttpsScans[1].id = expectedHttpsScans[1]._key
+          expectedHttpsScans[1].domainId = domain._id
 
           const connectionArgs = {
             first: 5,
             endDate: '2020-10-03T13:50:00Z',
           }
 
-          const sslScans = await connectionLoader({
+          const httpsScans = await connectionLoader({
             domainId: domain._id,
             ...connectionArgs,
           })
@@ -444,15 +447,15 @@ describe('given the load ssl connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('ssl', expectedSslScans[0]._key),
+                cursor: toGlobalId('https', expectedHttpsScans[0]._key),
                 node: {
-                  ...expectedSslScans[0],
+                  ...expectedHttpsScans[0],
                 },
               },
               {
-                cursor: toGlobalId('ssl', expectedSslScans[1]._key),
+                cursor: toGlobalId('https', expectedHttpsScans[1]._key),
                 node: {
-                  ...expectedSslScans[1],
+                  ...expectedHttpsScans[1],
                 },
               },
             ],
@@ -460,28 +463,30 @@ describe('given the load ssl connection function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
-              startCursor: toGlobalId('ssl', expectedSslScans[0]._key),
-              endCursor: toGlobalId('ssl', expectedSslScans[1]._key),
+              startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
+              endCursor: toGlobalId('https', expectedHttpsScans[1]._key),
             },
           }
 
-          expect(sslScans).toEqual(expectedStructure)
+          expect(httpsScans).toEqual(expectedStructure)
         })
       })
       describe('using start and end date filters', () => {
         it('returns a scan on a specific date', async () => {
-          const connectionLoader = sslLoaderConnectionsByDomainId(
+          const connectionLoader = httpsLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const sslLoader = sslLoaderByKey(query, i18n)
-          const expectedSslScans = await sslLoader.loadMany([sslScan2._key])
+          const httpsLoader = httpsLoaderByKey(query, i18n)
+          const expectedHttpsScans = await httpsLoader.loadMany([
+            httpsScan2._key,
+          ])
 
-          expectedSslScans[0].id = expectedSslScans[0]._key
-          expectedSslScans[0].domainId = domain._id
+          expectedHttpsScans[0].id = expectedHttpsScans[0]._key
+          expectedHttpsScans[0].domainId = domain._id
 
           const connectionArgs = {
             first: 5,
@@ -489,7 +494,7 @@ describe('given the load ssl connection function', () => {
             endDate: '2020-10-03T23:59:59Z',
           }
 
-          const sslScans = await connectionLoader({
+          const httpsScans = await connectionLoader({
             domainId: domain._id,
             ...connectionArgs,
           })
@@ -497,9 +502,9 @@ describe('given the load ssl connection function', () => {
           const expectedStructure = {
             edges: [
               {
-                cursor: toGlobalId('ssl', expectedSslScans[0]._key),
+                cursor: toGlobalId('https', expectedHttpsScans[0]._key),
                 node: {
-                  ...expectedSslScans[0],
+                  ...expectedHttpsScans[0],
                 },
               },
             ],
@@ -507,20 +512,20 @@ describe('given the load ssl connection function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: true,
-              startCursor: toGlobalId('ssl', expectedSslScans[0]._key),
-              endCursor: toGlobalId('ssl', expectedSslScans[0]._key),
+              startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
+              endCursor: toGlobalId('https', expectedHttpsScans[0]._key),
             },
           }
 
-          expect(sslScans).toEqual(expectedStructure)
+          expect(httpsScans).toEqual(expectedStructure)
         })
       })
     })
-    describe('no ssl scans are found', () => {
+    describe('no https scans are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
 
-        const connectionLoader = sslLoaderConnectionsByDomainId(
+        const connectionLoader = httpsLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -531,7 +536,7 @@ describe('given the load ssl connection function', () => {
           first: 5,
         }
 
-        const sslScans = await connectionLoader({
+        const httpsScans = await connectionLoader({
           domainId: domain._id,
           ...connectionArgs,
         })
@@ -547,7 +552,7 @@ describe('given the load ssl connection function', () => {
           },
         }
 
-        expect(sslScans).toEqual(expectedStructure)
+        expect(httpsScans).toEqual(expectedStructure)
       })
     })
   })
@@ -566,7 +571,7 @@ describe('given the load ssl connection function', () => {
     describe('given an unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslLoaderConnectionsByDomainId(
+          const connectionLoader = httpsLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
@@ -583,19 +588,18 @@ describe('given the load ssl connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `ssl` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `https` connection.',
               ),
             )
           }
-
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: sslLoaderConnectionsByDomainId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
           ])
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslLoaderConnectionsByDomainId(
+          const connectionLoader = httpsLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
@@ -615,20 +619,19 @@ describe('given the load ssl connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `ssl` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `https` connection is not supported.',
               ),
             )
           }
-
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: sslLoaderConnectionsByDomainId.`,
+            `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
           ])
         })
       })
-      describe('both limits are below minimum', () => {
+      describe('limits are below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslLoaderConnectionsByDomainId(
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -647,19 +650,18 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `ssl` connection cannot be less than zero.',
+                  '`first` on the `https` connection cannot be less than zero.',
                 ),
               )
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: sslLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: httpsLoaderConnectionsByDomainId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslLoaderConnectionsByDomainId(
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -678,21 +680,20 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `ssl` connection cannot be less than zero.',
+                  '`last` on the `https` connection cannot be less than zero.',
                 ),
               )
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: sslLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: httpsLoaderConnectionsByDomainId.`,
             ])
           })
         })
       })
-      describe('both limits are above maximum', () => {
+      describe('limits are above maximum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslLoaderConnectionsByDomainId(
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -711,19 +712,18 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 101 records on the `ssl` connection exceeds the `first` limit of 100 records.',
+                  'Requesting 101 records on the `https` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 101 for: sslLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set to 101 for: httpsLoaderConnectionsByDomainId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslLoaderConnectionsByDomainId(
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -742,13 +742,12 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 500 records on the `ssl` connection exceeds the `last` limit of 100 records.',
+                  'Requesting 500 records on the `https` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: sslLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: httpsLoaderConnectionsByDomainId.`,
             ])
           })
         })
@@ -759,7 +758,7 @@ describe('given the load ssl connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslLoaderConnectionsByDomainId(
+              const connectionLoader = httpsLoaderConnectionsByDomainId(
                 query,
                 user._key,
                 cleanseInput,
@@ -785,7 +784,7 @@ describe('given the load ssl connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: httpsLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -795,7 +794,7 @@ describe('given the load ssl connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslLoaderConnectionsByDomainId(
+              const connectionLoader = httpsLoaderConnectionsByDomainId(
                 query,
                 user._key,
                 cleanseInput,
@@ -821,7 +820,7 @@ describe('given the load ssl connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: httpsLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -834,7 +833,7 @@ describe('given the load ssl connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = sslLoaderConnectionsByDomainId(
+        const connectionLoader = httpsLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -852,12 +851,12 @@ describe('given the load ssl connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load ssl scans. Please try again.'),
+            new Error('Unable to load https scans. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to get ssl information for ${domain._id}, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to get https information for ${domain._id}, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -870,7 +869,7 @@ describe('given the load ssl connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = sslLoaderConnectionsByDomainId(
+        const connectionLoader = httpsLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -888,12 +887,12 @@ describe('given the load ssl connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load ssl scans. Please try again.'),
+            new Error('Unable to load https scans. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to get ssl information for ${domain._id}, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to get https information for ${domain._id}, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
@@ -913,7 +912,7 @@ describe('given the load ssl connection function', () => {
     describe('given an unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslLoaderConnectionsByDomainId(
+          const connectionLoader = httpsLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
@@ -930,15 +929,14 @@ describe('given the load ssl connection function', () => {
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
-
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: sslLoaderConnectionsByDomainId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
           ])
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslLoaderConnectionsByDomainId(
+          const connectionLoader = httpsLoaderConnectionsByDomainId(
             query,
             user._key,
             cleanseInput,
@@ -958,16 +956,15 @@ describe('given the load ssl connection function', () => {
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
-
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: sslLoaderConnectionsByDomainId.`,
+            `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
           ])
         })
       })
-      describe('both limits are below minimum', () => {
+      describe('limits are below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslLoaderConnectionsByDomainId(
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -986,15 +983,14 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: sslLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: httpsLoaderConnectionsByDomainId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslLoaderConnectionsByDomainId(
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -1013,17 +1009,16 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: sslLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: httpsLoaderConnectionsByDomainId.`,
             ])
           })
         })
       })
-      describe('both limits are above maximum', () => {
+      describe('limits are above maximum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslLoaderConnectionsByDomainId(
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -1042,15 +1037,14 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 101 for: sslLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set to 101 for: httpsLoaderConnectionsByDomainId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslLoaderConnectionsByDomainId(
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
               query,
               user._key,
               cleanseInput,
@@ -1069,9 +1063,8 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
-
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: sslLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: httpsLoaderConnectionsByDomainId.`,
             ])
           })
         })
@@ -1082,7 +1075,7 @@ describe('given the load ssl connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslLoaderConnectionsByDomainId(
+              const connectionLoader = httpsLoaderConnectionsByDomainId(
                 query,
                 user._key,
                 cleanseInput,
@@ -1104,7 +1097,7 @@ describe('given the load ssl connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: httpsLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -1114,7 +1107,7 @@ describe('given the load ssl connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslLoaderConnectionsByDomainId(
+              const connectionLoader = httpsLoaderConnectionsByDomainId(
                 query,
                 user._key,
                 cleanseInput,
@@ -1136,7 +1129,7 @@ describe('given the load ssl connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: httpsLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -1149,7 +1142,7 @@ describe('given the load ssl connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = sslLoaderConnectionsByDomainId(
+        const connectionLoader = httpsLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -1170,7 +1163,7 @@ describe('given the load ssl connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to get ssl information for ${domain._id}, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to get https information for ${domain._id}, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -1183,7 +1176,7 @@ describe('given the load ssl connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = sslLoaderConnectionsByDomainId(
+        const connectionLoader = httpsLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
@@ -1204,7 +1197,7 @@ describe('given the load ssl connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to get ssl information for ${domain._id}, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to get https information for ${domain._id}, error: Error: Cursor Error Occurred.`,
         ])
       })
     })

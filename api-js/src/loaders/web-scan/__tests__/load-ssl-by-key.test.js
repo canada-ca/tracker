@@ -3,12 +3,12 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { httpsLoaderByKey } = require('../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { sslLoaderByKey } = require('../..')
 
-describe('given the httpsLoaderByKey function', () => {
+describe('given the sslLoaderByKey function', () => {
   let query, drop, truncate, migrate, collections, i18n
 
   const consoleErrorOutput = []
@@ -34,8 +34,8 @@ describe('given the httpsLoaderByKey function', () => {
   beforeEach(async () => {
     consoleErrorOutput.length = 0
     await truncate()
-    await collections.https.save({})
-    await collections.https.save({})
+    await collections.ssl.save({})
+    await collections.ssl.save({})
   })
 
   afterAll(async () => {
@@ -43,43 +43,43 @@ describe('given the httpsLoaderByKey function', () => {
   })
 
   describe('given a single id', () => {
-    it('returns a single https scan', async () => {
+    it('returns a single ssl scan', async () => {
       const expectedCursor = await query`
-      FOR httpsScan IN https
-        SORT httpsScan._key ASC LIMIT 1
-        RETURN httpsScan
+      FOR sslScan IN ssl
+        SORT sslScan._key ASC LIMIT 1
+        RETURN sslScan
       `
-      const expectedHttps = await expectedCursor.next()
+      const expectedSsl = await expectedCursor.next()
 
-      const loader = httpsLoaderByKey(query)
-      const https = await loader.load(expectedHttps._key)
+      const loader = sslLoaderByKey(query, i18n)
+      const ssl = await loader.load(expectedSsl._key)
 
-      expect(https).toEqual(expectedHttps)
+      expect(ssl).toEqual(expectedSsl)
     })
   })
   describe('given multiple ids', () => {
-    it('returns multiple https scans', async () => {
-      const httpsKeys = []
-      const expectedHttpsScans = []
+    it('returns multiple ssl scans', async () => {
+      const sslKeys = []
+      const expectedSslScans = []
 
       const expectedCursor = await query`
-      FOR httpsScan IN https
-        RETURN httpsScan
+      FOR sslScan IN ssl
+        RETURN sslScan
       `
 
       while (expectedCursor.hasNext()) {
-        const tempHttps = await expectedCursor.next()
-        httpsKeys.push(tempHttps._key)
-        expectedHttpsScans.push(tempHttps)
+        const tempSsl = await expectedCursor.next()
+        sslKeys.push(tempSsl._key)
+        expectedSslScans.push(tempSsl)
       }
 
-      const loader = httpsLoaderByKey(query)
-      const httpsScans = await loader.loadMany(httpsKeys)
+      const loader = sslLoaderByKey(query, i18n)
+      const sslScans = await loader.loadMany(sslKeys)
 
-      expect(httpsScans).toEqual(expectedHttpsScans)
+      expect(sslScans).toEqual(expectedSslScans)
     })
   })
-  describe('language is set to english', () => {
+  describe('language set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
         language: 'en',
@@ -96,17 +96,17 @@ describe('given the httpsLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsLoaderByKey(query, '1234', i18n)
+        const loader = sslLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find https scan. Please try again.'),
+            new Error('Unable to find ssl scan. Please try again.'),
           )
         }
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running httpsLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running sslLoaderByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -118,22 +118,22 @@ describe('given the httpsLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsLoaderByKey(query, '1234', i18n)
+        const loader = sslLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find https scan. Please try again.'),
+            new Error('Unable to find ssl scan. Please try again.'),
           )
         }
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running httpsLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running sslLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })
   })
-  describe('language is set to french', () => {
+  describe('language set to french', () => {
     beforeAll(() => {
       i18n = setupI18n({
         language: 'fr',
@@ -150,7 +150,7 @@ describe('given the httpsLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsLoaderByKey(query, '1234', i18n)
+        const loader = sslLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -158,7 +158,7 @@ describe('given the httpsLoaderByKey function', () => {
           expect(err).toEqual(new Error('todo'))
         }
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running httpsLoaderByKey: Error: Database error occurred.`,
+          'Database error occurred when user: 1234 running sslLoaderByKey: Error: Database error occurred.',
         ])
       })
     })
@@ -170,7 +170,7 @@ describe('given the httpsLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsLoaderByKey(query, '1234', i18n)
+        const loader = sslLoaderByKey(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -178,7 +178,7 @@ describe('given the httpsLoaderByKey function', () => {
           expect(err).toEqual(new Error('todo'))
         }
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running httpsLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running sslLoaderByKey: Error: Cursor error occurred.`,
         ])
       })
     })
