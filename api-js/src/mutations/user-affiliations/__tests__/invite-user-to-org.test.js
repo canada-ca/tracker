@@ -5,19 +5,19 @@ const bcrypt = require('bcrypt')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
 const { toGlobalId } = require('graphql-relay')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { cleanseInput } = require('../validators')
-const { tokenize, checkPermission, userRequired } = require('../auth')
+const { makeMigrations } = require('../../../../migrations')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../..')
+const { cleanseInput } = require('../../../validators')
+const { tokenize, checkPermission, userRequired } = require('../../../auth')
 const {
   orgLoaderByKey,
   userLoaderByKey,
   userLoaderByUserName,
-} = require('../loaders')
+} = require('../../../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

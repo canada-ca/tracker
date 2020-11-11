@@ -5,18 +5,18 @@ const bcrypt = require('bcrypt')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { cleanseInput } = require('../validators')
-const { checkPermission, tokenize, userRequired } = require('../auth')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../..')
+const { cleanseInput } = require('../../../validators')
+const { checkPermission, tokenize, userRequired } = require('../../../auth')
 const {
   userLoaderByUserName,
   orgLoaderByKey,
   userLoaderByKey,
-} = require('../loaders')
+} = require('../../../loaders')
 const { toGlobalId } = require('graphql-relay')
 
 describe('update a users role', () => {
