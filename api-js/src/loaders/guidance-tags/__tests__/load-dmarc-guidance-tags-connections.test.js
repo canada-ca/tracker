@@ -5,16 +5,16 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
 const {
-  sslGuidanceTagConnectionsLoader,
-  sslGuidanceTagLoader,
-} = require('../loaders')
+  dmarcGuidanceTagConnectionsLoader,
+  dmarcGuidanceTagLoader,
+} = require('../..')
 
-describe('when given the load ssl guidance tag connection function', () => {
+describe('when given the load dmarc guidance tag connection function', () => {
   let query, drop, truncate, migrate, collections, user, i18n
 
   const consoleWarnOutput = []
@@ -54,11 +54,11 @@ describe('when given the load ssl guidance tag connection function', () => {
       emailValidated: false,
     })
 
-    await collections.sslGuidanceTags.save({
-      _key: 'ssl1',
+    await collections.dmarcGuidanceTags.save({
+      _key: 'dmarc1',
     })
-    await collections.sslGuidanceTags.save({
-      _key: 'ssl2',
+    await collections.dmarcGuidanceTags.save({
+      _key: 'dmarc2',
     })
   })
 
@@ -68,39 +68,41 @@ describe('when given the load ssl guidance tag connection function', () => {
 
   describe('given a successful load', () => {
     describe('using no cursor', () => {
-      it('returns multiple ssl results', async () => {
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+      it('returns multiple dmarc results', async () => {
+        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslGuidanceTags = ['ssl1', 'ssl2']
+        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
         const connectionArgs = {
           first: 5,
         }
 
-        const sslTags = await connectionLoader({
-          sslGuidanceTags,
+        const dmarcTags = await connectionLoader({
+          dmarcGuidanceTags,
           ...connectionArgs,
         })
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
-        const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
+        const dmarcTagLoader = dmarcGuidanceTagLoader(query)
+        const expectedDmarcTags = await dmarcTagLoader.loadMany(
+          dmarcGuidanceTags,
+        )
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedSslTags[0]._key),
+              cursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
               node: {
-                ...expectedSslTags[0],
+                ...expectedDmarcTags[0],
               },
             },
             {
-              cursor: toGlobalId('guidanceTags', expectedSslTags[1]._key),
+              cursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
               node: {
-                ...expectedSslTags[1],
+                ...expectedDmarcTags[1],
               },
             },
           ],
@@ -108,44 +110,46 @@ describe('when given the load ssl guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedSslTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedSslTags[1]._key),
+            startCursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
+            endCursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
           },
         }
 
-        expect(sslTags).toEqual(expectedStructure)
+        expect(dmarcTags).toEqual(expectedStructure)
       })
     })
     describe('using after cursor', () => {
-      it('returns ssl result(s) after a given node id', async () => {
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+      it('returns dmarc result(s) after a given node id', async () => {
+        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslGuidanceTags = ['ssl1', 'ssl2']
+        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
-        const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
+        const dmarcTagLoader = dmarcGuidanceTagLoader(query)
+        const expectedDmarcTags = await dmarcTagLoader.loadMany(
+          dmarcGuidanceTags,
+        )
 
         const connectionArgs = {
           first: 5,
-          after: toGlobalId('guidanceTag', expectedSslTags[0]._key),
+          after: toGlobalId('guidanceTag', expectedDmarcTags[0]._key),
         }
 
-        const sslTags = await connectionLoader({
-          sslGuidanceTags,
+        const dmarcTags = await connectionLoader({
+          dmarcGuidanceTags,
           ...connectionArgs,
         })
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedSslTags[1]._key),
+              cursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
               node: {
-                ...expectedSslTags[1],
+                ...expectedDmarcTags[1],
               },
             },
           ],
@@ -153,44 +157,46 @@ describe('when given the load ssl guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTags', expectedSslTags[1]._key),
-            endCursor: toGlobalId('guidanceTags', expectedSslTags[1]._key),
+            startCursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
+            endCursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
           },
         }
 
-        expect(sslTags).toEqual(expectedStructure)
+        expect(dmarcTags).toEqual(expectedStructure)
       })
     })
     describe('using before cursor', () => {
-      it('returns ssl result(s) before a given node id', async () => {
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+      it('returns dmarc result(s) before a given node id', async () => {
+        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslGuidanceTags = ['ssl1', 'ssl2']
+        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
-        const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
+        const dmarcTagLoader = dmarcGuidanceTagLoader(query)
+        const expectedDmarcTags = await dmarcTagLoader.loadMany(
+          dmarcGuidanceTags,
+        )
 
         const connectionArgs = {
           first: 5,
-          before: toGlobalId('guidanceTags', expectedSslTags[1]._key),
+          before: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
         }
 
-        const sslTags = await connectionLoader({
-          sslGuidanceTags,
+        const dmarcTags = await connectionLoader({
+          dmarcGuidanceTags,
           ...connectionArgs,
         })
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedSslTags[0]._key),
+              cursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
               node: {
-                ...expectedSslTags[0],
+                ...expectedDmarcTags[0],
               },
             },
           ],
@@ -198,43 +204,45 @@ describe('when given the load ssl guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedSslTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedSslTags[0]._key),
+            startCursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
+            endCursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
           },
         }
 
-        expect(sslTags).toEqual(expectedStructure)
+        expect(dmarcTags).toEqual(expectedStructure)
       })
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslGuidanceTags = ['ssl1', 'ssl2']
+        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
-        const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
+        const dmarcTagLoader = dmarcGuidanceTagLoader(query)
+        const expectedDmarcTags = await dmarcTagLoader.loadMany(
+          dmarcGuidanceTags,
+        )
 
         const connectionArgs = {
           first: 1,
         }
 
-        const sslTags = await connectionLoader({
-          sslGuidanceTags,
+        const dmarcTags = await connectionLoader({
+          dmarcGuidanceTags,
           ...connectionArgs,
         })
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedSslTags[0]._key),
+              cursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
               node: {
-                ...expectedSslTags[0],
+                ...expectedDmarcTags[0],
               },
             },
           ],
@@ -242,43 +250,45 @@ describe('when given the load ssl guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedSslTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedSslTags[0]._key),
+            startCursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
+            endCursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
           },
         }
 
-        expect(sslTags).toEqual(expectedStructure)
+        expect(dmarcTags).toEqual(expectedStructure)
       })
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslGuidanceTags = ['ssl1', 'ssl2']
+        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
-        const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
+        const dmarcTagLoader = dmarcGuidanceTagLoader(query)
+        const expectedDmarcTags = await dmarcTagLoader.loadMany(
+          dmarcGuidanceTags,
+        )
 
         const connectionArgs = {
           last: 1,
         }
 
-        const sslTags = await connectionLoader({
-          sslGuidanceTags,
+        const dmarcTags = await connectionLoader({
+          dmarcGuidanceTags,
           ...connectionArgs,
         })
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedSslTags[1]._key),
+              cursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
               node: {
-                ...expectedSslTags[1],
+                ...expectedDmarcTags[1],
               },
             },
           ],
@@ -286,18 +296,18 @@ describe('when given the load ssl guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTags', expectedSslTags[1]._key),
-            endCursor: toGlobalId('guidanceTags', expectedSslTags[1]._key),
+            startCursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
+            endCursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
           },
         }
 
-        expect(sslTags).toEqual(expectedStructure)
+        expect(dmarcTags).toEqual(expectedStructure)
       })
     })
-    describe('no ssl results are found', () => {
+    describe('no dmarc results are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
@@ -308,9 +318,9 @@ describe('when given the load ssl guidance tag connection function', () => {
           first: 5,
         }
 
-        const sslGuidanceTags = ['ssl1', 'ssl2']
-        const sslTags = await connectionLoader({
-          sslGuidanceTags,
+        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
+        const dmarcTags = await connectionLoader({
+          dmarcGuidanceTags,
           ...connectionArgs,
         })
 
@@ -325,7 +335,7 @@ describe('when given the load ssl guidance tag connection function', () => {
           },
         }
 
-        expect(sslTags).toEqual(expectedStructure)
+        expect(dmarcTags).toEqual(expectedStructure)
       })
     })
   })
@@ -344,19 +354,19 @@ describe('when given the load ssl guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslGuidanceTagConnectionsLoader(
+          const connectionLoader = dmarcGuidanceTagConnectionsLoader(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const sslGuidanceTags = ['ssl1', 'ssl2']
+          const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
           const connectionArgs = {}
 
           try {
             await connectionLoader({
-              sslGuidanceTags,
+              dmarcGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
@@ -367,20 +377,20 @@ describe('when given the load ssl guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslGuidanceTagConnectionsLoader(
+          const connectionLoader = dmarcGuidanceTagConnectionsLoader(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const sslGuidanceTags = ['ssl1', 'ssl2']
+          const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
           const connectionArgs = {
             first: 1,
             last: 5,
@@ -388,7 +398,7 @@ describe('when given the load ssl guidance tag connection function', () => {
 
           try {
             await connectionLoader({
-              sslGuidanceTags,
+              dmarcGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
@@ -399,28 +409,28 @@ describe('when given the load ssl guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const sslGuidanceTags = ['ssl1', 'ssl2']
+            const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
               first: -1,
             }
 
             try {
               await connectionLoader({
-                sslGuidanceTags,
+                dmarcGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -431,27 +441,27 @@ describe('when given the load ssl guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const sslGuidanceTags = ['ssl1', 'ssl2']
+            const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
               last: -5,
             }
 
             try {
               await connectionLoader({
-                sslGuidanceTags,
+                dmarcGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -462,7 +472,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
             ])
           })
         })
@@ -470,21 +480,21 @@ describe('when given the load ssl guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const sslGuidanceTags = ['ssl1', 'ssl2']
+            const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
               first: 1000,
             }
 
             try {
               await connectionLoader({
-                sslGuidanceTags,
+                dmarcGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -495,27 +505,27 @@ describe('when given the load ssl guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: dmarcGuidanceTagConnectionsLoader.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const sslGuidanceTags = ['ssl1', 'ssl2']
+            const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
               last: 500,
             }
 
             try {
               await connectionLoader({
-                sslGuidanceTags,
+                dmarcGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -526,7 +536,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: dmarcGuidanceTagConnectionsLoader.`,
             ])
           })
         })
@@ -537,21 +547,21 @@ describe('when given the load ssl guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslGuidanceTagConnectionsLoader(
+              const connectionLoader = dmarcGuidanceTagConnectionsLoader(
                 query,
                 user._key,
                 cleanseInput,
                 i18n,
               )
 
-              const sslGuidanceTags = ['ssl1', 'ssl2']
+              const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
               const connectionArgs = {
                 first: invalidInput,
               }
 
               try {
                 await connectionLoader({
-                  sslGuidanceTags,
+                  dmarcGuidanceTags,
                   ...connectionArgs,
                 })
               } catch (err) {
@@ -564,7 +574,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: sslGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: dmarcGuidanceTagConnectionsLoader.`,
               ])
             })
           })
@@ -574,21 +584,21 @@ describe('when given the load ssl guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslGuidanceTagConnectionsLoader(
+              const connectionLoader = dmarcGuidanceTagConnectionsLoader(
                 query,
                 user._key,
                 cleanseInput,
                 i18n,
               )
 
-              const sslGuidanceTags = ['ssl1', 'ssl2']
+              const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
               const connectionArgs = {
                 last: invalidInput,
               }
 
               try {
                 await connectionLoader({
-                  sslGuidanceTags,
+                  dmarcGuidanceTags,
                   ...connectionArgs,
                 })
               } catch (err) {
@@ -601,7 +611,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: sslGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: dmarcGuidanceTagConnectionsLoader.`,
               ])
             })
           })
@@ -614,30 +624,30 @@ describe('when given the load ssl guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslGuidanceTags = ['ssl1', 'ssl2']
+        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
         const connectionArgs = {
           first: 5,
         }
         try {
           await connectionLoader({
-            sslGuidanceTags,
+            dmarcGuidanceTags,
             ...connectionArgs,
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load ssl guidance tags. Please try again.'),
+            new Error('Unable to load dmarc guidance tags. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in sslGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -650,30 +660,30 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslGuidanceTags = ['ssl1', 'ssl2']
+        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
         const connectionArgs = {
           first: 5,
         }
         try {
           await connectionLoader({
-            sslGuidanceTags,
+            dmarcGuidanceTags,
             ...connectionArgs,
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load ssl guidance tags. Please try again.'),
+            new Error('Unable to load dmarc guidance tags. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in sslGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
@@ -693,39 +703,39 @@ describe('when given the load ssl guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslGuidanceTagConnectionsLoader(
+          const connectionLoader = dmarcGuidanceTagConnectionsLoader(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const sslGuidanceTags = ['ssl1', 'ssl2']
+          const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
           const connectionArgs = {}
 
           try {
             await connectionLoader({
-              sslGuidanceTags,
+              dmarcGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = sslGuidanceTagConnectionsLoader(
+          const connectionLoader = dmarcGuidanceTagConnectionsLoader(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const sslGuidanceTags = ['ssl1', 'ssl2']
+          const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
           const connectionArgs = {
             first: 1,
             last: 5,
@@ -733,69 +743,69 @@ describe('when given the load ssl guidance tag connection function', () => {
 
           try {
             await connectionLoader({
-              sslGuidanceTags,
+              dmarcGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: sslGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const sslGuidanceTags = ['ssl1', 'ssl2']
+            const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
               first: -1,
             }
 
             try {
               await connectionLoader({
-                sslGuidanceTags,
+                dmarcGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const sslGuidanceTags = ['ssl1', 'ssl2']
+            const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
               last: -5,
             }
 
             try {
               await connectionLoader({
-                sslGuidanceTags,
+                dmarcGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
             ])
           })
         })
@@ -803,55 +813,55 @@ describe('when given the load ssl guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const sslGuidanceTags = ['ssl1', 'ssl2']
+            const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
               first: 1000,
             }
 
             try {
               await connectionLoader({
-                sslGuidanceTags,
+                dmarcGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: dmarcGuidanceTagConnectionsLoader.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = sslGuidanceTagConnectionsLoader(
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const sslGuidanceTags = ['ssl1', 'ssl2']
+            const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
               last: 500,
             }
 
             try {
               await connectionLoader({
-                sslGuidanceTags,
+                dmarcGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: sslGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: dmarcGuidanceTagConnectionsLoader.`,
             ])
           })
         })
@@ -862,21 +872,21 @@ describe('when given the load ssl guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslGuidanceTagConnectionsLoader(
+              const connectionLoader = dmarcGuidanceTagConnectionsLoader(
                 query,
                 user._key,
                 cleanseInput,
                 i18n,
               )
 
-              const sslGuidanceTags = ['ssl1', 'ssl2']
+              const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
               const connectionArgs = {
                 first: invalidInput,
               }
 
               try {
                 await connectionLoader({
-                  sslGuidanceTags,
+                  dmarcGuidanceTags,
                   ...connectionArgs,
                 })
               } catch (err) {
@@ -885,7 +895,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: sslGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: dmarcGuidanceTagConnectionsLoader.`,
               ])
             })
           })
@@ -895,21 +905,21 @@ describe('when given the load ssl guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = sslGuidanceTagConnectionsLoader(
+              const connectionLoader = dmarcGuidanceTagConnectionsLoader(
                 query,
                 user._key,
                 cleanseInput,
                 i18n,
               )
 
-              const sslGuidanceTags = ['ssl1', 'ssl2']
+              const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
               const connectionArgs = {
                 last: invalidInput,
               }
 
               try {
                 await connectionLoader({
-                  sslGuidanceTags,
+                  dmarcGuidanceTags,
                   ...connectionArgs,
                 })
               } catch (err) {
@@ -918,7 +928,7 @@ describe('when given the load ssl guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: sslGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: dmarcGuidanceTagConnectionsLoader.`,
               ])
             })
           })
@@ -931,20 +941,20 @@ describe('when given the load ssl guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslGuidanceTags = ['ssl1', 'ssl2']
+        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
         const connectionArgs = {
           first: 5,
         }
         try {
           await connectionLoader({
-            sslGuidanceTags,
+            dmarcGuidanceTags,
             ...connectionArgs,
           })
         } catch (err) {
@@ -952,7 +962,7 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in sslGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -965,20 +975,20 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
+        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const sslGuidanceTags = ['ssl1', 'ssl2']
+        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
         const connectionArgs = {
           first: 5,
         }
         try {
           await connectionLoader({
-            sslGuidanceTags,
+            dmarcGuidanceTags,
             ...connectionArgs,
           })
         } catch (err) {
@@ -986,7 +996,7 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in sslGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
         ])
       })
     })

@@ -5,14 +5,14 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
 const {
   spfGuidanceTagConnectionsLoader,
   spfGuidanceTagLoader,
-} = require('../loaders')
+} = require('../..')
 
 describe('when given the load spf guidance tag connection function', () => {
   let query, drop, truncate, migrate, collections, user, i18n

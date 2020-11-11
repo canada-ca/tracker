@@ -5,16 +5,16 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
 const {
-  httpsGuidanceTagConnectionsLoader,
-  httpsGuidanceTagLoader,
-} = require('../loaders')
+  dkimGuidanceTagConnectionsLoader,
+  dkimGuidanceTagLoader,
+} = require('../..')
 
-describe('when given the load https guidance tag connection function', () => {
+describe('when given the load dkim guidance tag connection function', () => {
   let query, drop, truncate, migrate, collections, user, i18n
 
   const consoleWarnOutput = []
@@ -54,11 +54,11 @@ describe('when given the load https guidance tag connection function', () => {
       emailValidated: false,
     })
 
-    await collections.httpsGuidanceTags.save({
-      _key: 'https1',
+    await collections.dkimGuidanceTags.save({
+      _key: 'dkim1',
     })
-    await collections.httpsGuidanceTags.save({
-      _key: 'https2',
+    await collections.dkimGuidanceTags.save({
+      _key: 'dkim2',
     })
   })
 
@@ -68,41 +68,39 @@ describe('when given the load https guidance tag connection function', () => {
 
   describe('given a successful load', () => {
     describe('using no cursor', () => {
-      it('returns multiple https results', async () => {
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+      it('returns multiple dkim results', async () => {
+        const connectionLoader = dkimGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const httpsGuidanceTags = ['https1', 'https2']
+        const dkimGuidanceTags = ['dkim1', 'dkim2']
         const connectionArgs = {
           first: 5,
         }
 
-        const httpsTags = await connectionLoader({
-          httpsGuidanceTags,
+        const dkimTags = await connectionLoader({
+          dkimGuidanceTags,
           ...connectionArgs,
         })
 
-        const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(
-          httpsGuidanceTags,
-        )
+        const dkimTagLoader = dkimGuidanceTagLoader(query)
+        const expectedDkimTags = await dkimTagLoader.loadMany(dkimGuidanceTags)
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
+              cursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
               node: {
-                ...expectedHttpsTags[0],
+                ...expectedDkimTags[0],
               },
             },
             {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+              cursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
               node: {
-                ...expectedHttpsTags[1],
+                ...expectedDkimTags[1],
               },
             },
           ],
@@ -110,46 +108,44 @@ describe('when given the load https guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+            startCursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
+            endCursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
           },
         }
 
-        expect(httpsTags).toEqual(expectedStructure)
+        expect(dkimTags).toEqual(expectedStructure)
       })
     })
     describe('using after cursor', () => {
-      it('returns https result(s) after a given node id', async () => {
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+      it('returns dkim result(s) after a given node id', async () => {
+        const connectionLoader = dkimGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const httpsGuidanceTags = ['https1', 'https2']
+        const dkimGuidanceTags = ['dkim1', 'dkim2']
 
-        const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(
-          httpsGuidanceTags,
-        )
+        const dkimTagLoader = dkimGuidanceTagLoader(query)
+        const expectedDkimTags = await dkimTagLoader.loadMany(dkimGuidanceTags)
 
         const connectionArgs = {
           first: 5,
-          after: toGlobalId('guidanceTag', expectedHttpsTags[0]._key),
+          after: toGlobalId('guidanceTag', expectedDkimTags[0]._key),
         }
 
-        const httpsTags = await connectionLoader({
-          httpsGuidanceTags,
+        const dkimTags = await connectionLoader({
+          dkimGuidanceTags,
           ...connectionArgs,
         })
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+              cursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
               node: {
-                ...expectedHttpsTags[1],
+                ...expectedDkimTags[1],
               },
             },
           ],
@@ -157,46 +153,44 @@ describe('when given the load https guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
-            endCursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+            startCursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
+            endCursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
           },
         }
 
-        expect(httpsTags).toEqual(expectedStructure)
+        expect(dkimTags).toEqual(expectedStructure)
       })
     })
     describe('using before cursor', () => {
-      it('returns https result(s) before a given node id', async () => {
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+      it('returns dkim result(s) before a given node id', async () => {
+        const connectionLoader = dkimGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const httpsGuidanceTags = ['https1', 'https2']
+        const dkimGuidanceTags = ['dkim1', 'dkim2']
 
-        const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(
-          httpsGuidanceTags,
-        )
+        const dkimTagLoader = dkimGuidanceTagLoader(query)
+        const expectedDkimTags = await dkimTagLoader.loadMany(dkimGuidanceTags)
 
         const connectionArgs = {
           first: 5,
-          before: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+          before: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
         }
 
-        const httpsTags = await connectionLoader({
-          httpsGuidanceTags,
+        const dkimTags = await connectionLoader({
+          dkimGuidanceTags,
           ...connectionArgs,
         })
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
+              cursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
               node: {
-                ...expectedHttpsTags[0],
+                ...expectedDkimTags[0],
               },
             },
           ],
@@ -204,45 +198,43 @@ describe('when given the load https guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
+            startCursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
+            endCursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
           },
         }
 
-        expect(httpsTags).toEqual(expectedStructure)
+        expect(dkimTags).toEqual(expectedStructure)
       })
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = dkimGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const httpsGuidanceTags = ['https1', 'https2']
+        const dkimGuidanceTags = ['dkim1', 'dkim2']
 
-        const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(
-          httpsGuidanceTags,
-        )
+        const dkimTagLoader = dkimGuidanceTagLoader(query)
+        const expectedDkimTags = await dkimTagLoader.loadMany(dkimGuidanceTags)
 
         const connectionArgs = {
           first: 1,
         }
 
-        const httpsTags = await connectionLoader({
-          httpsGuidanceTags,
+        const dkimTags = await connectionLoader({
+          dkimGuidanceTags,
           ...connectionArgs,
         })
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
+              cursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
               node: {
-                ...expectedHttpsTags[0],
+                ...expectedDkimTags[0],
               },
             },
           ],
@@ -250,45 +242,43 @@ describe('when given the load https guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
+            startCursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
+            endCursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
           },
         }
 
-        expect(httpsTags).toEqual(expectedStructure)
+        expect(dkimTags).toEqual(expectedStructure)
       })
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = dkimGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const httpsGuidanceTags = ['https1', 'https2']
+        const dkimGuidanceTags = ['dkim1', 'dkim2']
 
-        const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(
-          httpsGuidanceTags,
-        )
+        const dkimTagLoader = dkimGuidanceTagLoader(query)
+        const expectedDkimTags = await dkimTagLoader.loadMany(dkimGuidanceTags)
 
         const connectionArgs = {
           last: 1,
         }
 
-        const httpsTags = await connectionLoader({
-          httpsGuidanceTags,
+        const dkimTags = await connectionLoader({
+          dkimGuidanceTags,
           ...connectionArgs,
         })
 
         const expectedStructure = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+              cursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
               node: {
-                ...expectedHttpsTags[1],
+                ...expectedDkimTags[1],
               },
             },
           ],
@@ -296,18 +286,18 @@ describe('when given the load https guidance tag connection function', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: true,
-            startCursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
-            endCursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
+            startCursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
+            endCursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
           },
         }
 
-        expect(httpsTags).toEqual(expectedStructure)
+        expect(dkimTags).toEqual(expectedStructure)
       })
     })
-    describe('no https results are found', () => {
+    describe('no dkim results are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = dkimGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
@@ -318,9 +308,9 @@ describe('when given the load https guidance tag connection function', () => {
           first: 5,
         }
 
-        const httpsGuidanceTags = ['https1', 'https2']
-        const httpsTags = await connectionLoader({
-          httpsGuidanceTags,
+        const dkimGuidanceTags = ['dkim1', 'dkim2']
+        const dkimTags = await connectionLoader({
+          dkimGuidanceTags,
           ...connectionArgs,
         })
 
@@ -335,7 +325,7 @@ describe('when given the load https guidance tag connection function', () => {
           },
         }
 
-        expect(httpsTags).toEqual(expectedStructure)
+        expect(dkimTags).toEqual(expectedStructure)
       })
     })
   })
@@ -354,19 +344,19 @@ describe('when given the load https guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = httpsGuidanceTagConnectionsLoader(
+          const connectionLoader = dkimGuidanceTagConnectionsLoader(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const httpsGuidanceTags = ['https1', 'https2']
+          const dkimGuidanceTags = ['dkim1', 'dkim2']
           const connectionArgs = {}
 
           try {
             await connectionLoader({
-              httpsGuidanceTags,
+              dkimGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
@@ -377,20 +367,20 @@ describe('when given the load https guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = httpsGuidanceTagConnectionsLoader(
+          const connectionLoader = dkimGuidanceTagConnectionsLoader(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const httpsGuidanceTags = ['https1', 'https2']
+          const dkimGuidanceTags = ['dkim1', 'dkim2']
           const connectionArgs = {
             first: 1,
             last: 5,
@@ -398,7 +388,7 @@ describe('when given the load https guidance tag connection function', () => {
 
           try {
             await connectionLoader({
-              httpsGuidanceTags,
+              dkimGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
@@ -409,28 +399,28 @@ describe('when given the load https guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = dkimGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const httpsGuidanceTags = ['https1', 'https2']
+            const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
               first: -1,
             }
 
             try {
               await connectionLoader({
-                httpsGuidanceTags,
+                dkimGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -441,27 +431,27 @@ describe('when given the load https guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = dkimGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const httpsGuidanceTags = ['https1', 'https2']
+            const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
               last: -5,
             }
 
             try {
               await connectionLoader({
-                httpsGuidanceTags,
+                dkimGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -472,7 +462,7 @@ describe('when given the load https guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
             ])
           })
         })
@@ -480,21 +470,21 @@ describe('when given the load https guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = dkimGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const httpsGuidanceTags = ['https1', 'https2']
+            const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
               first: 1000,
             }
 
             try {
               await connectionLoader({
-                httpsGuidanceTags,
+                dkimGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -505,27 +495,27 @@ describe('when given the load https guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: dkimGuidanceTagConnectionsLoader.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = dkimGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const httpsGuidanceTags = ['https1', 'https2']
+            const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
               last: 500,
             }
 
             try {
               await connectionLoader({
-                httpsGuidanceTags,
+                dkimGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
@@ -536,7 +526,7 @@ describe('when given the load https guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: dkimGuidanceTagConnectionsLoader.`,
             ])
           })
         })
@@ -547,21 +537,21 @@ describe('when given the load https guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = httpsGuidanceTagConnectionsLoader(
+              const connectionLoader = dkimGuidanceTagConnectionsLoader(
                 query,
                 user._key,
                 cleanseInput,
                 i18n,
               )
 
-              const httpsGuidanceTags = ['https1', 'https2']
+              const dkimGuidanceTags = ['dkim1', 'dkim2']
               const connectionArgs = {
                 first: invalidInput,
               }
 
               try {
                 await connectionLoader({
-                  httpsGuidanceTags,
+                  dkimGuidanceTags,
                   ...connectionArgs,
                 })
               } catch (err) {
@@ -574,7 +564,7 @@ describe('when given the load https guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: httpsGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimGuidanceTagConnectionsLoader.`,
               ])
             })
           })
@@ -584,21 +574,21 @@ describe('when given the load https guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = httpsGuidanceTagConnectionsLoader(
+              const connectionLoader = dkimGuidanceTagConnectionsLoader(
                 query,
                 user._key,
                 cleanseInput,
                 i18n,
               )
 
-              const httpsGuidanceTags = ['https1', 'https2']
+              const dkimGuidanceTags = ['dkim1', 'dkim2']
               const connectionArgs = {
                 last: invalidInput,
               }
 
               try {
                 await connectionLoader({
-                  httpsGuidanceTags,
+                  dkimGuidanceTags,
                   ...connectionArgs,
                 })
               } catch (err) {
@@ -611,7 +601,7 @@ describe('when given the load https guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: httpsGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimGuidanceTagConnectionsLoader.`,
               ])
             })
           })
@@ -624,30 +614,30 @@ describe('when given the load https guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = dkimGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const httpsGuidanceTags = ['https1', 'https2']
+        const dkimGuidanceTags = ['dkim1', 'dkim2']
         const connectionArgs = {
           first: 5,
         }
         try {
           await connectionLoader({
-            httpsGuidanceTags,
+            dkimGuidanceTags,
             ...connectionArgs,
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load https guidance tags. Please try again.'),
+            new Error('Unable to load dkim guidance tags. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in httpsGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -660,30 +650,30 @@ describe('when given the load https guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = dkimGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const httpsGuidanceTags = ['https1', 'https2']
+        const dkimGuidanceTags = ['dkim1', 'dkim2']
         const connectionArgs = {
           first: 5,
         }
         try {
           await connectionLoader({
-            httpsGuidanceTags,
+            dkimGuidanceTags,
             ...connectionArgs,
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load https guidance tags. Please try again.'),
+            new Error('Unable to load dkim guidance tags. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in httpsGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
@@ -703,39 +693,39 @@ describe('when given the load https guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = httpsGuidanceTagConnectionsLoader(
+          const connectionLoader = dkimGuidanceTagConnectionsLoader(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const httpsGuidanceTags = ['https1', 'https2']
+          const dkimGuidanceTags = ['dkim1', 'dkim2']
           const connectionArgs = {}
 
           try {
             await connectionLoader({
-              httpsGuidanceTags,
+              dkimGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = httpsGuidanceTagConnectionsLoader(
+          const connectionLoader = dkimGuidanceTagConnectionsLoader(
             query,
             user._key,
             cleanseInput,
             i18n,
           )
 
-          const httpsGuidanceTags = ['https1', 'https2']
+          const dkimGuidanceTags = ['dkim1', 'dkim2']
           const connectionArgs = {
             first: 1,
             last: 5,
@@ -743,69 +733,69 @@ describe('when given the load https guidance tag connection function', () => {
 
           try {
             await connectionLoader({
-              httpsGuidanceTags,
+              dkimGuidanceTags,
               ...connectionArgs,
             })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = dkimGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const httpsGuidanceTags = ['https1', 'https2']
+            const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
               first: -1,
             }
 
             try {
               await connectionLoader({
-                httpsGuidanceTags,
+                dkimGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = dkimGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const httpsGuidanceTags = ['https1', 'https2']
+            const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
               last: -5,
             }
 
             try {
               await connectionLoader({
-                httpsGuidanceTags,
+                dkimGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
             ])
           })
         })
@@ -813,55 +803,55 @@ describe('when given the load https guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = dkimGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const httpsGuidanceTags = ['https1', 'https2']
+            const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
               first: 1000,
             }
 
             try {
               await connectionLoader({
-                httpsGuidanceTags,
+                dkimGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: dkimGuidanceTagConnectionsLoader.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = dkimGuidanceTagConnectionsLoader(
               query,
               user._key,
               cleanseInput,
               i18n,
             )
 
-            const httpsGuidanceTags = ['https1', 'https2']
+            const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
               last: 500,
             }
 
             try {
               await connectionLoader({
-                httpsGuidanceTags,
+                dkimGuidanceTags,
                 ...connectionArgs,
               })
             } catch (err) {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: dkimGuidanceTagConnectionsLoader.`,
             ])
           })
         })
@@ -872,21 +862,21 @@ describe('when given the load https guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = httpsGuidanceTagConnectionsLoader(
+              const connectionLoader = dkimGuidanceTagConnectionsLoader(
                 query,
                 user._key,
                 cleanseInput,
                 i18n,
               )
 
-              const httpsGuidanceTags = ['https1', 'https2']
+              const dkimGuidanceTags = ['dkim1', 'dkim2']
               const connectionArgs = {
                 first: invalidInput,
               }
 
               try {
                 await connectionLoader({
-                  httpsGuidanceTags,
+                  dkimGuidanceTags,
                   ...connectionArgs,
                 })
               } catch (err) {
@@ -895,7 +885,7 @@ describe('when given the load https guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: httpsGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimGuidanceTagConnectionsLoader.`,
               ])
             })
           })
@@ -905,21 +895,21 @@ describe('when given the load https guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = httpsGuidanceTagConnectionsLoader(
+              const connectionLoader = dkimGuidanceTagConnectionsLoader(
                 query,
                 user._key,
                 cleanseInput,
                 i18n,
               )
 
-              const httpsGuidanceTags = ['https1', 'https2']
+              const dkimGuidanceTags = ['dkim1', 'dkim2']
               const connectionArgs = {
                 last: invalidInput,
               }
 
               try {
                 await connectionLoader({
-                  httpsGuidanceTags,
+                  dkimGuidanceTags,
                   ...connectionArgs,
                 })
               } catch (err) {
@@ -928,7 +918,7 @@ describe('when given the load https guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: httpsGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimGuidanceTagConnectionsLoader.`,
               ])
             })
           })
@@ -941,20 +931,20 @@ describe('when given the load https guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = dkimGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const httpsGuidanceTags = ['https1', 'https2']
+        const dkimGuidanceTags = ['dkim1', 'dkim2']
         const connectionArgs = {
           first: 5,
         }
         try {
           await connectionLoader({
-            httpsGuidanceTags,
+            dkimGuidanceTags,
             ...connectionArgs,
           })
         } catch (err) {
@@ -962,7 +952,7 @@ describe('when given the load https guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in httpsGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -975,20 +965,20 @@ describe('when given the load https guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = dkimGuidanceTagConnectionsLoader(
           query,
           user._key,
           cleanseInput,
           i18n,
         )
 
-        const httpsGuidanceTags = ['https1', 'https2']
+        const dkimGuidanceTags = ['dkim1', 'dkim2']
         const connectionArgs = {
           first: 5,
         }
         try {
           await connectionLoader({
-            httpsGuidanceTags,
+            dkimGuidanceTags,
             ...connectionArgs,
           })
         } catch (err) {
@@ -996,7 +986,7 @@ describe('when given the load https guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in httpsGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
         ])
       })
     })

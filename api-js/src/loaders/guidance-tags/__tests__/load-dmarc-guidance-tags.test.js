@@ -3,12 +3,12 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { httpsGuidanceTagLoader } = require('../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { dmarcGuidanceTagLoader } = require('../..')
 
-describe('given the httpsGuidanceTagLoader function', () => {
+describe('given the dmarcGuidanceTagLoader function', () => {
   let query, drop, truncate, migrate, collections, i18n
 
   const consoleErrorOutput = []
@@ -35,8 +35,8 @@ describe('given the httpsGuidanceTagLoader function', () => {
     consoleErrorOutput.length = 0
 
     await truncate()
-    await collections.httpsGuidanceTags.save({})
-    await collections.httpsGuidanceTags.save({})
+    await collections.dmarcGuidanceTags.save({})
+    await collections.dmarcGuidanceTags.save({})
   })
 
   afterAll(async () => {
@@ -44,39 +44,39 @@ describe('given the httpsGuidanceTagLoader function', () => {
   })
 
   describe('given a single id', () => {
-    it('returns a single https guidance tag', async () => {
-      // Get https tag from db
+    it('returns a single dmarc guidance tag', async () => {
+      // Get dmarc tag from db
       const expectedCursor = await query`
-        FOR tag IN httpsGuidanceTags
+        FOR tag IN dmarcGuidanceTags
           SORT tag._key ASC LIMIT 1
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
       `
-      const expectedHttpsTag = await expectedCursor.next()
+      const expectedDmarcTag = await expectedCursor.next()
 
-      const loader = httpsGuidanceTagLoader(query, i18n)
-      const httpsTag = await loader.load(expectedHttpsTag._key)
+      const loader = dmarcGuidanceTagLoader(query, i18n)
+      const dmarcTag = await loader.load(expectedDmarcTag._key)
 
-      expect(httpsTag).toEqual(expectedHttpsTag)
+      expect(dmarcTag).toEqual(expectedDmarcTag)
     })
   })
   describe('given multiple ids', () => {
-    it('returns multiple https guidance tags', async () => {
-      const httpsTagKeys = []
-      const expectedHttpsTags = []
+    it('returns multiple dmarc guidance tags', async () => {
+      const dmarcTagKeys = []
+      const expectedDmarcTags = []
       const expectedCursor = await query`
-        FOR tag IN httpsGuidanceTags
+        FOR tag IN dmarcGuidanceTags
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
       `
 
       while (expectedCursor.hasNext()) {
-        const tempHttps = await expectedCursor.next()
-        httpsTagKeys.push(tempHttps._key)
-        expectedHttpsTags.push(tempHttps)
+        const tempDkim = await expectedCursor.next()
+        dmarcTagKeys.push(tempDkim._key)
+        expectedDmarcTags.push(tempDkim)
       }
 
-      const loader = httpsGuidanceTagLoader(query, i18n)
-      const httpsTags = await loader.loadMany(httpsTagKeys)
-      expect(httpsTags).toEqual(expectedHttpsTags)
+      const loader = dmarcGuidanceTagLoader(query, i18n)
+      const dmarcTags = await loader.loadMany(dmarcTagKeys)
+      expect(dmarcTags).toEqual(expectedDmarcTags)
     })
   })
   describe('users language is set to english', () => {
@@ -96,18 +96,18 @@ describe('given the httpsGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
+        const loader = dmarcGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find https guidance tags. Please try again.'),
+            new Error('Unable to find dmarc guidance tags. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running dmarcGuidanceTagLoader: Error: Database error occurred.`,
         ])
       })
     })
@@ -119,18 +119,18 @@ describe('given the httpsGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
+        const loader = dmarcGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find https guidance tags. Please try again.'),
+            new Error('Unable to find dmarc guidance tags. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running dmarcGuidanceTagLoader: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -152,7 +152,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
+        const loader = dmarcGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -161,7 +161,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running dmarcGuidanceTagLoader: Error: Database error occurred.`,
         ])
       })
     })
@@ -173,7 +173,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
+        const loader = dmarcGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -182,7 +182,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running dmarcGuidanceTagLoader: Error: Cursor error occurred.`,
         ])
       })
     })

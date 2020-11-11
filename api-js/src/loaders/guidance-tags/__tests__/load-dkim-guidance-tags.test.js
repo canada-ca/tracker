@@ -3,12 +3,12 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { spfGuidanceTagLoader } = require('../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { dkimGuidanceTagLoader } = require('../..')
 
-describe('given the spfGuidanceTagLoader function', () => {
+describe('given the dkimGuidanceTagLoader function', () => {
   let query, drop, truncate, migrate, collections, i18n
 
   const consoleErrorOutput = []
@@ -35,8 +35,8 @@ describe('given the spfGuidanceTagLoader function', () => {
     consoleErrorOutput.length = 0
 
     await truncate()
-    await collections.spfGuidanceTags.save({})
-    await collections.spfGuidanceTags.save({})
+    await collections.dkimGuidanceTags.save({})
+    await collections.dkimGuidanceTags.save({})
   })
 
   afterAll(async () => {
@@ -44,39 +44,39 @@ describe('given the spfGuidanceTagLoader function', () => {
   })
 
   describe('given a single id', () => {
-    it('returns a single spf guidance tag', async () => {
-      // Get spf tag from db
+    it('returns a single dkim guidance tag', async () => {
+      // Get dkim tag from db
       const expectedCursor = await query`
-        FOR tag IN spfGuidanceTags
+        FOR tag IN dkimGuidanceTags
           SORT tag._key ASC LIMIT 1
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
       `
-      const expectedSpfTag = await expectedCursor.next()
+      const expectedDkimTag = await expectedCursor.next()
 
-      const loader = spfGuidanceTagLoader(query, i18n)
-      const spfTag = await loader.load(expectedSpfTag._key)
+      const loader = dkimGuidanceTagLoader(query, i18n)
+      const dkim = await loader.load(expectedDkimTag._key)
 
-      expect(spfTag).toEqual(expectedSpfTag)
+      expect(dkim).toEqual(expectedDkimTag)
     })
   })
   describe('given multiple ids', () => {
-    it('returns multiple spf guidance tags', async () => {
-      const spfTagKeys = []
-      const expectedSpfTags = []
+    it('returns multiple dkim guidance tags', async () => {
+      const dkimTagKeys = []
+      const expectedDkimTags = []
       const expectedCursor = await query`
-        FOR tag IN spfGuidanceTags
+        FOR tag IN dkimGuidanceTags
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
       `
 
       while (expectedCursor.hasNext()) {
-        const tempSpf = await expectedCursor.next()
-        spfTagKeys.push(tempSpf._key)
-        expectedSpfTags.push(tempSpf)
+        const tempDkim = await expectedCursor.next()
+        dkimTagKeys.push(tempDkim._key)
+        expectedDkimTags.push(tempDkim)
       }
 
-      const loader = spfGuidanceTagLoader(query, i18n)
-      const spfTags = await loader.loadMany(spfTagKeys)
-      expect(spfTags).toEqual(expectedSpfTags)
+      const loader = dkimGuidanceTagLoader(query, i18n)
+      const dkimTags = await loader.loadMany(dkimTagKeys)
+      expect(dkimTags).toEqual(expectedDkimTags)
     })
   })
   describe('users language is set to english', () => {
@@ -96,18 +96,18 @@ describe('given the spfGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = spfGuidanceTagLoader(query, '1234', i18n)
+        const loader = dkimGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find spf guidance tags. Please try again.'),
+            new Error('Unable to find dkim guidance tags. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running spfGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running dkimGuidanceTagLoader: Error: Database error occurred.`,
         ])
       })
     })
@@ -119,18 +119,18 @@ describe('given the spfGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = spfGuidanceTagLoader(query, '1234', i18n)
+        const loader = dkimGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find spf guidance tags. Please try again.'),
+            new Error('Unable to find dkim guidance tags. Please try again.'),
           )
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running spfGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running dkimGuidanceTagLoader: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -152,7 +152,7 @@ describe('given the spfGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = spfGuidanceTagLoader(query, '1234', i18n)
+        const loader = dkimGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -161,7 +161,7 @@ describe('given the spfGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running spfGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running dkimGuidanceTagLoader: Error: Database error occurred.`,
         ])
       })
     })
@@ -173,7 +173,7 @@ describe('given the spfGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = spfGuidanceTagLoader(query, '1234', i18n)
+        const loader = dkimGuidanceTagLoader(query, '1234', i18n)
 
         try {
           await loader.load('1')
@@ -182,7 +182,7 @@ describe('given the spfGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running spfGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running dkimGuidanceTagLoader: Error: Cursor error occurred.`,
         ])
       })
     })
