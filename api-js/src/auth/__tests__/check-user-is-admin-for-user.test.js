@@ -100,7 +100,7 @@ describe('given the checkUserIsAdminForUser', () => {
         })
 
         const check = await testCheck({
-          username: 'test.account2@istio.actually.exists',
+          userName: 'test.account2@istio.actually.exists',
         })
         expect(check).toEqual(true)
       })
@@ -121,7 +121,7 @@ describe('given the checkUserIsAdminForUser', () => {
         })
 
         const check = await testCheck({
-          username: 'test.account2@istio.actually.exists',
+          userName: 'test.account2@istio.actually.exists',
         })
         expect(check).toEqual(true)
       })
@@ -169,7 +169,7 @@ describe('given the checkUserIsAdminForUser', () => {
         })
 
         const check = await testCheck({
-          username: 'test.account2@istio.actually.exists',
+          userName: 'test.account2@istio.actually.exists',
         })
         expect(check).toEqual(false)
       })
@@ -190,7 +190,7 @@ describe('given the checkUserIsAdminForUser', () => {
         })
 
         const check = await testCheck({
-          username: 'test.account2@istio.actually.exists',
+          userName: 'test.account2@istio.actually.exists',
         })
         expect(check).toEqual(false)
       })
@@ -221,7 +221,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           try {
             await testCheck({
-              username: 'test.account2@istio.actually.exists',
+              userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
             expect(err).toEqual(
@@ -250,7 +250,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           try {
             await testCheck({
-              username: 'test.account2@istio.actually.exists',
+              userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
             expect(err).toEqual(
@@ -280,7 +280,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           try {
             await testCheck({
-              username: 'test.account2@istio.actually.exists',
+              userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
             expect(err).toEqual(
@@ -315,7 +315,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           try {
             await testCheck({
-              username: 'test.account2@istio.actually.exists',
+              userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
             expect(err).toEqual(
@@ -354,7 +354,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           try {
             await testCheck({
-              username: 'test.account2@istio.actually.exists',
+              userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
             expect(err).toEqual(Error('todo'))
@@ -381,7 +381,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           try {
             await testCheck({
-              username: 'test.account2@istio.actually.exists',
+              userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
             expect(err).toEqual(Error('todo'))
@@ -409,7 +409,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           try {
             await testCheck({
-              username: 'test.account2@istio.actually.exists',
+              userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
             expect(err).toEqual(Error('todo'))
@@ -442,7 +442,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           try {
             await testCheck({
-              username: 'test.account2@istio.actually.exists',
+              userName: 'test.account2@istio.actually.exists',
             })
           } catch (err) {
             expect(err).toEqual(Error('todo'))
