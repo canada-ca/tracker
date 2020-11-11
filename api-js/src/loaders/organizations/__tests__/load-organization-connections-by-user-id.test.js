@@ -5,11 +5,11 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { cleanseInput } = require('../validators')
-const { orgLoaderConnectionsByUserId, orgLoaderByKey } = require('../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { cleanseInput } = require('../../../validators')
+const { orgLoaderConnectionsByUserId, orgLoaderByKey } = require('../..')
 
 describe('given the load organization connections by user id function', () => {
   let query, drop, truncate, migrate, collections, user, orgOne, orgTwo, i18n
