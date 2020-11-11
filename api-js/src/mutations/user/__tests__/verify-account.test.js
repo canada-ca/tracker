@@ -4,14 +4,14 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { cleanseInput } = require('../validators')
-const { tokenize, verifyToken } = require('../auth')
-const { userLoaderByKey } = require('../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../..')
+const { cleanseInput } = require('../../../validators')
+const { tokenize, verifyToken } = require('../../../auth')
+const { userLoaderByKey } = require('../../../loaders')
 
 describe('user send password reset email', () => {
   const originalInfo = console.info

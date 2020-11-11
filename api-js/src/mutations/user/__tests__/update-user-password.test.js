@@ -3,16 +3,18 @@ const bcrypt = require('bcrypt')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { cleanseInput } = require('../validators')
-const { tokenize } = require('../auth')
-const { userLoaderByUserName, userLoaderByKey } = require('../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../..')
+const { cleanseInput } = require('../../../validators')
+const { tokenize } = require('../../../auth')
+const { userLoaderByUserName, userLoaderByKey } = require('../../../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const mockNotfiy = jest.fn()
 
 describe('authenticate user account', () => {
   let query, drop, truncate, migrate, schema, i18n
@@ -95,251 +97,110 @@ describe('authenticate user account', () => {
       })
     })
     describe('given successful update of users password', () => {
-      describe('user updates their display name', () => {
-        it('returns a successful status message', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
+      it('returns a successful status message', async () => {
+        const cursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const user = await cursor.next()
 
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(input: { displayName: "John Doe" }) {
-                  status
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              updateUserPassword(
+                input: {
+                  currentPassword: "testpassword123"
+                  updatedPassword: "newtestpassword123"
+                  updatedPasswordConfirm: "newtestpassword123"
                 }
+              ) {
+                status
               }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userId: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
+            }
+          `,
+          null,
+          {
+            i18n,
+            query,
+            userId: user._key,
+            auth: {
+              bcrypt,
+              tokenize,
             },
-          )
-
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                status: 'Profile successfully updated.',
-              },
+            validators: {
+              cleanseInput,
             },
-          }
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
+              userLoaderByKey: userLoaderByKey(query),
+            },
+          },
+        )
 
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
+        const expectedResponse = {
+          data: {
+            updateUserPassword: {
+              status: 'Password was successfully updated.',
+            },
+          },
+        }
 
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+        expect(response).toEqual(expectedResponse)
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully updated their password.`,
+        ])
+
+        consoleOutput = []
+
+        const authenticateResponse = await graphql(
+          schema,
           `
-          user = await cursor.next()
-          expect(user.displayName).toEqual('John Doe')
-        })
-      })
-      describe('user updates their user name', () => {
-        it('returns a successful status message', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: { userName: "john.doe@istio.actually.works" }
-                ) {
-                  status
+            mutation {
+              signIn(
+                input: {
+                  userName: "test.account@istio.actually.exists"
+                  password: "newtestpassword123"
                 }
+              ) {
+                status
               }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userId: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
+            }
+          `,
+          null,
+          {
+            i18n,
+            query,
+            auth: {
+              bcrypt,
+              tokenize,
             },
-          )
-
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                status: 'Profile successfully updated.',
-              },
+            validators: {
+              cleanseInput,
             },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "john.doe@istio.actually.works"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.userName).toEqual('john.doe@istio.actually.works')
-        })
-      })
-      describe('user updates their preferred language', () => {
-        it('returns a successful status message', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(input: { preferredLang: ENGLISH }) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userId: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
             },
-          )
-
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                status: 'Profile successfully updated.',
-              },
+            notify: {
+              sendAuthEmail: mockNotfiy,
             },
-          }
+          },
+        )
 
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.preferredLang).toEqual('english')
-        })
-      })
-      describe('user updates display name, user name, and preferred language', () => {
-        it('returns a successful status message', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
-                  }
-                ) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userId: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
+        const expectedAuthResponse = {
+          data: {
+            signIn: {
+              status:
+                "We've sent you an email with an authentication code to sign into Pulse.",
             },
-          )
+          },
+        }
 
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                status: 'Profile successfully updated.',
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "john.smith@istio.actually.works"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.displayName).toEqual('John Smith')
-          expect(user.userName).toEqual('john.smith@istio.actually.works')
-          expect(user.preferredLang).toEqual('english')
-        })
+        expect(authenticateResponse).toEqual(expectedAuthResponse)
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully signed in, and sent auth msg.`,
+        ])
       })
     })
     describe('given unsuccessful update of users password', () => {
@@ -349,11 +210,11 @@ describe('authenticate user account', () => {
             schema,
             `
               mutation {
-                updateUserProfile(
+                updateUserPassword(
                   input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
+                    currentPassword: "testpassword123"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
                   status
@@ -385,7 +246,7 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            'User attempted to update their profile, but the user id is undefined.',
+            'User attempted to update password, but the user id is undefined.',
           ])
         })
       })
@@ -395,11 +256,11 @@ describe('authenticate user account', () => {
             schema,
             `
               mutation {
-                updateUserProfile(
+                updateUserPassword(
                   input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
+                    currentPassword: "testpassword123"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
                   status
@@ -426,12 +287,177 @@ describe('authenticate user account', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update profile. Please try again.'),
+            new GraphQLError('Unable to update password. Please try again.'),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: 1 attempted to update their profile, but no account is associated with that id.`,
+            `User: 1 attempted to update their password, but no account is associated with that id.`,
+          ])
+        })
+      })
+      describe('the current password does not match the password in the database', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserPassword(
+                  input: {
+                    currentPassword: "randompassword"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "newtestpassword123"
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userId: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              'Unable to update password, current password does not match. Please try again.',
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to update their password, however they did not enter the current password correctly.`,
+          ])
+        })
+      })
+      describe('the new password does not match the new password confirmation', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserPassword(
+                  input: {
+                    currentPassword: "testpassword123"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "oldtestpassword123"
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userId: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              'Unable to update password, new passwords do not match. Please try again.',
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to update their password, however the new passwords do not match.`,
+          ])
+        })
+      })
+      describe('the new password does not meet GoC requirements', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserPassword(
+                  input: {
+                    currentPassword: "testpassword123"
+                    updatedPassword: "password"
+                    updatedPasswordConfirm: "password"
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userId: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              'Unable to update password, passwords are required to be 12 characters or longer. Please try again.',
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to update their password, however the new password does not meet GoC requirements.`,
           ])
         })
       })
@@ -455,11 +481,11 @@ describe('authenticate user account', () => {
             schema,
             `
               mutation {
-                updateUserProfile(
+                updateUserPassword(
                   input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
+                    currentPassword: "testpassword123"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
                   status
@@ -486,12 +512,12 @@ describe('authenticate user account', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update profile. Please try again.'),
+            new GraphQLError('Unable to update password. Please try again.'),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error ocurred when user: ${user._key} attempted to update their profile: Error: Database error occurred.`,
+            `Database error ocurred when user: ${user._key} attempted to update their password: Error: Database error occurred.`,
           ])
         })
       })
@@ -510,251 +536,109 @@ describe('authenticate user account', () => {
       })
     })
     describe('given successful update of users password', () => {
-      describe('user updates their display name', () => {
-        it('returns a successful status message', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
+      it('returns a successful status message', async () => {
+        const cursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const user = await cursor.next()
 
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(input: { displayName: "John Doe" }) {
-                  status
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              updateUserPassword(
+                input: {
+                  currentPassword: "testpassword123"
+                  updatedPassword: "newtestpassword123"
+                  updatedPasswordConfirm: "newtestpassword123"
                 }
+              ) {
+                status
               }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userId: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
+            }
+          `,
+          null,
+          {
+            i18n,
+            query,
+            userId: user._key,
+            auth: {
+              bcrypt,
+              tokenize,
             },
-          )
-
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                status: 'todo',
-              },
+            validators: {
+              cleanseInput,
             },
-          }
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
+              userLoaderByKey: userLoaderByKey(query),
+            },
+          },
+        )
 
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
+        const expectedResponse = {
+          data: {
+            updateUserPassword: {
+              status: 'todo',
+            },
+          },
+        }
 
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+        expect(response).toEqual(expectedResponse)
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully updated their password.`,
+        ])
+
+        consoleOutput = []
+
+        const authenticateResponse = await graphql(
+          schema,
           `
-          user = await cursor.next()
-          expect(user.displayName).toEqual('John Doe')
-        })
-      })
-      describe('user updates their user name', () => {
-        it('returns a successful status message', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: { userName: "john.doe@istio.actually.works" }
-                ) {
-                  status
+            mutation {
+              signIn(
+                input: {
+                  userName: "test.account@istio.actually.exists"
+                  password: "newtestpassword123"
                 }
+              ) {
+                status
               }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userId: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
+            }
+          `,
+          null,
+          {
+            i18n,
+            query,
+            auth: {
+              bcrypt,
+              tokenize,
             },
-          )
-
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                status: 'todo',
-              },
+            validators: {
+              cleanseInput,
             },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "john.doe@istio.actually.works"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.userName).toEqual('john.doe@istio.actually.works')
-        })
-      })
-      describe('user updates their preferred language', () => {
-        it('returns a successful status message', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(input: { preferredLang: ENGLISH }) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userId: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
             },
-          )
-
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                status: 'todo',
-              },
+            notify: {
+              sendAuthEmail: mockNotfiy,
             },
-          }
+          },
+        )
 
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.preferredLang).toEqual('english')
-        })
-      })
-      describe('user updates display name, user name, and preferred language', () => {
-        it('returns a successful status message', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
-                  }
-                ) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userId: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
+        const expectedAuthResponse = {
+          data: {
+            signIn: {
+              status: 'todo',
             },
-          )
+          },
+        }
 
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                status: 'todo',
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "john.smith@istio.actually.works"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.displayName).toEqual('John Smith')
-          expect(user.userName).toEqual('john.smith@istio.actually.works')
-          expect(user.preferredLang).toEqual('english')
-        })
+        expect(authenticateResponse).toEqual(expectedAuthResponse)
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully signed in, and sent auth msg.`,
+        ])
       })
     })
     describe('given unsuccessful update of users password', () => {
@@ -764,11 +648,11 @@ describe('authenticate user account', () => {
             schema,
             `
               mutation {
-                updateUserProfile(
+                updateUserPassword(
                   input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
+                    currentPassword: "testpassword123"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
                   status
@@ -798,7 +682,7 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            'User attempted to update their profile, but the user id is undefined.',
+            'User attempted to update password, but the user id is undefined.',
           ])
         })
       })
@@ -808,11 +692,11 @@ describe('authenticate user account', () => {
             schema,
             `
               mutation {
-                updateUserProfile(
+                updateUserPassword(
                   input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
+                    currentPassword: "testpassword123"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
                   status
@@ -842,7 +726,160 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: 1 attempted to update their profile, but no account is associated with that id.`,
+            `User: 1 attempted to update their password, but no account is associated with that id.`,
+          ])
+        })
+      })
+      describe('the current password does not match the password in the database', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserPassword(
+                  input: {
+                    currentPassword: "randompassword"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "newtestpassword123"
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userId: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to update their password, however they did not enter the current password correctly.`,
+          ])
+        })
+      })
+      describe('the new password does not match the new password confirmation', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserPassword(
+                  input: {
+                    currentPassword: "testpassword123"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "oldtestpassword123"
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userId: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to update their password, however the new passwords do not match.`,
+          ])
+        })
+      })
+      describe('the new password does not meet GoC requirements', () => {
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserPassword(
+                  input: {
+                    currentPassword: "testpassword123"
+                    updatedPassword: "password"
+                    updatedPasswordConfirm: "password"
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userId: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to update their password, however the new password does not meet GoC requirements.`,
           ])
         })
       })
@@ -866,11 +903,11 @@ describe('authenticate user account', () => {
             schema,
             `
               mutation {
-                updateUserProfile(
+                updateUserPassword(
                   input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
+                    currentPassword: "testpassword123"
+                    updatedPassword: "newtestpassword123"
+                    updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
                   status
@@ -900,7 +937,7 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error ocurred when user: ${user._key} attempted to update their profile: Error: Database error occurred.`,
+            `Database error ocurred when user: ${user._key} attempted to update their password: Error: Database error occurred.`,
           ])
         })
       })

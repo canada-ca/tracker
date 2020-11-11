@@ -5,14 +5,14 @@ const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
 const request = require('supertest')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { cleanseInput } = require('../validators')
-const { tokenize } = require('../auth')
-const { userLoaderByUserName } = require('../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { createQuerySchema } = require('../../../queries')
+const { createMutationSchema } = require('../..')
+const { cleanseInput } = require('../../../validators')
+const { tokenize } = require('../../../auth')
+const { userLoaderByUserName } = require('../../../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
