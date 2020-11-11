@@ -1,0 +1,52 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: start_testdb
+    entrypoint: /bin/sh
+    args: ["-c", "docker run --net cloudbuild --name testdb -d --rm -p 127.0.0.1:8529:8529 -e POSTGRES_USER=track_dmarc -e POSTGRES_PASSWORD=postgres postgres:alpine"]
+
+  - name: mikewilliamson/wait-for
+    id: wait_testdb
+    args: ['testdb:5432']
+
+  - name: 'gcr.io/track-compliance/services/db-migration'
+    id: start_dbmigrate
+    entrypoint: /bin/sh
+    dir: ../app
+    args: ["-c", "alembic --config=/app/migrations/alembic.ini upgrade head"]
+    env:
+      - POSTGRES_USER=track_dmarc
+      - POSTGRES_PASSWORD=postgres
+      - DB_HOST=testdb
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-results
+    dir: services/scanners/results
+    entrypoint: /bin/sh
+    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-results-if-master
+    entrypoint: 'bash'
+    dir: services/scanners/results
+    args:
+    -  '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/scanners/results:$BRANCH_NAME-$SHORT_SHA .
+      else
+        exit 0
+      fi
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-results-if-master
+    entrypoint: 'bash'
+    args:
+    -  '-c'
+    -  |
+       if [[ "$BRANCH_NAME" == "master" ]]
+       then
+         docker push gcr.io/$PROJECT_ID/scanners/results:$BRANCH_NAME-$SHORT_SHA
+       else
+         exit 0
+       fi

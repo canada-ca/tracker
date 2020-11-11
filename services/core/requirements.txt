@@ -1,0 +1,4 @@
+emoji
+pytest
+gql[all]
+pretend
