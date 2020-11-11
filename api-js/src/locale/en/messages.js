@@ -78,6 +78,8 @@
     'Password was successfully reset.': 'Password was successfully reset.',
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
+    'Permission error, not an admin for this user.':
+      'Permission error, not an admin for this user.',
     'Profile successfully updated.': 'Profile successfully updated.',
     'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.': function (
       a,

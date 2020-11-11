@@ -158,6 +158,13 @@ msgstr "todo"
 msgid "Passwords do not match."
 msgstr "todo"
 
+#: src/auth/check-user-is-admin-for-user.js:17
+#: src/auth/check-user-is-admin-for-user.js:27
+#: src/auth/check-user-is-admin-for-user.js:59
+#: src/auth/check-user-is-admin-for-user.js:69
+msgid "Permission error, not an admin for this user."
+msgstr "todo"
+
 #: src/mutations/user/update-user-profile.js:91
 msgid "Profile successfully updated."
 msgstr "todo"
