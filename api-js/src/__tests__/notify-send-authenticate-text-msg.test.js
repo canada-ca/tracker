@@ -37,8 +37,8 @@ describe('given the sendAuthTextMsg function', () => {
         tfaCode: 123456,
       }
 
-      const mockedSendAuthTextMsg = sendAuthTextMsg(i18n)
-      await mockedSendAuthTextMsg({ user, notifyClient })
+      const mockedSendAuthTextMsg = sendAuthTextMsg(notifyClient, i18n)
+      await mockedSendAuthTextMsg({ user })
 
       expect(notifyClient.sendSms).toHaveBeenCalledWith(
         'bccda53c-278f-4d8c-a8d1-7b58cade2bd8',
@@ -77,8 +77,8 @@ describe('given the sendAuthTextMsg function', () => {
         }
 
         try {
-          const mockedSendAuthTextMsg = sendAuthTextMsg(i18n)
-          await mockedSendAuthTextMsg({ user, notifyClient })
+          const mockedSendAuthTextMsg = sendAuthTextMsg(notifyClient, i18n)
+          await mockedSendAuthTextMsg({ user })
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to authenticate. Please try again.'),
@@ -117,8 +117,8 @@ describe('given the sendAuthTextMsg function', () => {
         }
 
         try {
-          const mockedSendAuthTextMsg = sendAuthTextMsg(i18n)
-          await mockedSendAuthTextMsg({ user, notifyClient })
+          const mockedSendAuthTextMsg = sendAuthTextMsg(notifyClient, i18n)
+          await mockedSendAuthTextMsg({ user })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }

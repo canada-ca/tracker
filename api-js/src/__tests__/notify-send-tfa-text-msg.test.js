@@ -37,12 +37,11 @@ describe('given the sendTfaTextMsg function', () => {
         tfaCode: 123456,
       }
 
-      const mockedSendTfaTextMsg = sendTfaTextMsg(i18n)
+      const mockedSendTfaTextMsg = sendTfaTextMsg(notifyClient, i18n)
       await mockedSendTfaTextMsg({
         templateId: 'test-id',
         phoneNumber: user.phoneNumber,
         user,
-        notifyClient,
       })
 
       expect(notifyClient.sendSms).toHaveBeenCalledWith(
@@ -82,12 +81,11 @@ describe('given the sendTfaTextMsg function', () => {
         }
 
         try {
-          const mockedSendTfaTextMsg = sendTfaTextMsg(i18n)
+          const mockedSendTfaTextMsg = sendTfaTextMsg(notifyClient, i18n)
           await mockedSendTfaTextMsg({
             templateId: 'test-id',
             phoneNumber: user.phoneNumber,
             user,
-            notifyClient,
           })
         } catch (err) {
           expect(err).toEqual(
@@ -129,12 +127,11 @@ describe('given the sendTfaTextMsg function', () => {
         }
 
         try {
-          const mockedSendTfaTextMsg = sendTfaTextMsg(i18n)
+          const mockedSendTfaTextMsg = sendTfaTextMsg(notifyClient, i18n)
           await mockedSendTfaTextMsg({
             templateId: 'test-id',
             phoneNumber: user.phoneNumber,
             user,
-            notifyClient,
           })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))

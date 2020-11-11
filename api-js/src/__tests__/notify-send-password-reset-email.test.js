@@ -38,12 +38,14 @@ describe('given the sendPasswordResetEmail function', () => {
         displayName: 'Test Account',
       }
 
-      const mockedSendPasswordResetEmail = sendPasswordResetEmail(i18n)
+      const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+        notifyClient,
+        i18n,
+      )
       await mockedSendPasswordResetEmail({
         templateId: 'test_id',
         user,
         resetUrl: 'reset.url',
-        notifyClient,
       })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
@@ -85,12 +87,14 @@ describe('given the sendPasswordResetEmail function', () => {
         }
 
         try {
-          const mockedSendPasswordResetEmail = sendPasswordResetEmail(i18n)
+          const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+            notifyClient,
+            i18n,
+          )
           await mockedSendPasswordResetEmail({
             templateId: 'test_id',
             user,
             resetUrl: 'reset.url',
-            notifyClient,
           })
         } catch (err) {
           expect(err).toEqual(
@@ -131,12 +135,14 @@ describe('given the sendPasswordResetEmail function', () => {
         }
 
         try {
-          const mockedSendPasswordResetEmail = sendPasswordResetEmail(i18n)
+          const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+            notifyClient,
+            i18n,
+          )
           await mockedSendPasswordResetEmail({
             templateId: 'test_id',
             user,
             resetUrl: 'reset.url',
-            notifyClient,
           })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))

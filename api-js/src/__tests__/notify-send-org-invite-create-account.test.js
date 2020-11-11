@@ -38,13 +38,15 @@ describe('given the sendOrgInviteCreateAccount function', () => {
         displayName: 'Test Account',
       }
 
-      const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(i18n)
+      const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(
+        notifyClient,
+        i18n,
+      )
       await mockedSendOrgInviteCreateAccount({
         templateId: 'test_id',
         user,
         orgName: 'Test Org',
         createAccountLink: 'TestLink.ca',
-        notifyClient,
       })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
@@ -88,6 +90,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
 
         try {
           const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(
+            notifyClient,
             i18n,
           )
           await mockedSendOrgInviteCreateAccount({
@@ -95,7 +98,6 @@ describe('given the sendOrgInviteCreateAccount function', () => {
             user,
             orgName: 'Test Org',
             createAccountLink: 'TestLink.ca',
-            notifyClient,
           })
         } catch (err) {
           expect(err).toEqual(
@@ -137,6 +139,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
 
         try {
           const mockedSendOrgInviteCreateAccount = sendOrgInviteCreateAccount(
+            notifyClient,
             i18n,
           )
           await mockedSendOrgInviteCreateAccount({
@@ -144,7 +147,6 @@ describe('given the sendOrgInviteCreateAccount function', () => {
             user,
             orgName: 'Test Org',
             createAccountLink: 'TestLink.ca',
-            notifyClient,
           })
         } catch (err) {
           expect(err).toEqual(
