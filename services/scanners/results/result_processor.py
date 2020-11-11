@@ -430,7 +430,7 @@ def process_dns(results):
         tags["dmarc"].append("dmarc2")
     else:
 
-        if results["dmarc"].get("valid", "false").lower() == "true":
+        if results["dmarc"].get("valid", False) == True:
             tags["dmarc"].append("dmarc23")
 
         # Check P Policy Tag
@@ -558,7 +558,7 @@ def process_dns(results):
         tags["spf"].append("spf2")
         return tags
 
-    if results["spf"].get("valid", "false").lower() == "true":
+    if results["spf"].get("valid", False) == True:
         tags["spf"].append("spf12")
 
     for selector, data in results["dkim"].items():
