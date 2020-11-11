@@ -3,9 +3,9 @@ const { AUTHENTICATED_KEY } = process.env
 const jwt = require('jsonwebtoken')
 const { setupI18n } = require('@lingui/core')
 
-const { verifyToken } = require('../auth')
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
+const { verifyToken } = require('..')
+const englishMessages = require('../../locale/en/messages')
+const frenchMessages = require('../../locale/fr/messages')
 
 describe('given a encoded token', () => {
   let consoleOutput = []

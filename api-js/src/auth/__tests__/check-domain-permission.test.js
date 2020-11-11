@@ -3,12 +3,12 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { setupI18n } = require('@lingui/core')
 
-const { makeMigrations } = require('../../migrations')
-const { checkDomainOwnership } = require('../auth')
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
+const { makeMigrations } = require('../../../migrations')
+const { checkDomainPermission } = require('..')
+const englishMessages = require('../../locale/en/messages')
+const frenchMessages = require('../../locale/fr/messages')
 
-describe('given the check domain ownership function', () => {
+describe('given the check domain permission function', () => {
   let query, drop, truncate, migrate, collections, org, domain, i18n
 
   let consoleOutput = []
@@ -60,7 +60,7 @@ describe('given the check domain ownership function', () => {
       lastRan: null,
       selectors: ['selector1', 'selector2'],
     })
-    await collections.ownership.save({
+    await collections.claims.save({
       _to: domain._id,
       _from: org._id,
     })
@@ -71,7 +71,7 @@ describe('given the check domain ownership function', () => {
     await drop()
   })
 
-  describe('given a successful domain ownership check', () => {
+  describe('given a successful domain permission check', () => {
     let user, permitted
     beforeEach(async () => {
       const userCursor = await query`
@@ -81,7 +81,7 @@ describe('given the check domain ownership function', () => {
       `
       user = await userCursor.next()
     })
-    describe('if the user belongs to an org which has a ownership for a given organization', () => {
+    describe('if the user belongs to an org which has a claim for a given organization', () => {
       afterEach(async () => {
         await query`
           LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
@@ -102,13 +102,11 @@ describe('given the check domain ownership function', () => {
           })
         })
         it('will return true', async () => {
-          const testCheckDomainOwnerShip = checkDomainOwnership({
+          const testCheckDomainPermission = checkDomainPermission({
             query,
             userId: user._key,
           })
-          permitted = await testCheckDomainOwnerShip({
-            domainId: domain._id,
-          })
+          permitted = await testCheckDomainPermission({ domainId: domain._id })
           expect(permitted).toEqual(true)
         })
       })
@@ -121,13 +119,11 @@ describe('given the check domain ownership function', () => {
           })
         })
         it('will return true', async () => {
-          const testCheckDomainOwnerShip = checkDomainOwnership({
+          const testCheckDomainPermission = checkDomainPermission({
             query,
             userId: user._key,
           })
-          permitted = await testCheckDomainOwnerShip({
-            domainId: domain._id,
-          })
+          permitted = await testCheckDomainPermission({ domainId: domain._id })
           expect(permitted).toEqual(true)
         })
       })
@@ -140,20 +136,18 @@ describe('given the check domain ownership function', () => {
           })
         })
         it('will return true', async () => {
-          const testCheckDomainOwnerShip = checkDomainOwnership({
+          const testCheckDomainPermission = checkDomainPermission({
             query,
             userId: user._key,
           })
-          permitted = await testCheckDomainOwnerShip({
-            domainId: domain._id,
-          })
+          permitted = await testCheckDomainPermission({ domainId: domain._id })
           expect(permitted).toEqual(true)
         })
       })
     })
   })
 
-  describe('given an unsuccessful domain ownership check', () => {
+  describe('given an unsuccessful domain permission check', () => {
     let user
     beforeEach(async () => {
       const userCursor = await query`
@@ -163,20 +157,18 @@ describe('given the check domain ownership function', () => {
       `
       user = await userCursor.next()
     })
-    describe('if the user does not belong to an org which has a ownership for a given domain', () => {
+    describe('if the user does not belong to an org which has a claim for a given organization', () => {
       let permitted
       it('will return false', async () => {
-        const testCheckDomainOwnerShip = checkDomainOwnership({
+        const testCheckDomainPermission = checkDomainPermission({
           query,
           userId: user._key,
         })
-        permitted = await testCheckDomainOwnerShip({
-          domainId: domain._id,
-        })
+        permitted = await testCheckDomainPermission({ domainId: domain._id })
         expect(permitted).toEqual(false)
       })
     })
-    describe('users language is set to english', () => {
+    describe('language is set to english', () => {
       beforeAll(() => {
         i18n = setupI18n({
           language: 'en',
@@ -188,34 +180,30 @@ describe('given the check domain ownership function', () => {
           },
         })
       })
-      describe('if a database error is encountered during ownership check', () => {
+      describe('if a database error is encountered during permission check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
           mockQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
-            const testCheckDomainOwnerShip = checkDomainOwnership({
+            const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
               userId: user._key,
             })
-            await testCheckDomainOwnerShip({
-              domainId: domain._id,
-            })
+            await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                'Error when retrieving dmarc report information. Please try again.',
-              ),
+              new Error('Authentication error. Please sign in again.'),
             )
             expect(consoleOutput).toEqual([
-              `Database error when retrieving affiliated organization ownership for user: ${user._id} and the domain: ${domain._id}: Error: Database error occurred.`,
+              `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Database error occurred.`,
             ])
           }
         })
       })
-      describe('if a cursor error is encountered during ownership check', () => {
+      describe('if a cursor error is encountered during permission check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
           const cursor = {
@@ -225,28 +213,24 @@ describe('given the check domain ownership function', () => {
           }
           mockQuery = jest.fn().mockReturnValue(cursor)
           try {
-            const testCheckDomainOwnerShip = checkDomainOwnership({
+            const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
               userId: user._key,
             })
-            await testCheckDomainOwnerShip({
-              domainId: domain._id,
-            })
+            await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                'Error when retrieving dmarc report information. Please try again.',
-              ),
+              new Error('Unable to find domain. Please try again.'),
             )
             expect(consoleOutput).toEqual([
-              `Cursor error when retrieving affiliated organization ownership for user: ${user._id} and the domain: ${domain._id}: Error: Cursor error occurred.`,
+              `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Cursor error occurred.`,
             ])
           }
         })
       })
     })
-    describe('users language is set to french', () => {
+    describe('language is set to french', () => {
       beforeAll(() => {
         i18n = setupI18n({
           language: 'fr',
@@ -258,30 +242,28 @@ describe('given the check domain ownership function', () => {
           },
         })
       })
-      describe('if a database error is encountered during ownership check', () => {
+      describe('if a database error is encountered during permission check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
           mockQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
-            const testCheckDomainOwnerShip = checkDomainOwnership({
+            const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
               userId: user._key,
             })
-            await testCheckDomainOwnerShip({
-              domainId: domain._id,
-            })
+            await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
             expect(consoleOutput).toEqual([
-              `Database error when retrieving affiliated organization ownership for user: ${user._id} and the domain: ${domain._id}: Error: Database error occurred.`,
+              `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Database error occurred.`,
             ])
           }
         })
       })
-      describe('if a cursor error is encountered during ownership check', () => {
+      describe('if a cursor error is encountered during permission check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
           const cursor = {
@@ -291,18 +273,16 @@ describe('given the check domain ownership function', () => {
           }
           mockQuery = jest.fn().mockReturnValue(cursor)
           try {
-            const testCheckDomainOwnerShip = checkDomainOwnership({
+            const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
               userId: user._key,
             })
-            await testCheckDomainOwnerShip({
-              domainId: domain._id,
-            })
+            await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
             expect(consoleOutput).toEqual([
-              `Cursor error when retrieving affiliated organization ownership for user: ${user._id} and the domain: ${domain._id}: Error: Cursor error occurred.`,
+              `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Cursor error occurred.`,
             ])
           }
         })

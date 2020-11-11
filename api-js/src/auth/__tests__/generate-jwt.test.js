@@ -1,7 +1,7 @@
 const { AUTHENTICATED_KEY } = process.env
 
 const jwt = require('jsonwebtoken')
-const { tokenize } = require('../auth')
+const { tokenize } = require('..')
 
 describe('given a token generator', () => {
   describe('given a set of parameters token can be encoded', () => {
