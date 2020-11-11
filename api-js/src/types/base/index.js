@@ -5,7 +5,6 @@ const {
   GraphQLString,
   GraphQLBoolean,
   GraphQLInt,
-  GraphQLID,
   GraphQLList,
   GraphQLNonNull,
 } = require('graphql')
@@ -13,7 +12,6 @@ const {
   globalIdField,
   connectionDefinitions,
   connectionArgs,
-  toGlobalId,
 } = require('graphql-relay')
 const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
 const { t } = require('@lingui/macro')
