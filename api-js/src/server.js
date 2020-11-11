@@ -373,17 +373,17 @@ const Server = (
     res.json({ ok: 'yes' })
   })
 
-  // app.get(
-  //   '/graphql',
-  //   expressPlayground({
-  //     endpoint: '/graphql',
-  //   }),
-  // )
+  app.get(
+    '/graphql',
+    expressPlayground({
+      endpoint: '/graphql',
+    }),
+  )
 
   app.use(
     '/graphql',
     graphqlHTTP(async (request, response, _graphQLParams) => ({
-      graphiql: true,
+      graphiql: false,
       schema: createSchema({ language: request.language }),
       context: createContext({ context, request, response }),
       validationRules: createValidationRules(
