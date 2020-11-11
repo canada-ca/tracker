@@ -12,7 +12,7 @@ const { makeMigrations } = require('../../../../migrations')
 const { createQuerySchema } = require('../../../queries')
 const { createMutationSchema } = require('../..')
 const { cleanseInput } = require('../../../validators')
-const { tokenize, checkPermission, userRequired } = require('../../../auth')
+const { checkPermission, userRequired } = require('../../../auth')
 const {
   orgLoaderByKey,
   userLoaderByKey,
@@ -22,7 +22,7 @@ const {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('invite user to org', () => {
-  let query, drop, truncate, migrate, schema, collections, transaction, i18n
+  let query, drop, truncate, migrate, schema, collections, transaction, i18n, tokenize
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -30,6 +30,8 @@ describe('invite user to org', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+
+    tokenize = jest.fn().mockReturnValue('token')
   })
 
   let consoleOutput = []
@@ -470,7 +472,6 @@ describe('invite user to org', () => {
                 },
               })
               const createAccountLink = `http://host/create-account/${token}`
-
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,

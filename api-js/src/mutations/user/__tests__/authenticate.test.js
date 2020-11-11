@@ -18,7 +18,7 @@ const { userLoaderByKey } = require('../../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, migrate, schema, collections
+  let query, drop, truncate, migrate, schema, collections, mockTokenize
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -26,6 +26,8 @@ describe('authenticate user account', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+
+    mockTokenize = jest.fn().mockReturnValue('token')
   })
 
   let consoleOutput = []
@@ -101,7 +103,7 @@ describe('authenticate user account', () => {
           query,
           auth: {
             bcrypt,
-            tokenize,
+            tokenize: mockTokenize,
             verifyToken: verifyToken({}),
           },
           validators: {
@@ -117,7 +119,7 @@ describe('authenticate user account', () => {
         data: {
           authenticate: {
             authResult: {
-              authToken: tokenize({ parameters: { userId: user._key } }),
+              authToken: 'token',
               user: {
                 id: `${toGlobalId('users', user._key)}`,
                 userName: 'test.account@istio.actually.exists',
