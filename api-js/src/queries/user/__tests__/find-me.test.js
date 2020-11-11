@@ -7,7 +7,10 @@ const { makeMigrations } = require('../../../../migrations')
 const { userRequired } = require('../../../auth')
 const { createQuerySchema } = require('../..')
 const { createMutationSchema } = require('../../../mutations')
-const { userLoaderByKey, affiliationLoaderByUserId } = require('../../../loaders')
+const {
+  userLoaderByKey,
+  affiliationLoaderByUserId,
+} = require('../../../loaders')
 const { cleanseInput } = require('../../../validators')
 
 describe('given the findMe query', () => {
@@ -17,9 +20,7 @@ describe('given the findMe query', () => {
     migrate,
     schema,
     collections,
-    user,
-    org,
-    affiliation
+    user
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -51,35 +52,6 @@ describe('given the findMe query', () => {
       tfaValidated: false,
       emailValidated: false,
     })
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    affiliation = await collections.affiliations.save({
-      _from: org._id,
-      _to: user._id,
-      permission: 'user',
-    })
     consoleOutput = []
   })
 
@@ -95,18 +67,6 @@ describe('given the findMe query', () => {
           query {
             findMe {
               id
-              userName
-              displayName
-              preferredLang
-              tfaValidated
-              emailValidated
-              affiliations(first: 5) {
-                edges {
-                  node {
-                    id
-                  }
-                }
-              }
             }
           }
         `,
@@ -132,20 +92,6 @@ describe('given the findMe query', () => {
         data: {
           findMe: {
             id: toGlobalId('users', user._key),
-            displayName: 'Test Account',
-            emailValidated: false,
-            preferredLang: 'FRENCH',
-            tfaValidated: false,
-            userName: 'test.account@istio.actually.exists',
-            affiliations: {
-              edges: [
-                {
-                  node: {
-                    id: toGlobalId('affiliations', affiliation._key),
-                  },
-                },
-              ],
-            },
           },
         },
       }
