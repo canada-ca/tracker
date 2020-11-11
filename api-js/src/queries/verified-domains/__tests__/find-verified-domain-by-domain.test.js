@@ -106,8 +106,6 @@ describe('given findVerifiedDomainByDomain query', () => {
           query {
             findVerifiedDomainByDomain(domain: "test.gc.ca") {
               id
-              domain
-              lastRan
             }
           }
         `,
@@ -133,8 +131,6 @@ describe('given findVerifiedDomainByDomain query', () => {
         data: {
           findVerifiedDomainByDomain: {
             id: toGlobalId('verifiedDomains', domain._key),
-            domain: 'test.gc.ca',
-            lastRan: null,
           },
         },
       }
@@ -163,8 +159,6 @@ describe('given findVerifiedDomainByDomain query', () => {
               query {
                 findVerifiedDomainByDomain(domain: "not-test.gc.ca") {
                   id
-                  domain
-                  lastRan
                 }
               }
             `,
@@ -220,8 +214,6 @@ describe('given findVerifiedDomainByDomain query', () => {
               query {
                 findVerifiedDomainByDomain(domain: "not-test.gc.ca") {
                   id
-                  domain
-                  lastRan
                 }
               }
             `,

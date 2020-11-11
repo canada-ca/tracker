@@ -109,8 +109,6 @@ describe('given findVerifiedDomains query', () => {
                 cursor
                 node {
                   id
-                  domain
-                  lastRan
                 }
               }
               totalCount
@@ -152,8 +150,6 @@ describe('given findVerifiedDomains query', () => {
                 cursor: toGlobalId('verifiedDomains', domain._key),
                 node: {
                   id: toGlobalId('verifiedDomains', domain._key),
-                  domain: 'test.gc.ca',
-                  lastRan: null,
                 },
               },
             ],
@@ -197,8 +193,6 @@ describe('given findVerifiedDomains query', () => {
                     cursor
                     node {
                       id
-                      domain
-                      lastRan
                     }
                   }
                   totalCount
@@ -278,8 +272,6 @@ describe('given findVerifiedDomains query', () => {
                     cursor
                     node {
                       id
-                      domain
-                      lastRan
                     }
                   }
                   totalCount
