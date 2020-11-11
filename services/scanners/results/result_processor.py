@@ -485,6 +485,17 @@ def process_dns(results):
             .get("value", None)
         )
 
+        # Check if external reporting arrangement has been authorized
+        rua_accepting = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("rua", {})
+            .get("accepting", None)
+        )
+
+        if rua_accepting is not None and rua_accepting is False:
+            tags["dmarc"].append("dmarc22")
+
         if rua_tag is None or not rua_tag:
             tags["dmarc"].append("dmarc12")
         else:
