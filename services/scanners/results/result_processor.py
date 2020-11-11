@@ -378,53 +378,53 @@ def process_dns(results):
     tags = {"dmarc": [], "dkim": [], "spf": []}
 
     if results["dkim"].get("missing", None) is not None:
-		tags["dkim"].append("dkim2")
-	else:
-		for selector, data in results["dkim"].items():
-			if data.get("missing", None) is not None and "dkim2" not in tags["dkim"]:
-				tags["dkim"].append("dkim2")
-		for selector, data in results["dkim"].items():
-			key_size = data.get("key_size", None)
-			key_type = data.get("key_type", None)
+        tags["dkim"].append("dkim2")
+    else:
+        for selector, data in results["dkim"].items():
+            if data.get("missing", None) is not None and "dkim2" not in tags["dkim"]:
+                tags["dkim"].append("dkim2")
+        for selector, data in results["dkim"].items():
+            key_size = data.get("key_size", None)
+            key_type = data.get("key_type", None)
 
-			if key_size is None:
-				tags["dkim"].append("dkim9")
-			elif key_type is None:
-				tags["dkim"].append("dkim9")
-			else:
-				if key_size >= 4096 and key_type == "rsa":
-					tags["dkim"].append("dkim8")
-				elif key_size >= 2048 and key_type == "rsa":
-					tags["dkim"].append("dkim7")
-				elif key_size == 1024 and key_type == "rsa":
-					tags["dkim"].append("dkim6")
-				elif key_size < 1024 and key_type == "rsa":
-					tags["dkim"].append("dkim5")
-				else:
-					tags["dkim"].append("dkim9")
+            if key_size is None:
+                tags["dkim"].append("dkim9")
+            elif key_type is None:
+                tags["dkim"].append("dkim9")
+            else:
+                if key_size >= 4096 and key_type == "rsa":
+                    tags["dkim"].append("dkim8")
+                elif key_size >= 2048 and key_type == "rsa":
+                    tags["dkim"].append("dkim7")
+                elif key_size == 1024 and key_type == "rsa":
+                    tags["dkim"].append("dkim6")
+                elif key_size < 1024 and key_type == "rsa":
+                    tags["dkim"].append("dkim5")
+                else:
+                    tags["dkim"].append("dkim9")
 
-			# Invalid Crypto
-			invalid_crypto = data.get("txt_record", {}).get("k", None)
+            # Invalid Crypto
+            invalid_crypto = data.get("txt_record", {}).get("k", None)
 
-			if invalid_crypto is not None:
-				# if k != rsa
-				if invalid_crypto != "rsa":
-					tags["dkim"].append("dkim11")
+            if invalid_crypto is not None:
+                # if k != rsa
+                if invalid_crypto != "rsa":
+                    tags["dkim"].append("dkim11")
 
-			# Dkim value invalid
-			# Check if v, k, and p exist in txt_record
-			v_tag = data.get("txt_record", {}).get("v", None)
-			k_tag = data.get("txt_record", {}).get("k", None)
-			p_tag = data.get("txt_record", {}).get("p", None)
+            # Dkim value invalid
+            # Check if v, k, and p exist in txt_record
+            v_tag = data.get("txt_record", {}).get("v", None)
+            k_tag = data.get("txt_record", {}).get("k", None)
+            p_tag = data.get("txt_record", {}).get("p", None)
 
-			if v_tag is None and k_tag is None and p_tag is None:
-				if "dkim12" not in tags:
-					tags["dkim"].append("dkim12")
+            if v_tag is None and k_tag is None and p_tag is None:
+                if "dkim12" not in tags:
+                    tags["dkim"].append("dkim12")
 
-			# Testing Enabled
-			t_enabled = data.get("t_value", None)
-			if t_enabled is not None:
-				tags["dkim"].append("dkim13")
+            # Testing Enabled
+            t_enabled = data.get("t_value", None)
+            if t_enabled is not None:
+                tags["dkim"].append("dkim13")
 
     if results["dmarc"].get("missing", None) is not None:
         tags["dmarc"].append("dmarc2")
