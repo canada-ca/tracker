@@ -30,7 +30,7 @@ msgstr "todo"
 msgid "Authentication error. Please sign in."
 msgstr "todo"
 
-#: src/types/base/index.js:858
+#: src/types/base/index.js:870
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "todo"
 
@@ -830,10 +830,14 @@ msgstr "todo"
 
 #: src/queries/summaries/mail-summary.js:22
 #: src/queries/summaries/web-summary.js:22
+#: src/types/base/organization-summary.js:22
+#: src/types/base/organization-summary.js:46
 msgid "fail"
 msgstr "todo"
 
 #: src/queries/summaries/mail-summary.js:17
 #: src/queries/summaries/web-summary.js:17
+#: src/types/base/organization-summary.js:17
+#: src/types/base/organization-summary.js:41
 msgid "pass"
 msgstr "todo"
