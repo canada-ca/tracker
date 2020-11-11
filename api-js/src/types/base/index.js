@@ -951,13 +951,6 @@ const userAffiliationsType = new GraphQLObjectType({
   name: 'UserAffiliations',
   fields: () => ({
     id: globalIdField('affiliations'),
-    userId: {
-      type: GraphQLID,
-      description: "Affiliated user's ID",
-      resolve: ({ _to }) => {
-        return toGlobalId('users', _to.split('/')[1])
-      },
-    },
     permission: {
       type: RoleEnums,
       description: "User's level of access to a given organization.",
