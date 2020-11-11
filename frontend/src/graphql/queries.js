@@ -350,6 +350,7 @@ export const QUERY_USER = gql`
 export const DMARC_REPORT_SUMMARY_LIST = gql`
   query DmarcReportSummaryList($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
+      id
       yearlyDmarcSummaries {
         month
         year
@@ -407,6 +408,7 @@ export const DMARC_REPORT_PAGE = gql`
     $year: Year!
   ) {
     findDomainByDomain(domain: $domain) {
+      id
       yearlyDmarcSummaries {
         month
         year
@@ -516,6 +518,7 @@ export const DMARC_REPORT_DETAIL_TABLES = gql`
     $year: Year!
   ) {
     findDomainByDomain(domain: $domain) {
+      id
       dmarcSummaryByPeriod(month: $month, year: $year) {
         detailTables {
           dkimFailure {
