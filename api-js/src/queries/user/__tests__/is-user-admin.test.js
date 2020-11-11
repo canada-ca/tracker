@@ -3,13 +3,13 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema } = require('graphql')
 const { setupI18n } = require('@lingui/core')
-const { makeMigrations } = require('../../migrations')
-const { checkPermission, userRequired } = require('../auth')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { userLoaderByKey } = require('../loaders')
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
+const { makeMigrations } = require('../../../../migrations')
+const { checkPermission, userRequired } = require('../../../auth')
+const { createQuerySchema } = require('../..')
+const { createMutationSchema } = require('../../../mutations')
+const { userLoaderByKey } = require('../../../loaders')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
 
 describe('given the isUserAdmin query', () => {
   let query, drop, truncate, migrate, schema, collections, org, i18n, user

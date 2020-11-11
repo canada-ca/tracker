@@ -3,12 +3,12 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
-const { makeMigrations } = require('../../migrations')
-const { userRequired } = require('../auth')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
-const { userLoaderByKey, affiliationLoaderByUserId } = require('../loaders')
-const { cleanseInput } = require('../validators')
+const { makeMigrations } = require('../../../../migrations')
+const { userRequired } = require('../../../auth')
+const { createQuerySchema } = require('../..')
+const { createMutationSchema } = require('../../../mutations')
+const { userLoaderByKey, affiliationLoaderByUserId } = require('../../../loaders')
+const { cleanseInput } = require('../../../validators')
 
 describe('given the findMe query', () => {
   let query,
