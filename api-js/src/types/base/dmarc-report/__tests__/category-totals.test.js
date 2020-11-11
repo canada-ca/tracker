@@ -1,22 +1,22 @@
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema } = require('graphql')
-const { makeMigrations } = require('../../migrations')
-const { createQuerySchema } = require('../queries')
-const { createMutationSchema } = require('../mutations')
+const { makeMigrations } = require('../../../../../migrations')
+const { createQuerySchema } = require('../../../../queries')
+const { createMutationSchema } = require('../../../../mutations')
 const bcrypt = require('bcrypt')
 
-const { cleanseInput } = require('../validators')
+const { cleanseInput } = require('../../../../validators')
 const {
   checkDomainPermission,
   checkDomainOwnership,
   tokenize,
   userRequired,
-} = require('../auth')
+} = require('../../../../auth')
 const {
   domainLoaderByDomain,
   userLoaderByUserName,
   userLoaderByKey,
-} = require('../loaders')
+} = require('../../../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findDomainByDomain query', () => {
