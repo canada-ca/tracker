@@ -1,4 +1,4 @@
-const { generateDetailTableFields } = require('../loaders')
+const { generateDetailTableFields } = require('../..')
 
 describe('given the generateDetailTableFields function', () => {
   describe('given a successful generation', () => {

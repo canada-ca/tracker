@@ -2,13 +2,13 @@ require('jest-fetch-mock').enableFetchMocks()
 
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../locale/en/messages')
-const frenchMessages = require('../locale/fr/messages')
+const englishMessages = require('../../../locale/en/messages')
+const frenchMessages = require('../../../locale/fr/messages')
 const {
   dmarcReportLoader,
   generateDetailTableFields,
   generateGqlQuery,
-} = require('../loaders')
+} = require('../..')
 
 describe('given the domainLoaderDmarcReport function', () => {
   const fetch = fetchMock

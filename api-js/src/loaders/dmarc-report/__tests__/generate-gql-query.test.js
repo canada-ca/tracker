@@ -1,4 +1,4 @@
-const { generateGqlQuery, generateDetailTableFields } = require('../loaders')
+const { generateGqlQuery, generateDetailTableFields } = require('../..')
 
 describe('given the generateGqlQuery function', () => {
   describe('given a successful generation', () => {
