@@ -349,12 +349,11 @@ def process_ssl(results):
         tags.append("ssl6")
 
     # Heartbleed
-    heart_bleed = results["heartbleed"]
-    if heart_bleed is True:
+    if results["heartbleed"]:
         tags.append("ssl7")
 
     # openssl ccs injection
-    if results["openssl_ccs_injection"]
+    if results["openssl_ccs_injection"]:
         tags.append("ssl8")
 
     return tags
