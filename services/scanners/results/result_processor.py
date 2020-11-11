@@ -334,11 +334,11 @@ def process_ssl(results):
         return tags
 
     # SSL-rc4
-    ssl_rc4 = results["rc4"]
+    if results["rc4"]:
         tags.append("ssl3")
 
     # SSL-3des
-    ssl_3des = results["3des"]
+    if results["3des"]:
         tags.append("ssl4")
 
     # Acceptable certificate (e.g. SHA256, SHA384, AEAD)
