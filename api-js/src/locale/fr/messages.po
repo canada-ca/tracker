@@ -30,7 +30,7 @@ msgstr "todo"
 msgid "Authentication error. Please sign in."
 msgstr "todo"
 
-#: src/types/base/index.js:857
+#: src/types/base/index.js:858
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "todo"
 
@@ -259,8 +259,8 @@ msgstr "todo"
 #: src/mutations/user/authenticate.js:66
 #: src/mutations/user/authenticate.js:83
 #: src/mutations/user/authenticate.js:101
-#: src/notify/notify-send-authenticate-email.js:20
-#: src/notify/notify-send-authenticate-text-msg.js:21
+#: src/notify/notify-send-authenticate-email.js:16
+#: src/notify/notify-send-authenticate-text-msg.js:17
 msgid "Unable to authenticate. Please try again."
 msgstr "todo"
 
@@ -551,20 +551,20 @@ msgstr "todo"
 msgid "Unable to send TFA code, please try again."
 msgstr "todo"
 
-#: src/notify/notify-send-org-invite-create-account.js:24
-#: src/notify/notify-send-org-invite-email.js:22
+#: src/notify/notify-send-org-invite-create-account.js:22
+#: src/notify/notify-send-org-invite-email.js:20
 msgid "Unable to send org invite email. Please try again."
 msgstr "todo"
 
-#: src/notify/notify-send-password-reset-email.js:23
+#: src/notify/notify-send-password-reset-email.js:21
 msgid "Unable to send password reset email. Please try again."
 msgstr "todo"
 
-#: src/notify/notify-send-tfa-text-msg.js:23
+#: src/notify/notify-send-tfa-text-msg.js:21
 msgid "Unable to send two factor authentication message. Please try again."
 msgstr "todo"
 
-#: src/notify/notify-send-verification-email.js:23
+#: src/notify/notify-send-verification-email.js:21
 msgid "Unable to send verification email. Please try again."
 msgstr "todo"
 
