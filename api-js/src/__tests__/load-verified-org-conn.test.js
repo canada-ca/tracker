@@ -33,6 +33,18 @@ describe('given the load organizations connection function', () => {
     await truncate()
     org = await collections.organizations.save({
       verified: true,
+      summaries: {
+        web: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+        mail: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+      },
       orgDetails: {
         en: {
           slug: 'treasury-board-secretariat',
@@ -58,6 +70,18 @@ describe('given the load organizations connection function', () => {
     })
     orgTwo = await collections.organizations.save({
       verified: true,
+      summaries: {
+        web: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+        mail: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+      },
       orgDetails: {
         en: {
           slug: 'communications-security-establishment',

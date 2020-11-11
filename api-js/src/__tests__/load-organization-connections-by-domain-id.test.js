@@ -48,6 +48,19 @@ describe('given the load organizations connection function', () => {
       emailValidated: false,
     })
     org = await collections.organizations.save({
+      verified: false,
+      summaries: {
+        web: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+        mail: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+      },
       orgDetails: {
         en: {
           slug: 'treasury-board-secretariat',
@@ -72,6 +85,19 @@ describe('given the load organizations connection function', () => {
       },
     })
     orgTwo = await collections.organizations.save({
+      verified: false,
+      summaries: {
+        web: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+        mail: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+      },
       orgDetails: {
         en: {
           slug: 'communications-security-establishment',
