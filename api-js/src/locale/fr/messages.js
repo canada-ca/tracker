@@ -53,6 +53,7 @@
     'Password was successfully reset.': 'todo',
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
+    'Permission error, not an admin for this user.': 'todo',
     'Profile successfully updated.': 'todo',
     'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.':
       'todo',

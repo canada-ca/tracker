@@ -5,7 +5,7 @@ const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
 const { makeMigrations } = require('../../../../migrations')
-const { userRequired } = require('../../../auth')
+const { userRequired, checkUserIsAdminForUser } = require('../../../auth')
 const { createQuerySchema } = require('../..')
 const { cleanseInput } = require('../../../validators')
 const { createMutationSchema } = require('../../../mutations')
@@ -144,6 +144,10 @@ describe('given the findUserByUsername query', () => {
                     userId: user._key,
                     userLoaderByKey: userLoaderByKey(query),
                   }),
+                  checkUserIsAdminForUser: checkUserIsAdminForUser({
+                    userId: user._key,
+                    query,
+                  }),
                 },
                 loaders: {
                   userLoaderByUserName: userLoaderByUserName(query),
@@ -169,15 +173,18 @@ describe('given the findUserByUsername query', () => {
             expect(response).toEqual(expectedResponse)
           })
         })
-        describe('if the user is an admin for an organization', () => {
+        describe('if the user is an admin for the same organization', () => {
           beforeEach(async () => {
-            await query`
-              INSERT {
-                _from: ${org._id},
-                _to: ${user._id},
-                permission: "admin"
-              } INTO affiliations
-            `
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'admin',
+            })
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: userTwo._id,
+              permission: 'user',
+            })
           })
           it('will return specified user', async () => {
             const response = await graphql(
@@ -205,6 +212,10 @@ describe('given the findUserByUsername query', () => {
                   userRequired: userRequired({
                     userId: user._key,
                     userLoaderByKey: userLoaderByKey(query),
+                  }),
+                  checkUserIsAdminForUser: checkUserIsAdminForUser({
+                    userId: user._key,
+                    query,
                   }),
                 },
                 loaders: {
@@ -234,15 +245,74 @@ describe('given the findUserByUsername query', () => {
       })
     })
     describe('given an unsuccessful query', () => {
+      describe('if the user is an admin for a different organization', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+          await collections.affiliations.save({
+            _from: "organizations/2",
+            _to: userTwo._id,
+            permission: 'user',
+          })
+        })
+        it('will return specified user', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findUserByUsername(
+                  userName: "test.accounttwo@istio.actually.exists"
+                ) {
+                  id
+                  userName
+                  displayName
+                  preferredLang
+                  tfaValidated
+                  emailValidated
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userId: user._key,
+              query: query,
+              auth: {
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+                checkUserIsAdminForUser: checkUserIsAdminForUser({
+                  userId: user._key,
+                  query,
+                }),
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              validators: {
+                cleanseInput,
+              },
+            },
+          )
+          expect(response.errors).toEqual([new GraphQLError('User could not be queried.')])
+        })
+      })
       describe('if the user is only a user for their organization(s)', () => {
         beforeEach(async () => {
-          await query`
-            INSERT {
-              _from: ${org._id},
-              _to: ${user._id},
-              permission: "user"
-            } INTO affiliations
-          `
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: userTwo._id,
+            permission: 'user',
+          })
         })
         it('will return error', async () => {
           const response = await graphql(
@@ -271,6 +341,10 @@ describe('given the findUserByUsername query', () => {
                   userId: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
+                checkUserIsAdminForUser: checkUserIsAdminForUser({
+                  userId: user._key,
+                  query,
+                }),
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
@@ -286,107 +360,6 @@ describe('given the findUserByUsername query', () => {
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `User ${user._key} is not permitted to query users.`,
-          ])
-        })
-      })
-      describe('database error occurs', () => {
-        it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          try {
-            await graphql(
-              schema,
-              `
-                query {
-                  findUserByUsername(
-                    userName: "test.accounttwo@istio.actually.exists"
-                  ) {
-                    id
-                    userName
-                    displayName
-                    preferredLang
-                    tfaValidated
-                    emailValidated
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                userId: user._key,
-                query: mockedQuery,
-                auth: {
-                  userRequired: userRequired({
-                    userId: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
-                  }),
-                },
-                loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
-                },
-                validators: {
-                  cleanseInput,
-                },
-              },
-            )
-          } catch (err) {
-            expect(err).toEqual(
-              new Error(`Unable to query user, please try again.`),
-            )
-          }
-
-          expect(consoleOutput).toEqual([
-            `Database error occurred when user: ${user._key} was querying for users, err: Error: Database error occurred.`,
-          ])
-        })
-      })
-      describe('no username is provided', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              query {
-                findUserByUsername {
-                  id
-                  userName
-                  displayName
-                  preferredLang
-                  tfaValidated
-                  emailValidated
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userId: user._key,
-              query: query,
-              auth: {
-                userRequired: userRequired({
-                  userId: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
-                }),
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              `Unable to query user without a username, please try again.`,
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} provided no username argument to query`,
           ])
         })
       })
@@ -443,6 +416,10 @@ describe('given the findUserByUsername query', () => {
                     userId: user._key,
                     userLoaderByKey: userLoaderByKey(query),
                   }),
+                  checkUserIsAdminForUser: checkUserIsAdminForUser({
+                    userId: user._key,
+                    query,
+                  }),
                 },
                 loaders: {
                   userLoaderByUserName: userLoaderByUserName(query),
@@ -468,15 +445,18 @@ describe('given the findUserByUsername query', () => {
             expect(response).toEqual(expectedResponse)
           })
         })
-        describe('if the user is an admin for an organization', () => {
+        describe('if the user is an admin for the same organization', () => {
           beforeEach(async () => {
-            await query`
-              INSERT {
-                _from: ${org._id},
-                _to: ${user._id},
-                permission: "admin"
-              } INTO affiliations
-            `
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'admin',
+            })
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: userTwo._id,
+              permission: 'user',
+            })
           })
           it('will return specified user', async () => {
             const response = await graphql(
@@ -504,6 +484,10 @@ describe('given the findUserByUsername query', () => {
                   userRequired: userRequired({
                     userId: user._key,
                     userLoaderByKey: userLoaderByKey(query),
+                  }),
+                  checkUserIsAdminForUser: checkUserIsAdminForUser({
+                    userId: user._key,
+                    query,
                   }),
                 },
                 loaders: {
@@ -533,15 +517,74 @@ describe('given the findUserByUsername query', () => {
       })
     })
     describe('given an unsuccessful query', () => {
+      describe('if the user is an admin for a different organization', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+          await collections.affiliations.save({
+            _from: "organizations/2",
+            _to: userTwo._id,
+            permission: 'user',
+          })
+        })
+        it('will return specified user', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findUserByUsername(
+                  userName: "test.accounttwo@istio.actually.exists"
+                ) {
+                  id
+                  userName
+                  displayName
+                  preferredLang
+                  tfaValidated
+                  emailValidated
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userId: user._key,
+              query: query,
+              auth: {
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+                checkUserIsAdminForUser: checkUserIsAdminForUser({
+                  userId: user._key,
+                  query,
+                }),
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              validators: {
+                cleanseInput,
+              },
+            },
+          )
+          expect(response.errors).toEqual([new GraphQLError('todo')])
+        })
+      })
       describe('if the user is only a user for their organization(s)', () => {
         beforeEach(async () => {
-          await query`
-            INSERT {
-              _from: ${org._id},
-              _to: ${user._id},
-              permission: "user"
-            } INTO affiliations
-          `
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: userTwo._id,
+            permission: 'user',
+          })
         })
         it('will return error', async () => {
           const response = await graphql(
@@ -570,100 +613,9 @@ describe('given the findUserByUsername query', () => {
                   userId: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-              },
-              validators: {
-                cleanseInput,
-              },
-            },
-          )
-
-          const error = [new GraphQLError(`todo`)]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User ${user._key} is not permitted to query users.`,
-          ])
-        })
-      })
-      describe('database error occurs', () => {
-        it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          try {
-            await graphql(
-              schema,
-              `
-                query {
-                  findUserByUsername(
-                    userName: "test.accounttwo@istio.actually.exists"
-                  ) {
-                    id
-                    userName
-                    displayName
-                    preferredLang
-                    tfaValidated
-                    emailValidated
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                userId: user._key,
-                query: mockedQuery,
-                auth: {
-                  userRequired: userRequired({
-                    userId: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
-                  }),
-                },
-                loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
-                },
-                validators: {
-                  cleanseInput,
-                },
-              },
-            )
-          } catch (err) {
-            expect(err).toEqual(new Error(`todo`))
-          }
-
-          expect(consoleOutput).toEqual([
-            `Database error occurred when user: ${user._key} was querying for users, err: Error: Database error occurred.`,
-          ])
-        })
-      })
-      describe('no username is provided', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              query {
-                findUserByUsername {
-                  id
-                  userName
-                  displayName
-                  preferredLang
-                  tfaValidated
-                  emailValidated
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userId: user._key,
-              query: query,
-              auth: {
-                userRequired: userRequired({
+                checkUserIsAdminForUser: checkUserIsAdminForUser({
                   userId: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  query,
                 }),
               },
               loaders: {
@@ -679,7 +631,7 @@ describe('given the findUserByUsername query', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} provided no username argument to query`,
+            `User ${user._key} is not permitted to query users.`,
           ])
         })
       })

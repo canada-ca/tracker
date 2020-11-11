@@ -22,6 +22,7 @@ const {
   checkDomainOwnership,
   checkDomainPermission,
   checkPermission,
+  checkUserIsAdminForUser,
   tokenize,
   userRequired,
   verifyToken,
@@ -127,6 +128,7 @@ const createContext = ({ context, request, response }) => {
       checkDomainOwnership: checkDomainOwnership({ i18n, userId, query }),
       checkDomainPermission: checkDomainPermission({ i18n, userId, query }),
       checkPermission: checkPermission({ i18n, userId, query }),
+      checkUserIsAdminForUser: checkUserIsAdminForUser({ i18n, userId, query }),
       tokenize,
       userRequired: userRequired({
         i18n,
