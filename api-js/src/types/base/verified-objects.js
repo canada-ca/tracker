@@ -13,6 +13,7 @@ const { GraphQLDateTime } = require('graphql-scalars')
 const { Domain, Acronym, Slug } = require('../../scalars')
 const { nodeInterface } = require('../node')
 const { domainStatus } = require('./domain-status')
+const { organizationSummaryType } = require('./organization-summary')
 
 /* Domain related objects */
 const verifiedDomainType = new GraphQLObjectType({
@@ -117,6 +118,11 @@ const verifiedOrganizationType = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: 'Wether the organization is a verified organization.',
       resolve: ({ verified }) => verified,
+    },
+    summaries: {
+      type: organizationSummaryType,
+      description: 'Summaries based on scan types that are preformed on the given organizations domains.',
+      resolve: ({ summaries }) => summaries,
     },
     domainCount: {
       type: GraphQLInt,
