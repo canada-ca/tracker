@@ -1,6 +1,6 @@
 const { Kind } = require('graphql')
 const { stringify } = require('jest-matcher-utils')
-const { Selectors } = require('../scalars')
+const { Selectors } = require('..')
 
 describe('given a selectors scalar', () => {
   describe('serializing inputs', () => {

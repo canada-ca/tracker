@@ -1,6 +1,6 @@
 const { Kind } = require('graphql')
 const { stringify } = require('jest-matcher-utils')
-const { Acronym } = require('../scalars')
+const { Acronym } = require('..')
 
 describe('given a acronym scalar', () => {
   describe('serializing inputs', () => {

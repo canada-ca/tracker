@@ -1,6 +1,6 @@
 const { Kind } = require('graphql')
 const { stringify } = require('jest-matcher-utils')
-const { Domain } = require('../scalars')
+const { Domain } = require('..')
 
 describe('given a domain scalar', () => {
   describe('serializing inputs', () => {
