@@ -9,7 +9,7 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends apt-utils && \
 apt-get install -y --no-install-recommends python3 python3-pip && \
 apt-get install -y --no-install-recommends python3-setuptools python3-wheel && \
-apt-get install -y --no-install-recommends build-essential python3-dev
+apt-get install -y --no-install-recommends build-essential python3-dev libpq-dev
 
 # Install dependencies.
 RUN pip3 install -r requirements.txt
