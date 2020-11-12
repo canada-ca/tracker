@@ -6,4 +6,3 @@ redis
 rq
 flask
 pretend
-psycopg2-binary
