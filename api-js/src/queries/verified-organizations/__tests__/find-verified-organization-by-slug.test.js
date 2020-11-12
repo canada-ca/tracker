@@ -102,23 +102,6 @@ describe('given findOrganizationBySlugQuery', () => {
                   orgSlug: "treasury-board-secretariat"
                 ) {
                   id
-                  acronym
-                  name
-                  slug
-                  zone
-                  sector
-                  country
-                  province
-                  city
-                  verified
-                  domainCount
-                  domains(first: 5) {
-                    edges {
-                      node {
-                        id
-                      }
-                    }
-                  }
                 }
               }
             `,
@@ -148,25 +131,6 @@ describe('given findOrganizationBySlugQuery', () => {
             data: {
               findVerifiedOrganizationBySlug: {
                 id: toGlobalId('verifiedOrganizations', org._key),
-                slug: 'treasury-board-secretariat',
-                acronym: 'TBS',
-                name: 'Treasury Board of Canada Secretariat',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-                verified: true,
-                domainCount: 1,
-                domains: {
-                  edges: [
-                    {
-                      node: {
-                        id: toGlobalId('verifiedDomains', domain._key),
-                      },
-                    },
-                  ],
-                },
               },
             },
           }
@@ -186,23 +150,6 @@ describe('given findOrganizationBySlugQuery', () => {
                   orgSlug: "not-treasury-board-secretariat"
                 ) {
                   id
-                  acronym
-                  name
-                  slug
-                  zone
-                  sector
-                  country
-                  province
-                  city
-                  verified
-                  domainCount
-                  domains(first: 5) {
-                    edges {
-                      node {
-                        id
-                      }
-                    }
-                  }
                 }
               }
             `,
@@ -262,23 +209,6 @@ describe('given findOrganizationBySlugQuery', () => {
                   orgSlug: "secretariat-conseil-tresor"
                 ) {
                   id
-                  acronym
-                  name
-                  slug
-                  zone
-                  sector
-                  country
-                  province
-                  city
-                  verified
-                  domainCount
-                  domains(first: 5) {
-                    edges {
-                      node {
-                        id
-                      }
-                    }
-                  }
                 }
               }
             `,
@@ -308,25 +238,6 @@ describe('given findOrganizationBySlugQuery', () => {
             data: {
               findVerifiedOrganizationBySlug: {
                 id: toGlobalId('verifiedOrganizations', org._key),
-                slug: 'secretariat-conseil-tresor',
-                acronym: 'SCT',
-                name: 'Secrétariat du Conseil Trésor du Canada',
-                zone: 'FED',
-                sector: 'TBS',
-                country: 'Canada',
-                province: 'Ontario',
-                city: 'Ottawa',
-                verified: true,
-                domainCount: 1,
-                domains: {
-                  edges: [
-                    {
-                      node: {
-                        id: toGlobalId('verifiedDomains', domain._key),
-                      },
-                    },
-                  ],
-                },
               },
             },
           }
@@ -357,23 +268,6 @@ describe('given findOrganizationBySlugQuery', () => {
                   orgSlug: "ne-pas-secretariat-conseil-tresor"
                 ) {
                   id
-                  acronym
-                  name
-                  slug
-                  zone
-                  sector
-                  country
-                  province
-                  city
-                  verified
-                  domainCount
-                  domains(first: 5) {
-                    edges {
-                      node {
-                        id
-                      }
-                    }
-                  }
                 }
               }
             `,

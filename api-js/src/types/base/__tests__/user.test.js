@@ -5,22 +5,25 @@ const { graphql, GraphQLSchema } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 const { makeMigrations } = require('../../../../migrations')
 const { userRequired } = require('../../../auth')
-const { createQuerySchema } = require('../..')
+const { createQuerySchema } = require('../../../queries')
 const { createMutationSchema } = require('../../../mutations')
 const {
   userLoaderByKey,
   affiliationLoaderByUserId,
+  orgLoaderByKey,
 } = require('../../../loaders')
 const { cleanseInput } = require('../../../validators')
 
-describe('given the findMe query', () => {
+describe('given the user object', () => {
   let query,
     drop,
     truncate,
     migrate,
     schema,
     collections,
-    user
+    user,
+    org,
+    affiliation
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -52,6 +55,48 @@ describe('given the findMe query', () => {
       tfaValidated: false,
       emailValidated: false,
     })
+    org = await collections.organizations.save({
+      verified: false,
+      summaries: {
+        web: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+        mail: {
+          pass: 50,
+          fail: 1000,
+          total: 1050,
+        },
+      },
+      orgDetails: {
+        en: {
+          slug: 'treasury-board-secretariat',
+          acronym: 'TBS',
+          name: 'Treasury Board of Canada Secretariat',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+        fr: {
+          slug: 'secretariat-conseil-tresor',
+          acronym: 'SCT',
+          name: 'Secrétariat du Conseil Trésor du Canada',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+      },
+    })
+    affiliation = await collections.affiliations.save({
+      _to: user._id,
+      _from: org._id,
+      permission: 'user',
+    })
     consoleOutput = []
   })
 
@@ -59,14 +104,26 @@ describe('given the findMe query', () => {
     await drop()
   })
 
-  describe('users successfully performs query', () => {
-    it('will return specified user', async () => {
+  describe('all fields are being queried', () => {
+    it('returns all fields', async () => {
       const response = await graphql(
         schema,
         `
           query {
             findMe {
               id
+              userName
+              displayName
+              preferredLang
+              tfaValidated
+              emailValidated
+              affiliations(first: 5) {
+                edges {
+                  node {
+                    id
+                  }
+                }
+              }
             }
           }
         `,
@@ -79,6 +136,8 @@ describe('given the findMe query', () => {
             }),
           },
           loaders: {
+            userLoaderByKey: userLoaderByKey(query, user._key),
+            orgLoaderByKey: orgLoaderByKey(query, 'en', user._key),
             affiliationLoaderByUserId: affiliationLoaderByUserId(
               query,
               user._key,
@@ -92,6 +151,20 @@ describe('given the findMe query', () => {
         data: {
           findMe: {
             id: toGlobalId('users', user._key),
+            userName: 'test.account@istio.actually.exists',
+            displayName: 'Test Account',
+            preferredLang: 'FRENCH',
+            tfaValidated: false,
+            emailValidated: false,
+            affiliations: {
+              edges: [
+                {
+                  node: {
+                    id: toGlobalId('affiliations', affiliation._key),
+                  },
+                },
+              ],
+            },
           },
         },
       }

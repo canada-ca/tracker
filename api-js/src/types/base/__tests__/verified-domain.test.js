@@ -6,7 +6,7 @@ const { setupI18n } = require('@lingui/core')
 const englishMessages = require('../../../locale/en/messages')
 const frenchMessages = require('../../../locale/fr/messages')
 const { makeMigrations } = require('../../../../migrations')
-const { createQuerySchema } = require('../..')
+const { createQuerySchema } = require('../../../queries')
 const { createMutationSchema } = require('../../../mutations')
 const { cleanseInput } = require('../../../validators')
 const {
@@ -15,7 +15,7 @@ const {
 } = require('../../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given findVerifiedDomains query', () => {
+describe('given the verified domains connection, and verified domains object', () => {
   let query, drop, truncate, migrate, schema, collections, domain, org, i18n
 
   beforeAll(async () => {
@@ -98,8 +98,8 @@ describe('given findVerifiedDomains query', () => {
     await drop()
   })
 
-  describe('given successful domain retrieval', () => {
-    it('returns domain', async () => {
+  describe('querying all fields', () => {
+    it('resolves all fields', async () => {
       const response = await graphql(
         schema,
         `
@@ -109,6 +109,18 @@ describe('given findVerifiedDomains query', () => {
                 cursor
                 node {
                   id
+                  domain
+                  lastRan
+                  status {
+                    dkim
+                  }
+                  organizations(first: 5) {
+                    edges {
+                      node {
+                        id
+                      }
+                    }
+                  }
                 }
               }
               totalCount
@@ -150,6 +162,20 @@ describe('given findVerifiedDomains query', () => {
                 cursor: toGlobalId('verifiedDomains', domain._key),
                 node: {
                   id: toGlobalId('verifiedDomains', domain._key),
+                  domain: 'test.gc.ca',
+                  lastRan: null,
+                  status: {
+                    dkim: 'PASS',
+                  },
+                  organizations: {
+                    edges: [
+                      {
+                        node: {
+                          id: toGlobalId('verifiedOrganizations', org._key),
+                        },
+                      },
+                    ],
+                  },
                 },
               },
             ],
@@ -164,165 +190,6 @@ describe('given findVerifiedDomains query', () => {
         },
       }
       expect(response).toEqual(expectedResponse)
-    })
-  })
-
-  describe('users language is set to english', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        language: 'en',
-        locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
-        catalogs: {
-          en: englishMessages,
-          fr: frenchMessages,
-        },
-      })
-    })
-    describe('given unsuccessful domain retrieval', () => {
-      describe('domain cannot be found', () => {
-        it('returns an appropriate error message', async () => {
-          await truncate()
-
-          const response = await graphql(
-            schema,
-            `
-              query {
-                findVerifiedDomains(first: 5) {
-                  edges {
-                    cursor
-                    node {
-                      id
-                    }
-                  }
-                  totalCount
-                  pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    startCursor
-                    endCursor
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: query,
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                verifiedDomainLoaderConnections: verifiedDomainLoaderConnections(
-                  query,
-                  cleanseInput,
-                  i18n,
-                ),
-                verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
-                  query,
-                  'en',
-                  cleanseInput,
-                ),
-              },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              findVerifiedDomains: {
-                edges: [],
-                totalCount: 0,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  startCursor: '',
-                  endCursor: '',
-                },
-              },
-            },
-          }
-          expect(response).toEqual(expectedResponse)
-        })
-      })
-    })
-  })
-  describe('users language is set to french', () => {
-    beforeAll(() => {
-      i18n = setupI18n({
-        language: 'fr',
-        locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
-        catalogs: {
-          en: englishMessages,
-          fr: frenchMessages,
-        },
-      })
-    })
-    describe('given unsuccessful domain retrieval', () => {
-      describe('domain cannot be found', () => {
-        it('returns an appropriate error message', async () => {
-          await truncate()
-
-          const response = await graphql(
-            schema,
-            `
-              query {
-                findVerifiedDomains(first: 5) {
-                  edges {
-                    cursor
-                    node {
-                      id
-                    }
-                  }
-                  totalCount
-                  pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    startCursor
-                    endCursor
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: query,
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                verifiedDomainLoaderConnections: verifiedDomainLoaderConnections(
-                  query,
-                  cleanseInput,
-                  i18n,
-                ),
-                verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
-                  query,
-                  'en',
-                  cleanseInput,
-                ),
-              },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              findVerifiedDomains: {
-                edges: [],
-                totalCount: 0,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  startCursor: '',
-                  endCursor: '',
-                },
-              },
-            },
-          }
-          expect(response).toEqual(expectedResponse)
-        })
-      })
     })
   })
 })

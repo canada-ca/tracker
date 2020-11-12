@@ -5,7 +5,6 @@ const {
   GraphQLString,
   GraphQLBoolean,
   GraphQLInt,
-  GraphQLID,
   GraphQLList,
   GraphQLNonNull,
 } = require('graphql')
@@ -13,7 +12,6 @@ const {
   globalIdField,
   connectionDefinitions,
   connectionArgs,
-  toGlobalId,
 } = require('graphql-relay')
 const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
 const { t } = require('@lingui/macro')
@@ -951,13 +949,6 @@ const userAffiliationsType = new GraphQLObjectType({
   name: 'UserAffiliations',
   fields: () => ({
     id: globalIdField('affiliations'),
-    userId: {
-      type: GraphQLID,
-      description: "Affiliated user's ID",
-      resolve: ({ _to }) => {
-        return toGlobalId('users', _to.split('/')[1])
-      },
-    },
     permission: {
       type: RoleEnums,
       description: "User's level of access to a given organization.",

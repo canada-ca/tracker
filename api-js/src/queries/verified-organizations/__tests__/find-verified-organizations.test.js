@@ -123,16 +123,6 @@ describe('given findVerifiedOrganizations', () => {
                     cursor
                     node {
                       id
-                      acronym
-                      name
-                      slug
-                      zone
-                      sector
-                      country
-                      province
-                      city
-                      verified
-                      domainCount
                     }
                   }
                   totalCount
@@ -172,32 +162,12 @@ describe('given findVerifiedOrganizations', () => {
                     cursor: toGlobalId('verifiedOrganizations', orgOne._key),
                     node: {
                       id: toGlobalId('verifiedOrganizations', orgOne._key),
-                      slug: 'treasury-board-secretariat',
-                      acronym: 'TBS',
-                      name: 'Treasury Board of Canada Secretariat',
-                      zone: 'FED',
-                      sector: 'TBS',
-                      country: 'Canada',
-                      province: 'Ontario',
-                      city: 'Ottawa',
-                      verified: true,
-                      domainCount: 0,
                     },
                   },
                   {
                     cursor: toGlobalId('verifiedOrganizations', orgTwo._key),
                     node: {
                       id: toGlobalId('verifiedOrganizations', orgTwo._key),
-                      slug: 'not-treasury-board-secretariat',
-                      acronym: 'NTBS',
-                      name: 'Not Treasury Board of Canada Secretariat',
-                      zone: 'NFED',
-                      sector: 'NTBS',
-                      country: 'Canada',
-                      province: 'Ontario',
-                      city: 'Ottawa',
-                      verified: true,
-                      domainCount: 0,
                     },
                   },
                 ],
@@ -226,16 +196,6 @@ describe('given findVerifiedOrganizations', () => {
                     cursor
                     node {
                       id
-                      acronym
-                      name
-                      slug
-                      zone
-                      sector
-                      country
-                      province
-                      city
-                      verified
-                      domainCount
                     }
                   }
                   totalCount
@@ -310,16 +270,6 @@ describe('given findVerifiedOrganizations', () => {
                     cursor
                     node {
                       id
-                      acronym
-                      name
-                      slug
-                      zone
-                      sector
-                      country
-                      province
-                      city
-                      verified
-                      domainCount
                     }
                   }
                   totalCount
@@ -359,32 +309,12 @@ describe('given findVerifiedOrganizations', () => {
                     cursor: toGlobalId('verifiedOrganizations', orgOne._key),
                     node: {
                       id: toGlobalId('verifiedOrganizations', orgOne._key),
-                      slug: 'secretariat-conseil-tresor',
-                      acronym: 'SCT',
-                      name: 'Secrétariat du Conseil Trésor du Canada',
-                      zone: 'FED',
-                      sector: 'TBS',
-                      country: 'Canada',
-                      province: 'Ontario',
-                      city: 'Ottawa',
-                      verified: true,
-                      domainCount: 0,
                     },
                   },
                   {
                     cursor: toGlobalId('verifiedOrganizations', orgTwo._key),
                     node: {
                       id: toGlobalId('verifiedOrganizations', orgTwo._key),
-                      slug: 'ne-pas-secretariat-conseil-tresor',
-                      acronym: 'NPSCT',
-                      name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
-                      zone: 'NPFED',
-                      sector: 'NPTBS',
-                      country: 'Canada',
-                      province: 'Ontario',
-                      city: 'Ottawa',
-                      verified: true,
-                      domainCount: 0,
                     },
                   },
                 ],
@@ -413,16 +343,6 @@ describe('given findVerifiedOrganizations', () => {
                     cursor
                     node {
                       id
-                      acronym
-                      name
-                      slug
-                      zone
-                      sector
-                      country
-                      province
-                      city
-                      verified
-                      domainCount
                     }
                   }
                   totalCount
