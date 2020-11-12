@@ -13,7 +13,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
           <Trans>For in-depth CCCS implementation guidance:</Trans>
         </Text>
         <Link
-          color="teal.500"
+          color="teal.600"
           href={guidanceTags[categoryName][guidanceTag].ref_links_guide.link}
           target="_blank"
         >
@@ -42,7 +42,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
           <Trans>For technical implementation guidance:</Trans>
         </Text>
         <Link
-          color="teal.500"
+          color="teal.600"
           href={
             guidanceTags[categoryName][guidanceTag].ref_links_technical.link
           }
@@ -76,7 +76,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
   const warningIcon = <Icon name="warning" color="weak" />
 
   return (
-    <Stack isInline align="center">
+    <Stack isInline align="center" px="2" pt={['2', '0']}>
       {!smallDevice && warningIcon}
       <Box>
         <Stack isInline>
