@@ -8,7 +8,7 @@ https_result_data = {
     "self_signed_cert": False,
 }
 
-expected_https_tags = ["https11"]
+expected_https_tags = ['https11', 'https-fail']
 
 ssl_result_data = {
     "rc4": False,
@@ -39,7 +39,7 @@ ssl_result_data = {
     "acceptable_certificate": True,
 }
 
-expected_ssl_tags = ["ssl6"]
+expected_ssl_tags = ['ssl5', 'ssl-pass']
 
 dns_result_data = {
     "mx": {
@@ -153,6 +153,7 @@ dns_result_data = {
                         "scheme": "mailto",
                         "address": "dmarc@cyber.gc.ca",
                         "size_limit": None,
+                        "accepting": True,
                     }
                 ],
                 "explicit": True,
@@ -163,6 +164,7 @@ dns_result_data = {
                         "scheme": "mailto",
                         "address": "dmarc@cyber.gc.ca",
                         "size_limit": None,
+                        "accepting": True,
                     }
                 ],
                 "explicit": True,
@@ -193,7 +195,7 @@ dns_result_data = {
 }
 
 expected_dns_tags = {
-    "dmarc": ["dmarc4", "dmarc7", "dmarc10", "dmarc11", "dmarc15", "dmarc17"],
-    "dkim": ["dkim9", "dkim12"],
-    "spf": ["spf8", "spf11", "spf11", "spf11"],
+    "dmarc": ['dmarc23', 'dmarc4', 'dmarc7', 'dmarc10', 'dmarc11', 'dmarc14', 'dmarc17', 'dmarc-pass'],
+    "dkim": ['dkim6', 'dkim-fail'],
+    "spf": ['spf12', 'spf8', 'spf-pass'],
 }

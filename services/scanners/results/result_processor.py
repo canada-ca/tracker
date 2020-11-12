@@ -283,7 +283,7 @@ def process_https(results):
     # HSTS
     hsts = results.get("hsts", None)
 
-    if hsts is not None:
+    if hsts is not None and hsts.lower() != "no hsts":
         if isinstance(hsts, str):
             hsts = hsts.lower()
 
@@ -292,12 +292,12 @@ def process_https(results):
         elif hsts == "no hsts":
             tags.append("https9")
 
-    # HSTS Age
-    hsts_age = results.get("hsts_age", None)
+        # HSTS Age
+        hsts_age = results.get("hsts_age", None)
 
-    if hsts_age is not None:
-        if hsts_age < 31536000 and "https" not in tags:
-            tags.append("https10")
+        if hsts_age is not None:
+            if hsts_age < 31536000 and "https" not in tags:
+                tags.append("https10")
 
     # Preload Status
     preload_status = results.get("preload_status", None)
@@ -312,18 +312,24 @@ def process_https(results):
             tags.append("https12")
 
     # Expired Cert
-    expired_cert = results.get("expired_cert", None)
+    expired_cert = results.get("expired_cert", False)
 
-    if expired_cert is not None:
-        if expired_cert is True:
-            tags.append("https13")
+    if expired_cert is True:
+        tags.append("https13")
 
     # Self Signed Cert
-    self_signed_cert = results.get("https", {}).get("self_signed_cert", None)
+    self_signed_cert = results.get("https", {}).get("self_signed_cert", False)
 
-    if self_signed_cert is not None:
-        if self_signed_cert is True:
-            tags.append("https14")
+    if self_signed_cert is True:
+        tags.append("https14")
+
+    for tag in ["https2", "https3", "https4", "https5", "https6", "https7", "https8", "https9", "https10", "https11", "https12", "https13", "https14"]:
+        if tag in tags:
+            if not "https-fail" in tags:
+                tags.append("https-fail")
+
+    if not "https-fail" in tags:
+            tags.append("https-pass")
 
     return tags
 
@@ -336,48 +342,35 @@ def process_ssl(results):
         return tags
 
     # SSL-rc4
-    ssl_rc4 = results.get("rc4", None)
-    if ssl_rc4 is not None:
-        if ssl_rc4 is True:
-            tags.append("ssl3")
+    if results["rc4"]:
+        tags.append("ssl3")
 
     # SSL-3des
-    ssl_3des = results.get("3des", None)
-    if ssl_3des is not None:
-        if ssl_3des is True:
-            tags.append("ssl4")
+    if results["3des"]:
+        tags.append("ssl4")
 
-    # Signature Algorithm
-    signature_algorithm = results.get("signature_algorithm", None)
+    # Acceptable certificate (e.g. SHA256, SHA384, AEAD)
+    if results["acceptable_certificate"]:
+        tags.append("ssl5")
 
-    if signature_algorithm is not None:
-        if isinstance(signature_algorithm, str):
-            signature_algorithm = signature_algorithm.lower()
-
-        if (
-            signature_algorithm == "sha-256"
-            or signature_algorithm == "sha-384"
-            or signature_algorithm == "aead"
-        ):
-            tags.append("ssl5")
-        else:
-            tags.append("ssl6")
-    else:
+    if len(results["weak_ciphers"]) > 0:
         tags.append("ssl6")
 
     # Heartbleed
-    heart_bleed = results.get("heartbleed", None)
-
-    if heart_bleed is not None:
-        if heart_bleed is True:
-            tags.append("ssl7")
+    if results["heartbleed"]:
+        tags.append("ssl7")
 
     # openssl ccs injection
-    openssl_ccs_injection = results.get("ssl", {}).get("openssl_ccs_injection", None)
+    if results["openssl_ccs_injection"]:
+        tags.append("ssl8")
 
-    if openssl_ccs_injection is not None:
-        if openssl_ccs_injection is True:
-            tags.append("ssl8")
+    for tag in ["ssl2", "ssl3", "ssl4", "ssl6", "ssl7", "ssl8"]:
+        if tag in tags:
+            if not "ssl-fail" in tags:
+                tags.append("ssl-fail")
+
+    if not "ssl-fail" in tags and "ssl5" in tags:
+            tags.append("ssl-pass")
 
     return tags
 
@@ -387,179 +380,194 @@ def process_dns(results):
 
     if results["dkim"].get("missing", None) is not None:
         tags["dkim"].append("dkim2")
-
-    # Get Key Size, and Key Type
-    key_size = results["dkim"].get("key_size", None)
-    key_type = results["dkim"].get("key_type", None)
-
-    if key_size is None:
-        tags["dkim"].append("dkim9")
-    elif key_type is None:
-        tags["dkim"].append("dkim9")
     else:
-        if key_size >= 4096 and key_type == "rsa":
-            tags["dkim"].append("dkim8")
-        elif key_size >= 2048 and key_type == "rsa":
-            tags["dkim"].append("dkim7")
-        elif key_size == 1024 and key_type == "rsa":
-            tags["dkim"].append("dkim6")
-        elif key_size < 1024 and key_type == "rsa":
-            tags["dkim"].append("dkim5")
-        else:
-            tags["dkim"].append("dkim9")
+        for selector, data in results["dkim"].items():
+            if data.get("missing", None) is not None and "dkim2" not in tags["dkim"]:
+                tags["dkim"].append("dkim2")
+        for selector, data in results["dkim"].items():
+            key_size = data.get("key_size", None)
+            key_type = data.get("key_type", None)
 
-    # Update Recommended
-    key_invalid = results["dkim"].get("update-recommend", None)
+            if key_size is None:
+                tags["dkim"].append("dkim9")
+            elif key_type is None:
+                tags["dkim"].append("dkim9")
+            else:
+                if key_size >= 4096 and key_type == "rsa":
+                    tags["dkim"].append("dkim8")
+                elif key_size >= 2048 and key_type == "rsa":
+                    tags["dkim"].append("dkim7")
+                elif key_size == 1024 and key_type == "rsa":
+                    tags["dkim"].append("dkim6")
+                elif key_size < 1024 and key_type == "rsa":
+                    tags["dkim"].append("dkim5")
+                else:
+                    tags["dkim"].append("dkim9")
 
-    if key_invalid is not None:
-        if key_invalid is True:
-            tags["dkim"].append("dkim10")
+            # Invalid Crypto
+            invalid_crypto = data.get("txt_record", {}).get("k", None)
 
-    # Invalid Crypto
-    invalid_crypto = results["dkim"].get("txt_record", {}).get("k", None)
+            if invalid_crypto is not None:
+                # if k != rsa
+                if invalid_crypto != "rsa":
+                    tags["dkim"].append("dkim11")
 
-    if invalid_crypto is not None:
-        # if k != rsa
-        if invalid_crypto != "rsa":
-            tags["dkim"].append("dkim11")
+            # Dkim value invalid
+            # Check if v, k, and p exist in txt_record
+            v_tag = data.get("txt_record", {}).get("v", None)
+            k_tag = data.get("txt_record", {}).get("k", None)
+            p_tag = data.get("txt_record", {}).get("p", None)
 
-    # Dkim value invalid
-    # Check if v, k, and p exist in txt_record
-    v_tag = results["dkim"].get("txt_record", {}).get("v", None)
-    k_tag = results["dkim"].get("txt_record", {}).get("k", None)
-    p_tag = results["dkim"].get("txt_record", {}).get("p", None)
+            if v_tag is None and k_tag is None and p_tag is None:
+                if "dkim12" not in tags:
+                    tags["dkim"].append("dkim12")
 
-    if v_tag is None and k_tag is None and p_tag is None:
-        if "dkim12" not in tags:
-            tags["dkim"].append("dkim12")
-
-    # Testing Enabled
-    t_enabled = results["dkim"].get("t_value", None)
-    if t_enabled is not None:
-        tags["dkim"].append("dkim13")
+            # Testing Enabled
+            t_enabled = data.get("t_value", None)
+            if t_enabled not in [None, "null", ""]:
+                tags["dkim"].append("dkim13")
 
     if results["dmarc"].get("missing", None) is not None:
         tags["dmarc"].append("dmarc2")
-
-    # Check P Policy Tag
-    p_policy_tag = (
-        results["dmarc"]
-        .get("tags", {})
-        .get("p", {})
-        .get("value", None)
-    )
-
-    if p_policy_tag is not None:
-        if isinstance(p_policy_tag, str):
-            p_policy_tag = p_policy_tag.lower()
-
-        if p_policy_tag == "missing":
-            tags["dmarc"].append("dmarc3")
-        elif p_policy_tag == "none":
-            tags["dmarc"].append("dmarc4")
-        elif p_policy_tag == "quarantine":
-            tags["dmarc"].append("dmarc5")
-        elif p_policy_tag == "reject":
-            tags["dmarc"].append("dmarc6")
-
-    # Check PCT Tag
-    pct_tag = (
-        results["dmarc"]
-        .get("tags", {})
-        .get("pct", {})
-        .get("value", None)
-    )
-
-    if pct_tag is not None:
-        if isinstance(pct_tag, str):
-            pct_tag = pct_tag.lower()
-            if pct_tag == "invalid":
-                tags["dmarc"].append("dmarc9")
-            elif pct_tag == "none":
-                tags["dmarc"].append("dmarc20")
-        elif isinstance(pct_tag, int):
-            if pct_tag == 100:
-                tags["dmarc"].append("dmarc7")
-            elif 100 > pct_tag > 0:
-                tags["dmarc"].append("dmarc8")
-            else:
-                tags["dmarc"].append("dmarc21")
-
-    # Check RUA Tag
-    rua_tag = (
-        results["dmarc"]
-        .get("tags", {})
-        .get("rua", {})
-        .get("value", None)
-    )
-
-    if rua_tag is None or not rua_tag:
-        tags["dmarc"].append("dmarc12")
     else:
-        if isinstance(rua_tag, str):
-            rua_tag = rua_tag.lower()
-        for value in rua_tag:
-            if value["address"] == "dmarc@cyber.gc.ca":
-                tags["dmarc"].append("dmarc10")
-            else:
-                tags["dmarc"].append("dmarc12")
 
-    # Check RUF Tag
-    ruf_tag = (
-        results["dmarc"]
-        .get("tags", {})
-        .get("ruf", {})
-        .get("value", None)
-    )
+        if results["dmarc"]["valid"]:
+            tags["dmarc"].append("dmarc23")
 
-    if ruf_tag is None or not ruf_tag:
-        tags["dmarc"].append("dmarc13")
-    else:
-        if isinstance(ruf_tag, str):
-            ruf_tag = ruf_tag.lower()
-        for value in ruf_tag:
-            if value["address"] == "dmarc@cyber.gc.ca":
-                tags["dmarc"].append("dmarc11")
-            else:
-                tags["dmarc"].append("dmarc13")
+        # Check P Policy Tag
+        p_policy_tag = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("p", {})
+            .get("value", None)
+        )
 
-    # TXT DMARC
-    record_tag = results["dmarc"].get("dmarc", {}).get("record", None)
-    if record_tag == "" or record_tag is None:
-        tags["dmarc"].append("dmarc15")
-    else:
-        tags["dmarc"].append("dmarc14")
+        if p_policy_tag is not None:
+            if isinstance(p_policy_tag, str):
+                p_policy_tag = p_policy_tag.lower()
 
-    # Check SP tag
-    sp_tag = (
-        results["dmarc"]
-        .get("tags", {})
-        .get("sp", {})
-        .get("value", None)
-    )
+            if p_policy_tag == "missing":
+                tags["dmarc"].append("dmarc3")
+            elif p_policy_tag == "none":
+                tags["dmarc"].append("dmarc4")
+            elif p_policy_tag == "quarantine":
+                tags["dmarc"].append("dmarc5")
+            elif p_policy_tag == "reject":
+                tags["dmarc"].append("dmarc6")
 
-    if sp_tag is not None:
-        if isinstance(sp_tag, str):
-            sp_tag = sp_tag.lower()
+        # Check PCT Tag
+        pct_tag = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("pct", {})
+            .get("value", None)
+        )
 
-        if sp_tag == "missing":
-            tags["dmarc"].append("dmarc16")
-        elif sp_tag == "none":
-            tags["dmarc"].append("dmarc17")
-        elif sp_tag == "quarantine":
-            tags["dmarc"].append("dmarc18")
-        elif sp_tag == "reject":
-            tags["dmarc"].append("dmarc19")
+        if pct_tag is not None:
+            if isinstance(pct_tag, str):
+                pct_tag = pct_tag.lower()
+                if pct_tag == "invalid":
+                    tags["dmarc"].append("dmarc9")
+                elif pct_tag == "none":
+                    tags["dmarc"].append("dmarc20")
+            elif isinstance(pct_tag, int):
+                if pct_tag == 100:
+                    tags["dmarc"].append("dmarc7")
+                elif 100 > pct_tag > 0:
+                    tags["dmarc"].append("dmarc8")
+                else:
+                    tags["dmarc"].append("dmarc21")
+
+        # Check RUA Tags
+        rua_tags = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("rua", {})
+            .get("value", [])
+        )
+
+        if len(rua_tags) == 0:
+            tags["dmarc"].append("dmarc12")
+
+        for rua in rua_tags:
+            for key, val in rua.items():
+                if key == "address" and val == "dmarc@cyber.gc.ca":
+                    tags["dmarc"].append("dmarc10")
+
+            # Check if external reporting arrangement has been authorized
+            rua_accepting = (
+                rua.get("accepting", None)
+            )
+
+            if rua_accepting is not None:
+                if rua_accepting is False:
+                    if "dmarc22" not in tags["dmarc"]:
+                        tags["dmarc"].append("dmarc22")
+                    if "dmarc15" not in tags["dmarc"]:
+                        tags["dmarc"].append("dmarc15")
+
+        # Check RUF Tags
+        ruf_tags = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("ruf", {})
+            .get("value", [])
+        )
+
+        if len(ruf_tags) == 0:
+            tags["dmarc"].append("dmarc13")
+
+        for ruf in ruf_tags:
+            for key, val in ruf.items():
+                if key == "address" and val == "dmarc@cyber.gc.ca":
+                    tags["dmarc"].append("dmarc11")
+
+            # Check if external reporting arrangement has been authorized
+            ruf_accepting = (
+                ruf.get("accepting", None)
+            )
+
+            if ruf_accepting is not None:
+                if ruf_accepting is False:
+                    if "dmarc15" not in tags["dmarc"]:
+                        tags["dmarc"].append("dmarc15")
+
+        if "dmarc15" not in tags["dmarc"] and (len(ruf_tags)>0 or len(rua_tags)>0):
+            tags["dmarc"].append("dmarc14")
+
+        # Check SP tag
+        sp_tag = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("sp", {})
+            .get("value", None)
+        )
+
+        if sp_tag is not None:
+            if isinstance(sp_tag, str):
+                sp_tag = sp_tag.lower()
+
+            if sp_tag == "missing":
+                tags["dmarc"].append("dmarc16")
+            elif sp_tag == "none":
+                tags["dmarc"].append("dmarc17")
+            elif sp_tag == "quarantine":
+                tags["dmarc"].append("dmarc18")
+            elif sp_tag == "reject":
+                tags["dmarc"].append("dmarc19")
 
     if results["spf"].get("missing", None) is not None:
         tags["spf"].append("spf2")
         return tags
 
-    dkim_record = results["dkim"].get("txt_record", None)
-    if dkim_record is not None:
-        for key in dkim_record:
-            if key == "a" or key == "include":
-                tags["spf"].append("spf3")
+    if results["spf"]["valid"]:
+        tags["spf"].append("spf12")
+
+    for selector, data in results["dkim"].items():
+	    if data.get("txt_record", None) is not None:
+	        for key in data["txt_record"]:
+	            if (key == "a" or key == "include") and "spf3" not in tags["spf"]:
+	                tags["spf"].append("spf3")
 
     dmarc_record = results["dmarc"].get("record", None)
     if dmarc_record is not None:
@@ -573,12 +581,12 @@ def process_dns(results):
 
     # Check all tag
     all_tag = results["spf"].get("parsed", {}).get("all", None)
-    record_all_tag = results["spf"].get("record", None)
+    spf_record = results["spf"].get("record", None)
 
-    if (all_tag is not None) and (record_all_tag is not None):
-        if isinstance(all_tag, str) and isinstance(record_all_tag, str):
+    if (all_tag is not None) and (spf_record is not None):
+        if isinstance(all_tag, str) and isinstance(spf_record, str):
             all_tag = all_tag.lower()
-            record_all_tag = record_all_tag[-4:].lower()
+            record_all_tag = spf_record[-4:].lower()
 
             if record_all_tag != "-all" and record_all_tag != "~all":
                 tags["spf"].append("spf10")
@@ -596,21 +604,10 @@ def process_dns(results):
                 elif record_all_tag == "~all":
                     tags["spf"].append("spf7")
 
-    # Check for no host
-    record = results["spf"].get("record", None)
-    if record is not None:
-        search_string = "a:"
-        matches = re.finditer(search_string, record)
-        match_pos = [match.start() for match in matches]
-
-        for pos in match_pos:
-            if record[pos + 1 : 1] == "" and not "spf11" in tags:
-                tags["spf"].append("spf11")
-
     # Look up limit check
     dns_lookups = results["spf"].get("dns_lookups", 0)
     if dns_lookups > 10:
-        tags["spf"].append("spf12")
+        tags["spf"].append("spf11")
 
     # Check for missing include
     include = results["spf"].get("parsed", {}).get("include", None)
@@ -622,6 +619,22 @@ def process_dns(results):
             if check_item is not None and f"include:{check_item}" not in record:
                 if not "spf13" in tags:
                     tags["spf"].append("spf13")
+
+    # Summary tags
+
+    if "spf12" in tags["spf"]:
+        tags["spf"].append("spf-pass")
+
+    if "dmarc23" in tags["dmarc"]:
+        tags["dmarc"].append("dmarc-pass")
+
+    for tag in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim9", "dkim11", "dkim12"]:
+        if tag in tags["dkim"]:
+            if not "dkim-fail" in tags["dkim"]:
+                tags["dkim"].append("dkim-fail")
+
+    if not "dkim-fail" in tags["dkim"] and "dkim7" in tags["dkim"] and "dkim8" in tags["dkim"]:
+            tags["dkim"].append("dkim-pass")
 
     return tags
 
@@ -712,10 +725,10 @@ async def insert_dns(report, tags, scan_id, db):
                     for historical_selector in historical_dkim.get("dkim_scan")["dkim"]:
                         if selector == historical_selector:
                             if (
-                                report["dkim"]["selector"]["public_key_modulus"]
+                                report["dkim"][selector]["public_key_modulus"]
                                 == historical_selector["public_key_modulus"]
                             ):
-                                report["dkim"]["selector"]["update-recommended"] = True
+                                tags["dkim"].append("dkim10")
 
         dmarc_insert_query = Dmarc_scans.insert().values(
             dmarc_scan={"dmarc": report["dmarc"], "tags": tags["dmarc"]},
