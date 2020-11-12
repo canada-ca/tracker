@@ -48,8 +48,9 @@ export function AdminDomains({ domainsData, orgName }) {
   const [domainList, setDomainList] = useState(domains)
   const [currentPage, setCurrentPage] = useState(1)
   const [domainsPerPage] = useState(4)
-  const [domainSearch, setDomainSearch] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()
+  const [createDomainUrl, setCreateDomainUrl] = useState()
   const toast = useToast()
   const {
     isOpen: createIsOpen,
@@ -71,7 +72,7 @@ export function AdminDomains({ domainsData, orgName }) {
   const { currentUser } = useUserState()
 
   const filterDomains = domainList.filter((domain) => {
-    return domain.url.toLowerCase().includes(domainSearch.toLowerCase())
+    return domain.url.toLowerCase().includes(searchTerm.toLowerCase())
   })
 
   // Get current domains
@@ -125,7 +126,8 @@ export function AdminDomains({ domainsData, orgName }) {
         isClosable: true,
         position: 'top-left',
       })
-      setDomainSearch('')
+      setSearchTerm('')
+      setCreateDomainUrl('')
     },
   })
 
@@ -210,9 +212,10 @@ export function AdminDomains({ domainsData, orgName }) {
         <Input
           type="text"
           placeholder={t`Search for a domain`}
-          value={domainSearch}
+          value={searchTerm}
           onChange={(e) => {
-            setDomainSearch(e.target.value)
+            setSearchTerm(e.target.value)
+            setCreateDomainUrl(e.target.value)
           }}
         />
       </InputGroup>
@@ -423,8 +426,8 @@ export function AdminDomains({ domainsData, orgName }) {
                   </Text>
                   <Input
                     placeholder={t`Enter new domain URL`}
-                    defaultValue={domainSearch}
-                    onChange={(e) => setDomainSearch(e.target.value)}
+                    defaultValue={searchTerm}
+                    onChange={(e) => setCreateDomainUrl(e.target.value)}
                   />
                 </Stack>
               </ModalBody>
@@ -432,10 +435,9 @@ export function AdminDomains({ domainsData, orgName }) {
               <ModalFooter>
                 <TrackerButton
                   variant="primary"
-                  isLoading={removeDomainLoading}
                   mr={4}
                   onClick={() => {
-                    if (!domainSearch) {
+                    if (!createDomainUrl) {
                       toast({
                         title: t`An error occurred.`,
                         description: t`New domain name cannot be empty`,
@@ -448,7 +450,7 @@ export function AdminDomains({ domainsData, orgName }) {
                       createDomain({
                         variables: {
                           orgSlug: slugify(orgName),
-                          url: domainSearch,
+                          url: createDomainUrl,
                           selectors: [],
                         },
                       })
