@@ -1,5 +1,7 @@
 const cors = require('cors')
 const express = require('express')
+const bcrypt = require('bcrypt')
+const moment = require('moment')
 // const http = require('http')
 // const { createServer } = require('graphql-transport-ws')
 const { graphqlHTTP } = require('express-graphql')
@@ -8,9 +10,10 @@ const expressPlayground = require('graphql-playground-middleware-express')
   .default
 const requestLanguage = require('express-request-language')
 const { setupI18n } = require('@lingui/core')
+const { t } = require('@lingui/macro')
 const fetch = require('isomorphic-fetch')
-const bcrypt = require('bcrypt')
-const moment = require('moment')
+const depthLimit = require('graphql-depth-limit')
+const { createComplexityLimitRule } = require('graphql-validation-complexity')
 
 const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
@@ -319,7 +322,39 @@ const createContext = ({ context, request, response }) => {
   }
 }
 
-const Server = (_PORT, context = {}) => {
+const createValidationRules = (
+  language,
+  maxDepth,
+  complexityCost,
+  scalarCost,
+  objectCost,
+  listFactor,
+) => {
+  const i18n = createI18n(language)
+
+  return [
+    depthLimit(maxDepth),
+    createComplexityLimitRule(complexityCost, {
+      scalarCost,
+      objectCost,
+      listFactor,
+      formatErrorMessage: (cost) => {
+        console.warn(`User attempted a costly request: ${cost}`)
+        return i18n._(t`Query error, query is too complex.`)
+      },
+    }),
+  ]
+}
+
+const Server = (
+  _PORT,
+  maxDepth,
+  complexityCost,
+  scalarCost,
+  objectCost,
+  listFactor,
+  context = {},
+) => {
   const app = express()
 
   app.use('*', cors())
@@ -351,6 +386,14 @@ const Server = (_PORT, context = {}) => {
       graphiql: false,
       schema: createSchema({ language: request.language }),
       context: createContext({ context, request, response }),
+      validationRules: createValidationRules(
+        request.language,
+        maxDepth,
+        complexityCost,
+        scalarCost,
+        objectCost,
+        listFactor,
+      ),
     })),
   )
 

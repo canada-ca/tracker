@@ -25,6 +25,11 @@ DMARC_REPORT_API_SECRET=somesecretvalue
 TOKEN_HASH=somehash
 DMARC_REPORT_API_TOKEN=uuid-like-string
 DMARC_REPORT_API_URL=http://localhost:4001/graphql
+DEPTH_LIMIT=5
+COST_LIMIT=100
+SCALAR_COST=1
+OBJECT_COST=1
+LIST_FACTOR=1
 EOF
 ```
 With that defined you can start the server with these commands.
@@ -76,6 +81,11 @@ DMARC_REPORT_API_SECRET=somesecretvalue
 TOKEN_HASH=somehash
 DMARC_REPORT_API_TOKEN=uuid-like-string
 DMARC_REPORT_API_URL=http://localhost:4001/graphql
+DEPTH_LIMIT=5
+COST_LIMIT=100
+SCALAR_COST=1
+OBJECT_COST=1
+LIST_FACTOR=1
 EOF
 ```
 
