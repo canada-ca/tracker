@@ -35,7 +35,6 @@ resources:
 - tracker-frontend-deployment.yaml
 - tracker-frontend-service.yaml
 - tracker-frontend-virtual-service.yaml
-- istio.yaml
 - envoy-filter.yaml
 - publicgateway.yaml
 - postgres-deployment.yaml
@@ -45,8 +44,3 @@ resources:
 - cert-manager.yaml
 - cluster-admin-rolebinding.yaml
 - http-01-challenge-destination-rule.yaml
-- api-namespace.yaml
-- frontend-namespace.yaml
-- istio-system-namespace.yaml
-- knative-serving-namespace.yaml
-- scanners-namespace.yaml
