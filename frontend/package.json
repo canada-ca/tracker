@@ -76,7 +76,7 @@
     "fs-extra": "^9.0.1",
     "html-webpack-plugin": "^5.0.0-alpha.6",
     "jest": "^26.6.2",
-    "jest-emotion": "^10.0.32",
+    "jest-emotion": "^11.0.0",
     "mq-polyfill": "^1.1.8",
     "prettier": "^2.1.2",
     "react-hot-loader": "^4.13.0",
