@@ -25,18 +25,5 @@ describe('parse server', () => {
         expect(response.status).toEqual(200)
       })
     })
-    describe('valid graphql query can be executed', () => {
-      it('returns query', async () => {
-        const response = await request(Server({ query: jest.fn() }))
-          .post('/graphql')
-          .set('Accept', 'application/json')
-          .set('Content-Type', 'application/json')
-          .send({
-            query: '{ queryTest: __schema { description } }',
-            operationName: 'testQuery',
-          })
-        expect(response).toEqual(200)
-      })
-    })
   })
 })
