@@ -36,7 +36,7 @@ describe('<OrganizationsCard />', () => {
 
     const domain = getByText(/tbs-sct.gc.ca/i)
     expect(domain).toBeDefined()
-    const lastRan = getByText(/2020-09-10T00:34:26.429Z/i)
+    const lastRan = getByText(/2020-09-10T00:34/i)
     expect(lastRan).toBeDefined()
   })
 
