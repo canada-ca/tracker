@@ -78,7 +78,7 @@ export function DomainCard({ url, lastRan, ...rest }) {
               <Text fontWeight="bold">
                 <Trans>Last scanned:</Trans>
               </Text>
-              {lastRan}
+              {lastRan.substring(0, 16)}
             </Box>
           ) : (
             <Text fontWeight="bold" fontSize="sm">
