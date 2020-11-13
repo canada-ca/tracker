@@ -1,7 +1,13 @@
 FROM alpine
 
 RUN apk update && apk add --no-cache \
-python3-dev py3-pip gcc musl-dev postgresql-dev postgresql-contrib bash
+    python3-dev \
+    py3-pip \
+    gcc \
+    musl-dev \
+    postgresql-dev \
+    postgresql-contrib \
+    bash
 
 COPY . /app
 
