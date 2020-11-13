@@ -126,7 +126,6 @@ export function AdminDomains({ domainsData, orgName }) {
         isClosable: true,
         position: 'top-left',
       })
-      setSearchTerm('')
       setCreateDomainUrl('')
     },
   })

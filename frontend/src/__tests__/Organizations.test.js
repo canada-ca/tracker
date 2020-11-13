@@ -24,6 +24,9 @@ const i18n = setupI18n({
   },
 })
 
+const fillIn = (element, { with: value }) =>
+  fireEvent.change(element, { target: { value } })
+
 describe('<Organisations />', () => {
   describe('given a list of organizations', () => {
     it('displays a list of organizations', async () => {
@@ -95,10 +98,97 @@ describe('<Organisations />', () => {
         </UserStateProvider>,
       )
 
-      // expect(getByText(/organization two/i)).toBeInTheDocument(),
       await waitFor(() =>
         expect(getByText(/organization one/i)).toBeInTheDocument(),
       )
+    })
+
+    it('filters domains using the search field', async () => {
+      const mocks = [
+        {
+          request: {
+            query: PAGINATED_ORGANIZATIONS,
+            variables: { first: 2 },
+          },
+          result: {
+            data: {
+              pagination: {
+                edges: [
+                  {
+                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    node: {
+                      id: 'T3JnYW5pemF0aW9uczoyCg==',
+                      acronym: 'ORG1',
+                      name: 'organization one',
+                      slug: 'organization-one',
+                      domainCount: 5,
+                      __typename: 'Organizations',
+                    },
+                    __typename: 'OrganizationsEdge',
+                  },
+                  {
+                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    node: {
+                      id: 'T3JnYW5pemF0aW9uczoxCg==',
+                      acronym: 'ORG2',
+                      name: 'organization two',
+                      slug: 'organization-two',
+                      domainCount: 5,
+                      __typename: 'Organizations',
+                    },
+                    __typename: 'OrganizationsEdge',
+                  },
+                ],
+                pageInfo: {
+                  hasNextPage: true,
+                  endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  hasPreviousPage: false,
+                  startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  __typename: 'PageInfo',
+                },
+                __typename: 'OrganizationsConnection',
+              },
+            },
+          },
+        },
+      ]
+
+      const { queryByText, getByRole } = render(
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfa: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter
+                initialEntries={['/organizations']}
+                initialIndex={0}
+              >
+                <MockedProvider mocks={mocks} cache={createCache()}>
+                  <Organizations orgsPerPage={2} />
+                </MockedProvider>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
+      )
+
+      // both orgs are visibles
+      await waitFor(() => {
+        expect(queryByText(/organization one/i)).toBeInTheDocument()
+        expect(queryByText(/organization two/i)).toBeInTheDocument()
+      })
+
+      // get search field
+      const domain = getByRole('textbox')
+      // input name
+      fillIn(domain, {
+        with: 'organization two',
+      })
+      // expect searched org
+      await waitFor(() => {
+        expect(queryByText(/organization one/i)).not.toBeInTheDocument()
+        expect(queryByText(/organization two/i)).toBeInTheDocument()
+      })
     })
 
     it('navigates to an organization detail page when a link is clicked', async () => {

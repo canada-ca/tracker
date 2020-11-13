@@ -1,7 +1,7 @@
 import React from 'react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
-import { render, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import {
   PAGINATED_DOMAINS,
@@ -22,6 +22,9 @@ const i18n = setupI18n({
     en: {},
   },
 })
+
+const fillIn = (element, { with: value }) =>
+  fireEvent.change(element, { target: { value } })
 
 describe('<DomainsPage />', () => {
   const mocks = [
@@ -136,6 +139,42 @@ describe('<DomainsPage />', () => {
       await waitFor(() =>
         expect(queryByText(/tbs-sct.gc.ca/i)).toBeInTheDocument(),
       )
+    })
+
+    it('filters domains using the search field', async () => {
+      const { queryByText, getByRole } = render(
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfa: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                <MockedProvider mocks={mocks} cache={createCache()}>
+                  <DomainsPage domainsPerPage={2} />
+                </MockedProvider>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
+      )
+
+      // both domains are visibles
+      await waitFor(() => {
+        expect(queryByText(/tbs-sct.gc.ca/i)).toBeInTheDocument()
+        expect(queryByText(/rcmp-grc.gc.ca/i)).toBeInTheDocument()
+      })
+
+      // get search field
+      const domain = getByRole('textbox')
+      // input URL
+      fillIn(domain, {
+        with: 'rcmp-grc.gc.ca',
+      })
+      // expect searched url
+      await waitFor(() => {
+        expect(queryByText(/tbs-sct.gc.ca/i)).not.toBeInTheDocument()
+        expect(queryByText(/rcmp-grc.gc.ca/i)).toBeInTheDocument()
+      })
     })
   })
 })
