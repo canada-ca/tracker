@@ -4,6 +4,10 @@ bases:
 - ../base
 secretGenerator:
 - envs:
+  - arangodb.env
+  name: arangodb
+  namespace: db
+- envs:
   - postgres.env
   name: postgres
   namespace: api

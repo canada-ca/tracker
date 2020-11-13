@@ -44,3 +44,5 @@ resources:
 - cert-manager.yaml
 - cluster-admin-rolebinding.yaml
 - http-01-challenge-destination-rule.yaml
+- arangodb-operator.yaml
+- arangodb-deployment.yaml

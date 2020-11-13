@@ -7,3 +7,4 @@ resources:
 - istio-system-namespace.yaml
 - knative-serving-namespace.yaml
 - scanners-namespace.yaml
+- db-namespace.yaml

@@ -6,6 +6,10 @@ patchesStrategicMerge:
 - istio-ingressgateway-service.yaml
 secretGenerator:
 - envs:
+  - arangodb.env
+  name: arangodb
+  namespace: db
+- envs:
   - postgres.env
   name: postgres
   namespace: api
