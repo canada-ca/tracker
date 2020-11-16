@@ -1,8 +1,18 @@
 const upsertOwnership = async ({ ownerships, query }) => {
+  console.info('Removing current ownerships ...')
+  try {
+    await query`
+      FOR item IN ownership
+        REMOVE item IN ownership
+    `
+  } catch (err) {
+    console.error(`Error occurred while removing current ownerships: ${err}`)
+  }
   console.info('Assigning ownerships ...')
 
   Object.keys(ownerships).forEach(async (key) => {
     console.info(`Assigning domain ownership to: ${String(key)}`)
+
     try {
       await query`
       LET givenDomains = ${ownerships[key]}
@@ -13,6 +23,7 @@ const upsertOwnership = async ({ ownerships, query }) => {
           FILTER LENGTH(domainId) > 0
               LET ownershipKey = (FOR v, e IN 1..1 ANY domainId[0] ownership RETURN e._key)
               LET orgId = (FOR org IN organizations FILTER (org.orgDetails.en.acronym == orgAcronym) || (org.orgDetails.fr.acronym == orgAcronym) RETURN org._id)
+              FILTER LENGTH(orgId) > 0
               UPSERT { _to: domainId[0] }
                   INSERT { _from: orgId[0], _to: domainId[0] }
                   UPDATE { _from: orgId[0], _to: domainId[0] }
@@ -27,7 +38,6 @@ const upsertOwnership = async ({ ownerships, query }) => {
       )
     }
   })
-  console.info('Completed assigning ownerships, exiting now.')
 }
 
 module.exports = {
