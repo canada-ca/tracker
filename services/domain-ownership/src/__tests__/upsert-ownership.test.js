@@ -87,8 +87,9 @@ describe('given the upsertOwnership function', () => {
           _to: domain._id,
           _from: org._id,
         }
-
-        await expect(cursor.next()).resolves.toEqual(expectedOwnership)
+        setTimeout(async () => {
+          await expect(cursor.next()).resolves.toEqual(expectedOwnership)
+        }, 1000)
       })
     })
     describe('domain is not reassigned', () => {
@@ -111,10 +112,11 @@ describe('given the upsertOwnership function', () => {
         }
 
         const cursor = await query`
-            FOR v, e IN 1..1 ANY ${domain._id} ownership RETURN { _from: e._from, _to: e._to }
+            FOR item IN ownership RETURN { _from: item._from, _to: item._to }
           `
-
-        await expect(cursor.next()).resolves.toEqual(expectedOwnership)
+        setTimeout(async () => {
+          await expect(cursor.next()).resolves.toEqual(expectedOwnership)
+        }, 1000)
       })
     })
     describe('domain is reassigned to a different organization', () => {
@@ -165,8 +167,9 @@ describe('given the upsertOwnership function', () => {
         const cursor = await query`
             FOR item IN ownership RETURN { _from: item._from, _to: item._to }
           `
-
-        await expect(cursor.next()).resolves.toEqual(expectedOwnership)
+        setTimeout(async () => {
+          await expect(cursor.next()).resolves.toEqual(expectedOwnership)
+        }, 1000)
       })
     })
   })
