@@ -10,10 +10,6 @@ secretGenerator:
   name: arangodb
   namespace: db
 - envs:
-  - postgres.env
-  name: postgres
-  namespace: api
-- envs:
   - api.env
   name: api
   namespace: api

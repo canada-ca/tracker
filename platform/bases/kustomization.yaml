@@ -1,6 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
+- name: gcr.io/track-compliance/api-js
+  newTag: master-644fbde
 - name: gcr.io/track-compliance/api
   newTag: master-4003aac
 - name: gcr.io/track-compliance/autoscan
@@ -37,9 +39,6 @@ resources:
 - tracker-frontend-virtual-service.yaml
 - envoy-filter.yaml
 - publicgateway.yaml
-- postgres-deployment.yaml
-- postgres-pvc.yaml
-- postgres-service.yaml
 - certificate.yaml
 - cert-manager.yaml
 - cluster-admin-rolebinding.yaml
