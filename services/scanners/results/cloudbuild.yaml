@@ -6,7 +6,7 @@ steps:
 
   - name: mikewilliamson/wait-for
     id: wait_testdb
-    args: ['testdb:5432']
+    args: ['testdb:8529']
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-results
