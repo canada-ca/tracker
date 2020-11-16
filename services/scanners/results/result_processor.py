@@ -141,54 +141,51 @@ def process_ssl(results):
 def process_dns(results):
     tags = {"dmarc": [], "dkim": [], "spf": []}
 
-    if results["dkim"].get("missing", None) is not None:
-        tags["dkim"].append("dkim2")
-    else:
-        for selector, data in results["dkim"].items():
-            if data.get("missing", None) is not None and "dkim2" not in tags["dkim"]:
-                tags["dkim"].append("dkim2")
-        for selector, data in results["dkim"].items():
-            key_size = data.get("key_size", None)
-            key_type = data.get("key_type", None)
+    for selector in results.get("dkim", []):
+        tags["dkim"][selector] = []
+        if selector.get("missing", None) is not None:
+            tags["dkim"][selector].append("dkim2")
+        else:
+            key_size = selector.get("key_size", None)
+            key_type = selector.get("key_type", None)
 
             if key_size is None:
-                tags["dkim"].append("dkim9")
+                tags["dkim"][selector].append("dkim9")
             elif key_type is None:
-                tags["dkim"].append("dkim9")
+                tags["dkim"][selector].append("dkim9")
             else:
                 if key_size >= 4096 and key_type == "rsa":
-                    tags["dkim"].append("dkim8")
+                    tags["dkim"][selector].append("dkim8")
                 elif key_size >= 2048 and key_type == "rsa":
-                    tags["dkim"].append("dkim7")
+                    tags["dkim"][selector].append("dkim7")
                 elif key_size == 1024 and key_type == "rsa":
-                    tags["dkim"].append("dkim6")
+                    tags["dkim"][selector].append("dkim6")
                 elif key_size < 1024 and key_type == "rsa":
-                    tags["dkim"].append("dkim5")
+                    tags["dkim"][selector].append("dkim5")
                 else:
-                    tags["dkim"].append("dkim9")
+                    tags["dkim"][selector].append("dkim9")
 
             # Invalid Crypto
-            invalid_crypto = data.get("txt_record", {}).get("k", None)
+            invalid_crypto = selector.get("txt_record", {}).get("k", None)
 
             if invalid_crypto is not None:
                 # if k != rsa
                 if invalid_crypto != "rsa":
-                    tags["dkim"].append("dkim11")
+                    tags["dkim"][selector].append("dkim11")
 
             # Dkim value invalid
             # Check if v, k, and p exist in txt_record
-            v_tag = data.get("txt_record", {}).get("v", None)
-            k_tag = data.get("txt_record", {}).get("k", None)
-            p_tag = data.get("txt_record", {}).get("p", None)
+            v_tag = selector.get("txt_record", {}).get("v", None)
+            k_tag = selector.get("txt_record", {}).get("k", None)
+            p_tag = selector.get("txt_record", {}).get("p", None)
 
             if v_tag is None and k_tag is None and p_tag is None:
-                if "dkim12" not in tags:
-                    tags["dkim"].append("dkim12")
+                tags["dkim"][selector].append("dkim12")
 
             # Testing Enabled
-            t_enabled = data.get("t_value", None)
+            t_enabled = selector.get("t_value", None)
             if t_enabled not in [None, "null", ""]:
-                tags["dkim"].append("dkim13")
+                tags["dkim"][selector].append("dkim13")
 
     if results["dmarc"].get("missing", None) is not None:
         tags["dmarc"].append("dmarc2")
@@ -389,7 +386,7 @@ def process_dns(results):
 async def insert_https(report, tags, domain_key, db):
 
     try:
-        db.collection("https").insert({"timestamp": datetime.datetime.utcnow(), "implementation": report.get("implementation", None), "enforced": report.get("enforced", None), "hsts": report.get("hsts", None), "hstsAge": report.get("hsts_age", None), "preloaded": report.get("preload_status", None), "rawJson": report, "guidanceTags": tags})
+        db.collection("https").insert({"timestamp": str(datetime.datetime.utcnow()), "implementation": report.get("implementation", None), "enforced": report.get("enforced", None), "hsts": report.get("hsts", None), "hstsAge": report.get("hsts_age", None), "preloaded": report.get("preload_status", None), "rawJson": report, "guidanceTags": tags})
     except Exception as e:
         logging.error(
             f"(HTTPS SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
@@ -410,7 +407,7 @@ async def insert_https(report, tags, domain_key, db):
 async def insert_ssl(report, tags, domain_key, db):
 
     try:
-        db.collection("ssl").insert({"timestamp": datetime.datetime.utcnow(), "rawJson": report, "guidanceTags": tags})
+        db.collection("ssl").insert({"timestamp": str(datetime.datetime.utcnow()), "rawJson": report, "guidanceTags": tags})
     except Exception as e:
         logging.error(
             f"(SSL SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
@@ -431,10 +428,10 @@ async def insert_ssl(report, tags, domain_key, db):
 async def insert_dns(report, tags, domain_key, db):
 
     try:
-        db.collection("dmarc").insert({"timestamp": datetime.datetime.utcnow(), "record": report["dmarc"].get("record", None), "pPolicy": report["dmarc"].get("tags", {}).get("p", {}).get("value", None), "spPolicy": report["dmarc"].get("tags", {}).get("sp", {}).get("value", None), "pct": report["dmarc"].get("tags", {}).get("pct", {}).get("value", None), "rawJson": report["dmarc"], "guidanceTags": tags["dmarc"]})
-        db.collection("spf").insert({"timestamp": datetime.datetime.utcnow(), "record": report["spf"].get("record", None), "lookups": report["spf"].get("dns_lookups", None), "spfDefault": report["spf"].get("record", "none")[-4:].lower(), "rawJson": report["spf"], "guidanceTags": tags["spf"]})
+        db.collection("dmarc").insert({"timestamp": str(datetime.datetime.utcnow()), "record": report["dmarc"].get("record", None), "pPolicy": report["dmarc"].get("tags", {}).get("p", {}).get("value", None), "spPolicy": report["dmarc"].get("tags", {}).get("sp", {}).get("value", None), "pct": report["dmarc"].get("tags", {}).get("pct", {}).get("value", None), "rawJson": report["dmarc"], "guidanceTags": tags["dmarc"]})
+        db.collection("spf").insert({"timestamp": str(datetime.datetime.utcnow()), "record": report["spf"].get("record", None), "lookups": report["spf"].get("dns_lookups", None), "spfDefault": report["spf"].get("record", "none")[-4:].lower(), "rawJson": report["spf"], "guidanceTags": tags["spf"]})
 
-        db.collection("dkim").insert({"timestamp": datetime.datetime.utcnow()})
+        db.collection("dkim").insert({"timestamp": str(datetime.datetime.utcnow())})
         for selector in report["dkim"]:
             db.collection("dkim_scans").insert({"record": selector.get("txt_record", None), "keyLength": selector.get("key_size", None), "rawJson": selector, "guidanceTags": tags["dkim"]})
 

@@ -57,7 +57,7 @@ def scan(db_host, db_name, user_name, password, http_client=requests):
 
         domains = db.collection("domains").all()
 
-        scan_time = datetime.datetime.utcnow()
+        scan_time = str(datetime.datetime.utcnow())
         count = 0
 
         for domain in domains:
