@@ -78,7 +78,11 @@ describe('given the upsertOwnership function', () => {
     describe('ownership to domains is assigned to org', () => {
       it('returns the upserted item, with type being set to insert', async () => {
         const ownerships = {
-          TEST: ['test.gc.ca'],
+          Federal: {
+            TBS: {
+              TEST: ['test.gc.ca'],
+            },
+          },
         }
 
         upsertOwnership({ ownerships, query })
@@ -108,7 +112,11 @@ describe('given the upsertOwnership function', () => {
       })
       it('returns the upserted item, with type being set to update', async () => {
         const ownerships = {
-          TEST: ['test.gc.ca'],
+          Federal: {
+            TBS: {
+              TEST: ['test.gc.ca'],
+            },
+          },
         }
 
         upsertOwnership({ ownerships, query })
@@ -162,7 +170,11 @@ describe('given the upsertOwnership function', () => {
       })
       it('returns the upserted item, with type being set to update', async () => {
         const ownerships = {
-          TEST2: ['test.gc.ca'],
+          Federal: {
+            TBS: {
+              TEST: ['test.gc.ca'],
+            },
+          },
         }
 
         upsertOwnership({ ownerships, query })
@@ -190,9 +202,13 @@ describe('given the upsertOwnership function', () => {
         .fn()
         .mockRejectedValue(new Error('Database error occurred.'))
 
-      const ownerships = {
-        TEST2: ['test.gc.ca'],
-      }
+        const ownerships = {
+          Federal: {
+            TBS: {
+              TEST: ['test.gc.ca'],
+            },
+          },
+        }
 
       try {
         upsertOwnership({ ownerships, query: queryMock })
