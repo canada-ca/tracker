@@ -13,7 +13,7 @@ def setup():
     sys_db.create_database("test")
 
     # Establish DB connection
-    db = db_client.db("test", username="", password="")
+    db = arango_client.db("test", username="", password="")
     db.create_collection("domains")
 
     db.collection("domains").insert({"domain": "cyber.gc.ca", "selectors": ["selector1"]})
@@ -37,7 +37,7 @@ def test_process_dns():
 async def test_insert_https():
     setup()
 
-    db = db_client.db("test", username="", password="")
+    db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.result()
     test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
@@ -57,7 +57,7 @@ async def test_insert_https():
 
 
 async def test_insert_ssl():
-    db = db_client.db("test", username="", password="")
+    db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.result()
     test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
@@ -77,7 +77,7 @@ async def test_insert_ssl():
 
 
 async def test_insert_dns():
-    db = db_client.db("test", username="", password="")
+    db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.result()
     test_app = Server(db_host="", db_name="test", db_user="", db_pass="")

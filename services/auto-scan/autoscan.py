@@ -51,7 +51,7 @@ def scan(db_host, db_name, user_name, password, http_client=requests):
     try:
         # Establish DB connection
         arango_client = ArangoClient(hosts=db_host)
-        db = db_client.db(db_name, username=user_name, password=password)
+        db = arango_client.db(db_name, username=user_name, password=password)
 
         logging.info("Querying domains...")
 
