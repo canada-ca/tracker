@@ -74,11 +74,7 @@ describe('given the upsertOwnership function', () => {
     describe('ownership to domains is assigned to org', () => {
       it('returns the upserted item, with type being set to insert', async () => {
         const ownerships = {
-          Federal: {
-            TBS: {
-              TEST: ['test.gc.ca'],
-            },
-          },
+          TEST: ['test.gc.ca'],
         }
 
         await upsertOwnership({ ownerships, query })
@@ -104,11 +100,7 @@ describe('given the upsertOwnership function', () => {
       })
       it('returns the upserted item, with type being set to update', async () => {
         const ownerships = {
-          Federal: {
-            TBS: {
-              TEST: ['test.gc.ca'],
-            },
-          },
+          TEST: ['test.gc.ca'],
         }
 
         await upsertOwnership({ ownerships, query })
@@ -160,11 +152,7 @@ describe('given the upsertOwnership function', () => {
       })
       it('returns the upserted item, with type being set to update', async () => {
         const ownerships = {
-          Federal: {
-            TBS: {
-              TEST2: ['test.gc.ca'],
-            },
-          },
+          TEST2: ['test.gc.ca'],
         }
 
         await upsertOwnership({ ownerships, query })
@@ -189,17 +177,13 @@ describe('given the upsertOwnership function', () => {
         .mockRejectedValue(new Error('Database error occurred.'))
 
       const ownerships = {
-        Federal: {
-          TBS: {
-            TEST: ['test.gc.ca'],
-          },
-        },
+        TEST: ['test.gc.ca'],
       }
 
       await upsertOwnership({ ownerships, query: queryMock })
 
       expect(consoleErrorOutput).toEqual([
-        `Error occurred while inserting/updating ownerships for Federal: Error: Database error occurred.`,
+        `Error occurred while inserting/updating ownerships for TEST: Error: Database error occurred.`,
       ])
     })
   })
