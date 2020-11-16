@@ -24,6 +24,10 @@ DB_URL=http://localhost:8529
 DB_NAME=track_dmarc
 GITHUB_TOKEN=<your github token>
 GITHUB_URL=https://api.github.com/graphql
+GITHUB_BRANCH=<your github branch file is located in>
+GITHUB_FILE=<your github file containing domain ownership info>
+GITHUB_OWNER=<your github repo owner>
+GITHUB_REPO=<your github repo the file is located in>
 ```
 
 ## Testing
