@@ -40,7 +40,7 @@ def dispatch_dns(domain, client):
     payload = {
         "domain_key": domain["_key"],
         "domain": domain["domain"],
-        "selectors": domain["selectors"],
+        "selectors": domain.get("selectors", None),
         "uuid": None,
     }
     client.post(QUEUE_URL + "/dns", json=payload)

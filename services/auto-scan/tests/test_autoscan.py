@@ -17,7 +17,7 @@ def test_dispatch():
     db.create_collection("domains")
 
     input_domains = [
-        {"domain": "cyber.gc.ca"},
+        {"domain": "cyber.gc.ca", "selectors": ["selector1", "selector2"]},
         {"domain": "canada.ca"},
         {"domain": "forces.gc.ca"},
     ]

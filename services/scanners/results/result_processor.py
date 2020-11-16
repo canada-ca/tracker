@@ -143,11 +143,11 @@ def process_dns(results):
 
     for selector in results.get("dkim", {}).keys():
         tags["dkim"][selector] = []
-        if selector.get("missing", None) is not None:
+        if results["dkim"][selector].get("missing", None) is not None:
             tags["dkim"][selector].append("dkim2")
         else:
-            key_size = selector.get("key_size", None)
-            key_type = selector.get("key_type", None)
+            key_size = results["dkim"][selector].get("key_size", None)
+            key_type = results["dkim"][selector].get("key_type", None)
 
             if key_size is None:
                 tags["dkim"][selector].append("dkim9")
@@ -166,7 +166,7 @@ def process_dns(results):
                     tags["dkim"][selector].append("dkim9")
 
             # Invalid Crypto
-            invalid_crypto = selector.get("txt_record", {}).get("k", None)
+            invalid_crypto = results["dkim"][selector].get("txt_record", {}).get("k", None)
 
             if invalid_crypto is not None:
                 # if k != rsa
@@ -175,15 +175,15 @@ def process_dns(results):
 
             # Dkim value invalid
             # Check if v, k, and p exist in txt_record
-            v_tag = selector.get("txt_record", {}).get("v", None)
-            k_tag = selector.get("txt_record", {}).get("k", None)
-            p_tag = selector.get("txt_record", {}).get("p", None)
+            v_tag = results["dkim"][selector].get("txt_record", {}).get("v", None)
+            k_tag = results["dkim"][selector].get("txt_record", {}).get("k", None)
+            p_tag = results["dkim"][selector].get("txt_record", {}).get("p", None)
 
             if v_tag is None and k_tag is None and p_tag is None:
                 tags["dkim"][selector].append("dkim12")
 
             # Testing Enabled
-            t_enabled = selector.get("t_value", None)
+            t_enabled = results["dkim"][selector].get("t_value", None)
             if t_enabled not in [None, "null", ""]:
                 tags["dkim"][selector].append("dkim13")
 
@@ -446,10 +446,10 @@ async def insert_dns(report, tags, domain_key, db):
             dmarc_status = "fail"
 
         dkim_statuses = []
-        for selector_tags in tags["dkim"].keys():
-            if any(i in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim9", "dkim11", "dkim12"] for i in selector_tags["dkim"]):
+        for selector in tags["dkim"].keys():
+            if any(i in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim9", "dkim11", "dkim12"] for i in tags["dkim"][selector]):
                 dkim_statuses.append("fail")
-            elif all(i in ["dkim7", "dkim8"] for i in selector_tags["dkim"]):
+            elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"][selector]):
                 dkim_statuses.append("pass")
 
         if any(i == "fail" for i in dkim_statuses):
