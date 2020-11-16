@@ -8,7 +8,7 @@ const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
 const { ArangoTools } = require('arango-tools')
 const { makeMigrations } = require('./migrations')
 const fetch = require('isomorphic-fetch')
-const { loadDomainOwnership, upsertOwnership } = require('./src')
+const { loadDomainOwnership, upsertOwnership, removeOwnerships } = require('./src')
 
 ;(async () => {
   // Generate Database information
@@ -17,6 +17,7 @@ const { loadDomainOwnership, upsertOwnership } = require('./src')
   // Load ownership assignments from github
   const ownerships = await loadDomainOwnership({ fetch })
 
+  await removeOwnerships({ query })
   await upsertOwnership({ ownerships, query })
 
   console.info('Completed assigning ownerships.')

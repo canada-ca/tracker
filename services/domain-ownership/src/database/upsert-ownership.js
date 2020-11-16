@@ -1,13 +1,4 @@
 const upsertOwnership = async ({ ownerships, query }) => {
-  console.info('Removing current ownerships ...')
-  try {
-    await query`
-      FOR item IN ownership
-        REMOVE item IN ownership
-    `
-  } catch (err) {
-    console.error(`Error occurred while removing current ownerships: ${err}`)
-  }
   console.info('Assigning ownerships ...')
 
   Object.keys(ownerships).forEach(async (key) => {
