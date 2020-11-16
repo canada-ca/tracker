@@ -35,6 +35,10 @@ steps:
     - DB_NAME=$_DB_NAME
     - GITHUB_TOKEN=$_GITHUB_TOKEN
     - GITHUB_URL=$_GITHUB_URL
+    - GITHUB_BRANCH=$_GITHUB_BRANCH
+    - GITHUB_FILE=$_GITHUB_FILE
+    - GITHUB_OWNER=$_GITHUB_OWNER
+    - GITHUB_REPO=$_GITHUB_REPO
 
 - name: 'gcr.io/cloud-builders/docker'
   id: build-if-master
