@@ -9,7 +9,7 @@ arango_client = ArangoClient(hosts="testdb")
 def test_dispatch():
 
     # Connect to arango system DB and create test DB
-    sys_db = client.db("_system", username="", password="")
+    sys_db = arango_client.db("_system", username="", password="")
     sys_db.create_database("test")
 
     # Establish DB connection

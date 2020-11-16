@@ -9,6 +9,7 @@ import emoji
 import random
 import asyncio
 import datetime
+from arango import ArangoClient
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import PlainTextResponse, JSONResponse
