@@ -5,18 +5,15 @@ from result_processor import *
 from test_data import *
 
 arango_client = ArangoClient(hosts="http://testdb:8529")
+# Connect to arango system DB and create test DB
+sys_db = arango_client.db("_system", username="", password="")
+sys_db.create_database("test")
 
+# Establish DB connection
+db = arango_client.db("test", username="", password="")
+db.create_collection("domains")
 
-def setup():
-    # Connect to arango system DB and create test DB
-    sys_db = arango_client.db("_system", username="", password="")
-    sys_db.create_database("test")
-
-    # Establish DB connection
-    db = arango_client.db("test", username="", password="")
-    db.create_collection("domains")
-
-    db.collection("domains").insert({"domain": "cyber.gc.ca", "selectors": ["selector1"]})
+db.collection("domains").insert({"domain": "cyber.gc.ca", "selectors": ["selector1"]})
 
 
 def test_process_https():
@@ -35,8 +32,6 @@ def test_process_dns():
 
 
 async def test_insert_https():
-    setup()
-
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.result()
