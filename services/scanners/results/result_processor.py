@@ -141,7 +141,7 @@ def process_ssl(results):
 def process_dns(results):
     tags = {"dmarc": [], "dkim": [], "spf": []}
 
-    for selector in results.get("dkim", []):
+    for selector in results.get("dkim", {}).keys():
         tags["dkim"][selector] = []
         if selector.get("missing", None) is not None:
             tags["dkim"][selector].append("dkim2")
@@ -432,7 +432,7 @@ async def insert_dns(report, tags, domain_key, db):
         db.collection("spf").insert({"timestamp": str(datetime.datetime.utcnow()), "record": report["spf"].get("record", None), "lookups": report["spf"].get("dns_lookups", None), "spfDefault": report["spf"].get("record", "none")[-4:].lower(), "rawJson": report["spf"], "guidanceTags": tags["spf"]})
 
         db.collection("dkim").insert({"timestamp": str(datetime.datetime.utcnow())})
-        for selector in report["dkim"]:
+        for selector in report["dkim"].keys():
             db.collection("dkim_scans").insert({"record": selector.get("txt_record", None), "keyLength": selector.get("key_size", None), "rawJson": selector, "guidanceTags": tags["dkim"]})
 
         if "spf12" in tags["spf"]:
@@ -445,9 +445,16 @@ async def insert_dns(report, tags, domain_key, db):
         else:
             dmarc_status = "fail"
 
-        if any(i in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim9", "dkim11", "dkim12"] for i in tags["dkim"]):
+        dkim_statuses = []
+        for selector_tags in tags["dkim"]:
+            if any(i in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim9", "dkim11", "dkim12"] for i in selector_tags["dkim"]):
+                dkim_statuses.append("fail")
+            elif all(i in ["dkim7", "dkim8"] for i in selector_tags["dkim"]):
+                dkim_statuses.append("pass")
+
+        if any(i == "fail" for i in dkim_statuses):
             dkim_status = "fail"
-        elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"]):
+        else:
             dkim_status = "pass"
 
         domain = db.collection("domains").get({"_key": domain_key})
