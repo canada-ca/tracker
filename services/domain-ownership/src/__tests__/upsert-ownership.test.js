@@ -185,9 +185,11 @@ describe('given the upsertOwnership function', () => {
 
       await upsertOwnership({ ownerships, query: queryMock })
 
-      expect(consoleErrorOutput).toEqual([
-        `Error occurred while inserting/updating ownerships for TEST: Error: Database error occurred.`,
-      ])
+      setTimeout(async () => {
+        expect(consoleErrorOutput).toEqual([
+          `Error occurred while inserting/updating ownerships for TEST: Error: Database error occurred.`,
+        ])
+      }, 1000)
     })
   })
 })
