@@ -28,7 +28,9 @@ def test_process_ssl():
 
 def test_process_dns():
     tags = process_dns(dns_result_data)
-    assert tags == expected_dns_tags
+    assert tags["dmarc"] == expected_dmarc_tags
+    assert tags["spf"] == expected_spf_tags
+    assert tags["dkim"] == expected_dkim_tags
 
 
 async def test_insert_https():

@@ -65,7 +65,7 @@ def scan(db_host, db_name, user_name, password, http_client=requests):
             logging.info(f"Dispatching scan number {count} of {len(domains)}")
             logging.info(f"Requesting scan for {domain['domain']}")
 
-            db.collection("domains").update_match({"_key": domain["key"]}, {"lastRan": scan_time})
+            db.collection("domains").update_match({"_key": domain["_key"]}, {"lastRan": scan_time})
 
             dispatch_https(domain)
             dispatch_ssl(domain)
