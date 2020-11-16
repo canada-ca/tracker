@@ -13,7 +13,7 @@ def test_dispatch():
     sys_db.create_database("test")
 
     # Establish DB connection
-    db = db_client.db("test", username="", password="")
+    db = arango_client.db("test", username="", password="")
     db.create_collection("domains")
 
     input_domains = [

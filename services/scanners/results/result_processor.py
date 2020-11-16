@@ -519,5 +519,5 @@ def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
 
     return starlette_app
 
-
-app = Server()
+if all(i is not None for i in [DB_USER, DB_HOST, DB_PASS, DB_PORT]):
+    app = Server()
