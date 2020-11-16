@@ -85,22 +85,18 @@ describe('given the upsertOwnership function', () => {
           },
         }
 
-        upsertOwnership({ ownerships, query })
+        await upsertOwnership({ ownerships, query })
+
+        const cursor = await query`
+            FOR v, e IN 1..1 ANY ${domain._id} ownership RETURN { _from: e._from, _to: e._to }
+          `
 
         const expectedOwnership = {
           _to: domain._id,
           _from: org._id,
         }
 
-        const cursor = await query`
-          FOR v, e IN 1..1 ANY ${domain._id} ownership RETURN { _from: e._from, _to: e._to }
-        `
-
-        const ownership = await cursor.next()
-
-        setTimeout(() => {
-          expect(ownership).toEqual(expectedOwnership)
-        }, 500)
+        await expect(cursor.next()).resolves.toEqual(expectedOwnership)
       })
     })
     describe('domain is not reassigned', () => {
@@ -127,12 +123,10 @@ describe('given the upsertOwnership function', () => {
         }
 
         const cursor = await query`
-          FOR v, e IN 1..1 ANY ${domain._id} ownership RETURN { _from: e._from, _to: e._to }
-        `
+            FOR v, e IN 1..1 ANY ${domain._id} ownership RETURN { _from: e._from, _to: e._to }
+          `
 
-        const ownership = await cursor.next()
-
-        expect(ownership).toEqual(expectedOwnership)
+        await expect(cursor.next()).resolves.toEqual(expectedOwnership)
       })
     })
     describe('domain is reassigned to a different organization', () => {
@@ -172,7 +166,7 @@ describe('given the upsertOwnership function', () => {
         const ownerships = {
           Federal: {
             TBS: {
-              TEST: ['test.gc.ca'],
+              TEST2: ['test.gc.ca'],
             },
           },
         }
@@ -185,8 +179,8 @@ describe('given the upsertOwnership function', () => {
         }
 
         const cursor = await query`
-          FOR v, e IN 1..1 ANY ${domain._id} ownership RETURN { _from: e._from, _to: e._to }
-        `
+            FOR v, e IN 1..1 ANY ${domain._id} ownership RETURN { _from: e._from, _to: e._to }
+          `
 
         const ownership = await cursor.next()
 
