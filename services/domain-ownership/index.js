@@ -17,5 +17,7 @@ const { loadDomainOwnership, upsertOwnership } = require('./src')
   // Load ownership assignments from github
   const ownerships = await loadDomainOwnership({ fetch })
 
-  upsertOwnership({ ownerships, query })
+  await upsertOwnership({ ownerships, query })
+
+  console.info('Completed assigning ownerships.')
 })()
