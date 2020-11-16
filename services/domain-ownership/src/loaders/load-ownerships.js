@@ -17,7 +17,7 @@ const loadDomainOwnership = async ({ fetch }) => {
 
     const domainOwnership = JSON.parse(repoInfo.data.repository.object.text)
 
-    return domainOwnership
+    return domainOwnership.Federal.TBS
   } catch (err) {
     console.error(
       `Error occurred while fetching domain ownership information: ${err}`,
