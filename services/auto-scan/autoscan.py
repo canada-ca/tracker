@@ -67,9 +67,9 @@ def scan(db_host, db_name, user_name, password, http_client=requests):
 
             db.collection("domains").update_match({"_key": domain["_key"]}, {"lastRan": scan_time})
 
-            dispatch_https(domain, requests)
-            dispatch_ssl(domain, requests)
-            dispatch_dns(domain, requests)
+            dispatch_https(domain, http_client)
+            dispatch_ssl(domain, http_client)
+            dispatch_dns(domain, http_client)
 
     except Exception as e:
         logging.error(

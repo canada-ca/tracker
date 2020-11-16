@@ -139,7 +139,7 @@ def process_ssl(results):
 
 
 def process_dns(results):
-    tags = {"dmarc": [], "dkim": [], "spf": []}
+    tags = {"dmarc": [], "dkim": {}, "spf": []}
 
     for selector in results.get("dkim", {}).keys():
         tags["dkim"][selector] = []
@@ -446,7 +446,7 @@ async def insert_dns(report, tags, domain_key, db):
             dmarc_status = "fail"
 
         dkim_statuses = []
-        for selector_tags in tags["dkim"]:
+        for selector_tags in tags["dkim"].keys():
             if any(i in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim9", "dkim11", "dkim12"] for i in selector_tags["dkim"]):
                 dkim_statuses.append("fail")
             elif all(i in ["dkim7", "dkim8"] for i in selector_tags["dkim"]):
