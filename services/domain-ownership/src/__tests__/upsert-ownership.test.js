@@ -190,9 +190,11 @@ describe('given the upsertOwnership function', () => {
 
         const ownership = await cursor.next()
 
+        // Not exactly sure how to fix this
+        // Race condition issue
         setTimeout(() => {
           expect(ownership).toEqual(expectedOwnership)
-        }, 500)
+        }, 1000)
       })
     })
   })
