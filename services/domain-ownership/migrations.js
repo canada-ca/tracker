@@ -27,6 +27,11 @@ const makeMigrations = ({ databaseName, rootPass }) => [
   {
     type: 'documentcollection',
     databaseName,
+    name: 'dkimResults',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
     name: 'dmarc',
   },
   {
@@ -45,6 +50,36 @@ const makeMigrations = ({ databaseName, rootPass }) => [
     name: 'ssl',
   },
   {
+    type: 'documentcollection',
+    databaseName,
+    name: 'dkimGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'dmarcGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'spfGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'httpsGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'sslGuidanceTags',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'chartSummaries',
+  },
+  {
     type: 'edgecollection',
     databaseName,
     name: 'affiliations',
@@ -58,6 +93,11 @@ const makeMigrations = ({ databaseName, rootPass }) => [
     type: 'edgecollection',
     databaseName,
     name: 'domainsDKIM',
+  },
+  {
+    type: 'edgecollection',
+    databaseName,
+    name: 'dkimToDkimResults',
   },
   {
     type: 'edgecollection',

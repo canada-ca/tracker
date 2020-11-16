@@ -1,8 +1,15 @@
+const {
+  GITHUB_BRANCH,
+  GITHUB_FILE,
+  GITHUB_OWNER,
+  GITHUB_REPO,
+} = process.env
+
 const GET_FILE_CONTENTS = `
 {
-  repository(name: "reading-json-file-demo", owner: "nslandolt") {
+  repository(name: "${GITHUB_REPO}", owner: "${GITHUB_OWNER}") {
     id
-    object(expression: "master:file.json") {
+    object(expression: "${GITHUB_BRANCH}:${GITHUB_FILE}") {
       ... on Blob {
         text
       }
