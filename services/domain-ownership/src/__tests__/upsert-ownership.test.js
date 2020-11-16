@@ -177,7 +177,7 @@ describe('given the upsertOwnership function', () => {
           },
         }
 
-        upsertOwnership({ ownerships, query })
+        await upsertOwnership({ ownerships, query })
 
         const expectedOwnership = {
           _to: domain._id,
@@ -190,11 +190,7 @@ describe('given the upsertOwnership function', () => {
 
         const ownership = await cursor.next()
 
-        // Not exactly sure how to fix this
-        // Race condition issue
-        setTimeout(() => {
-          expect(ownership).toEqual(expectedOwnership)
-        }, 1000)
+        expect(ownership).toEqual(expectedOwnership)
       })
     })
   })
@@ -204,13 +200,13 @@ describe('given the upsertOwnership function', () => {
         .fn()
         .mockRejectedValue(new Error('Database error occurred.'))
 
-        const ownerships = {
-          Federal: {
-            TBS: {
-              TEST: ['test.gc.ca'],
-            },
+      const ownerships = {
+        Federal: {
+          TBS: {
+            TEST: ['test.gc.ca'],
           },
-        }
+        },
+      }
 
       try {
         upsertOwnership({ ownerships, query: queryMock })

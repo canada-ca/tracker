@@ -1,4 +1,4 @@
-const upsertOwnership = ({ ownerships, query }) => {
+const upsertOwnership = async ({ ownerships, query }) => {
   console.info('Assigning ownerships ...')
 
   Object.keys(ownerships).forEach(async (key) => {
