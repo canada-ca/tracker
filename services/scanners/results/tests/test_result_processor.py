@@ -4,11 +4,8 @@ from arango import ArangoClient
 from result_processor import *
 from test_data import *
 
-arango_client = ArangoClient(hosts="testdb")
+arango_client = ArangoClient(hosts="http://testdb:8529")
 
-TEST_DATABASE_URI = "postgresql://track_dmarc:postgres@testdb/track_dmarc"
-
-test_session = session()
 
 def setup():
     # Connect to arango system DB and create test DB

@@ -3,7 +3,7 @@ from arango import ArangoClient
 from pretend import stub
 from autoscan import *
 
-arango_client = ArangoClient(hosts="testdb")
+arango_client = ArangoClient(hosts="http://testdb:8529")
 
 
 def test_dispatch():
