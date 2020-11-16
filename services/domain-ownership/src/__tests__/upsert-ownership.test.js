@@ -70,10 +70,6 @@ describe('given the upsertOwnership function', () => {
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
-      await collections.claims.save({
-        _to: domain._id,
-        _from: org._id,
-      })
     })
     describe('ownership to domains is assigned to org', () => {
       it('returns the upserted item, with type being set to insert', async () => {
@@ -88,7 +84,7 @@ describe('given the upsertOwnership function', () => {
         await upsertOwnership({ ownerships, query })
 
         const cursor = await query`
-            FOR v, e IN 1..1 ANY ${domain._id} ownership RETURN { _from: e._from, _to: e._to }
+            FOR item IN ownership RETURN { _from: item._from, _to: item._to }
           `
 
         const expectedOwnership = {
@@ -115,7 +111,7 @@ describe('given the upsertOwnership function', () => {
           },
         }
 
-        upsertOwnership({ ownerships, query })
+        await upsertOwnership({ ownerships, query })
 
         const expectedOwnership = {
           _to: domain._id,
@@ -179,12 +175,10 @@ describe('given the upsertOwnership function', () => {
         }
 
         const cursor = await query`
-            FOR v, e IN 1..1 ANY ${domain._id} ownership RETURN { _from: e._from, _to: e._to }
+            FOR item IN ownership RETURN { _from: item._from, _to: item._to }
           `
 
-        const ownership = await cursor.next()
-
-        expect(ownership).toEqual(expectedOwnership)
+        await expect(cursor.next()).resolves.toEqual(expectedOwnership)
       })
     })
   })
@@ -202,11 +196,11 @@ describe('given the upsertOwnership function', () => {
         },
       }
 
-      try {
-        upsertOwnership({ ownerships, query: queryMock })
-      } catch (err) {
-        expect(err).toEqual(new Error(''))
-      }
+      await upsertOwnership({ ownerships, query: queryMock })
+
+      expect(consoleErrorOutput).toEqual([
+        `Error occurred while inserting/updating ownerships for Federal: Error: Database error occurred.`,
+      ])
     })
   })
 })
