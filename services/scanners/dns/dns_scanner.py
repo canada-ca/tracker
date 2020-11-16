@@ -256,7 +256,7 @@ def Server(server_client=requests):
             msg = "Timeout while performing scan"
             logging.error(msg)
             dispatch_results(
-                {"scan_type": "dns", "scan_id": scan_id, "results": {}}, server_client
+                {"scan_type": "dns", "uuid": uuid, "results": {}}, server_client
             )
             return PlainTextResponse(msg)
 
@@ -266,21 +266,22 @@ def Server(server_client=requests):
             signal.alarm(60)
             try:
                 domain = inbound_payload["domain"]
-                scan_id = inbound_payload["scan_id"]
+                uuid = inbound_payload["uuid"]
                 selectors = inbound_payload["selectors"]
+                domain_key = inbound_payload["domain_key"]
             except KeyError:
                 msg = f"Invalid scan request format received: {str(inbound_payload)}"
                 logging.error(msg)
                 return PlainTextResponse(msg)
 
-            logging.info(f"(ID={scan_id}) Performing scan...")
+            logging.info("Performing scan...")
             dmarc_results = scan_dmarc(domain)
 
             try:
                 iter(selectors)
                 dkim_results = await scan_dkim(domain, selectors)
             except TypeError:
-                logging.info("(ID={scan_id}) No DKIM selector strings provided")
+                logging.info("No DKIM selector strings provided")
                 dkim_results = {}
                 pass
 
@@ -295,20 +296,21 @@ def Server(server_client=requests):
                     {
                         "results": processed_results,
                         "scan_type": "dns",
-                        "scan_id": scan_id,
+                        "uuid": uuid,
+                        "domain_key": domain_key
                     }
                 )
-                logging.info(f"(ID={scan_id}) Scan results: {str(scan_results)}")
+                logging.info("Scan results: {str(scan_results)}")
             else:
                 raise Exception("DNS scan not completed")
 
         except Exception as e:
             signal.alarm(0)
-            msg = f"(ID={scan_id}) An unexpected error occurred while attempting to process DNS scan request: ({type(e).__name__}: {str(e)})"
+            msg = "An unexpected error occurred while attempting to process DNS scan request: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "dns", "scan_id": scan_id, "results": {}}, server_client
+                {"scan_type": "dns", "uuid": uuid, "results": {}}, server_client
             )
             return PlainTextResponse(msg)
 
@@ -316,7 +318,7 @@ def Server(server_client=requests):
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
         dispatch_results(outbound_payload, server_client)
-        msg = f"(ID={scan_id}) DNS scan completed in {elapsed_time.total_seconds()} seconds."
+        msg = "DNS scan completed in {elapsed_time.total_seconds()} seconds."
         logging.info(msg)
 
         return PlainTextResponse(msg)

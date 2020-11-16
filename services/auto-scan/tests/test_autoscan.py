@@ -1,16 +1,20 @@
 import pytest
-import databases
-from autoscan import *
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from arango import ArangoClient
 from pretend import stub
-from autoscan import Dispatch, Domains, Users
+from autoscan import *
 
-TEST_DATABASE_URI = "postgresql://track_dmarc:postgres@testdb/track_dmarc"
-engine = create_engine(TEST_DATABASE_URI)
+arango_client = ArangoClient(hosts="testdb")
 
 
-def test_retrieval():
+def test_dispatch():
+
+    # Connect to arango system DB and create test DB
+    sys_db = client.db("_system", username="", password="")
+    sys_db.create_database("test")
+
+    # Establish DB connection
+    db = db_client.db("test", username="", password="")
+    db.create_collection("domains")
 
     input_domains = [
         {"domain": "cyber.gc.ca"},
@@ -18,28 +22,13 @@ def test_retrieval():
         {"domain": "forces.gc.ca"},
     ]
 
-    session = sessionmaker(bind=engine, autocommit=True)
-    test_session = session()
-
-    with test_session.begin():
-        test_session.execute(
-            Users.insert().values(
-                user_name="system",
-                user_password="sysuserpass",
-                display_name="system",
-                preferred_lang="English",
-            )
-        )
-
-        for domain in input_domains:
-            test_session.execute(Domains.insert().values(domain=domain["domain"]))
-            test_session.execute(Domains.insert().values(domain=domain["domain"]))
-            test_session.execute(Domains.insert().values(domain=domain["domain"]))
+    for domain in input_domains:
+        db.collection("domains").insert(domain)
 
     client_stub = stub(post=lambda url, json: None)
 
-    dispatched = Dispatch(
-        database=databases.Database(TEST_DATABASE_URI), client=client_stub
+    dispatched = scan(
+        "testdb", "test", "", "", http_client=client_stub
     )
 
-    assert all(domain["domain"] in dispatched for domain in input_domains)
+    assert dispatched == len(input_domains)

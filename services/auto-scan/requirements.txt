@@ -1,7 +1,5 @@
-asyncio
-pytest-asyncio
+pytest
 requests>=2.18.4
-SQLAlchemy
-psycopg2-binary
-databases[postgresql]
+python-arango
 pretend
+uuid
