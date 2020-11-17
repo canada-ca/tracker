@@ -26,7 +26,7 @@ def test_update_guidance():
     test_guidance.append({"file": "tags_https", "guidance": https_tag_data})
     test_guidance.append({"file": "tags_ssl", "guidance": ssl_tag_data})
     test_guidance.append({"file": "tags_agg", "guidance": aggregate_tag_data})
-    update_guidance(host="http://testdb:8529", name="test", user="", password="")
+    update_guidance(test_guidance, host="http://testdb:8529", name="test", user="", password="")
     for key, data in scan_summary_criteria_data:
         test_criteria = {"_key": key}
         for k, v in data:
