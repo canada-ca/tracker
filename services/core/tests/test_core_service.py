@@ -60,7 +60,7 @@ def test_update_guidance():
     for key, data in dkim_tag_data.items():
         test_tag = {"_key": key}
         for k, v in data.items():
-            test_tagk[k] = v
+            test_tag[k] = v
         current_tag = db.collection("dkimGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
@@ -73,7 +73,7 @@ def test_update_guidance():
     for key, data in dmarc_tag_data.items():
         test_tag = {"_key": key}
         for k, v in data.items():
-            test_tagk[k] = v
+            test_tag[k] = v
         current_tag = db.collection("dmarcGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
@@ -86,7 +86,7 @@ def test_update_guidance():
     for key, data in spf_tag_data.items():
         test_tag = {"_key": key}
         for k, v in data.items():
-            test_tagk[k] = v
+            test_tag[k] = v
         current_tag = db.collection("spfGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
@@ -99,7 +99,7 @@ def test_update_guidance():
     for key, data in https_tag_data.items():
         test_tag = {"_key": key}
         for k, v in data.items():
-            test_tagk[k] = v
+            test_tag[k] = v
         current_tag = db.collection("httpsGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
@@ -112,7 +112,7 @@ def test_update_guidance():
     for key, data in ssl_tag_data.items():
         test_tag = {"_key": key}
         for k, v in data.items():
-            test_tagk[k] = v
+            test_tag[k] = v
         current_tag = db.collection("sslGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
@@ -125,7 +125,7 @@ def test_update_guidance():
     for key, data in aggregate_tag_data.items():
         test_tag = {"_key": key}
         for k, v in data.items():
-            test_tagk[k] = v
+            test_tag[k] = v
         current_tag = db.collection("aggGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
