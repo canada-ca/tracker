@@ -4,8 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "jest",
+    "test-coverage": "jest --coverage",
+    "lint": "eslint src",
+    "prettier": "prettier --write \"**/*.js\""
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "arango-tools": "0.0.9",
+    "bcrypt": "^5.0.0",
+    "dotenv-safe": "^8.2.0"
+  }
 }
