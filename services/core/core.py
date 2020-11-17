@@ -114,9 +114,10 @@ def update_guidance(
             for criteria_type, criteria in entry["guidance"].items():
                 new_criteria = {
                     "_key": criteria_type,
-                    "pass": criteria["pass"],
-                    "fail": criteria["fail"],
-                    "info": criteria["info"],
+                    "pass": criteria.get("pass", []),
+                    "fail": criteria.get("fail", []),
+                    "warning": criteria.get("warning", []),
+                    "info": criteria.get("info", []),
                 }
 
                 logging.info(
@@ -157,8 +158,8 @@ def update_guidance(
             for criteria_type, criteria in entry["guidance"].items():
                 new_criteria = {
                     "_key": criteria_type,
-                    "pass": criteria["pass"],
-                    "fail": criteria["fail"],
+                    "pass": criteria.get("pass", []),
+                    "fail": criteria.get("fail", []),
                 }
 
                 logging.info(
