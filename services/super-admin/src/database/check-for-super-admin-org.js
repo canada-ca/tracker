@@ -25,5 +25,5 @@ const checkForSuperAdminOrg = async ({ query }) => {
 }
 
 module.exports = {
-    checkForSuperAdminOrg,
+  checkForSuperAdminOrg,
 }

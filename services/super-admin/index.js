@@ -30,37 +30,57 @@ const {
 
   const admin = await checkForSuperAdminAccount({ query })
   const org = await checkForSuperAdminOrg({ query })
-  
+
   let newAffiliation, newOrg, newAdmin
   if (typeof admin === 'undefined' && typeof org === 'undefined') {
-    console.info('Super admin account, and org not found, creating new account.')
+    console.info(
+      'Super admin account, and org not found, creating new account.',
+    )
     newAdmin = await createSuperAdminAccount({ collections, bcrypt })
     newOrg = await createSuperAdminOrg({ collections })
-    newAffiliation = await createSuperAdminAffiliation({ collections, org: newOrg, admin: newAdmin })
-    console.info('Super admin account, org, and affiliation creation successful.')
+    newAffiliation = await createSuperAdminAffiliation({
+      collections,
+      org: newOrg,
+      admin: newAdmin,
+    })
+    console.info(
+      'Super admin account, org, and affiliation creation successful.',
+    )
     console.info('Exiting now.')
     return
-  }  
-  
+  }
+
   if (typeof admin === 'undefined' && typeof org !== 'undefined') {
-    console.info('Super admin account not found, Super admin org found. Creating account.')
+    console.info(
+      'Super admin account not found, Super admin org found. Creating account.',
+    )
     newAdmin = await createSuperAdminAccount({ collections, bcrypt })
     console.info('Removing old super admin affiliation.')
     await removeSuperAdminAffiliation({ query })
     console.info('Creating new super admin affiliation')
-    newAffiliation = await createSuperAdminAffiliation({ collections, org, admin: newAdmin })
+    newAffiliation = await createSuperAdminAffiliation({
+      collections,
+      org,
+      admin: newAdmin,
+    })
     console.info('Super admin account, and affiliation creation successful.')
     console.info('Exiting now.')
     return
   }
 
   if (typeof admin !== 'undefined' && typeof org === 'undefined') {
-    console.info('Super admin org not found, Super admin account found. Creating super admin org.')
+    console.info(
+      'Super admin org not found, Super admin account found. Creating super admin org.',
+    )
     newOrg = await createSuperAdminOrg({ collections })
     console.info('Removing old super admin affiliation.')
     await removeSuperAdminAffiliation({ query })
     console.info('Creating new super admin affiliation')
-    newAffiliation = await createSuperAdminAffiliation({ collections, org: newOrg, admin })
+    newAffiliation = await createSuperAdminAffiliation({
+      collections,
+      org: newOrg,
+      admin,
+    })
     console.info('Super admin org, and affiliation creation successful.')
     console.info('Exiting now.')
 
@@ -68,11 +88,19 @@ const {
   }
 
   if (typeof admin !== 'undefined' && typeof org !== 'undefined') {
-    console.info('Found super admin account, and org. Checking for affiliation.')
+    console.info(
+      'Found super admin account, and org. Checking for affiliation.',
+    )
     const affiliation = await checkForSuperAdminAffiliation({ query })
     if (typeof affiliation === 'undefined') {
-      console.info('Super admin affiliation not found, creating new affiliation.')
-      newAffiliation = await createSuperAdminAffiliation({ collections, org, admin })
+      console.info(
+        'Super admin affiliation not found, creating new affiliation.',
+      )
+      newAffiliation = await createSuperAdminAffiliation({
+        collections,
+        org,
+        admin,
+      })
       console.info('Super admin affiliation creation successful.')
       console.info('Exiting now.')
       return
@@ -82,5 +110,4 @@ const {
       return
     }
   }
-
 })()

@@ -8,7 +8,9 @@ const {
   createSuperAdminAffiliation,
 } = require('./create-super-admin-affiliation')
 const { createSuperAdminOrg } = require('./create-super-admin-org')
-const { removeSuperAdminAffiliation } = require('./remove-super-admin-affiliation')
+const {
+  removeSuperAdminAffiliation,
+} = require('./remove-super-admin-affiliation')
 
 module.exports = {
   checkForSuperAdminAccount,
@@ -17,5 +19,5 @@ module.exports = {
   createSuperAdminAccount,
   createSuperAdminAffiliation,
   createSuperAdminOrg,
-  removeSuperAdminAffiliation
+  removeSuperAdminAffiliation,
 }
