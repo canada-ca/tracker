@@ -373,7 +373,8 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
     logging.info(f"Organization summary value update completed.")
 
 
-if __name__ == "__main__":
+if all(i is not None for i in [DB_USER, DB_HOST, DB_PASS, DB_PORT]):
+    logging.info(emoji.emojize("Core service started :rocket:"))
     guidance_data = retrieve_guidance()
     update_guidance(guidance_data)
     update_scan_summaries()
