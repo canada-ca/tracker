@@ -25,8 +25,6 @@ GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 SCAN_TYPES = ["https", "ssl", "dkim", "mx", "spf", "dmarc"]
 CHARTS = {"mail": ["dmarc", "spf", "dkim"], "web": ["https", "ssl"]}
 
-client = ArangoClient(hosts=DB_HOST)
-
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
@@ -106,6 +104,7 @@ def update_guidance(
     logging.info(f"Updating guidance...")
 
     # Establish DB connection
+    client = ArangoClient(hosts=DB_HOST)
     db = client.db(name, username=user, password=password)
 
     for entry in guidance_data:
@@ -242,6 +241,7 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
     logging.info(f"Updating scan summaries...")
 
     # Establish DB connection
+    client = ArangoClient(hosts=DB_HOST)
     db = client.db(name, username=user, password=password)
 
     for scan_type in SCAN_TYPES:
@@ -283,6 +283,7 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB
     logging.info(f"Updating chart summaries...")
 
     # Establish DB connection
+    client = ArangoClient(hosts=DB_HOST)
     db = client.db(name, username=user, password=password)
 
     for chart_type, scan_types in CHARTS.items():
@@ -329,6 +330,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
     logging.info(f"Updating organization summary values...")
 
     # Establish DB connection
+    client = ArangoClient(hosts=DB_HOST)
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
@@ -373,7 +375,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
     logging.info(f"Organization summary value update completed.")
 
 
-if all(i is not None for i in [DB_USER, DB_HOST, DB_PASS, DB_PORT]):
+if __name__ == "__main__":
     logging.info(emoji.emojize("Core service started :rocket:"))
     guidance_data = retrieve_guidance()
     update_guidance(guidance_data)
