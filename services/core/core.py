@@ -148,9 +148,7 @@ def update_guidance(
                     )
                     logging.info(f"Scan summary criteria {criteria_type} updated.")
                 else:
-                    logging.info(
-                        f"Scan summary criteria {criteria_type} not updated."
-                    )
+                    logging.info(f"Scan summary criteria {criteria_type} not updated.")
 
         elif entry["file"] == "chartSummaryCriteria":
             if not db.has_collection("chartSummaryCriteria"):
@@ -177,9 +175,7 @@ def update_guidance(
                 # Insert if the criteria doesn't exist
                 if not criteria_exists:
                     db.collection("chartSummaryCriteria").insert(new_criteria)
-                    logging.info(
-                        f"Chart summary criteria {criteria_type} inserted."
-                    )
+                    logging.info(f"Chart summary criteria {criteria_type} inserted.")
                 # Update if the criteria has changed
                 elif criteria_updated:
                     db.collection("chartSummaryCriteria").update_match(
@@ -188,9 +184,7 @@ def update_guidance(
                     )
                     logging.info(f"Chart summary criteria {criteria_type} updated.")
                 else:
-                    logging.info(
-                        f"Chart summary criteria {criteria_type} not updated."
-                    )
+                    logging.info(f"Chart summary criteria {criteria_type} not updated.")
 
         else:
             tag_type = entry["file"].split("tags_")[0]
@@ -225,7 +219,9 @@ def update_guidance(
                             "tagName": tag_data["tagName"],
                             "guidance": tag_data["guidance"],
                             "refLinksGuide": tag_data.get("refLinksGuide", None),
-                            "refLinksTechnical": tag_data.get("refLinksTechnical", None),
+                            "refLinksTechnical": tag_data.get(
+                                "refLinksTechnical", None
+                            ),
                         },
                     )
                     logging.info(f"Tag {tag_key} updated.")
