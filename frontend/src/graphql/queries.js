@@ -151,17 +151,19 @@ export const ORGANIZATIONS = gql`
 `
 
 export const ADMIN_PANEL = gql`
-  query Domains($number: Int, $cursor: String) {
-    domains: findMyDomains(first: $number, after: $cursor) {
-      edges {
-        node {
-          domain
-          lastRan
+  query AdminPanel($orgSlug: Slug!, $number: Int, $cursor: String) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      domains(first: $number, after: $cursor) {
+        edges {
+          node {
+            domain
+            lastRan
+          }
         }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
       }
     }
   }
@@ -689,13 +691,14 @@ export const DMARC_REPORT_SUMMARY_TABLE = gql`
 
 export const USER_AFFILIATIONS = gql`
   query UserAffiliations {
-    user {
+    findMe {
       affiliations {
         edges {
           node {
             organization {
               id
               acronym
+              slug
             }
             permission
           }

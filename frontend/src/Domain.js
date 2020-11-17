@@ -39,7 +39,7 @@ export function Domain({ url, lastRan, ...rest }) {
             <Text fontWeight="bold">
               <Trans>Last scanned:</Trans>
             </Text>
-            <Link as={RouteLink} to={`domains/${slugify(url)}`}>
+            <Link as={RouteLink} to={`domains/${url}`}>
               {lastRan}
               <Icon name="link" mx="2px" />
             </Link>

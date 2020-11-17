@@ -33,17 +33,16 @@ import {
   REMOVE_DOMAIN,
   UPDATE_DOMAIN,
 } from './graphql/mutations'
-import { slugify } from './slugify'
 import { Field, Formik } from 'formik'
 import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
 import { object as yupObject, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { useUserState } from './UserState'
 
-export function AdminDomains({ domainsData, orgName }) {
+export function AdminDomains({ domainsData, orgSlug }) {
   let domains = []
   if (domainsData && domainsData.edges) {
-    domains = domainsData.edges.map((e) => e.node)
+    domains = domainsData.edges.map((edge) => edge.node)
   }
 
   const [domainList, setDomainList] = useState(domains)
@@ -108,7 +107,7 @@ export function AdminDomains({ domainsData, orgName }) {
     onCompleted() {
       toast({
         title: t`Domain added`,
-        description: t`Domain was added to ${orgName}`,
+        description: t`Domain was added to ${orgSlug}`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -141,7 +140,7 @@ export function AdminDomains({ domainsData, orgName }) {
         removeOnClose()
         toast({
           title: t`Domain removed`,
-          description: t`Domain removed from ${orgName}`,
+          description: t`Domain removed from ${orgSlug}`,
           status: 'info',
           duration: 9000,
           isClosable: true,
@@ -171,7 +170,7 @@ export function AdminDomains({ domainsData, orgName }) {
     onCompleted() {
       toast({
         title: t`Domain updated`,
-        description: t`Domain from ${orgName} successfully updated`,
+        description: t`Domain from ${orgSlug} successfully updated`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -220,7 +219,7 @@ export function AdminDomains({ domainsData, orgName }) {
           } else {
             createDomain({
               variables: {
-                orgSlug: slugify(orgName),
+                orgSlug: orgSlug,
                 url: domainSearch,
                 selectors: [],
               },
@@ -244,11 +243,11 @@ export function AdminDomains({ domainsData, orgName }) {
                 </Text>
               )}
             >
-              {({ url, lastRan }, index) => (
+              {({ domain, lastRan }, index) => (
                 <Stack key={'admindomain' + index} isInline align="center">
                   <TrackerButton
                     onClick={() => {
-                      setSelectedRemoveDomain(url)
+                      setSelectedRemoveDomain(domain)
                       removeOnOpen()
                     }}
                     variant="danger"
@@ -262,13 +261,13 @@ export function AdminDomains({ domainsData, orgName }) {
                     px="2"
                     fontSize="xs"
                     onClick={() => {
-                      setEditingDomainUrl(url)
+                      setEditingDomainUrl(domain)
                       updateOnOpen()
                     }}
                   >
                     <Icon name="edit" />
                   </TrackerButton>
-                  <Domain url={url} lastRan={lastRan} />
+                  <Domain url={domain} lastRan={lastRan} />
                 </Stack>
               )}
             </ListOf>
@@ -438,6 +437,6 @@ export function AdminDomains({ domainsData, orgName }) {
 
 AdminDomains.propTypes = {
   domainsData: object,
-  orgName: string,
+  orgSlug: string,
   refetchFunc: func,
 }

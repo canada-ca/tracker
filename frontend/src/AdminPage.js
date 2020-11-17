@@ -9,41 +9,50 @@ import { useUserState } from './UserState'
 
 export default function AdminPage() {
   const { currentUser } = useUserState()
-  const [orgName, setOrgName] = useState()
-  // const toast = useToast()
+  const [orgDetails, setOrgDetails] = useState()
+  const toast = useToast()
 
-  // const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
-  //   context: {
-  //     headers: {
-  //       authorization: currentUser.jwt,
-  //     },
-  //   },
-  //   onError: (error) => {
-  //     const [_, message] = error.message.split(': ')
-  //     toast({
-  //       title: 'Error',
-  //       description: message,
-  //       status: 'failure',
-  //       duration: 9000,
-  //       isClosable: true,
-  //       position: 'top-left',
-  //     })
-  //   },
-  // })
+  const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
+    onError: (error) => {
+      const [_, message] = error.message.split(': ')
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'failure',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
 
-  // if (loading) {
-  //   return <p>Loading user affilliations...</p>
-  // }
+  if (loading) {
+    return <p>Loading user affilliations...</p>
+  }
 
-  // if (error) {
-  //   return <p>{String(error)}</p>
-  // }
+  if (error) {
+    return <p>{String(error)}</p>
+  }
 
-  // const adminAffiliations = {}
-  // if (data?.user[0]?.affiliations?.edges) {
-  //   const {
-  //     affiliations: { edges },
-  //   } = data.user[0]
+  const adminAffiliations = {}
+  data.findMe.affiliations?.edges.forEach((edge) => {
+    const {
+      permission,
+      organization: { slug, acronym },
+    } = edge.node
+    if (permission === 'ADMIN' || permission === 'SUPER_ADMIN') {
+      adminAffiliations[acronym] = { slug: slug, permission: permission }
+    }
+  })
+
+  // console.log(data.findMe.)
+  // if (data.findMe.affiliations?.edges) {
+  //   const edges = data.findMe.affiliations?.edges
   //   for (let i = 0; i < edges.length; i++) {
   //     const {
   //       node: {
@@ -57,23 +66,7 @@ export default function AdminPage() {
   //   }
   // }
 
-  const adminAffiliations = {}
-  if (currentUser.affiliations?.edges) {
-    const edges = currentUser.affiliations?.edges
-    for (let i = 0; i < edges.length; i++) {
-      const {
-        node: {
-          permission,
-          organization: { acronym },
-        },
-      } = edges[i]
-      if (permission === 'ADMIN' || permission === 'SUPER_ADMIN') {
-        adminAffiliations[acronym] = permission
-      }
-    }
-  }
-
-  const adminOrgs = Object.keys(adminAffiliations)
+  const adminOrgsAcronyms = Object.keys(adminAffiliations)
 
   const options = [
     <option hidden key="default">
@@ -81,13 +74,21 @@ export default function AdminPage() {
     </option>,
   ]
 
-  for (let i = 0; i < adminOrgs.length; i++) {
+  adminOrgsAcronyms.forEach((acronym) => {
     options.push(
-      <option key={'option' + i} value={adminOrgs[i]}>
-        {adminOrgs[i]}
+      <option key={acronym} value={acronym}>
+        {acronym}
       </option>,
     )
-  }
+  })
+
+  // for (let i = 0; i < adminOrgs.length; i++) {
+  //   options.push(
+  //     <option key={'option' + i} value={adminOrgs[i]}>
+  //       {adminOrgs[i]}
+  //     </option>,
+  //   )
+  // }
 
   if (options.length > 1) {
     return (
@@ -106,17 +107,17 @@ export default function AdminPage() {
               size="lg"
               variant="filled"
               onChange={(e) => {
-                setOrgName(e.target.value)
+                setOrgDetails(adminAffiliations[e.target.value])
               }}
             >
               {options}
             </Select>
           </Stack>
-          {options.length > 1 && orgName ? (
+          {options.length > 1 && orgDetails ? (
             <Stack>
               <AdminPanel
-                orgName={orgName}
-                permission={adminAffiliations[orgName]}
+                orgSlug={orgDetails.slug}
+                permission={orgDetails.permission}
                 mr="4"
               />
               <Trans>

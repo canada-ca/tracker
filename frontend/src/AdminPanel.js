@@ -8,13 +8,12 @@ import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { AdminDomains } from './AdminDomains'
 
-export default function AdminPanel({ orgName, permission }) {
+export default function AdminPanel({ orgSlug, permission }) {
   const { currentUser } = useUserState()
   const toast = useToast()
 
-  // TODO: combine these queries into a single request
   const { loading, error, data, refetch } = useQuery(ADMIN_PANEL, {
-    variables: { slug: slugify(orgName) },
+    variables: { orgSlug: orgSlug },
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -46,8 +45,8 @@ export default function AdminPanel({ orgName, permission }) {
     <Stack spacing={10}>
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
         <AdminDomains
-          domainsData={data.domains}
-          orgName={orgName}
+          domainsData={data.findOrganizationBySlug.domains}
+          orgSlug={orgSlug}
           refetchFunc={refetch}
         />
         {/* TODO: get user list working */}
@@ -63,6 +62,6 @@ export default function AdminPanel({ orgName, permission }) {
 }
 
 AdminPanel.propTypes = {
-  orgName: string,
-  permission: string,
+  orgSlug: string.isRequired,
+  permission: string.isRequired,
 }
