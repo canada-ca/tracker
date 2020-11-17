@@ -27,72 +27,72 @@ def test_update_guidance():
     test_guidance.append({"file": "tags_ssl", "guidance": ssl_tag_data})
     test_guidance.append({"file": "tags_agg", "guidance": aggregate_tag_data})
     update_guidance(test_guidance, host="http://testdb:8529", name="test", user="", password="")
-    for key, data in scan_summary_criteria_data:
+    for key, data in scan_summary_criteria_data.items():
         test_criteria = {"_key": key}
-        for k, v in data:
+        for k, v in data.items():
             test_criteria[k] = v
         current_criteria = db.collection("scanSummaryCriteria").get(
             {"_key": key}
         )
         assert test_criteria == current_criteria
 
-    for key, data in chart_summary_criteria_data:
+    for key, data in chart_summary_criteria_data.items():
         test_criteria = {"_key": key}
-        for k, v in data:
+        for k, v in data.items():
             test_criteria[k] = v
         current_criteria = db.collection("chartSummaryCriteria").get(
             {"_key": key}
         )
         assert test_criteria == current_criteria
 
-    for key, data in dkim_tag_data:
+    for key, data in dkim_tag_data.items():
         test_tag = {"_key": key}
-        for k, v in data:
+        for k, v in data.items():
             test_tagk[k] = v
         current_tag = db.collection("dkimGuidanceTags").get(
             {"_key": key}
         )
         assert test_tag == current_tag
 
-    for key, data in dmarc_tag_data:
+    for key, data in dmarc_tag_data.items():
         test_tag = {"_key": key}
-        for k, v in data:
+        for k, v in data.items():
             test_tagk[k] = v
         current_tag = db.collection("dmarcGuidanceTags").get(
             {"_key": key}
         )
         assert test_tag == current_tag
 
-    for key, data in spf_tag_data:
+    for key, data in spf_tag_data.items():
         test_tag = {"_key": key}
-        for k, v in data:
+        for k, v in data.items():
             test_tagk[k] = v
         current_tag = db.collection("spfGuidanceTags").get(
             {"_key": key}
         )
         assert test_tag == current_tag
 
-    for key, data in https_tag_data:
+    for key, data in https_tag_data.items():
         test_tag = {"_key": key}
-        for k, v in data:
+        for k, v in data.items():
             test_tagk[k] = v
         current_tag = db.collection("httpsGuidanceTags").get(
             {"_key": key}
         )
         assert test_tag == current_tag
 
-    for key, data in ssl_tag_data:
+    for key, data in ssl_tag_data.items():
         test_tag = {"_key": key}
-        for k, v in data:
+        for k, v in data.items():
             test_tagk[k] = v
         current_tag = db.collection("sslGuidanceTags").get(
             {"_key": key}
         )
         assert test_tag == current_tag
 
-    for key, data in aggregate_tag_data:
+    for key, data in aggregate_tag_data.items():
         test_tag = {"_key": key}
-        for k, v in data:
+        for k, v in data.items():
             test_tagk[k] = v
         current_tag = db.collection("aggGuidanceTags").get(
             {"_key": key}
