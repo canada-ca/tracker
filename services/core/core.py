@@ -187,7 +187,7 @@ def update_guidance(
                     logging.info(f"Chart summary criteria {criteria_type} not updated.")
 
         else:
-            tag_type = entry["file"].split("tags_")[0]
+            tag_type = entry["file"].split("tags_")[1]
             if not db.has_collection(f"{tag_type}GuidanceTags"):
                 db.create_collection(f"{tag_type}GuidanceTags")
             for tag_key, tag_data in entry["guidance"].items():

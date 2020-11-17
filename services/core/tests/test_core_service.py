@@ -29,7 +29,7 @@ def test_update_guidance():
     test_guidance.append({"file": "tags_spf", "guidance": spf_tag_data})
     test_guidance.append({"file": "tags_https", "guidance": https_tag_data})
     test_guidance.append({"file": "tags_ssl", "guidance": ssl_tag_data})
-    test_guidance.append({"file": "tags_agg", "guidance": aggregate_tag_data})
+    test_guidance.append({"file": "tags_aggregate", "guidance": aggregate_tag_data})
     update_guidance(
         test_guidance, host="http://testdb:8529", name="test", user="", password=""
     )
@@ -126,7 +126,7 @@ def test_update_guidance():
         test_tag = {"_key": key}
         for k, v in data.items():
             test_tag[k] = v
-        current_tag = db.collection("aggGuidanceTags").get({"_key": key})
+        current_tag = db.collection("aggregateGuidanceTags").get({"_key": key})
         assert test_tag == {
             "_key": current_tag["_key"],
             "tagName": current_tag["tagName"],
