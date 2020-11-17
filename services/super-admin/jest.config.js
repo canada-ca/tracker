@@ -9,4 +9,5 @@ module.exports = {
     '.module.js',
   ],
   testTimeout: 10000,
+  verbose: true,
 }
