@@ -111,128 +111,125 @@ def update_guidance(
         if entry["file"] == "scanSummaryCriteria":
             if not db.has_collection("scanSummaryCriteria"):
                 db.create_collection("scanSummaryCriteria")
-            for data in entry["guidance"]:
-                for criteria_type, criteria in data.items():
-                    new_criteria = {
-                        "_key": criteria_type,
-                        "pass": criteria["pass"],
-                        "fail": criteria["fail"],
-                        "info": criteria["info"],
-                    }
+            for criteria_type, criteria in entry["guidance"].items():
+                new_criteria = {
+                    "_key": criteria_type,
+                    "pass": criteria["pass"],
+                    "fail": criteria["fail"],
+                    "info": criteria["info"],
+                }
 
+                logging.info(
+                    f"Checking if scan summary criteria {criteria_type} exists..."
+                )
+                current_criteria = db.collection("scanSummaryCriteria").get(
+                    {"_key": criteria_type}
+                )
+
+                criteria_exists = current_criteria is not None
+                criteria_updated = criteria_exists and (
+                    current_criteria != new_criteria
+                )
+
+                # Insert if the criteria doesn't exist
+                if not criteria_exists:
+                    db.collection("scanSummaryCriteria").insert(new_criteria)
+                    logging.info(f"Scan summary criteria {criteria_type} inserted.")
+                # Update if the criteria has changed
+                elif criteria_updated:
+                    db.collection("scanSummaryCriteria").update_match(
+                        {"_key": criteria_type},
+                        {
+                            "pass": criteria["pass"],
+                            "fail": criteria["fail"],
+                            "info": criteria["info"],
+                        },
+                    )
+                    logging.info(f"Scan summary criteria {criteria_type} updated.")
+                else:
                     logging.info(
-                        f"Checking if scan summary criteria {criteria_type} exists..."
+                        f"Scan summary criteria {criteria_type} not updated."
                     )
-                    current_criteria = db.collection("scanSummaryCriteria").get(
-                        {"_key": criteria_type}
-                    )
-
-                    criteria_exists = current_criteria is not None
-                    criteria_updated = criteria_exists and (
-                        current_criteria != new_criteria
-                    )
-
-                    # Insert if the criteria doesn't exist
-                    if not criteria_exists:
-                        db.collection("scanSummaryCriteria").insert(new_criteria)
-                        logging.info(f"Scan summary criteria {criteria_type} inserted.")
-                    # Update if the criteria has changed
-                    elif criteria_updated:
-                        db.collection("scanSummaryCriteria").update_match(
-                            {"_key": criteria_type},
-                            {
-                                "pass": criteria["pass"],
-                                "fail": criteria["fail"],
-                                "info": criteria["info"],
-                            },
-                        )
-                        logging.info(f"Scan summary criteria {criteria_type} updated.")
-                    else:
-                        logging.info(
-                            f"Scan summary criteria {criteria_type} not updated."
-                        )
 
         elif entry["file"] == "chartSummaryCriteria":
             if not db.has_collection("chartSummaryCriteria"):
                 db.create_collection("chartSummaryCriteria")
-            for data in entry["guidance"]:
-                for criteria_type, criteria in data.items():
-                    new_criteria = {
-                        "_key": criteria_type,
-                        "pass": criteria["pass"],
-                        "fail": criteria["fail"],
-                    }
+            for criteria_type, criteria in entry["guidance"].items():
+                new_criteria = {
+                    "_key": criteria_type,
+                    "pass": criteria["pass"],
+                    "fail": criteria["fail"],
+                }
 
+                logging.info(
+                    f"Checking if chart summary criteria {criteria_type} exists..."
+                )
+                current_criteria = db.collection("chartSummaryCriteria").get(
+                    {"_key": criteria_type}
+                )
+
+                criteria_exists = current_criteria is not None
+                criteria_updated = criteria_exists and (
+                    current_criteria != new_criteria
+                )
+
+                # Insert if the criteria doesn't exist
+                if not criteria_exists:
+                    db.collection("chartSummaryCriteria").insert(new_criteria)
                     logging.info(
-                        f"Checking if chart summary criteria {criteria_type} exists..."
+                        f"Chart summary criteria {criteria_type} inserted."
                     )
-                    current_criteria = db.collection("chartSummaryCriteria").get(
-                        {"_key": criteria_type}
+                # Update if the criteria has changed
+                elif criteria_updated:
+                    db.collection("chartSummaryCriteria").update_match(
+                        {"_key": criteria_type},
+                        {"pass": criteria["pass"], "fail": criteria["fail"]},
                     )
-
-                    criteria_exists = current_criteria is not None
-                    criteria_updated = criteria_exists and (
-                        current_criteria != new_criteria
+                    logging.info(f"Chart summary criteria {criteria_type} updated.")
+                else:
+                    logging.info(
+                        f"Chart summary criteria {criteria_type} not updated."
                     )
-
-                    # Insert if the criteria doesn't exist
-                    if not criteria_exists:
-                        db.collection("chartSummaryCriteria").insert(new_criteria)
-                        logging.info(
-                            f"Chart summary criteria {criteria_type} inserted."
-                        )
-                    # Update if the criteria has changed
-                    elif criteria_updated:
-                        db.collection("chartSummaryCriteria").update_match(
-                            {"_key": criteria_type},
-                            {"pass": criteria["pass"], "fail": criteria["fail"]},
-                        )
-                        logging.info(f"Chart summary criteria {criteria_type} updated.")
-                    else:
-                        logging.info(
-                            f"Chart summary criteria {criteria_type} not updated."
-                        )
 
         else:
             tag_type = entry["file"].split("tags_")[0]
             if not db.has_collection(f"{tag_type}GuidanceTags"):
                 db.create_collection(f"{tag_type}GuidanceTags")
-            for data in entry["guidance"]:
-                for tag_key, tag_data in data.items():
-                    new_tag = {
-                        "_key": tag_key,
-                        "tagName": tag_data["tagName"],
-                        "guidance": tag_data["guidance"],
-                        "refLinksGuide": tag_data["refLinksGuide"],
-                        "refLinksTechnical": tag_data["refLinksTechnical"],
-                    }
+            for tag_key, tag_data in entry["guidance"].items():
+                new_tag = {
+                    "_key": tag_key,
+                    "tagName": tag_data["tagName"],
+                    "guidance": tag_data["guidance"],
+                    "refLinksGuide": tag_data["refLinksGuide"],
+                    "refLinksTechnical": tag_data["refLinksTechnical"],
+                }
 
-                    logging.info(f"Checking if tag {tag_key} exists...")
-                    current_tag = db.collection(f"{tag_type}GuidanceTags").get(
-                        {"_key": tag_key}
+                logging.info(f"Checking if tag {tag_key} exists...")
+                current_tag = db.collection(f"{tag_type}GuidanceTags").get(
+                    {"_key": tag_key}
+                )
+
+                tag_exists = current_tag is not None
+                tag_updated = tag_exists and (current_tag != new_tag)
+
+                # Insert if the tag doesn't exist
+                if not tag_exists:
+                    db.collection(f"{tag_type}GuidanceTags").insert(new_tag)
+                    logging.info(f"Tag {tag_key} inserted.")
+                # Update if the tag has changed
+                elif tag_updated:
+                    db.collection(f"{tag_type}GuidanceTags").update_match(
+                        {"_key": tag_key},
+                        {
+                            "tagName": tag_data["tagName"],
+                            "guidance": tag_data["guidance"],
+                            "refLinksGuide": tag_data["refLinksGuide"],
+                            "refLinksTechnical": tag_data["refLinksTechnical"],
+                        },
                     )
-
-                    tag_exists = current_tag is not None
-                    tag_updated = tag_exists and (current_tag != new_tag)
-
-                    # Insert if the tag doesn't exist
-                    if not tag_exists:
-                        db.collection(f"{tag_type}GuidanceTags").insert(new_tag)
-                        logging.info(f"Tag {tag_key} inserted.")
-                    # Update if the tag has changed
-                    elif tag_updated:
-                        db.collection(f"{tag_type}GuidanceTags").update_match(
-                            {"_key": tag_key},
-                            {
-                                "tagName": tag_data["tagName"],
-                                "guidance": tag_data["guidance"],
-                                "refLinksGuide": tag_data["refLinksGuide"],
-                                "refLinksTechnical": tag_data["refLinksTechnical"],
-                            },
-                        )
-                        logging.info(f"Tag {tag_key} updated.")
-                    else:
-                        logging.info(f"Tag {tag_key} not updated.")
+                    logging.info(f"Tag {tag_key} updated.")
+                else:
+                    logging.info(f"Tag {tag_key} not updated.")
 
     logging.info(f"Guidance update completed.")
 
