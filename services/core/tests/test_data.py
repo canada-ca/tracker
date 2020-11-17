@@ -1,5 +1,5 @@
 chart_summary_criteria_data = {
-    "mailSummaryCriteria": {"pass": ["dmarc23", "dmarc10", "spf12"]},
+    "mailSummaryCriteria": {"pass": ["dmarc23", "dmarc10", "spf12"], "fail": [""]},
     "webSummaryCriteria": {
         "pass": ["ssl5"],
         "fail": [
