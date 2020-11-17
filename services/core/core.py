@@ -104,7 +104,7 @@ def update_guidance(
     logging.info(f"Updating guidance...")
 
     # Establish DB connection
-    client = ArangoClient(hosts=DB_HOST)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for entry in guidance_data:
@@ -241,7 +241,7 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
     logging.info(f"Updating scan summaries...")
 
     # Establish DB connection
-    client = ArangoClient(hosts=DB_HOST)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for scan_type in SCAN_TYPES:
@@ -283,7 +283,7 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB
     logging.info(f"Updating chart summaries...")
 
     # Establish DB connection
-    client = ArangoClient(hosts=DB_HOST)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for chart_type, scan_types in CHARTS.items():
@@ -330,7 +330,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
     logging.info(f"Updating organization summary values...")
 
     # Establish DB connection
-    client = ArangoClient(hosts=[DB_HOST])
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
