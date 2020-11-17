@@ -10,7 +10,7 @@ steps:
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-results
-    dir: services/scanners/results
+    dir: services/core
     entrypoint: /bin/sh
     args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
