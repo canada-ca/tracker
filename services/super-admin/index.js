@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt')
 const { ArangoTools } = require('arango-tools')
 const { makeMigrations } = require('./migrations')
 
-const { superAdminCreation } = require('./src')
+const { superAdminService } = require('./src')
 
 ;(async () => {
   // Generate Database information
@@ -18,5 +18,5 @@ const { superAdminCreation } = require('./src')
     makeMigrations({ databaseName, rootPass }),
   )
 
-  await superAdminCreation({ query, collections, bcrypt })
+  await superAdminService({ query, collections, bcrypt })
 })()

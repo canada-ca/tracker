@@ -8,7 +8,7 @@ const {
   removeSuperAdminAffiliation,
 } = require('./database')
 
-const superAdminCreation = async ({ query, collections, bcrypt }) => {
+const superAdminService = async ({ query, collections, bcrypt }) => {
   console.info('Checking for super admin account.')
 
   const admin = await checkForSuperAdminAccount({ query })
@@ -94,5 +94,5 @@ const superAdminCreation = async ({ query, collections, bcrypt }) => {
 }
 
 module.exports = {
-  superAdminCreation,
+  superAdminService,
 }
