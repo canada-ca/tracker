@@ -1,4 +1,0 @@
-pytest
-alembic
-SQLAlchemy
-psycopg2
