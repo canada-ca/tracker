@@ -330,7 +330,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
     logging.info(f"Updating organization summary values...")
 
     # Establish DB connection
-    client = ArangoClient(hosts=DB_HOST)
+    client = ArangoClient(hosts=[DB_HOST])
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
