@@ -2,7 +2,7 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
-import { IconButton, Heading, Stack } from '@chakra-ui/core'
+import { IconButton, Heading, Stack, Divider } from '@chakra-ui/core'
 import { useParams, useHistory } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
@@ -57,6 +57,7 @@ export default function DmarcGuidancePage() {
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <ScanCard scanType="web" scanData={webScan} />
       </ErrorBoundary>
+      <Divider />
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <ScanCard scanType="email" scanData={emailScan} />
       </ErrorBoundary>
