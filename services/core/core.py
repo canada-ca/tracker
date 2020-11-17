@@ -110,6 +110,8 @@ def update_guidance(
 
     for entry in guidance_data:
         if entry["file"] == "scanSummaryCriteria":
+            if not db.has_collection("scanSummaryCriteria"):
+                db.create_collection("scanSummaryCriteria")
             for data in entry["guidance"]:
                 for criteria_type, criteria in data.items():
                     new_criteria = {
@@ -120,17 +122,15 @@ def update_guidance(
                     }
 
                     logging.info(
-                        f"Checking if scan summary criteria {summary_type} exists..."
+                        f"Checking if scan summary criteria {criteria_type} exists..."
                     )
-                    criteria_query = db.collection("scanSummaryCriteria").get(
+                    current_criteria = db.collection("scanSummaryCriteria").get(
                         {"_key": criteria_type}
                     )
 
-                    criteria_query_result = criteria_query.result()
-
-                    criteria_exists = criteria_query_result is not None
+                    criteria_exists = current_criteria is not None
                     criteria_updated = criteria_exists and (
-                        criteria_query_result != new_criteria
+                        current_criteria != new_criteria
                     )
 
                     # Insert if the criteria doesn't exist
@@ -154,6 +154,8 @@ def update_guidance(
                         )
 
         elif entry["file"] == "chartSummaryCriteria":
+            if not db.has_collection("chartSummaryCriteria"):
+                db.create_collection("chartSummaryCriteria")
             for data in entry["guidance"]:
                 for criteria_type, criteria in data.items():
                     new_criteria = {
@@ -163,17 +165,15 @@ def update_guidance(
                     }
 
                     logging.info(
-                        f"Checking if chart summary criteria {summary_type} exists..."
+                        f"Checking if chart summary criteria {criteria_type} exists..."
                     )
-                    criteria_query = db.collection("chartSummaryCriteria").get(
+                    current_criteria = db.collection("chartSummaryCriteria").get(
                         {"_key": criteria_type}
                     )
 
-                    criteria_query_result = criteria_query.result()
-
-                    criteria_exists = criteria_query_result is not None
+                    criteria_exists = current_criteria is not None
                     criteria_updated = criteria_exists and (
-                        criteria_query_result != new_criteria
+                        current_criteria != new_criteria
                     )
 
                     # Insert if the criteria doesn't exist
@@ -196,6 +196,8 @@ def update_guidance(
 
         else:
             tag_type = entry["file"].split("tags_")[0]
+            if not db.has_collection(f"{tag_type}GuidanceTags"):
+                db.create_collection(f"{tag_type}GuidanceTags")
             for data in entry["guidance"]:
                 for tag_key, tag_data in data.items():
                     new_tag = {
@@ -207,14 +209,12 @@ def update_guidance(
                     }
 
                     logging.info(f"Checking if tag {tag_key} exists...")
-                    tag_query = db.collection(f"{tag_type}GuidanceTags").get(
+                    current_tag = db.collection(f"{tag_type}GuidanceTags").get(
                         {"_key": tag_key}
                     )
 
-                    tag_query_result = tag_query.result()
-
-                    tag_exists = tag_query_result is not None
-                    tag_updated = tag_exists and (tag_query_result != new_tag)
+                    tag_exists = current_tag is not None
+                    tag_updated = tag_exists and (current_tag != new_tag)
 
                     # Insert if the tag doesn't exist
                     if not tag_exists:
@@ -255,9 +255,9 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
             elif domain["status"][scan_type] == "pass":
                 scan_pass = scan_pass + 1
 
-        summary_query = db.collection("scanSummaries").get({"_key": scan_type})
+        current_summary = db.collection("scanSummaries").get({"_key": scan_type})
 
-        summary_exists = summary_query.result() is not None
+        summary_exists = current_summary is not None
 
         if not summary_exists:
             db.collection("scanSummaries").insert(
@@ -301,9 +301,9 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB
             else:
                 pass_count = pass_count + 1
 
-        summary_query = db.collection("chartSummaries").get({"_key": chart_type})
+        current_summary = db.collection("chartSummaries").get({"_key": chart_type})
 
-        summary_exists = summary_query.result() is not None
+        summary_exists = current_summary is not None
 
         if not summary_exists:
             db.collection("chartSummaries").insert(
