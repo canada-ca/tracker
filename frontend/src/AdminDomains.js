@@ -39,7 +39,7 @@ import { object as yupObject, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { useUserState } from './UserState'
 
-export function AdminDomains({ domainsData, orgSlug }) {
+export function AdminDomains({ domainsData, orgSlug, orgId }) {
   let domains = []
   if (domainsData && domainsData.edges) {
     domains = domainsData.edges.map((edge) => edge.node)
@@ -50,6 +50,7 @@ export function AdminDomains({ domainsData, orgSlug }) {
   const [domainsPerPage] = useState(4)
   const [domainSearch, setDomainSearch] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()
+  const [editingDomainId, setEditingDomainId] = useState()
   const toast = useToast()
   const {
     isOpen: updateIsOpen,
@@ -88,7 +89,7 @@ export function AdminDomains({ domainsData, orgSlug }) {
   }, [domainList]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
-    refetchQueries: ['Domains'],
+    refetchQueries: ['AdminPanel'],
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -104,10 +105,10 @@ export function AdminDomains({ domainsData, orgSlug }) {
         position: 'top-left',
       })
     },
-    onCompleted() {
+    onCompleted(mutationReturnData) {
       toast({
         title: t`Domain added`,
-        description: t`Domain was added to ${orgSlug}`,
+        description: t`${mutationReturnData.createDomain.domain.domain} was added to ${orgSlug}`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -125,7 +126,7 @@ export function AdminDomains({ domainsData, orgSlug }) {
           authorization: currentUser.jwt,
         },
       },
-      refetchQueries: ['Domains'],
+      refetchQueries: ['AdminPanel'],
       onError(error) {
         toast({
           title: t`An error occurred.`,
@@ -151,7 +152,7 @@ export function AdminDomains({ domainsData, orgSlug }) {
   )
 
   const [updateDomain] = useMutation(UPDATE_DOMAIN, {
-    refetchQueries: ['Domains'],
+    refetchQueries: ['AdminPanel'],
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -167,10 +168,10 @@ export function AdminDomains({ domainsData, orgSlug }) {
         position: 'top-left',
       })
     },
-    onCompleted() {
+    onCompleted(mutationReturnData) {
       toast({
         title: t`Domain updated`,
-        description: t`Domain from ${orgSlug} successfully updated`,
+        description: t`${editingDomainUrl} from ${orgSlug} successfully updated to ${mutationReturnData.updateDomain.domain.domain}`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -219,8 +220,8 @@ export function AdminDomains({ domainsData, orgSlug }) {
           } else {
             createDomain({
               variables: {
-                orgSlug: orgSlug,
-                url: domainSearch,
+                orgId: orgId,
+                domain: domainSearch,
                 selectors: [],
               },
             })
@@ -243,11 +244,11 @@ export function AdminDomains({ domainsData, orgSlug }) {
                 </Text>
               )}
             >
-              {({ domain, lastRan }, index) => (
+              {({ id: domainId, domain, lastRan }, index) => (
                 <Stack key={'admindomain' + index} isInline align="center">
                   <TrackerButton
                     onClick={() => {
-                      setSelectedRemoveDomain(domain)
+                      setSelectedRemoveDomain(domainId)
                       removeOnOpen()
                     }}
                     variant="danger"
@@ -262,6 +263,7 @@ export function AdminDomains({ domainsData, orgSlug }) {
                     fontSize="xs"
                     onClick={() => {
                       setEditingDomainUrl(domain)
+                      setEditingDomainId(domainId)
                       updateOnOpen()
                     }}
                   >
@@ -306,9 +308,10 @@ export function AdminDomains({ domainsData, orgSlug }) {
                   // Submit update detail mutation
                   await updateDomain({
                     variables: {
-                      currentUrl: editingDomainUrl,
-                      updatedUrl: values.newDomainUrl,
-                      updatedSelectors: [],
+                      domainId: editingDomainId,
+                      orgId: orgId,
+                      domain: values.newDomainUrl,
+                      selectors: [],
                     },
                   })
                 }}
@@ -410,7 +413,10 @@ export function AdminDomains({ domainsData, orgSlug }) {
                   mr={4}
                   onClick={() =>
                     removeDomain({
-                      variables: { url: selectedRemoveDomain },
+                      variables: {
+                        domainId: selectedRemoveDomain,
+                        orgId: orgId,
+                      },
                     })
                   }
                 >
@@ -438,5 +444,5 @@ export function AdminDomains({ domainsData, orgSlug }) {
 AdminDomains.propTypes = {
   domainsData: object,
   orgSlug: string,
-  refetchFunc: func,
+  orgId: string,
 }

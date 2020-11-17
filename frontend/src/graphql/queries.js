@@ -153,9 +153,11 @@ export const ORGANIZATIONS = gql`
 export const ADMIN_PANEL = gql`
   query AdminPanel($orgSlug: Slug!, $number: Int, $cursor: String) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
       domains(first: $number, after: $cursor) {
         edges {
           node {
+            id
             domain
             lastRan
           }

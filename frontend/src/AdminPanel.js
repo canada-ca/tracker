@@ -46,6 +46,7 @@ export default function AdminPanel({ orgSlug, permission }) {
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
         <AdminDomains
           domainsData={data.findOrganizationBySlug.domains}
+          orgId={data.findOrganizationBySlug.id}
           orgSlug={orgSlug}
           refetchFunc={refetch}
         />

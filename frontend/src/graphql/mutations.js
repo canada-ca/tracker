@@ -134,18 +134,24 @@ export const UPDATE_USER_PROFILE = gql`
 `
 
 export const CREATE_DOMAIN = gql`
-  mutation CreateDomain($orgSlug: Slug!, $url: URL!, $selectors: Selectors) {
+  mutation CreateDomain(
+    $orgId: ID!
+    $domain: DomainScalar!
+    $selectors: [Selector]
+  ) {
     createDomain(
-      input: { orgSlug: $orgSlug, url: $url, selectors: $selectors }
+      input: { orgId: $orgId, domain: $domain, selectors: $selectors }
     ) {
-      status
+      domain {
+        domain
+      }
     }
   }
 `
 
 export const REMOVE_DOMAIN = gql`
-  mutation RemoveDomain($url: URL!) {
-    removeDomain(input: { url: $url }) {
+  mutation RemoveDomain($domainId: ID!, $orgId: ID!) {
+    removeDomain(input: { domainId: $domainId, orgId: $orgId }) {
       status
     }
   }
@@ -153,18 +159,22 @@ export const REMOVE_DOMAIN = gql`
 
 export const UPDATE_DOMAIN = gql`
   mutation UpdateDomain(
-    $currentUrl: URL!
-    $updatedUrl: URL!
-    $updatedSelectors: Selectors
+    $domainId: ID!
+    $orgId: ID!
+    $domain: DomainScalar
+    $selectors: [Selector]
   ) {
     updateDomain(
       input: {
-        currentUrl: $currentUrl
-        updatedUrl: $updatedUrl
-        updatedSelectors: $updatedSelectors
+        domainId: $domainId
+        orgId: $orgId
+        domain: $domain
+        selectors: $selectors
       }
     ) {
-      status
+      domain {
+        domain
+      }
     }
   }
 `
