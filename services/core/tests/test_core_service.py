@@ -38,12 +38,12 @@ def test_update_guidance():
         for k, v in data.items():
             test_criteria[k] = v
         current_criteria = db.collection("scanSummaryCriteria").get({"_key": key})
-        assert test_tag == {
-            "_key": current_tag["_key"],
-            "pass": current_tag["pass"],
-            "fail": current_tag["fail"],
-            "info": current_tag["info"],
-            "warning": current_tag["warning"],
+        assert test_criteria == {
+            "_key": current_criteria["_key"],
+            "pass": current_criteria["pass"],
+            "fail": current_criteria["fail"],
+            "info": current_criteria["info"],
+            "warning": current_criteria["warning"],
         }
 
     for key, data in chart_summary_criteria_data.items():
@@ -51,10 +51,10 @@ def test_update_guidance():
         for k, v in data.items():
             test_criteria[k] = v
         current_criteria = db.collection("chartSummaryCriteria").get({"_key": key})
-        assert test_tag == {
-            "_key": current_tag["_key"],
-            "pass": current_tag["pass"],
-            "fail": current_tag["fail"],
+        assert test_criteria == {
+            "_key": current_criteria["_key"],
+            "pass": current_criteria["pass"],
+            "fail": current_criteria["fail"],
         }
 
     for key, data in dkim_tag_data.items():
