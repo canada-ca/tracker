@@ -201,8 +201,8 @@ def update_guidance(
                     "_key": tag_key,
                     "tagName": tag_data["tagName"],
                     "guidance": tag_data["guidance"],
-                    "refLinksGuide": tag_data["refLinksGuide"],
-                    "refLinksTechnical": tag_data["refLinksTechnical"],
+                    "refLinksGuide": tag_data.get("refLinksGuide", None),
+                    "refLinksTechnical": tag_data.get("refLinksTechnical", None),
                 }
 
                 logging.info(f"Checking if tag {tag_key} exists...")
@@ -224,8 +224,8 @@ def update_guidance(
                         {
                             "tagName": tag_data["tagName"],
                             "guidance": tag_data["guidance"],
-                            "refLinksGuide": tag_data["refLinksGuide"],
-                            "refLinksTechnical": tag_data["refLinksTechnical"],
+                            "refLinksGuide": tag_data.get("refLinksGuide", None),
+                            "refLinksTechnical": tag_data.get("refLinksTechnical", None),
                         },
                     )
                     logging.info(f"Tag {tag_key} updated.")
