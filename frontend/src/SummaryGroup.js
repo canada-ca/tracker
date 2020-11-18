@@ -50,15 +50,11 @@ export function SummaryGroup() {
         title={t`Web Configuration`}
         description={t`Web encryption settings summary`}
         categoryDisplay={{
-          'full-fail': {
+          fail: {
             name: t`Non-compliant TLS`,
             color: colors.weak,
           },
-          'partial-pass': {
-            name: t`Partially TLS`,
-            color: colors.moderate,
-          },
-          'full-pass': {
+          pass: {
             name: t`Policy compliant TLS`,
             color: colors.strong,
           },
@@ -69,23 +65,19 @@ export function SummaryGroup() {
         title={t`Email Configuration`}
         description={t`Email security settings summary`}
         categoryDisplay={{
-          'full-pass': {
+          pass: {
             name: t`Dmarc pass`,
             color: colors.strong,
           },
-          'partial-pass': {
-            name: t`Dmarc partial`,
-            color: colors.moderate,
-          },
-          'full-fail': {
+          fail: {
             name: t`Dmarc fail`,
             color: colors.weak,
           },
         }}
-        data={data.emailSummary}
+        data={data.mailSummary}
       />
     </SimpleGrid>
-  );
+  )
 }
 
 SummaryGroup.propTypes = {
