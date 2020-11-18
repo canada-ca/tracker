@@ -62,12 +62,7 @@ def test_insert_https():
         "domain_key": domain["_key"],
     }
 
-    loop = asyncio.new_event_loop()
-    try:
-        loop.run_until_complete(test_client.post("/", json=test_payload))
-    finally:
-        loop.stop()
-        loop.close()
+    test_client.post("/", json=test_payload)
 
     inserted_results_query = db.collection("https").all()
 
@@ -94,12 +89,7 @@ def test_insert_ssl():
         "domain_key": domain["_key"],
     }
 
-    loop = asyncio.new_event_loop()
-    try:
-        loop.run_until_complete(test_client.post("/", json=test_payload))
-    finally:
-        loop.stop()
-        loop.close()
+    test_client.post("/", json=test_payload)
 
     inserted_results_query = db.collection("ssl").all()
 
@@ -126,12 +116,7 @@ def test_insert_dns():
         "domain_key": domain["_key"],
     }
 
-    loop = asyncio.new_event_loop()
-    try:
-        loop.run_until_complete(test_client.post("/", json=test_payload))
-    finally:
-        loop.stop()
-        loop.close()
+    test_client.post("/", json=test_payload)
 
     inserted_dmarc_results_query = db.collection("dmarc").all()
 
