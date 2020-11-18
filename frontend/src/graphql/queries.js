@@ -48,7 +48,7 @@ export const REVERSE_PAGINATED_ORGANIZATIONS = gql`
 
 export const WEB_AND_EMAIL_SUMMARIES = gql`
   query LandingPageSummaries {
-    webSummary: demoWebSummary {
+    webSummary {
       categories {
         name
         count
@@ -56,7 +56,7 @@ export const WEB_AND_EMAIL_SUMMARIES = gql`
       }
       total
     }
-    emailSummary: demoEmailSummary {
+    emailSummary {
       categories {
         name
         count
