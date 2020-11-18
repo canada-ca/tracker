@@ -56,7 +56,7 @@ export const WEB_AND_EMAIL_SUMMARIES = gql`
       }
       total
     }
-    emailSummary {
+    mailSummary {
       categories {
         name
         count
