@@ -1,0 +1,37 @@
+{
+  "name": "super-admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest",
+    "test-coverage": "jest --coverage",
+    "lint": "eslint src",
+    "prettier": "prettier --write \"**/*.js\""
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "arango-tools": "0.0.9",
+    "bcrypt": "^5.0.0",
+    "dotenv-safe": "^8.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^23.20.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^26.4.1",
+    "jest-fetch-mock": "^3.0.3",
+    "jest-matcher-utils": "^26.4.1",
+    "prettier": "^2.0.5"
+  },
+  "jest": {
+    "verbose": true
+  }
+}
