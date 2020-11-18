@@ -14,9 +14,9 @@ const { superAdminService } = require('./src')
 ;(async () => {
   // Generate Database information
   const { migrate } = await ArangoTools({ rootPass, url })
-  const { query, collections } = await migrate(
+  const { query, collections, transaction } = await migrate(
     makeMigrations({ databaseName, rootPass }),
   )
 
-  await superAdminService({ query, collections, bcrypt })
+  await superAdminService({ query, collections, transaction, bcrypt })
 })()

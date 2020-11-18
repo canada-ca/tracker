@@ -1,28 +1,39 @@
-const removeSuperAdminAffiliation = async ({ query }) => {
-  let cursor
+const removeSuperAdminAffiliation = async ({
+  query,
+  collections,
+  transaction,
+}) => {
+  // Generate list of collections names
+  const collectionStrings = []
+  for (const property in collections) {
+    collectionStrings.push(property.toString())
+  }
+
+  // Setup Transaction
+  const trx = await transaction(collectionStrings)
+
   try {
-    cursor = await query`
+    await trx.run(async () => {
+      await query`
         FOR affiliation IN affiliations
           FILTER affiliation.defaultSA == true
-          REMOVE affiliation
+          REMOVE affiliation IN affiliations
           RETURN OLD
       `
+    })
   } catch (err) {
     throw new Error(
-      `Database error occurred well trying to remove super admin affiliation: ${err}`,
+      `Transaction run error occurred well removing super admin affiliation: ${err}`,
     )
   }
 
-  let affiliation
   try {
-    affiliation = await cursor.next()
+    await trx.commit()
   } catch (err) {
     throw new Error(
-      `Cursor error occurred well trying to remove super admin affiliation: ${err}`,
+      `Transaction commit error occurred while removing new super admin affiliation: ${err}`,
     )
   }
-
-  return affiliation
 }
 
 module.exports = {
