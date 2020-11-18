@@ -1,5 +1,3 @@
-const { DMARC_REPORT_API_TOKEN, DMARC_REPORT_API_SECRET } = process.env
-
 const {
   GraphQLObjectType,
   GraphQLString,
