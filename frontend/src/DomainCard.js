@@ -64,7 +64,12 @@ export function DomainCard({ url, lastRan, ...rest }) {
         tabIndex={0}
       >
         <Tooltip label={url} placement="left">
-          <Box flexShrink="0" minW="13%" maxW={['100%', '13%']}>
+          <Box
+            flexShrink="0"
+            minW="13%"
+            maxW={['100%', '13%']}
+            textAlign="left"
+          >
             <Text fontWeight="semibold">
               <Trans>Domain:</Trans>
             </Text>
@@ -72,7 +77,7 @@ export function DomainCard({ url, lastRan, ...rest }) {
           </Box>
         </Tooltip>
         <Divider orientation={['horizontal', 'vertical']} />
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} textAlign="left">
           {lastRan ? (
             <Box>
               <Text fontWeight="bold">
