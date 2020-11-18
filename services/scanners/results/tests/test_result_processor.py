@@ -35,7 +35,7 @@ def test_process_dns():
 
 
 @pytest.mark.asyncio
-async def test_insert_https():
+async def test_insert_https(event_loop):
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
@@ -44,7 +44,7 @@ async def test_insert_https():
 
     test_payload = {"results": https_result_data, "uuid": 1, "scan_type": "https", "domain_key": domain["_key"]}
 
-    await test_client.post("/", json=test_payload)
+    event_loop.run_until_complete(test_client.post("/", json=test_payload))
 
     inserted_results_query = db.collection("https").all()
 
@@ -56,7 +56,7 @@ async def test_insert_https():
 
 
 @pytest.mark.asyncio
-async def test_insert_ssl():
+async def test_insert_ssl(event_loop):
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
@@ -65,7 +65,7 @@ async def test_insert_ssl():
 
     test_payload = {"results": ssl_result_data, "uuid": 1, "scan_type": "ssl", "domain_key": domain["_key"]}
 
-    await test_client.post("/", json=test_payload)
+    event_loop.run_until_complete(test_client.post("/", json=test_payload))
 
     inserted_results_query = db.collection("ssl").all()
 
@@ -77,7 +77,7 @@ async def test_insert_ssl():
 
 
 @pytest.mark.asyncio
-async def test_insert_dns():
+async def test_insert_dns(event_loop):
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
@@ -86,7 +86,7 @@ async def test_insert_dns():
 
     test_payload = {"results": dns_result_data, "uuid": 1, "scan_type": "dns", "domain_key": domain["_key"]}
 
-    await test_client.post("/", json=test_payload)
+    event_loop.run_until_complete(test_client.post("/", json=test_payload))
 
     inserted_dmarc_results_query = db.collection("dmarc").all()
 
