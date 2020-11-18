@@ -14,7 +14,19 @@ sys_db.create_database("test")
 db = arango_client.db("test", username="", password="")
 db.create_collection("domains")
 
-db.collection("domains").insert({"domain": "cyber.gc.ca", "selectors": ["selector1"]})
+db.collection("domains").insert(
+    {
+        "domain": "cyber.gc.ca",
+        "selectors": ["selector1"],
+        "status": {
+            "dkim": "pass",
+            "dmarc": "pass",
+            "https": "pass",
+            "spf": "pass",
+            "ssl": "pass",
+        },
+    }
+)
 
 
 def test_process_https():
@@ -38,10 +50,17 @@ def test_insert_https():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
-    test_app = Server(db_host="http://testdb:8529", db_name="test", db_user="", db_pass="")
+    test_app = Server(
+        db_host="http://testdb:8529", db_name="test", db_user="", db_pass=""
+    )
     test_client = TestClient(test_app)
 
-    test_payload = {"results": https_result_data, "uuid": 1, "scan_type": "https", "domain_key": domain["_key"]}
+    test_payload = {
+        "results": https_result_data,
+        "uuid": 1,
+        "scan_type": "https",
+        "domain_key": domain["_key"],
+    }
 
     loop = asyncio.new_event_loop()
     try:
@@ -63,10 +82,17 @@ def test_insert_ssl():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
-    test_app = Server(db_host="http://testdb:8529", db_name="test", db_user="", db_pass="")
+    test_app = Server(
+        db_host="http://testdb:8529", db_name="test", db_user="", db_pass=""
+    )
     test_client = TestClient(test_app)
 
-    test_payload = {"results": ssl_result_data, "uuid": 1, "scan_type": "ssl", "domain_key": domain["_key"]}
+    test_payload = {
+        "results": ssl_result_data,
+        "uuid": 1,
+        "scan_type": "ssl",
+        "domain_key": domain["_key"],
+    }
 
     loop = asyncio.new_event_loop()
     try:
@@ -88,10 +114,17 @@ def test_insert_dns():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
-    test_app = Server(db_host="http://testdb:8529", db_name="test", db_user="", db_pass="")
+    test_app = Server(
+        db_host="http://testdb:8529", db_name="test", db_user="", db_pass=""
+    )
     test_client = TestClient(test_app)
 
-    test_payload = {"results": dns_result_data, "uuid": 1, "scan_type": "dns", "domain_key": domain["_key"]}
+    test_payload = {
+        "results": dns_result_data,
+        "uuid": 1,
+        "scan_type": "dns",
+        "domain_key": domain["_key"],
+    }
 
     loop = asyncio.new_event_loop()
     try:
