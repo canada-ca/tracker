@@ -28,6 +28,5 @@ const { makeMigrations } = require('./migrations')
     transaction,
   }).listen(PORT, (err) => {
     if (err) throw err
-    console.log(`🚀 API listening on port ${PORT}`)
   })
 })()
