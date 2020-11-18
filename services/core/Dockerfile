@@ -6,10 +6,15 @@ WORKDIR $HOME
 COPY . ./
 
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends apt-utils git && \
-apt-get install -y --no-install-recommends python3 python3-pip && \
-apt-get install -y --no-install-recommends python3-setuptools python3-wheel && \
-apt-get install -y --no-install-recommends build-essential python3-dev
+RUN apt-get install -y --no-install-recommends \
+  apt-utils \
+  git \
+  python3 \
+  python3-pip \
+  python3-setuptools \
+  python3-wheel \
+  build-essential \
+  python3-dev
 
 # Install dependencies.
 RUN pip3 install --pre -r requirements.txt
