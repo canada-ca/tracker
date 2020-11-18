@@ -70,7 +70,7 @@ def test_insert_https():
 
     for field in inserted_results:
         assert inserted_results.get(field, None) is not None
-    assert inserted_results["tags"] == expected_https_tags
+    assert inserted_results["guidanceTags"] == expected_https_tags
 
 
 def test_insert_ssl():
@@ -97,7 +97,7 @@ def test_insert_ssl():
 
     for field in inserted_results:
         assert inserted_results.get(field, None) is not None
-    assert inserted_results["tags"] == expected_ssl_tags
+    assert inserted_results["guidanceTags"] == expected_ssl_tags
 
 
 def test_insert_dns():
@@ -124,7 +124,7 @@ def test_insert_dns():
 
     for field in inserted_dmarc_results:
         assert inserted_dmarc_results.get(field, None) is not None
-    assert inserted_dmarc_results["tags"] == expected_dmarc_tags
+    assert inserted_dmarc_results["guidanceTags"] == expected_dmarc_tags
 
     inserted_spf_results_query = db.collection("spf").all()
 
@@ -132,7 +132,7 @@ def test_insert_dns():
 
     for field in inserted_spf_results:
         assert inserted_spf_results.get(field, None) is not None
-    assert inserted_spf_results["tags"] == expected_spf_tags
+    assert inserted_spf_results["guidanceTags"] == expected_spf_tags
 
     inserted_dkim_scan_results_query = db.collection("dkim_scans").all()
 
@@ -140,4 +140,4 @@ def test_insert_dns():
 
     for field in inserted_dkim_scan_results:
         assert inserted_dkim_scan_results.get(field, None) is not None
-    assert inserted_dkim_scan_results["tags"] == expected_dkim_scan_tags
+    assert inserted_dkim_scan_results["guidanceTags"] == expected_dkim_scan_tags
