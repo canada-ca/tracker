@@ -34,8 +34,7 @@ def test_process_dns():
     assert tags["dkim"]["selector1"] == expected_dkim_scan_tags
 
 
-@pytest.mark.asyncio
-async def test_insert_https(event_loop):
+def test_insert_https():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
@@ -44,7 +43,12 @@ async def test_insert_https(event_loop):
 
     test_payload = {"results": https_result_data, "uuid": 1, "scan_type": "https", "domain_key": domain["_key"]}
 
-    event_loop.run_until_complete(test_client.post("/", json=test_payload))
+    loop = asyncio.get_event_loop()
+    try:
+        loop.run_until_complete(test_client.post("/", json=test_payload))
+    finally:
+        loop.stop()
+        loop.close()
 
     inserted_results_query = db.collection("https").all()
 
@@ -55,8 +59,7 @@ async def test_insert_https(event_loop):
     assert inserted_results["tags"] == expected_https_tags
 
 
-@pytest.mark.asyncio
-async def test_insert_ssl(event_loop):
+def test_insert_ssl():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
@@ -65,7 +68,12 @@ async def test_insert_ssl(event_loop):
 
     test_payload = {"results": ssl_result_data, "uuid": 1, "scan_type": "ssl", "domain_key": domain["_key"]}
 
-    event_loop.run_until_complete(test_client.post("/", json=test_payload))
+    loop = asyncio.get_event_loop()
+    try:
+        loop.run_until_complete(test_client.post("/", json=test_payload))
+    finally:
+        loop.stop()
+        loop.close()
 
     inserted_results_query = db.collection("ssl").all()
 
@@ -76,8 +84,7 @@ async def test_insert_ssl(event_loop):
     assert inserted_results["tags"] == expected_ssl_tags
 
 
-@pytest.mark.asyncio
-async def test_insert_dns(event_loop):
+def test_insert_dns():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
@@ -86,7 +93,12 @@ async def test_insert_dns(event_loop):
 
     test_payload = {"results": dns_result_data, "uuid": 1, "scan_type": "dns", "domain_key": domain["_key"]}
 
-    event_loop.run_until_complete(test_client.post("/", json=test_payload))
+    loop = asyncio.get_event_loop()
+    try:
+        loop.run_until_complete(test_client.post("/", json=test_payload))
+    finally:
+        loop.stop()
+        loop.close()
 
     inserted_dmarc_results_query = db.collection("dmarc").all()
 
