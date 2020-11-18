@@ -485,7 +485,7 @@ def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
                 results = payload_dict["results"]
                 scan_type = payload_dict["scan_type"]
                 uuid = payload_dict["uuid"]
-                domain_key = inbound_payload["domain_key"]
+                domain_key = payload_dict["domain_key"]
                 logging.info(
                     f"Results received for {scan_type} scan (TIME={datetime.datetime.utcnow()})"
                 )
