@@ -453,6 +453,8 @@ def insert_dns(report, tags, domain_key, db):
             db.create_collection("spf")
         if not db.has_collection("dkim"):
             db.create_collection("dkim")
+        if not db.has_collection("dkim_scans"):
+            db.create_collection("dkim_scans")
 
         db.collection("dmarc").insert(
             {
