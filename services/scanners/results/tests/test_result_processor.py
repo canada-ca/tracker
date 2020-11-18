@@ -37,7 +37,7 @@ def test_process_dns():
 async def test_insert_https():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
-    domain = domain_query.result()
+    domain = domain_query.next()
     test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
     test_client = TestClient(test_app)
 
@@ -47,7 +47,7 @@ async def test_insert_https():
 
     inserted_results_query = db.collection("https").all()
 
-    inserted_results = inserted_results_query.result()[0]
+    inserted_results = inserted_results_query.next()
 
     for field in inserted_results:
         assert inserted_results.get(field, None) is not None
@@ -58,7 +58,7 @@ async def test_insert_https():
 async def test_insert_ssl():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
-    domain = domain_query.result()
+    domain = domain_query.next()
     test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
     test_client = TestClient(test_app)
 
@@ -68,7 +68,7 @@ async def test_insert_ssl():
 
     inserted_results_query = db.collection("ssl").all()
 
-    inserted_results = inserted_results_query.result()[0]
+    inserted_results = inserted_results_query.next()
 
     for field in inserted_results:
         assert inserted_results.get(field, None) is not None
@@ -79,7 +79,7 @@ async def test_insert_ssl():
 async def test_insert_dns():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
-    domain = domain_query.result()
+    domain = domain_query.next()
     test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
     test_client = TestClient(test_app)
 
@@ -89,7 +89,7 @@ async def test_insert_dns():
 
     inserted_dmarc_results_query = db.collection("dmarc").all()
 
-    inserted_dmarc_results = inserted_dmarc_results_query.result()[0]
+    inserted_dmarc_results = inserted_dmarc_results_query.next()
 
     for field in inserted_dmarc_results:
         assert inserted_dmarc_results.get(field, None) is not None
@@ -97,7 +97,7 @@ async def test_insert_dns():
 
     inserted_spf_results_query = db.collection("spf").all()
 
-    inserted_spf_results = inserted_spf_results_query.result()[0]
+    inserted_spf_results = inserted_spf_results_query.next()
 
     for field in inserted_spf_results:
         assert inserted_spf_results.get(field, None) is not None
@@ -105,7 +105,7 @@ async def test_insert_dns():
 
     inserted_dkim_scan_results_query = db.collection("dkim_scans").all()
 
-    inserted_dkim_scan_results = inserted_dkim_scan_results_query.result()[0]
+    inserted_dkim_scan_results = inserted_dkim_scan_results_query.next()
 
     for field in inserted_dkim_scan_results:
         assert inserted_dkim_scan_results.get(field, None) is not None
