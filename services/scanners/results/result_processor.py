@@ -186,7 +186,7 @@ def process_dns(results):
 
             # Testing Enabled
             t_enabled = results["dkim"][selector].get("t_value", "")
-            if t_enabled.lower() != "true":
+            if t_enabled.lower() == "true":
                 tags["dkim"][selector].append("dkim13")
 
     if results["dmarc"].get("missing", None) is not None:
