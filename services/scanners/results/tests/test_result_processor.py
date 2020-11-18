@@ -33,6 +33,7 @@ def test_process_dns():
     assert tags["dkim"]["selector1"] == expected_dkim_scan_tags
 
 
+@pytest.mark.asyncio
 async def test_insert_https():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
@@ -53,6 +54,7 @@ async def test_insert_https():
     assert inserted_results["tags"] == expected_https_tags
 
 
+@pytest.mark.asyncio
 async def test_insert_ssl():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
@@ -73,6 +75,7 @@ async def test_insert_ssl():
     assert inserted_results["tags"] == expected_ssl_tags
 
 
+@pytest.mark.asyncio
 async def test_insert_dns():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
