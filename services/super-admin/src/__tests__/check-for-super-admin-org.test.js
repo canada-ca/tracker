@@ -11,12 +11,12 @@ describe('given the checkForSuperAdminOrg function', () => {
   const mockedError = (output) => consoleErrorOutput.push(output)
   const mockedInfo = (output) => consoleInfoOutput.push(output)
 
-  let query, drop, truncate, migrate, collections
+  let query, drop, truncate, migrate, collections, transaction
 
   beforeAll(async () => {
     // Generate DB Items
     ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
+    ;({ query, drop, truncate, collections, transaction } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
   })
@@ -37,7 +37,7 @@ describe('given the checkForSuperAdminOrg function', () => {
   describe('given a successful check', () => {
     let org
     beforeEach(async () => {
-      const orgDBInfo = await createSuperAdminOrg({ collections })
+      const orgDBInfo = await createSuperAdminOrg({ collections, transaction })
       const orgCursor = await query`
         FOR org IN organizations
           FILTER org._key == ${orgDBInfo._key}

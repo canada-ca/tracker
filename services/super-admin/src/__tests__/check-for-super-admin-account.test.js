@@ -15,12 +15,12 @@ describe('given the checkForSuperAdminAccount function', () => {
   const mockedError = (output) => consoleErrorOutput.push(output)
   const mockedInfo = (output) => consoleInfoOutput.push(output)
 
-  let query, drop, truncate, migrate, collections
+  let query, drop, truncate, migrate, collections, transaction
 
   beforeAll(async () => {
     // Generate DB Items
     ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
+    ;({ query, drop, truncate, collections, transaction } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
   })
@@ -41,7 +41,7 @@ describe('given the checkForSuperAdminAccount function', () => {
   describe('given a successful check', () => {
     let user
     beforeEach(async () => {
-      const userDBInfo = await createSuperAdminAccount({ collections, bcrypt })
+      const userDBInfo = await createSuperAdminAccount({ collections, transaction, bcrypt })
       const userCursor = await query`
         FOR user IN users
           FILTER user._key == ${userDBInfo._key}
