@@ -43,7 +43,7 @@ def test_insert_https():
 
     test_payload = {"results": https_result_data, "uuid": 1, "scan_type": "https", "domain_key": domain["_key"]}
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
     try:
         loop.run_until_complete(test_client.post("/", json=test_payload))
     finally:
@@ -68,7 +68,7 @@ def test_insert_ssl():
 
     test_payload = {"results": ssl_result_data, "uuid": 1, "scan_type": "ssl", "domain_key": domain["_key"]}
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
     try:
         loop.run_until_complete(test_client.post("/", json=test_payload))
     finally:
@@ -93,7 +93,7 @@ def test_insert_dns():
 
     test_payload = {"results": dns_result_data, "uuid": 1, "scan_type": "dns", "domain_key": domain["_key"]}
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
     try:
         loop.run_until_complete(test_client.post("/", json=test_payload))
     finally:
