@@ -19,7 +19,7 @@ export function SummaryGroup() {
       toast({
         title: 'Error',
         description: message,
-        status: 'failure',
+        status: 'error',
         duration: 9000,
         isClosable: true,
         position: 'top-left',
