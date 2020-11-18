@@ -38,7 +38,7 @@ def test_insert_https():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
-    test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
+    test_app = Server(db_host="https://testdb:8529", db_name="test", db_user="", db_pass="")
     test_client = TestClient(test_app)
 
     test_payload = {"results": https_result_data, "uuid": 1, "scan_type": "https", "domain_key": domain["_key"]}
@@ -63,7 +63,7 @@ def test_insert_ssl():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
-    test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
+    test_app = Server(db_host="https://testdb:8529", db_name="test", db_user="", db_pass="")
     test_client = TestClient(test_app)
 
     test_payload = {"results": ssl_result_data, "uuid": 1, "scan_type": "ssl", "domain_key": domain["_key"]}
@@ -88,7 +88,7 @@ def test_insert_dns():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
-    test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
+    test_app = Server(db_host="https://testdb:8529", db_name="test", db_user="", db_pass="")
     test_client = TestClient(test_app)
 
     test_payload = {"results": dns_result_data, "uuid": 1, "scan_type": "dns", "domain_key": domain["_key"]}
