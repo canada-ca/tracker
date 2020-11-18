@@ -385,6 +385,9 @@ def process_dns(results):
 
 def insert_https(report, tags, domain_key, db):
     try:
+        if not db.has_collection("https"):
+                db.create_collection("https")
+
         db.collection("https").insert({"timestamp": str(datetime.datetime.utcnow()), "implementation": report.get("implementation", None), "enforced": report.get("enforced", None), "hsts": report.get("hsts", None), "hstsAge": report.get("hsts_age", None), "preloaded": report.get("preload_status", None), "rawJson": report, "guidanceTags": tags})
 
         if any(i in ["https2", "https3", "https4", "https5", "https6", "https7", "https8", "https9", "https10", "https11", "https12", "https13", "https14"] for i in tags):
@@ -407,6 +410,9 @@ def insert_https(report, tags, domain_key, db):
 
 def insert_ssl(report, tags, domain_key, db):
     try:
+        if not db.has_collection("ssl"):
+                db.create_collection("ssl")
+
         db.collection("ssl").insert({"timestamp": str(datetime.datetime.utcnow()), "rawJson": report, "guidanceTags": tags})
 
         if any(i in ["ssl2", "ssl3", "ssl4", "ssl6", "ssl7", "ssl8"] for i in tags):
@@ -429,6 +435,13 @@ def insert_ssl(report, tags, domain_key, db):
 
 def insert_dns(report, tags, domain_key, db):
     try:
+        if not db.has_collection("dmarc"):
+                db.create_collection("dmarc")
+        if not db.has_collection("spf"):
+                db.create_collection("spf")
+        if not db.has_collection("dkim"):
+                db.create_collection("dkim")
+                
         db.collection("dmarc").insert({"timestamp": str(datetime.datetime.utcnow()), "record": report["dmarc"].get("record", None), "pPolicy": report["dmarc"].get("tags", {}).get("p", {}).get("value", None), "spPolicy": report["dmarc"].get("tags", {}).get("sp", {}).get("value", None), "pct": report["dmarc"].get("tags", {}).get("pct", {}).get("value", None), "rawJson": report["dmarc"], "guidanceTags": tags["dmarc"]})
         db.collection("spf").insert({"timestamp": str(datetime.datetime.utcnow()), "record": report["spf"].get("record", None), "lookups": report["spf"].get("dns_lookups", None), "spfDefault": report["spf"].get("record", "none")[-4:].lower(), "rawJson": report["spf"], "guidanceTags": tags["spf"]})
 
