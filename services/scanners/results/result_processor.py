@@ -469,6 +469,10 @@ async def insert_dns(report, tags, domain_key, db):
 
     logging.info("DNS Scans inserted into database")
 
+INSERT = {"https": insert_https, "ssl": insert_ssl, "dns": insert_dns}
+
+PROCESS = {"https": process_https, "ssl": process_ssl, "dns": process_dns}
+
 
 def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
 
@@ -494,9 +498,9 @@ def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
                 logging.error(msg)
                 return PlainTextResponse(msg)
 
-            tags = functions["process"][scan_type](results)
+            tags = PROCESS[scan_type](results)
 
-            await functions["insert"][scan_type](results, tags, domain_key, db)
+            await INSERT[scan_type](results, tags, domain_key, db)
 
             return PlainTextResponse(
                 f"{scan_type} results processed and inserted successfully TIME={datetime.datetime.utcnow()})."
