@@ -336,9 +336,8 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
         key_query = db.aql.execute(
             f"(FOR v, e IN 1..1 OUTBOUND ${org['_id']} claims RETURN v._key)"
         )
-        for key in key_query.result():
-            domain_query = db.collection("domains").get({"_key": key})
-            domain = domain_query.result()
+        for key in key_query:
+            domain = db.collection("domains").get({"_key": key})
             domain_total = domain_total + 1
 
             if (
