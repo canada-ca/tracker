@@ -474,7 +474,7 @@ def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
 
     # Establish DB connection
     arango_client = ArangoClient(hosts=db_host)
-    db = arango_client.db(db_name, username=user_name, password=password)
+    db = arango_client.db(db_name, username=db_user, password=db_pass)
 
     async def process(result_request):
         logging.info(f"Results received.")
