@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+bases:
+- ../base
 resources:
-- ../../bases
 - knative-istio-networking.yaml
 - knative-serving-core.yaml
-- selfsigned-issuer.yaml
