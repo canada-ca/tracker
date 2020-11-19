@@ -94,9 +94,12 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     if (reportCalled) getTables()
   }, [selectedPeriod, selectedYear, getTables])
 
-  if (reportLoading) return       <LoadingMessage>
+  if (reportLoading)
+    return (
+      <LoadingMessage>
         <Trans>DMARC Report</Trans>
       </LoadingMessage>
+    )
 
   const options = [
     <option
@@ -186,12 +189,14 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     }
     formattedGraphData.strengths = strengths
     graphDisplay = (
-      <DmarcTimeGraph
-        data={formattedGraphData}
-        width="100%"
-        mr="400px"
-        responsiveWidth={summaryListResponsiveWidth}
-      />
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcTimeGraph
+          data={formattedGraphData}
+          width="100%"
+          mr="400px"
+          responsiveWidth={summaryListResponsiveWidth}
+        />
+      </ErrorBoundary>
     )
   }
 
@@ -338,49 +343,57 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       },
     ]
     const fullyAlignedTable = fullPassData.length ? (
-      <DmarcReportTable
-        data={fullPassData}
-        columns={fullPassColumns}
-        title={t`Fully Aligned by IP Address`}
-        initialSort={initialSort}
-        mb="8"
-      />
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcReportTable
+          data={fullPassData}
+          columns={fullPassColumns}
+          title={t`Fully Aligned by IP Address`}
+          initialSort={initialSort}
+          mb="8"
+        />
+      </ErrorBoundary>
     ) : (
       <Heading as="h3" size="lg">
         * <Trans>No data for the Fully Aligned by IP Address table</Trans> *
       </Heading>
     )
     const spfFailureTable = spfFailureData.length ? (
-      <DmarcReportTable
-        data={spfFailureData}
-        columns={spfFailureColumns}
-        title={t`SPF Failures by IP Address`}
-        initialSort={initialSort}
-      />
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcReportTable
+          data={spfFailureData}
+          columns={spfFailureColumns}
+          title={t`SPF Failures by IP Address`}
+          initialSort={initialSort}
+        />
+      </ErrorBoundary>
     ) : (
       <Heading as="h3" size="lg">
         * <Trans>No data for the SPF Failures by IP Address table</Trans> *
       </Heading>
     )
     const dkimFailureTable = dkimFailureData.length ? (
-      <DmarcReportTable
-        data={dkimFailureData}
-        columns={dkimFailureColumns}
-        title={t`DKIM Failures by IP Address`}
-        initialSort={initialSort}
-      />
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcReportTable
+          data={dkimFailureData}
+          columns={dkimFailureColumns}
+          title={t`DKIM Failures by IP Address`}
+          initialSort={initialSort}
+        />
+      </ErrorBoundary>
     ) : (
       <Heading as="h3" size="lg">
         * <Trans>No data for the DKIM Failures by IP Address table</Trans> *
       </Heading>
     )
     const dmarcFailureTable = dkimFailureData.length ? (
-      <DmarcReportTable
-        data={dmarcFailureData}
-        columns={dmarcFailureColumns}
-        title={t`DMARC Failures by IP Address`}
-        initialSort={initialSort}
-      />
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcReportTable
+          data={dmarcFailureData}
+          columns={dmarcFailureColumns}
+          title={t`DMARC Failures by IP Address`}
+          initialSort={initialSort}
+        />
+      </ErrorBoundary>
     ) : (
       <Heading as="h3" size="lg">
         * <Trans>No data for the DMARC Failures by IP Address table</Trans> *
@@ -388,12 +401,14 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
 
     tableDisplay = (
-      <Stack spacing="30px">
-        {fullyAlignedTable}
-        {spfFailureTable}
-        {dkimFailureTable}
-        {dmarcFailureTable}
-      </Stack>
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <Stack spacing="30px">
+          {fullyAlignedTable}
+          {spfFailureTable}
+          {dkimFailureTable}
+          {dmarcFailureTable}
+        </Stack>
+      </ErrorBoundary>
     )
   }
 
@@ -413,9 +428,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         </Heading>
       </Stack>
 
-<ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
       {graphDisplay}
-      </ErrorBoundary>
 
       <Stack isInline align="center" mb="16px">
         <Text fontWeight="bold" textAlign="center">
@@ -429,9 +442,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           {options}
         </Select>
       </Stack>
-      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        {tableDisplay}
-      </ErrorBoundary>
+
+      {tableDisplay}
     </Box>
   )
 }
