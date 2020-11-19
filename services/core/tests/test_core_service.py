@@ -223,7 +223,7 @@ def test_update_scan_summaries():
     update_scan_summaries(host="http://testdb:8529", name="test", user="", password="")
 
     httpsScanSummary = db.collection("scanSummaries").get({"_key": "https"})
-    assert httpsScanSummary.next() == {
+    assert httpsScanSummary == {
         "_key": "https",
         "pass": 2,
         "fail": 1,
@@ -231,10 +231,10 @@ def test_update_scan_summaries():
     }
 
     sslScanSummary = db.collection("scanSummaries").get({"_key": "ssl"})
-    assert sslScanSummary.next() == {"_key": "ssl", "pass": 2, "fail": 1, "total": 3}
+    assert sslScanSummary == {"_key": "ssl", "pass": 2, "fail": 1, "total": 3}
 
     dmarcScanSummary = db.collection("scanSummaries").get({"_key": "dmarc"})
-    assert dmarcScanSummary.next() == {
+    assert dmarcScanSummary == {
         "_key": "dmarc",
         "pass": 2,
         "fail": 1,
@@ -242,20 +242,20 @@ def test_update_scan_summaries():
     }
 
     spfScanSummary = db.collection("scanSummaries").get({"_key": "spf"})
-    assert spfScanSummary.next() == {"_key": "spf", "pass": 2, "fail": 1, "total": 3}
+    assert spfScanSummary == {"_key": "spf", "pass": 2, "fail": 1, "total": 3}
 
     dkimScanSummary = db.collection("scanSummaries").get({"_key": "dkim"})
-    assert dkimScanSummary.next() == {"_key": "dkim", "pass": 1, "fail": 2, "total": 3}
+    assert dkimScanSummary == {"_key": "dkim", "pass": 1, "fail": 2, "total": 3}
 
 
 def test_update_chart_summaries():
     update_chart_summaries(host="http://testdb:8529", name="test", user="", password="")
 
     webSummary = db.collection("chartSummaries").get({"_key": "web"})
-    assert webSummary.next() == {"_key": "web", "pass": 2, "fail": 1, "total": 3}
+    assert webSummary == {"_key": "web", "pass": 2, "fail": 1, "total": 3}
 
     mailSummary = db.collection("mailSummaries").get({"_key": "mail"})
-    assert mailSummary.next() == {"_key": "mail", "pass": 1, "fail": 2, "total": 3}
+    assert mailSummary == {"_key": "mail", "pass": 1, "fail": 2, "total": 3}
 
 
 def test_update_org_summaries():
