@@ -76,14 +76,17 @@ const {
 
 module.exports.createContext = ({ context, req: request, res: response }) => {
   const { query } = context
+
+  const i18n = createI18n(request.language)
+
+  const verify = verifyToken({ i18n })
+
   // Get user id from token
   let userId
   const token = request.headers.authorization || ''
   if (token !== '') {
-    userId = verifyToken({ token }).userId
+    userId = verify({ token })
   }
-
-  const i18n = createI18n(request.language)
 
   return {
     i18n,
