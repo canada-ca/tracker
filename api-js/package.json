@@ -18,7 +18,7 @@
   "author": "nsdeschenes",
   "license": "MIT",
   "dependencies": {
-    "@lingui/core": "^2.9.2",
+    "@lingui/core": "^3.2.1",
     "apollo-server": "^2.19.0",
     "apollo-server-express": "^2.19.0",
     "arango-tools": "0.0.9",
