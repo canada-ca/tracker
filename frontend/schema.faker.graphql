@@ -1039,7 +1039,7 @@ scalar Year
 # being compared.
 type CategorizedSummary {
   # List of SummaryCategory objects with data for different computed categories.
-  categories: [SummaryCategory] @listLength(min: 2, max: 3)
+  categories: [SummaryCategory] @listLength(min: 2, max: 2)
   # Total domains that were check under this summary.
   total: Int @examples(values: [86954, 57896, 54386, 93456, 23452])
 }
