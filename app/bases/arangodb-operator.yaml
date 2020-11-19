@@ -1,0 +1,1079 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    app.kubernetes.io/instance: crd
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb-crd
+    helm.sh/chart: kube-arangodb-crd-1.1.2
+    release: crd
+  name: arangobackuppolicies.backup.arangodb.com
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.schedule
+    description: Schedule
+    name: Schedule
+    type: string
+  - JSONPath: .status.scheduled
+    description: Scheduled
+    name: Scheduled
+    type: string
+  - JSONPath: .status.message
+    description: Message of the ArangoBackupPolicy object
+    name: Message
+    priority: 1
+    type: string
+  group: backup.arangodb.com
+  names:
+    kind: ArangoBackupPolicy
+    listKind: ArangoBackupPolicyList
+    plural: arangobackuppolicies
+    shortNames:
+    - arangobackuppolicy
+    - arangobp
+    singular: arangobackuppolicy
+  scope: Namespaced
+  subresources:
+    status: {}
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+  - name: v1alpha
+    served: true
+    storage: false
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    app.kubernetes.io/instance: crd
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb-crd
+    helm.sh/chart: kube-arangodb-crd-1.1.2
+    release: crd
+  name: arangobackups.backup.arangodb.com
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.policyName
+    description: Policy name
+    name: Policy
+    type: string
+  - JSONPath: .spec.deployment.name
+    description: Deployment name
+    name: Deployment
+    type: string
+  - JSONPath: .status.backup.version
+    description: Backup Version
+    name: Version
+    type: string
+  - JSONPath: .status.backup.createdAt
+    description: Backup Creation Timestamp
+    name: Created
+    type: string
+  - JSONPath: .status.backup.sizeInBytes
+    description: Backup Size in Bytes
+    format: byte
+    name: Size
+    type: integer
+  - JSONPath: .status.backup.numberOfDBServers
+    description: Backup Number of the DB Servers
+    name: DBServers
+    type: integer
+  - JSONPath: .status.state
+    description: The actual state of the ArangoBackup
+    name: State
+    type: string
+  - JSONPath: .status.message
+    description: Message of the ArangoBackup object
+    name: Message
+    priority: 1
+    type: string
+  group: backup.arangodb.com
+  names:
+    kind: ArangoBackup
+    listKind: ArangoBackupList
+    plural: arangobackups
+    shortNames:
+    - arangobackup
+    singular: arangobackup
+  scope: Namespaced
+  subresources:
+    status: {}
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+  - name: v1alpha
+    served: true
+    storage: false
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    app.kubernetes.io/instance: crd
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb-crd
+    helm.sh/chart: kube-arangodb-crd-1.1.2
+    release: crd
+  name: arangodeploymentreplications.replication.database.arangodb.com
+spec:
+  group: replication.database.arangodb.com
+  names:
+    kind: ArangoDeploymentReplication
+    listKind: ArangoDeploymentReplicationList
+    plural: arangodeploymentreplications
+    shortNames:
+    - arangorepl
+    singular: arangodeploymentreplication
+  scope: Namespaced
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+  - name: v1alpha
+    served: true
+    storage: false
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    app.kubernetes.io/instance: crd
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb-crd
+    helm.sh/chart: kube-arangodb-crd-1.1.2
+    release: crd
+  name: arangodeployments.database.arangodb.com
+spec:
+  group: database.arangodb.com
+  names:
+    kind: ArangoDeployment
+    listKind: ArangoDeploymentList
+    plural: arangodeployments
+    shortNames:
+    - arangodb
+    - arango
+    singular: arangodeployment
+  scope: Namespaced
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+  - name: v1alpha
+    served: true
+    storage: false
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    app.kubernetes.io/instance: storage
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: storage
+  name: arangolocalstorages.storage.arangodb.com
+spec:
+  group: storage.arangodb.com
+  names:
+    kind: ArangoLocalStorage
+    listKind: ArangoLocalStorageList
+    plural: arangolocalstorages
+    shortNames:
+    - arangostorage
+    singular: arangolocalstorage
+  scope: Cluster
+  version: v1alpha
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment
+  name: arango-deployment-operator
+  namespace: db
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment-replication
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment-replication
+  name: arango-deployment-replication-operator
+  namespace: db
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: storage
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: storage
+  name: arango-storage-operator
+  namespace: db
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment
+  name: arango-deployment-operator-rbac-default
+  namespace: db
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment
+  name: arango-deployment-operator-rbac-deployment
+  namespace: db
+rules:
+- apiGroups:
+  - database.arangodb.com
+  resources:
+  - arangodeployments
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  - endpoints
+  - persistentvolumeclaims
+  - events
+  - secrets
+  - serviceaccounts
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - replicasets
+  verbs:
+  - get
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - '*'
+- apiGroups:
+  - backup.arangodb.com
+  resources:
+  - arangobackuppolicies
+  - arangobackups
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - get
+  - create
+  - delete
+  - update
+  - list
+  - watch
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment-replication
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment-replication
+  name: arango-deployment-replication-operator-rbac-deployment-replication
+  namespace: db
+rules:
+- apiGroups:
+  - replication.database.arangodb.com
+  resources:
+  - arangodeploymentreplications
+  verbs:
+  - '*'
+- apiGroups:
+  - database.arangodb.com
+  resources:
+  - arangodeployments
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  - endpoints
+  - persistentvolumeclaims
+  - events
+  - secrets
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - replicasets
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/instance: storage
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: storage
+  name: arango-storage-operator-rbac-storage
+  namespace: db
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
+  - apps
+  resources:
+  - daemonsets
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - replicasets
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment
+  name: arango-deployment-operator-rbac-deployment
+rules:
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - nodes
+  - persistentvolumes
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment-replication
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment-replication
+  name: arango-deployment-replication-operator-rbac-deployment-replication
+rules:
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - nodes
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: storage
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: storage
+  name: arango-storage-operator-rbac-storage
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes
+  - persistentvolumeclaims
+  - endpoints
+  - events
+  - services
+  verbs:
+  - '*'
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - nodes
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - storageclasses
+  verbs:
+  - '*'
+- apiGroups:
+  - storage.arangodb.com
+  resources:
+  - arangolocalstorages
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment
+  name: arango-deployment-operator-rbac-default
+  namespace: db
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: arango-deployment-operator-rbac-default
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: db
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment
+  name: arango-deployment-operator-rbac-deployment
+  namespace: db
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: arango-deployment-operator-rbac-deployment
+subjects:
+- kind: ServiceAccount
+  name: arango-deployment-operator
+  namespace: db
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment-replication
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment-replication
+  name: arango-deployment-replication-operator-rbac-deployment-replication
+  namespace: db
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: arango-deployment-replication-operator-rbac-deployment-replication
+subjects:
+- kind: ServiceAccount
+  name: arango-deployment-replication-operator
+  namespace: db
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: storage
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: storage
+  name: arango-storage-operator-rbac-storage
+  namespace: db
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: arango-storage-operator-rbac-storage
+subjects:
+- kind: ServiceAccount
+  name: arango-storage-operator
+  namespace: db
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment
+  name: arango-deployment-operator-rbac-deployment
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: arango-deployment-operator-rbac-deployment
+subjects:
+- kind: ServiceAccount
+  name: arango-deployment-operator
+  namespace: db
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment-replication
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment-replication
+  name: arango-deployment-replication-operator-rbac-deployment-replication
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: arango-deployment-replication-operator-rbac-deployment-replication
+subjects:
+- kind: ServiceAccount
+  name: arango-deployment-replication-operator
+  namespace: db
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: storage
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: storage
+  name: arango-storage-operator-rbac-storage
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: arango-storage-operator-rbac-storage
+subjects:
+- kind: ServiceAccount
+  name: arango-storage-operator
+  namespace: db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment
+  name: arango-deployment-operator
+  namespace: db
+spec:
+  ports:
+  - name: server
+    port: 8528
+    protocol: TCP
+    targetPort: 8528
+  selector:
+    app.kubernetes.io/instance: deployment
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    release: deployment
+    role: leader
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment-replication
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment-replication
+  name: arango-deployment-replication-operator
+  namespace: db
+spec:
+  ports:
+  - name: server
+    port: 8528
+    protocol: TCP
+    targetPort: 8528
+  selector:
+    app.kubernetes.io/instance: deployment-replication
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    release: deployment-replication
+    role: leader
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: storage
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: storage
+  name: arango-storage-operator
+  namespace: db
+spec:
+  ports:
+  - name: server
+    port: 8528
+    protocol: TCP
+    targetPort: 8528
+  selector:
+    app.kubernetes.io/instance: storage
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    release: storage
+    role: leader
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment
+  name: arango-deployment-operator
+  namespace: db
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: deployment
+      app.kubernetes.io/managed-by: Tiller
+      app.kubernetes.io/name: kube-arangodb
+      release: deployment
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: deployment
+        app.kubernetes.io/managed-by: Tiller
+        app.kubernetes.io/name: kube-arangodb
+        helm.sh/chart: kube-arangodb-1.1.2
+        release: deployment
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - kube-arangodb
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - deployment
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - --scope=legacy
+        - --operator.deployment
+        - --chaos.allowed=false
+        env:
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: RELATED_IMAGE_UBI
+          value: alpine:3.11
+        - name: RELATED_IMAGE_METRICSEXPORTER
+          value: arangodb/arangodb-exporter:0.1.7
+        - name: RELATED_IMAGE_DATABASE
+          value: arangodb/arangodb:latest
+        image: arangodb/kube-arangodb:1.1.2
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8528
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        name: operator
+        ports:
+        - containerPort: 8528
+          name: metrics
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8528
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      serviceAccountName: arango-deployment-operator
+      tolerations:
+      - effect: NoExecute
+        key: node.kubernetes.io/unreachable
+        operator: Exists
+        tolerationSeconds: 5
+      - effect: NoExecute
+        key: node.kubernetes.io/not-ready
+        operator: Exists
+        tolerationSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: deployment-replication
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: deployment-replication
+  name: arango-deployment-replication-operator
+  namespace: db
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: deployment-replication
+      app.kubernetes.io/managed-by: Tiller
+      app.kubernetes.io/name: kube-arangodb
+      release: deployment-replication
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: deployment-replication
+        app.kubernetes.io/managed-by: Tiller
+        app.kubernetes.io/name: kube-arangodb
+        helm.sh/chart: kube-arangodb-1.1.2
+        release: deployment-replication
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - kube-arangodb
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - deployment-replication
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - --scope=legacy
+        - --operator.deployment-replication
+        - --chaos.allowed=false
+        env:
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: RELATED_IMAGE_UBI
+          value: alpine:3.11
+        - name: RELATED_IMAGE_METRICSEXPORTER
+          value: arangodb/arangodb-exporter:0.1.7
+        - name: RELATED_IMAGE_DATABASE
+          value: arangodb/arangodb:latest
+        image: arangodb/kube-arangodb:1.1.2
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8528
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        name: operator
+        ports:
+        - containerPort: 8528
+          name: metrics
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8528
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      serviceAccountName: arango-deployment-replication-operator
+      tolerations:
+      - effect: NoExecute
+        key: node.kubernetes.io/unreachable
+        operator: Exists
+        tolerationSeconds: 5
+      - effect: NoExecute
+        key: node.kubernetes.io/not-ready
+        operator: Exists
+        tolerationSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: storage
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb
+    helm.sh/chart: kube-arangodb-1.1.2
+    release: storage
+  name: arango-storage-operator
+  namespace: db
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: storage
+      app.kubernetes.io/managed-by: Tiller
+      app.kubernetes.io/name: kube-arangodb
+      release: storage
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: storage
+        app.kubernetes.io/managed-by: Tiller
+        app.kubernetes.io/name: kube-arangodb
+        helm.sh/chart: kube-arangodb-1.1.2
+        release: storage
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - kube-arangodb
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - storage
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - --scope=legacy
+        - --operator.storage
+        - --chaos.allowed=false
+        env:
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: RELATED_IMAGE_UBI
+          value: alpine:3.11
+        - name: RELATED_IMAGE_METRICSEXPORTER
+          value: arangodb/arangodb-exporter:0.1.7
+        - name: RELATED_IMAGE_DATABASE
+          value: arangodb/arangodb:latest
+        image: arangodb/kube-arangodb:1.1.2
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8528
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        name: operator
+        ports:
+        - containerPort: 8528
+          name: metrics
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8528
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      serviceAccountName: arango-storage-operator
+      tolerations:
+      - effect: NoExecute
+        key: node.kubernetes.io/unreachable
+        operator: Exists
+        tolerationSeconds: 5
+      - effect: NoExecute
+        key: node.kubernetes.io/not-ready
+        operator: Exists
+        tolerationSeconds: 5

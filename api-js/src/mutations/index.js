@@ -5,7 +5,7 @@ const scanMutations = require('./scans')
 const userMutations = require('./user')
 const userAffiliationMutations = require('./user-affiliations')
 
-const createMutationSchema = (i18n) => {
+const createMutationSchema = () => {
   return new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({

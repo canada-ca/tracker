@@ -6,6 +6,8 @@ import AdminPanel from './AdminPanel'
 import { USER_AFFILIATIONS } from './graphql/queries'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function AdminPage() {
   const { currentUser } = useUserState()
@@ -23,7 +25,7 @@ export default function AdminPage() {
       toast({
         title: 'Error',
         description: message,
-        status: 'failure',
+        status: 'error',
         duration: 9000,
         isClosable: true,
         position: 'top-left',
@@ -32,11 +34,15 @@ export default function AdminPage() {
   })
 
   if (loading) {
-    return <p>Loading user affilliations...</p>
+    return (
+      <LoadingMessage>
+        <Trans>User Affiliations</Trans>
+      </LoadingMessage>
+    )
   }
 
   if (error) {
-    return <p>{String(error)}</p>
+    return <ErrorFallbackMessage error={error} />
   }
 
   const adminAffiliations = {}
@@ -78,11 +84,11 @@ export default function AdminPage() {
     return (
       <Layout>
         <Stack spacing={10}>
-          <Text fontSize="3xl" fontWeight="bold">
+          <Text fontSize="4xl" fontWeight="bold">
             <Trans>Welcome, Admin</Trans>
           </Text>
           <Stack isInline align="center">
-            <Text fontWeight="bold" fontSize="xl">
+            <Text fontWeight="bold" fontSize="2xl">
               <Trans>Organization: </Trans>
             </Text>
             <Select

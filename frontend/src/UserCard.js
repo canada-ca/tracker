@@ -19,6 +19,7 @@ export function UserCard({ userName, displayName, tfa, role }) {
       }}
       _hover={{ borderColor: 'gray.200', bg: 'gray.200' }}
       p="8"
+      as="button"
     >
       <Box flexShrink="0" minW="10%">
         <Text mt="1" fontSize="md" fontWeight="semibold">

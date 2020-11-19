@@ -7,7 +7,7 @@ const categoryPercentagesType = new GraphQLObjectType({
     failPercentage: {
       type: GraphQLFloat,
       description: 'Percentage of messages that are failing all checks.',
-      resolve: async ({ fail, fullPass, passDkimOnly, passSpfOnly }) => {
+      resolve: ({ fail, fullPass, passDkimOnly, passSpfOnly }) => {
         const total = [fail, fullPass, passDkimOnly, passSpfOnly].reduce(
           (a, b) => a + b,
           0,
@@ -22,7 +22,7 @@ const categoryPercentagesType = new GraphQLObjectType({
     fullPassPercentage: {
       type: GraphQLFloat,
       description: 'Percentage of messages that are passing all checks.',
-      resolve: async ({ fail, fullPass, passDkimOnly, passSpfOnly }) => {
+      resolve: ({ fail, fullPass, passDkimOnly, passSpfOnly }) => {
         const total = [fail, fullPass, passDkimOnly, passSpfOnly].reduce(
           (a, b) => a + b,
           0,
@@ -37,7 +37,7 @@ const categoryPercentagesType = new GraphQLObjectType({
     passDkimOnlyPercentage: {
       type: GraphQLFloat,
       description: 'Percentage of messages that are passing only dkim.',
-      resolve: async ({ fail, fullPass, passDkimOnly, passSpfOnly }) => {
+      resolve: ({ fail, fullPass, passDkimOnly, passSpfOnly }) => {
         const total = [fail, fullPass, passDkimOnly, passSpfOnly].reduce(
           (a, b) => a + b,
           0,
@@ -52,7 +52,7 @@ const categoryPercentagesType = new GraphQLObjectType({
     passSpfOnlyPercentage: {
       type: GraphQLFloat,
       description: 'Percentage of messages that are passing only spf.',
-      resolve: async ({ fail, fullPass, passDkimOnly, passSpfOnly }) => {
+      resolve: ({ fail, fullPass, passDkimOnly, passSpfOnly }) => {
         const total = [fail, fullPass, passDkimOnly, passSpfOnly].reduce(
           (a, b) => a + b,
           0,
@@ -67,7 +67,7 @@ const categoryPercentagesType = new GraphQLObjectType({
     totalMessages: {
       type: GraphQLInt,
       description: 'The total amount of messages sent by this domain.',
-      resolve: async ({ fail, fullPass, passDkimOnly, passSpfOnly }) => {
+      resolve: ({ fail, fullPass, passDkimOnly, passSpfOnly }) => {
         const total = [fail, fullPass, passDkimOnly, passSpfOnly].reduce(
           (a, b) => a + b,
           0,

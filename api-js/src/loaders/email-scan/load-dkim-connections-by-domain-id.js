@@ -117,7 +117,7 @@ const dkimLoaderConnectionsByDomainId = (
         ${startDateTemplate}
         ${endDateTemplate}
         ${limitTemplate}
-        RETURN dkimScan
+        RETURN MERGE({ id: dkimScan._key }, dkimScan)
     )
 
     LET hasNextPage = (LENGTH(
@@ -137,7 +137,8 @@ const dkimLoaderConnectionsByDomainId = (
     ) > 0 ? true : false)
 
     RETURN { 
-      "dkimScans": retrievedDkim, 
+      "dkimScans": retrievedDkim,
+      "totalCount": LENGTH(dkimKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedDkim)._key, 
@@ -164,6 +165,7 @@ const dkimLoaderConnectionsByDomainId = (
   if (dkimScanInfo.dkimScans.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -174,7 +176,6 @@ const dkimLoaderConnectionsByDomainId = (
   }
 
   const edges = dkimScanInfo.dkimScans.map((dkimScan) => {
-    dkimScan.id = dkimScan._key
     dkimScan.domainId = domainId
     return {
       cursor: toGlobalId('dkim', dkimScan._key),
@@ -184,6 +185,7 @@ const dkimLoaderConnectionsByDomainId = (
 
   return {
     edges,
+    totalCount: dkimScanInfo.totalCount,
     pageInfo: {
       hasNextPage: dkimScanInfo.hasNextPage,
       hasPreviousPage: dkimScanInfo.hasPreviousPage,

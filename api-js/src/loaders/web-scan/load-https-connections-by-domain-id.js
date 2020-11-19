@@ -108,7 +108,7 @@ const httpsLoaderConnectionsByDomainId = (
         ${startDateTemplate}
         ${endDateTemplate}
         ${limitTemplate}
-        RETURN httpsScan
+        RETURN MERGE({ id: httpsScan._key }, httpsScan)
     )
 
     LET hasNextPage = (LENGTH(
@@ -128,7 +128,8 @@ const httpsLoaderConnectionsByDomainId = (
     ) > 0 ? true : false)
 
     RETURN { 
-      "httpsScans": retrievedHttps, 
+      "httpsScans": retrievedHttps,
+      "totalCount": LENGTH(httpsKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedHttps)._key, 
@@ -155,6 +156,7 @@ const httpsLoaderConnectionsByDomainId = (
   if (httpsScanInfo.httpsScans.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -165,7 +167,6 @@ const httpsLoaderConnectionsByDomainId = (
   }
 
   const edges = httpsScanInfo.httpsScans.map((httpsScan) => {
-    httpsScan.id = httpsScan._key
     httpsScan.domainId = domainId
     return {
       cursor: toGlobalId('https', httpsScan._key),
@@ -175,6 +176,7 @@ const httpsLoaderConnectionsByDomainId = (
 
   return {
     edges,
+    totalCount: httpsScanInfo.totalCount,
     pageInfo: {
       hasNextPage: httpsScanInfo.hasNextPage,
       hasPreviousPage: httpsScanInfo.hasPreviousPage,

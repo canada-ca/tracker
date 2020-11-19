@@ -13,6 +13,9 @@ import { useLingui } from '@lingui/react'
 import { number } from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
 import { months } from './months'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -91,7 +94,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     if (reportCalled) getTables()
   }, [selectedPeriod, selectedYear, getTables])
 
-  if (reportLoading) return <Text>Loading</Text>
+  if (reportLoading) return       <LoadingMessage>
+        <Trans>DMARC Report</Trans>
+      </LoadingMessage>
 
   const options = [
     <option
@@ -408,7 +413,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         </Heading>
       </Stack>
 
+<ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
       {graphDisplay}
+      </ErrorBoundary>
 
       <Stack isInline align="center" mb="16px">
         <Text fontWeight="bold" textAlign="center">
@@ -422,8 +429,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           {options}
         </Select>
       </Stack>
-
-      {tableDisplay}
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        {tableDisplay}
+      </ErrorBoundary>
     </Box>
   )
 }

@@ -22,6 +22,8 @@ import { useUserState } from './UserState'
 import { Field, Formik } from 'formik'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
+import { LoadingMessage } from './LoadingMessage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function UserList({
   permission,
@@ -108,11 +110,11 @@ export default function UserList({
 
   if (loading)
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>User List</Trans>
+      </LoadingMessage>
     )
-  if (error) return <p>{String(error)}</p>
+  if (error) return <ErrorFallbackMessage error={error} />
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)

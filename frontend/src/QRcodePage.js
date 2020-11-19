@@ -6,6 +6,9 @@ import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { GENERATE_OTP_URL } from './graphql/queries'
 import QRCode from 'qrcode.react'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function QRcodePage() {
   const { currentUser } = useUserState()
@@ -18,11 +21,11 @@ export default function QRcodePage() {
 
   if (loading)
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>QR Code</Trans>
+      </LoadingMessage>
     )
-  if (error) return <p>Error: {error.message} </p>
+  if (error) return <ErrorFallbackMessage error={error} />
 
   if (data)
     return (
@@ -33,14 +36,16 @@ export default function QRcodePage() {
           </Trans>
         </Text>
 
-        <Box mt={6} mx="auto">
-          <QRCode
-            role="img"
-            renderAs="svg"
-            value={String(data.generateOtpUrl)}
-            size={256}
-          />
-        </Box>
+        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+          <Box mt={6} mx="auto">
+            <QRCode
+              role="img"
+              renderAs="svg"
+              value={String(data.generateOtpUrl)}
+              size={256}
+            />
+          </Box>
+        </ErrorBoundary>
 
         <Text mt="6" textAlign="center" mx="auto" fontSize="lg">
           <Trans>

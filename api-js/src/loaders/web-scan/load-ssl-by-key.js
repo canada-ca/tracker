@@ -1,18 +1,18 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-module.exports.sslLoaderByKey = (query, i18n) =>
+module.exports.sslLoaderByKey = (query, userId, i18n) =>
   new DataLoader(async (keys) => {
     let cursor
     try {
       cursor = await query`
         FOR sslScan IN ssl
-          FILTER ${keys}[** FILTER CURRENT == sslScan._key]
-          RETURN sslScan
+          FILTER sslScan._key IN ${keys}
+          RETURN MERGE({ id: sslScan._key }, sslScan)
       `
     } catch (err) {
       console.error(
-        `Database error occurred when running sslLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userId} running sslLoaderByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find ssl scan. Please try again.`))
     }
@@ -23,7 +23,9 @@ module.exports.sslLoaderByKey = (query, i18n) =>
         sslMap[sslScan._key] = sslScan
       })
     } catch (err) {
-      console.error(`Cursor error occurred when running sslLoaderByKey: ${err}`)
+      console.error(
+        `Cursor error occurred when user: ${userId} running sslLoaderByKey: ${err}`,
+      )
       throw new Error(i18n._(t`Unable to find ssl scan. Please try again.`))
     }
 

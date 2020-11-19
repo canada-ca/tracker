@@ -104,7 +104,7 @@ const domainLoaderConnectionsByUserId = (
         ${afterTemplate}
         ${beforeTemplate}
         ${limitTemplate}
-        RETURN domain
+        RETURN MERGE({ id: domain._key}, domain)
     )
     
     LET hasNextPage = (LENGTH(
@@ -124,7 +124,8 @@ const domainLoaderConnectionsByUserId = (
     ) > 0 ? true : false)
     
     RETURN { 
-      "domains": retrievedDomains, 
+      "domains": retrievedDomains,
+      "totalCount": LENGTH(domainKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedDomains)._key, 
@@ -133,7 +134,7 @@ const domainLoaderConnectionsByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to query domains in loadDomainsByUser.`,
+      `Database error occurred while user: ${userId} was trying to query domains in loadDomainsByUser, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to query domains. Please try again.`))
   }
@@ -143,7 +144,7 @@ const domainLoaderConnectionsByUserId = (
     domainsInfo = await requestedDomainInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainsByUser.`,
+      `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainsByUser, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
@@ -151,6 +152,7 @@ const domainLoaderConnectionsByUserId = (
   if (domainsInfo.domains.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -161,7 +163,6 @@ const domainLoaderConnectionsByUserId = (
   }
 
   const edges = domainsInfo.domains.map((domain) => {
-    domain.id = domain._key
     return {
       cursor: toGlobalId('domains', domain._key),
       node: domain,
@@ -170,6 +171,7 @@ const domainLoaderConnectionsByUserId = (
 
   return {
     edges,
+    totalCount: domainsInfo.totalCount,
     pageInfo: {
       hasNextPage: domainsInfo.hasNextPage,
       hasPreviousPage: domainsInfo.hasPreviousPage,

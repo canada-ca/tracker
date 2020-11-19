@@ -1,19 +1,19 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-module.exports.domainLoaderByDomain = (query, i18n) =>
+module.exports.domainLoaderByDomain = (query, userId, i18n) =>
   new DataLoader(async (domains) => {
     let cursor
 
     try {
       cursor = await query`
         FOR domain IN domains
-          FILTER ${domains}[** FILTER CURRENT == domain.domain]
-          RETURN domain
+          FILTER domain.domain IN ${domains}
+          RETURN MERGE({ id: domain._key}, domain)
       `
     } catch (err) {
       console.error(
-        `Database error occurred when running domainLoaderByDomain: ${err}`,
+        `Database error occurred when user: ${userId} running domainLoaderByDomain: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find domain. Please try again.`))
     }
@@ -24,7 +24,9 @@ module.exports.domainLoaderByDomain = (query, i18n) =>
         domainMap[domain.domain] = domain
       })
     } catch (err) {
-      console.error(`Cursor error occurred during domainLoaderByDomain: ${err}`)
+      console.error(
+        `Cursor error occurred when user: ${userId} running domainLoaderByDomain: ${err}`,
+      )
       throw new Error(i18n._(t`Unable to find domain. Please try again.`))
     }
 

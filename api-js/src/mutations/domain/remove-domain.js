@@ -72,10 +72,10 @@ const removeDomain = new mutationWithClientMutationId({
     // Get permission
     const permission = await checkPermission({ orgId: org._id })
 
-    // Check to see if domain belongs to blue check org
-    if (org.blueCheck && permission !== 'super_admin') {
+    // Check to see if domain belongs to verified check org
+    if (org.verified && permission !== 'super_admin') {
       console.warn(
-        `User: ${userId} attempted to remove ${domain.slug} in ${org.slug} but does not have permission to remove a domain from a blue check org.`,
+        `User: ${userId} attempted to remove ${domain.slug} in ${org.slug} but does not have permission to remove a domain from a verified check org.`,
       )
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }

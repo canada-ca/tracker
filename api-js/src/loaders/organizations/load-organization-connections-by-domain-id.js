@@ -106,7 +106,7 @@ const orgLoaderConnectionArgsByDomainId = (
         ${beforeTemplate} 
         ${limitTemplate}
         LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE(${language}, org.orgDetails))
+        RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, id: org._key, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE(${language}, org.orgDetails))
     )
 
     LET hasNextPage = (LENGTH(
@@ -127,6 +127,7 @@ const orgLoaderConnectionArgsByDomainId = (
     
     RETURN { 
       "organizations": retrievedOrgs,
+      "totalCount": LENGTH(orgKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedOrgs)._key, 
@@ -135,7 +136,7 @@ const orgLoaderConnectionArgsByDomainId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
+      `Database error occurred while user: ${userId} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }
@@ -145,7 +146,7 @@ const orgLoaderConnectionArgsByDomainId = (
     organizationInfo = await organizationInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
+      `Cursor error occurred while user: ${userId} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }
@@ -153,6 +154,7 @@ const orgLoaderConnectionArgsByDomainId = (
   if (organizationInfo.organizations.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -163,7 +165,6 @@ const orgLoaderConnectionArgsByDomainId = (
   }
 
   const edges = organizationInfo.organizations.map((organization) => {
-    organization.id = organization._key
     return {
       cursor: toGlobalId('organizations', organization._key),
       node: organization,
@@ -172,6 +173,7 @@ const orgLoaderConnectionArgsByDomainId = (
 
   return {
     edges,
+    totalCount: organizationInfo.totalCount,
     pageInfo: {
       hasNextPage: organizationInfo.hasNextPage,
       hasPreviousPage: organizationInfo.hasPreviousPage,

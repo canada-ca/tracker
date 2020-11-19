@@ -1,19 +1,21 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-module.exports.orgLoaderByKey = (query, language, i18n) =>
+module.exports.orgLoaderByKey = (query, language, userId, i18n) =>
   new DataLoader(async (ids) => {
     let cursor
 
     try {
       cursor = await query`
         FOR org IN organizations
-          FILTER ${ids}[** FILTER CURRENT == org._key]
+          FILTER org._key IN ${ids}
           LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE(${language}, org.orgDetails))
+          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, id: org._key, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
-      console.error(`Database error when running orgLoaderByKey: ${err}`)
+      console.error(
+        `Database error occurred when user: ${userId} running orgLoaderByKey: ${err}`,
+      )
       throw new Error(i18n._(t`Unable to find organization. Please try again.`))
     }
 
@@ -23,7 +25,9 @@ module.exports.orgLoaderByKey = (query, language, i18n) =>
         orgMap[org._key] = org
       })
     } catch (err) {
-      console.error(`Cursor error occurred during orgLoaderByKey: ${err}`)
+      console.error(
+        `Cursor error occurred when user: ${userId} during orgLoaderByKey: ${err}`,
+      )
       throw new Error(i18n._(t`Unable to find organization. Please try again.`))
     }
 

@@ -11,8 +11,8 @@ def test_scan():
 
     test_client = TestClient(test_app)
 
-    test_payload = {"scan_id": 1, "domain": "cyber.gc.ca"}
+    test_payload = {"uuid": 1, "domain": "cyber.gc.ca", "domain_key": "domains/1"}
 
     res = test_client.post("/", json=test_payload)
 
-    assert "(ID=1) SSL scan completed" in res.text
+    assert "SSL scan completed" in res.text

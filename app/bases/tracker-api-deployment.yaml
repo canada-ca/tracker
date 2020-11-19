@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tracker-api
+  name: tracker-api
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracker-api
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tracker-api
+    spec:
+      containers:
+      - image: gcr.io/track-compliance/api-js
+        name: api
+        ports:
+        - containerPort: 4000
+        env:
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_PASS
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_NAME
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_URL
+        - name: AUTHENTICATED_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: AUTHENTICATED_KEY
+        - name: SIGN_IN_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SIGN_IN_KEY
+        - name: NOTIFICATION_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_API_KEY
+        - name: NOTIFICATION_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_API_URL
+        - name: DMARC_REPORT_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DMARC_REPORT_API_URL
+        - name: DMARC_REPORT_API_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DMARC_REPORT_API_SECRET
+        - name: DMARC_REPORT_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DMARC_REPORT_API_TOKEN
+        - name: TOKEN_HASH
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: TOKEN_HASH
+        - name: DEPTH_LIMIT
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DEPTH_LIMIT
+        - name: COST_LIMIT
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: COST_LIMIT
+        - name: SCALAR_COST
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SCALAR_COST
+        - name: OBJECT_COST
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: OBJECT_COST
+        - name: LIST_FACTOR
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: OBJECT_COST
+        resources:
+          limits:
+            cpu: 300m
+            memory: 70Mi
+          requests:
+            cpu: 300m
+            memory: 70Mi
+status: {}

@@ -108,7 +108,7 @@ const sslLoaderConnectionsByDomainId = (
         ${startDateTemplate}
         ${endDateTemplate}
         ${limitTemplate}
-        RETURN sslScan
+        RETURN MERGE({ id: sslScan._key }, sslScan)
     )
 
     LET hasNextPage = (LENGTH(
@@ -128,7 +128,8 @@ const sslLoaderConnectionsByDomainId = (
     ) > 0 ? true : false)
 
     RETURN { 
-      "sslScans": retrievedSsl, 
+      "sslScans": retrievedSsl,
+      "totalCount": LENGTH(sslKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedSsl)._key, 
@@ -155,6 +156,7 @@ const sslLoaderConnectionsByDomainId = (
   if (sslScansInfo.sslScans.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -165,7 +167,6 @@ const sslLoaderConnectionsByDomainId = (
   }
 
   const edges = await sslScansInfo.sslScans.map((sslScan) => {
-    sslScan.id = sslScan._key
     sslScan.domainId = domainId
     return {
       cursor: toGlobalId('ssl', sslScan._key),
@@ -175,6 +176,7 @@ const sslLoaderConnectionsByDomainId = (
 
   return {
     edges,
+    totalCount: sslScansInfo.totalCount,
     pageInfo: {
       hasNextPage: sslScansInfo.hasNextPage,
       hasPreviousPage: sslScansInfo.hasPreviousPage,

@@ -1,46 +1,19 @@
 import pytest
 import datetime
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from starlette.testclient import TestClient
+from arango import ArangoClient
 from result_processor import *
 from test_data import *
 
-TEST_DATABASE_URI = "postgresql://track_dmarc:postgres@testdb/track_dmarc"
-engine = create_engine(TEST_DATABASE_URI)
-test_app = Server(database_uri=TEST_DATABASE_URI)
+arango_client = ArangoClient(hosts="http://testdb:8529")
+# Connect to arango system DB and create test DB
+sys_db = arango_client.db("_system", username="", password="")
+sys_db.create_database("test")
 
-session = sessionmaker(bind=engine, autocommit=True)
-test_session = session()
+# Establish DB connection
+db = arango_client.db("test", username="", password="")
+db.create_collection("domains")
 
-
-def setup():
-    scan_time = datetime.datetime.utcnow()
-    with test_session.begin():
-        test_session.execute(
-            Users.insert().values(
-                user_name="system",
-                user_password="sysuserpass",
-                display_name="system",
-                preferred_lang="English",
-            )
-        )
-        test_session.execute(
-            Domains.insert().values(
-                domain="cyber.gc.ca", selectors=["selector1._domainkey"]
-            )
-        )
-        test_session.execute(
-            Web_scans.insert().values(domain_id=1, scan_date=scan_time, initiated_by=1)
-        )
-        test_session.execute(
-            Mail_scans.insert().values(
-                domain_id=1,
-                scan_date=scan_time,
-                selectors=["selector1._domainkey"],
-                initiated_by=1,
-            )
-        )
+db.collection("domains").insert({"domain": "cyber.gc.ca", "selectors": ["selector1"]})
 
 
 def test_process_https():
@@ -55,68 +28,82 @@ def test_process_ssl():
 
 def test_process_dns():
     tags = process_dns(dns_result_data)
-    assert tags == expected_dns_tags
+    assert tags["dmarc"] == expected_dmarc_tags
+    assert tags["spf"] == expected_spf_tags
+    assert tags["dkim"]["selector1"] == expected_dkim_scan_tags
 
 
 async def test_insert_https():
-    setup()
-
+    db = arango_client.db("test", username="", password="")
+    domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
+    domain = domain_query.result()
+    test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
     test_client = TestClient(test_app)
 
-    test_payload = {"results": https_result_data, "scan_id": 1, "scan_type": "https"}
+    test_payload = {"results": https_result_data, "uuid": 1, "scan_type": "https", "domain_key": domain["_key"]}
 
     await test_client.post("/", json=test_payload)
 
-    with test_session.begin():
-        inserted_results = test_session.fetch_one(
-            select([Https_scans]).where(Https_scans.c.id == 1)
-        )
+    inserted_results_query = db.collection("https").all()
 
-    assert inserted_results.get("https_scan")["https"] is not None
-    assert inserted_results.get("https_scan")["tags"] is not None
+    inserted_results = inserted_results_query.result()[0]
+
+    for field in inserted_results:
+        assert inserted_results.get(field, None) is not None
+    assert inserted_results["tags"] == expected_https_tags
 
 
 async def test_insert_ssl():
+    db = arango_client.db("test", username="", password="")
+    domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
+    domain = domain_query.result()
+    test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
     test_client = TestClient(test_app)
 
-    test_payload = {"results": ssl_result_data, "scan_id": 1, "scan_type": "ssl"}
+    test_payload = {"results": ssl_result_data, "uuid": 1, "scan_type": "ssl", "domain_key": domain["_key"]}
 
     await test_client.post("/", json=test_payload)
 
-    with test_session.begin():
-        inserted_results = test_session.fetch_one(
-            select([Ssl_scans]).where(Ssl_scans.c.id == 1)
-        )
+    inserted_results_query = db.collection("ssl").all()
 
-    assert inserted_results.get("ssl_scan")["ssl"] is not None
-    assert inserted_results.get("ssl_scan")["tags"] is not None
+    inserted_results = inserted_results_query.result()[0]
+
+    for field in inserted_results:
+        assert inserted_results.get(field, None) is not None
+    assert inserted_results["tags"] == expected_ssl_tags
 
 
 async def test_insert_dns():
+    db = arango_client.db("test", username="", password="")
+    domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
+    domain = domain_query.result()
+    test_app = Server(db_host="", db_name="test", db_user="", db_pass="")
     test_client = TestClient(test_app)
 
-    test_payload = {"results": dns_result_data, "scan_id": 1, "scan_type": "dns"}
+    test_payload = {"results": dns_result_data, "uuid": 1, "scan_type": "dns", "domain_key": domain["_key"]}
 
     await test_client.post("/", json=test_payload)
 
-    with test_session.begin():
-        inserted_dmarc_results = test_session.fetch_one(
-            select([Dmarc_scans]).where(Dmarc_scans.c.id == 1)
-        )
-        inserted_spf_results = test_session.fetch_one(
-            select([Spf_scans]).where(Spf_scans.c.id == 1)
-        )
-        inserted_mx_results = test_session.fetch_one(
-            select([Mx_scans]).where(Mx_scans.c.id == 1)
-        )
-        inserted_dkim_results = test_session.fetch_one(
-            select([Dkim_scans]).where(Dkim_scans.c.id == 1)
-        )
+    inserted_dmarc_results_query = db.collection("dmarc").all()
 
-    assert inserted_dmarc_results.get("dmarc_scan")["dmarc"] is not None
-    assert inserted_dmarc_results.get("dmarc_scan")["tags"] is not None
-    assert inserted_spf_results.get("spf_scan")["spf"] is not None
-    assert inserted_dmarc_results.get("spf_scan")["tags"] is not None
-    assert inserted_mx_results.get("mx_scan")["mx"] is not None
-    assert inserted_dkim_results.get("dkim_scan")["dkim"] is not None
-    assert inserted_dmarc_results.get("dkim_scan")["tags"] is not None
+    inserted_dmarc_results = inserted_dmarc_results_query.result()[0]
+
+    for field in inserted_dmarc_results:
+        assert inserted_dmarc_results.get(field, None) is not None
+    assert inserted_dmarc_results["tags"] == expected_dmarc_tags
+
+    inserted_spf_results_query = db.collection("spf").all()
+
+    inserted_spf_results = inserted_spf_results_query.result()[0]
+
+    for field in inserted_spf_results:
+        assert inserted_spf_results.get(field, None) is not None
+    assert inserted_spf_results["tags"] == expected_spf_tags
+
+    inserted_dkim_scan_results_query = db.collection("dkim_scans").all()
+
+    inserted_dkim_scan_results = inserted_dkim_scan_results_query.result()[0]
+
+    for field in inserted_dkim_scan_results:
+        assert inserted_dkim_scan_results.get(field, None) is not None
+    assert inserted_dkim_scan_results["tags"] == expected_dkim_scan_tags

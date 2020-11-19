@@ -19,6 +19,8 @@ import EditableUserDisplayName from './EditableUserDisplayName'
 import EditableUserEmail from './EditableUserEmail'
 import EditableUserPassword from './EditableUserPassword'
 import { TrackerButton } from './TrackerButton'
+import { LoadingMessage } from './LoadingMessage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function UserPage() {
   const location = useLocation()
@@ -41,11 +43,15 @@ export default function UserPage() {
   })
 
   if (queryUserLoading) {
-    return <p>Loading user...</p>
+    return (
+      <LoadingMessage>
+        <Trans>User Profile</Trans>
+      </LoadingMessage>
+    )
   }
 
   if (queryUserError) {
-    return <p>{String(queryUserError)}</p>
+    return <ErrorFallbackMessage error={queryUserError} />
   }
 
   return (

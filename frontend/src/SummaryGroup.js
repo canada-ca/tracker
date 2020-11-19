@@ -6,6 +6,8 @@ import { string } from 'prop-types'
 import theme from './theme/canada'
 import { useQuery } from '@apollo/client'
 import { WEB_AND_EMAIL_SUMMARIES } from './graphql/queries'
+import { LoadingMessage } from './LoadingMessage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 const { colors } = theme
 
@@ -17,7 +19,7 @@ export function SummaryGroup() {
       toast({
         title: 'Error',
         description: message,
-        status: 'failure',
+        status: 'error',
         duration: 9000,
         isClosable: true,
         position: 'top-left',
@@ -25,15 +27,13 @@ export function SummaryGroup() {
     },
   })
 
-  if (error) {
-    return <p>{String(error)}</p>
-  }
+  if (error) return <ErrorFallbackMessage error={error} />
 
   if (loading) {
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>Summary Cards</Trans>
+      </LoadingMessage>
     )
   }
 
@@ -50,15 +50,11 @@ export function SummaryGroup() {
         title={t`Web Configuration`}
         description={t`Web encryption settings summary`}
         categoryDisplay={{
-          'full-fail': {
+          fail: {
             name: t`Non-compliant TLS`,
             color: colors.weak,
           },
-          'partial-pass': {
-            name: t`Partially TLS`,
-            color: colors.moderate,
-          },
-          'full-pass': {
+          pass: {
             name: t`Policy compliant TLS`,
             color: colors.strong,
           },
@@ -69,23 +65,19 @@ export function SummaryGroup() {
         title={t`Email Configuration`}
         description={t`Email security settings summary`}
         categoryDisplay={{
-          'full-pass': {
+          pass: {
             name: t`Dmarc pass`,
             color: colors.strong,
           },
-          'partial-pass': {
-            name: t`Dmarc partial`,
-            color: colors.moderate,
-          },
-          'full-fail': {
+          fail: {
             name: t`Dmarc fail`,
             color: colors.weak,
           },
         }}
-        data={data.emailSummary}
+        data={data.mailSummary}
       />
     </SimpleGrid>
-  );
+  )
 }
 
 SummaryGroup.propTypes = {

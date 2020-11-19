@@ -1,11 +1,14 @@
 import React from 'react'
 import { Stack, SimpleGrid, useToast } from '@chakra-ui/core'
-// import UserList from './UserList'
 import { string } from 'prop-types'
 import { ADMIN_PANEL } from './graphql/queries'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { AdminDomains } from './AdminDomains'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
+import { Trans } from '@lingui/macro'
 import UserList from './UserList'
 
 export default function AdminPanel({ orgSlug, permission }) {
@@ -24,7 +27,7 @@ export default function AdminPanel({ orgSlug, permission }) {
       toast({
         title: 'Error',
         description: message,
-        status: 'failure',
+        status: 'error',
         duration: 9000,
         isClosable: true,
         position: 'top-left',
@@ -33,30 +36,37 @@ export default function AdminPanel({ orgSlug, permission }) {
   })
 
   if (loading) {
-    return <p>Loading...</p>
+    return (
+      <LoadingMessage>
+        <Trans>Organization Info</Trans>
+      </LoadingMessage>
+    )
   }
   // Current api returns an error if no domains found
   // TODO: Remove includes check when api is ready
   if (error && !error.includes('Error, unable to find domains')) {
-    return <p>{String(error)}</p>
+    return <ErrorFallbackMessage error={error} />
   }
 
   return (
     <Stack spacing={10}>
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
+        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <AdminDomains
           domainsData={data.findOrganizationBySlug.domains}
           orgId={data.findOrganizationBySlug.id}
           orgSlug={orgSlug}
           refetchFunc={refetch}
         />
-        {/* TODO: get user list working */}
+        </ErrorBoundary>
+        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <UserList
           permission={permission}
           userListData={data.userList}
           // orgName={orgName}
           orgSlug={orgSlug}
         />
+        </ErrorBoundary>
       </SimpleGrid>
     </Stack>
   )

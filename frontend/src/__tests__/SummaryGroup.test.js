@@ -27,34 +27,29 @@ const mocks = [
         webSummary: {
           categories: [
             {
-              name: 'full-pass',
+              name: 'pass',
               count: 7468,
               percentage: 56.6,
             },
             {
-              name: 'full-fail',
+              name: 'fail',
               count: 5738,
               percentage: 43.4,
             },
           ],
           total: 13206,
         },
-        emailSummary: {
+        mailSummary: {
           categories: [
             {
-              name: 'full-pass',
+              name: 'pass',
               count: 2091,
               percentage: 11.2,
             },
             {
-              name: 'full-fail',
+              name: 'fail',
               count: 8604,
               percentage: 46.2,
-            },
-            {
-              name: 'partial-pass',
-              count: 7918,
-              percentage: 42.5,
             },
           ],
           total: 18613,
@@ -76,7 +71,7 @@ describe('<SummaryGroup />', () => {
           </ThemeProvider>
         </I18nProvider>,
       )
-      const summaries = await waitFor(() => getAllByText(/Summary/i))
+      const summaries = await waitFor(() => getAllByText(/settings summary/i))
       expect(summaries).toHaveLength(2)
     })
   })

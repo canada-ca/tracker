@@ -1,0 +1,28 @@
+apiVersion: database.arangodb.com/v1alpha
+kind: ArangoDeployment
+metadata:
+  name: arangodb
+  namespace: db
+spec:
+  metadata:
+  image: arangodb/arangodb:3.7.3
+  environment: Production
+  mode: Single
+  tls:
+    caSecretName: None
+  externalAccess:
+    type: None
+  bootstrap:
+    passwordSecretNames:
+      root: arangodb
+  metrics:
+    enabled: true
+  coordinators:
+    count: 1
+  agents:
+    count: 1
+  dbservers:
+    count: 1
+    resources:
+      requests:
+        storage: 80Gi

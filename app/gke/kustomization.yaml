@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../bases
+- letsencrypt-issuer.yaml
+patchesStrategicMerge:
+- tracker-api-deployment.yaml
+- tracker-frontend-deployment.yaml
+- publicgateway.yaml
+- certificate.yaml
+- knative/config/queues.yaml
+- arangodb-deployment.yaml

@@ -49,17 +49,10 @@ async def scan_dmarc(domain):
         )
         return None
 
-    # Retrieve 'rua' tag address.
-    try:
-        rua_addr = scan_result["dmarc"]["tags"]["rua"]["value"][0]["address"]
-    except KeyError as e:
-        logging.error(
-            "Failed to retrieve RUA address from tag value. Report acceptance check will not be performed. (KeyError: %s)"
-            % str(e)
-        )
-        rua_addr = None
+    for rua in scan_result["dmarc"]["tags"]["rua"]["value"]:
+        # Retrieve 'rua' tag address.
+        rua_addr = rua["address"]
 
-    if rua_addr is not None:
         # Extract the domain from the address string (e.g. 'dmarc@cyber.gc.ca' -> 'cyber.gc.ca').
         rua_domain = rua_addr.split("@", 1)[1]
 
@@ -75,7 +68,7 @@ async def scan_dmarc(domain):
 
         # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
         if rua_org_domain == org_domain:
-            scan_result["dmarc"]["tags"]["rua"]["accepting"] = True
+            rua["accepting"] = True
         else:
             try:
                 # Request txt record to ensure that "rua" domain accepts DMARC reports.
@@ -92,7 +85,45 @@ async def scan_dmarc(domain):
                 logging.info("External reporting arrangement verified.")
             except (DNSException, SPFError, DMARCError) as e:
                 logging.error("Failed to validate rua address: %s" % str(e))
-                scan_result["dmarc"]["tags"]["rua"]["accepting"] = "undetermined"
+                rua["accepting"] = "undetermined"
+
+    for ruf in scan_result["dmarc"]["tags"]["ruf"]["value"]:
+        # Retrieve 'ruf' tag address.
+        ruf_addr = ruf["address"]
+
+        # Extract the domain from the address string (e.g. 'dmarc@cyber.gc.ca' -> 'cyber.gc.ca').
+        ruf_domain = ruf_addr.split("@", 1)[1]
+
+        # Extract organizational domain from original domain (e.g. 'tracker.cyber.gc.ca' -> 'cyber.gc.ca')
+        extract = tldextract.TLDExtract(include_psl_private_domains=True)
+        extract.update()
+        parsed_domain = extract(domain)
+        org_domain = ".".join([parsed_domain.domain, parsed_domain.suffix])
+
+        # Extract organizational domain from 'ruf' domain
+        parsed_ruf_domain = extract(ruf_domain)
+        ruf_org_domain = ".".join([parsed_ruf_domain.domain, parsed_ruf_domain.suffix])
+
+        # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
+        if ruf_org_domain == org_domain:
+            ruf["accepting"] = True
+        else:
+            try:
+                # Request txt record to ensure that "ruf" domain accepts DMARC reports.
+                ruf_scan_result = dns.resolver.query(
+                    f"{domain}._report._dmarc.{ruf_domain}", "TXT"
+                )
+                ruf_txt_value = (
+                    ruf_scan_result.response.answer[0][0].strings[0].decode("UTF-8")
+                )
+                # Assert external reporting arrangement has been authorized if TXT containing version tag with value "DMARC1" is found.
+                scan_result["dmarc"]["tags"]["ruf"]["accepting"] = (
+                    ruf_txt_value == "v=DMARC1"
+                )
+                logging.info("External reporting arrangement verified.")
+            except (DNSException, SPFError, DMARCError) as e:
+                logging.error("Failed to validate ruf address: %s" % str(e))
+                ruf["accepting"] = "undetermined"
 
     logging.info("DMARC scan completed")
 
@@ -225,7 +256,7 @@ def Server(server_client=requests):
             msg = "Timeout while performing scan"
             logging.error(msg)
             dispatch_results(
-                {"scan_type": "dns", "scan_id": scan_id, "results": {}}, server_client
+                {"scan_type": "dns", "uuid": uuid, "results": {}}, server_client
             )
             return PlainTextResponse(msg)
 
@@ -235,21 +266,22 @@ def Server(server_client=requests):
             signal.alarm(60)
             try:
                 domain = inbound_payload["domain"]
-                scan_id = inbound_payload["scan_id"]
+                uuid = inbound_payload["uuid"]
                 selectors = inbound_payload["selectors"]
+                domain_key = inbound_payload["domain_key"]
             except KeyError:
                 msg = f"Invalid scan request format received: {str(inbound_payload)}"
                 logging.error(msg)
                 return PlainTextResponse(msg)
 
-            logging.info(f"(ID={scan_id}) Performing scan...")
+            logging.info("Performing scan...")
             dmarc_results = scan_dmarc(domain)
 
             try:
                 iter(selectors)
                 dkim_results = await scan_dkim(domain, selectors)
             except TypeError:
-                logging.info("(ID={scan_id}) No DKIM selector strings provided")
+                logging.info("No DKIM selector strings provided")
                 dkim_results = {}
                 pass
 
@@ -264,20 +296,21 @@ def Server(server_client=requests):
                     {
                         "results": processed_results,
                         "scan_type": "dns",
-                        "scan_id": scan_id,
+                        "uuid": uuid,
+                        "domain_key": domain_key
                     }
                 )
-                logging.info(f"(ID={scan_id}) Scan results: {str(scan_results)}")
+                logging.info("Scan results: {str(scan_results)}")
             else:
                 raise Exception("DNS scan not completed")
 
         except Exception as e:
             signal.alarm(0)
-            msg = f"(ID={scan_id}) An unexpected error occurred while attempting to process DNS scan request: ({type(e).__name__}: {str(e)})"
+            msg = "An unexpected error occurred while attempting to process DNS scan request: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "dns", "scan_id": scan_id, "results": {}}, server_client
+                {"scan_type": "dns", "uuid": uuid, "results": {}}, server_client
             )
             return PlainTextResponse(msg)
 
@@ -285,7 +318,7 @@ def Server(server_client=requests):
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
         dispatch_results(outbound_payload, server_client)
-        msg = f"(ID={scan_id}) DNS scan completed in {elapsed_time.total_seconds()} seconds."
+        msg = "DNS scan completed in {elapsed_time.total_seconds()} seconds."
         logging.info(msg)
 
         return PlainTextResponse(msg)

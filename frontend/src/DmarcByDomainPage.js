@@ -7,6 +7,9 @@ import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { months } from './months'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -43,9 +46,9 @@ export default function DmarcByDomainPage() {
 
   // default tableDisplay to loading, will change to actual display in the if(!loading) block
   let tableDisplay = (
-    <Text>
-      <Trans>Loading...</Trans>
-    </Text>
+    <LoadingMessage>
+      <Trans>Domains Table</Trans>
+    </LoadingMessage>
   )
   if (loading) {
     return 'laoding'
@@ -201,8 +204,9 @@ export default function DmarcByDomainPage() {
           {options}
         </Select>
       </Stack>
-
-      {tableDisplay}
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        {tableDisplay}
+      </ErrorBoundary>
     </Box>
   )
 }

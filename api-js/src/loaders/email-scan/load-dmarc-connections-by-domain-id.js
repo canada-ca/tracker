@@ -109,7 +109,7 @@ const dmarcLoaderConnectionsByDomainId = (
       ${startDateTemplate}
       ${endDateTemplate}
       ${limitTemplate}
-      RETURN dmarcScan
+      RETURN MERGE({ id: dmarcScan._key }, dmarcScan)
     )
 
     LET hasNextPage = (LENGTH(
@@ -129,7 +129,8 @@ const dmarcLoaderConnectionsByDomainId = (
     ) > 0 ? true : false)
 
     RETURN { 
-      "dmarcScans": retrievedDmarcScans, 
+      "dmarcScans": retrievedDmarcScans,
+      "totalCount": LENGTH(dmarcKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedDmarcScans)._key, 
@@ -157,6 +158,7 @@ const dmarcLoaderConnectionsByDomainId = (
   if (dmarcScanInfo.dmarcScans.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -167,7 +169,6 @@ const dmarcLoaderConnectionsByDomainId = (
   }
 
   const edges = dmarcScanInfo.dmarcScans.map((dmarcScan) => {
-    dmarcScan.id = dmarcScan._key
     dmarcScan.domainId = domainId
     return {
       cursor: toGlobalId('dmarc', dmarcScan._key),
@@ -177,6 +178,7 @@ const dmarcLoaderConnectionsByDomainId = (
 
   return {
     edges,
+    totalCount: dmarcScanInfo.totalCount,
     pageInfo: {
       hasNextPage: dmarcScanInfo.hasNextPage,
       hasPreviousPage: dmarcScanInfo.hasPreviousPage,

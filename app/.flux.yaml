@@ -1,0 +1,8 @@
+version: 1
+commandUpdated:
+  generators:
+    - command: "kustomize build gke"
+  updaters:
+    - containerImage:
+        command: >-
+          cd bases && kustomize edit set image "$FLUX_IMG:$FLUX_TAG"

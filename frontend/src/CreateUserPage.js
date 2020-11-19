@@ -13,6 +13,7 @@ import { t, Trans } from '@lingui/macro'
 import DisplayNameField from './DisplayNameField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function CreateUserPage() {
   const { login } = useUserState()
@@ -44,11 +45,10 @@ export default function CreateUserPage() {
       .oneOf(fieldRequirements.lang.oneOf.types),
   })
 
-  const [signUp, { loading, error }] = useMutation(SIGN_UP, {
-    onError() {
-      console.log(error)
+  const [signUp, { loading }] = useMutation(SIGN_UP, {
+    onError(error) {
       toast({
-        title: t`An error occurred.`,
+        title: error.message,
         description: t`Unable to create your account, please try again.`,
         status: 'error',
         duration: 9000,
@@ -77,13 +77,7 @@ export default function CreateUserPage() {
     },
   })
 
-  if (loading)
-    return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
-    )
-  if (error) return <p>{String(error)}</p>
+  if (loading) return <LoadingMessage />
 
   const addUserToOrgText = userOrgToken ? (
     <Text fontSize="md">

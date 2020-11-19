@@ -492,6 +492,8 @@ msgstr "DMARC Messages"
 #~ msgstr "DMARC Policy Applied"
 
 #: src/App.js:70
+#: src/DmarcReportPage.js:67
+#: src/App.js:71
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
@@ -1348,8 +1350,8 @@ msgid "Page"
 msgstr "Page"
 
 #: src/PageNotFound.js:9
-msgid "Page not found"
-msgstr "Page not found"
+msgid "404 - Page Not Found"
+msgstr "404 - Page Not Found"
 
 #: src/DmarcReportTable.js:351
 msgid "Page {0} of {1}"
@@ -1841,8 +1843,8 @@ msgid "Skip to main content"
 msgstr "Skip to main content"
 
 #: src/PageNotFound.js:12
-msgid "Sorry, the page you were trying to view does not exist."
-msgstr "Sorry, the page you were trying to view does not exist."
+msgid "The page you are looking for has moved or does not exist."
+msgstr "The page you are looking for has moved or does not exist."
 
 #: src/DmarcReportPage.js:194
 msgid "Source IP Address"
@@ -2034,6 +2036,8 @@ msgid "User List"
 msgstr "User List"
 
 #: src/App.js:76
+
+#: src/App.js:77
 msgid "User Profile"
 msgstr "User Profile"
 
@@ -2261,3 +2265,72 @@ msgstr "{count} records..."
 #: src/OrganizationDetails.js:92
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/LoadingMessage.js:12
+msgid "Loading {children}..."
+msgstr "Loading {children}..."
+
+#: src/ErrorFallbackMessage.js:12
+msgid "An error has occurred."
+msgstr "An error has occurred."
+
+#: src/ErrorFallbackMessage.js:22
+msgid "This component is currently unavailable. Try reloading the page."
+msgstr "This component is currently unavailable. Try reloading the page."
+
+#: src/SummaryGroup.js:39
+msgid "Summary Cards"
+msgstr "Summary Cards"
+
+#: src/AdminPage.js:41
+msgid "User Affiliations"
+msgstr "User Affiliations"
+
+#: src/AdminPanel.js:40
+msgid "Organization Info"
+msgstr "Organization Info"
+
+#: src/DmarcByDomainPage.js:163
+msgid "Domains Table"
+msgstr "Domains Table"
+
+#: src/DmarcGuidancePage.js:34
+msgid "Guidance Tags"
+msgstr "Guidance Tags"
+
+#: src/OrganizationDetails.js:59
+msgid "Organization Details"
+msgstr "Organization Details"
+
+#: src/QRcodePage.js:25
+msgid "QR Code"
+msgstr "QR Code"
+
+#: src/Organizations.js:69
+msgid "Search for an organization"
+msgstr "Search for an organization"
+
+#: src/DomainsPage.js:75
+msgid "Search"
+msgstr "Search"
+
+#: src/DomainsPage.js:78
+msgid "Scan"
+msgstr "Scan"
+
+#: src/DomainsPage.js:85
+msgid "Search for any Government of Canada tracked domain:"
+msgstr "Search for any Government of Canada tracked domain:"
+
+#: src/DomainsPage.js:128
+msgid "Perform a one-off scan on a domain:"
+msgstr "Perform a one-off scan on a domain:"
+
+#: src/DomainsPage.js:132
+msgid "Enter a domain"
+msgstr "Enter a domain"
+
+#: src/DomainsPage.js:141
+msgid "Scan Domain"
+msgstr "Scan Domain"
+

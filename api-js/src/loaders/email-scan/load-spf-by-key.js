@@ -1,19 +1,19 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-module.exports.spfLoaderByKey = (query, i18n) =>
+module.exports.spfLoaderByKey = (query, userId, i18n) =>
   new DataLoader(async (keys) => {
     let cursor
 
     try {
       cursor = await query`
         FOR spfScan IN spf
-          FILTER ${keys}[** FILTER CURRENT == spfScan._key]
-          RETURN spfScan
+          FILTER spfScan._key IN ${keys} 
+          RETURN MERGE({ id: spfScan._key }, spfScan)
       `
     } catch (err) {
       console.error(
-        `Database error occurred when running spfLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userId} running spfLoaderByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find spf scan. Please try again.`))
     }
@@ -24,7 +24,9 @@ module.exports.spfLoaderByKey = (query, i18n) =>
         spfMap[spfScan._key] = spfScan
       })
     } catch (err) {
-      console.error(`Cursor error occurred when running spfLoaderByKey: ${err}`)
+      console.error(
+        `Cursor error occurred when user: ${userId} running spfLoaderByKey: ${err}`,
+      )
       throw new Error(i18n._(t`Unable to find spf scan. Please try again.`))
     }
 

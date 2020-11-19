@@ -8,7 +8,7 @@ https_result_data = {
     "self_signed_cert": False,
 }
 
-expected_https_tags = ["https11"]
+expected_https_tags = ['https11']
 
 ssl_result_data = {
     "rc4": False,
@@ -39,7 +39,7 @@ ssl_result_data = {
     "acceptable_certificate": True,
 }
 
-expected_ssl_tags = ["ssl6"]
+expected_ssl_tags = ['ssl5']
 
 dns_result_data = {
     "mx": {
@@ -153,6 +153,7 @@ dns_result_data = {
                         "scheme": "mailto",
                         "address": "dmarc@cyber.gc.ca",
                         "size_limit": None,
+                        "accepting": True,
                     }
                 ],
                 "explicit": True,
@@ -163,6 +164,7 @@ dns_result_data = {
                         "scheme": "mailto",
                         "address": "dmarc@cyber.gc.ca",
                         "size_limit": None,
+                        "accepting": True,
                     }
                 ],
                 "explicit": True,
@@ -176,7 +178,7 @@ dns_result_data = {
         },
     },
     "dkim": {
-        "selector1._domainkey": {
+        "selector1": {
             "t_value": "null",
             "txt_record": {
                 "v": "DKIM1",
@@ -192,8 +194,6 @@ dns_result_data = {
     },
 }
 
-expected_dns_tags = {
-    "dmarc": ["dmarc4", "dmarc7", "dmarc10", "dmarc11", "dmarc15", "dmarc17"],
-    "dkim": ["dkim9", "dkim12"],
-    "spf": ["spf8", "spf11", "spf11", "spf11"],
-}
+expected_dmarc_tags = ['dmarc23', 'dmarc4', 'dmarc7', 'dmarc10', 'dmarc11', 'dmarc14', 'dmarc17']
+expected_spf_tags = ['spf12', 'spf8']
+expected_dkim_scan_tags = ['dkim6']

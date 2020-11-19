@@ -8,6 +8,7 @@ import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { SEND_PASSWORD_RESET_LINK } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function ForgotPasswordPage() {
   const toast = useToast()
@@ -18,7 +19,7 @@ export default function ForgotPasswordPage() {
       .email(t`Invalid email`),
   })
 
-  const [sendPasswordResetLink, { loading, error }] = useMutation(
+  const [sendPasswordResetLink, { loading }] = useMutation(
     SEND_PASSWORD_RESET_LINK,
     {
       onError(error) {
@@ -33,7 +34,6 @@ export default function ForgotPasswordPage() {
       },
       onCompleted() {
         history.push('/')
-        // Display a welcome message
         toast({
           title: t`Email Sent`,
           description: t`An email was sent with a link to reset your password`,
@@ -46,13 +46,7 @@ export default function ForgotPasswordPage() {
     },
   )
 
-  if (loading)
-    return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
-    )
-  if (error) return <p>{String(error)}</p>
+  if (loading) return <LoadingMessage />
 
   return (
     <Box px="8" mx="auto" overflow="hidden" w={['100%', '60%']}>

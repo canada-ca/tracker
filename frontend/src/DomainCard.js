@@ -61,7 +61,7 @@ export function DomainCard({ url, lastRan, ...rest }) {
         }}
         _hover={{ bg: 'gray.100' }}
         p="8"
-        tabIndex={0}
+        as="button"
       >
         <Tooltip label={url} placement="left">
           <Box flexShrink="0" minW="13%" maxW={['100%', '13%']}>

@@ -108,7 +108,7 @@ const spfLoaderConnectionsByDomainId = (
         ${startDateTemplate}
         ${endDateTemplate}
         ${limitTemplate}
-        RETURN spfScan
+        RETURN MERGE({ id: spfScan._key }, spfScan)
     )
 
     LET hasNextPage = (LENGTH(
@@ -128,7 +128,8 @@ const spfLoaderConnectionsByDomainId = (
     ) > 0 ? true : false)
 
     RETURN { 
-      "spfScans": retrievedSpfScans, 
+      "spfScans": retrievedSpfScans,
+      "totalCount": LENGTH(spfKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedSpfScans)._key, 
@@ -155,6 +156,7 @@ const spfLoaderConnectionsByDomainId = (
   if (spfScanInfo.spfScans.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -165,7 +167,6 @@ const spfLoaderConnectionsByDomainId = (
   }
 
   const edges = spfScanInfo.spfScans.map((spfScan) => {
-    spfScan.id = spfScan._key
     spfScan.domainId = domainId
     return {
       cursor: toGlobalId('spf', spfScan._key),
@@ -175,6 +176,7 @@ const spfLoaderConnectionsByDomainId = (
 
   return {
     edges,
+    totalCount: spfScanInfo.totalCount,
     pageInfo: {
       hasNextPage: spfScanInfo.hasNextPage,
       hasPreviousPage: spfScanInfo.hasPreviousPage,

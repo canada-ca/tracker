@@ -6,23 +6,13 @@ import json
 import logging
 import traceback
 import emoji
-import sqlalchemy
 import random
-import databases
 import asyncio
 import datetime
-import sqlalchemy
-from sqlalchemy.sql import select
-from sqlalchemy.dialects.postgresql import ARRAY
+from arango import ArangoClient
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import PlainTextResponse, JSONResponse
-from asyncpg.exceptions import (
-    ConnectionDoesNotExistError,
-    TooManyConnectionsError,
-    UniqueViolationError,
-    CannotConnectNowError,
-)
 from utils import formatted_dictionary
 
 DB_USER = os.getenv("DB_USER")
@@ -30,217 +20,6 @@ DB_PASS = os.getenv("DB_PASS")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
-
-DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
-metadata = sqlalchemy.MetaData()
-
-Domains = sqlalchemy.Table(
-    "domains",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("domain", sqlalchemy.String),
-    sqlalchemy.Column("last_run", sqlalchemy.DateTime),
-    sqlalchemy.Column("selectors", ARRAY(sqlalchemy.String)),
-    sqlalchemy.Column(
-        "organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")
-    ),
-)
-
-Dmarc_Reports = sqlalchemy.Table(
-    "dmarc_reports",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
-    sqlalchemy.Column(
-        "domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")
-    ),
-    sqlalchemy.Column("start_date", sqlalchemy.DateTime),
-    sqlalchemy.Column("end_date", sqlalchemy.DateTime),
-    sqlalchemy.Column("report", sqlalchemy.JSON),
-    sqlalchemy.Column(
-        "organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")
-    ),
-)
-
-Organizations = sqlalchemy.Table(
-    "organizations",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("name", sqlalchemy.String),
-    sqlalchemy.Column("slug", sqlalchemy.String, index=True),
-    sqlalchemy.Column("acronym", sqlalchemy.String),
-    sqlalchemy.Column("org_tags", sqlalchemy.JSON),
-)
-
-Users = sqlalchemy.Table(
-    "users",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
-    sqlalchemy.Column("user_name", sqlalchemy.String),
-    sqlalchemy.Column("display_name", sqlalchemy.String),
-    sqlalchemy.Column("user_password", sqlalchemy.String),
-    sqlalchemy.Column("preferred_lang", sqlalchemy.String),
-    sqlalchemy.Column("failed_login_attempts", sqlalchemy.Integer, default=0),
-    sqlalchemy.Column(
-        "failed_login_attempt_time", sqlalchemy.Float, default=0, nullable=True
-    ),
-    sqlalchemy.Column("tfa_validated", sqlalchemy.Boolean, default=False),
-)
-
-User_affiliations = sqlalchemy.Table(
-    "user_affiliations",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
-    sqlalchemy.Column(
-        "user_id",
-        sqlalchemy.Integer,
-        sqlalchemy.ForeignKey(
-            "users.id",
-            onupdate="CASCADE",
-            ondelete="CASCADE",
-            name="user_affiliations_users_id_fkey",
-        ),
-        primary_key=True,
-    ),
-    sqlalchemy.Column(
-        "organization_id",
-        sqlalchemy.Integer,
-        sqlalchemy.ForeignKey(
-            "organizations.id",
-            onupdate="CASCADE",
-            ondelete="CASCADE",
-            name="user_affiliations_organization_id_fkey",
-        ),
-    ),
-    sqlalchemy.Column("permission", sqlalchemy.String),
-)
-
-Web_scans = sqlalchemy.Table(
-    "web_scans",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column(
-        "domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")
-    ),
-    sqlalchemy.Column("scan_date", sqlalchemy.DateTime),
-    sqlalchemy.Column(
-        "initiated_by", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")
-    ),
-)
-
-Mail_scans = sqlalchemy.Table(
-    "mail_scans",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column(
-        "domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")
-    ),
-    sqlalchemy.Column("scan_date", sqlalchemy.DateTime),
-    sqlalchemy.Column("selectors", ARRAY(sqlalchemy.String)),
-    sqlalchemy.Column("dmarc_phase", sqlalchemy.Integer),
-    sqlalchemy.Column(
-        "initiated_by", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")
-    ),
-)
-
-Dmarc_scans = sqlalchemy.Table(
-    "dmarc_scans",
-    metadata,
-    sqlalchemy.Column(
-        "id",
-        sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("mail_scans.id"),
-        primary_key=True,
-    ),
-    sqlalchemy.Column("dmarc_scan", sqlalchemy.JSON),
-)
-
-Dkim_scans = sqlalchemy.Table(
-    "dkim_scans",
-    metadata,
-    sqlalchemy.Column(
-        "id",
-        sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("mail_scans.id"),
-        primary_key=True,
-    ),
-    sqlalchemy.Column("dkim_scan", sqlalchemy.JSON),
-)
-
-Mx_scans = sqlalchemy.Table(
-    "mx_scans",
-    metadata,
-    sqlalchemy.Column(
-        "id",
-        sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("mail_scans.id"),
-        primary_key=True,
-    ),
-    sqlalchemy.Column("mx_scan", sqlalchemy.JSON),
-)
-
-Spf_scans = sqlalchemy.Table(
-    "spf_scans",
-    metadata,
-    sqlalchemy.Column(
-        "id",
-        sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("mail_scans.id"),
-        primary_key=True,
-    ),
-    sqlalchemy.Column("spf_scan", sqlalchemy.JSON),
-)
-
-Https_scans = sqlalchemy.Table(
-    "https_scans",
-    metadata,
-    sqlalchemy.Column(
-        "id",
-        sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("web_scans.id"),
-        primary_key=True,
-    ),
-    sqlalchemy.Column("https_scan", sqlalchemy.JSON),
-)
-
-Ssl_scans = sqlalchemy.Table(
-    "ssl_scans",
-    metadata,
-    sqlalchemy.Column(
-        "id",
-        sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("web_scans.id"),
-        primary_key=True,
-    ),
-    sqlalchemy.Column("ssl_scan", sqlalchemy.JSON),
-)
-
-Ciphers = sqlalchemy.Table(
-    "ciphers",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("cipher_type", sqlalchemy.String),
-)
-
-Guidance = sqlalchemy.Table(
-    "guidance",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("tag_id", sqlalchemy.String),
-    sqlalchemy.Column("tag_name", sqlalchemy.String),
-    sqlalchemy.Column("guidance", sqlalchemy.String),
-    sqlalchemy.Column("ref_links", ARRAY(sqlalchemy.String)),
-)
-
-Summaries = sqlalchemy.Table(
-    "summaries",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("name", sqlalchemy.String),
-    sqlalchemy.Column("count", sqlalchemy.Integer),
-    sqlalchemy.Column("percentage", sqlalchemy.Float),
-    sqlalchemy.Column("type", sqlalchemy.String),
-)
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -283,7 +62,7 @@ def process_https(results):
     # HSTS
     hsts = results.get("hsts", None)
 
-    if hsts is not None:
+    if hsts is not None and hsts.lower() != "no hsts":
         if isinstance(hsts, str):
             hsts = hsts.lower()
 
@@ -292,12 +71,12 @@ def process_https(results):
         elif hsts == "no hsts":
             tags.append("https9")
 
-    # HSTS Age
-    hsts_age = results.get("hsts_age", None)
+        # HSTS Age
+        hsts_age = results.get("hsts_age", None)
 
-    if hsts_age is not None:
-        if hsts_age < 31536000 and "https" not in tags:
-            tags.append("https10")
+        if hsts_age is not None:
+            if hsts_age < 31536000 and "https" not in tags:
+                tags.append("https10")
 
     # Preload Status
     preload_status = results.get("preload_status", None)
@@ -312,18 +91,16 @@ def process_https(results):
             tags.append("https12")
 
     # Expired Cert
-    expired_cert = results.get("expired_cert", None)
+    expired_cert = results.get("expired_cert", False)
 
-    if expired_cert is not None:
-        if expired_cert is True:
-            tags.append("https13")
+    if expired_cert is True:
+        tags.append("https13")
 
     # Self Signed Cert
-    self_signed_cert = results.get("https", {}).get("self_signed_cert", None)
+    self_signed_cert = results.get("https", {}).get("self_signed_cert", False)
 
-    if self_signed_cert is not None:
-        if self_signed_cert is True:
-            tags.append("https14")
+    if self_signed_cert is True:
+        tags.append("https14")
 
     return tags
 
@@ -336,230 +113,221 @@ def process_ssl(results):
         return tags
 
     # SSL-rc4
-    ssl_rc4 = results.get("rc4", None)
-    if ssl_rc4 is not None:
-        if ssl_rc4 is True:
-            tags.append("ssl3")
+    if results["rc4"]:
+        tags.append("ssl3")
 
     # SSL-3des
-    ssl_3des = results.get("3des", None)
-    if ssl_3des is not None:
-        if ssl_3des is True:
-            tags.append("ssl4")
+    if results["3des"]:
+        tags.append("ssl4")
 
-    # Signature Algorithm
-    signature_algorithm = results.get("signature_algorithm", None)
+    # Acceptable certificate (e.g. SHA256, SHA384, AEAD)
+    if results["acceptable_certificate"]:
+        tags.append("ssl5")
 
-    if signature_algorithm is not None:
-        if isinstance(signature_algorithm, str):
-            signature_algorithm = signature_algorithm.lower()
-
-        if (
-            signature_algorithm == "sha-256"
-            or signature_algorithm == "sha-384"
-            or signature_algorithm == "aead"
-        ):
-            tags.append("ssl5")
-        else:
-            tags.append("ssl6")
-    else:
+    if len(results["weak_ciphers"]) > 0:
         tags.append("ssl6")
 
     # Heartbleed
-    heart_bleed = results.get("heartbleed", None)
-
-    if heart_bleed is not None:
-        if heart_bleed is True:
-            tags.append("ssl7")
+    if results["heartbleed"]:
+        tags.append("ssl7")
 
     # openssl ccs injection
-    openssl_ccs_injection = results.get("ssl", {}).get("openssl_ccs_injection", None)
-
-    if openssl_ccs_injection is not None:
-        if openssl_ccs_injection is True:
-            tags.append("ssl8")
+    if results["openssl_ccs_injection"]:
+        tags.append("ssl8")
 
     return tags
 
 
 def process_dns(results):
-    tags = {"dmarc": [], "dkim": [], "spf": []}
+    tags = {"dmarc": [], "dkim": {}, "spf": []}
 
-    if results["dkim"].get("missing", None) is not None:
-        tags["dkim"].append("dkim2")
-
-    # Get Key Size, and Key Type
-    key_size = results["dkim"].get("key_size", None)
-    key_type = results["dkim"].get("key_type", None)
-
-    if key_size is None:
-        tags["dkim"].append("dkim9")
-    elif key_type is None:
-        tags["dkim"].append("dkim9")
-    else:
-        if key_size >= 4096 and key_type == "rsa":
-            tags["dkim"].append("dkim8")
-        elif key_size >= 2048 and key_type == "rsa":
-            tags["dkim"].append("dkim7")
-        elif key_size == 1024 and key_type == "rsa":
-            tags["dkim"].append("dkim6")
-        elif key_size < 1024 and key_type == "rsa":
-            tags["dkim"].append("dkim5")
+    for selector in results.get("dkim", {}).keys():
+        tags["dkim"][selector] = []
+        if results["dkim"][selector].get("missing", None) is not None:
+            tags["dkim"][selector].append("dkim2")
         else:
-            tags["dkim"].append("dkim9")
+            key_size = results["dkim"][selector].get("key_size", None)
+            key_type = results["dkim"][selector].get("key_type", None)
 
-    # Update Recommended
-    key_invalid = results["dkim"].get("update-recommend", None)
+            if key_size is None:
+                tags["dkim"][selector].append("dkim9")
+            elif key_type is None:
+                tags["dkim"][selector].append("dkim9")
+            else:
+                if key_size >= 4096 and key_type == "rsa":
+                    tags["dkim"][selector].append("dkim8")
+                elif key_size >= 2048 and key_type == "rsa":
+                    tags["dkim"][selector].append("dkim7")
+                elif key_size == 1024 and key_type == "rsa":
+                    tags["dkim"][selector].append("dkim6")
+                elif key_size < 1024 and key_type == "rsa":
+                    tags["dkim"][selector].append("dkim5")
+                else:
+                    tags["dkim"][selector].append("dkim9")
 
-    if key_invalid is not None:
-        if key_invalid is True:
-            tags["dkim"].append("dkim10")
+            # Invalid Crypto
+            invalid_crypto = results["dkim"][selector].get("txt_record", {}).get("k", None)
 
-    # Invalid Crypto
-    invalid_crypto = results["dkim"].get("txt_record", {}).get("k", None)
+            if invalid_crypto is not None:
+                # if k != rsa
+                if invalid_crypto != "rsa":
+                    tags["dkim"][selector].append("dkim11")
 
-    if invalid_crypto is not None:
-        # if k != rsa
-        if invalid_crypto != "rsa":
-            tags["dkim"].append("dkim11")
+            # Dkim value invalid
+            # Check if v, k, and p exist in txt_record
+            v_tag = results["dkim"][selector].get("txt_record", {}).get("v", None)
+            k_tag = results["dkim"][selector].get("txt_record", {}).get("k", None)
+            p_tag = results["dkim"][selector].get("txt_record", {}).get("p", None)
 
-    # Dkim value invalid
-    # Check if v, k, and p exist in txt_record
-    v_tag = results["dkim"].get("txt_record", {}).get("v", None)
-    k_tag = results["dkim"].get("txt_record", {}).get("k", None)
-    p_tag = results["dkim"].get("txt_record", {}).get("p", None)
+            if v_tag is None and k_tag is None and p_tag is None:
+                tags["dkim"][selector].append("dkim12")
 
-    if v_tag is None and k_tag is None and p_tag is None:
-        if "dkim12" not in tags:
-            tags["dkim"].append("dkim12")
-
-    # Testing Enabled
-    t_enabled = results["dkim"].get("t_value", None)
-    if t_enabled is not None:
-        tags["dkim"].append("dkim13")
+            # Testing Enabled
+            t_enabled = results["dkim"][selector].get("t_value", None)
+            if t_enabled not in [None, "null", ""]:
+                tags["dkim"][selector].append("dkim13")
 
     if results["dmarc"].get("missing", None) is not None:
         tags["dmarc"].append("dmarc2")
-
-    # Check P Policy Tag
-    p_policy_tag = (
-        results["dmarc"]
-        .get("tags", {})
-        .get("p", {})
-        .get("value", None)
-    )
-
-    if p_policy_tag is not None:
-        if isinstance(p_policy_tag, str):
-            p_policy_tag = p_policy_tag.lower()
-
-        if p_policy_tag == "missing":
-            tags["dmarc"].append("dmarc3")
-        elif p_policy_tag == "none":
-            tags["dmarc"].append("dmarc4")
-        elif p_policy_tag == "quarantine":
-            tags["dmarc"].append("dmarc5")
-        elif p_policy_tag == "reject":
-            tags["dmarc"].append("dmarc6")
-
-    # Check PCT Tag
-    pct_tag = (
-        results["dmarc"]
-        .get("tags", {})
-        .get("pct", {})
-        .get("value", None)
-    )
-
-    if pct_tag is not None:
-        if isinstance(pct_tag, str):
-            pct_tag = pct_tag.lower()
-            if pct_tag == "invalid":
-                tags["dmarc"].append("dmarc9")
-            elif pct_tag == "none":
-                tags["dmarc"].append("dmarc20")
-        elif isinstance(pct_tag, int):
-            if pct_tag == 100:
-                tags["dmarc"].append("dmarc7")
-            elif 100 > pct_tag > 0:
-                tags["dmarc"].append("dmarc8")
-            else:
-                tags["dmarc"].append("dmarc21")
-
-    # Check RUA Tag
-    rua_tag = (
-        results["dmarc"]
-        .get("tags", {})
-        .get("rua", {})
-        .get("value", None)
-    )
-
-    if rua_tag is None or not rua_tag:
-        tags["dmarc"].append("dmarc12")
     else:
-        if isinstance(rua_tag, str):
-            rua_tag = rua_tag.lower()
-        for value in rua_tag:
-            if value["address"] == "dmarc@cyber.gc.ca":
-                tags["dmarc"].append("dmarc10")
-            else:
-                tags["dmarc"].append("dmarc12")
 
-    # Check RUF Tag
-    ruf_tag = (
-        results["dmarc"]
-        .get("tags", {})
-        .get("ruf", {})
-        .get("value", None)
-    )
+        if results["dmarc"]["valid"]:
+            tags["dmarc"].append("dmarc23")
 
-    if ruf_tag is None or not ruf_tag:
-        tags["dmarc"].append("dmarc13")
-    else:
-        if isinstance(ruf_tag, str):
-            ruf_tag = ruf_tag.lower()
-        for value in ruf_tag:
-            if value["address"] == "dmarc@cyber.gc.ca":
-                tags["dmarc"].append("dmarc11")
-            else:
-                tags["dmarc"].append("dmarc13")
+        # Check P Policy Tag
+        p_policy_tag = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("p", {})
+            .get("value", None)
+        )
 
-    # TXT DMARC
-    record_tag = results["dmarc"].get("dmarc", {}).get("record", None)
-    if record_tag == "" or record_tag is None:
-        tags["dmarc"].append("dmarc15")
-    else:
-        tags["dmarc"].append("dmarc14")
+        if p_policy_tag is not None:
+            if isinstance(p_policy_tag, str):
+                p_policy_tag = p_policy_tag.lower()
 
-    # Check SP tag
-    sp_tag = (
-        results["dmarc"]
-        .get("tags", {})
-        .get("sp", {})
-        .get("value", None)
-    )
+            if p_policy_tag == "missing":
+                tags["dmarc"].append("dmarc3")
+            elif p_policy_tag == "none":
+                tags["dmarc"].append("dmarc4")
+            elif p_policy_tag == "quarantine":
+                tags["dmarc"].append("dmarc5")
+            elif p_policy_tag == "reject":
+                tags["dmarc"].append("dmarc6")
 
-    if sp_tag is not None:
-        if isinstance(sp_tag, str):
-            sp_tag = sp_tag.lower()
+        # Check PCT Tag
+        pct_tag = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("pct", {})
+            .get("value", None)
+        )
 
-        if sp_tag == "missing":
-            tags["dmarc"].append("dmarc16")
-        elif sp_tag == "none":
-            tags["dmarc"].append("dmarc17")
-        elif sp_tag == "quarantine":
-            tags["dmarc"].append("dmarc18")
-        elif sp_tag == "reject":
-            tags["dmarc"].append("dmarc19")
+        if pct_tag is not None:
+            if isinstance(pct_tag, str):
+                pct_tag = pct_tag.lower()
+                if pct_tag == "invalid":
+                    tags["dmarc"].append("dmarc9")
+                elif pct_tag == "none":
+                    tags["dmarc"].append("dmarc20")
+            elif isinstance(pct_tag, int):
+                if pct_tag == 100:
+                    tags["dmarc"].append("dmarc7")
+                elif 100 > pct_tag > 0:
+                    tags["dmarc"].append("dmarc8")
+                else:
+                    tags["dmarc"].append("dmarc21")
+
+        # Check RUA Tags
+        rua_tags = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("rua", {})
+            .get("value", [])
+        )
+
+        if len(rua_tags) == 0:
+            tags["dmarc"].append("dmarc12")
+
+        for rua in rua_tags:
+            for key, val in rua.items():
+                if key == "address" and val == "dmarc@cyber.gc.ca":
+                    tags["dmarc"].append("dmarc10")
+
+            # Check if external reporting arrangement has been authorized
+            rua_accepting = (
+                rua.get("accepting", None)
+            )
+
+            if rua_accepting is not None:
+                if rua_accepting is False:
+                    if "dmarc22" not in tags["dmarc"]:
+                        tags["dmarc"].append("dmarc22")
+                    if "dmarc15" not in tags["dmarc"]:
+                        tags["dmarc"].append("dmarc15")
+
+        # Check RUF Tags
+        ruf_tags = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("ruf", {})
+            .get("value", [])
+        )
+
+        if len(ruf_tags) == 0:
+            tags["dmarc"].append("dmarc13")
+
+        for ruf in ruf_tags:
+            for key, val in ruf.items():
+                if key == "address" and val == "dmarc@cyber.gc.ca":
+                    tags["dmarc"].append("dmarc11")
+
+            # Check if external reporting arrangement has been authorized
+            ruf_accepting = (
+                ruf.get("accepting", None)
+            )
+
+            if ruf_accepting is not None:
+                if ruf_accepting is False:
+                    if "dmarc15" not in tags["dmarc"]:
+                        tags["dmarc"].append("dmarc15")
+
+        if "dmarc15" not in tags["dmarc"] and (len(ruf_tags)>0 or len(rua_tags)>0):
+            tags["dmarc"].append("dmarc14")
+
+        # Check SP tag
+        sp_tag = (
+            results["dmarc"]
+            .get("tags", {})
+            .get("sp", {})
+            .get("value", None)
+        )
+
+        if sp_tag is not None:
+            if isinstance(sp_tag, str):
+                sp_tag = sp_tag.lower()
+
+            if sp_tag == "missing":
+                tags["dmarc"].append("dmarc16")
+            elif sp_tag == "none":
+                tags["dmarc"].append("dmarc17")
+            elif sp_tag == "quarantine":
+                tags["dmarc"].append("dmarc18")
+            elif sp_tag == "reject":
+                tags["dmarc"].append("dmarc19")
 
     if results["spf"].get("missing", None) is not None:
         tags["spf"].append("spf2")
         return tags
 
-    dkim_record = results["dkim"].get("txt_record", None)
-    if dkim_record is not None:
-        for key in dkim_record:
-            if key == "a" or key == "include":
-                tags["spf"].append("spf3")
+    if results["spf"]["valid"]:
+        tags["spf"].append("spf12")
+
+    for selector, data in results["dkim"].items():
+	    if data.get("txt_record", None) is not None:
+	        for key in data["txt_record"]:
+	            if (key == "a" or key == "include") and "spf3" not in tags["spf"]:
+	                tags["spf"].append("spf3")
 
     dmarc_record = results["dmarc"].get("record", None)
     if dmarc_record is not None:
@@ -573,12 +341,12 @@ def process_dns(results):
 
     # Check all tag
     all_tag = results["spf"].get("parsed", {}).get("all", None)
-    record_all_tag = results["spf"].get("record", None)
+    spf_record = results["spf"].get("record", None)
 
-    if (all_tag is not None) and (record_all_tag is not None):
-        if isinstance(all_tag, str) and isinstance(record_all_tag, str):
+    if (all_tag is not None) and (spf_record is not None):
+        if isinstance(all_tag, str) and isinstance(spf_record, str):
             all_tag = all_tag.lower()
-            record_all_tag = record_all_tag[-4:].lower()
+            record_all_tag = spf_record[-4:].lower()
 
             if record_all_tag != "-all" and record_all_tag != "~all":
                 tags["spf"].append("spf10")
@@ -596,21 +364,10 @@ def process_dns(results):
                 elif record_all_tag == "~all":
                     tags["spf"].append("spf7")
 
-    # Check for no host
-    record = results["spf"].get("record", None)
-    if record is not None:
-        search_string = "a:"
-        matches = re.finditer(search_string, record)
-        match_pos = [match.start() for match in matches]
-
-        for pos in match_pos:
-            if record[pos + 1 : 1] == "" and not "spf11" in tags:
-                tags["spf"].append("spf11")
-
     # Look up limit check
     dns_lookups = results["spf"].get("dns_lookups", 0)
     if dns_lookups > 10:
-        tags["spf"].append("spf12")
+        tags["spf"].append("spf11")
 
     # Check for missing include
     include = results["spf"].get("parsed", {}).get("include", None)
@@ -626,140 +383,98 @@ def process_dns(results):
     return tags
 
 
-async def insert_https(report, tags, scan_id, db):
+async def insert_https(report, tags, domain_key, db):
 
     try:
-        await db.connect()
-        scan_query = select([Web_scans]).where(Web_scans.c.id == scan_id)
-        scan = await db.fetch_one(scan_query)
-        logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
-
-        insert_query = Https_scans.insert().values(
-            https_scan={"https": report, "tags": tags}, id=scan.get("id")
-        )
-        await db.execute(insert_query)
-        await db.disconnect()
+        db.collection("https").insert({"timestamp": str(datetime.datetime.utcnow()), "implementation": report.get("implementation", None), "enforced": report.get("enforced", None), "hsts": report.get("hsts", None), "hstsAge": report.get("hsts_age", None), "preloaded": report.get("preload_status", None), "rawJson": report, "guidanceTags": tags})
     except Exception as e:
-        try:
-            await db.disconnect()
-        except:
-            pass
         logging.error(
-            f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}"
+            f"(HTTPS SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
-        logging.error(
-            f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}"
-        )
+
+    if any(i in ["https2", "https3", "https4", "https5", "https6", "https7", "https8", "https9", "https10", "https11", "https12", "https13", "https14"] for i in tags):
+        https_status = "fail"
+    else:
+        https_status = "pass"
+
+    domain = db.collection("domains").get({"_key": domain_key})
+    domain["status"]["https"] = https_status
+    db.collection("domains").update_match({"_key": domain_key}, {"status": domain["status"]})
 
     logging.info("HTTPS Scan inserted into database")
 
 
-async def insert_ssl(report, tags, scan_id, db):
+async def insert_ssl(report, tags, domain_key, db):
 
     try:
-        await db.connect()
-        scan_query = select([Web_scans]).where(Web_scans.c.id == scan_id)
-        scan = await db.fetch_one(scan_query)
-        logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
-
-        insert_query = Ssl_scans.insert().values(
-            ssl_scan={"ssl": report, "tags": tags}, id=scan.get("id")
-        )
-        await db.execute(insert_query)
-        await db.disconnect()
+        db.collection("ssl").insert({"timestamp": str(datetime.datetime.utcnow()), "rawJson": report, "guidanceTags": tags})
     except Exception as e:
-        try:
-            await db.disconnect()
-        except:
-            pass
         logging.error(
-            f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}"
+            f"(SSL SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
-        logging.error(
-            f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}"
-        )
+
+    if any(i in ["ssl2", "ssl3", "ssl4", "ssl6", "ssl7", "ssl8"] for i in tags):
+        ssl_status = "fail"
+    elif "ssl5" in tags:
+        ssl_status = "pass"
+
+    domain = db.collection("domains").get({"_key": domain_key})
+    domain["status"]["ssl"] = ssl_status
+    db.collection("domains").update_match({"_key": domain_key}, {"status": domain["status"]})
 
     logging.info("SSL Scan inserted into database")
 
 
-async def insert_dns(report, tags, scan_id, db):
+async def insert_dns(report, tags, domain_key, db):
 
     try:
-        await db.connect()
-        scan_query = select([Mail_scans]).where(Mail_scans.c.id == scan_id)
-        scan = await db.fetch_one(scan_query)
-        logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
+        db.collection("dmarc").insert({"timestamp": str(datetime.datetime.utcnow()), "record": report["dmarc"].get("record", None), "pPolicy": report["dmarc"].get("tags", {}).get("p", {}).get("value", None), "spPolicy": report["dmarc"].get("tags", {}).get("sp", {}).get("value", None), "pct": report["dmarc"].get("tags", {}).get("pct", {}).get("value", None), "rawJson": report["dmarc"], "guidanceTags": tags["dmarc"]})
+        db.collection("spf").insert({"timestamp": str(datetime.datetime.utcnow()), "record": report["spf"].get("record", None), "lookups": report["spf"].get("dns_lookups", None), "spfDefault": report["spf"].get("record", "none")[-4:].lower(), "rawJson": report["spf"], "guidanceTags": tags["spf"]})
 
-        if report["dkim"].get("missing", False) is not True:
-            # Check for previous dkim scans on this domain
-            previous_scan_query = select([Mail_scans]).where(
-                Mail_scans.c.domain_id == scan.get("domain_id")
-            )
+        db.collection("dkim").insert({"timestamp": str(datetime.datetime.utcnow())})
+        for selector in report["dkim"].keys():
+            db.collection("dkim_scans").insert({"record": selector.get("txt_record", None), "keyLength": selector.get("key_size", None), "rawJson": selector, "guidanceTags": tags["dkim"]})
 
-            previous_scans = await db.fetch_all(previous_scan_query)
+        if "spf12" in tags["spf"]:
+            spf_status = "pass"
+        else:
+            spf_status = "fail"
 
-            historical_dkim = None
-            # If public key has been in use for a year or more, recommend update
-            for previous_scan in previous_scans:
-                if (scan.get("scan_date") - previous_scan.get("scan_date")).days >= 365:
-                    historical_dkim_query = select([Dkim_scans]).where(
-                        Dkim_scans.c.id == previous_scan.get("id")
-                    )
-                    historical_dkim = await db.fetch_one(historical_dkim_query)
+        if "dmarc23" in tags["dmarc"]:
+            dmarc_status = "pass"
+        else:
+            dmarc_status = "fail"
 
-            if historical_dkim is not None:
-                for selector in report["dkim"]:
-                    for historical_selector in historical_dkim.get("dkim_scan")["dkim"]:
-                        if selector == historical_selector:
-                            if (
-                                report["dkim"]["selector"]["public_key_modulus"]
-                                == historical_selector["public_key_modulus"]
-                            ):
-                                report["dkim"]["selector"]["update-recommended"] = True
+        dkim_statuses = []
+        for selector in tags["dkim"].keys():
+            if any(i in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim9", "dkim11", "dkim12"] for i in tags["dkim"][selector]):
+                dkim_statuses.append("fail")
+            elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"][selector]):
+                dkim_statuses.append("pass")
 
-        dmarc_insert_query = Dmarc_scans.insert().values(
-            dmarc_scan={"dmarc": report["dmarc"], "tags": tags["dmarc"]},
-            id=scan.get("id"),
-        )
-        mx_insert_query = Mx_scans.insert().values(
-            mx_scan={"mx": report["mx"]}, id=scan.get("id")
-        )
-        spf_insert_query = Spf_scans.insert().values(
-            spf_scan={"spf": report["spf"], "tags": tags["spf"]}, id=scan.get("id")
-        )
-        dkim_insert_query = Dkim_scans.insert().values(
-            dkim_scan={"dkim": report["dkim"], "tags": tags["dkim"]}, id=scan.get("id")
-        )
+        if any(i == "fail" for i in dkim_statuses):
+            dkim_status = "fail"
+        else:
+            dkim_status = "pass"
 
-        await db.execute(dmarc_insert_query)
-        await db.execute(mx_insert_query)
-        await db.execute(spf_insert_query)
-        await db.execute(dkim_insert_query)
-        await db.disconnect()
+        domain = db.collection("domains").get({"_key": domain_key})
+        for key, val in {"dkim": dkim_status, "dmarc": dmarc_status, "spf": spf_status}.items():
+            domain["status"][key] = val
+        db.collection("domains").update_match({"_key": domain_key}, {"status": domain["status"]})
+
     except Exception as e:
-        try:
-            await db.disconnect()
-        except:
-            pass
         logging.error(
-            f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}"
-        )
-        logging.error(
-            f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}"
+            f"(DNS SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
 
     logging.info("DNS Scans inserted into database")
 
 
-DEFAULT_FUNCTIONS = {
-    "insert": {"https": insert_https, "ssl": insert_ssl, "dns": insert_dns,},
-    "process": {"https": process_https, "ssl": process_ssl, "dns": process_dns,},
-}
+def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
 
-
-def Server(database_uri=DATABASE_URI, functions=DEFAULT_FUNCTIONS):
-
-    async_db = databases.Database(database_uri)
+    # Establish DB connection
+    arango_client = ArangoClient(hosts=db_host)
+    db = arango_client.db(db_name, username=user_name, password=password)
 
     async def process(result_request):
         logging.info(f"Results received.")
@@ -769,9 +484,10 @@ def Server(database_uri=DATABASE_URI, functions=DEFAULT_FUNCTIONS):
             try:
                 results = payload_dict["results"]
                 scan_type = payload_dict["scan_type"]
-                scan_id = payload_dict["scan_id"]
+                uuid = payload_dict["uuid"]
+                domain_key = inbound_payload["domain_key"]
                 logging.info(
-                    f"Results received for {scan_type} scan with ID {scan_id} (TIME={datetime.datetime.utcnow()})"
+                    f"Results received for {scan_type} scan (TIME={datetime.datetime.utcnow()})"
                 )
             except KeyError:
                 msg = f"Invalid result format received: {str(payload_dict)}"
@@ -780,10 +496,10 @@ def Server(database_uri=DATABASE_URI, functions=DEFAULT_FUNCTIONS):
 
             tags = functions["process"][scan_type](results)
 
-            await functions["insert"][scan_type](results, tags, scan_id, async_db)
+            await functions["insert"][scan_type](results, tags, domain_key, db)
 
             return PlainTextResponse(
-                f"{scan_type} results processed and inserted successfully (ID={scan_id}, TIME={datetime.datetime.utcnow()})."
+                f"{scan_type} results processed and inserted successfully TIME={datetime.datetime.utcnow()})."
             )
 
         except Exception as e:
@@ -807,5 +523,5 @@ def Server(database_uri=DATABASE_URI, functions=DEFAULT_FUNCTIONS):
 
     return starlette_app
 
-
-app = Server()
+if all(i is not None for i in [DB_USER, DB_HOST, DB_PASS, DB_PORT]):
+    app = Server()

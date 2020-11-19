@@ -1,11 +1,8 @@
-const { DMARC_REPORT_API_TOKEN, DMARC_REPORT_API_SECRET } = process.env
-
 const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLBoolean,
   GraphQLInt,
-  GraphQLID,
   GraphQLList,
   GraphQLNonNull,
 } = require('graphql')
@@ -15,10 +12,15 @@ const {
   connectionArgs,
 } = require('graphql-relay')
 const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
+const { t } = require('@lingui/macro')
+
 const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
 const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
 const { nodeInterface } = require('../node')
 const { periodType } = require('./dmarc-report')
+const { guidanceTagType } = require('./guidance-tags')
+const { domainStatus } = require('./domain-status')
+const { organizationSummaryType } = require('./organization-summary')
 
 /* Domain related objects */
 const domainType = new GraphQLObjectType({
@@ -28,18 +30,23 @@ const domainType = new GraphQLObjectType({
     domain: {
       type: Domain,
       description: 'Domain that scans will be ran on.',
-      resolve: async ({ domain }) => domain,
+      resolve: ({ domain }) => domain,
     },
     lastRan: {
       type: GraphQLDateTime,
       description: 'The last time that a scan was ran on this domain.',
-      resolve: async ({ lastRan }) => lastRan,
+      resolve: ({ lastRan }) => lastRan,
     },
     selectors: {
       type: new GraphQLList(Selectors),
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: async ({ selectors }) => selectors,
+      resolve: ({ selectors }) => selectors,
+    },
+    status: {
+      type: domainStatus,
+      description: 'The domains scan status, based on the latest scan data.',
+      resolve: ({ status }) => status,
     },
     organizations: {
       type: organizationConnection.connectionType,
@@ -60,14 +67,14 @@ const domainType = new GraphQLObjectType({
     email: {
       type: emailScanType,
       description: 'DKIM, DMARC, and SPF scan results.',
-      resolve: async ({ _id, _key }) => {
+      resolve: ({ _id, _key }) => {
         return { _id, _key }
       },
     },
     web: {
       type: webScanType,
       description: 'HTTPS, and SSL scan results.',
-      resolve: async ({ _id, _key }) => {
+      resolve: ({ _id, _key }) => {
         return { _id, _key }
       },
     },
@@ -155,6 +162,13 @@ const domainType = new GraphQLObjectType({
 const domainConnection = connectionDefinitions({
   name: 'Domain',
   nodeType: domainType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of domains the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const emailScanType = new GraphQLObjectType({
@@ -268,7 +282,7 @@ const dkimType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
-      resolve: async ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => timestamp,
     },
     results: {
       type: dkimResultsConnection.connectionType,
@@ -291,15 +305,22 @@ const dkimType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: `DomainKeys Identified Mail (DKIM) permits a person, role, or
-    organization that owns the signing domain to claim some
-    responsibility for a message by associating the domain with the
-    message.  This can be an author's organization, an operational relay,
-    or one of their agents.`,
+organization that owns the signing domain to claim some
+responsibility for a message by associating the domain with the
+message.  This can be an author's organization, an operational relay,
+or one of their agents.`,
 })
 
 const dkimConnection = connectionDefinitions({
   name: 'DKIM',
   nodeType: dkimType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dkim scans related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const dkimResultsType = new GraphQLObjectType({
@@ -319,22 +340,35 @@ const dkimResultsType = new GraphQLObjectType({
     selector: {
       type: GraphQLString,
       description: 'The selector the scan was ran on.',
-      resolve: async ({ selector }) => selector,
+      resolve: ({ selector }) => selector,
     },
     record: {
       type: GraphQLString,
       description: 'DKIM record retrieved during the scan of the domain.',
-      resolve: async ({ record }) => record,
+      resolve: ({ record }) => record,
     },
     keyLength: {
       type: GraphQLString,
       description: 'Size of the Public Key in bits',
-      resolve: async ({ keyLength }) => keyLength,
+      resolve: ({ keyLength }) => keyLength,
     },
-    dkimGuidanceTags: {
-      type: new GraphQLList(GraphQLString),
+    guidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       description: 'Key tags found during scan.',
-      resolve: async ({ dkimGuidanceTags }) => dkimGuidanceTags,
+      resolve: async (
+        { guidanceTags },
+        args,
+        { loaders: { dkimGuidanceTagConnectionsLoader } },
+      ) => {
+        const dkimTags = await dkimGuidanceTagConnectionsLoader({
+          dkimGuidanceTags: guidanceTags,
+          ...args,
+        })
+        return dkimTags
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -344,6 +378,14 @@ const dkimResultsType = new GraphQLObjectType({
 const dkimResultsConnection = connectionDefinitions({
   name: 'DKIMResult',
   nodeType: dkimResultsType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description:
+        'The total amount of dkim results related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const dmarcType = new GraphQLObjectType({
@@ -363,52 +405,72 @@ const dmarcType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
-      resolve: async ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => timestamp,
     },
     dmarcPhase: {
       type: GraphQLInt,
       description: `DMARC phase found during scan.`,
-      resolve: async ({ dmarcPhase }) => dmarcPhase,
+      resolve: ({ dmarcPhase }) => dmarcPhase,
     },
     record: {
       type: GraphQLString,
       description: `DMARC record retrieved during scan.`,
-      resolve: async ({ record }) => record,
+      resolve: ({ record }) => record,
     },
     pPolicy: {
       type: GraphQLString,
       description: `The requested policy you wish mailbox providers to apply
-            when your email fails DMARC authentication and alignment checks. `,
-      resolve: async ({ pPolicy }) => pPolicy,
+when your email fails DMARC authentication and alignment checks. `,
+      resolve: ({ pPolicy }) => pPolicy,
     },
     spPolicy: {
       type: GraphQLString,
       description: `This tag is used to indicate a requested policy for all
-            subdomains where mail is failing the DMARC authentication and alignment checks.`,
-      resolve: async ({ spPolicy }) => spPolicy,
+subdomains where mail is failing the DMARC authentication and alignment checks.`,
+      resolve: ({ spPolicy }) => spPolicy,
     },
     pct: {
       type: GraphQLInt,
       description: `The percentage of messages to which the DMARC policy is to be applied.`,
-      resolve: async ({ pct }) => pct,
+      resolve: ({ pct }) => pct,
     },
-    dmarcGuidanceTags: {
-      type: GraphQLList(GraphQLString),
+    guidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       description: `Key tags found during DMARC Scan.`,
-      resolve: async ({ dmarcGuidanceTags }) => dmarcGuidanceTags,
+      resolve: async (
+        { guidanceTags },
+        args,
+        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+      ) => {
+        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+          dmarcGuidanceTags: guidanceTags,
+          ...args,
+        })
+        return dmarcTags
+      },
     },
   }),
   interfaces: [nodeInterface],
   description: `Domain-based Message Authentication, Reporting, and Conformance
-    (DMARC) is a scalable mechanism by which a mail-originating
-    organization can express domain-level policies and preferences for
-    message validation, disposition, and reporting, that a mail-receiving
-    organization can use to improve mail handling.`,
+(DMARC) is a scalable mechanism by which a mail-originating
+organization can express domain-level policies and preferences for
+message validation, disposition, and reporting, that a mail-receiving
+organization can use to improve mail handling.`,
 })
 
 const dmarcConnection = connectionDefinitions({
   name: 'DMARC',
   nodeType: dmarcType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dmarc scans related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const spfType = new GraphQLObjectType({
@@ -428,42 +490,62 @@ const spfType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time the scan was initiated.`,
-      resolve: async ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => timestamp,
     },
     lookups: {
       type: GraphQLInt,
       description: `The amount of DNS lookups.`,
-      resolve: async ({ lookups }) => lookups,
+      resolve: ({ lookups }) => lookups,
     },
     record: {
       type: GraphQLString,
       description: `SPF record retrieved during the scan of the given domain.`,
-      resolve: async ({ record }) => record,
+      resolve: ({ record }) => record,
     },
     spfDefault: {
       type: GraphQLString,
       description: `Instruction of what a recipient should do if there is not a match to your SPF record.`,
-      resolve: async ({ spfDefault }) => spfDefault,
+      resolve: ({ spfDefault }) => spfDefault,
     },
-    spfGuidanceTags: {
-      type: GraphQLList(GraphQLString),
+    guidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       description: `Key tags found during scan.`,
-      resolve: async ({ spfGuidanceTags }) => spfGuidanceTags,
+      resolve: async (
+        { guidanceTags },
+        args,
+        { loaders: { spfGuidanceTagConnectionsLoader } },
+      ) => {
+        const spfTags = await spfGuidanceTagConnectionsLoader({
+          spfGuidanceTags: guidanceTags,
+          ...args,
+        })
+        return spfTags
+      },
     },
   }),
   interfaces: [nodeInterface],
   description: `Email on the Internet can be forged in a number of ways.  In
-  particular, existing protocols place no restriction on what a sending
-  host can use as the "MAIL FROM" of a message or the domain given on
-  the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
-  protocol is where ADministrative Management Domains (ADMDs) can explicitly
-  authorize the hosts that are allowed to use their domain names, and a
-  receiving host can check such authorization.`,
+particular, existing protocols place no restriction on what a sending
+host can use as the "MAIL FROM" of a message or the domain given on
+the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
+protocol is where ADministrative Management Domains (ADMDs) can explicitly
+authorize the hosts that are allowed to use their domain names, and a
+receiving host can check such authorization.`,
 })
 
 const spfConnection = connectionDefinitions({
   name: 'SPF',
   nodeType: spfType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of spf scans related to a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const webScanType = new GraphQLObjectType({
@@ -552,37 +634,50 @@ const httpsType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time the scan was initiated.`,
-      resolve: async ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => timestamp,
     },
     implementation: {
       type: GraphQLString,
       description: `State of the HTTPS implementation on the server and any issues therein.`,
-      resolve: async ({ implementation }) => implementation,
+      resolve: ({ implementation }) => implementation,
     },
     enforced: {
       type: GraphQLString,
       description: `Degree to which HTTPS is enforced on the server based on behaviour.`,
-      resolve: async ({ enforced }) => enforced,
+      resolve: ({ enforced }) => enforced,
     },
     hsts: {
       type: GraphQLString,
       description: `Presence and completeness of HSTS implementation.`,
-      resolve: async ({ hsts }) => hsts,
+      resolve: ({ hsts }) => hsts,
     },
     hstsAge: {
       type: GraphQLString,
       description: `Denotes how long the domain should only be accessed using HTTPS`,
-      resolve: async ({ hstsAge }) => hstsAge,
+      resolve: ({ hstsAge }) => hstsAge,
     },
     preloaded: {
       type: GraphQLString,
       description: `Denotes whether the domain has been submitted and included within HSTS preload list.`,
-      resolve: async ({ preloaded }) => preloaded,
+      resolve: ({ preloaded }) => preloaded,
     },
-    httpsGuidanceTags: {
-      type: GraphQLList(GraphQLString),
+    guidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       description: `Key tags found during scan.`,
-      resolve: async ({ httpsGuidanceTags }) => httpsGuidanceTags,
+      resolve: async (
+        { guidanceTags },
+        args,
+        { loaders: { httpsGuidanceTagConnectionsLoader } },
+      ) => {
+        const httpsTags = await httpsGuidanceTagConnectionsLoader({
+          httpsGuidanceTags: guidanceTags,
+          ...args,
+        })
+        return httpsTags
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -592,6 +687,13 @@ const httpsType = new GraphQLObjectType({
 const httpsConnection = connectionDefinitions({
   name: 'HTTPS',
   nodeType: httpsType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of https scans for a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const sslType = new GraphQLObjectType({
@@ -611,12 +713,25 @@ const sslType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
-      resolve: async ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => timestamp,
     },
-    sslGuidanceTags: {
-      type: GraphQLList(GraphQLString),
+    guidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
       description: `Key tags found during scan.`,
-      resolve: async ({ sslGuidanceTags }) => sslGuidanceTags,
+      resolve: async (
+        { guidanceTags },
+        args,
+        { loaders: { sslGuidanceTagConnectionsLoader } },
+      ) => {
+        const sslTags = await sslGuidanceTagConnectionsLoader({
+          sslGuidanceTags: guidanceTags,
+          ...args,
+        })
+        return sslTags
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -626,6 +741,25 @@ const sslType = new GraphQLObjectType({
 const sslConnection = connectionDefinitions({
   name: 'SSL',
   nodeType: sslType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of https scans for a given domain.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
+})
+
+const guidanceTagConnection = connectionDefinitions({
+  name: 'GuidanceTag',
+  nodeType: guidanceTagType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of guidance tags for a given scan type.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 /* End domain related objects */
@@ -637,52 +771,58 @@ const organizationType = new GraphQLObjectType({
     acronym: {
       type: Acronym,
       description: 'The organizations acronym.',
-      resolve: async ({ acronym }) => acronym,
+      resolve: ({ acronym }) => acronym,
     },
     name: {
       type: GraphQLString,
       description: 'The full name of the organization.',
-      resolve: async ({ name }) => name,
+      resolve: ({ name }) => name,
     },
     slug: {
       type: Slug,
       description: 'Slugified name of the organization.',
-      resolve: async ({ slug }) => slug,
+      resolve: ({ slug }) => slug,
     },
     zone: {
       type: GraphQLString,
       description: 'The zone which the organization belongs to.',
-      resolve: async ({ zone }) => zone,
+      resolve: ({ zone }) => zone,
     },
     sector: {
       type: GraphQLString,
       description: 'The sector which the organization belongs to.',
-      resolve: async ({ sector }) => sector,
+      resolve: ({ sector }) => sector,
     },
     country: {
       type: GraphQLString,
       description: 'The country in which the organization resides.',
-      resolve: async ({ country }) => country,
+      resolve: ({ country }) => country,
     },
     province: {
       type: GraphQLString,
       description: 'The province in which the organization resides.',
-      resolve: async ({ province }) => province,
+      resolve: ({ province }) => province,
     },
     city: {
       type: GraphQLString,
       description: 'The city in which the organization resides.',
-      resolve: async ({ city }) => city,
+      resolve: ({ city }) => city,
     },
-    blueCheck: {
+    verified: {
       type: GraphQLBoolean,
       description: 'Wether the organization is a verified organization.',
-      resolve: async ({ blueCheck }) => blueCheck,
+      resolve: ({ verified }) => verified,
+    },
+    summaries: {
+      type: organizationSummaryType,
+      description:
+        'Summaries based on scan types that are preformed on the given organizations domains.',
+      resolve: ({ summaries }) => summaries,
     },
     domainCount: {
       type: GraphQLInt,
       description: 'The number of domains associated with this organization.',
-      resolve: async ({ domainCount }) => domainCount,
+      resolve: ({ domainCount }) => domainCount,
     },
     domains: {
       type: domainConnection.connectionType,
@@ -700,6 +840,34 @@ const organizationType = new GraphQLObjectType({
         return connections
       },
     },
+    affiliations: {
+      type: userAffiliationsConnection.connectionType,
+      description: 'Organization affiliations to various users.',
+      args: connectionArgs,
+      resolve: async (
+        { _id },
+        args,
+        {
+          i18n,
+          auth: { checkPermission },
+          loaders: { affiliationLoaderByOrgId },
+        },
+      ) => {
+        const permission = await checkPermission({ orgId: _id })
+        if (permission === 'admin' || permission === 'super_admin') {
+          const affiliations = await affiliationLoaderByOrgId({
+            orgId: _id,
+            ...args,
+          })
+          return affiliations
+        }
+        throw new Error(
+          i18n._(
+            t`Cannot query affiliations on organization without admin permission or higher.`,
+          ),
+        )
+      },
+    },
   }),
   interfaces: [nodeInterface],
   description:
@@ -709,6 +877,13 @@ const organizationType = new GraphQLObjectType({
 const organizationConnection = connectionDefinitions({
   name: 'Organization',
   nodeType: organizationType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of organizations the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 const userType = new GraphQLObjectType({
@@ -718,49 +893,49 @@ const userType = new GraphQLObjectType({
     userName: {
       type: GraphQLEmailAddress,
       description: 'Users email address.',
-      resolve: async ({ userName }) => {
-        return userName
-      },
+      resolve: ({ userName }) => userName,
     },
     displayName: {
       type: GraphQLString,
       description: 'Name displayed to other users.',
-      resolve: async ({ displayName }) => {
-        return displayName
-      },
+      resolve: ({ displayName }) => displayName,
     },
     preferredLang: {
       type: LanguageEnums,
       description: 'Users preferred language.',
-      resolve: async ({ preferredLang }) => {
-        return preferredLang
-      },
+      resolve: ({ preferredLang }) => preferredLang,
     },
     tfaValidated: {
       type: GraphQLBoolean,
       description: 'Has the user completed two factor authentication.',
-      resolve: async ({ tfaValidated }) => {
-        return tfaValidated
-      },
+      resolve: ({ tfaValidated }) => tfaValidated,
     },
     emailValidated: {
       type: GraphQLBoolean,
       description: 'Has the user email verified their account.',
-      resolve: async ({ emailValidated }) => {
-        return emailValidated
-      },
+      resolve: ({ emailValidated }) => emailValidated,
     },
     affiliations: {
       type: userAffiliationsConnection.connectionType,
       description: 'Users affiliations to various organizations.',
       args: connectionArgs,
-      resolve: async () => {},
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { affiliationLoaderByUserId } },
+      ) => {
+        const affiliations = await affiliationLoaderByUserId({
+          uId: _id,
+          ...args,
+        })
+        return affiliations
+      },
     },
   }),
   interfaces: [nodeInterface],
   description: `This object can be queried to retrieve the current logged in users
-    information or if the user is an org or super admin they can query a user
-    by their user name`,
+information or if the user is an org or super admin they can query a user
+by their user name`,
 })
 
 const userConnection = connectionDefinitions({
@@ -772,25 +947,30 @@ const userAffiliationsType = new GraphQLObjectType({
   name: 'UserAffiliations',
   fields: () => ({
     id: globalIdField('affiliations'),
-    userId: {
-      type: GraphQLID,
-      description: "Affiliated user's ID",
-      resolve: async () => {},
-    },
     permission: {
       type: RoleEnums,
       description: "User's level of access to a given organization.",
-      resolve: async () => {},
+      resolve: ({ permission }) => permission,
     },
     user: {
       type: userType,
       description: 'The affiliated users information.',
-      resolve: async () => {},
+      resolve: async ({ _to }, _args, { loaders: { userLoaderByKey } }) => {
+        const userKey = _to.split('/')[1]
+        const user = await userLoaderByKey.load(userKey)
+        user.id = user._key
+        return user
+      },
     },
     organization: {
       type: organizationType,
       description: 'The affiliated organizations information.',
-      resolve: async () => {},
+      resolve: async ({ _from }, _args, { loaders: { orgLoaderByKey } }) => {
+        const orgKey = _from.split('/')[1]
+        const org = await orgLoaderByKey.load(orgKey)
+        org.id = org._key
+        return org
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -801,6 +981,13 @@ const userAffiliationsType = new GraphQLObjectType({
 const userAffiliationsConnection = connectionDefinitions({
   name: 'UserAffiliations',
   nodeType: userAffiliationsType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of affiliations the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
 
 module.exports = {

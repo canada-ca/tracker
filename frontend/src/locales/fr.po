@@ -1310,8 +1310,8 @@ msgid "Page"
 msgstr "Page"
 
 #: src/PageNotFound.js:9
-msgid "Page not found"
-msgstr "Page non trouvée"
+msgid "404 - Page Not Found"
+msgstr "404 - Page non trouvée"
 
 #: src/DmarcReportTable.js:351
 msgid "Page {0} of {1}"
@@ -1787,8 +1787,8 @@ msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
 #: src/PageNotFound.js:12
-msgid "Sorry, the page you were trying to view does not exist."
-msgstr "Désolé, la page que vous essayiez de consulter n'existe pas."
+msgid "The page you are looking for has moved or does not exist."
+msgstr "La page que vous recherchez a été déplacée ou n'existe pas."
 
 #: src/DmarcReportPage.js:194
 msgid "Source IP Address"
@@ -2203,3 +2203,71 @@ msgstr "{count} enregistrements..."
 #: src/OrganizationDetails.js:92
 msgid "{orgName}"
 msgstr ""
+
+#: src/LoadingMessage.js:12
+msgid "Loading {children}..."
+msgstr "Chargement {children}..."
+
+#: src/ErrorFallbackMessage.js:12
+msgid "An error has occurred."
+msgstr "Une erreur s'est produite."
+
+#: src/ErrorFallbackMessage.js:22
+msgid "This component is currently unavailable. Try reloading the page."
+msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la page."
+
+#: src/SummaryGroup.js:39
+msgid "Summary Cards"
+msgstr "Fiches de synthèse"
+
+#: src/AdminPage.js:41
+msgid "User Affiliations"
+msgstr "Affiliations des utilisateurs"
+
+#: src/AdminPanel.js:40
+msgid "Organization Info"
+msgstr "Informations sur l'organisation"
+
+#: src/DmarcByDomainPage.js:163
+msgid "Domains Table"
+msgstr "Tableau des domaines"
+
+#: src/DmarcGuidancePage.js:34
+msgid "Guidance Tags"
+msgstr "Étiquettes d'orientation"
+
+#: src/OrganizationDetails.js:59
+msgid "Organization Details"
+msgstr "Détails de l'organisation"
+
+#: src/QRcodePage.js:25
+msgid "QR Code"
+msgstr "Code QR"
+
+#: src/Organizations.js:69
+msgid "Search for an organization"
+msgstr "Rechercher une organisation"
+
+#: src/DomainsPage.js:75
+msgid "Search"
+msgstr "Recherchez"
+
+#: src/DomainsPage.js:78
+msgid "Scan"
+msgstr "Scanner"
+
+#: src/DomainsPage.js:85
+msgid "Search for any Government of Canada tracked domain:"
+msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
+
+#: src/DomainsPage.js:128
+msgid "Perform a one-time scan on a domain:"
+msgstr "Effectuer un balayage unique sur un domaine:"
+
+#: src/DomainsPage.js:132
+msgid "Enter a domain"
+msgstr "Entrez un domaine"
+
+#: src/DomainsPage.js:141
+msgid "Scan Domain"
+msgstr "Domaine de balayage"

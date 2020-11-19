@@ -13,6 +13,8 @@ import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { FloatingMenu } from './FloatingMenu'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
@@ -20,7 +22,6 @@ const CreateUserPage = lazy(() => import('./CreateUserPage'))
 const QRcodePage = lazy(() => import('./QRcodePage'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
 const UserPage = lazy(() => import('./UserPage'))
-const UserList = lazy(() => import('./UserList'))
 const SignInPage = lazy(() => import('./SignInPage'))
 const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
 const Organizations = lazy(() => import('./Organizations'))
@@ -40,19 +41,18 @@ export default function App() {
   const toast = useToast()
   const { currentUser, isLoggedIn, logout } = useUserState()
 
-  return (
-    <>
-      <Flex direction="column" minHeight="100vh" bg="gray.50">
-        <header>
-          <CSSReset />
-          <SkipLink invisible href="#main">
-            <Trans>Skip to main content</Trans>
-          </SkipLink>
-          <PhaseBanner phase={<Trans>Pre-Alpha</Trans>}>
-            <Trans>This service is being developed in the open</Trans>
-          </PhaseBanner>
-          <TopBanner />
-        </header>
+  return <>
+    <Flex direction="column" minHeight="100vh" bg="gray.50">
+      <header>
+        <CSSReset />
+        <SkipLink invisible href="#main">
+          <Trans>Skip to main content</Trans>
+        </SkipLink>
+        <PhaseBanner phase={<Trans>Pre-Alpha</Trans>}>
+          <Trans>This service is being developed in the open</Trans>
+        </PhaseBanner>
+        <TopBanner />
+      </header>
 
         <Navigation>
           <Link to="/">
@@ -139,7 +139,6 @@ export default function App() {
               />
 
               <Route
-                // condition={isLoggedIn()}
                 alternate="/sign-in"
                 path="/organizations"
                 render={({ match: { url } }) => (
@@ -159,15 +158,9 @@ export default function App() {
                 alternate="/sign-in"
                 path="/admin"
               >
-                <AdminPage />
-              </RouteIf>
-
-              <RouteIf
-                condition={isLoggedIn()}
-                alternate="/sign-in"
-                path="/user-list"
-              >
-                <UserList />
+                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                  <AdminPage />
+                </ErrorBoundary>
               </RouteIf>
 
               <RouteIf
@@ -258,6 +251,5 @@ export default function App() {
         <FloatingMenu />
         <Box h="40px" />
       </Flex>
-    </>
-  )
+    </>;
 }

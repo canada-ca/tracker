@@ -1,3 +1,4 @@
+const { notifyClient } = require('./notify-client')
 const { sendAuthEmail } = require('./notify-send-authenticate-email')
 const { sendAuthTextMsg } = require('./notify-send-authenticate-text-msg')
 const {
@@ -9,6 +10,7 @@ const { sendTfaTextMsg } = require('./notify-send-tfa-text-msg')
 const { sendVerificationEmail } = require('./notify-send-verification-email')
 
 module.exports = {
+  notifyClient,
   sendAuthEmail,
   sendAuthTextMsg,
   sendOrgInviteCreateAccount,

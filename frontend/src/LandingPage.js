@@ -5,6 +5,9 @@ import { Text, Image, Stack } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
 import trackerLogo from './images/tracker_v-03.png'
 import { WelcomeMessage } from './WelcomeMessage'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+
 
 export function LandingPage() {
   return (
@@ -17,12 +20,14 @@ export function LandingPage() {
         />
         <WelcomeMessage />
       </Stack>
-      <SummaryGroup name="dashboard" />
-      <Text>
-        <Trans>
-          *All data represented is mocked for demonstration purposes
-        </Trans>
-      </Text>
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <SummaryGroup name="dashboard" />
+        <Text>
+          <Trans>
+            *All data represented is mocked for demonstration purposes
+          </Trans>
+        </Text>
+      </ErrorBoundary>
     </Layout>
   )
 }

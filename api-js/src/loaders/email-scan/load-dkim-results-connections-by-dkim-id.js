@@ -96,7 +96,7 @@ const dkimResultsLoaderConnectionByDkimId = (
         ${afterTemplate}
         ${beforeTemplate}
         ${limitTemplate}
-        RETURN dkimResult
+        RETURN MERGE({ id: dkimResult._key }, dkimResult)
     )
 
     LET hasNextPage = (LENGTH(
@@ -116,7 +116,8 @@ const dkimResultsLoaderConnectionByDkimId = (
     ) > 0 ? true : false)
 
     RETURN { 
-      "dkimResults": retrievedDkimResults, 
+      "dkimResults": retrievedDkimResults,
+      "totalCount": LENGTH(dkimResultKeys),
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedDkimResults)._key, 
@@ -143,6 +144,7 @@ const dkimResultsLoaderConnectionByDkimId = (
   if (dkimResultsInfo.dkimResults.length === 0) {
     return {
       edges: [],
+      totalCount: 0,
       pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,
@@ -153,7 +155,6 @@ const dkimResultsLoaderConnectionByDkimId = (
   }
 
   const edges = dkimResultsInfo.dkimResults.map((dkimResult) => {
-    dkimResult.id = dkimResult._key
     dkimResult.dkimId = dkimId
     return {
       cursor: toGlobalId('dkimResult', dkimResult._key),
@@ -163,6 +164,7 @@ const dkimResultsLoaderConnectionByDkimId = (
 
   return {
     edges,
+    totalCount: dkimResultsInfo.totalCount,
     pageInfo: {
       hasNextPage: dkimResultsInfo.hasNextPage,
       hasPreviousPage: dkimResultsInfo.hasPreviousPage,
