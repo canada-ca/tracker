@@ -9,7 +9,7 @@ module.exports.dmarcLoaderByKey = (query, userId, i18n) =>
       cursor = await query`
         FOR dmarcScan IN dmarc
           FILTER dmarcScan._key IN ${keys}
-          RETURN dmarcScan   
+          RETURN MERGE({ id: dmarcScan._key }, dmarcScan)
       `
     } catch (err) {
       console.error(

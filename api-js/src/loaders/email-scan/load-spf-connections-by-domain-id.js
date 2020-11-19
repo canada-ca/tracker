@@ -108,7 +108,7 @@ const spfLoaderConnectionsByDomainId = (
         ${startDateTemplate}
         ${endDateTemplate}
         ${limitTemplate}
-        RETURN spfScan
+        RETURN MERGE({ id: spfScan._key }, spfScan)
     )
 
     LET hasNextPage = (LENGTH(
@@ -167,7 +167,6 @@ const spfLoaderConnectionsByDomainId = (
   }
 
   const edges = spfScanInfo.spfScans.map((spfScan) => {
-    spfScan.id = spfScan._key
     spfScan.domainId = domainId
     return {
       cursor: toGlobalId('spf', spfScan._key),

@@ -117,7 +117,7 @@ const dkimLoaderConnectionsByDomainId = (
         ${startDateTemplate}
         ${endDateTemplate}
         ${limitTemplate}
-        RETURN dkimScan
+        RETURN MERGE({ id: dkimScan._key }, dkimScan)
     )
 
     LET hasNextPage = (LENGTH(
@@ -176,7 +176,6 @@ const dkimLoaderConnectionsByDomainId = (
   }
 
   const edges = dkimScanInfo.dkimScans.map((dkimScan) => {
-    dkimScan.id = dkimScan._key
     dkimScan.domainId = domainId
     return {
       cursor: toGlobalId('dkim', dkimScan._key),

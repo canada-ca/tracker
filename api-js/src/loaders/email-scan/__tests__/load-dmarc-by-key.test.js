@@ -47,7 +47,7 @@ describe('given the dmarcLoaderByKey function', () => {
       const expectedCursor = await query`
         FOR dmarcScan IN dmarc
           SORT dmarcScan._key ASC LIMIT 1
-          RETURN dmarcScan
+          RETURN MERGE({ id: dmarcScan._key }, dmarcScan)
       `
       const expectedDmarc = await expectedCursor.next()
 
@@ -63,7 +63,7 @@ describe('given the dmarcLoaderByKey function', () => {
       const expectedDkimScans = []
       const expectedCursor = await query`
       FOR dmarcScan IN dmarc
-        RETURN dmarcScan
+        RETURN MERGE({ id: dmarcScan._key }, dmarcScan)
       `
 
       while (expectedCursor.hasNext()) {
