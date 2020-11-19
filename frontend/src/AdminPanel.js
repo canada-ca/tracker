@@ -15,7 +15,7 @@ export default function AdminPanel({ orgSlug, permission }) {
   const { currentUser } = useUserState()
   const toast = useToast()
 
-  const { loading, error, data, refetch } = useQuery(ADMIN_PANEL, {
+  const { loading, error, data } = useQuery(ADMIN_PANEL, {
     variables: { orgSlug: orgSlug },
     context: {
       headers: {
@@ -52,20 +52,19 @@ export default function AdminPanel({ orgSlug, permission }) {
     <Stack spacing={10}>
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
         <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <AdminDomains
-          domainsData={data.findOrganizationBySlug.domains}
-          orgId={data.findOrganizationBySlug.id}
-          orgSlug={orgSlug}
-          refetchFunc={refetch}
-        />
+          <AdminDomains
+            domainsData={data.findOrganizationBySlug.domains}
+            orgId={data.findOrganizationBySlug.id}
+            orgSlug={orgSlug}
+          />
         </ErrorBoundary>
         <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <UserList
-          permission={permission}
-          userListData={data.userList}
-          // orgName={orgName}
-          orgSlug={orgSlug}
-        />
+          <UserList
+            permission={permission}
+            userListData={data.userList}
+            // orgName={orgName}
+            orgSlug={orgSlug}
+          />
         </ErrorBoundary>
       </SimpleGrid>
     </Stack>

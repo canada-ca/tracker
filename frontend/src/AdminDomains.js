@@ -23,7 +23,7 @@ import {
 } from '@chakra-ui/core'
 import { PaginationButtons } from './PaginationButtons'
 import { Domain } from './Domain'
-import { string, object} from 'prop-types'
+import { string, object } from 'prop-types'
 import { ListOf } from './ListOf'
 import { TrackerButton } from './TrackerButton'
 import { useMutation } from '@apollo/client'
@@ -421,7 +421,7 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
 }
 
 AdminDomains.propTypes = {
-  domainsData: object,
-  orgSlug: string,
-  orgId: string,
+  domainsData: object.isRequired,
+  orgSlug: string.isRequired,
+  orgId: string.isRequired,
 }
