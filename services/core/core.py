@@ -361,8 +361,16 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
             else:
                 mail_fail = mail_fail + 1
 
-        org["summaries"]["web"] = {"pass": web_pass, "fail": web_fail, "total": domain_total}
-        org["summaries"]["mail"] = {"pass": mail_pass, "fail": mail_fail, "total": domain_total}
+        org["summaries"]["web"] = {
+            "pass": web_pass,
+            "fail": web_fail,
+            "total": domain_total,
+        }
+        org["summaries"]["mail"] = {
+            "pass": mail_pass,
+            "fail": mail_fail,
+            "total": domain_total,
+        }
         db.collection("organizations").update(org)
 
     logging.info(f"Organization summary value update completed.")
