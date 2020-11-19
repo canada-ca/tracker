@@ -58,7 +58,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
       const expectedCursor = await query`
         FOR summary IN chartSummaries
           FILTER summary._key == "web"
-          RETURN summary
+          RETURN MERGE({ id: summary._key }, summary)
       `
       const expectedSummary = await expectedCursor.next()
 
@@ -74,7 +74,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
       const expectedSummaries = []
       const expectedCursor = await query`
         FOR summary IN chartSummaries
-          RETURN summary
+          RETURN MERGE({ id: summary._key }, summary)
       `
 
       while (expectedCursor.hasNext()) {
