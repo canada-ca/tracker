@@ -101,7 +101,7 @@ const affiliationLoaderByUserId = (
           ${limitTemplate}
           LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
           LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
+          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey })
     )
 
     LET hasNextPage = (LENGTH(
@@ -160,7 +160,6 @@ const affiliationLoaderByUserId = (
   }
 
   const edges = filteredAffiliations.affiliations.map((affiliation) => {
-    affiliation.id = affiliation._key
     return {
       cursor: toGlobalId('affiliations', affiliation._key),
       node: affiliation,
