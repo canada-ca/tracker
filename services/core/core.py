@@ -238,6 +238,9 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
     client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
+    if not db.has_collection("scanSummaries"):
+        db.create_collection("scanSummaries")
+
     for scan_type in SCAN_TYPES:
         scan_pass = 0
         scan_fail = 0
@@ -279,6 +282,9 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB
     # Establish DB connection
     client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
+
+    if not db.has_collection("chartSummaries"):
+        db.create_collection("chartSummaries")
 
     for chart_type, scan_types in CHARTS.items():
         pass_count = 0
@@ -333,11 +339,9 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
         mail_fail = 0
         mail_pass = 0
         domain_total = 0
-        key_query = db.aql.execute(
-            f"(FOR v, e IN 1..1 OUTBOUND ${org['_id']} claims RETURN v._key)"
-        )
-        for key in key_query:
-            domain = db.collection("domains").get({"_key": key})
+        claims = db.collection("claims").find({"_from": org["_id"]})
+        for claim in claims:
+            domain = db.collection("domains").get({"_id": claim["_to"]})
             domain_total = domain_total + 1
 
             if (
@@ -360,8 +364,10 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
         db.collection("organizations").update_match(
             {"_key": org["_key"]},
             {
-                {"web": {"pass": web_pass, "fail": web_fail}},
-                {"mail": {"pass": mail_pass, "fail": mail_fail}},
+                "summaries": {
+                    {"web": {"pass": web_pass, "fail": web_fail}},
+                    {"mail": {"pass": mail_pass, "fail": mail_fail}},
+                }
             },
         )
 
