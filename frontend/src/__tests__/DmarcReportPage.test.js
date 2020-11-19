@@ -4,17 +4,11 @@ import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import DmarcReportPage from '../DmarcReportPage'
-import {
-  DMARC_REPORT_DETAIL_TABLES,
-  DMARC_REPORT_SUMMARY,
-  DMARC_REPORT_SUMMARY_LIST,
-} from '../graphql/queries'
+import { DMARC_REPORT_PAGE } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { rawSummaryListData } from '../fixtures/summaryListData'
-import { rawDmarcReportDetailTablesData } from '../fixtures/dmarcReportDetailTablesData'
-import { rawSummaryCardData } from '../fixtures/summaryCardData'
+import { rawDmarcReportSummaryData } from '../fixtures/dmarcReportSummaryData'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -29,40 +23,14 @@ const i18n = setupI18n({
 const mocks = [
   {
     request: {
-      query: DMARC_REPORT_SUMMARY,
+      query: DMARC_REPORT_PAGE,
       variables: {
-        domainSlug: 'test-domain-slug',
-        period: 'LAST30DAYS',
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
         year: '2020',
       },
     },
-    result: {
-      data: rawSummaryCardData,
-    },
-  },
-  {
-    request: {
-      query: DMARC_REPORT_SUMMARY_LIST,
-      variables: { domainSlug: 'test-domain-slug' },
-    },
-    result: {
-      data: rawSummaryListData,
-    },
-  },
-  {
-    request: {
-      query: DMARC_REPORT_DETAIL_TABLES,
-      variables: {
-        domainSlug: 'test-domain-slug',
-        period: 'LAST30DAYS',
-        year: '2020',
-      },
-    },
-    result: {
-      data: {
-        dmarcReportDetailTables: rawDmarcReportDetailTablesData,
-      },
-    },
+    result: rawDmarcReportSummaryData,
   },
 ]
 
@@ -83,10 +51,12 @@ describe('<DmarcReportPage />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MemoryRouter
-              initialEntries={['/domains/test-domain-slug/dmarc-report']}
+              initialEntries={[
+                '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+              ]}
               initialIndex={0}
             >
-              <Route path="/domains/:domainSlug/dmarc-report">
+              <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
                 <MockedProvider mocks={mocks} addTypename={false}>
                   <DmarcReportPage summaryListResponsiveWidth={500} />
                 </MockedProvider>
@@ -96,7 +66,7 @@ describe('<DmarcReportPage />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/test-domain-slug/i))
+    await waitFor(() => getAllByText(/test-domain/i))
   })
 
   it('renders date selector', async () => {
@@ -107,10 +77,12 @@ describe('<DmarcReportPage />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MemoryRouter
-              initialEntries={['/domains/test-domain-slug/dmarc-report']}
+              initialEntries={[
+                '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+              ]}
               initialIndex={0}
             >
-              <Route path="/domains/:domainSlug/dmarc-report">
+              <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
                 <MockedProvider mocks={mocks} addTypename={false}>
                   <DmarcReportPage summaryListResponsiveWidth={500} />
                 </MockedProvider>
@@ -131,10 +103,12 @@ describe('<DmarcReportPage />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MemoryRouter
-              initialEntries={['/domains/test-domain-slug/dmarc-report']}
+              initialEntries={[
+                '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+              ]}
               initialIndex={0}
             >
-              <Route path="/domains/:domainSlug/dmarc-report">
+              <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
                 <MockedProvider mocks={mocks} addTypename={false}>
                   <DmarcReportPage summaryListResponsiveWidth={500} />
                 </MockedProvider>
@@ -155,10 +129,12 @@ describe('<DmarcReportPage />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MemoryRouter
-              initialEntries={['/domains/test-domain-slug/dmarc-report']}
+              initialEntries={[
+                '/domains/test-domain/dmarc-report/LAST30DAYS/2020',
+              ]}
               initialIndex={0}
             >
-              <Route path="/domains/:domainSlug/dmarc-report">
+              <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
                 <MockedProvider mocks={mocks} addTypename={false}>
                   <DmarcReportPage summaryListResponsiveWidth={500} />
                 </MockedProvider>
