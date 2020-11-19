@@ -361,18 +361,9 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
             else:
                 mail_fail = mail_fail + 1
 
-        web_summary = frozenset({"pass": web_pass, "fail": web_fail, "total": domain_total}.items())
-        mail_summary = frozenset({"pass": mail_pass, "fail": mail_fail, "total": domain_total}.items())
-        updated_summaries = {"web": web_summary, "mail": mail_summary}
-        db.collection("organizations").update_match(
-            {"_key": org["_key"]},
-            {
-                "summaries": {
-                    "web": web_summary,
-                    "mail": mail_summary,
-                }
-            },
-        )
+        org["summaries"]["web"] = {"pass": web_pass, "fail": web_fail, "total": domain_total}
+        org["summaries"]["mail"] = {"pass": mail_pass, "fail": mail_fail, "total": domain_total}
+        db.collection("organizations").update(org)
 
     logging.info(f"Organization summary value update completed.")
 

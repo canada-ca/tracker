@@ -224,6 +224,8 @@ def test_update_scan_summaries():
 
     httpsScanSummary = db.collection("scanSummaries").get({"_key": "https"})
     assert httpsScanSummary == {
+        "_id": "scanSummaries/https",
+        "_rev": httpsScanSummary["_rev"],
         "_key": "https",
         "pass": 2,
         "fail": 1,
@@ -231,10 +233,12 @@ def test_update_scan_summaries():
     }
 
     sslScanSummary = db.collection("scanSummaries").get({"_key": "ssl"})
-    assert sslScanSummary == {"_key": "ssl", "pass": 2, "fail": 1, "total": 3}
+    assert sslScanSummary == {"_id": "scanSummaries/ssl", "_rev": sslScanSummary["_rev"], "_key": "ssl", "pass": 2, "fail": 1, "total": 3}
 
     dmarcScanSummary = db.collection("scanSummaries").get({"_key": "dmarc"})
     assert dmarcScanSummary == {
+        "_id": "scanSummaries/dmarc",
+        "_rev": dmarcScanSummary["_rev"],
         "_key": "dmarc",
         "pass": 2,
         "fail": 1,
@@ -242,20 +246,20 @@ def test_update_scan_summaries():
     }
 
     spfScanSummary = db.collection("scanSummaries").get({"_key": "spf"})
-    assert spfScanSummary == {"_key": "spf", "pass": 2, "fail": 1, "total": 3}
+    assert spfScanSummary == {"_id": "scanSummaries/spf", "_rev": spfScanSummary["_rev"], "_key": "spf", "pass": 2, "fail": 1, "total": 3}
 
     dkimScanSummary = db.collection("scanSummaries").get({"_key": "dkim"})
-    assert dkimScanSummary == {"_key": "dkim", "pass": 1, "fail": 2, "total": 3}
+    assert dkimScanSummary == {"_id": "scanSummaries/dkim", "_rev": dkimScanSummary["_rev"], "_key": "dkim", "pass": 1, "fail": 2, "total": 3}
 
 
 def test_update_chart_summaries():
     update_chart_summaries(host="http://testdb:8529", name="test", user="", password="")
 
     webSummary = db.collection("chartSummaries").get({"_key": "web"})
-    assert webSummary == {"_key": "web", "pass": 2, "fail": 1, "total": 3}
+    assert webSummary == {"_id": "chartSummaries/web", "_rev": webSummary["_rev"], "_key": "web", "pass": 2, "fail": 1, "total": 3}
 
     mailSummary = db.collection("mailSummaries").get({"_key": "mail"})
-    assert mailSummary == {"_key": "mail", "pass": 1, "fail": 2, "total": 3}
+    assert mailSummary == {"_id": "chartSummaries/mail", "_rev": mailSummary["_rev"], "_key": "mail", "pass": 1, "fail": 2, "total": 3}
 
 
 def test_update_org_summaries():
@@ -263,8 +267,6 @@ def test_update_org_summaries():
 
     organization = db.collection("organizations").get({"_key": "testorg"})
     assert organization["summaries"] == {
-        "summaries": {
-            "web": {"pass": 2, "fail": 1, "total": 3},
-            "mail": {"pass": 1, "fail": 2, "total": 3},
-        }
+        "web": {"pass": 2, "fail": 1, "total": 3},
+        "mail": {"pass": 1, "fail": 2, "total": 3},
     }
