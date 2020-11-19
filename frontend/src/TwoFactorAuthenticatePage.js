@@ -89,7 +89,7 @@ export default function TwoFactorAuthenticatePage() {
             name="form"
           >
             <Heading as="h1" fontSize="2xl" mb="12" textAlign="center">
-              <Trans>Two Factor Authentication.</Trans>
+              <Trans>Two Factor Authentication</Trans>
             </Heading>
 
             <AuthenticateField name="twoFactorCode" mb="4" />

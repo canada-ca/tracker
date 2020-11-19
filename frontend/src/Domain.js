@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/core'
 import { sanitizeUrl } from './sanitizeUrl'
 import { Link as RouteLink } from 'react-router-dom'
-import { slugify } from './slugify'
 
 export function Domain({ url, lastRan, ...rest }) {
   return (

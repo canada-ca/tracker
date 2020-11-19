@@ -1,12 +1,12 @@
 import React from 'react'
 import { Stack, SimpleGrid, useToast } from '@chakra-ui/core'
-import UserList from './UserList'
+// import UserList from './UserList'
 import { string } from 'prop-types'
-import { slugify } from './slugify'
 import { ADMIN_PANEL } from './graphql/queries'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { AdminDomains } from './AdminDomains'
+import UserList from './UserList'
 
 export default function AdminPanel({ orgSlug, permission }) {
   const { currentUser } = useUserState()
@@ -51,12 +51,12 @@ export default function AdminPanel({ orgSlug, permission }) {
           refetchFunc={refetch}
         />
         {/* TODO: get user list working */}
-        {/* <UserList
+        <UserList
           permission={permission}
           userListData={data.userList}
-          orgName={orgName}
-          orgSlug={slugify(orgName)}
-        /> */}
+          // orgName={orgName}
+          orgSlug={orgSlug}
+        />
       </SimpleGrid>
     </Stack>
   )

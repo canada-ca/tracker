@@ -24,7 +24,7 @@ import {
 } from '@chakra-ui/core'
 import { PaginationButtons } from './PaginationButtons'
 import { Domain } from './Domain'
-import { string, object, func } from 'prop-types'
+import { string, object} from 'prop-types'
 import { ListOf } from './ListOf'
 import { TrackerButton } from './TrackerButton'
 import { useMutation } from '@apollo/client'

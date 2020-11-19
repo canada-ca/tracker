@@ -1,6 +1,5 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import PasswordField from './PasswordField'
 import { object, string } from 'yup'
 import {

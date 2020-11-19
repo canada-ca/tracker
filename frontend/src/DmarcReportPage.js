@@ -40,7 +40,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   const {
     loading: reportLoading,
-    error: reportError,
+    error: _reportError,
     data: reportData,
   } = useQuery(DMARC_REPORT_PAGE, {
     context: {
@@ -68,7 +68,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   const [
     getTables,
-    { loading: tableLoading, error: tableError, data: tableReturnData },
+    { loading: _tableLoading, error: _tableError, data: tableReturnData },
   ] = useLazyQuery(DMARC_REPORT_DETAIL_TABLES, {
     context: {
       headers: {

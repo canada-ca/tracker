@@ -50,22 +50,6 @@ export default function AdminPage() {
     }
   })
 
-  // console.log(data.findMe.)
-  // if (data.findMe.affiliations?.edges) {
-  //   const edges = data.findMe.affiliations?.edges
-  //   for (let i = 0; i < edges.length; i++) {
-  //     const {
-  //       node: {
-  //         permission,
-  //         organization: { acronym },
-  //       },
-  //     } = edges[i]
-  //     if (permission === 'ADMIN' || permission === 'SUPER_ADMIN') {
-  //       adminAffiliations[acronym] = permission
-  //     }
-  //   }
-  // }
-
   const adminOrgsAcronyms = Object.keys(adminAffiliations)
 
   const options = [
