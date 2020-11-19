@@ -10,14 +10,24 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { createMemoryHistory } from 'history'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<TwoFactorAuthenticatePage />', () => {
   it('renders correctly', async () => {
-    const { queryByText } = render(
+    const { getByText } = render(
       <UserStateProvider
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter
               initialEntries={['/authenticate/authenticate-token-test']}
               initialIndex={0}
@@ -32,7 +42,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
     )
 
     await waitFor(() =>
-      expect(queryByText(/Two Factor Authentication/)).toBeInTheDocument(),
+      expect(getByText(/Two Factor Authentication/)).toBeInTheDocument(),
     )
   })
 
@@ -45,7 +55,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
               initialState={{ userName: null, jwt: null, tfa: null }}
             >
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <MemoryRouter
                     initialEntries={['/authenticate/authenticate-token-test']}
                     initialIndex={0}
@@ -115,7 +125,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <Router history={history}>
                 <Route path="/authenticate/:authenticateToken">
                   <MockedProvider mocks={mocks} addTypename={false}>
