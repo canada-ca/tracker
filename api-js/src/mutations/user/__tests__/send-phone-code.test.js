@@ -80,7 +80,7 @@ describe('user send password reset email', () => {
         let cursor = await query`
           FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
         `
         let user = await cursor.next()
 
@@ -127,7 +127,7 @@ describe('user send password reset email', () => {
         cursor = await query`
           FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
         `
         user = await cursor.next()
 
@@ -243,7 +243,7 @@ describe('user send password reset email', () => {
           const cursor = await query`
             FOR user IN users
                 FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
+                RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
           const loaderById = userLoaderByKey(query)
@@ -307,7 +307,7 @@ describe('user send password reset email', () => {
           const cursor = await query`
             FOR user IN users
                 FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
+                RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
           const loaderById = userLoaderByKey(query)
@@ -387,7 +387,7 @@ describe('user send password reset email', () => {
         let cursor = await query`
           FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
         `
         let user = await cursor.next()
         const response = await graphql(
@@ -432,7 +432,7 @@ describe('user send password reset email', () => {
         cursor = await query`
           FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
         `
         user = await cursor.next()
 
@@ -544,7 +544,7 @@ describe('user send password reset email', () => {
           const cursor = await query`
             FOR user IN users
                 FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
+                RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
           const loaderById = userLoaderByKey(query)
@@ -605,7 +605,7 @@ describe('user send password reset email', () => {
           const cursor = await query`
             FOR user IN users
                 FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
+                RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
           const loaderById = userLoaderByKey(query)

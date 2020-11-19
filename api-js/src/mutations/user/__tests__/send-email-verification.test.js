@@ -120,7 +120,7 @@ describe('user send password reset email', () => {
         const cursor = await query`
             FOR user IN users
                 FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
+                RETURN MERGE({ id: user._key }, user)
           `
         const user = await cursor.next()
 
@@ -260,7 +260,7 @@ describe('user send password reset email', () => {
         const cursor = await query`
             FOR user IN users
                 FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
+                RETURN MERGE({ id: user._key }, user)
           `
         const user = await cursor.next()
 

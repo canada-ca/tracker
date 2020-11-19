@@ -22,7 +22,15 @@ const {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('invite user to org', () => {
-  let query, drop, truncate, migrate, schema, collections, transaction, i18n, tokenize
+  let query,
+    drop,
+    truncate,
+    migrate,
+    schema,
+    collections,
+    transaction,
+    i18n,
+    tokenize
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -133,7 +141,7 @@ describe('invite user to org', () => {
         const userCursor = await query`
           FOR user IN users
             FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
+            RETURN MERGE({ id: user._key }, user)
         `
         user = await userCursor.next()
       })
@@ -157,7 +165,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                   FOR user IN users
                     FILTER user.userName == "test@email.gc.ca"
-                    RETURN user
+                    RETURN MERGE({ id: user._key }, user)
                 `
               secondaryUser = await userCursor.next()
             })
@@ -242,7 +250,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
+                  RETURN MERGE({ id: user._key }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -327,7 +335,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
+                  RETURN MERGE({ id: user._key }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -672,7 +680,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
+                  RETURN MERGE({ id: user._key }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -757,7 +765,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
+                  RETURN MERGE({ id: user._key }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -1009,7 +1017,7 @@ describe('invite user to org', () => {
           const userCursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await userCursor.next()
         })
@@ -1080,7 +1088,7 @@ describe('invite user to org', () => {
           const userCursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await userCursor.next()
         })
@@ -1173,7 +1181,7 @@ describe('invite user to org', () => {
           const userCursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await userCursor.next()
           await collections.affiliations.save({
@@ -1271,7 +1279,7 @@ describe('invite user to org', () => {
           const userCursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await userCursor.next()
           await collections.affiliations.save({
@@ -1370,7 +1378,7 @@ describe('invite user to org', () => {
         let userCursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
         user = await userCursor.next()
         await collections.affiliations.save({
@@ -1387,7 +1395,7 @@ describe('invite user to org', () => {
         userCursor = await query`
           FOR user IN users
             FILTER user.userName == "test@email.gc.ca"
-            RETURN user
+            RETURN MERGE({ id: user._key }, user)
         `
         secondaryUser = await userCursor.next()
       })
@@ -1570,7 +1578,7 @@ describe('invite user to org', () => {
         const userCursor = await query`
           FOR user IN users
             FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
+            RETURN MERGE({ id: user._key }, user)
         `
         user = await userCursor.next()
       })
@@ -1594,7 +1602,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
+                  RETURN MERGE({ id: user._key }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -1678,7 +1686,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
+                  RETURN MERGE({ id: user._key }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -1762,7 +1770,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
+                  RETURN MERGE({ id: user._key }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -2105,7 +2113,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
+                  RETURN MERGE({ id: user._key }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -2189,7 +2197,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
+                  RETURN MERGE({ id: user._key }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -2438,7 +2446,7 @@ describe('invite user to org', () => {
           const userCursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await userCursor.next()
         })
@@ -2505,7 +2513,7 @@ describe('invite user to org', () => {
           const userCursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await userCursor.next()
         })
@@ -2596,7 +2604,7 @@ describe('invite user to org', () => {
           const userCursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await userCursor.next()
           await collections.affiliations.save({
@@ -2692,7 +2700,7 @@ describe('invite user to org', () => {
           const userCursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await userCursor.next()
           await collections.affiliations.save({
@@ -2789,7 +2797,7 @@ describe('invite user to org', () => {
         let userCursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
         user = await userCursor.next()
         await collections.affiliations.save({
@@ -2806,7 +2814,7 @@ describe('invite user to org', () => {
         userCursor = await query`
           FOR user IN users
             FILTER user.userName == "test@email.gc.ca"
-            RETURN user
+            RETURN MERGE({ id: user._key }, user)
         `
         secondaryUser = await userCursor.next()
       })
