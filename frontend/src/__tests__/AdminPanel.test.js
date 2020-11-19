@@ -7,6 +7,8 @@ import { UserStateProvider } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
 import { ADMIN_PANEL } from '../graphql/queries'
 import AdminPanel from '../AdminPanel'
+import { rawAdminPanelData } from '../fixtures/adminPanelData'
+import { MemoryRouter, Route } from 'react-router-dom'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -24,44 +26,9 @@ describe('<AdminPanel />', () => {
       {
         request: {
           query: ADMIN_PANEL,
-          variables: { slug: 'testorgslug' },
+          variables: { orgSlug: 'test-org' },
         },
-        result: {
-          data: {
-            domains: {
-              edges: [
-                {
-                  node: {
-                    url: 'tbs-sct.ca',
-                    slug: 'tbs-sct-ca',
-                    lastRan: null,
-                  },
-                },
-              ],
-              pageInfo: {
-                endCursor: 'YXJyYXljb25uZWN0aW9uOjQ=',
-                hasNextPage: false,
-              },
-            },
-            userList: {
-              pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-              },
-              edges: [
-                {
-                  node: {
-                    id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
-                    userName: 'testuser@testemail.gc.ca',
-                    role: 'ADMIN',
-                    tfa: false,
-                    displayName: 'testuser',
-                  },
-                },
-              ],
-            },
-          },
-        },
+        result: rawAdminPanelData,
       },
     ]
 
@@ -75,9 +42,13 @@ describe('<AdminPanel />', () => {
       >
         <I18nProvider i18n={i18n}>
           <ThemeProvider theme={theme}>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <AdminPanel orgName="testorgslug" />
-            </MockedProvider>
+            <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+              <Route path="/admin">
+                <MockedProvider mocks={mocks} addTypename={false}>
+                  <AdminPanel orgSlug="test-org" permission="ADMIN" />
+                </MockedProvider>
+              </Route>
+            </MemoryRouter>
           </ThemeProvider>
         </I18nProvider>
       </UserStateProvider>,
