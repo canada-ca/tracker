@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+secretGenerator:
+- envs:
+  - arangodb.env
+  name: arangodb
+  namespace: db
+- envs:
+  - api.env
+  name: api
+  namespace: api
+- envs:
+  - kiali.env
+  name: kiali
+  namespace: istio-system
+- envs:
+  - scanners.env
+  name: scanners
+  namespace: scanners
+generatorOptions:
+  disableNameSuffixHash: true
