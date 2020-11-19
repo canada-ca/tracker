@@ -50,9 +50,6 @@ export default function DmarcByDomainPage() {
       <Trans>Domains Table</Trans>
     </LoadingMessage>
   )
-  if (loading) {
-    return 'laoding'
-  }
 
   if (!loading) {
     const formattedData = []
@@ -163,8 +160,9 @@ export default function DmarcByDomainPage() {
       const value = `${months[months.length + i].toUpperCase()}, ${
         currentDate.getFullYear() - 1
       }`
-      const translatedValue = `${months[months.length + i]
-        .toUpperCase()}, ${currentDate.getFullYear() - 1}`
+      const translatedValue = `${months[months.length + i].toUpperCase()}, ${
+        currentDate.getFullYear() - 1
+      }`
 
       options.push(
         <option key={value} value={value}>
@@ -175,8 +173,9 @@ export default function DmarcByDomainPage() {
     // handle current year
     else {
       const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${months[i]
-        .toUpperCase()}, ${currentDate.getFullYear()}`
+      const translatedValue = `${months[
+        i
+      ].toUpperCase()}, ${currentDate.getFullYear()}`
 
       options.push(
         <option key={value} value={value}>

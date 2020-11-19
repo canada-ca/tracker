@@ -25,13 +25,11 @@ const mocks = [
     request: {
       query: DMARC_REPORT_SUMMARY_TABLE,
       variables: {
-        period: 'LAST30DAYS',
+        month: 'LAST30DAYS',
         year: '2020',
       },
     },
-    result: {
-      data: rawDmarcReportSummaryTableData,
-    },
+    result: rawDmarcReportSummaryTableData,
   },
 ]
 
