@@ -8,7 +8,7 @@ module.exports.sslLoaderByKey = (query, userId, i18n) =>
       cursor = await query`
         FOR sslScan IN ssl
           FILTER sslScan._key IN ${keys}
-          RETURN sslScan
+          RETURN MERGE({ id: sslScan._key }, sslScan)
       `
     } catch (err) {
       console.error(
