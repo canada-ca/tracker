@@ -108,7 +108,7 @@ const httpsLoaderConnectionsByDomainId = (
         ${startDateTemplate}
         ${endDateTemplate}
         ${limitTemplate}
-        RETURN httpsScan
+        RETURN MERGE({ id: httpsScan._key }, httpsScan)
     )
 
     LET hasNextPage = (LENGTH(
@@ -167,7 +167,6 @@ const httpsLoaderConnectionsByDomainId = (
   }
 
   const edges = httpsScanInfo.httpsScans.map((httpsScan) => {
-    httpsScan.id = httpsScan._key
     httpsScan.domainId = domainId
     return {
       cursor: toGlobalId('https', httpsScan._key),

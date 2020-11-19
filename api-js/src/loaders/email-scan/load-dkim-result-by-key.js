@@ -9,7 +9,7 @@ module.exports.dkimResultLoaderByKey = (query, userId, i18n) =>
       cursor = await query`
         FOR dkimResult IN dkimResults
           FILTER dkimResult._key IN ${keys}
-          RETURN dkimResult
+          RETURN MERGE({ id: dkimResult._key }, dkimResult)
       `
     } catch (err) {
       console.error(

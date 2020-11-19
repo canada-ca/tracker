@@ -9,7 +9,7 @@ module.exports.domainLoaderByKey = (query, userId, i18n) =>
       cursor = await query`
         FOR domain IN domains
           FILTER domain._key IN ${ids}
-          RETURN domain
+          RETURN MERGE({ id: domain._key}, domain)
       `
     } catch (err) {
       console.error(

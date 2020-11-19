@@ -46,7 +46,7 @@ describe('given a userLoaderByKey dataloader', () => {
       const expectedCursor = await query`
         FOR user IN users
           FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
+          RETURN MERGE({ id: user._key }, user)
       `
       const expectedUser = await expectedCursor.next()
 

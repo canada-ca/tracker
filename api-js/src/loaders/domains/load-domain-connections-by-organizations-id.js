@@ -109,7 +109,7 @@ const domainLoaderConnectionsByOrgId = (
         ${afterTemplate}
         ${beforeTemplate}
         ${limitTemplate}
-        RETURN domain
+        RETURN MERGE({ id: domain._key}, domain)
     )
     
     LET hasNextPage = (LENGTH(
@@ -168,7 +168,6 @@ const domainLoaderConnectionsByOrgId = (
   }
 
   const edges = domainsInfo.domains.map((domain) => {
-    domain.id = domain._key
     return {
       cursor: toGlobalId('domains', domain._key),
       node: domain,

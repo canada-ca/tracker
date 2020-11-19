@@ -9,7 +9,7 @@ module.exports.spfLoaderByKey = (query, userId, i18n) =>
       cursor = await query`
         FOR spfScan IN spf
           FILTER spfScan._key IN ${keys} 
-          RETURN spfScan
+          RETURN MERGE({ id: spfScan._key }, spfScan)
       `
     } catch (err) {
       console.error(

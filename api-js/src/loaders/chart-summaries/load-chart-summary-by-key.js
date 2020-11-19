@@ -9,7 +9,7 @@ module.exports.chartSummaryLoaderByKey = (query, userId, i18n) =>
       cursor = await query`
         FOR summary IN chartSummaries
           FILTER summary._key IN ${keys}
-          RETURN summary
+          RETURN MERGE({ id: summary._key }, summary)
       `
     } catch (err) {
       console.error(

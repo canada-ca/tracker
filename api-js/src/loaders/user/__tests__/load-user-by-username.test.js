@@ -62,15 +62,10 @@ describe('given a userLoaderByUserName dataloader', () => {
       const cursor = await query`
         FOR user IN users
           FILTER user.userName == ${userName}
-          RETURN user
+          RETURN MERGE({ id: user._key }, user)
       `
       const expectedUser = await cursor.next()
 
-      /* 
-        doing the following causes errors because database connection closes before promise is resolved
-        expect(loader.load(userName)).resolves.toEqual(expectedUser)
-        so as a work around until more testing can be done is the way it has to be done
-      */
       const user = await loader.load(userName)
       expect(user).toEqual(expectedUser)
     })
@@ -89,16 +84,11 @@ describe('given a userLoaderByUserName dataloader', () => {
         const cursor = await query`
           FOR user IN users
             FILTER user.userName == ${userNames[i]}
-            RETURN user
+            RETURN MERGE({ id: user._key }, user)
         `
         expectedUsers.push(await cursor.next())
       }
 
-      /* 
-        doing the following causes errors because database connection closes before promise is resolved
-        expect(loader.loadMany(userNames)).resolves.toEqual(expectedUsers)
-        so as a work around until more testing can be done is the way it has to be done
-      */
       const users = await loader.loadMany(userNames)
       expect(users).toEqual(expectedUsers)
     })

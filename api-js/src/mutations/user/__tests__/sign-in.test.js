@@ -105,7 +105,7 @@ describe('authenticate user account', () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           let user = await cursor.next()
 
@@ -162,7 +162,7 @@ describe('authenticate user account', () => {
           cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await cursor.next()
 
@@ -178,7 +178,7 @@ describe('authenticate user account', () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           let user = await cursor.next()
 
@@ -235,7 +235,7 @@ describe('authenticate user account', () => {
           cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await cursor.next()
 
@@ -252,7 +252,7 @@ describe('authenticate user account', () => {
         let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
         let user = await cursor.next()
 
@@ -299,7 +299,7 @@ describe('authenticate user account', () => {
         cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
         user = await cursor.next()
 
@@ -359,7 +359,7 @@ describe('authenticate user account', () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
 
@@ -415,7 +415,7 @@ describe('authenticate user account', () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           let user = await cursor.next()
 
@@ -462,7 +462,7 @@ describe('authenticate user account', () => {
           cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await cursor.next()
 
@@ -474,7 +474,7 @@ describe('authenticate user account', () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
 
@@ -534,7 +534,7 @@ describe('authenticate user account', () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
 
@@ -593,7 +593,7 @@ describe('authenticate user account', () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
 
@@ -658,7 +658,7 @@ describe('authenticate user account', () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
 
@@ -739,7 +739,7 @@ describe('authenticate user account', () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           let user = await cursor.next()
 
@@ -795,7 +795,7 @@ describe('authenticate user account', () => {
           cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await cursor.next()
 
@@ -811,7 +811,7 @@ describe('authenticate user account', () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           let user = await cursor.next()
 
@@ -867,7 +867,7 @@ describe('authenticate user account', () => {
           cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await cursor.next()
 
@@ -884,7 +884,7 @@ describe('authenticate user account', () => {
         let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
         let user = await cursor.next()
 
@@ -931,7 +931,7 @@ describe('authenticate user account', () => {
         cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
         user = await cursor.next()
 
@@ -989,7 +989,7 @@ describe('authenticate user account', () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
 
@@ -1043,7 +1043,7 @@ describe('authenticate user account', () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           let user = await cursor.next()
 
@@ -1090,7 +1090,7 @@ describe('authenticate user account', () => {
           cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           user = await cursor.next()
 
@@ -1102,7 +1102,7 @@ describe('authenticate user account', () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
 
@@ -1158,7 +1158,7 @@ describe('authenticate user account', () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
 
@@ -1215,7 +1215,7 @@ describe('authenticate user account', () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
 
@@ -1278,7 +1278,7 @@ describe('authenticate user account', () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
+              RETURN MERGE({ id: user._key }, user)
           `
           const user = await cursor.next()
 

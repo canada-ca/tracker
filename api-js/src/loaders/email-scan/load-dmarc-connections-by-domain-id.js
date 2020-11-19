@@ -109,7 +109,7 @@ const dmarcLoaderConnectionsByDomainId = (
       ${startDateTemplate}
       ${endDateTemplate}
       ${limitTemplate}
-      RETURN dmarcScan
+      RETURN MERGE({ id: dmarcScan._key }, dmarcScan)
     )
 
     LET hasNextPage = (LENGTH(
@@ -169,7 +169,6 @@ const dmarcLoaderConnectionsByDomainId = (
   }
 
   const edges = dmarcScanInfo.dmarcScans.map((dmarcScan) => {
-    dmarcScan.id = dmarcScan._key
     dmarcScan.domainId = domainId
     return {
       cursor: toGlobalId('dmarc', dmarcScan._key),

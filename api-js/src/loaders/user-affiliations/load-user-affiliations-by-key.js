@@ -11,7 +11,7 @@ module.exports.affiliationLoaderByKey = (query, userId, i18n) =>
           FILTER affiliation._key IN ${ids}
           LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
           LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { orgKey: orgKey, userKey: userKey })
+          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey })
       `
     } catch (err) {
       console.error(
