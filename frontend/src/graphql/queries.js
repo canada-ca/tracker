@@ -11,6 +11,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
           name
           slug
           domainCount
+          verified
         }
       }
       pageInfo {
@@ -34,6 +35,7 @@ export const REVERSE_PAGINATED_ORGANIZATIONS = gql`
           name
           slug
           domainCount
+          verified
         }
       }
       pageInfo {
@@ -185,33 +187,43 @@ export const ADMIN_PANEL = gql`
 
 export const ORG_DETAILS_PAGE = gql`
   query OrgDetails($slug: Slug!) {
-    organization: findOrganizationDetailBySlug(slug: $slug) {
+    organization: findOrganizationBySlug(orgSlug: $slug) {
       id
       name
       acronym
+      domainCount
+      city
       province
+      verified
       domains {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
         edges {
           node {
             id
-            url
+            domain
             lastRan
           }
         }
       }
-    }
-    userList(orgSlug: $slug) {
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-      }
-      edges {
-        node {
-          id
-          userName
-          role
-          tfa
-          displayName
+      affiliations {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        totalCount
+        edges {
+          node {
+            permission
+            user {
+              id
+              userName
+              displayName
+              tfaValidated
+            }
+          }
         }
       }
     }

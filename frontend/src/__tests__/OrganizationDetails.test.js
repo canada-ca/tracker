@@ -63,35 +63,43 @@ describe('<OrganizationDetails />', () => {
                 id: 'ODk3MDg5MzI2MA==',
                 name,
                 acronym: 'TBS',
+                domainCount: 1,
+                city: 'Ottawa',
                 province: 'ON',
+                verified: true,
                 domains: {
+                  pageInfo: {
+                    hasNextPage: false,
+                    hasPreviousPage: false,
+                  },
                   edges: [
                     {
                       node: {
                         id: 'OTY2NTI4OTY4NA==',
-                        url: 'tbs-sct.gc.ca',
+                        domain: 'tbs-sct.gc.ca',
                         lastRan: '2020-06-18T00:42:12.414Z',
                       },
                     },
                   ],
                 },
-              },
-              userList: {
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                },
-                edges: [
-                  {
+                affiliations: {
+                  pageInfo: {
+                    hasNextPage: false,
+                    hasPreviousPage: false,
+                  },
+                  totalCount: 5,
+                  edges: {
                     node: {
-                      id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
-                      userName: 'testuser@testemail.gc.ca',
-                      role: 'ADMIN',
-                      tfa: false,
-                      displayName: 'testuser',
+                      permission: 'ADMIN',
+                      user: {
+                        id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
+                        userName: 'testuser@testemail.gc.ca',
+                        displayName: 'testuser',
+                        tfaValidated: false,
+                      },
                     },
                   },
-                ],
+                },
               },
             },
           },

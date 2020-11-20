@@ -14,6 +14,8 @@ import {
   TabPanel,
   Box,
   Divider,
+  Text,
+  Icon,
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
 import { useUserState } from './UserState'
@@ -94,6 +96,9 @@ export default function OrganizationDetails() {
         <Heading as="h1" textAlign={['center', 'left']}>
           <Trans>{orgName}</Trans>
         </Heading>
+        {data.organization.verified && (
+          <Icon name="check-circle" color="blue.500" size="icons.lg" />
+        )}
       </Stack>
       <Tabs isFitted>
         <TabList mb="4">
@@ -113,20 +118,29 @@ export default function OrganizationDetails() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationSummary />
+              <OrganizationSummary
+                domainCount={data.organization.domainCount}
+                userCount={data.organization.affiliations.totalCount}
+                city={data.organization.city}
+                province={data.organization.province}
+              />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <ListOf
                 elements={currentDomains}
-                ifEmpty={() => <Trans>No Domains</Trans>}
+                ifEmpty={() => (
+                  <Text fontSize="xl" fontWeight="bold">
+                    <Trans>No Domains</Trans>
+                  </Text>
+                )}
                 mb="4"
               >
-                {({ id, url, lastRan }, index) => (
+                {({ id, domain, lastRan }, index) => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <Box key={`${id}:${index}`}>
-                      <DomainCard url={url} lastRan={lastRan} />
+                      <DomainCard url={domain} lastRan={lastRan} />
                       <Divider borderColor="gray.900" />
                     </Box>
                   </ErrorBoundary>
@@ -149,7 +163,7 @@ export default function OrganizationDetails() {
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <UserList
-                  userListData={data.userList}
+                  userListData={data.organization.affiliations}
                   orgName={orgName}
                   orgSlug={orgSlug}
                 />

@@ -61,17 +61,14 @@ export default function Organisations({ orgsPerPage = 10 }) {
           <InputLeftElement>
             <Icon name="search" color="gray.300" />
           </InputLeftElement>
-          <Input
-            type="text"
-            placeholder={t`Search for an organization`}
-          />
+          <Input type="text" placeholder={t`Search for an organization`} />
         </InputGroup>
         <ListOf
           elements={nodes}
           ifEmpty={() => <Trans>No Organizations</Trans>}
           mb="4"
         >
-          {({ name, slug, acronym, domainCount }, index) => (
+          {({ name, slug, acronym, domainCount, verified }, index) => (
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <Box key={`${slug}:${index}`}>
                 <OrganizationCard
@@ -79,6 +76,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
                   name={name}
                   acronym={acronym}
                   domainCount={domainCount}
+                  verified={verified}
                 />
                 <Divider borderColor="gray.900" />
               </Box>
@@ -104,7 +102,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
         </Trans>
       </ErrorBoundary>
     </Layout>
-  );
+  )
 }
 
 Organisations.propTypes = { orgsPerPage: number }

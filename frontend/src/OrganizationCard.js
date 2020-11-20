@@ -7,9 +7,10 @@ import {
   Box,
   Stack,
   Divider,
+  Icon,
 } from '@chakra-ui/core'
 import { useRouteMatch, useHistory } from 'react-router-dom'
-import { string, number } from 'prop-types'
+import { string, number, bool } from 'prop-types'
 import { Trans } from '@lingui/macro'
 
 export function OrganizationCard({
@@ -17,6 +18,7 @@ export function OrganizationCard({
   acronym,
   slug,
   domainCount,
+  verified,
   ...rest
 }) {
   const { path, _url } = useRouteMatch()
@@ -52,6 +54,9 @@ export function OrganizationCard({
             <Text mt="1" fontSize={['lg', 'md']} fontWeight="semibold">
               ({acronym})
             </Text>
+            {verified && (
+              <Icon name="check-circle" color="blue.500" size="icons.sm" />
+            )}
           </Stack>
         </Box>
         <Divider orientation="vertical" />
@@ -100,4 +105,5 @@ OrganizationCard.propTypes = {
   acronym: string.isRequired,
   slug: string.isRequired,
   domainCount: number.isRequired,
+  verified: bool,
 }
