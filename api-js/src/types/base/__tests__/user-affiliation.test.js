@@ -139,7 +139,7 @@ describe('given the user affiliation connection, and user affiliation object', (
         {
           auth: {
             userRequired: userRequired({
-              userId: user._key,
+              userKey: user._key,
               userLoaderByKey: userLoaderByKey(query),
             }),
           },

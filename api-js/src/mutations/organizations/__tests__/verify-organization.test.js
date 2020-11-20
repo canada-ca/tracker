@@ -159,15 +159,15 @@ describe('removing an organization', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 checkPermission: checkPermission({
-                  userId: user._key,
+                  userKey: user._key,
                   query,
                   i18n,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                   i18n,
                 }),
@@ -233,15 +233,15 @@ describe('removing an organization', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 checkPermission: checkPermission({
-                  userId: user._key,
+                  userKey: user._key,
                   query,
                   i18n,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                   i18n,
                 }),
@@ -344,15 +344,15 @@ describe('removing an organization', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 checkPermission: checkPermission({
-                  userId: user._key,
+                  userKey: user._key,
                   query,
                   i18n,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                   i18n,
                 }),
@@ -433,15 +433,15 @@ describe('removing an organization', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 checkPermission: checkPermission({
-                  userId: user._key,
+                  userKey: user._key,
                   query,
                   i18n,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                   i18n,
                 }),
@@ -525,15 +525,15 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                     i18n,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                     i18n,
                   }),
@@ -616,15 +616,15 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                     i18n,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                     i18n,
                   }),
@@ -718,15 +718,15 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction: mockedTransaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                     i18n,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                     i18n,
                   }),
@@ -782,15 +782,15 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction: mockedTransaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                     i18n,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                     i18n,
                   }),
@@ -887,15 +887,15 @@ describe('removing an organization', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 checkPermission: checkPermission({
-                  userId: user._key,
+                  userKey: user._key,
                   query,
                   i18n,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                   i18n,
                 }),
@@ -974,15 +974,15 @@ describe('removing an organization', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 checkPermission: checkPermission({
-                  userId: user._key,
+                  userKey: user._key,
                   query,
                   i18n,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                   i18n,
                 }),
@@ -1062,15 +1062,15 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                     i18n,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                     i18n,
                   }),
@@ -1149,15 +1149,15 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                     i18n,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                     i18n,
                   }),
@@ -1247,15 +1247,15 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction: mockedTransaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                     i18n,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                     i18n,
                   }),
@@ -1307,15 +1307,15 @@ describe('removing an organization', () => {
                 query,
                 collections,
                 transaction: mockedTransaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                     i18n,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query, user._key, i18n),
                     i18n,
                   }),

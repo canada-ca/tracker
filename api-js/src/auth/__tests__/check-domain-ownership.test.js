@@ -84,7 +84,7 @@ describe('given the check domain ownership function', () => {
     describe('if the user belongs to an org which has a ownership for a given organization', () => {
       afterEach(async () => {
         await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
           LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
           RETURN true
         `
@@ -104,7 +104,7 @@ describe('given the check domain ownership function', () => {
         it('will return true', async () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
             query,
-            userId: user._key,
+            userKey: user._key,
           })
           permitted = await testCheckDomainOwnerShip({
             domainId: domain._id,
@@ -123,7 +123,7 @@ describe('given the check domain ownership function', () => {
         it('will return true', async () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
             query,
-            userId: user._key,
+            userKey: user._key,
           })
           permitted = await testCheckDomainOwnerShip({
             domainId: domain._id,
@@ -142,7 +142,7 @@ describe('given the check domain ownership function', () => {
         it('will return true', async () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
             query,
-            userId: user._key,
+            userKey: user._key,
           })
           permitted = await testCheckDomainOwnerShip({
             domainId: domain._id,
@@ -168,7 +168,7 @@ describe('given the check domain ownership function', () => {
       it('will return false', async () => {
         const testCheckDomainOwnerShip = checkDomainOwnership({
           query,
-          userId: user._key,
+          userKey: user._key,
         })
         permitted = await testCheckDomainOwnerShip({
           domainId: domain._id,
@@ -198,7 +198,7 @@ describe('given the check domain ownership function', () => {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
               query: mockQuery,
-              userId: user._key,
+              userKey: user._key,
             })
             await testCheckDomainOwnerShip({
               domainId: domain._id,
@@ -228,7 +228,7 @@ describe('given the check domain ownership function', () => {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
               query: mockQuery,
-              userId: user._key,
+              userKey: user._key,
             })
             await testCheckDomainOwnerShip({
               domainId: domain._id,
@@ -268,7 +268,7 @@ describe('given the check domain ownership function', () => {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
               query: mockQuery,
-              userId: user._key,
+              userKey: user._key,
             })
             await testCheckDomainOwnerShip({
               domainId: domain._id,
@@ -294,7 +294,7 @@ describe('given the check domain ownership function', () => {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
               query: mockQuery,
-              userId: user._key,
+              userKey: user._key,
             })
             await testCheckDomainOwnerShip({
               domainId: domain._id,

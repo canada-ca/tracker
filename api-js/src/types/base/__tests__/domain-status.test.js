@@ -157,7 +157,7 @@ describe('given the domain status object', () => {
     })
     afterEach(async () => {
       await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
         LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
         RETURN true
       `
@@ -166,7 +166,7 @@ describe('given the domain status object', () => {
           REMOVE affiliation IN affiliations
       `
       await query`
-        LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
+        LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userKey: e._to })
         LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
         RETURN true
       `
@@ -198,7 +198,7 @@ describe('given the domain status object', () => {
         null,
         {
           i18n,
-          userId: user._key,
+          userKey: user._key,
           loaders: {
             domainLoaderByKey: domainLoaderByKey(query, user._key),
             domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(

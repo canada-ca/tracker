@@ -10,7 +10,11 @@ const { makeMigrations } = require('../../../../migrations')
 const { createQuerySchema } = require('../..')
 const { createMutationSchema } = require('../../../mutations')
 const { cleanseInput } = require('../../../validators')
-const { checkDomainPermission, tokenize, userRequired } = require('../../../auth')
+const {
+  checkDomainPermission,
+  tokenize,
+  userRequired,
+} = require('../../../auth')
 const {
   userLoaderByUserName,
   domainLoaderByDomain,
@@ -157,7 +161,7 @@ describe('given findDomainByDomain query', () => {
       })
       afterEach(async () => {
         await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
           LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
           RETURN true
         `
@@ -190,15 +194,15 @@ describe('given findDomainByDomain query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: query,
               auth: {
                 checkDomainPermission: checkDomainPermission({
                   query,
-                  userId: user._key,
+                  userKey: user._key,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -271,15 +275,15 @@ describe('given findDomainByDomain query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: query,
               auth: {
                 checkDomainPermission: checkDomainPermission({
                   query,
-                  userId: user._key,
+                  userKey: user._key,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -372,15 +376,15 @@ describe('given findDomainByDomain query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: query,
               auth: {
                 checkDomainPermission: checkDomainPermission({
                   query,
-                  userId: user._key,
+                  userKey: user._key,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -435,7 +439,7 @@ describe('given findDomainByDomain query', () => {
       })
       afterEach(async () => {
         await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
           LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
           RETURN true
         `
@@ -468,15 +472,15 @@ describe('given findDomainByDomain query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: query,
               auth: {
                 checkDomainPermission: checkDomainPermission({
                   query,
-                  userId: user._key,
+                  userKey: user._key,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -542,15 +546,15 @@ describe('given findDomainByDomain query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: query,
               auth: {
                 checkDomainPermission: checkDomainPermission({
                   query,
-                  userId: user._key,
+                  userKey: user._key,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -639,15 +643,15 @@ describe('given findDomainByDomain query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: query,
               auth: {
                 checkDomainPermission: checkDomainPermission({
                   query,
-                  userId: user._key,
+                  userKey: user._key,
                 }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },

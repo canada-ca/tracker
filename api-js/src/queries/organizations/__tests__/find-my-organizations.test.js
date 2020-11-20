@@ -176,12 +176,12 @@ describe('given findMyOrganizationsQuery', () => {
     })
     afterEach(async () => {
       await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+        LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
         LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
         RETURN true
       `
       await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+        LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
         LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
         RETURN true
       `
@@ -226,7 +226,7 @@ describe('given findMyOrganizationsQuery', () => {
               null,
               {
                 i18n,
-                userId: user._key,
+                userKey: user._key,
                 loaders: {
                   orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
                     query,
@@ -326,7 +326,7 @@ describe('given findMyOrganizationsQuery', () => {
           null,
           {
             i18n,
-            userId: user._key,
+            userKey: user._key,
             loaders: {
               orgLoaderConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
             },
@@ -376,12 +376,12 @@ describe('given findMyOrganizationsQuery', () => {
     })
     afterEach(async () => {
       await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+        LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
         LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
         RETURN true
       `
       await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+        LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
         LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
         RETURN true
       `
@@ -426,7 +426,7 @@ describe('given findMyOrganizationsQuery', () => {
               null,
               {
                 i18n,
-                userId: user._key,
+                userKey: user._key,
                 loaders: {
                   orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
                     query,
@@ -526,7 +526,7 @@ describe('given findMyOrganizationsQuery', () => {
           null,
           {
             i18n,
-            userId: user._key,
+            userKey: user._key,
             loaders: {
               orgLoaderConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
             },

@@ -83,7 +83,7 @@ describe('user send password reset email', () => {
           `
         let user = await cursor.next()
 
-        const token = tokenize({ parameters: { userId: user._key } })
+        const token = tokenize({ parameters: { userKey: user._key } })
 
         const response = await graphql(
           schema,
@@ -98,7 +98,7 @@ describe('user send password reset email', () => {
           {
             i18n,
             request,
-            userId: user._key,
+            userKey: user._key,
             query,
             auth: {
               verifyToken: verifyToken({}),
@@ -135,10 +135,10 @@ describe('user send password reset email', () => {
       })
     })
     describe('given an unsuccessful validation', () => {
-      describe('userId is undefined', () => {
+      describe('userKey is undefined', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userId: 1 },
+            parameters: { userKey: 1 },
           })
 
           const response = await graphql(
@@ -154,7 +154,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: undefined,
+              userKey: undefined,
               query,
               auth: {
                 verifyToken: verifyToken({}),
@@ -174,14 +174,14 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User attempted to verify their account, but the userId is undefined.`,
+            `User attempted to verify their account, but the userKey is undefined.`,
           ])
         })
       })
       describe('user cannot be found in db', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userId: 1 },
+            parameters: { userKey: 1 },
           })
           const response = await graphql(
             schema,
@@ -196,7 +196,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: 1,
+              userKey: 1,
               query,
               auth: {
                 verifyToken: verifyToken({}),
@@ -220,7 +220,7 @@ describe('user send password reset email', () => {
           ])
         })
       })
-      describe('userId cannot be found in token parameters', () => {
+      describe('userKey cannot be found in token parameters', () => {
         beforeEach(async () => {
           await collections.users.save({
             userName: 'test.account@istio.actually.exists',
@@ -255,7 +255,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query,
               auth: {
                 verifyToken: verifyToken({}),
@@ -277,11 +277,11 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When validating account user: ${user._key} attempted to verify account, but userId is not located in the token parameters.`,
+            `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
-      describe('userId in token is undefined', () => {
+      describe('userKey in token is undefined', () => {
         beforeEach(async () => {
           await collections.users.save({
             userName: 'test.account@istio.actually.exists',
@@ -300,7 +300,7 @@ describe('user send password reset email', () => {
           const user = await cursor.next()
 
           const token = tokenize({
-            parameters: { userId: undefined },
+            parameters: { userKey: undefined },
           })
 
           const response = await graphql(
@@ -316,7 +316,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query,
               auth: {
                 verifyToken: verifyToken({}),
@@ -338,11 +338,11 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When validating account user: ${user._key} attempted to verify account, but userId is not located in the token parameters.`,
+            `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
-      describe('userId in token does not match users key in db', () => {
+      describe('userKey in token does not match users key in db', () => {
         beforeEach(async () => {
           await collections.users.save({
             userName: 'test.account@istio.actually.exists',
@@ -361,7 +361,7 @@ describe('user send password reset email', () => {
           const user = await cursor.next()
 
           const token = tokenize({
-            parameters: { userId: 1 },
+            parameters: { userKey: 1 },
           })
 
           const response = await graphql(
@@ -377,7 +377,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query,
               auth: {
                 verifyToken: verifyToken({}),
@@ -422,7 +422,7 @@ describe('user send password reset email', () => {
           const user = await cursor.next()
 
           const token = tokenize({
-            parameters: { userId: user._key },
+            parameters: { userKey: user._key },
           })
 
           const loader = userLoaderByKey(query)
@@ -444,7 +444,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query: mockedQuery,
               auth: {
                 verifyToken: verifyToken({}),
@@ -500,7 +500,7 @@ describe('user send password reset email', () => {
           `
         let user = await cursor.next()
 
-        const token = tokenize({ parameters: { userId: user._key } })
+        const token = tokenize({ parameters: { userKey: user._key } })
 
         const response = await graphql(
           schema,
@@ -515,7 +515,7 @@ describe('user send password reset email', () => {
           {
             i18n,
             request,
-            userId: user._key,
+            userKey: user._key,
             query,
             auth: {
               verifyToken: verifyToken({}),
@@ -552,10 +552,10 @@ describe('user send password reset email', () => {
       })
     })
     describe('given an unsuccessful validation', () => {
-      describe('userId is undefined', () => {
+      describe('userKey is undefined', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userId: 1 },
+            parameters: { userKey: 1 },
           })
 
           const response = await graphql(
@@ -571,7 +571,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: undefined,
+              userKey: undefined,
               query,
               auth: {
                 verifyToken: verifyToken({}),
@@ -589,14 +589,14 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User attempted to verify their account, but the userId is undefined.`,
+            `User attempted to verify their account, but the userKey is undefined.`,
           ])
         })
       })
       describe('user cannot be found in db', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userId: 1 },
+            parameters: { userKey: 1 },
           })
           const response = await graphql(
             schema,
@@ -611,7 +611,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: 1,
+              userKey: 1,
               query,
               auth: {
                 verifyToken: verifyToken({}),
@@ -633,7 +633,7 @@ describe('user send password reset email', () => {
           ])
         })
       })
-      describe('userId cannot be found in token parameters', () => {
+      describe('userKey cannot be found in token parameters', () => {
         beforeEach(async () => {
           await collections.users.save({
             userName: 'test.account@istio.actually.exists',
@@ -668,7 +668,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query,
               auth: {
                 verifyToken: verifyToken({}),
@@ -686,11 +686,11 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When validating account user: ${user._key} attempted to verify account, but userId is not located in the token parameters.`,
+            `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
-      describe('userId in token is undefined', () => {
+      describe('userKey in token is undefined', () => {
         beforeEach(async () => {
           await collections.users.save({
             userName: 'test.account@istio.actually.exists',
@@ -709,7 +709,7 @@ describe('user send password reset email', () => {
           const user = await cursor.next()
 
           const token = tokenize({
-            parameters: { userId: undefined },
+            parameters: { userKey: undefined },
           })
 
           const response = await graphql(
@@ -725,7 +725,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query,
               auth: {
                 verifyToken: verifyToken({}),
@@ -743,11 +743,11 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When validating account user: ${user._key} attempted to verify account, but userId is not located in the token parameters.`,
+            `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
-      describe('userId in token does not match users key in db', () => {
+      describe('userKey in token does not match users key in db', () => {
         beforeEach(async () => {
           await collections.users.save({
             userName: 'test.account@istio.actually.exists',
@@ -766,7 +766,7 @@ describe('user send password reset email', () => {
           const user = await cursor.next()
 
           const token = tokenize({
-            parameters: { userId: 1 },
+            parameters: { userKey: 1 },
           })
 
           const response = await graphql(
@@ -782,7 +782,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query,
               auth: {
                 verifyToken: verifyToken({}),
@@ -823,7 +823,7 @@ describe('user send password reset email', () => {
           const user = await cursor.next()
 
           const token = tokenize({
-            parameters: { userId: user._key },
+            parameters: { userKey: user._key },
           })
 
           const loader = userLoaderByKey(query)
@@ -845,7 +845,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query: mockedQuery,
               auth: {
                 verifyToken: verifyToken({}),

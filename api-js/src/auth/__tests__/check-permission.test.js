@@ -88,7 +88,7 @@ describe('given the check permission function', () => {
       })
       it('will return the users permission level', async () => {
         const testCheckPermission = checkPermission({
-          userId: user._key,
+          userKey: user._key,
           query,
         })
         const permission = await testCheckPermission({ orgId: org._id })
@@ -121,7 +121,7 @@ describe('given the check permission function', () => {
       })
       it('will return the users permission level', async () => {
         const testCheckPermission = checkPermission({
-          userId: user._key,
+          userKey: user._key,
           query,
         })
         const permission = await testCheckPermission({ orgId: org._id })
@@ -154,7 +154,7 @@ describe('given the check permission function', () => {
       })
       it('will return the users permission level', async () => {
         const testCheckPermission = checkPermission({
-          userId: user._key,
+          userKey: user._key,
           query,
         })
         const permission = await testCheckPermission({ orgId: org._id })
@@ -181,7 +181,7 @@ describe('given the check permission function', () => {
       })
       it('will return the users permission level', async () => {
         const testCheckPermission = checkPermission({
-          userId: user._key,
+          userKey: user._key,
           query,
         })
         const permission = await testCheckPermission({ orgId: org._id })
@@ -210,7 +210,7 @@ describe('given the check permission function', () => {
             try {
               const testCheckPermission = checkPermission({
                 i18n,
-                userId: '1',
+                userKey: '1',
                 query,
               })
               await testCheckPermission({ orgId: 'organizations/1' })
@@ -239,7 +239,7 @@ describe('given the check permission function', () => {
             try {
               const testCheckPermission = checkPermission({
                 i18n,
-                userId: '1',
+                userKey: '1',
                 query,
               })
               await testCheckPermission({ orgId: 'organizations/1' })
@@ -268,7 +268,7 @@ describe('given the check permission function', () => {
             try {
               const testCheckPermission = checkPermission({
                 i18n,
-                userId: '1',
+                userKey: '1',
                 query,
               })
               await testCheckPermission({ orgId: 'organizations/1' })
@@ -302,7 +302,7 @@ describe('given the check permission function', () => {
             try {
               const testCheckPermission = checkPermission({
                 i18n,
-                userId: '1',
+                userKey: '1',
                 query,
               })
               await testCheckPermission({ orgId: 'organizations/1' })
@@ -341,7 +341,7 @@ describe('given the check permission function', () => {
             try {
               const testCheckPermission = checkPermission({
                 i18n,
-                userId: '1',
+                userKey: '1',
                 query,
               })
               await testCheckPermission({ orgId: 'organizations/1' })
@@ -368,7 +368,7 @@ describe('given the check permission function', () => {
             try {
               const testCheckPermission = checkPermission({
                 i18n,
-                userId: '1',
+                userKey: '1',
                 query,
               })
               await testCheckPermission({ orgId: 'organizations/1' })
@@ -395,7 +395,7 @@ describe('given the check permission function', () => {
             try {
               const testCheckPermission = checkPermission({
                 i18n,
-                userId: '1',
+                userKey: '1',
                 query,
               })
               await testCheckPermission({ orgId: 'organizations/1' })
@@ -427,7 +427,7 @@ describe('given the check permission function', () => {
             try {
               const testCheckPermission = checkPermission({
                 i18n,
-                userId: '1',
+                userKey: '1',
                 query,
               })
               await testCheckPermission({ orgId: 'organizations/1' })

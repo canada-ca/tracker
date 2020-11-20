@@ -131,7 +131,7 @@ describe('given the user object', () => {
         {
           auth: {
             userRequired: userRequired({
-              userId: user._key,
+              userKey: user._key,
               userLoaderByKey: userLoaderByKey(query),
             }),
           },
