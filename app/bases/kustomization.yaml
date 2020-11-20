@@ -28,6 +28,7 @@ resources:
 - knative/config/queues.yaml
 - knative/config/config.yaml
 - knative/config/autoscan.yaml
+- knative/config/core.yaml
 - knative/monitoring/prometheus.yaml
 - knative/monitoring/loki-stack.yaml
 - knative/monitoring/grafana/grafana.yaml

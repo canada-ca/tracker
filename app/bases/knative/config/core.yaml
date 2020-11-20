@@ -4,7 +4,7 @@ metadata:
   name: core
   namespace: scanners
 spec:
-  schedule: "*/720 * 12 * *"
+  schedule: "59 23 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   successfulJobsHistoryLimit: 0
