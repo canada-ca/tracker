@@ -11,7 +11,7 @@ const findMyDomains = {
   resolve: async (
     _,
     args,
-    { i18n, userId, loaders: { domainLoaderConnectionsByUserId } },
+    { i18n, userKey, loaders: { domainLoaderConnectionsByUserId } },
   ) => {
     let domainConnections
 
@@ -19,12 +19,12 @@ const findMyDomains = {
       domainConnections = await domainLoaderConnectionsByUserId(args)
     } catch (err) {
       console.error(
-        `Database error occurred while user: ${userId} was trying to gather domain connections in findMyDomains.`,
+        `Database error occurred while user: ${userKey} was trying to gather domain connections in findMyDomains.`,
       )
       throw new Error(i18n._(t`Unable to load domains. Please try again.`))
     }
 
-    console.info(`User ${userId} successfully retrieved their domains.`)
+    console.info(`User ${userKey} successfully retrieved their domains.`)
 
     return domainConnections
   },

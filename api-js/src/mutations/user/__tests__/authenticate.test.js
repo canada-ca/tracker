@@ -71,7 +71,7 @@ describe('authenticate user account', () => {
       let user = await cursor.next()
 
       const token = tokenize({
-        parameters: { userId: user._key },
+        parameters: { userKey: user._key },
         secret: String(SIGN_IN_KEY),
       })
       const response = await graphql(
@@ -161,10 +161,10 @@ describe('authenticate user account', () => {
           },
         })
       })
-      describe('when userId in token is undefined', () => {
+      describe('when userKey in token is undefined', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userId: undefined },
+            parameters: { userKey: undefined },
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -215,11 +215,11 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Authentication token does not contain the userId`,
+            `Authentication token does not contain the userKey`,
           ])
         })
       })
-      describe('when userId is not a field in the token parameters', () => {
+      describe('when userKey is not a field in the token parameters', () => {
         it('returns an error message', async () => {
           const token = tokenize({
             parameters: {},
@@ -273,14 +273,14 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Authentication token does not contain the userId`,
+            `Authentication token does not contain the userKey`,
           ])
         })
       })
       describe('when user cannot be found in database', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userId: 1 },
+            parameters: { userKey: 1 },
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -355,7 +355,7 @@ describe('authenticate user account', () => {
           const user = await cursor.next()
 
           const token = tokenize({
-            parameters: { userId: user._key },
+            parameters: { userKey: user._key },
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -430,7 +430,7 @@ describe('authenticate user account', () => {
           const user = await cursor.next()
           const loader = userLoaderByKey(query)
           const token = tokenize({
-            parameters: { userId: user._key },
+            parameters: { userKey: user._key },
             secret: String(SIGN_IN_KEY),
           })
 
@@ -503,10 +503,10 @@ describe('authenticate user account', () => {
           },
         })
       })
-      describe('when userId in token is undefined', () => {
+      describe('when userKey in token is undefined', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userId: undefined },
+            parameters: { userKey: undefined },
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -555,11 +555,11 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Authentication token does not contain the userId`,
+            `Authentication token does not contain the userKey`,
           ])
         })
       })
-      describe('when userId is not a field in the token parameters', () => {
+      describe('when userKey is not a field in the token parameters', () => {
         it('returns an error message', async () => {
           const token = tokenize({
             parameters: {},
@@ -611,14 +611,14 @@ describe('authenticate user account', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Authentication token does not contain the userId`,
+            `Authentication token does not contain the userKey`,
           ])
         })
       })
       describe('when user cannot be found in database', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userId: 1 },
+            parameters: { userKey: 1 },
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -691,7 +691,7 @@ describe('authenticate user account', () => {
           const user = await cursor.next()
 
           const token = tokenize({
-            parameters: { userId: user._key },
+            parameters: { userKey: user._key },
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -764,7 +764,7 @@ describe('authenticate user account', () => {
           const user = await cursor.next()
           const loader = userLoaderByKey(query)
           const token = tokenize({
-            parameters: { userId: user._key },
+            parameters: { userKey: user._key },
             secret: String(SIGN_IN_KEY),
           })
 

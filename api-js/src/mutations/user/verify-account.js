@@ -26,7 +26,7 @@ const verifyAccount = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      userId,
+      userKey,
       auth: { verifyToken },
       loaders: { userLoaderByKey },
       validators: { cleanseInput },
@@ -35,19 +35,19 @@ const verifyAccount = new mutationWithClientMutationId({
     // Cleanse Input
     const verifyTokenString = cleanseInput(args.verifyTokenString)
 
-    if (typeof userId === 'undefined') {
+    if (typeof userKey === 'undefined') {
       console.warn(
-        `User attempted to verify their account, but the userId is undefined.`,
+        `User attempted to verify their account, but the userKey is undefined.`,
       )
       throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
 
     // Check if user exists
-    const user = await userLoaderByKey.load(userId)
+    const user = await userLoaderByKey.load(userKey)
 
     if (typeof user === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to verify account, however no account is associated with this id.`,
+        `User: ${userKey} attempted to verify account, however no account is associated with this id.`,
       )
       throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
@@ -55,13 +55,13 @@ const verifyAccount = new mutationWithClientMutationId({
     // Get info from token
     const tokenParameters = verifyToken({ token: verifyTokenString })
 
-    // Check to see if userId exists in tokenParameters
+    // Check to see if userKey exists in tokenParameters
     if (
-      tokenParameters.userId === 'undefined' ||
-      typeof tokenParameters.userId === 'undefined'
+      tokenParameters.userKey === 'undefined' ||
+      typeof tokenParameters.userKey === 'undefined'
     ) {
       console.warn(
-        `When validating account user: ${user._key} attempted to verify account, but userId is not located in the token parameters.`,
+        `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
       )
       throw new Error(
         i18n._(t`Unable to verify account. Please request a new email.`),
@@ -69,7 +69,7 @@ const verifyAccount = new mutationWithClientMutationId({
     }
 
     // Make sure user ids match
-    if (tokenParameters.userId !== user._key) {
+    if (tokenParameters.userKey !== user._key) {
       console.warn(
         `User: ${user._key} attempted to verify their account, but the user id's do not match.`,
       )

@@ -28,7 +28,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      userId,
+      userKey,
       loaders: { userLoaderByKey },
       validators: { cleanseInput },
       notify: { sendTfaTextMsg },
@@ -38,19 +38,19 @@ const sendPhoneCode = new mutationWithClientMutationId({
     const phoneNumber = cleanseInput(args.phoneNumber)
 
     // Check to see if user Id exists
-    if (typeof userId === 'undefined') {
+    if (typeof userKey === 'undefined') {
       console.warn(
-        `User attempted to send TFA text message, however the userId does not exist.`,
+        `User attempted to send TFA text message, however the userKey does not exist.`,
       )
       throw new Error(i18n._(t`Authentication error, please sign in again.`))
     }
 
     // Get User From Db
-    let user = await userLoaderByKey.load(userId)
+    let user = await userLoaderByKey.load(userKey)
 
     if (typeof user === 'undefined') {
       console.warn(
-        `User attempted to send TFA text message, however no account is associated with ${userId}.`,
+        `User attempted to send TFA text message, however no account is associated with ${userKey}.`,
       )
       throw new Error(i18n._(t`Unable to send TFA code, please try again.`))
     }

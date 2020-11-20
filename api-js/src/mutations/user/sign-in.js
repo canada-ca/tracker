@@ -75,7 +75,7 @@ const signIn = new mutationWithClientMutationId({
       // Check to see if passwords match
       if (bcrypt.compareSync(password, user.password)) {
         const token = tokenize({
-          parameters: { userId: user._key },
+          parameters: { userKey: user._key },
           secret: String(SIGN_IN_KEY),
         })
 

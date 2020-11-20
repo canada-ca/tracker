@@ -1,7 +1,7 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-const httpsGuidanceTagLoader = (query, userId, i18n) =>
+const httpsGuidanceTagLoader = (query, userKey, i18n) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
@@ -12,7 +12,7 @@ const httpsGuidanceTagLoader = (query, userId, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userId} running httpsGuidanceTagLoader: ${err}`,
+        `Database error occurred when user: ${userKey} running httpsGuidanceTagLoader: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find https guidance tags. Please try again.`),
@@ -26,7 +26,7 @@ const httpsGuidanceTagLoader = (query, userId, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userId} running httpsGuidanceTagLoader: ${err}`,
+        `Cursor error occurred when user: ${userKey} running httpsGuidanceTagLoader: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find https guidance tags. Please try again.`),

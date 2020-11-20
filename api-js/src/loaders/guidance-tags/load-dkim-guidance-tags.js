@@ -1,7 +1,7 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-const dkimGuidanceTagLoader = (query, userId, i18n) =>
+const dkimGuidanceTagLoader = (query, userKey, i18n) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
@@ -12,7 +12,7 @@ const dkimGuidanceTagLoader = (query, userId, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userId} running dkimGuidanceTagLoader: ${err}`,
+        `Database error occurred when user: ${userKey} running dkimGuidanceTagLoader: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find dkim guidance tags. Please try again.`),
@@ -26,7 +26,7 @@ const dkimGuidanceTagLoader = (query, userId, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userId} running dkimGuidanceTagLoader: ${err}`,
+        `Cursor error occurred when user: ${userKey} running dkimGuidanceTagLoader: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find dkim guidance tags. Please try again.`),

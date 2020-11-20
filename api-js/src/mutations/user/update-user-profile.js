@@ -37,7 +37,7 @@ const updateUserProfile = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      userId,
+      userKey,
       loaders: { userLoaderByKey },
       validators: { cleanseInput },
     },
@@ -47,8 +47,8 @@ const updateUserProfile = new mutationWithClientMutationId({
     const userName = cleanseInput(args.userName).toLowerCase()
     const preferredLang = cleanseInput(args.preferredLang)
 
-    // Make sure userId is not undefined
-    if (typeof userId === 'undefined') {
+    // Make sure userKey is not undefined
+    if (typeof userKey === 'undefined') {
       console.warn(
         `User attempted to update their profile, but the user id is undefined.`,
       )
@@ -56,11 +56,11 @@ const updateUserProfile = new mutationWithClientMutationId({
     }
 
     // Get user info from DB
-    const user = await userLoaderByKey.load(userId)
+    const user = await userLoaderByKey.load(userKey)
 
     if (typeof user === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to update their profile, but no account is associated with that id.`,
+        `User: ${userKey} attempted to update their profile, but no account is associated with that id.`,
       )
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }

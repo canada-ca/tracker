@@ -174,11 +174,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -303,11 +303,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -408,11 +408,11 @@ describe('create a domain', () => {
             query,
             collections,
             transaction,
-            userId: user._key,
+            userKey: user._key,
             auth: {
-              checkPermission: checkPermission({ userId: user._key, query }),
+              checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
-                userId: user._key,
+                userKey: user._key,
                 userLoaderByKey: userLoaderByKey(query),
               }),
             },
@@ -512,11 +512,11 @@ describe('create a domain', () => {
             query,
             collections,
             transaction,
-            userId: user._key,
+            userKey: user._key,
             auth: {
-              checkPermission: checkPermission({ userId: user._key, query }),
+              checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
-                userId: user._key,
+                userKey: user._key,
                 userLoaderByKey: userLoaderByKey(query),
               }),
             },
@@ -651,11 +651,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -764,11 +764,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -877,11 +877,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -1002,11 +1002,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -1074,11 +1074,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -1160,11 +1160,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -1205,7 +1205,7 @@ describe('create a domain', () => {
           it('returns an error message', async () => {
             const domainLoader = domainLoaderByDomain(query)
             const orgIdLoader = orgLoaderByKey(query, 'en')
-            const userIdLoader = userLoaderByKey(query)
+            const userKeyLoader = userLoaderByKey(query)
             const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
               query,
               'en',
@@ -1264,22 +1264,22 @@ describe('create a domain', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
-                    userLoaderByKey: userIdLoader,
+                    userKey: user._key,
+                    userLoaderByKey: userKeyLoader,
                   }),
                 },
                 loaders: {
                   domainLoaderByDomain: domainLoader,
                   orgLoaderByKey: orgIdLoader,
                   orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                  userLoaderByKey: userIdLoader,
+                  userLoaderByKey: userKeyLoader,
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -1306,7 +1306,7 @@ describe('create a domain', () => {
           it('returns an error message', async () => {
             const domainLoader = domainLoaderByDomain(query)
             const orgIdLoader = orgLoaderByKey(query, 'en')
-            const userIdLoader = userLoaderByKey(query)
+            const userKeyLoader = userLoaderByKey(query)
             const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
               query,
               'en',
@@ -1360,14 +1360,14 @@ describe('create a domain', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query),
                   }),
                 },
@@ -1375,7 +1375,7 @@ describe('create a domain', () => {
                   domainLoaderByDomain: domainLoader,
                   orgLoaderByKey: orgIdLoader,
                   orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                  userLoaderByKey: userIdLoader,
+                  userLoaderByKey: userKeyLoader,
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -1444,11 +1444,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -1514,11 +1514,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -1598,11 +1598,11 @@ describe('create a domain', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -1641,7 +1641,7 @@ describe('create a domain', () => {
           it('returns an error message', async () => {
             const domainLoader = domainLoaderByDomain(query)
             const orgIdLoader = orgLoaderByKey(query, 'en')
-            const userIdLoader = userLoaderByKey(query)
+            const userKeyLoader = userLoaderByKey(query)
             const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
               query,
               'en',
@@ -1700,22 +1700,22 @@ describe('create a domain', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
-                    userLoaderByKey: userIdLoader,
+                    userKey: user._key,
+                    userLoaderByKey: userKeyLoader,
                   }),
                 },
                 loaders: {
                   domainLoaderByDomain: domainLoader,
                   orgLoaderByKey: orgIdLoader,
                   orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                  userLoaderByKey: userIdLoader,
+                  userLoaderByKey: userKeyLoader,
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -1740,7 +1740,7 @@ describe('create a domain', () => {
           it('returns an error message', async () => {
             const domainLoader = domainLoaderByDomain(query)
             const orgIdLoader = orgLoaderByKey(query, 'en')
-            const userIdLoader = userLoaderByKey(query)
+            const userKeyLoader = userLoaderByKey(query)
             const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
               query,
               'en',
@@ -1794,14 +1794,14 @@ describe('create a domain', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                   }),
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query),
                   }),
                 },
@@ -1809,7 +1809,7 @@ describe('create a domain', () => {
                   domainLoaderByDomain: domainLoader,
                   orgLoaderByKey: orgIdLoader,
                   orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                  userLoaderByKey: userIdLoader,
+                  userLoaderByKey: userKeyLoader,
                 },
                 validators: { cleanseInput, slugify },
               },

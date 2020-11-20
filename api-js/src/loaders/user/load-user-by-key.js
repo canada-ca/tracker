@@ -1,7 +1,7 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-module.exports.userLoaderByKey = (query, userId, i18n) =>
+module.exports.userLoaderByKey = (query, userKey, i18n) =>
   new DataLoader(async (ids) => {
     let cursor
 
@@ -13,7 +13,7 @@ module.exports.userLoaderByKey = (query, userId, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userId} running userLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running userLoaderByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find user. Please try again.`))
     }
@@ -25,7 +25,7 @@ module.exports.userLoaderByKey = (query, userId, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userId} funning userLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} funning userLoaderByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find user. Please try again.`))
     }

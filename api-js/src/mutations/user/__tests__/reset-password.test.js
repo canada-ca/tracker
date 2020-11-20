@@ -106,7 +106,7 @@ describe('reset users password', () => {
         const user = await userCursor.next()
 
         const resetToken = tokenize({
-          parameters: { userId: user._key, currentPassword: user.password },
+          parameters: { userKey: user._key, currentPassword: user.password },
         })
 
         const response = await graphql(
@@ -208,7 +208,7 @@ describe('reset users password', () => {
       })
     })
     describe('user does not successfully reset their password', () => {
-      describe('userId cannot be found in token parameters', () => {
+      describe('userKey cannot be found in token parameters', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
             parameters: {},
@@ -254,14 +254,14 @@ describe('reset users password', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When resetting password user attempted to verify account, but userId is not located in the token parameters.`,
+            `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
-      describe('userId in token is undefined', () => {
+      describe('userKey in token is undefined', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userId: undefined },
+            parameters: { userKey: undefined },
           })
 
           const response = await graphql(
@@ -304,14 +304,14 @@ describe('reset users password', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When resetting password user attempted to verify account, but userId is not located in the token parameters.`,
+            `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
       describe('user cannot be found', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userId: 1, currentPassword: 'secretPassword' },
+            parameters: { userKey: 1, currentPassword: 'secretPassword' },
           })
 
           const response = await graphql(
@@ -369,7 +369,7 @@ describe('reset users password', () => {
 
           const resetToken = tokenize({
             parameters: {
-              userId: user._key,
+              userKey: user._key,
               currentPassword: 'secretPassword',
             },
           })
@@ -428,7 +428,7 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const resetToken = tokenize({
-            parameters: { userId: user._key, currentPassword: user.password },
+            parameters: { userKey: user._key, currentPassword: user.password },
           })
 
           const response = await graphql(
@@ -485,7 +485,7 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const resetToken = tokenize({
-            parameters: { userId: user._key, currentPassword: user.password },
+            parameters: { userKey: user._key, currentPassword: user.password },
           })
 
           const response = await graphql(
@@ -544,10 +544,10 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const userNameLoader = userLoaderByUserName(query)
-          const userIdLoader = userLoaderByKey(query)
+          const userKeyLoader = userLoaderByKey(query)
 
           const resetToken = tokenize({
-            parameters: { userId: user._key, currentPassword: user.password },
+            parameters: { userKey: user._key, currentPassword: user.password },
             secret: 'superSecret',
           })
 
@@ -580,7 +580,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userNameLoader,
-                userLoaderByKey: userIdLoader,
+                userLoaderByKey: userKeyLoader,
               },
             },
           )
@@ -605,10 +605,10 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const userNameLoader = userLoaderByUserName(query)
-          const userIdLoader = userLoaderByKey(query)
+          const userKeyLoader = userLoaderByKey(query)
 
           const resetToken = tokenize({
-            parameters: { userId: user._key, currentPassword: user.password },
+            parameters: { userKey: user._key, currentPassword: user.password },
           })
 
           query = jest
@@ -644,7 +644,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userNameLoader,
-                userLoaderByKey: userIdLoader,
+                userLoaderByKey: userKeyLoader,
               },
             },
           )
@@ -683,7 +683,7 @@ describe('reset users password', () => {
         const user = await userCursor.next()
 
         const resetToken = tokenize({
-          parameters: { userId: user._key, currentPassword: user.password },
+          parameters: { userKey: user._key, currentPassword: user.password },
         })
 
         const response = await graphql(
@@ -784,7 +784,7 @@ describe('reset users password', () => {
       })
     })
     describe('user does not successfully reset their password', () => {
-      describe('userId cannot be found in token parameters', () => {
+      describe('userKey cannot be found in token parameters', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
             parameters: {},
@@ -828,14 +828,14 @@ describe('reset users password', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When resetting password user attempted to verify account, but userId is not located in the token parameters.`,
+            `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
-      describe('userId in token is undefined', () => {
+      describe('userKey in token is undefined', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userId: undefined },
+            parameters: { userKey: undefined },
           })
 
           const response = await graphql(
@@ -876,14 +876,14 @@ describe('reset users password', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `When resetting password user attempted to verify account, but userId is not located in the token parameters.`,
+            `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
         })
       })
       describe('user cannot be found', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userId: 1, currentPassword: 'secretPassword' },
+            parameters: { userKey: 1, currentPassword: 'secretPassword' },
           })
 
           const response = await graphql(
@@ -939,7 +939,7 @@ describe('reset users password', () => {
 
           const resetToken = tokenize({
             parameters: {
-              userId: user._key,
+              userKey: user._key,
               currentPassword: 'secretPassword',
             },
           })
@@ -996,7 +996,7 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const resetToken = tokenize({
-            parameters: { userId: user._key, currentPassword: user.password },
+            parameters: { userKey: user._key, currentPassword: user.password },
           })
 
           const response = await graphql(
@@ -1051,7 +1051,7 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const resetToken = tokenize({
-            parameters: { userId: user._key, currentPassword: user.password },
+            parameters: { userKey: user._key, currentPassword: user.password },
           })
 
           const response = await graphql(
@@ -1106,10 +1106,10 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const userNameLoader = userLoaderByUserName(query)
-          const userIdLoader = userLoaderByKey(query)
+          const userKeyLoader = userLoaderByKey(query)
 
           const resetToken = tokenize({
-            parameters: { userId: user._key, currentPassword: user.password },
+            parameters: { userKey: user._key, currentPassword: user.password },
             secret: 'superSecret',
           })
 
@@ -1142,7 +1142,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userNameLoader,
-                userLoaderByKey: userIdLoader,
+                userLoaderByKey: userKeyLoader,
               },
             },
           )
@@ -1165,10 +1165,10 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const userNameLoader = userLoaderByUserName(query)
-          const userIdLoader = userLoaderByKey(query)
+          const userKeyLoader = userLoaderByKey(query)
 
           const resetToken = tokenize({
-            parameters: { userId: user._key, currentPassword: user.password },
+            parameters: { userKey: user._key, currentPassword: user.password },
           })
 
           query = jest
@@ -1204,7 +1204,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userNameLoader,
-                userLoaderByKey: userIdLoader,
+                userLoaderByKey: userKeyLoader,
               },
             },
           )

@@ -23,7 +23,7 @@ describe('given a encoded token', () => {
   describe('token can be decoded and verified', () => {
     it('returns the parameters', () => {
       const parameters = {
-        userId: 1,
+        userKey: 1,
       }
       const token = jwt.sign({ parameters }, String(AUTHENTICATED_KEY), {
         algorithm: 'HS256',
@@ -31,7 +31,7 @@ describe('given a encoded token', () => {
 
       const testVerify = verifyToken({ i18n })
       const decoded = testVerify({ token })
-      expect(decoded.userId).toEqual(1)
+      expect(decoded.userKey).toEqual(1)
     })
   })
   describe('language is set to english', () => {
@@ -49,7 +49,7 @@ describe('given a encoded token', () => {
     describe('if the secret does not match', () => {
       it('raises an error', () => {
         const parameters = {
-          userId: 1,
+          userKey: 1,
         }
         const token = jwt.sign({ parameters }, 'superSecretKey', {
           algorithm: 'HS256',
@@ -80,7 +80,7 @@ describe('given a encoded token', () => {
     describe('if the secret does not match', () => {
       it('raises an error', () => {
         const parameters = {
-          userId: 1,
+          userKey: 1,
         }
         const token = jwt.sign({ parameters }, 'superSecretKey', {
           algorithm: 'HS256',

@@ -1,7 +1,7 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-const sslGuidanceTagLoader = (query, userId, i18n) =>
+const sslGuidanceTagLoader = (query, userKey, i18n) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
@@ -12,7 +12,7 @@ const sslGuidanceTagLoader = (query, userId, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userId} running sslGuidanceTagLoader: ${err}`,
+        `Database error occurred when user: ${userKey} running sslGuidanceTagLoader: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find ssl guidance tags. Please try again.`),
@@ -26,7 +26,7 @@ const sslGuidanceTagLoader = (query, userId, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userId} running sslGuidanceTagLoader: ${err}`,
+        `Cursor error occurred when user: ${userKey} running sslGuidanceTagLoader: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find ssl guidance tags. Please try again.`),

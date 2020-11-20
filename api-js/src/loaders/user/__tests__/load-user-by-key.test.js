@@ -71,7 +71,7 @@ describe('given a userLoaderByKey dataloader', () => {
   })
   describe('provided a list of ids', () => {
     it('returns a list of users', async () => {
-      const userIds = []
+      const userKeys = []
       const expectedUsers = []
       const expectedCursor = await query`
         FOR user IN users
@@ -80,12 +80,12 @@ describe('given a userLoaderByKey dataloader', () => {
 
       while (expectedCursor.hasNext()) {
         const tempUser = await expectedCursor.next()
-        userIds.push(tempUser._key)
+        userKeys.push(tempUser._key)
         expectedUsers.push(tempUser)
       }
 
       const loader = userLoaderByKey(query)
-      const users = await loader.loadMany(userIds)
+      const users = await loader.loadMany(userKeys)
       expect(users).toEqual(expectedUsers)
     })
   })

@@ -4,7 +4,7 @@ const { t } = require('@lingui/macro')
 
 const dkimGuidanceTagConnectionsLoader = (
   query,
-  userId,
+  userKey,
   cleanseInput,
   i18n,
 ) => async ({ dkimGuidanceTags, after, before, first, last }) => {
@@ -23,7 +23,7 @@ const dkimGuidanceTagConnectionsLoader = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
     )
     throw new Error(
       i18n._(
@@ -32,7 +32,7 @@ const dkimGuidanceTagConnectionsLoader = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
     )
     throw new Error(
       i18n._(
@@ -44,7 +44,7 @@ const dkimGuidanceTagConnectionsLoader = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
       )
       throw new Error(
         i18n._(
@@ -55,7 +55,7 @@ const dkimGuidanceTagConnectionsLoader = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: dkimGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: dkimGuidanceTagConnectionsLoader.`,
       )
       throw new Error(
         i18n._(
@@ -71,7 +71,7 @@ const dkimGuidanceTagConnectionsLoader = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: dkimGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: dkimGuidanceTagConnectionsLoader.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -124,7 +124,7 @@ const dkimGuidanceTagConnectionsLoader = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load dkim guidance tags. Please try again.`),
@@ -136,7 +136,7 @@ const dkimGuidanceTagConnectionsLoader = (
     dkimGuidanceTagInfo = await dkimGuidanceTagInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load dkim guidance tags. Please try again.`),

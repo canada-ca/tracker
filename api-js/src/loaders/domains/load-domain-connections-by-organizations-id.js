@@ -4,14 +4,14 @@ const { t } = require('@lingui/macro')
 
 const domainLoaderConnectionsByOrgId = (
   query,
-  userId,
+  userKey,
   cleanseInput,
   i18n,
 ) => async ({ orgId, after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
-  const userDBId = `users/${userId}`
+  const userDBId = `users/${userKey}`
 
   let afterId
   if (typeof after !== 'undefined') {
@@ -28,7 +28,7 @@ const domainLoaderConnectionsByOrgId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
     )
     throw new Error(
       i18n._(
@@ -37,7 +37,7 @@ const domainLoaderConnectionsByOrgId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
     )
     throw new Error(
       i18n._(
@@ -49,7 +49,7 @@ const domainLoaderConnectionsByOrgId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: domainLoaderConnectionsByOrgId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: domainLoaderConnectionsByOrgId.`,
       )
       throw new Error(
         i18n._(
@@ -60,7 +60,7 @@ const domainLoaderConnectionsByOrgId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` to ${amount} for: domainLoaderConnectionsByOrgId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: domainLoaderConnectionsByOrgId.`,
       )
       throw new Error(
         i18n._(
@@ -76,7 +76,7 @@ const domainLoaderConnectionsByOrgId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: domainLoaderConnectionsByOrgId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: domainLoaderConnectionsByOrgId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -139,7 +139,7 @@ const domainLoaderConnectionsByOrgId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
@@ -149,7 +149,7 @@ const domainLoaderConnectionsByOrgId = (
     domainsInfo = await requestedDomainInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }

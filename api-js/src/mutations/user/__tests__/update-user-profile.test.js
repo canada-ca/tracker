@@ -117,7 +117,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 bcrypt,
                 tokenize,
@@ -178,7 +178,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 bcrypt,
                 tokenize,
@@ -237,7 +237,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 bcrypt,
                 tokenize,
@@ -302,7 +302,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 bcrypt,
                 tokenize,
@@ -364,7 +364,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: undefined,
+              userKey: undefined,
               auth: {
                 bcrypt,
                 tokenize,
@@ -410,7 +410,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: 1,
+              userKey: 1,
               auth: {
                 bcrypt,
                 tokenize,
@@ -470,7 +470,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 bcrypt,
                 tokenize,
@@ -532,7 +532,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 bcrypt,
                 tokenize,
@@ -593,7 +593,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 bcrypt,
                 tokenize,
@@ -652,7 +652,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 bcrypt,
                 tokenize,
@@ -717,7 +717,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 bcrypt,
                 tokenize,
@@ -779,7 +779,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: undefined,
+              userKey: undefined,
               auth: {
                 bcrypt,
                 tokenize,
@@ -823,7 +823,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: 1,
+              userKey: 1,
               auth: {
                 bcrypt,
                 tokenize,
@@ -881,7 +881,7 @@ describe('authenticate user account', () => {
             {
               i18n,
               query,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 bcrypt,
                 tokenize,

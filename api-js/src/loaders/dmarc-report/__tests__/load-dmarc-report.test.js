@@ -52,7 +52,7 @@ describe('given the domainLoaderDmarcReport function', () => {
       const data = await loader({
         info,
         domain: 'test.domain.gc.ca',
-        userId: '53521',
+        userKey: '53521',
         tokenize: jest.fn(),
       })
 
@@ -103,7 +103,7 @@ describe('given the domainLoaderDmarcReport function', () => {
           await loader({
             info,
             domain: 'test.domain.gc.ca',
-            userId: '53521',
+            userKey: '53521',
             tokenize: jest.fn(),
           })
         } catch (err) {
@@ -164,7 +164,7 @@ describe('given the domainLoaderDmarcReport function', () => {
           await loader({
             info,
             domain: 'test.domain.gc.ca',
-            userId: '53521',
+            userKey: '53521',
             tokenize: jest.fn(),
           })
         } catch (err) {

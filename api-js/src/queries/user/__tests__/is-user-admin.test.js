@@ -105,12 +105,12 @@ describe('given the isUserAdmin query', () => {
           `,
           null,
           {
-            userId: user._key,
+            userKey: user._key,
             query: query,
             auth: {
-              checkPermission: checkPermission({ userId: user._key, query }),
+              checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
-                userId: user._key,
+                userKey: user._key,
                 userLoaderByKey: userLoaderByKey(query),
               }),
             },
@@ -148,12 +148,12 @@ describe('given the isUserAdmin query', () => {
           `,
           null,
           {
-            userId: user._key,
+            userKey: user._key,
             query: query,
             auth: {
-              checkPermission: checkPermission({ userId: user._key, query }),
+              checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
-                userId: user._key,
+                userKey: user._key,
                 userLoaderByKey: userLoaderByKey(query),
               }),
             },
@@ -191,12 +191,12 @@ describe('given the isUserAdmin query', () => {
           `,
           null,
           {
-            userId: user._key,
+            userKey: user._key,
             query: query,
             auth: {
-              checkPermission: checkPermission({ userId: user._key, query }),
+              checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
-                userId: user._key,
+                userKey: user._key,
                 userLoaderByKey: userLoaderByKey(query),
               }),
             },
@@ -244,12 +244,12 @@ describe('given the isUserAdmin query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: mockedQuery,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -301,12 +301,12 @@ describe('given the isUserAdmin query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: mockedQuery,
               auth: {
-                checkPermission: checkPermission({ userId: user._key, query }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },

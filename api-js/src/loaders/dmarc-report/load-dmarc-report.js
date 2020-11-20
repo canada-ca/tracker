@@ -11,7 +11,7 @@ const dmarcReportLoader = ({
   generateDetailTableFields,
   fetch,
   i18n,
-}) => async ({ info, domain, userId, tokenize }) => {
+}) => async ({ info, domain, userKey, tokenize }) => {
   const genGqlQuery = generateGqlQuery({ generateDetailTableFields })
   let data
   try {
@@ -33,7 +33,7 @@ const dmarcReportLoader = ({
     }).then((response) => response.json())
   } catch (err) {
     console.error(
-      `Fetch error occurred well User: ${userId} was trying to retrieve ${info.fieldName} from the dmarc-report-api, error: ${err}`,
+      `Fetch error occurred well User: ${userKey} was trying to retrieve ${info.fieldName} from the dmarc-report-api, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to retrieve ${info.fieldName} for domain: ${domain}.`),

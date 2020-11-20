@@ -4,7 +4,7 @@ const { t } = require('@lingui/macro')
 
 const spfGuidanceTagConnectionsLoader = (
   query,
-  userId,
+  userKey,
   cleanseInput,
   i18n,
 ) => async ({ spfGuidanceTags, after, before, first, last }) => {
@@ -23,7 +23,7 @@ const spfGuidanceTagConnectionsLoader = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: spfGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: spfGuidanceTagConnectionsLoader.`,
     )
     throw new Error(
       i18n._(
@@ -32,7 +32,7 @@ const spfGuidanceTagConnectionsLoader = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: spfGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: spfGuidanceTagConnectionsLoader.`,
     )
     throw new Error(
       i18n._(
@@ -44,7 +44,7 @@ const spfGuidanceTagConnectionsLoader = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: spfGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: spfGuidanceTagConnectionsLoader.`,
       )
       throw new Error(
         i18n._(
@@ -55,7 +55,7 @@ const spfGuidanceTagConnectionsLoader = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: spfGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: spfGuidanceTagConnectionsLoader.`,
       )
       throw new Error(
         i18n._(
@@ -71,7 +71,7 @@ const spfGuidanceTagConnectionsLoader = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: spfGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: spfGuidanceTagConnectionsLoader.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -124,7 +124,7 @@ const spfGuidanceTagConnectionsLoader = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather orgs in spfGuidanceTagConnectionsLoader, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather orgs in spfGuidanceTagConnectionsLoader, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load spf guidance tags. Please try again.`),
@@ -136,7 +136,7 @@ const spfGuidanceTagConnectionsLoader = (
     spfGuidanceTagInfo = await spfGuidanceTagInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather orgs in spfGuidanceTagConnectionsLoader, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather orgs in spfGuidanceTagConnectionsLoader, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load spf guidance tags. Please try again.`),

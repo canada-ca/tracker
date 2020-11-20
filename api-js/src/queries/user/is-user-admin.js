@@ -4,7 +4,7 @@ const { t } = require('@lingui/macro')
 const isUserAdmin = {
   type: GraphQLBoolean,
   description: 'Query used to check if the user has an admin role.',
-  resolve: async (_, __, { i18n, query, userId, auth: { userRequired } }) => {
+  resolve: async (_, __, { i18n, query, userKey, auth: { userRequired } }) => {
     const user = await userRequired()
 
     let userAdmin
@@ -17,7 +17,7 @@ const isUserAdmin = {
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userId} was seeing if they were an admin, err: ${err}`,
+        `Database error occurred when user: ${userKey} was seeing if they were an admin, err: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to verify if user is an admin, please try again.`),

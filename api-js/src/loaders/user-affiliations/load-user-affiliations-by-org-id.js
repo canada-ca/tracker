@@ -2,13 +2,12 @@ const { aql } = require('arangojs')
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
 const { t } = require('@lingui/macro')
 
-const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
-  orgId,
-  after,
-  before,
-  first,
-  last,
-}) => {
+const affiliationLoaderByOrgId = (
+  query,
+  userKey,
+  cleanseInput,
+  i18n,
+) => async ({ orgId, after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -27,7 +26,7 @@ const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: affiliationLoaderByOrgId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: affiliationLoaderByOrgId.`,
     )
     throw new Error(
       i18n._(
@@ -36,7 +35,7 @@ const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: affiliationLoaderByOrgId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: affiliationLoaderByOrgId.`,
     )
     throw new Error(
       i18n._(
@@ -48,7 +47,7 @@ const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: affiliationLoaderByOrgId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: affiliationLoaderByOrgId.`,
       )
       throw new Error(
         i18n._(
@@ -59,7 +58,7 @@ const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: affiliationLoaderByOrgId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: affiliationLoaderByOrgId.`,
       )
       throw new Error(
         i18n._(
@@ -75,7 +74,7 @@ const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: affiliationLoaderByOrgId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: affiliationLoaderByOrgId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -132,7 +131,7 @@ const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to query affiliations in affiliationLoaderByOrgId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to query affiliations in affiliationLoaderByOrgId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to query affiliations. Please try again.`))
   }
@@ -142,7 +141,7 @@ const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
     filteredAffiliations = await filteredAffiliationCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather affiliations in affiliationLoaderByOrgId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather affiliations in affiliationLoaderByOrgId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load affiliations. Please try again.`))
   }

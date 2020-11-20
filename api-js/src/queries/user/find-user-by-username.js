@@ -17,7 +17,7 @@ const findUserByUsername = {
     args,
     {
       i18n,
-      userId,
+      userKey,
       auth: { userRequired, checkUserIsAdminForUser },
       loaders: { userLoaderByUserName },
       validators: { cleanseInput },
@@ -36,7 +36,7 @@ const findUserByUsername = {
       user.id = user._key
       return user
     } else {
-      console.warn(`User ${userId} is not permitted to query users.`)
+      console.warn(`User ${userKey} is not permitted to query users.`)
       throw new Error(i18n._(t`User could not be queried.`))
     }
   },

@@ -137,15 +137,15 @@ describe('given the findUserByUsername query', () => {
               null,
               {
                 i18n,
-                userId: user._key,
+                userKey: user._key,
                 query: query,
                 auth: {
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query),
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                   }),
                 },
@@ -206,15 +206,15 @@ describe('given the findUserByUsername query', () => {
               null,
               {
                 i18n,
-                userId: user._key,
+                userKey: user._key,
                 query: query,
                 auth: {
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query),
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                   }),
                 },
@@ -253,7 +253,7 @@ describe('given the findUserByUsername query', () => {
             permission: 'admin',
           })
           await collections.affiliations.save({
-            _from: "organizations/2",
+            _from: 'organizations/2',
             _to: userTwo._id,
             permission: 'user',
           })
@@ -278,15 +278,15 @@ describe('given the findUserByUsername query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: query,
               auth: {
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
                 checkUserIsAdminForUser: checkUserIsAdminForUser({
-                  userId: user._key,
+                  userKey: user._key,
                   query,
                 }),
               },
@@ -298,7 +298,9 @@ describe('given the findUserByUsername query', () => {
               },
             },
           )
-          expect(response.errors).toEqual([new GraphQLError('User could not be queried.')])
+          expect(response.errors).toEqual([
+            new GraphQLError('User could not be queried.'),
+          ])
         })
       })
       describe('if the user is only a user for their organization(s)', () => {
@@ -334,15 +336,15 @@ describe('given the findUserByUsername query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: query,
               auth: {
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
                 checkUserIsAdminForUser: checkUserIsAdminForUser({
-                  userId: user._key,
+                  userKey: user._key,
                   query,
                 }),
               },
@@ -409,15 +411,15 @@ describe('given the findUserByUsername query', () => {
               null,
               {
                 i18n,
-                userId: user._key,
+                userKey: user._key,
                 query: query,
                 auth: {
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query),
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                   }),
                 },
@@ -478,15 +480,15 @@ describe('given the findUserByUsername query', () => {
               null,
               {
                 i18n,
-                userId: user._key,
+                userKey: user._key,
                 query: query,
                 auth: {
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query),
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
-                    userId: user._key,
+                    userKey: user._key,
                     query,
                   }),
                 },
@@ -525,7 +527,7 @@ describe('given the findUserByUsername query', () => {
             permission: 'admin',
           })
           await collections.affiliations.save({
-            _from: "organizations/2",
+            _from: 'organizations/2',
             _to: userTwo._id,
             permission: 'user',
           })
@@ -550,15 +552,15 @@ describe('given the findUserByUsername query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: query,
               auth: {
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
                 checkUserIsAdminForUser: checkUserIsAdminForUser({
-                  userId: user._key,
+                  userKey: user._key,
                   query,
                 }),
               },
@@ -606,15 +608,15 @@ describe('given the findUserByUsername query', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: query,
               auth: {
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
                 checkUserIsAdminForUser: checkUserIsAdminForUser({
-                  userId: user._key,
+                  userKey: user._key,
                   query,
                 }),
               },
