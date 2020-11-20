@@ -1,17 +1,20 @@
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  creationTimestamp: null
   name: ingress-cert
   namespace: istio-system
 spec:
-  keySize: 4096
-  keyAlgorithm: rsa
-  keyEncoding: pkcs8
-  secretName: tracker-credential
-  issuerRef:
-    name: letsencrypt
-    kind: Issuer
   commonName: tracker.alpha.canada.ca
   dnsNames:
   - tracker.alpha.canada.ca
   - suivi.alpha.canada.ca
+  issuerRef:
+    kind: Issuer
+    name: letsencrypt
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 4096
+  secretName: tracker-credential
+status: {}
