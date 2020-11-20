@@ -1,7 +1,7 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-module.exports.chartSummaryLoaderByKey = (query, userId, i18n) =>
+module.exports.chartSummaryLoaderByKey = (query, userKey, i18n) =>
   new DataLoader(async (keys) => {
     let cursor
 
@@ -13,7 +13,7 @@ module.exports.chartSummaryLoaderByKey = (query, userId, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userId} running chartSummaryLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running chartSummaryLoaderByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find summary. Please try again.`))
     }
@@ -25,7 +25,7 @@ module.exports.chartSummaryLoaderByKey = (query, userId, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userId} running chartSummaryLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} running chartSummaryLoaderByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find summary. Please try again.`))
     }

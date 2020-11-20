@@ -1,7 +1,7 @@
 const DataLoader = require('dataloader')
 const { t } = require('@lingui/macro')
 
-module.exports.domainLoaderByDomain = (query, userId, i18n) =>
+module.exports.domainLoaderByDomain = (query, userKey, i18n) =>
   new DataLoader(async (domains) => {
     let cursor
 
@@ -13,7 +13,7 @@ module.exports.domainLoaderByDomain = (query, userId, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userId} running domainLoaderByDomain: ${err}`,
+        `Database error occurred when user: ${userKey} running domainLoaderByDomain: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find domain. Please try again.`))
     }
@@ -25,7 +25,7 @@ module.exports.domainLoaderByDomain = (query, userId, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userId} running domainLoaderByDomain: ${err}`,
+        `Cursor error occurred when user: ${userKey} running domainLoaderByDomain: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find domain. Please try again.`))
     }

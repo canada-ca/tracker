@@ -128,7 +128,7 @@ const signUp = new mutationWithClientMutationId({
     insertedUser.id = insertedUser._key
 
     // Generate JWT
-    const token = tokenize({ parameters: { userId: insertedUser._key } })
+    const token = tokenize({ parameters: { userKey: insertedUser._key } })
 
     console.info(`User: ${userName} successfully created a new account.`)
 

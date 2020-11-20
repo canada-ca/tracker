@@ -1,7 +1,9 @@
 const { t } = require('@lingui/macro')
 
-const checkUserIsAdminForUser = ({ i18n, userId, query }) => async ({ userName }) => {
-  const requestingUserId = `users/${userId}`
+const checkUserIsAdminForUser = ({ i18n, userKey, query }) => async ({
+  userName,
+}) => {
+  const requestingUserId = `users/${userKey}`
   let cursor
 
   try {
@@ -12,7 +14,7 @@ const checkUserIsAdminForUser = ({ i18n, userId, query }) => async ({ userName }
     `
   } catch (err) {
     console.error(
-      `Database error when checking to see if user: ${userId} has super admin permission for user: ${userName}, error: ${err}`,
+      `Database error when checking to see if user: ${userKey} has super admin permission for user: ${userName}, error: ${err}`,
     )
     throw new Error(i18n._(t`Permission error, not an admin for this user.`))
   }
@@ -22,7 +24,7 @@ const checkUserIsAdminForUser = ({ i18n, userId, query }) => async ({ userName }
     permission = await cursor.next()
   } catch (err) {
     console.error(
-      `Cursor error when checking to see if user: ${userId} has super admin permission for user: ${userName}, error: ${err}`,
+      `Cursor error when checking to see if user: ${userKey} has super admin permission for user: ${userName}, error: ${err}`,
     )
     throw new Error(i18n._(t`Permission error, not an admin for this user.`))
   }
@@ -53,7 +55,7 @@ const checkUserIsAdminForUser = ({ i18n, userId, query }) => async ({ userName }
       `
     } catch (err) {
       console.error(
-        `Database error when checking to see if user: ${userId} has admin permission for user: ${userName}, error: ${err}`,
+        `Database error when checking to see if user: ${userKey} has admin permission for user: ${userName}, error: ${err}`,
       )
       throw new Error(i18n._(t`Permission error, not an admin for this user.`))
     }
@@ -63,7 +65,7 @@ const checkUserIsAdminForUser = ({ i18n, userId, query }) => async ({ userName }
       isAdmin = await cursor.next()
     } catch (err) {
       console.error(
-        `Cursor error when checking to see if user: ${userId} has admin permission for user: ${userName}, error: ${err}`,
+        `Cursor error when checking to see if user: ${userKey} has admin permission for user: ${userName}, error: ${err}`,
       )
       throw new Error(i18n._(t`Permission error, not an admin for this user.`))
     }

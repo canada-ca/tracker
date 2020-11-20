@@ -25,7 +25,7 @@ const verifyOrganization = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      userId,
+      userKey,
       auth: { checkPermission, userRequired },
       loaders: { orgLoaderByKey },
       validators: { cleanseInput },
@@ -41,7 +41,7 @@ const verifyOrganization = new mutationWithClientMutationId({
 
     if (typeof currentOrg === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to verify organization: ${orgKey}, however no organizations is associated with that id.`,
+        `User: ${userKey} attempted to verify organization: ${orgKey}, however no organizations is associated with that id.`,
       )
       throw new Error(
         i18n._(t`Unable to verify organization. Please try again.`),
@@ -53,7 +53,7 @@ const verifyOrganization = new mutationWithClientMutationId({
 
     if (permission !== 'super_admin') {
       console.warn(
-        `User: ${userId} attempted to verify organization: ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
+        `User: ${userKey} attempted to verify organization: ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
       )
       throw new Error(
         i18n._(t`Unable to verify organization. Please try again.`),
@@ -63,7 +63,7 @@ const verifyOrganization = new mutationWithClientMutationId({
     // Check to see if org is already verified
     if (currentOrg.verified) {
       console.warn(
-        `User: ${userId} attempted to verify organization: ${orgKey}, however the organization has already been verified.`,
+        `User: ${userKey} attempted to verify organization: ${orgKey}, however the organization has already been verified.`,
       )
       throw new Error(i18n._(t`Organization has already been verified.`))
     }
@@ -111,7 +111,7 @@ const verifyOrganization = new mutationWithClientMutationId({
       )
     }
 
-    console.info(`User: ${userId}, successfully verified org: ${orgKey}.`)
+    console.info(`User: ${userKey}, successfully verified org: ${orgKey}.`)
 
     return {
       status: i18n._(

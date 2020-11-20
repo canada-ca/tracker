@@ -28,7 +28,7 @@ const removeOrganization = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      userId,
+      userKey,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
       loaders: { orgLoaderByKey },
@@ -46,7 +46,7 @@ const removeOrganization = new mutationWithClientMutationId({
     // Check to see if org exists
     if (typeof organization === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to remove org: ${orgId}, but there is no org associated with that id.`,
+        `User: ${userKey} attempted to remove org: ${orgId}, but there is no org associated with that id.`,
       )
       throw new Error(
         i18n._(t`Unable to remove organization. Please try again.`),
@@ -59,7 +59,7 @@ const removeOrganization = new mutationWithClientMutationId({
     // Check to see if org is verified check, and the user is super admin
     if (organization.verified && permission !== 'super_admin') {
       console.warn(
-        `User: ${userId} attempted to remove ${organization._key}, however the user is not a super admin.`,
+        `User: ${userKey} attempted to remove ${organization._key}, however the user is not a super admin.`,
       )
       throw new Error(
         i18n._(t`Unable to remove organization. Please try again.`),
@@ -68,7 +68,7 @@ const removeOrganization = new mutationWithClientMutationId({
 
     if (permission !== 'super_admin' && permission !== 'admin') {
       console.warn(
-        `User: ${userId} attempted to remove ${organization._key}, however the user does not have permission to this organization.`,
+        `User: ${userKey} attempted to remove ${organization._key}, however the user does not have permission to this organization.`,
       )
       throw new Error(
         i18n._(t`Unable to remove organization. Please try again.`),
@@ -158,7 +158,7 @@ const removeOrganization = new mutationWithClientMutationId({
         }),
         trx.run(async () => {
           await query`
-            LET userEdges = (FOR v, e IN 1..1 ANY ${organization._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+            LET userEdges = (FOR v, e IN 1..1 ANY ${organization._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
             LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
             RETURN true
           `
@@ -190,7 +190,7 @@ const removeOrganization = new mutationWithClientMutationId({
     }
 
     console.info(
-      `User: ${userId} successfully removed org: ${organization._key}.`,
+      `User: ${userKey} successfully removed org: ${organization._key}.`,
     )
 
     return {

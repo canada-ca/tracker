@@ -50,7 +50,7 @@ const sendEmailVerification = new mutationWithClientMutationId({
       }
 
       const token = tokenize({
-        parameters: { userId: user._key },
+        parameters: { userKey: user._key },
       })
 
       const verifyUrl = `${request.protocol}://${request.get(

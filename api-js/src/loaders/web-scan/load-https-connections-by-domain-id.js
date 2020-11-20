@@ -4,7 +4,7 @@ const { t } = require('@lingui/macro')
 
 const httpsLoaderConnectionsByDomainId = (
   query,
-  userId,
+  userKey,
   cleanseInput,
   i18n,
 ) => async ({ domainId, startDate, endDate, after, before, first, last }) => {
@@ -33,7 +33,7 @@ const httpsLoaderConnectionsByDomainId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
@@ -42,7 +42,7 @@ const httpsLoaderConnectionsByDomainId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} tried to have \`first\` and \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
+      `User: ${userKey} tried to have \`first\` and \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
@@ -54,7 +54,7 @@ const httpsLoaderConnectionsByDomainId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: httpsLoaderConnectionsByDomainId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: httpsLoaderConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -65,7 +65,7 @@ const httpsLoaderConnectionsByDomainId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: httpsLoaderConnectionsByDomainId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: httpsLoaderConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -81,7 +81,7 @@ const httpsLoaderConnectionsByDomainId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: httpsLoaderConnectionsByDomainId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: httpsLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -138,7 +138,7 @@ const httpsLoaderConnectionsByDomainId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to get https information for ${domainId}, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to get https information for ${domainId}, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load https scans. Please try again.`))
   }
@@ -148,7 +148,7 @@ const httpsLoaderConnectionsByDomainId = (
     httpsScanInfo = await requestedHttpsInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to get https information for ${domainId}, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to get https information for ${domainId}, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load https scans. Please try again.`))
   }

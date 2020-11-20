@@ -49,26 +49,26 @@ const authenticate = new mutationWithClientMutationId({
     })
 
     if (
-      tokenParameters.userId === 'undefined' ||
-      typeof tokenParameters.userId === 'undefined'
+      tokenParameters.userKey === 'undefined' ||
+      typeof tokenParameters.userKey === 'undefined'
     ) {
-      console.warn(`Authentication token does not contain the userId`)
+      console.warn(`Authentication token does not contain the userKey`)
       throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
     }
 
     // Gather sign in user
-    const user = await userLoaderByKey.load(tokenParameters.userId)
+    const user = await userLoaderByKey.load(tokenParameters.userKey)
 
     if (typeof user === 'undefined') {
       console.warn(
-        `User: ${tokenParameters.userId} attempted to authenticate, no account is associated with this id.`,
+        `User: ${tokenParameters.userKey} attempted to authenticate, no account is associated with this id.`,
       )
       throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
     }
 
     // Check to see if security token matches the user submitted one
     if (authenticationCode === user.tfaCode) {
-      const token = tokenize({ parameters: { userId: user._key } })
+      const token = tokenize({ parameters: { userKey: user._key } })
 
       // Reset Failed Login attempts
       try {

@@ -41,7 +41,7 @@ const updateUserRole = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      userId,
+      userKey,
       auth: { checkPermission, userRequired },
       loaders: { orgLoaderByKey, userLoaderByUserName },
       validators: { cleanseInput },
@@ -58,7 +58,7 @@ const updateUserRole = new mutationWithClientMutationId({
     // Make sure user is not attempting to update their own role
     if (user.userName === userName) {
       console.warn(
-        `User: ${userId} attempted to update their own role in org: ${orgId}.`,
+        `User: ${userKey} attempted to update their own role in org: ${orgId}.`,
       )
       throw new Error(
         i18n._(t`Unable to update your own role. Please try again.`),
@@ -70,7 +70,7 @@ const updateUserRole = new mutationWithClientMutationId({
 
     if (typeof requestedUser === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to update a user: ${userName} role in org: ${orgId}, however there is no user associated with that user name.`,
+        `User: ${userKey} attempted to update a user: ${userName} role in org: ${orgId}, however there is no user associated with that user name.`,
       )
       throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
@@ -80,7 +80,7 @@ const updateUserRole = new mutationWithClientMutationId({
 
     if (typeof org === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to update a user: ${requestedUser._key} role in org: ${orgId}, however there is no org associated with that id.`,
+        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${orgId}, however there is no org associated with that id.`,
       )
       throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
@@ -90,7 +90,7 @@ const updateUserRole = new mutationWithClientMutationId({
 
     if (permission === 'user' || typeof permission === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
+        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
       )
       throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
@@ -105,14 +105,14 @@ const updateUserRole = new mutationWithClientMutationId({
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userId} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
+        `Database error occurred when user: ${userKey} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
 
     if (affiliationCursor.count < 1) {
       console.warn(
-        `User: ${userId} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however that user does not have an affiliation with that organization.`,
+        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however that user does not have an affiliation with that organization.`,
       )
       throw new Error(
         i18n._(
@@ -147,7 +147,7 @@ const updateUserRole = new mutationWithClientMutationId({
       // If requested users permission is super admin, make sure they don't get downgraded
       if (affiliation.permission === 'super_admin') {
         console.warn(
-          `User: ${userId} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: admin.`,
+          `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: admin.`,
         )
         throw new Error(
           i18n._(t`Unable to update users role. Please try again.`),
@@ -166,7 +166,7 @@ const updateUserRole = new mutationWithClientMutationId({
         (affiliation.permission === 'admin' && permission !== 'super_admin')
       ) {
         console.warn(
-          `User: ${userId} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: user.`,
+          `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: user.`,
         )
         throw new Error(
           i18n._(t`Unable to update users role. Please try again.`),
@@ -180,7 +180,7 @@ const updateUserRole = new mutationWithClientMutationId({
       }
     } else {
       console.warn(
-        `User: ${userId} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: ${role}.`,
+        `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: ${role}.`,
       )
       throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
@@ -196,7 +196,7 @@ const updateUserRole = new mutationWithClientMutationId({
       })
     } catch (err) {
       console.error(
-        `Transaction run error occurred when user: ${userId} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
+        `Transaction run error occurred when user: ${userKey} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
@@ -205,13 +205,13 @@ const updateUserRole = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.warn(
-        `Transaction commit error occurred when user: ${userId} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
+        `Transaction commit error occurred when user: ${userKey} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
 
     console.info(
-      `User: ${userId} successful updated user: ${requestedUser._key} role to ${role} in org: ${org.slug}.`,
+      `User: ${userKey} successful updated user: ${requestedUser._key} role to ${role} in org: ${org.slug}.`,
     )
 
     return {

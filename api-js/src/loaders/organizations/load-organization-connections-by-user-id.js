@@ -4,7 +4,7 @@ const { t } = require('@lingui/macro')
 
 const orgLoaderConnectionsByUserId = (
   query,
-  userId,
+  userKey,
   cleanseInput,
   language,
   i18n,
@@ -12,7 +12,7 @@ const orgLoaderConnectionsByUserId = (
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
-  const userDBId = `users/${userId}`
+  const userDBId = `users/${userKey}`
 
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -27,7 +27,7 @@ const orgLoaderConnectionsByUserId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -36,7 +36,7 @@ const orgLoaderConnectionsByUserId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -48,7 +48,7 @@ const orgLoaderConnectionsByUserId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionsByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -59,7 +59,7 @@ const orgLoaderConnectionsByUserId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` to ${amount} for: orgLoaderConnectionsByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: orgLoaderConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -75,7 +75,7 @@ const orgLoaderConnectionsByUserId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: orgLoaderConnectionsByUserId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: orgLoaderConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -131,7 +131,7 @@ const orgLoaderConnectionsByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to query organizations in orgLoaderConnectionsByUserId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to query organizations in orgLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to query organizations. Please try again.`))
   }
@@ -141,7 +141,7 @@ const orgLoaderConnectionsByUserId = (
     organizationInfo = await organizationInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather organizations in orgLoaderConnectionsByUserId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather organizations in orgLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }

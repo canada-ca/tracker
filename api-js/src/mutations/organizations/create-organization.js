@@ -93,7 +93,7 @@ const createOrganization = new mutationWithClientMutationId({
       collections,
       transaction,
       query,
-      userId,
+      userKey,
       auth: { userRequired },
       loaders: { orgLoaderBySlug },
       validators: { cleanseInput, slugify },
@@ -127,7 +127,7 @@ const createOrganization = new mutationWithClientMutationId({
 
     if (typeof orgEN !== 'undefined' || typeof orgFR !== 'undefined') {
       console.warn(
-        `User: ${userId} attempted to create an organization that already exists: ${slugEN}`,
+        `User: ${userKey} attempted to create an organization that already exists: ${slugEN}`,
       )
       throw new Error(
         i18n._(t`Unable to create organization. Please try again.`),
@@ -181,7 +181,7 @@ const createOrganization = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(
-        `Transaction error occurred when user: ${userId} was creating new organization ${slugEN}: ${err}`,
+        `Transaction error occurred when user: ${userKey} was creating new organization ${slugEN}: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to create organization. Please try again.`),
@@ -202,7 +202,7 @@ const createOrganization = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(
-        `Transaction error occurred when inserting edge definition for user: ${userId} to ${slugEN}: ${err}`,
+        `Transaction error occurred when inserting edge definition for user: ${userKey} to ${slugEN}: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to create organization. Please try again.`),
@@ -213,7 +213,7 @@ const createOrganization = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(
-        `Transaction error occurred when committing new organization: ${slugEN} for user: ${userId} to db: ${err}`,
+        `Transaction error occurred when committing new organization: ${slugEN} for user: ${userKey} to db: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to create organization. Please try again.`),
@@ -221,7 +221,7 @@ const createOrganization = new mutationWithClientMutationId({
     }
 
     console.info(
-      `User: ${userId} successfully created a new organization: ${slugEN}`,
+      `User: ${userKey} successfully created a new organization: ${slugEN}`,
     )
 
     return {

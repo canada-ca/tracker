@@ -35,7 +35,7 @@ const updateUserPassword = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      userId,
+      userKey,
       auth: { bcrypt },
       loaders: { userLoaderByKey },
       validators: { cleanseInput },
@@ -47,7 +47,7 @@ const updateUserPassword = new mutationWithClientMutationId({
     const updatedPasswordConfirm = cleanseInput(args.updatedPasswordConfirm)
 
     // Make sure user id is not undefined
-    if (typeof userId === 'undefined') {
+    if (typeof userKey === 'undefined') {
       console.warn(
         `User attempted to update password, but the user id is undefined.`,
       )
@@ -55,11 +55,11 @@ const updateUserPassword = new mutationWithClientMutationId({
     }
 
     // Get user from db
-    const user = await userLoaderByKey.load(userId)
+    const user = await userLoaderByKey.load(userKey)
 
     if (typeof user === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to update their password, but no account is associated with that id.`,
+        `User: ${userKey} attempted to update their password, but no account is associated with that id.`,
       )
       throw new Error(i18n._(t`Unable to update password. Please try again.`))
     }

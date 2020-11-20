@@ -44,7 +44,7 @@ const updateDomain = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      userId,
+      userKey,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
       loaders: { domainLoaderByKey, orgLoaderByKey },
@@ -69,7 +69,7 @@ const updateDomain = new mutationWithClientMutationId({
 
     if (typeof domain === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to update domain: ${domainId}, however there is no domain associated with that id.`,
+        `User: ${userKey} attempted to update domain: ${domainId}, however there is no domain associated with that id.`,
       )
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
@@ -79,7 +79,7 @@ const updateDomain = new mutationWithClientMutationId({
 
     if (typeof org === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to update domain: ${domainId} for org: ${orgId}, however there is no org associated with that id.`,
+        `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however there is no org associated with that id.`,
       )
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
@@ -93,7 +93,7 @@ const updateDomain = new mutationWithClientMutationId({
       permission !== 'super_admin'
     ) {
       console.warn(
-        `User: ${userId} attempted to update domain: ${domainId} for org: ${orgId}, however they do not have permission in that org.`,
+        `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however they do not have permission in that org.`,
       )
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
@@ -108,14 +108,14 @@ const updateDomain = new mutationWithClientMutationId({
       `
     } catch (err) {
       console.error(
-        `Database error occurred while user: ${userId} attempted to update domain: ${domainId}, error: ${err}`,
+        `Database error occurred while user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
     if (countCursor.count < 1) {
       console.warn(
-        `User: ${userId} attempted to update domain: ${domainId} for org: ${orgId}, however that org has no claims to that domain.`,
+        `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however that org has no claims to that domain.`,
       )
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
@@ -148,7 +148,7 @@ const updateDomain = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(
-        `Transaction run error occurred when user: ${userId} attempted to update domain: ${domainId}, error: ${err}`,
+        `Transaction run error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
@@ -158,7 +158,7 @@ const updateDomain = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(
-        `Transaction commit error occurred when user: ${userId} attempted to update domain: ${domainId}, error: ${err}`,
+        `Transaction commit error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
@@ -167,7 +167,7 @@ const updateDomain = new mutationWithClientMutationId({
     await domainLoaderByKey.clear(domain._key)
     const returnDomain = await domainLoaderByKey.load(domain._key)
 
-    console.info(`User: ${userId} successfully updated domain: ${domainId}.`)
+    console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
     returnDomain.id = returnDomain._key
 
     return {

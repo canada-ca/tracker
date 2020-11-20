@@ -95,7 +95,7 @@ const domainType = new GraphQLObjectType({
         { _id, _key, domain },
         __,
         {
-          userId,
+          userKey,
           loaders: { dmarcReportLoader },
           auth: { checkDomainOwnership, userRequired, tokenize },
         },
@@ -108,7 +108,7 @@ const domainType = new GraphQLObjectType({
 
         if (!permitted) {
           console.warn(
-            `User: ${userId} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
+            `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
           )
           throw new Error(
             `Unable to retrieve dmarc report information for: ${domain}`,
@@ -117,7 +117,7 @@ const domainType = new GraphQLObjectType({
 
         const {
           data: { dmarcSummaryByPeriod },
-        } = await dmarcReportLoader({ info, domain, userId, tokenize })
+        } = await dmarcReportLoader({ info, domain, userKey, tokenize })
         return dmarcSummaryByPeriod
       },
     },
@@ -128,7 +128,7 @@ const domainType = new GraphQLObjectType({
         { _id, _key, domain },
         __,
         {
-          userId,
+          userKey,
           loaders: { dmarcReportLoader },
           auth: { checkDomainOwnership, userRequired, tokenize },
         },
@@ -141,7 +141,7 @@ const domainType = new GraphQLObjectType({
 
         if (!permitted) {
           console.warn(
-            `User: ${userId} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
+            `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
           )
           throw new Error(
             `Unable to retrieve dmarc report information for: ${domain}`,
@@ -150,7 +150,7 @@ const domainType = new GraphQLObjectType({
 
         const {
           data: { yearlyDmarcSummaries },
-        } = await dmarcReportLoader({ info, domain, userId, tokenize })
+        } = await dmarcReportLoader({ info, domain, userKey, tokenize })
         return yearlyDmarcSummaries
       },
     },

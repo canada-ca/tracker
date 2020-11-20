@@ -44,7 +44,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       request,
       collections,
       transaction,
-      userId,
+      userKey,
       auth: { checkPermission, tokenize, userRequired },
       loaders: { orgLoaderByKey, userLoaderByUserName },
       notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
@@ -62,7 +62,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     // Make sure user is not inviting themselves
     if (user.userName === userName) {
       console.warn(
-        `User: ${userId} attempted to invite themselves to ${orgId}.`,
+        `User: ${userKey} attempted to invite themselves to ${orgId}.`,
       )
       throw new Error(
         i18n._(t`Unable to invite yourself to an org. Please try again.`),
@@ -74,7 +74,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
 
     if (typeof org === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to invite user: ${userName} to ${orgId} however there is no org associated with that id.`,
+        `User: ${userKey} attempted to invite user: ${userName} to ${orgId} however there is no org associated with that id.`,
       )
       throw new Error(i18n._(t`Unable to invite user. Please try again.`))
     }
@@ -87,7 +87,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       (permission === 'admin' && requestedRole === 'super_admin')
     ) {
       console.warn(
-        `User: ${userId} attempted to invite user: ${userName} to org: ${org.slug} with role: ${requestedRole} but does not have permission to do so.`,
+        `User: ${userKey} attempted to invite user: ${userName} to org: ${org.slug} with role: ${requestedRole} but does not have permission to do so.`,
       )
       throw new Error(i18n._(t`Unable to invite user. Please try again.`))
     }
@@ -119,7 +119,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       })
 
       console.info(
-        `User: ${userId} successfully invited user: ${userName} to the service, and org: ${org.slug}.`,
+        `User: ${userKey} successfully invited user: ${userName} to the service, and org: ${org.slug}.`,
       )
 
       return {
@@ -150,7 +150,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
         )
       } catch (err) {
         console.error(
-          `Transaction run error occurred while user: ${userId} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
+          `Transaction run error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to invite user. Please try again.`))
       }
@@ -172,13 +172,13 @@ const inviteUserToOrg = new mutationWithClientMutationId({
         await trx.commit()
       } catch (err) {
         console.error(
-          `Transaction commit error occurred while user: ${userId} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
+          `Transaction commit error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to invite user. Please try again.`))
       }
 
       console.info(
-        `User: ${userId} successfully invited user: ${requestedUser._key} to the org: ${org.slug}.`,
+        `User: ${userKey} successfully invited user: ${requestedUser._key} to the org: ${org.slug}.`,
       )
 
       return {
