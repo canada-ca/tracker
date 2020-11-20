@@ -10,11 +10,16 @@ import { createComplexityLimitRule } from 'graphql-validation-complexity'
 import { createContext } from './create-context'
 import { createQuerySchema } from './query'
 import { createMutationSchema } from './mutation'
+import { createSubscriptionSchema } from './subscriptions'
+import { createI18n } from './create-i18n'
+import { verifyToken, userRequired } from './auth'
+import { userLoaderByKey } from './user/loaders'
 
 const createSchema = () =>
   new GraphQLSchema({
     query: createQuerySchema(),
     mutation: createMutationSchema(),
+    subscription: createSubscriptionSchema(),
   })
 
 const createValidationRules = (
@@ -69,7 +74,62 @@ export const Server = (
 
   const server = new ApolloServer({
     schema: createSchema(),
-    context: async ({ req, res }) => createContext({ context, req, res }),
+    context: async ({ req, res, connection }) => {
+      if (connection) {
+        req = {
+          headers: {
+            authorization: connection.context.authorization,
+          },
+          language: connection.context.language,
+        }
+        return createContext({ context, req, res })
+      } else {
+        return createContext({ context, req, res })
+      }
+    },
+    subscriptions: {
+      onConnect: async (connectionParams, webSocket) => {
+        const enLangPos = String(
+          webSocket.upgradeReq.headers['accept-language'],
+        ).indexOf('en')
+        const frLangPos = String(
+          webSocket.upgradeReq.headers['accept-language'],
+        ).indexOf('fr')
+        let language
+        if (frLangPos > enLangPos) {
+          language = 'fr'
+        } else {
+          language = 'en'
+        }
+
+        let authorization
+        if (connectionParams.authorization) {
+          authorization = connectionParams.authorization
+        }
+
+        const i18n = createI18n(language)
+        const verify = verifyToken({ i18n })
+        const token = authorization || ''
+
+        let userKey
+        if (token !== '') {
+          userKey = verify({ token })
+        }
+
+        await userRequired({
+          i18n,
+          userId: userKey,
+          userLoaderByKey: userLoaderByKey(context.query),
+        })()
+
+        console.info(`User: ${userKey}, connected to subscription.`)
+
+        return {
+          language,
+          authorization,
+        }
+      },
+    },
     validationRules: createValidationRules(
       maxDepth,
       complexityCost,
