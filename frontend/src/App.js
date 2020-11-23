@@ -41,18 +41,19 @@ export default function App() {
   const toast = useToast()
   const { currentUser, isLoggedIn, logout } = useUserState()
 
-  return <>
-    <Flex direction="column" minHeight="100vh" bg="gray.50">
-      <header>
-        <CSSReset />
-        <SkipLink invisible href="#main">
-          <Trans>Skip to main content</Trans>
-        </SkipLink>
-        <PhaseBanner phase={<Trans>Pre-Alpha</Trans>}>
-          <Trans>This service is being developed in the open</Trans>
-        </PhaseBanner>
-        <TopBanner />
-      </header>
+  return (
+    <>
+      <Flex direction="column" minHeight="100vh" bg="gray.50">
+        <header>
+          <CSSReset />
+          <SkipLink invisible href="#main">
+            <Trans>Skip to main content</Trans>
+          </SkipLink>
+          <PhaseBanner phase={<Trans>Pre-Alpha</Trans>}>
+            <Trans>This service is being developed in the open</Trans>
+          </PhaseBanner>
+          <TopBanner />
+        </header>
 
         <Navigation>
           <Link to="/">
@@ -251,5 +252,6 @@ export default function App() {
         <FloatingMenu />
         <Box h="40px" />
       </Flex>
-    </>;
+    </>
+  )
 }
