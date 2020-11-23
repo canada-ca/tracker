@@ -61,7 +61,8 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
     onOpen: removeOnOpen,
     onClose: removeOnClose,
   } = useDisclosure()
-  const [selectedRemoveDomain, setSelectedRemoveDomain] = useState()
+  const [selectedRemoveDomainUrl, setSelectedRemoveDomainUrl] = useState()
+  const [selectedRemoveDomainId, setSelectedRemoveDomainId] = useState()
   const initialFocusRef = useRef()
   const { currentUser } = useUserState()
 
@@ -247,7 +248,8 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
                 <Stack key={'admindomain' + index} isInline align="center">
                   <TrackerButton
                     onClick={() => {
-                      setSelectedRemoveDomain(domainId)
+                      setSelectedRemoveDomainUrl(domain)
+                      setSelectedRemoveDomainId(domainId)
                       removeOnOpen()
                     }}
                     variant="danger"
@@ -391,7 +393,7 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
                   <Text>
                     <Trans>Confirm removal of domain:</Trans>
                   </Text>
-                  <Text fontWeight="bold">{selectedRemoveDomain}</Text>
+                  <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
                 </Stack>
               </ModalBody>
 
@@ -403,7 +405,7 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
                   onClick={() =>
                     removeDomain({
                       variables: {
-                        domainId: selectedRemoveDomain,
+                        domainId: selectedRemoveDomainId,
                         orgId: orgId,
                       },
                     })
