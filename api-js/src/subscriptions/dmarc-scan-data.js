@@ -13,9 +13,9 @@ const dmarcScanData = {
       description: 'Subscription ID retrieved from the requestScan mutation.',
     },
   },
-  resolve: async (payload, _args, { auth: { userRequired } }) => {
-    await userRequired()
-    return payload
+  resolve: async ({ uuid, scan }, _args, { auth: { userRequired } }) => {
+    // await userRequired()
+    return scan
   },
   subscribe: async (_context, _args, { pubsub }) =>
     pubsub.asyncIterator(DMARC_SCAN_CHANNEL),
