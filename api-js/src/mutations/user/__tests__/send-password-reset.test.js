@@ -126,7 +126,7 @@ describe('user send password reset email', () => {
           const user = await cursor.next()
 
           const token = tokenize({
-            parameters: { userId: user._key, currentPassword: user.password },
+            parameters: { userKey: user._key, currentPassword: user.password },
           })
           const resetUrl = `${request.protocol}://${request.get(
             'host',
@@ -268,7 +268,7 @@ describe('user send password reset email', () => {
           const user = await cursor.next()
 
           const token = tokenize({
-            parameters: { userId: user._key, currentPassword: user.password },
+            parameters: { userKey: user._key, currentPassword: user.password },
           })
           const resetUrl = `${request.protocol}://${request.get(
             'host',

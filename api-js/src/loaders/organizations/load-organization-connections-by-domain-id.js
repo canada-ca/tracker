@@ -5,14 +5,14 @@ const { t } = require('@lingui/macro')
 const orgLoaderConnectionArgsByDomainId = (
   query,
   language,
-  userId,
+  userKey,
   cleanseInput,
   i18n,
 ) => async ({ domainId, after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
-  const userDBId = `users/${userId}`
+  const userDBId = `users/${userKey}`
 
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -27,7 +27,7 @@ const orgLoaderConnectionArgsByDomainId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionArgsByDomainId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionArgsByDomainId.`,
     )
     throw new Error(
       i18n._(
@@ -36,7 +36,7 @@ const orgLoaderConnectionArgsByDomainId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionArgsByDomainId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionArgsByDomainId.`,
     )
     throw new Error(
       i18n._(
@@ -48,7 +48,7 @@ const orgLoaderConnectionArgsByDomainId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -59,7 +59,7 @@ const orgLoaderConnectionArgsByDomainId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` to ${amount} for: orgLoaderConnectionArgsByDomainId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: orgLoaderConnectionArgsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -75,7 +75,7 @@ const orgLoaderConnectionArgsByDomainId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: orgLoaderConnectionArgsByDomainId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: orgLoaderConnectionArgsByDomainId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -136,7 +136,7 @@ const orgLoaderConnectionArgsByDomainId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }
@@ -146,7 +146,7 @@ const orgLoaderConnectionArgsByDomainId = (
     organizationInfo = await organizationInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }

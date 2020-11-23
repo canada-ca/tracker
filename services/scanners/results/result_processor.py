@@ -166,7 +166,9 @@ def process_dns(results):
                     tags["dkim"][selector].append("dkim9")
 
             # Invalid Crypto
-            invalid_crypto = results["dkim"][selector].get("txt_record", {}).get("k", None)
+            invalid_crypto = (
+                results["dkim"][selector].get("txt_record", {}).get("k", None)
+            )
 
             if invalid_crypto is not None:
                 # if k != rsa
@@ -183,8 +185,8 @@ def process_dns(results):
                 tags["dkim"][selector].append("dkim12")
 
             # Testing Enabled
-            t_enabled = results["dkim"][selector].get("t_value", None)
-            if t_enabled not in [None, "null", ""]:
+            t_enabled = results["dkim"][selector].get("t_value", "")
+            if t_enabled.lower() == "true":
                 tags["dkim"][selector].append("dkim13")
 
     if results["dmarc"].get("missing", None) is not None:
@@ -195,12 +197,7 @@ def process_dns(results):
             tags["dmarc"].append("dmarc23")
 
         # Check P Policy Tag
-        p_policy_tag = (
-            results["dmarc"]
-            .get("tags", {})
-            .get("p", {})
-            .get("value", None)
-        )
+        p_policy_tag = results["dmarc"].get("tags", {}).get("p", {}).get("value", None)
 
         if p_policy_tag is not None:
             if isinstance(p_policy_tag, str):
@@ -216,12 +213,7 @@ def process_dns(results):
                 tags["dmarc"].append("dmarc6")
 
         # Check PCT Tag
-        pct_tag = (
-            results["dmarc"]
-            .get("tags", {})
-            .get("pct", {})
-            .get("value", None)
-        )
+        pct_tag = results["dmarc"].get("tags", {}).get("pct", {}).get("value", None)
 
         if pct_tag is not None:
             if isinstance(pct_tag, str):
@@ -239,12 +231,7 @@ def process_dns(results):
                     tags["dmarc"].append("dmarc21")
 
         # Check RUA Tags
-        rua_tags = (
-            results["dmarc"]
-            .get("tags", {})
-            .get("rua", {})
-            .get("value", [])
-        )
+        rua_tags = results["dmarc"].get("tags", {}).get("rua", {}).get("value", [])
 
         if len(rua_tags) == 0:
             tags["dmarc"].append("dmarc12")
@@ -255,9 +242,7 @@ def process_dns(results):
                     tags["dmarc"].append("dmarc10")
 
             # Check if external reporting arrangement has been authorized
-            rua_accepting = (
-                rua.get("accepting", None)
-            )
+            rua_accepting = rua.get("accepting", None)
 
             if rua_accepting is not None:
                 if rua_accepting is False:
@@ -267,12 +252,7 @@ def process_dns(results):
                         tags["dmarc"].append("dmarc15")
 
         # Check RUF Tags
-        ruf_tags = (
-            results["dmarc"]
-            .get("tags", {})
-            .get("ruf", {})
-            .get("value", [])
-        )
+        ruf_tags = results["dmarc"].get("tags", {}).get("ruf", {}).get("value", [])
 
         if len(ruf_tags) == 0:
             tags["dmarc"].append("dmarc13")
@@ -283,25 +263,18 @@ def process_dns(results):
                     tags["dmarc"].append("dmarc11")
 
             # Check if external reporting arrangement has been authorized
-            ruf_accepting = (
-                ruf.get("accepting", None)
-            )
+            ruf_accepting = ruf.get("accepting", None)
 
             if ruf_accepting is not None:
                 if ruf_accepting is False:
                     if "dmarc15" not in tags["dmarc"]:
                         tags["dmarc"].append("dmarc15")
 
-        if "dmarc15" not in tags["dmarc"] and (len(ruf_tags)>0 or len(rua_tags)>0):
+        if "dmarc15" not in tags["dmarc"] and (len(ruf_tags) > 0 or len(rua_tags) > 0):
             tags["dmarc"].append("dmarc14")
 
         # Check SP tag
-        sp_tag = (
-            results["dmarc"]
-            .get("tags", {})
-            .get("sp", {})
-            .get("value", None)
-        )
+        sp_tag = results["dmarc"].get("tags", {}).get("sp", {}).get("value", None)
 
         if sp_tag is not None:
             if isinstance(sp_tag, str):
@@ -324,10 +297,10 @@ def process_dns(results):
         tags["spf"].append("spf12")
 
     for selector, data in results["dkim"].items():
-	    if data.get("txt_record", None) is not None:
-	        for key in data["txt_record"]:
-	            if (key == "a" or key == "include") and "spf3" not in tags["spf"]:
-	                tags["spf"].append("spf3")
+        if data.get("txt_record", None) is not None:
+            for key in data["txt_record"]:
+                if (key == "a" or key == "include") and "spf3" not in tags["spf"]:
+                    tags["spf"].append("spf3")
 
     dmarc_record = results["dmarc"].get("record", None)
     if dmarc_record is not None:
@@ -383,57 +356,147 @@ def process_dns(results):
     return tags
 
 
-async def insert_https(report, tags, domain_key, db):
-
+def insert_https(report, tags, domain_key, db):
     try:
-        db.collection("https").insert({"timestamp": str(datetime.datetime.utcnow()), "implementation": report.get("implementation", None), "enforced": report.get("enforced", None), "hsts": report.get("hsts", None), "hstsAge": report.get("hsts_age", None), "preloaded": report.get("preload_status", None), "rawJson": report, "guidanceTags": tags})
+        if not db.has_collection("https"):
+            db.create_collection("https")
+
+        db.collection("https").insert(
+            {
+                "timestamp": str(datetime.datetime.utcnow()),
+                "implementation": report.get("implementation", None),
+                "enforced": report.get("enforced", None),
+                "hsts": report.get("hsts", None),
+                "hstsAge": report.get("hsts_age", None),
+                "preloaded": report.get("preload_status", None),
+                "rawJson": report,
+                "guidanceTags": tags,
+            }
+        )
+
+        if any(
+            i
+            in [
+                "https2",
+                "https3",
+                "https4",
+                "https5",
+                "https6",
+                "https7",
+                "https8",
+                "https9",
+                "https10",
+                "https11",
+                "https12",
+                "https13",
+                "https14",
+            ]
+            for i in tags
+        ):
+            https_status = "fail"
+        else:
+            https_status = "pass"
+
+        domain = db.collection("domains").get({"_key": domain_key})
+        domain["status"]["https"] = https_status
+        db.collection("domains").update_match(
+            {"_key": domain_key}, {"status": domain["status"]}
+        )
+
     except Exception as e:
         logging.error(
             f"(HTTPS SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
-
-    if any(i in ["https2", "https3", "https4", "https5", "https6", "https7", "https8", "https9", "https10", "https11", "https12", "https13", "https14"] for i in tags):
-        https_status = "fail"
-    else:
-        https_status = "pass"
-
-    domain = db.collection("domains").get({"_key": domain_key})
-    domain["status"]["https"] = https_status
-    db.collection("domains").update_match({"_key": domain_key}, {"status": domain["status"]})
+        return
 
     logging.info("HTTPS Scan inserted into database")
 
 
-async def insert_ssl(report, tags, domain_key, db):
-
+def insert_ssl(report, tags, domain_key, db):
     try:
-        db.collection("ssl").insert({"timestamp": str(datetime.datetime.utcnow()), "rawJson": report, "guidanceTags": tags})
+        if not db.has_collection("ssl"):
+            db.create_collection("ssl")
+
+        db.collection("ssl").insert(
+            {
+                "timestamp": str(datetime.datetime.utcnow()),
+                "rawJson": report,
+                "guidanceTags": tags,
+            }
+        )
+
+        if any(i in ["ssl2", "ssl3", "ssl4", "ssl6", "ssl7", "ssl8"] for i in tags):
+            ssl_status = "fail"
+        elif "ssl5" in tags:
+            ssl_status = "pass"
+
+        domain = db.collection("domains").get({"_key": domain_key})
+        domain["status"]["ssl"] = ssl_status
+        db.collection("domains").update_match(
+            {"_key": domain_key}, {"status": domain["status"]}
+        )
+
     except Exception as e:
         logging.error(
             f"(SSL SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
-
-    if any(i in ["ssl2", "ssl3", "ssl4", "ssl6", "ssl7", "ssl8"] for i in tags):
-        ssl_status = "fail"
-    elif "ssl5" in tags:
-        ssl_status = "pass"
-
-    domain = db.collection("domains").get({"_key": domain_key})
-    domain["status"]["ssl"] = ssl_status
-    db.collection("domains").update_match({"_key": domain_key}, {"status": domain["status"]})
+        return
 
     logging.info("SSL Scan inserted into database")
 
 
-async def insert_dns(report, tags, domain_key, db):
-
+def insert_dns(report, tags, domain_key, db):
     try:
-        db.collection("dmarc").insert({"timestamp": str(datetime.datetime.utcnow()), "record": report["dmarc"].get("record", None), "pPolicy": report["dmarc"].get("tags", {}).get("p", {}).get("value", None), "spPolicy": report["dmarc"].get("tags", {}).get("sp", {}).get("value", None), "pct": report["dmarc"].get("tags", {}).get("pct", {}).get("value", None), "rawJson": report["dmarc"], "guidanceTags": tags["dmarc"]})
-        db.collection("spf").insert({"timestamp": str(datetime.datetime.utcnow()), "record": report["spf"].get("record", None), "lookups": report["spf"].get("dns_lookups", None), "spfDefault": report["spf"].get("record", "none")[-4:].lower(), "rawJson": report["spf"], "guidanceTags": tags["spf"]})
+        if not db.has_collection("dmarc"):
+            db.create_collection("dmarc")
+        if not db.has_collection("spf"):
+            db.create_collection("spf")
+        if not db.has_collection("dkim"):
+            db.create_collection("dkim")
+        if not db.has_collection("dkim_scans"):
+            db.create_collection("dkim_scans")
+
+        db.collection("dmarc").insert(
+            {
+                "timestamp": str(datetime.datetime.utcnow()),
+                "record": report["dmarc"].get("record", None),
+                "pPolicy": report["dmarc"]
+                .get("tags", {})
+                .get("p", {})
+                .get("value", None),
+                "spPolicy": report["dmarc"]
+                .get("tags", {})
+                .get("sp", {})
+                .get("value", None),
+                "pct": report["dmarc"]
+                .get("tags", {})
+                .get("pct", {})
+                .get("value", None),
+                "rawJson": report["dmarc"],
+                "guidanceTags": tags["dmarc"],
+            }
+        )
+        db.collection("spf").insert(
+            {
+                "timestamp": str(datetime.datetime.utcnow()),
+                "record": report["spf"].get("record", None),
+                "lookups": report["spf"].get("dns_lookups", None),
+                "spfDefault": report["spf"].get("record", "none")[-4:].lower(),
+                "rawJson": report["spf"],
+                "guidanceTags": tags["spf"],
+            }
+        )
 
         db.collection("dkim").insert({"timestamp": str(datetime.datetime.utcnow())})
         for selector in report["dkim"].keys():
-            db.collection("dkim_scans").insert({"record": selector.get("txt_record", None), "keyLength": selector.get("key_size", None), "rawJson": selector, "guidanceTags": tags["dkim"]})
+            db.collection("dkim_scans").insert(
+                {
+                    "record": report["dkim"][selector].get("txt_record", None),
+                    "keyLength": report["dkim"][selector].get("key_size", None),
+                    "rawJson": report["dkim"][selector],
+                    "guidanceTags": tags["dkim"][selector],
+                }
+            )
 
         if "spf12" in tags["spf"]:
             spf_status = "pass"
@@ -447,7 +510,20 @@ async def insert_dns(report, tags, domain_key, db):
 
         dkim_statuses = []
         for selector in tags["dkim"].keys():
-            if any(i in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim9", "dkim11", "dkim12"] for i in tags["dkim"][selector]):
+            if any(
+                i
+                in [
+                    "dkim2",
+                    "dkim3",
+                    "dkim4",
+                    "dkim5",
+                    "dkim6",
+                    "dkim9",
+                    "dkim11",
+                    "dkim12",
+                ]
+                for i in tags["dkim"][selector]
+            ):
                 dkim_statuses.append("fail")
             elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"][selector]):
                 dkim_statuses.append("pass")
@@ -458,23 +534,35 @@ async def insert_dns(report, tags, domain_key, db):
             dkim_status = "pass"
 
         domain = db.collection("domains").get({"_key": domain_key})
-        for key, val in {"dkim": dkim_status, "dmarc": dmarc_status, "spf": spf_status}.items():
+        for key, val in {
+            "dkim": dkim_status,
+            "dmarc": dmarc_status,
+            "spf": spf_status,
+        }.items():
             domain["status"][key] = val
-        db.collection("domains").update_match({"_key": domain_key}, {"status": domain["status"]})
+        db.collection("domains").update_match(
+            {"_key": domain_key}, {"status": domain["status"]}
+        )
 
     except Exception as e:
         logging.error(
             f"(DNS SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
+        return
 
     logging.info("DNS Scans inserted into database")
+
+
+INSERT = {"https": insert_https, "ssl": insert_ssl, "dns": insert_dns}
+
+PROCESS = {"https": process_https, "ssl": process_ssl, "dns": process_dns}
 
 
 def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
 
     # Establish DB connection
     arango_client = ArangoClient(hosts=db_host)
-    db = arango_client.db(db_name, username=user_name, password=password)
+    db = arango_client.db(db_name, username=db_user, password=db_pass)
 
     async def process(result_request):
         logging.info(f"Results received.")
@@ -485,7 +573,7 @@ def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
                 results = payload_dict["results"]
                 scan_type = payload_dict["scan_type"]
                 uuid = payload_dict["uuid"]
-                domain_key = inbound_payload["domain_key"]
+                domain_key = payload_dict["domain_key"]
                 logging.info(
                     f"Results received for {scan_type} scan (TIME={datetime.datetime.utcnow()})"
                 )
@@ -494,9 +582,9 @@ def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
                 logging.error(msg)
                 return PlainTextResponse(msg)
 
-            tags = functions["process"][scan_type](results)
+            tags = PROCESS[scan_type](results)
 
-            await functions["insert"][scan_type](results, tags, domain_key, db)
+            INSERT[scan_type](results, tags, domain_key, db)
 
             return PlainTextResponse(
                 f"{scan_type} results processed and inserted successfully TIME={datetime.datetime.utcnow()})."
@@ -522,6 +610,7 @@ def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
     )
 
     return starlette_app
+
 
 if all(i is not None for i in [DB_USER, DB_HOST, DB_PASS, DB_PORT]):
     app = Server()

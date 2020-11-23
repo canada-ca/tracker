@@ -4,7 +4,7 @@ const { t } = require('@lingui/macro')
 
 const affiliationLoaderByUserId = (
   query,
-  userId,
+  userKey,
   cleanseInput,
   i18n,
 ) => async ({ uId, after, before, first, last }) => {
@@ -26,7 +26,7 @@ const affiliationLoaderByUserId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: affiliationLoaderByUserId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: affiliationLoaderByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -35,7 +35,7 @@ const affiliationLoaderByUserId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: affiliationLoaderByUserId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: affiliationLoaderByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -47,7 +47,7 @@ const affiliationLoaderByUserId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: affiliationLoaderByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: affiliationLoaderByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -58,7 +58,7 @@ const affiliationLoaderByUserId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: affiliationLoaderByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: affiliationLoaderByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -74,7 +74,7 @@ const affiliationLoaderByUserId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: affiliationLoaderByUserId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: affiliationLoaderByUserId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -131,7 +131,7 @@ const affiliationLoaderByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to query affiliations in affiliationLoaderByUserId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to query affiliations in affiliationLoaderByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to query affiliations. Please try again.`))
   }
@@ -141,7 +141,7 @@ const affiliationLoaderByUserId = (
     filteredAffiliations = await filteredAffiliationCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather affiliations in affiliationLoaderByUserId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather affiliations in affiliationLoaderByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load affiliations. Please try again.`))
   }

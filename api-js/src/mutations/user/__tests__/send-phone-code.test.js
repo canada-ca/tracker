@@ -97,7 +97,7 @@ describe('user send password reset email', () => {
           {
             i18n,
             request,
-            userId: user._key,
+            userKey: user._key,
             query,
             auth: {
               bcrypt,
@@ -158,7 +158,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: 1,
+              userKey: 1,
               query,
               auth: {
                 bcrypt,
@@ -186,7 +186,7 @@ describe('user send password reset email', () => {
           ])
         })
       })
-      describe('userId is undefined', () => {
+      describe('userKey is undefined', () => {
         it('error message', async () => {
           const response = await graphql(
             schema,
@@ -201,7 +201,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: undefined,
+              userKey: undefined,
               query,
               auth: {
                 bcrypt,
@@ -225,7 +225,7 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User attempted to send TFA text message, however the userId does not exist.`,
+            `User attempted to send TFA text message, however the userKey does not exist.`,
           ])
         })
       })
@@ -265,7 +265,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query,
               auth: {
                 bcrypt,
@@ -330,7 +330,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query,
               auth: {
                 bcrypt,
@@ -403,7 +403,7 @@ describe('user send password reset email', () => {
           {
             i18n,
             request,
-            userId: user._key,
+            userKey: user._key,
             query,
             auth: {
               bcrypt,
@@ -463,7 +463,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: 1,
+              userKey: 1,
               query,
               auth: {
                 bcrypt,
@@ -489,7 +489,7 @@ describe('user send password reset email', () => {
           ])
         })
       })
-      describe('userId is undefined', () => {
+      describe('userKey is undefined', () => {
         it('error message', async () => {
           const response = await graphql(
             schema,
@@ -504,7 +504,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: undefined,
+              userKey: undefined,
               query,
               auth: {
                 bcrypt,
@@ -526,7 +526,7 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User attempted to send TFA text message, however the userId does not exist.`,
+            `User attempted to send TFA text message, however the userKey does not exist.`,
           ])
         })
       })
@@ -566,7 +566,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query,
               auth: {
                 bcrypt,
@@ -628,7 +628,7 @@ describe('user send password reset email', () => {
             {
               i18n,
               request,
-              userId: user._key,
+              userKey: user._key,
               query,
               auth: {
                 bcrypt,

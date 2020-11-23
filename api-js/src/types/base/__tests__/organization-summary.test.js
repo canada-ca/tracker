@@ -216,12 +216,12 @@ describe('given the organization summary object', () => {
       })
       afterEach(async () => {
         await query`
-            LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+            LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
             LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
             RETURN true
           `
         await query`
-            LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+            LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
             LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
             RETURN true
           `
@@ -264,11 +264,11 @@ describe('given the organization summary object', () => {
           null,
           {
             i18n,
-            userId: user._key,
+            userKey: user._key,
             auth: {
               checkPermission: checkPermission({
                 i18n,
-                userId: user._key,
+                userKey: user._key,
                 query,
               }),
             },
@@ -414,12 +414,12 @@ describe('given the organization summary object', () => {
       })
       afterEach(async () => {
         await query`
-            LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+            LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
             LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
             RETURN true
           `
         await query`
-            LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+            LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
             LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
             RETURN true
           `
@@ -462,11 +462,11 @@ describe('given the organization summary object', () => {
           null,
           {
             i18n,
-            userId: user._key,
+            userKey: user._key,
             auth: {
               checkPermission: checkPermission({
                 i18n,
-                userId: user._key,
+                userKey: user._key,
                 query,
               }),
             },

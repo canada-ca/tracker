@@ -22,24 +22,24 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { i18n, query, userId, loaders: { userLoaderByKey } },
+    { i18n, query, userKey, loaders: { userLoaderByKey } },
   ) => {
     // Cleanse Input
     const twoFactorCode = args.twoFactorCode
 
-    if (typeof userId === 'undefined') {
+    if (typeof userKey === 'undefined') {
       console.warn(
-        `User attempted to two factor authenticate, however the userId is undefined.`,
+        `User attempted to two factor authenticate, however the userKey is undefined.`,
       )
       throw new Error(i18n._(t`Authentication error, please sign in again.`))
     }
 
     // Get User From DB
-    const user = await userLoaderByKey.load(userId)
+    const user = await userLoaderByKey.load(userKey)
 
     if (typeof user === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to two factor authenticate, however no account is associated with that id.`,
+        `User: ${userKey} attempted to two factor authenticate, however no account is associated with that id.`,
       )
       throw new Error(
         i18n._(t`Unable to two factor authenticate. Please try again.`),

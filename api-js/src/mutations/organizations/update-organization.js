@@ -96,7 +96,7 @@ const updateOrganization = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      userId,
+      userKey,
       auth: { checkPermission, userRequired },
       loaders: { orgLoaderByKey },
       validators: { cleanseInput, slugify },
@@ -131,7 +131,7 @@ const updateOrganization = new mutationWithClientMutationId({
 
     if (typeof currentOrg === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to update organization: ${orgKey}, however no organizations is associated with that id.`,
+        `User: ${userKey} attempted to update organization: ${orgKey}, however no organizations is associated with that id.`,
       )
       throw new Error(
         i18n._(t`Unable to update organization. Please try again.`),
@@ -143,7 +143,7 @@ const updateOrganization = new mutationWithClientMutationId({
 
     if (permission !== 'admin' && permission !== 'super_admin') {
       console.error(
-        `User: ${userId} attempted to update organization ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
+        `User: ${userKey} attempted to update organization ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
       )
       throw new Error(
         i18n._(t`Unable to update organization. Please try again.`),
@@ -237,7 +237,7 @@ const updateOrganization = new mutationWithClientMutationId({
     await orgLoaderByKey.clear(orgKey)
     const organization = await orgLoaderByKey.load(orgKey)
 
-    console.info(`User: ${userId}, successfully updated org ${orgKey}.`)
+    console.info(`User: ${userKey}, successfully updated org ${orgKey}.`)
     return {
       organization,
     }

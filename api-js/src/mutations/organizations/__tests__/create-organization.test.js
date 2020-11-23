@@ -144,10 +144,10 @@ describe('create an organization', () => {
             query,
             collections,
             transaction,
-            userId: user._key,
+            userKey: user._key,
             auth: {
               userRequired: userRequired({
-                userId: user._key,
+                userKey: user._key,
                 userLoaderByKey: userLoaderByKey(query),
               }),
             },
@@ -249,10 +249,10 @@ describe('create an organization', () => {
             query,
             collections,
             transaction,
-            userId: user._key,
+            userKey: user._key,
             auth: {
               userRequired: userRequired({
-                userId: user._key,
+                userKey: user._key,
                 userLoaderByKey: userLoaderByKey(query),
               }),
             },
@@ -395,10 +395,10 @@ describe('create an organization', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -487,10 +487,10 @@ describe('create an organization', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoader,
                   }),
                 },
@@ -583,10 +583,10 @@ describe('create an organization', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoader,
                   }),
                 },
@@ -683,10 +683,10 @@ describe('create an organization', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query),
                   }),
                 },
@@ -807,10 +807,10 @@ describe('create an organization', () => {
               query,
               collections,
               transaction,
-              userId: user._key,
+              userKey: user._key,
               auth: {
                 userRequired: userRequired({
-                  userId: user._key,
+                  userKey: user._key,
                   userLoaderByKey: userLoaderByKey(query),
                 }),
               },
@@ -895,10 +895,10 @@ describe('create an organization', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoader,
                   }),
                 },
@@ -987,10 +987,10 @@ describe('create an organization', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoader,
                   }),
                 },
@@ -1083,10 +1083,10 @@ describe('create an organization', () => {
                 query,
                 collections,
                 transaction,
-                userId: user._key,
+                userKey: user._key,
                 auth: {
                   userRequired: userRequired({
-                    userId: user._key,
+                    userKey: user._key,
                     userLoaderByKey: userLoaderByKey(query),
                   }),
                 },

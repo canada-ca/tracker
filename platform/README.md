@@ -5,23 +5,26 @@ This folder contains the Custom Resource Definitions that the Tracker app relies
 As an example, the Tracker app uses a `Certificate` object to acquire a TLS certificate. 
 
 ```
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  creationTimestamp: null
   name: ingress-cert
   namespace: istio-system
 spec:
-  keySize: 4096
-  keyAlgorithm: rsa
-  keyEncoding: pkcs8
-  secretName: tracker-credential
-  issuerRef:
-    name: selfsigned
-    kind: Issuer
-  commonName: pulse.alpha.canada.ca
+  commonName: tracker.alpha.canada.ca
   dnsNames:
-  - pulse.alpha.canada.ca
-  - pouls.alpha.canada.ca
+  - tracker.alpha.canada.ca
+  - suivi.alpha.canada.ca
+  issuerRef:
+    kind: Issuer
+    name: selfsigned
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 4096
+  secretName: tracker-credential
+status: {}
 ```
 
 `Certificate` is not a native Kubernetes object and is just assumed to exist in the environment. The manifests in this folder are all about defining generic objects like `Certificate` that the app can rely on without knowing how it got there.

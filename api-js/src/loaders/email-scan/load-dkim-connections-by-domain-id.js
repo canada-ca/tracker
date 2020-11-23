@@ -4,7 +4,7 @@ const { t } = require('@lingui/macro')
 
 const dkimLoaderConnectionsByDomainId = (
   query,
-  userId,
+  userKey,
   cleanseInput,
   i18n,
 ) => async ({ domainId, startDate, endDate, after, before, first, last }) => {
@@ -33,7 +33,7 @@ const dkimLoaderConnectionsByDomainId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
@@ -42,7 +42,7 @@ const dkimLoaderConnectionsByDomainId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
@@ -54,7 +54,7 @@ const dkimLoaderConnectionsByDomainId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: dkimLoaderConnectionsByDomainId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: dkimLoaderConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -65,7 +65,7 @@ const dkimLoaderConnectionsByDomainId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: dkimLoaderConnectionsByDomainId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: dkimLoaderConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -78,7 +78,7 @@ const dkimLoaderConnectionsByDomainId = (
       limitTemplate = aql`SORT dkimScan._key DESC LIMIT TO_NUMBER(${last})`
     } else {
       console.warn(
-        `User: ${userId} tried to have \`first\` and \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
+        `User: ${userKey} tried to have \`first\` and \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -90,7 +90,7 @@ const dkimLoaderConnectionsByDomainId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: dkimLoaderConnectionsByDomainId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: dkimLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -147,7 +147,7 @@ const dkimLoaderConnectionsByDomainId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to get dkim information for ${domainId}, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to get dkim information for ${domainId}, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load dkim scans. Please try again.`))
   }
@@ -157,7 +157,7 @@ const dkimLoaderConnectionsByDomainId = (
     dkimScanInfo = await requestedDkimInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to get dkim information for ${domainId}, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to get dkim information for ${domainId}, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load dkim scans. Please try again.`))
   }

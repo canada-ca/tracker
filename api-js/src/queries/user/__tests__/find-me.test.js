@@ -14,13 +14,7 @@ const {
 const { cleanseInput } = require('../../../validators')
 
 describe('given the findMe query', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    schema,
-    collections,
-    user
+  let query, drop, truncate, migrate, schema, collections, user
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -74,7 +68,7 @@ describe('given the findMe query', () => {
         {
           auth: {
             userRequired: userRequired({
-              userId: user._key,
+              userKey: user._key,
               userLoaderByKey: userLoaderByKey(query),
             }),
           },

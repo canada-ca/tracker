@@ -4,7 +4,7 @@ const { t } = require('@lingui/macro')
 
 const spfLoaderConnectionsByDomainId = (
   query,
-  userId,
+  userKey,
   cleanseInput,
   i18n,
 ) => async ({ domainId, startDate, endDate, after, before, first, last }) => {
@@ -33,7 +33,7 @@ const spfLoaderConnectionsByDomainId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
@@ -42,7 +42,7 @@ const spfLoaderConnectionsByDomainId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
@@ -54,7 +54,7 @@ const spfLoaderConnectionsByDomainId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: spfLoaderConnectionsByDomainId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: spfLoaderConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -65,7 +65,7 @@ const spfLoaderConnectionsByDomainId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: spfLoaderConnectionsByDomainId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: spfLoaderConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
@@ -81,7 +81,7 @@ const spfLoaderConnectionsByDomainId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: spfLoaderConnectionsByDomainId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: spfLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -138,7 +138,7 @@ const spfLoaderConnectionsByDomainId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to get spf information for ${domainId}, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to get spf information for ${domainId}, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load spf scans. Please try again.`))
   }
@@ -148,7 +148,7 @@ const spfLoaderConnectionsByDomainId = (
     spfScanInfo = await spfScanInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to get spf information for ${domainId}, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to get spf information for ${domainId}, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load spf scans. Please try again.`))
   }

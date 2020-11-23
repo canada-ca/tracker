@@ -39,7 +39,7 @@ const createDomain = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      userId,
+      userKey,
       auth: { checkPermission, userRequired },
       loaders: { domainLoaderByDomain, orgLoaderByKey },
       validators: { cleanseInput },
@@ -64,7 +64,7 @@ const createDomain = new mutationWithClientMutationId({
 
     if (typeof org === 'undefined') {
       console.warn(
-        `User: ${userId} attempted to create a domain to an organization: ${orgId} that does not exist.`,
+        `User: ${userKey} attempted to create a domain to an organization: ${orgId} that does not exist.`,
       )
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
@@ -78,7 +78,7 @@ const createDomain = new mutationWithClientMutationId({
       permission !== 'super_admin'
     ) {
       console.warn(
-        `User: ${userId} attempted to create a domain in: ${org.slug}, however they do not have permission to do so.`,
+        `User: ${userKey} attempted to create a domain in: ${org.slug}, however they do not have permission to do so.`,
       )
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
@@ -112,7 +112,7 @@ const createDomain = new mutationWithClientMutationId({
 
     if (typeof checkOrgDomain !== 'undefined') {
       console.warn(
-        `User: ${userId} attempted to create a domain for: ${org.slug}, however that org already has that domain claimed.`,
+        `User: ${userKey} attempted to create a domain for: ${org.slug}, however that org already has that domain claimed.`,
       )
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
@@ -173,7 +173,7 @@ const createDomain = new mutationWithClientMutationId({
     const returnDomain = await domainLoaderByDomain.load(insertDomain.domain)
 
     console.info(
-      `User: ${userId} successfully created ${returnDomain.domain} in org: ${org.slug}.`,
+      `User: ${userKey} successfully created ${returnDomain.domain} in org: ${org.slug}.`,
     )
 
     returnDomain.id = returnDomain._key

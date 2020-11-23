@@ -89,7 +89,7 @@ describe('user send password reset email', () => {
           null,
           {
             i18n,
-            userId: user._key,
+            userKey: user._key,
             query,
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
@@ -134,7 +134,7 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userId: undefined,
+              userKey: undefined,
               query,
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
@@ -148,7 +148,7 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User attempted to two factor authenticate, however the userId is undefined.`,
+            `User attempted to two factor authenticate, however the userKey is undefined.`,
           ])
         })
       })
@@ -166,7 +166,7 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userId: 1,
+              userKey: 1,
               query,
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
@@ -216,7 +216,7 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query,
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
@@ -266,7 +266,7 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query,
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
@@ -322,7 +322,7 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: mockedQuery,
               loaders: {
                 userLoaderByKey: idLoader,
@@ -386,7 +386,7 @@ describe('user send password reset email', () => {
           null,
           {
             i18n,
-            userId: user._key,
+            userKey: user._key,
             query,
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
@@ -431,7 +431,7 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userId: undefined,
+              userKey: undefined,
               query,
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
@@ -443,7 +443,7 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User attempted to two factor authenticate, however the userId is undefined.`,
+            `User attempted to two factor authenticate, however the userKey is undefined.`,
           ])
         })
       })
@@ -461,7 +461,7 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userId: 1,
+              userKey: 1,
               query,
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
@@ -507,7 +507,7 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query,
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
@@ -553,7 +553,7 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query,
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
@@ -605,7 +605,7 @@ describe('user send password reset email', () => {
             null,
             {
               i18n,
-              userId: user._key,
+              userKey: user._key,
               query: mockedQuery,
               loaders: {
                 userLoaderByKey: idLoader,

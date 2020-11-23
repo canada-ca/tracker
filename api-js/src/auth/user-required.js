@@ -1,16 +1,16 @@
 const { t } = require('@lingui/macro')
 
-const userRequired = ({ i18n, userId, userLoaderByKey }) => async () => {
-  if (typeof userId === 'undefined') {
+const userRequired = ({ i18n, userKey, userLoaderByKey }) => async () => {
+  if (typeof userKey === 'undefined') {
     console.warn(
-      `User attempted to access controlled content, but userId was undefined.`,
+      `User attempted to access controlled content, but userKey was undefined.`,
     )
     throw new Error(i18n._(t`Authentication error. Please sign in.`))
   }
 
   let user, userDoesNotExist
   try {
-    user = await userLoaderByKey.load(userId)
+    user = await userLoaderByKey.load(userKey)
     if (typeof user === 'undefined') {
       userDoesNotExist = true
     }
@@ -21,7 +21,7 @@ const userRequired = ({ i18n, userId, userLoaderByKey }) => async () => {
 
   if (userDoesNotExist) {
     console.warn(
-      `User: ${userId} attempted to access controlled content, but no user is associated with that id.`,
+      `User: ${userKey} attempted to access controlled content, but no user is associated with that id.`,
     )
     throw new Error(i18n._(t`Authentication error. Please sign in.`))
   }

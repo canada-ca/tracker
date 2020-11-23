@@ -4,7 +4,7 @@ const { t } = require('@lingui/macro')
 
 const dkimResultsLoaderConnectionByDkimId = (
   query,
-  userId,
+  userKey,
   cleanseInput,
   i18n,
 ) => async ({ dkimId, after, before, first, last }) => {
@@ -23,7 +23,7 @@ const dkimResultsLoaderConnectionByDkimId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
     )
     throw new Error(
       i18n._(
@@ -32,7 +32,7 @@ const dkimResultsLoaderConnectionByDkimId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
     )
     throw new Error(
       i18n._(
@@ -44,7 +44,7 @@ const dkimResultsLoaderConnectionByDkimId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
       )
       throw new Error(
         i18n._(
@@ -55,7 +55,7 @@ const dkimResultsLoaderConnectionByDkimId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: dkimResultsLoaderConnectionByDkimId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: dkimResultsLoaderConnectionByDkimId.`,
       )
       throw new Error(
         i18n._(
@@ -71,7 +71,7 @@ const dkimResultsLoaderConnectionByDkimId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: dkimResultsLoaderConnectionByDkimId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: dkimResultsLoaderConnectionByDkimId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -126,7 +126,7 @@ const dkimResultsLoaderConnectionByDkimId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to get dkim result information for ${dkimId}, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to get dkim result information for ${dkimId}, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load dkim results. Please try again.`))
   }
@@ -136,7 +136,7 @@ const dkimResultsLoaderConnectionByDkimId = (
     dkimResultsInfo = await dkimResultsCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to get dkim result information for ${dkimId}, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to get dkim result information for ${dkimId}, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load dkim results. Please try again.`))
   }

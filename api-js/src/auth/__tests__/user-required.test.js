@@ -51,7 +51,7 @@ describe('given a userLoaderByKey dataloader', () => {
       const expectedUser = await expectedCursor.next()
 
       const testUserRequired = userRequired({
-        userId: expectedUser._key,
+        userKey: expectedUser._key,
         userLoaderByKey: userLoaderByKey(query),
       })
       const user = await testUserRequired()
@@ -76,7 +76,7 @@ describe('given a userLoaderByKey dataloader', () => {
         try {
           const testUserRequired = userRequired({
             i18n,
-            userId: undefined,
+            userKey: undefined,
             userLoaderByKey: userLoaderByKey(query),
           })
           await testUserRequired()
@@ -87,7 +87,7 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `User attempted to access controlled content, but userId was undefined.`,
+          `User attempted to access controlled content, but userKey was undefined.`,
         ])
       })
     })
@@ -98,7 +98,7 @@ describe('given a userLoaderByKey dataloader', () => {
         try {
           const testUserRequired = userRequired({
             i18n,
-            userId: '1',
+            userKey: '1',
             userLoaderByKey: userLoaderByKey(query),
           })
           await testUserRequired()
@@ -126,7 +126,7 @@ describe('given a userLoaderByKey dataloader', () => {
         try {
           const testUserRequired = userRequired({
             i18n,
-            userId: '1',
+            userKey: '1',
             userLoaderByKey: testLoader(),
           })
           await testUserRequired()
@@ -159,7 +159,7 @@ describe('given a userLoaderByKey dataloader', () => {
         try {
           const testUserRequired = userRequired({
             i18n,
-            userId: undefined,
+            userKey: undefined,
             userLoaderByKey: userLoaderByKey(query),
           })
           await testUserRequired()
@@ -168,7 +168,7 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `User attempted to access controlled content, but userId was undefined.`,
+          `User attempted to access controlled content, but userKey was undefined.`,
         ])
       })
     })
@@ -179,7 +179,7 @@ describe('given a userLoaderByKey dataloader', () => {
         try {
           const testUserRequired = userRequired({
             i18n,
-            userId: '1',
+            userKey: '1',
             userLoaderByKey: userLoaderByKey(query),
           })
           await testUserRequired()
@@ -205,7 +205,7 @@ describe('given a userLoaderByKey dataloader', () => {
         try {
           const testUserRequired = userRequired({
             i18n,
-            userId: '1',
+            userKey: '1',
             userLoaderByKey: testLoader(),
           })
           await testUserRequired()

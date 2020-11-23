@@ -95,7 +95,7 @@ describe('given the checkUserIsAdminForUser', () => {
       it('returns true', async () => {
         const testCheck = checkUserIsAdminForUser({
           i18n,
-          userId: user1._key,
+          userKey: user1._key,
           query,
         })
 
@@ -116,7 +116,7 @@ describe('given the checkUserIsAdminForUser', () => {
       it('returns true', async () => {
         const testCheck = checkUserIsAdminForUser({
           i18n,
-          userId: user1._key,
+          userKey: user1._key,
           query,
         })
 
@@ -164,7 +164,7 @@ describe('given the checkUserIsAdminForUser', () => {
       it('returns true', async () => {
         const testCheck = checkUserIsAdminForUser({
           i18n,
-          userId: user1._key,
+          userKey: user1._key,
           query,
         })
 
@@ -185,7 +185,7 @@ describe('given the checkUserIsAdminForUser', () => {
       it('returns true', async () => {
         const testCheck = checkUserIsAdminForUser({
           i18n,
-          userId: user1._key,
+          userKey: user1._key,
           query,
         })
 
@@ -213,7 +213,7 @@ describe('given the checkUserIsAdminForUser', () => {
         it('throws an error', async () => {
           const testCheck = checkUserIsAdminForUser({
             i18n,
-            userId: user1._key,
+            userKey: user1._key,
             query: jest
               .fn()
               .mockRejectedValue(new Error('Database error occurred.')),
@@ -237,7 +237,7 @@ describe('given the checkUserIsAdminForUser', () => {
         it('throws an error', async () => {
           const testCheck = checkUserIsAdminForUser({
             i18n,
-            userId: user1._key,
+            userKey: user1._key,
             query: jest
               .fn()
               .mockReturnValueOnce({
@@ -274,7 +274,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           const testCheck = checkUserIsAdminForUser({
             i18n,
-            userId: user1._key,
+            userKey: user1._key,
             query: jest.fn().mockReturnValue(cursor),
           })
 
@@ -302,7 +302,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           const testCheck = checkUserIsAdminForUser({
             i18n,
-            userId: user1._key,
+            userKey: user1._key,
             query: jest
               .fn()
               .mockReturnValueOnce({
@@ -346,7 +346,7 @@ describe('given the checkUserIsAdminForUser', () => {
         it('throws an error', async () => {
           const testCheck = checkUserIsAdminForUser({
             i18n,
-            userId: user1._key,
+            userKey: user1._key,
             query: jest
               .fn()
               .mockRejectedValue(new Error('Database error occurred.')),
@@ -368,7 +368,7 @@ describe('given the checkUserIsAdminForUser', () => {
         it('throws an error', async () => {
           const testCheck = checkUserIsAdminForUser({
             i18n,
-            userId: user1._key,
+            userKey: user1._key,
             query: jest
               .fn()
               .mockReturnValueOnce({
@@ -403,7 +403,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           const testCheck = checkUserIsAdminForUser({
             i18n,
-            userId: user1._key,
+            userKey: user1._key,
             query: jest.fn().mockReturnValue(cursor),
           })
 
@@ -429,7 +429,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
           const testCheck = checkUserIsAdminForUser({
             i18n,
-            userId: user1._key,
+            userKey: user1._key,
             query: jest
               .fn()
               .mockReturnValueOnce({

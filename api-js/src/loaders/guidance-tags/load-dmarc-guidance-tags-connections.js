@@ -4,7 +4,7 @@ const { t } = require('@lingui/macro')
 
 const dmarcGuidanceTagConnectionsLoader = (
   query,
-  userId,
+  userKey,
   cleanseInput,
   i18n,
 ) => async ({ dmarcGuidanceTags, after, before, first, last }) => {
@@ -23,7 +23,7 @@ const dmarcGuidanceTagConnectionsLoader = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
     )
     throw new Error(
       i18n._(
@@ -32,7 +32,7 @@ const dmarcGuidanceTagConnectionsLoader = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
     )
     throw new Error(
       i18n._(
@@ -44,7 +44,7 @@ const dmarcGuidanceTagConnectionsLoader = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
       )
       throw new Error(
         i18n._(
@@ -55,7 +55,7 @@ const dmarcGuidanceTagConnectionsLoader = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: dmarcGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: dmarcGuidanceTagConnectionsLoader.`,
       )
       throw new Error(
         i18n._(
@@ -71,7 +71,7 @@ const dmarcGuidanceTagConnectionsLoader = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: dmarcGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: dmarcGuidanceTagConnectionsLoader.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -124,7 +124,7 @@ const dmarcGuidanceTagConnectionsLoader = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load dmarc guidance tags. Please try again.`),
@@ -136,7 +136,7 @@ const dmarcGuidanceTagConnectionsLoader = (
     dmarcGuidanceTagInfo = await dmarcGuidanceTagInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load dmarc guidance tags. Please try again.`),

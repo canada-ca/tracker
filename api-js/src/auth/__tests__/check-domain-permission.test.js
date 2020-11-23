@@ -84,7 +84,7 @@ describe('given the check domain permission function', () => {
     describe('if the user belongs to an org which has a claim for a given organization', () => {
       afterEach(async () => {
         await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
           LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
           RETURN true
         `
@@ -104,7 +104,7 @@ describe('given the check domain permission function', () => {
         it('will return true', async () => {
           const testCheckDomainPermission = checkDomainPermission({
             query,
-            userId: user._key,
+            userKey: user._key,
           })
           permitted = await testCheckDomainPermission({ domainId: domain._id })
           expect(permitted).toEqual(true)
@@ -121,7 +121,7 @@ describe('given the check domain permission function', () => {
         it('will return true', async () => {
           const testCheckDomainPermission = checkDomainPermission({
             query,
-            userId: user._key,
+            userKey: user._key,
           })
           permitted = await testCheckDomainPermission({ domainId: domain._id })
           expect(permitted).toEqual(true)
@@ -138,7 +138,7 @@ describe('given the check domain permission function', () => {
         it('will return true', async () => {
           const testCheckDomainPermission = checkDomainPermission({
             query,
-            userId: user._key,
+            userKey: user._key,
           })
           permitted = await testCheckDomainPermission({ domainId: domain._id })
           expect(permitted).toEqual(true)
@@ -162,7 +162,7 @@ describe('given the check domain permission function', () => {
       it('will return false', async () => {
         const testCheckDomainPermission = checkDomainPermission({
           query,
-          userId: user._key,
+          userKey: user._key,
         })
         permitted = await testCheckDomainPermission({ domainId: domain._id })
         expect(permitted).toEqual(false)
@@ -190,7 +190,7 @@ describe('given the check domain permission function', () => {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
-              userId: user._key,
+              userKey: user._key,
             })
             await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
@@ -216,7 +216,7 @@ describe('given the check domain permission function', () => {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
-              userId: user._key,
+              userKey: user._key,
             })
             await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
@@ -252,7 +252,7 @@ describe('given the check domain permission function', () => {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
-              userId: user._key,
+              userKey: user._key,
             })
             await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
@@ -276,7 +276,7 @@ describe('given the check domain permission function', () => {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
-              userId: user._key,
+              userKey: user._key,
             })
             await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {

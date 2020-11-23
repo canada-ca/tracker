@@ -51,21 +51,21 @@ const resetPassword = new mutationWithClientMutationId({
 
     // Check to see if user id exists in token params !!!
     if (
-      tokenParameters.userId === 'undefined' ||
-      typeof tokenParameters.userId === 'undefined'
+      tokenParameters.userKey === 'undefined' ||
+      typeof tokenParameters.userKey === 'undefined'
     ) {
       console.warn(
-        `When resetting password user attempted to verify account, but userId is not located in the token parameters.`,
+        `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
       )
       throw new Error(i18n._(t`Unable to reset password. Please try again.`))
     }
 
     // Check if user exists
-    const user = await userLoaderByKey.load(tokenParameters.userId)
+    const user = await userLoaderByKey.load(tokenParameters.userKey)
 
     if (typeof user === 'undefined') {
       console.warn(
-        `A user attempted to reset the password for ${tokenParameters.userId}, however there is no associated account.`,
+        `A user attempted to reset the password for ${tokenParameters.userKey}, however there is no associated account.`,
       )
       throw new Error(i18n._(t`Unable to reset password. Please try again.`))
     }
