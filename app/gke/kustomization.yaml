@@ -4,6 +4,7 @@ resources:
 - ../bases
 - letsencrypt-issuer.yaml
 patchesStrategicMerge:
+- arangodb.yaml
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
 - publicgateway.yaml

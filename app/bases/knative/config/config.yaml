@@ -17,7 +17,7 @@ spec:
         autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "25"
     spec:
-      timeoutSeconds: 900
+      timeoutSeconds: 600
       containerConcurrency: 8
       containers:
         - name: https-scanner
@@ -67,7 +67,7 @@ spec:
         autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "4"
     spec:
-      timeoutSeconds: 900
+      timeoutSeconds: 600
       containerConcurrency: 1
       containers:
         - name: result-processor
@@ -117,7 +117,7 @@ spec:
         autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "20"
     spec:
-      timeoutSeconds: 900
+      timeoutSeconds: 600
       containerConcurrency: 8
       containers:
         - name: ssl-scanner
@@ -167,7 +167,7 @@ spec:
         autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "20"
     spec:
-      timeoutSeconds: 900
+      timeoutSeconds: 600
       containerConcurrency: 8
       containers:
         - name: dns-scanner
