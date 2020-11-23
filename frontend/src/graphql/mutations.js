@@ -101,9 +101,13 @@ export const SEND_PASSWORD_RESET_LINK = gql`
   }
 `
 
-export const UPDATE_USER_ROLES = gql`
-  mutation UpdateUserRoles($input: UpdateUserRoleInput!) {
-    updateUserRole(input: $input) {
+export const UPDATE_USER_ROLE = gql`
+  mutation UpdateUserRole(
+    $userName: EmailAddress!
+    $orgId: ID!
+    $role: RoleEnums!
+  ) {
+    updateUserRole(input: { userName: $userName, orgId: $orgId, role: $role }) {
       status
     }
   }
@@ -183,15 +187,15 @@ export const INVITE_USER_TO_ORG = gql`
   mutation InviteUserToOrg(
     $userName: EmailAddress!
     $requestedRole: RoleEnums!
-    $orgSlug: Slug!
-    $preferredLanguage: LanguageEnums!
+    $orgId: ID!
+    $preferredLang: LanguageEnums!
   ) {
     inviteUserToOrg(
       input: {
         userName: $userName
         requestedRole: $requestedRole
-        orgSlug: $orgSlug
-        preferredLanguage: $preferredLanguage
+        orgId: $orgId
+        preferredLang: $preferredLang
       }
     ) {
       status

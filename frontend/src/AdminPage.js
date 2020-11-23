@@ -72,14 +72,6 @@ export default function AdminPage() {
     )
   })
 
-  // for (let i = 0; i < adminOrgs.length; i++) {
-  //   options.push(
-  //     <option key={'option' + i} value={adminOrgs[i]}>
-  //       {adminOrgs[i]}
-  //     </option>,
-  //   )
-  // }
-
   if (options.length > 1) {
     return (
       <Layout>

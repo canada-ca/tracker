@@ -61,9 +61,9 @@ export default function AdminPanel({ orgSlug, permission }) {
         <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
           <UserList
             permission={permission}
-            userListData={data.userList}
-            // orgName={orgName}
-            orgSlug={orgSlug}
+            userListData={data.findOrganizationBySlug.affiliations}
+            orgId={data.findOrganizationBySlug.id}
+            orgName={data.findOrganizationBySlug.name}
           />
         </ErrorBoundary>
       </SimpleGrid>

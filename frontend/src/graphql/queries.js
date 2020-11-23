@@ -154,6 +154,7 @@ export const ADMIN_PANEL = gql`
   query AdminPanel($orgSlug: Slug!, $number: Int, $cursor: String) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
+      name
       domains(first: $number, after: $cursor) {
         edges {
           node {
@@ -166,6 +167,25 @@ export const ADMIN_PANEL = gql`
           endCursor
           hasNextPage
         }
+        totalCount
+      }
+      affiliations {
+        edges {
+          node {
+            userId
+            permission
+            user {
+              userName
+              displayName
+              tfaValidated
+            }
+          }
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        totalCount
       }
     }
   }
