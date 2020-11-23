@@ -240,74 +240,59 @@ export default function UserList({ permission, userListData, orgName, orgId }) {
       ) : (
         currentUsers.map(({ node }, index) => {
           let userRole = node.permission
-          if (permission) {
-            return (
-              <Box key={`${node.user.userName}:${index}`}>
-                {userRole === 'SUPER_ADMIN' ||
-                (permission === 'ADMIN' && userRole === 'ADMIN') ? (
-                  <Stack key={node.userId} isInline align="center">
-                    <UserCard
-                      userName={node.user.userName}
-                      displayName={node.user.displayName}
-                      role={userRole}
-                      tfa={null}
-                    />
-                  </Stack>
-                ) : (
-                  <Box key={`${node.user.username}:${index}`}>
-                    <Stack isInline align="center">
-                      <TrackerButton
-                        variant="danger"
-                        onClick={() => removeUser(node)}
-                        px="3"
-                      >
-                        <Icon name="minus" />
-                      </TrackerButton>
-                      <UserCard
-                        userName={node.user.userName}
-                        displayName={node.user.displayName}
-                      />
-                    </Stack>
-                    <Stack isInline justifyContent="flex-end" align="center">
-                      <FormLabel htmlFor="role_select" fontWeight="bold">
-                        <Trans>Role:</Trans>
-                      </FormLabel>
-                      <Select
-                        w="35%"
-                        id="role_select"
-                        size="sm"
-                        name="role"
-                        defaultValue={userRole}
-                        onChange={(e) => (userRole = e.target.value)}
-                      >
-                        <option value="USER">{t`USER`}</option>
-                        <option value="ADMIN">{t`ADMIN`}</option>
-                        <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
-                      </Select>
-                      <TrackerButton
-                        onClick={() =>
-                          handleClick(userRole, node.user.userName)
-                        }
-                        variant="primary"
-                        fontSize="sm"
-                        px="3"
-                      >
-                        <Trans>Apply</Trans>
-                      </TrackerButton>
-                    </Stack>
-                  </Box>
-                )}
-              </Box>
-            )
-          }
           return (
-            <UserCard
-              key={node.userId}
-              userName={node.user.userName}
-              tfa={node.user.tfa}
-              role={node.permission}
-              displayName={node.user.displayName}
-            />
+            <Box key={`${node.user.username}:${index}`}>
+              <Stack isInline align="center">
+                {/* TODO: IMPLEMENT USER REMOVAL (NEEDS API SUPPORT NOV-23-2020 */}
+                {/*<TrackerButton*/}
+                {/*  variant="danger"*/}
+                {/*  onClick={() => removeUser(node)}*/}
+                {/*  px="3"*/}
+                {/*>*/}
+                {/*  <Icon name="minus" />*/}
+                {/*</TrackerButton>*/}
+                <UserCard
+                  userName={node.user.userName}
+                  displayName={node.user.displayName}
+                  role={userRole}
+                  tfa={node.user.tfaValidated}
+                />
+              </Stack>
+              <Stack isInline justifyContent="flex-end" align="center">
+                <FormLabel htmlFor="role_select" fontWeight="bold">
+                  <Trans>Role:</Trans>
+                </FormLabel>
+                <Select
+                  w="35%"
+                  id="role_select"
+                  size="sm"
+                  name="role"
+                  defaultValue={userRole}
+                  onChange={(e) => (userRole = e.target.value)}
+                >
+                  {/* TODO: Implement this conditional rendering in a cleaner way */}
+                  {(userRole === 'USER' ||
+                    (permission === 'SUPER_ADMIN' && userRole === 'ADMIN')) && (
+                    <option value="USER">{t`USER`}</option>
+                  )}
+                  {(userRole === 'USER' || userRole === 'ADMIN') && (
+                    <option value="ADMIN">{t`ADMIN`}</option>
+                  )}
+                  {(userRole === 'SUPER_ADMIN' ||
+                    permission === 'SUPER_ADMIN') && (
+                    <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
+                  )}
+                </Select>
+                <TrackerButton
+                  onClick={() => handleClick(userRole, node.user.userName)}
+                  variant="primary"
+                  fontSize="sm"
+                  px="3"
+                >
+                  <Trans>Apply</Trans>
+                </TrackerButton>
+              </Stack>
+            </Box>
           )
         })
       )}
