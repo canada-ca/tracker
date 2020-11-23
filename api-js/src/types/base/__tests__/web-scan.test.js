@@ -28,13 +28,13 @@ describe('given the web scan gql object', () => {
   const mockedError = (output) => consoleErrorOutput.push(output)
 
   beforeAll(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ migrate } = ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
   })
 
   beforeEach(async () => {
