@@ -24,7 +24,6 @@ images:
 - name: gcr.io/track-compliance/ssl
   newTag: master-0000000
 resources:
-- knative/config/domain-config.yaml
 - knative/config/queues.yaml
 - knative/config/config.yaml
 - knative/config/autoscan.yaml

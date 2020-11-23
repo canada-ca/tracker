@@ -6,6 +6,7 @@ resources:
 patchesStrategicMerge:
 - publicgateway.yaml
 - knative/config/queues.yaml
+- arangodb.yaml
 secretGenerator:
 - envs:
   - arangodb.env
