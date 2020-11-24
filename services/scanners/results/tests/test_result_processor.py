@@ -177,10 +177,10 @@ def test_insert_dns():
         assert inserted_spf_results.get(field, None) is not None
     assert inserted_spf_results["guidanceTags"] == expected_spf_tags
 
-    inserted_dkim_scan_results_query = db.collection("dkim_scans").all()
+    inserted_dkim_results_query = db.collection("dkimResults").all()
 
-    inserted_dkim_scan_results = inserted_dkim_scan_results_query.next()
+    inserted_dkim_results = inserted_dkim_results_query.next()
 
-    for field in inserted_dkim_scan_results:
-        assert inserted_dkim_scan_results.get(field, None) is not None
-    assert inserted_dkim_scan_results["guidanceTags"] == expected_dkim_scan_tags
+    for field in inserted_dkim_results:
+        assert inserted_dkim_results.get(field, None) is not None
+    assert inserted_dkim_results["guidanceTags"] == expected_dkim_tags
