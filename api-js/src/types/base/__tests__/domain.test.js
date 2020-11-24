@@ -189,7 +189,7 @@ describe('given the domain object', () => {
     })
 
     describe('testing the id resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
@@ -198,7 +198,7 @@ describe('given the domain object', () => {
       })
     })
     describe('testing the lastRan resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
         expect(
@@ -207,7 +207,7 @@ describe('given the domain object', () => {
       })
     })
     describe('testing the selectors resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
         const selectors = ['selector1._domainkey', 'selector2._domainkey']
@@ -219,7 +219,7 @@ describe('given the domain object', () => {
       })
     })
     describe('testing the status resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
         const status = {
@@ -240,7 +240,7 @@ describe('given the domain object', () => {
       })
     })
     describe('testing the organizations resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = domainType.getFields()
 
         const loader = orgLoaderConnectionArgsByDomainId(
@@ -304,7 +304,7 @@ describe('given the domain object', () => {
       })
     })
     describe('testing the email resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
         expect(demoType.email.resolve({ _id: '1', _key: '1' })).toEqual({
@@ -314,7 +314,7 @@ describe('given the domain object', () => {
       })
     })
     describe('testing the web resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
         expect(demoType.web.resolve({ _id: '1', _key: '1' })).toEqual({
@@ -344,7 +344,7 @@ describe('given the domain object', () => {
         })
       })
 
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = domainType.getFields()
 
         const data = {
@@ -441,7 +441,7 @@ describe('given the domain object', () => {
         })
       })
 
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = domainType.getFields()
 
         const data = {

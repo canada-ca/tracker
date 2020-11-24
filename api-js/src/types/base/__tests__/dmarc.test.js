@@ -134,14 +134,14 @@ describe('given the dmarcType object', () => {
     })
 
     describe('testing the id field resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dmarcType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('dmarc', 1))
       })
     })
     describe('testing the domain resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
         const loader = domainLoaderByKey(query, '1', {})
@@ -163,7 +163,7 @@ describe('given the dmarcType object', () => {
       })
     })
     describe('testing the timestamp resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dmarcType.getFields()
 
         expect(
@@ -172,14 +172,14 @@ describe('given the dmarcType object', () => {
       })
     })
     describe('testing the dmarcPhase resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dmarcType.getFields()
 
         expect(demoType.dmarcPhase.resolve({ dmarcPhase: 1 })).toEqual(1)
       })
     })
     describe('testing the record resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dmarcType.getFields()
 
         expect(demoType.record.resolve({ record: 'txtRecord' })).toEqual(
@@ -188,7 +188,7 @@ describe('given the dmarcType object', () => {
       })
     })
     describe('testing the pPolicy resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dmarcType.getFields()
 
         expect(demoType.pPolicy.resolve({ pPolicy: 'pPolicy' })).toEqual(
@@ -197,7 +197,7 @@ describe('given the dmarcType object', () => {
       })
     })
     describe('testing the spPolicy resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dmarcType.getFields()
 
         expect(demoType.spPolicy.resolve({ spPolicy: 'spPolicy' })).toEqual(
@@ -206,14 +206,14 @@ describe('given the dmarcType object', () => {
       })
     })
     describe('testing the pct resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dmarcType.getFields()
 
         expect(demoType.pct.resolve({ pct: 100 })).toEqual(100)
       })
     })
     describe('testing the guidanceTags resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
         const loader = dmarcGuidanceTagConnectionsLoader(

@@ -85,14 +85,14 @@ describe('given the dkimType object', () => {
     })
 
     describe('testing the id resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dkimType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('dkim', 1))
       })
     })
     describe('testing the domain resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = dkimType.getFields()
 
         const loader = domainLoaderByKey(query, '1', {})
@@ -114,7 +114,7 @@ describe('given the dkimType object', () => {
       })
     })
     describe('testing the timestamp resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dkimType.getFields()
 
         expect(
@@ -123,7 +123,7 @@ describe('given the dkimType object', () => {
       })
     })
     describe('testing the results resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = dkimType.getFields()
 
         const loader = dkimResultsLoaderConnectionByDkimId(

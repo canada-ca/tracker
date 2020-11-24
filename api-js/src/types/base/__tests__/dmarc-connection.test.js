@@ -12,7 +12,7 @@ describe('given the dmarc connection object', () => {
   })
   describe('testing its field resolvers', () => {
     describe('testing the totalCount resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dmarcConnection.connectionType.getFields()
 
         expect(demoType.totalCount.resolve({ totalCount: 1 })).toEqual(1)

@@ -143,7 +143,7 @@ describe('given the https gql object', () => {
     })
 
     describe('testing the id resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = httpsType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
@@ -152,7 +152,7 @@ describe('given the https gql object', () => {
       })
     })
     describe('testing the domain resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
 
         const loader = domainLoaderByKey(query, user._key, {})
@@ -176,7 +176,7 @@ describe('given the https gql object', () => {
       })
     })
     describe('testing the timestamp resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = httpsType.getFields()
 
         expect(
@@ -185,7 +185,7 @@ describe('given the https gql object', () => {
       })
     })
     describe('testing the implementation resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = httpsType.getFields()
 
         expect(
@@ -194,7 +194,7 @@ describe('given the https gql object', () => {
       })
     })
     describe('testing the enforced resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = httpsType.getFields()
 
         expect(demoType.enforced.resolve({ enforced: 'enforced' })).toEqual(
@@ -203,14 +203,14 @@ describe('given the https gql object', () => {
       })
     })
     describe('testing the hsts resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = httpsType.getFields()
 
         expect(demoType.hsts.resolve({ hsts: 'hsts' })).toEqual('hsts')
       })
     })
     describe('testing the hstsAge resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = httpsType.getFields()
 
         expect(demoType.hstsAge.resolve({ hstsAge: 'hstsAge' })).toEqual(
@@ -219,7 +219,7 @@ describe('given the https gql object', () => {
       })
     })
     describe('testing the preloaded resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = httpsType.getFields()
 
         expect(demoType.preloaded.resolve({ preloaded: 'preloaded' })).toEqual(
@@ -228,7 +228,7 @@ describe('given the https gql object', () => {
       })
     })
     describe('testing the guidanceTags resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
 
         const loader = httpsGuidanceTagConnectionsLoader(

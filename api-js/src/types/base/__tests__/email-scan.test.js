@@ -160,7 +160,7 @@ describe('given the email gql object', () => {
     })
 
     describe('testing the domain resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = emailScanType.getFields()
 
         const loader = domainLoaderByKey(query, user._key, {})
@@ -184,7 +184,7 @@ describe('given the email gql object', () => {
       })
     })
     describe('testing the dkim resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = emailScanType.getFields()
 
         const expectedResult = {
@@ -227,7 +227,7 @@ describe('given the email gql object', () => {
       })
     })
     describe('testing the dmarc resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = emailScanType.getFields()
 
         const expectedResult = {
@@ -276,7 +276,7 @@ describe('given the email gql object', () => {
       })
     })
     describe('testing the spf resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = emailScanType.getFields()
 
         const expectedResult = {

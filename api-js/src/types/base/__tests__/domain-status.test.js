@@ -37,35 +37,35 @@ describe('given the domainStatus object', () => {
 
   describe('testing its field resolvers', () => {
     describe('testing the dkim resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
         expect(demoType.dkim.resolve({ dkim: 'pass' })).toEqual('pass')
       })
     })
     describe('testing the dmarc resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
         expect(demoType.dmarc.resolve({ dmarc: 'pass' })).toEqual('pass')
       })
     })
     describe('testing the https resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
         expect(demoType.https.resolve({ https: 'pass' })).toEqual('pass')
       })
     })
     describe('testing the spf resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
         expect(demoType.spf.resolve({ spf: 'pass' })).toEqual('pass')
       })
     })
     describe('testing the ssl resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
         expect(demoType.ssl.resolve({ ssl: 'pass' })).toEqual('pass')

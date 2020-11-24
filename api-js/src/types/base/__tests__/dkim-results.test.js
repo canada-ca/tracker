@@ -102,7 +102,7 @@ describe('given the dkim result object', () => {
     })
 
     describe('testing the id resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dkimResultsType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
@@ -111,7 +111,7 @@ describe('given the dkim result object', () => {
       })
     })
     describe('testing the dkim resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = dkimResultsType.getFields()
 
         const loader = dkimLoaderByKey(query, '1', {})
@@ -132,7 +132,7 @@ describe('given the dkim result object', () => {
       })
     })
     describe('testing the selector field', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dkimResultsType.getFields()
 
         expect(
@@ -141,7 +141,7 @@ describe('given the dkim result object', () => {
       })
     })
     describe('testing the record resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dkimResultsType.getFields()
 
         expect(demoType.record.resolve({ record: 'txtRecord' })).toEqual(
@@ -150,7 +150,7 @@ describe('given the dkim result object', () => {
       })
     })
     describe('testing the keyLength resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = dkimResultsType.getFields()
 
         expect(demoType.keyLength.resolve({ keyLength: '2048' })).toEqual(
@@ -159,7 +159,7 @@ describe('given the dkim result object', () => {
       })
     })
     describe('testing the guidanceTags resolver', () => {
-      it('returns the parsed value', async () => {
+      it('returns the resolved value', async () => {
         const demoType = dkimResultsType.getFields()
 
         const loader = dkimGuidanceTagConnectionsLoader(

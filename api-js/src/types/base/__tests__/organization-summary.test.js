@@ -18,7 +18,7 @@ describe('given the organization summary object', () => {
   })
   describe('testing field resolvers', () => {
     describe('testing mail resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = organizationSummaryType.getFields()
 
         const mail = {
@@ -49,7 +49,7 @@ describe('given the organization summary object', () => {
       })
     })
     describe('testing web resolver', () => {
-      it('returns the parsed value', () => {
+      it('returns the resolved value', () => {
         const demoType = organizationSummaryType.getFields()
 
         const web = {
