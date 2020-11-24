@@ -774,7 +774,7 @@ type Period {
   # Start date of data collection.
   month: PeriodEnums
   # End date of data collection.
-  year: Year
+  year: Year @examples(values: [2019, 2020])
   # Category percentages based on the category totals.
   categoryPercentages: CategoryPercentages
   # Category totals for quick viewing.
