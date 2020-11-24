@@ -86,7 +86,7 @@ def test_process_dns():
     tags = process_dns(dns_result_data)
     assert tags["dmarc"] == expected_dmarc_tags
     assert tags["spf"] == expected_spf_tags
-    assert tags["dkim"]["selector1"] == expected_dkim_scan_tags
+    assert tags["dkim"]["selector1"] == expected_dkim_tags
 
 
 def test_insert_https():
