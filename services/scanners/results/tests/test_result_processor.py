@@ -57,7 +57,7 @@ graph.create_edge_definition(
     to_vertex_collections=["https"],
 )
 
-graph.collection("domains").insert(
+test_db.collection("domains").insert(
     {
         "domain": "cyber.gc.ca",
         "selectors": ["selector1"],
