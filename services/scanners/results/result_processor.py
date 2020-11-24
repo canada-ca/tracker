@@ -484,6 +484,14 @@ def insert_dns(report, tags, domain_key, db):
                 edges = db.collection("dkimToDkimResults").find({"_to": previous_dkim_result["_id"]})
                 for edge in edges:
                     previous_dkim = db.collection("dkim").get({"_id": previous_dkim_result["_id"]})
+
+                    # Check if PK was used for another domain
+                    previous_dkim_domain_query = db.collection("domainsDKIM").find({"_to": previous_dkim["_id"]}, limit=1)
+                    previous_dkim_domain = previous_dkim_domain_query.next()
+                    if (previous_dkim_domain["_key"] != domain_key) and ("dkim14" not in tags["dkim"][selector]):
+                        tags["dkim"][selector].append("dkim14")
+
+                    # Check if PK is older than 1 year
                     current_timestamp = datetime.datetime.strptime(dkimEntry["timestamp"], '%Y-%m-%d %H:%M:%S.%f')
                     previous_timestamp = datetime.datetime.strptime(previous_dkim["timestamp"], '%Y-%m-%d %H:%M:%S.%f')
 
