@@ -11,10 +11,53 @@ sys_db = arango_client.db("_system", username="", password="")
 sys_db.create_database("test")
 
 # Establish DB connection
-db = arango_client.db("test", username="", password="")
-db.create_collection("domains")
+test_db = arango_client.db("test", username="", password="")
+graph = test_db.create_graph("compliance")
+graph.create_vertex_collection("domains")
+graph.create_vertex_collection("dmarc")
+graph.create_vertex_collection("spf")
+graph.create_vertex_collection("dkim")
+graph.create_vertex_collection("dkimResults")
+graph.create_vertex_collection("https")
+graph.create_vertex_collection("ssl")
 
-db.collection("domains").insert(
+graph.create_edge_definition(
+    edge_collection="dkimToDkimResults",
+    from_vertex_collections=["dkim"],
+    to_vertex_collections=["dkimResults"],
+)
+
+graph.create_edge_definition(
+    edge_collection="domainsDMARC",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["dmarc"],
+)
+
+graph.create_edge_definition(
+    edge_collection="domainsSPF",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["spf"],
+)
+
+graph.create_edge_definition(
+    edge_collection="domainsDKIM",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["dkim"],
+)
+
+graph.create_edge_definition(
+    edge_collection="domainsSSL",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["ssl"],
+)
+
+graph.create_edge_definition(
+    edge_collection="domainsHTTPS",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["https"],
+)
+
+graph.collection("domains").insert(
     {
         "domain": "cyber.gc.ca",
         "selectors": ["selector1"],

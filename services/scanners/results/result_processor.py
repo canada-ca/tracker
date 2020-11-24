@@ -358,15 +358,6 @@ def process_dns(results):
 
 def insert_https(report, tags, domain_key, db):
     try:
-        if not db.has_collection("https"):
-            db.create_vertex_collection("https")
-        if not db.has_collection("domainsHTTPS"):
-            db.create_edge_definition(
-                edge_collection="domainsHTTPS",
-                from_vertex_collections=["domains"],
-                to_vertex_collections=["https"],
-            )
-
         httpsEntry = db.collection("https").insert(
             {
                 "timestamp": str(datetime.datetime.utcnow()),
@@ -421,15 +412,6 @@ def insert_https(report, tags, domain_key, db):
 
 def insert_ssl(report, tags, domain_key, db):
     try:
-        if not db.has_collection("ssl"):
-            db.create_vertex_collection("ssl")
-        if not db.has_collection("domainsSSL"):
-            db.create_edge_definition(
-                edge_collection="domainsSSL",
-                from_vertex_collections=["domains"],
-                to_vertex_collections=["ssl"],
-            )
-
         sslEntry = db.collection("ssl").insert(
             {
                 "timestamp": str(datetime.datetime.utcnow()),
@@ -461,39 +443,6 @@ def insert_ssl(report, tags, domain_key, db):
 
 def insert_dns(report, tags, domain_key, db):
     try:
-        if not db.has_collection("dmarc"):
-            db.create_vertex_collection("dmarc")
-        if not db.has_collection("spf"):
-            db.create_vertex_collection("spf")
-        if not db.has_collection("dkim"):
-            db.create_vertex_collection("dkim")
-        if not db.has_collection("dkimResults"):
-            db.create_vertex_collection("dkimResults")
-        if not db.has_collection("dkimToDkimResults"):
-            db.create_edge_definition(
-                edge_collection="dkimToDkimResults",
-                from_vertex_collections=["dkim"],
-                to_vertex_collections=["dkimResults"],
-            )
-        if not db.has_collection("domainsDMARC"):
-            db.create_edge_definition(
-                edge_collection="domainsDMARC",
-                from_vertex_collections=["domains"],
-                to_vertex_collections=["dmarc"],
-            )
-        if not db.has_collection("domainsSPF"):
-            db.create_edge_definition(
-                edge_collection="domainsSPF",
-                from_vertex_collections=["domains"],
-                to_vertex_collections=["spf"],
-            )
-        if not db.has_collection("domainsDKIM"):
-            db.create_edge_definition(
-                edge_collection="domainsDKIM",
-                from_vertex_collections=["domains"],
-                to_vertex_collections=["dkim"],
-            )
-
         dmarcEntry = db.collection("dmarc").insert(
             {
                 "timestamp": str(datetime.datetime.utcnow()),
