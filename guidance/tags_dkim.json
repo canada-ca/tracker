@@ -154,5 +154,16 @@
                 "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6.1"
             }
         ]
+    },
+    "dkim14": {
+        "tagName": "P-duplicate",
+        "guidance": "Public key used for multiple domains",
+        "refLinksGuide": [
+            {
+                "description": "A.3.4 Deploy DKIM for All Domains and Senders",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
+            }
+        ],
+        "refLinksTechnical": [""]
     }
 }
