@@ -1,190 +1,205 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { graphql, GraphQLSchema } = require('graphql')
+const { GraphQLNonNull, GraphQLID } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
+
 const { makeMigrations } = require('../../../../migrations')
-const { userRequired } = require('../../../auth')
-const { createQuerySchema } = require('../../../queries')
-const { createMutationSchema } = require('../../../mutations')
+const { userLoaderByKey, orgLoaderByKey } = require('../../../loaders')
 const {
-  userLoaderByKey,
-  affiliationLoaderByUserId,
-  orgLoaderByKey,
-} = require('../../../loaders')
-const { cleanseInput } = require('../../../validators')
+  userAffiliationsType,
+  userType,
+  organizationType,
+} = require('../../index')
+const { RoleEnums } = require('../../../enums')
 
-describe('given the user affiliation connection, and user affiliation object', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    schema,
-    collections,
-    user,
-    org,
-    affiliation
+describe('given the user affiliation object', () => {
+  describe('testing the field definitions', () => {
+    it('has an id field', () => {
+      const demoType = userAffiliationsType.getFields()
 
-  beforeAll(async () => {
-    // Create GQL Schema
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
+      expect(demoType).toHaveProperty('id')
+      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+    })
+    it('has a permission field', () => {
+      const demoType = userAffiliationsType.getFields()
+
+      expect(demoType).toHaveProperty('permission')
+      expect(demoType.permission.type).toMatchObject(RoleEnums)
+    })
+    it('has a user field', () => {
+      const demoType = userAffiliationsType.getFields()
+
+      expect(demoType).toHaveProperty('user')
+      expect(demoType.user.type).toMatchObject(userType)
+    })
+    it('has an organization field', () => {
+      const demoType = userAffiliationsType.getFields()
+
+      expect(demoType).toHaveProperty('organization')
+      expect(demoType.organization.type).toMatchObject(organizationType)
     })
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
+  describe('testing the field resolvers', () => {
+    let query, drop, truncate, migrate, collections, user, org
 
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
+    beforeAll(async () => {
+      // Generate DB Items
+      ;({ migrate } = await ArangoTools({ rootPass, url }))
+      ;({ query, drop, truncate, collections } = await migrate(
+        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+      ))
     })
-    org = await collections.organizations.save({
-      verified: false,
-      summaries: {
-        web: {
-          pass: 50,
-          fail: 1000,
-          total: 1050,
+
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      org = await collections.organizations.save({
+        verified: false,
+        summaries: {
+          web: {
+            pass: 50,
+            fail: 1000,
+            total: 1050,
+          },
+          mail: {
+            pass: 50,
+            fail: 1000,
+            total: 1050,
+          },
         },
-        mail: {
-          pass: 50,
-          fail: 1000,
-          total: 1050,
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
         },
-      },
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
+      })
+      await collections.affiliations.save({
+        _to: user._id,
+        _from: org._id,
+        permission: 'user',
+      })
+    })
+
+    afterEach(async () => {
+      await truncate()
+    })
+
+    afterAll(async () => {
+      await drop()
+    })
+
+    describe('testing the id resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = userAffiliationsType.getFields()
+
+        expect(demoType.id.resolve({ id: '1' })).toEqual(
+          toGlobalId('affiliations', '1'),
+        )
+      })
+    })
+    describe('testing the permission resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = userAffiliationsType.getFields()
+
+        expect(demoType.permission.resolve({ permission: 'admin' })).toEqual(
+          'admin',
+        )
+      })
+    })
+    describe('testing the user resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = userAffiliationsType.getFields()
+
+        const loader = userLoaderByKey(query, '1', {})
+
+        const expectedResult = {
+          _id: user._id,
+          _key: user._key,
+          _rev: user._rev,
+          id: user._key,
+          displayName: 'Test Account',
+          emailValidated: false,
+          preferredLang: 'french',
+          tfaValidated: false,
+          userName: 'test.account@istio.actually.exists',
+        }
+
+        await expect(
+          demoType.user.resolve(
+            { _to: user._id },
+            {},
+            { loaders: { userLoaderByKey: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the organization resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = userAffiliationsType.getFields()
+
+        const loader = orgLoaderByKey(query, 'en', '1', {})
+
+        const expectedResult = {
+          _id: org._id,
+          _key: org._key,
+          _rev: org._rev,
           acronym: 'TBS',
+          city: 'Ottawa',
+          country: 'Canada',
+          domainCount: 0,
+          id: org._key,
           name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
           province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
           sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    affiliation = await collections.affiliations.save({
-      _to: user._id,
-      _from: org._id,
-      permission: 'user',
-    })
-    consoleOutput = []
-  })
-
-  afterEach(async () => {
-    await drop()
-  })
-
-  describe('all fields are being queried', () => {
-    it('returns all fields', async () => {
-      const response = await graphql(
-        schema,
-        `
-          query {
-            findMe {
-              affiliations(first: 5) {
-                edges {
-                  node {
-                    id
-                    permission
-                    user {
-                      id
-                    }
-                    organization {
-                      id
-                    }
-                  }
-                }
-                totalCount
-                pageInfo {
-                  hasNextPage
-                  hasPreviousPage
-                  startCursor
-                  endCursor
-                }
-              }
-            }
-          }
-        `,
-        null,
-        {
-          auth: {
-            userRequired: userRequired({
-              userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query),
-            }),
-          },
-          loaders: {
-            userLoaderByKey: userLoaderByKey(query, user._key),
-            orgLoaderByKey: orgLoaderByKey(query, 'en', user._key),
-            affiliationLoaderByUserId: affiliationLoaderByUserId(
-              query,
-              user._key,
-              cleanseInput,
-            ),
-          },
-        },
-      )
-
-      const expectedResponse = {
-        data: {
-          findMe: {
-            affiliations: {
-              edges: [
-                {
-                  node: {
-                    id: toGlobalId('affiliations', affiliation._key),
-                    permission: 'USER',
-                    user: {
-                      id: toGlobalId('users', user._key),
-                    },
-                    organization: {
-                      id: toGlobalId('organizations', org._key),
-                    },
-                  },
-                },
-              ],
-              totalCount: 1,
-              pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-                startCursor: toGlobalId('affiliations', affiliation._key),
-                endCursor: toGlobalId('affiliations', affiliation._key),
-              },
+          slug: 'treasury-board-secretariat',
+          summaries: {
+            mail: {
+              fail: 1000,
+              pass: 50,
+              total: 1050,
+            },
+            web: {
+              fail: 1000,
+              pass: 50,
+              total: 1050,
             },
           },
-        },
-      }
-      expect(response).toEqual(expectedResponse)
+          verified: false,
+          zone: 'FED',
+        }
+
+        await expect(
+          demoType.organization.resolve(
+            { _from: org._id },
+            {},
+            { loaders: { orgLoaderByKey: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
     })
   })
 })
