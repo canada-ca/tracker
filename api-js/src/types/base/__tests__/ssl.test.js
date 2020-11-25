@@ -1,302 +1,195 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { GraphQLNonNull, GraphQLID } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
-const { graphql, GraphQLSchema } = require('graphql')
+const { GraphQLDateTime } = require('graphql-scalars')
 
-const { createQuerySchema } = require('../../../queries')
-const { createMutationSchema } = require('../../../mutations')
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
-const { checkDomainPermission, userRequired } = require('../../../auth')
 const {
-  sslLoaderByKey,
-  sslLoaderConnectionsByDomainId,
-  sslGuidanceTagLoader,
   sslGuidanceTagConnectionsLoader,
-  domainLoaderByDomain,
   domainLoaderByKey,
-  userLoaderByKey,
 } = require('../../../loaders')
+const { sslType, domainType, guidanceTagConnection } = require('../index')
 
 describe('given the ssl gql object', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    collections,
-    user,
-    domain,
-    schema,
-    org,
-    ssl
+  describe('testing field definitions', () => {
+    it('has an id field', () => {
+      const demoType = sslType.getFields()
 
-  const consoleInfoOutput = []
-  const mockedInfo = (output) => consoleInfoOutput.push(output)
-
-  const consoleWarnOutput = []
-  const mockedWarn = (output) => consoleWarnOutput.push(output)
-
-  const consoleErrorOutput = []
-  const mockedError = (output) => consoleErrorOutput.push(output)
-
-  beforeAll(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-  })
-
-  beforeEach(async () => {
-    await truncate()
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
+      expect(demoType).toHaveProperty('id')
+      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
     })
+    it('has a domain field', () => {
+      const demoType = sslType.getFields()
 
-    consoleWarnOutput.length = 0
-    consoleErrorOutput.length = 0
-    consoleInfoOutput.length = 0
+      expect(demoType).toHaveProperty('domain')
+      expect(demoType.domain.type).toMatchObject(domainType)
+    })
+    it('has a timestamp field', () => {
+      const demoType = sslType.getFields()
 
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
+      expect(demoType).toHaveProperty('timestamp')
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
     })
+    it('has a guidanceTags field', () => {
+      const demoType = sslType.getFields()
 
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    await collections.affiliations.save({
-      _from: org._id,
-      _to: user._id,
-      permission: 'admin',
-    })
-    domain = await collections.domains.save({
-      domain: 'test.domain.gc.ca',
-      slug: 'test-domain-gc-ca',
-    })
-    await collections.claims.save({
-      _from: org._id,
-      _to: domain._id,
-    })
-    ssl = await collections.ssl.save({
-      timestamp: '2020-10-02T12:43:39Z',
-      guidanceTags: ['ssl1'],
-    })
-    await collections.domainsSSL.save({
-      _from: domain._id,
-      _to: ssl._id,
-    })
-    await collections.sslGuidanceTags.save({
-      _key: 'ssl1',
-      tagName: 'SSL-TAG',
-      guidance: 'Some Interesting Guidance',
-      refLinksGuide: [
-        {
-          description: 'refLinksGuide Description',
-          ref_link: 'www.refLinksGuide.ca',
-        },
-      ],
-      refLinksTechnical: [
-        {
-          description: 'refLinksTechnical Description',
-          ref_link: 'www.refLinksTechnical.ca',
-        },
-      ],
-    })
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-
-  describe('all fields can be queried', () => {
-    it('resolves all fields', async () => {
-      const response = await graphql(
-        schema,
-        `
-          query {
-            findDomainByDomain(domain: "test.domain.gc.ca") {
-              id
-              domain
-              web {
-                ssl(first: 5) {
-                  edges {
-                    node {
-                      id
-                      domain {
-                        id
-                      }
-                      timestamp
-                      guidanceTags(first: 5) {
-                        edges {
-                          node {
-                            id
-                            tagId
-                            tagName
-                            guidance
-                            refLinks {
-                              description
-                              refLink
-                            }
-                            refLinksTech {
-                              description
-                              refLink
-                            }
-                          }
-                        }
-                        totalCount
-                        pageInfo {
-                          hasNextPage
-                          hasPreviousPage
-                          startCursor
-                          endCursor
-                        }
-                      }
-                    }
-                  }
-                  totalCount
-                  pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    startCursor
-                    endCursor
-                  }
-                }
-              }
-            }
-          }
-        `,
-        null,
-        {
-          userKey: user._key,
-          query: query,
-          auth: {
-            checkDomainPermission: checkDomainPermission({
-              query,
-              userKey: user._key,
-            }),
-            userRequired: userRequired({
-              userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query),
-            }),
-          },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            sslLoaderConnectionsByDomainId: sslLoaderConnectionsByDomainId(
-              query,
-              user._key,
-              cleanseInput,
-            ),
-            sslLoaderByKey: sslLoaderByKey(query),
-            sslGuidanceTagLoader: sslGuidanceTagLoader(query),
-            sslGuidanceTagConnectionsLoader: sslGuidanceTagConnectionsLoader(
-              query,
-              user._key,
-              cleanseInput,
-            ),
-            domainLoaderByDomain: domainLoaderByDomain(query),
-            domainLoaderByKey: domainLoaderByKey(query),
-            userLoaderByKey: userLoaderByKey(query),
-          },
-        },
+      expect(demoType).toHaveProperty('guidanceTags')
+      expect(demoType.guidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
       )
+    })
+  })
 
-      const expectedResponse = {
-        data: {
-          findDomainByDomain: {
-            id: toGlobalId('domains', domain._key),
-            domain: 'test.domain.gc.ca',
-            web: {
-              ssl: {
-                edges: [
+  describe('testing the field resolvers', () => {
+    let query, drop, truncate, migrate, collections, domain, ssl, sslGT
+
+    beforeAll(async () => {
+      ;({ migrate } = await ArangoTools({ rootPass, url }))
+      ;({ query, drop, truncate, collections } = await migrate(
+        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+      ))
+    })
+
+    beforeEach(async () => {
+      domain = await collections.domains.save({
+        domain: 'test.domain.gc.ca',
+        slug: 'test-domain-gc-ca',
+      })
+      ssl = await collections.ssl.save({
+        timestamp: '2020-10-02T12:43:39Z',
+        guidanceTags: ['ssl1'],
+      })
+      await collections.domainsSSL.save({
+        _from: domain._id,
+        _to: ssl._id,
+      })
+      sslGT = await collections.sslGuidanceTags.save({
+        _key: 'ssl1',
+        tagName: 'SSL-TAG',
+        guidance: 'Some Interesting Guidance',
+        refLinksGuide: [
+          {
+            description: 'refLinksGuide Description',
+            ref_link: 'www.refLinksGuide.ca',
+          },
+        ],
+        refLinksTechnical: [
+          {
+            description: 'refLinksTechnical Description',
+            ref_link: 'www.refLinksTechnical.ca',
+          },
+        ],
+      })
+    })
+
+    afterEach(async () => {
+      await truncate()
+    })
+
+    afterAll(async () => {
+      await drop()
+    })
+
+    describe('testing the id resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = sslType.getFields()
+
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('ssl', '1'))
+      })
+    })
+    describe('testing the domain resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = sslType.getFields()
+
+        const loader = domainLoaderByKey(query, '1', {})
+
+        const expectedResult = {
+          _id: domain._id,
+          _key: domain._key,
+          _rev: domain._rev,
+          id: domain._key,
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        }
+
+        await expect(
+          demoType.domain.resolve(
+            { domainId: domain._id },
+            {},
+            { loaders: { domainLoaderByKey: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the timestamp resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = sslType.getFields()
+
+        expect(
+          demoType.timestamp.resolve({ timestamp: '2020-10-02T12:43:39Z' }),
+        ).toEqual('2020-10-02T12:43:39Z')
+      })
+    })
+    describe('testing the guidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = sslType.getFields()
+
+        const loader = sslGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const guidanceTags = ['ssl1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', sslGT._key),
+              node: {
+                _id: sslGT._id,
+                _key: sslGT._key,
+                _rev: sslGT._rev,
+                id: sslGT._key,
+                guidance: 'Some Interesting Guidance',
+                refLinksGuide: [
                   {
-                    node: {
-                      id: toGlobalId('ssl', ssl._key),
-                      domain: {
-                        id: toGlobalId('domains', domain._key),
-                      },
-                      timestamp: new Date('2020-10-02T12:43:39Z'),
-                      guidanceTags: {
-                        edges: [
-                          {
-                            node: {
-                              id: toGlobalId('guidanceTags', 'ssl1'),
-                              tagId: 'ssl1',
-                              tagName: 'SSL-TAG',
-                              guidance: 'Some Interesting Guidance',
-                              refLinks: [
-                                {
-                                  description: 'refLinksGuide Description',
-                                  refLink: 'www.refLinksGuide.ca',
-                                },
-                              ],
-                              refLinksTech: [
-                                {
-                                  description: 'refLinksTechnical Description',
-                                  refLink: 'www.refLinksTechnical.ca',
-                                },
-                              ],
-                            },
-                          },
-                        ],
-                        totalCount: 1,
-                        pageInfo: {
-                          hasNextPage: false,
-                          hasPreviousPage: false,
-                          startCursor: toGlobalId('guidanceTags', 'ssl1'),
-                          endCursor: toGlobalId('guidanceTags', 'ssl1'),
-                        },
-                      },
-                    },
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
                   },
                 ],
-                totalCount: 1,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  startCursor: toGlobalId('ssl', ssl._key),
-                  endCursor: toGlobalId('ssl', ssl._key),
-                },
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'ssl1',
+                tagName: 'SSL-TAG',
               },
             },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', sslGT._key),
+            endCursor: toGlobalId('guidanceTags', sslGT._key),
           },
-        },
-      }
+        }
 
-      expect(response).toEqual(expectedResponse)
-      expect(consoleInfoOutput).toEqual([
-        `User ${user._key} successfully retrieved domain ${domain._key}.`,
-      ])
+        await expect(
+          demoType.guidanceTags.resolve(
+            { guidanceTags },
+            { first: 1 },
+            { loaders: { sslGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
     })
   })
 })
