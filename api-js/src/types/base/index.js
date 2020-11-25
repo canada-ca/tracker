@@ -551,7 +551,6 @@ const spfConnection = connectionDefinitions({
 const webScanType = new GraphQLObjectType({
   name: 'WebScan',
   fields: () => ({
-    id: globalIdField('web-scan'),
     domain: {
       type: domainType,
       description: `The domain the scan was ran on.`,
@@ -991,10 +990,25 @@ const userAffiliationsConnection = connectionDefinitions({
 })
 
 module.exports = {
+  dkimType,
+  dkimConnection,
+  dkimResultsType,
+  dkimResultsConnection,
+  dmarcType,
+  dmarcConnection,
   domainType,
   domainConnection,
+  emailScanType,
+  httpsType,
+  httpsConnection,
+  guidanceTagConnection,
   organizationType,
   organizationConnection,
+  spfType,
+  spfConnection,
+  sslType,
+  sslConnection,
+  webScanType,
   userType,
   userConnection,
   userAffiliationsType,
