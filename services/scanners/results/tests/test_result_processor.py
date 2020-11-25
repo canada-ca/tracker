@@ -11,10 +11,53 @@ sys_db = arango_client.db("_system", username="", password="")
 sys_db.create_database("test")
 
 # Establish DB connection
-db = arango_client.db("test", username="", password="")
-db.create_collection("domains")
+test_db = arango_client.db("test", username="", password="")
+graph = test_db.create_graph("compliance")
+graph.create_vertex_collection("domains")
+graph.create_vertex_collection("dmarc")
+graph.create_vertex_collection("spf")
+graph.create_vertex_collection("dkim")
+graph.create_vertex_collection("dkimResults")
+graph.create_vertex_collection("https")
+graph.create_vertex_collection("ssl")
 
-db.collection("domains").insert(
+graph.create_edge_definition(
+    edge_collection="dkimToDkimResults",
+    from_vertex_collections=["dkim"],
+    to_vertex_collections=["dkimResults"],
+)
+
+graph.create_edge_definition(
+    edge_collection="domainsDMARC",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["dmarc"],
+)
+
+graph.create_edge_definition(
+    edge_collection="domainsSPF",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["spf"],
+)
+
+graph.create_edge_definition(
+    edge_collection="domainsDKIM",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["dkim"],
+)
+
+graph.create_edge_definition(
+    edge_collection="domainsSSL",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["ssl"],
+)
+
+graph.create_edge_definition(
+    edge_collection="domainsHTTPS",
+    from_vertex_collections=["domains"],
+    to_vertex_collections=["https"],
+)
+
+test_db.collection("domains").insert(
     {
         "domain": "cyber.gc.ca",
         "selectors": ["selector1"],
@@ -43,7 +86,7 @@ def test_process_dns():
     tags = process_dns(dns_result_data)
     assert tags["dmarc"] == expected_dmarc_tags
     assert tags["spf"] == expected_spf_tags
-    assert tags["dkim"]["selector1"] == expected_dkim_scan_tags
+    assert tags["dkim"]["selector1"] == expected_dkim_tags
 
 
 def test_insert_https():
@@ -134,10 +177,10 @@ def test_insert_dns():
         assert inserted_spf_results.get(field, None) is not None
     assert inserted_spf_results["guidanceTags"] == expected_spf_tags
 
-    inserted_dkim_scan_results_query = db.collection("dkim_scans").all()
+    inserted_dkim_results_query = db.collection("dkimResults").all()
 
-    inserted_dkim_scan_results = inserted_dkim_scan_results_query.next()
+    inserted_dkim_results = inserted_dkim_results_query.next()
 
-    for field in inserted_dkim_scan_results:
-        assert inserted_dkim_scan_results.get(field, None) is not None
-    assert inserted_dkim_scan_results["guidanceTags"] == expected_dkim_scan_tags
+    for field in inserted_dkim_results:
+        assert inserted_dkim_results.get(field, None) is not None
+    assert inserted_dkim_results["guidanceTags"] == expected_dkim_tags

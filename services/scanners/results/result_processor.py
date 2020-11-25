@@ -358,10 +358,7 @@ def process_dns(results):
 
 def insert_https(report, tags, domain_key, db):
     try:
-        if not db.has_collection("https"):
-            db.create_collection("https")
-
-        db.collection("https").insert(
+        httpsEntry = db.collection("https").insert(
             {
                 "timestamp": str(datetime.datetime.utcnow()),
                 "implementation": report.get("implementation", None),
@@ -373,6 +370,8 @@ def insert_https(report, tags, domain_key, db):
                 "guidanceTags": tags,
             }
         )
+        domain = db.collection("domains").get({"_key": domain_key})
+        db.collection("domainsHTTPS").insert({"_from": domain["_id"], "_to": httpsEntry["_id"]})
 
         if any(
             i
@@ -397,7 +396,6 @@ def insert_https(report, tags, domain_key, db):
         else:
             https_status = "pass"
 
-        domain = db.collection("domains").get({"_key": domain_key})
         domain["status"]["https"] = https_status
         db.collection("domains").update_match(
             {"_key": domain_key}, {"status": domain["status"]}
@@ -414,23 +412,21 @@ def insert_https(report, tags, domain_key, db):
 
 def insert_ssl(report, tags, domain_key, db):
     try:
-        if not db.has_collection("ssl"):
-            db.create_collection("ssl")
-
-        db.collection("ssl").insert(
+        sslEntry = db.collection("ssl").insert(
             {
                 "timestamp": str(datetime.datetime.utcnow()),
                 "rawJson": report,
                 "guidanceTags": tags,
             }
         )
+        domain = db.collection("domains").get({"_key": domain_key})
+        db.collection("domainsSSL").insert({"_from": domain["_id"], "_to": sslEntry["_id"]})
 
         if any(i in ["ssl2", "ssl3", "ssl4", "ssl6", "ssl7", "ssl8"] for i in tags):
             ssl_status = "fail"
         elif "ssl5" in tags:
             ssl_status = "pass"
 
-        domain = db.collection("domains").get({"_key": domain_key})
         domain["status"]["ssl"] = ssl_status
         db.collection("domains").update_match(
             {"_key": domain_key}, {"status": domain["status"]}
@@ -447,16 +443,7 @@ def insert_ssl(report, tags, domain_key, db):
 
 def insert_dns(report, tags, domain_key, db):
     try:
-        if not db.has_collection("dmarc"):
-            db.create_collection("dmarc")
-        if not db.has_collection("spf"):
-            db.create_collection("spf")
-        if not db.has_collection("dkim"):
-            db.create_collection("dkim")
-        if not db.has_collection("dkim_scans"):
-            db.create_collection("dkim_scans")
-
-        db.collection("dmarc").insert(
+        dmarcEntry = db.collection("dmarc").insert(
             {
                 "timestamp": str(datetime.datetime.utcnow()),
                 "record": report["dmarc"].get("record", None),
@@ -476,7 +463,7 @@ def insert_dns(report, tags, domain_key, db):
                 "guidanceTags": tags["dmarc"],
             }
         )
-        db.collection("spf").insert(
+        spfEntry = db.collection("spf").insert(
             {
                 "timestamp": str(datetime.datetime.utcnow()),
                 "record": report["spf"].get("record", None),
@@ -487,16 +474,47 @@ def insert_dns(report, tags, domain_key, db):
             }
         )
 
-        db.collection("dkim").insert({"timestamp": str(datetime.datetime.utcnow())})
+        dkimEntry = db.collection("dkim").insert({"timestamp": str(datetime.datetime.utcnow())})
         for selector in report["dkim"].keys():
-            db.collection("dkim_scans").insert(
+            keyModulus = report["dkim"][selector]["public_key_modulus"]
+
+            previous_dkim_results = db.collection("dkimResults").find({"keyModulus": keyModulus})
+
+            for previous_dkim_result in previous_dkim_results:
+                edges = db.collection("dkimToDkimResults").find({"_to": previous_dkim_result["_id"]})
+                for edge in edges:
+                    previous_dkim = db.collection("dkim").get({"_id": previous_dkim_result["_id"]})
+
+                    # Check if PK was used for another domain
+                    previous_dkim_domain_query = db.collection("domainsDKIM").find({"_to": previous_dkim["_id"]}, limit=1)
+                    previous_dkim_domain = previous_dkim_domain_query.next()
+                    if (previous_dkim_domain["_key"] != domain_key) and ("dkim14" not in tags["dkim"][selector]):
+                        tags["dkim"][selector].append("dkim14")
+
+                    # Check if PK is older than 1 year
+                    current_timestamp = datetime.datetime.strptime(dkimEntry["timestamp"], '%Y-%m-%d %H:%M:%S.%f')
+                    previous_timestamp = datetime.datetime.strptime(previous_dkim["timestamp"], '%Y-%m-%d %H:%M:%S.%f')
+
+                    time_delta = current_timestamp - previous_timestamp
+
+                    if (time_delta.total_seconds > 31536000) and ("dkim10" not in tags["dkim"][selector]):
+                        tags["dkim"][selector].append("dkim10")
+
+            dkimResultsEntry = db.collection("dkimResults").insert(
                 {
                     "record": report["dkim"][selector].get("txt_record", None),
                     "keyLength": report["dkim"][selector].get("key_size", None),
+                    "keyModulus": keyModulus,
                     "rawJson": report["dkim"][selector],
                     "guidanceTags": tags["dkim"][selector],
                 }
             )
+            db.collection("dkimToDkimResults").insert({"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]})
+
+        domain = db.collection("domains").get({"_key": domain_key})
+        db.collection("domainsDMARC").insert({"_from": domain["_id"], "_to": dmarcEntry["_id"]})
+        db.collection("domainsSPF").insert({"_from": domain["_id"], "_to": spfEntry["_id"]})
+        db.collection("domainsDKIM").insert({"_from": domain["_id"], "_to": dkimEntry["_id"]})
 
         if "spf12" in tags["spf"]:
             spf_status = "pass"
@@ -533,7 +551,6 @@ def insert_dns(report, tags, domain_key, db):
         else:
             dkim_status = "pass"
 
-        domain = db.collection("domains").get({"_key": domain_key})
         for key, val in {
             "dkim": dkim_status,
             "dmarc": dmarc_status,
