@@ -241,7 +241,7 @@ export default function UserList({ permission, userListData, orgName, orgId }) {
         currentUsers.map(({ node }, index) => {
           let userRole = node.permission
           return (
-            <Box key={`${node.user.username}:${index}`}>
+            <Box key={`${node.user.userName}:${index}`}>
               <Stack isInline align="center">
                 {/* TODO: IMPLEMENT USER REMOVAL (NEEDS API SUPPORT NOV-23-2020 */}
                 {/*<TrackerButton*/}
@@ -313,11 +313,11 @@ UserList.propTypes = {
   userListData: shape({
     userId: string,
     permission: string,
-    user: {
+    user: shape({
       userName: string,
       tfaValidated: boolean,
       displayName: string,
-    },
+    }),
   }),
   orgName: string,
   orgId: string,

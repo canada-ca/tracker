@@ -37,7 +37,7 @@ export const rawAdminPanelData = {
           {
             node: {
               userId: 'NDUxNzAzMDY4NQ==',
-              permission: 'SUPER_ADMIN',
+              permission: 'USER',
               user: {
                 userName: 'Winnifred_Legros19@yahoo.com',
                 displayName: 'Fredy',
