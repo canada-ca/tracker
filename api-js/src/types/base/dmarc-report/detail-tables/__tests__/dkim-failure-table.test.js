@@ -1,300 +1,178 @@
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { graphql, GraphQLSchema } = require('graphql')
-const { makeMigrations } = require('../../../../../../migrations')
-const { createQuerySchema } = require('../../../../../queries')
-const { createMutationSchema } = require('../../../../../mutations')
-const bcrypt = require('bcrypt')
-
-const { cleanseInput } = require('../../../../../validators')
 const {
-  checkDomainPermission,
-  checkDomainOwnership,
-  tokenize,
-  userRequired,
-} = require('../../../../../auth')
-const {
-  domainLoaderByDomain,
-  userLoaderByUserName,
-  userLoaderByKey,
-} = require('../../../../../loaders')
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+  GraphQLID,
+  GraphQLBoolean,
+  GraphQLString,
+  GraphQLInt,
+} = require('graphql')
+const { dkimFailureTableType } = require('../dkim-failure-table')
 
-describe('given findDomainByDomain query', () => {
-  let query, drop, truncate, migrate, schema, collections, domain, org
+describe('given the dkimFailureTable gql object', () => {
+  describe('testing the field definitions', () => {
+    it('has an id field', () => {
+      const demoType = dkimFailureTableType.getFields()
 
-  beforeAll(async () => {
-    // Create GQL Schema
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
+      expect(demoType).toHaveProperty('id')
+      expect(demoType.id.type).toMatchObject(GraphQLID)
+    })
+    it('has a dkimAligned field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('dkimAligned')
+      expect(demoType.dkimAligned.type).toMatchObject(GraphQLBoolean)
+    })
+    it('has a dkimDomains field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('dkimDomains')
+      expect(demoType.dkimDomains.type).toMatchObject(GraphQLString)
+    })
+    it('has a dkimResults field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('dkimResults')
+      expect(demoType.dkimResults.type).toMatchObject(GraphQLString)
+    })
+    it('has a dkimSelectors field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('dkimSelectors')
+      expect(demoType.dkimSelectors.type).toMatchObject(GraphQLString)
+    })
+    it('has a dnsHost field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('dnsHost')
+      expect(demoType.dnsHost.type).toMatchObject(GraphQLString)
+    })
+    it('has an envelopeFrom field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('envelopeFrom')
+      expect(demoType.envelopeFrom.type).toMatchObject(GraphQLString)
+    })
+    it('has a guidance field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('guidance')
+      expect(demoType.guidance.type).toMatchObject(GraphQLString)
+    })
+    it('has a headerFrom field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('headerFrom')
+      expect(demoType.headerFrom.type).toMatchObject(GraphQLString)
+    })
+    it('has a sourceIpAddress field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('sourceIpAddress')
+      expect(demoType.sourceIpAddress.type).toMatchObject(GraphQLString)
+    })
+    it('has a totalMessages field', () => {
+      const demoType = dkimFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('totalMessages')
+      expect(demoType.totalMessages.type).toMatchObject(GraphQLInt)
     })
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
+  describe('testing field resolvers', () => {
+    describe('testing the id resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
 
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
-
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    domain = await collections.domains.save({
-      domain: 'test.gc.ca',
-      lastRan: null,
-      selectors: ['selector1._domainkey', 'selector2._domainkey'],
-    })
-    await collections.claims.save({
-      _to: domain._id,
-      _from: org._id,
-    })
-    await collections.ownership.save({
-      _to: domain._id,
-      _from: org._id,
-    })
-  })
-
-  afterEach(async () => {
-    await drop()
-  })
-
-  describe('find the dmarc report dkim fail information', () => {
-    let user
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'user',
+        expect(demoType.id.resolve({ id: '1' })).toEqual('1')
       })
     })
+    describe('testing the dkimAligned resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
 
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
-    })
-    it('returns dkim fail data', async () => {
-      const dmarcReportLoader = jest.fn().mockReturnValue({
-        data: {
-          dmarcSummaryByPeriod: {
-            detailTables: {
-              dkimFailure: {
-                edges: [
-                  {
-                    cursor: 'ZmFpbERraW06MQ==',
-                    node: {
-                      dkimAligned: false,
-                      dkimDomains: '',
-                      dkimResults: '',
-                      dkimSelectors: '',
-                      dnsHost: 'test.dns.gc.ca',
-                      envelopeFrom: 'test.domain.canada.ca',
-                      guidance: '',
-                      headerFrom: 'test.gc.ca',
-                      id: 'ZmFpbERraW06MQ==',
-                      sourceIpAddress: '123.456.78.99',
-                      totalMessages: 30,
-                    },
-                  },
-                ],
-                pageInfo: {
-                  startCursor: 'ZmFpbERraW06MQ==',
-                  endCursor: 'ZmFpbERraW06MQ==',
-                  hasNextPage: true,
-                  hasPreviousPage: false,
-                },
-              },
-            },
-          },
-        },
+        expect(
+          demoType.dkimAligned.resolve({ dkimAligned: true }),
+        ).toEqual(true)
       })
+    })
+    describe('testing the dkimDomains resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
 
-      const response = await graphql(
-        schema,
-        `
-          query {
-            findDomainByDomain(domain: "test.gc.ca") {
-              dmarcSummaryByPeriod(month: SEPTEMBER, year: "2020") {
-                detailTables {
-                  dkimFailure(first: 1) {
-                    edges {
-                      cursor
-                      node {
-                        id
-                        dkimAligned
-                        dkimDomains
-                        dkimResults
-                        dkimSelectors
-                        dnsHost
-                        envelopeFrom
-                        guidance
-                        headerFrom
-                        sourceIpAddress
-                        totalMessages
-                      }
-                    }
-                    pageInfo {
-                      startCursor
-                      endCursor
-                      hasNextPage
-                      hasPreviousPage
-                    }
-                  }
-                }
-              }
-            }
-          }
-        `,
-        null,
-        {
-          userKey: user._key,
-          query: query,
-          auth: {
-            checkDomainPermission: checkDomainPermission({
-              query,
-              userKey: user._key,
-            }),
-            checkDomainOwnership: checkDomainOwnership({
-              query,
-              userKey: user._key,
-            }),
-            tokenize,
-            userRequired: userRequired({
-              userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query),
-            }),
-          },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            domainLoaderByDomain: domainLoaderByDomain(query),
-            dmarcReportLoader,
-            userLoaderByKey: userLoaderByKey(query),
-          },
-        },
-      )
+        expect(
+          demoType.dkimDomains.resolve({ dkimDomains: 'dkimDomains' }),
+        ).toEqual('dkimDomains')
+      })
+    })
+    describe('testing the dkimResults resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
 
-      const expectedResponse = {
-        data: {
-          findDomainByDomain: {
-            dmarcSummaryByPeriod: {
-              detailTables: {
-                dkimFailure: {
-                  edges: [
-                    {
-                      cursor: 'ZmFpbERraW06MQ==',
-                      node: {
-                        dkimAligned: false,
-                        dkimDomains: '',
-                        dkimResults: '',
-                        dkimSelectors: '',
-                        dnsHost: 'test.dns.gc.ca',
-                        envelopeFrom: 'test.domain.canada.ca',
-                        guidance: '',
-                        headerFrom: 'test.gc.ca',
-                        id: 'ZmFpbERraW06MQ==',
-                        sourceIpAddress: '123.456.78.99',
-                        totalMessages: 30,
-                      },
-                    },
-                  ],
-                  pageInfo: {
-                    startCursor: 'ZmFpbERraW06MQ==',
-                    endCursor: 'ZmFpbERraW06MQ==',
-                    hasNextPage: true,
-                    hasPreviousPage: false,
-                  },
-                },
-              },
-            },
-          },
-        },
-      }
-      expect(response).toEqual(expectedResponse)
-      expect(consoleOutput).toEqual([
-        `User ${user._key} successfully retrieved domain ${domain._key}.`,
-      ])
+        expect(
+          demoType.dkimResults.resolve({ dkimResults: 'dkimResults' }),
+        ).toEqual('dkimResults')
+      })
+    })
+    describe('testing the dkimSelectors resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
+
+        expect(
+          demoType.dkimSelectors.resolve({ dkimSelectors: 'dkimSelectors' }),
+        ).toEqual('dkimSelectors')
+      })
+    })
+    describe('testing the dnsHost resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
+
+        expect(demoType.dnsHost.resolve({ dnsHost: 'dnsHost' })).toEqual(
+          'dnsHost',
+        )
+      })
+    })
+    describe('testing the envelopeFrom resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
+
+        expect(
+          demoType.envelopeFrom.resolve({ envelopeFrom: 'envelopeFrom' }),
+        ).toEqual('envelopeFrom')
+      })
+    })
+    describe('testing the guidance resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
+
+        expect(demoType.guidance.resolve({ guidance: 'guidance' })).toEqual(
+          'guidance',
+        )
+      })
+    })
+    describe('testing the headerFrom resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
+
+        expect(
+          demoType.headerFrom.resolve({ headerFrom: 'headerFrom' }),
+        ).toEqual('headerFrom')
+      })
+    })
+    describe('testing test sourceIpAddress resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
+
+        expect(
+          demoType.sourceIpAddress.resolve({
+            sourceIpAddress: 'sourceIpAddress',
+          }),
+        ).toEqual('sourceIpAddress')
+      })
+    })
+    describe('testing the totalMessages resolver', () => {
+      it('returns resolved value', () => {
+        const demoType = dkimFailureTableType.getFields()
+
+        expect(demoType.totalMessages.resolve({ totalMessages: 5 })).toEqual(5)
+      })
     })
   })
 })
