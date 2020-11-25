@@ -8,6 +8,7 @@ export function usePaginatedCollection({
   fetchForward,
   fetchBackward,
   fetchHeaders = {},
+  variables,
 }) {
   const { query: fwdQuery } = setQueryAlias({
     query: fetchForward,
@@ -22,7 +23,7 @@ export function usePaginatedCollection({
   const [currentPage, setCurrentPage] = useState(1)
 
   const { loading, error, data, fetchMore } = useQuery(fwdQuery, {
-    variables: { first: recordsPerPage },
+    variables: { first: recordsPerPage, ...variables },
     context: {
       headers: fetchHeaders,
     },
@@ -53,6 +54,7 @@ export function usePaginatedCollection({
           first: recordsPerPage,
           after:
             data && data.pagination ? data.pagination.pageInfo.endCursor : '',
+          ...variables,
         },
       })
     },
@@ -63,6 +65,7 @@ export function usePaginatedCollection({
         variables: {
           last: recordsPerPage,
           before: data ? data.pagination?.pageInfo?.endCursor : '',
+          ...variables,
         },
       })
     },

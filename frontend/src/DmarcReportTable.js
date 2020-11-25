@@ -121,6 +121,7 @@ function DmarcReportTable({ ...props }) {
     linkColumns,
     prependLink,
     appendLink,
+    frontendPagination,
   } = props
   const [show, setShow] = React.useState(true)
 
@@ -288,89 +289,92 @@ function DmarcReportTable({ ...props }) {
             </tbody>
           </Table>
         </Box>
-        <Box className="pagination" hidden={!show} mt="0.25em">
-          <Stack
-            isInline
-            align="center"
-            flexWrap="wrap"
-            justify="space-between"
-          >
-            <Stack spacing="1em" isInline align="center" flexWrap="wrap">
-              <IconButton
-                onClick={() => {
-                  wrapperRef.current.scrollIntoView()
-                  gotoPage(0)
-                }}
-                disabled={!canPreviousPage}
-                icon="arrow-left"
-                aria-label="Go to first page"
-              />
-              <IconButton
-                onClick={() => {
-                  wrapperRef.current.scrollIntoView(true)
-                  previousPage()
-                }}
-                disabled={!canPreviousPage}
-                icon="chevron-left"
-                aria-label="Go to previous page"
-              />
-              <IconButton
-                onClick={() => {
-                  wrapperRef.current.scrollIntoView(true)
-                  nextPage()
-                }}
-                disabled={!canNextPage}
-                icon="chevron-right"
-                aria-label="Go to next page"
-              />
-              <IconButton
-                onClick={() => {
-                  wrapperRef.current.scrollIntoView(true)
-                  gotoPage(pageCount - 1)
-                }}
-                disabled={!canNextPage}
-                icon="arrow-right"
-                aria-label="Go to last page"
-              />
-              <Stack isInline align="center" spacing="4px">
-                <Box>
-                  <label htmlFor={`${title}-goTo`}>
-                    <Trans>Go to page:</Trans>
-                  </label>
-                </Box>
-                <Input
-                  id={`${title}-goTo`}
-                  width="6rem"
-                  value={goToPageValue}
-                  onChange={(event) => {
-                    handleGoToPageChange(event)
+
+        {frontendPagination && (
+          <Box className="pagination" hidden={!show} mt="0.25em">
+            <Stack
+              isInline
+              align="center"
+              flexWrap="wrap"
+              justify="space-between"
+            >
+              <Stack spacing="1em" isInline align="center" flexWrap="wrap">
+                <IconButton
+                  onClick={() => {
+                    wrapperRef.current.scrollIntoView()
+                    gotoPage(0)
                   }}
+                  disabled={!canPreviousPage}
+                  icon="arrow-left"
+                  aria-label="Go to first page"
                 />
+                <IconButton
+                  onClick={() => {
+                    wrapperRef.current.scrollIntoView(true)
+                    previousPage()
+                  }}
+                  disabled={!canPreviousPage}
+                  icon="chevron-left"
+                  aria-label="Go to previous page"
+                />
+                <IconButton
+                  onClick={() => {
+                    wrapperRef.current.scrollIntoView(true)
+                    nextPage()
+                  }}
+                  disabled={!canNextPage}
+                  icon="chevron-right"
+                  aria-label="Go to next page"
+                />
+                <IconButton
+                  onClick={() => {
+                    wrapperRef.current.scrollIntoView(true)
+                    gotoPage(pageCount - 1)
+                  }}
+                  disabled={!canNextPage}
+                  icon="arrow-right"
+                  aria-label="Go to last page"
+                />
+                <Stack isInline align="center" spacing="4px">
+                  <Box>
+                    <label htmlFor={`${title}-goTo`}>
+                      <Trans>Go to page:</Trans>
+                    </label>
+                  </Box>
+                  <Input
+                    id={`${title}-goTo`}
+                    width="6rem"
+                    value={goToPageValue}
+                    onChange={(event) => {
+                      handleGoToPageChange(event)
+                    }}
+                  />
+                </Stack>
+                <Text>
+                  <Trans>
+                    Page {pageIndex + 1} of {pageOptions.length}
+                  </Trans>
+                </Text>
               </Stack>
-              <Text>
-                <Trans>
-                  Page {pageIndex + 1} of {pageOptions.length}
-                </Trans>
-              </Text>
+              <Stack spacing="1em" isInline align="center" flexWrap="wrap">
+                <Select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value))
+                    wrapperRef.current.scrollIntoView(true)
+                  }}
+                  width="fit-content"
+                >
+                  {[5, 10, 20].map((pageSize) => (
+                    <option key={pageSize} value={pageSize}>
+                      {t`Show ${pageSize}`}
+                    </option>
+                  ))}
+                </Select>
+              </Stack>
             </Stack>
-            <Stack spacing="1em" isInline align="center" flexWrap="wrap">
-              <Select
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value))
-                  wrapperRef.current.scrollIntoView(true)
-                }}
-                width="fit-content"
-              >
-                {[5, 10, 20].map((pageSize) => (
-                  <option key={pageSize} value={pageSize}>
-                    {t`Show ${pageSize}`}
-                  </option>
-                ))}
-              </Select>
-            </Stack>
-          </Stack>
-        </Box>
+          </Box>
+        )}
       </Collapse>
     </Box>
   )
@@ -385,6 +389,11 @@ DmarcReportTable.propTypes = {
   linkColumns: array,
   prependLink: string,
   appendLink: string,
+  frontendPagination: bool,
+}
+
+DmarcReportTable.defaultProps = {
+  frontendPagination: true,
 }
 
 export default WithPseudoBox(DmarcReportTable)

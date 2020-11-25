@@ -690,9 +690,14 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
   }
 `
 
-export const DMARC_REPORT_SUMMARY_TABLE = gql`
-  query FindMyDomains($month: PeriodEnums!, $year: Year!) {
-    findMyDomains {
+export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
+  query FindMyDomains(
+    $month: PeriodEnums!
+    $year: Year!
+    $after: String
+    $first: Int
+  ) {
+    findMyDomains(after: $after, first: $first) {
       edges {
         node {
           domain
@@ -707,9 +712,68 @@ export const DMARC_REPORT_SUMMARY_TABLE = gql`
           }
         }
       }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+      }
     }
   }
 `
+
+export const REVERSE_PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
+  query FindMyDomains(
+    $month: PeriodEnums!
+    $year: Year!
+    $before: String
+    $last: Int
+  ) {
+    findMyDomains(before: $before, last: $last) {
+      edges {
+        node {
+          domain
+          dmarcSummaryByPeriod(month: $month, year: $year) {
+            categoryPercentages {
+              failPercentage
+              fullPassPercentage
+              passDkimOnlyPercentage
+              passSpfOnlyPercentage
+              totalMessages
+            }
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+      }
+    }
+  }
+`
+
+// export const DMARC_REPORT_SUMMARY_TABLE = gql`
+//   query FindMyDomains($month: PeriodEnums!, $year: Year!) {
+//     findMyDomains {
+//       edges {
+//         node {
+//           domain
+//           dmarcSummaryByPeriod(month: $month, year: $year) {
+//             categoryPercentages {
+//               failPercentage
+//               fullPassPercentage
+//               passDkimOnlyPercentage
+//               passSpfOnlyPercentage
+//               totalMessages
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// `
 
 export const USER_AFFILIATIONS = gql`
   query UserAffiliations {

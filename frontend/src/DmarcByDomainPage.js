@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
-import { DMARC_REPORT_SUMMARY_TABLE } from './graphql/queries'
-import { Box, Heading, Text, Stack, Select } from '@chakra-ui/core'
+import {
+  PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD,
+  REVERSE_PAGINATED_DMARC_REPORT_SUMMARY_TABLE as BACKWARD,
+} from './graphql/queries'
+import { Box, Heading, Text, Stack, Select, Button } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -10,6 +13,7 @@ import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
+import { usePaginatedCollection } from './usePaginatedCollection'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -23,18 +27,37 @@ export default function DmarcByDomainPage() {
     `LAST30DAYS, ${currentDate.getFullYear()}`,
   )
 
-  const { loading, error, data } = useQuery(DMARC_REPORT_SUMMARY_TABLE, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
+  const {
+    loading,
+    error,
+    nodes,
+    next,
+    previous,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    fetchBackward: BACKWARD,
+    fetchHeaders: { authorization: currentUser.jwt },
+    recordsPerPage: 10,
     variables: {
       month: selectedPeriod,
       year: selectedYear,
     },
-    fetchPolicy: 'cache-and-network',
   })
+
+  // const { loading, error, data } = useQuery(DMARC_REPORT_SUMMARY_TABLE, {
+  //   context: {
+  //     headers: {
+  //       authorization: currentUser.jwt,
+  //     },
+  //   },
+  //   variables: {
+  //     month: selectedPeriod,
+  //     year: selectedYear,
+  //   },
+  //   fetchPolicy: 'cache-and-network',
+  // })
 
   // TODO: Properly handle these errors
   if (error)
@@ -53,9 +76,9 @@ export default function DmarcByDomainPage() {
 
   if (!loading) {
     const formattedData = []
-    data.findMyDomains.edges.forEach((edge) => {
-      const domain = edge.node.domain
-      const percentages = edge.node.dmarcSummaryByPeriod.categoryPercentages
+    nodes.forEach((node) => {
+      const domain = node.domain
+      const percentages = node.dmarcSummaryByPeriod.categoryPercentages
       formattedData.push({ domain, ...percentages })
     })
 
@@ -123,17 +146,33 @@ export default function DmarcByDomainPage() {
 
     // Replace table with "Loading..." if waiting for query
     tableDisplay = (
-      <DmarcReportTable
-        data={formattedData}
-        columns={percentageColumns}
-        title={i18n._(t`Pass/Fail Ratios by Domain`)}
-        initialSort={initialSort}
-        mb="30px"
-        hideTitleButton={true}
-        linkColumns={[{ column: 'domain', isExternal: false }]}
-        prependLink="domains/"
-        appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
-      />
+      <>
+        <DmarcReportTable
+          data={formattedData}
+          columns={percentageColumns}
+          title={i18n._(t`Pass/Fail Ratios by Domain`)}
+          initialSort={initialSort}
+          mb="10px"
+          hideTitleButton={true}
+          linkColumns={[{ column: 'domain', isExternal: false }]}
+          prependLink="domains/"
+          appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
+          frontendPagination={false}
+        />
+        <Stack isInline align="center" mb="4">
+          <Button
+            onClick={previous}
+            disable={!!hasPreviousPage}
+            aria-label="Previous page"
+          >
+            <Trans>Previous</Trans>
+          </Button>
+
+          <Button onClick={next} disable={!!hasNextPage} aria-label="Next page">
+            <Trans>Next</Trans>
+          </Button>
+        </Stack>
+      </>
     )
   }
 
