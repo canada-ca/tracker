@@ -37,7 +37,7 @@ const verifiedDomainType = new GraphQLObjectType({
       resolve: ({ status }) => status,
     },
     organizations: {
-      type: verifiedOrganizationConnections.connectionType,
+      type: verifiedOrganizationConnection.connectionType,
       args: connectionArgs,
       description: 'The organization that this domain belongs to.',
       resolve: async (
@@ -153,7 +153,7 @@ const verifiedOrganizationType = new GraphQLObjectType({
     'Verified Organization object containing information for a given Organization.',
 })
 
-const verifiedOrganizationConnections = connectionDefinitions({
+const verifiedOrganizationConnection = connectionDefinitions({
   name: 'VerifiedOrganization',
   nodeType: verifiedOrganizationType,
   connectionFields: () => ({
@@ -169,5 +169,5 @@ module.exports = {
   verifiedDomainType,
   verifiedDomainConnection,
   verifiedOrganizationType,
-  verifiedOrganizationConnections,
+  verifiedOrganizationConnection,
 }

@@ -1,8 +1,8 @@
 const { connectionArgs } = require('graphql-relay')
-const { verifiedOrganizationConnections } = require('../../types')
+const { verifiedOrganizationConnection } = require('../../types')
 
 const findVerifiedOrganizations = {
-  type: verifiedOrganizationConnections.connectionType,
+  type: verifiedOrganizationConnection.connectionType,
   description: 'Select organizations a user has access to.',
   args: {
     ...connectionArgs,
