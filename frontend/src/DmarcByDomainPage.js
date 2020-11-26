@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { useUserState } from './UserState'
-import { useQuery } from '@apollo/client'
 import {
   PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD,
   REVERSE_PAGINATED_DMARC_REPORT_SUMMARY_TABLE as BACKWARD,
 } from './graphql/queries'
-import { Box, Heading, Text, Stack, Select, Button } from '@chakra-ui/core'
+import { Box, Heading, Select, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -14,6 +13,8 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
+import * as PropTypes from 'prop-types'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -45,19 +46,6 @@ export default function DmarcByDomainPage() {
       year: selectedYear,
     },
   })
-
-  // const { loading, error, data } = useQuery(DMARC_REPORT_SUMMARY_TABLE, {
-  //   context: {
-  //     headers: {
-  //       authorization: currentUser.jwt,
-  //     },
-  //   },
-  //   variables: {
-  //     month: selectedPeriod,
-  //     year: selectedYear,
-  //   },
-  //   fetchPolicy: 'cache-and-network',
-  // })
 
   // TODO: Properly handle these errors
   if (error)
@@ -159,19 +147,12 @@ export default function DmarcByDomainPage() {
           appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
           frontendPagination={false}
         />
-        <Stack isInline align="center" mb="4">
-          <Button
-            onClick={previous}
-            disable={!!hasPreviousPage}
-            aria-label="Previous page"
-          >
-            <Trans>Previous</Trans>
-          </Button>
-
-          <Button onClick={next} disable={!!hasNextPage} aria-label="Next page">
-            <Trans>Next</Trans>
-          </Button>
-        </Stack>
+        <RelayPaginationControls
+          previous={previous}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          hasNextPage={hasNextPage}
+        />
       </>
     )
   }
