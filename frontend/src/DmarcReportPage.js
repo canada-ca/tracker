@@ -26,6 +26,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -83,7 +84,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       year: selectedYear,
       domain: domainSlug,
     },
-    edgesParent: 'dmarcSummaryByPeriod.detailTables.dkimFailure.edges',
+    relayRoot: 'dmarcSummaryByPeriod.detailTables.dkimFailure',
   })
 
   const {
@@ -104,7 +105,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       year: selectedYear,
       domain: domainSlug,
     },
-    edgesParent: 'dmarcSummaryByPeriod.detailTables.dmarcFailure.edges',
+    relayRoot: 'dmarcSummaryByPeriod.detailTables.dmarcFailure',
   })
 
   const {
@@ -125,7 +126,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       year: selectedYear,
       domain: domainSlug,
     },
-    edgesParent: 'dmarcSummaryByPeriod.detailTables.spfFailure.edges',
+    relayRoot: 'dmarcSummaryByPeriod.detailTables.spfFailure',
   })
 
   const {
@@ -146,7 +147,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       year: selectedYear,
       domain: domainSlug,
     },
-    edgesParent: 'dmarcSummaryByPeriod.detailTables.fullPass.edges',
+    relayRoot: 'dmarcSummaryByPeriod.detailTables.fullPass',
   })
 
   if (graphLoading)
@@ -423,6 +424,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           title={t`Fully Aligned by IP Address`}
           initialSort={initialSort}
           frontendPagination={false}
+          mb="10px"
+        />
+        <RelayPaginationControls
+          previous={fullPassPrevious}
+          hasPreviousPage={fullPassHasPreviousPage}
+          next={fullPassNext}
+          hasNextPage={fullPassHasNextPage}
         />
       </ErrorBoundary>
     ) : (
@@ -438,6 +446,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           title={t`SPF Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={false}
+          mb="10px"
+        />
+        <RelayPaginationControls
+          previous={spfFailurePrevious}
+          hasPreviousPage={spfFailureHasPreviousPage}
+          next={spfFailureNext}
+          hasNextPage={spfFailureHasNextPage}
         />
       </ErrorBoundary>
     ) : (
@@ -453,6 +468,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           title={t`DKIM Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={false}
+          mb="10px"
+        />
+        <RelayPaginationControls
+          previous={dkimFailurePrevious}
+          hasPreviousPage={dkimFailureHasPreviousPage}
+          next={dkimFailureNext}
+          hasNextPage={dkimFailureHasNextPage}
         />
       </ErrorBoundary>
     ) : (
@@ -468,6 +490,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           title={t`DMARC Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={false}
+          mb="10px"
+        />
+        <RelayPaginationControls
+          previous={dmarcFailurePrevious}
+          hasPreviousPage={dmarcFailureHasPreviousPage}
+          next={dmarcFailureNext}
+          hasNextPage={dmarcFailureHasNextPage}
         />
       </ErrorBoundary>
     ) : (

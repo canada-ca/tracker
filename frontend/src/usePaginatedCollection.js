@@ -9,7 +9,7 @@ export function usePaginatedCollection({
   fetchBackward,
   fetchHeaders = {},
   variables,
-  edgesParent,
+  relayRoot,
 }) {
   const { query: fwdQuery } = setQueryAlias({
     query: fetchForward,
@@ -31,13 +31,17 @@ export function usePaginatedCollection({
   })
 
   let currentEdges
+  let currentPageInfo
 
-  if (data?.pagination !== undefined && edgesParent) {
-    currentEdges = edgesParent.split('.').reduce((acc, cur) => {
+  if (data?.pagination !== undefined && relayRoot) {
+    currentEdges = relayRoot.split('.').reduce((acc, cur) => {
       return acc[cur]
     }, data?.pagination)
+    currentEdges = currentEdges?.edges || []
+    currentPageInfo = currentEdges?.pageInfo || {}
   } else {
-    currentEdges = data?.pagination?.edges
+    currentEdges = data?.pagination?.edges || []
+    currentPageInfo = data?.pagination?.pageInfo || {}
   }
 
   if (currentEdges?.length > recordsPerPage) {
@@ -59,8 +63,7 @@ export function usePaginatedCollection({
       return fetchMore({
         variables: {
           first: recordsPerPage,
-          after:
-            data && data.pagination ? data.pagination.pageInfo.endCursor : '',
+          after: data && data.pagination ? currentPageInfo.endCursor : '',
           ...variables,
         },
       })
@@ -71,12 +74,12 @@ export function usePaginatedCollection({
         query: bkwrdQuery,
         variables: {
           last: recordsPerPage,
-          before: data ? data.pagination?.pageInfo?.endCursor : '',
+          before: data ? currentPageInfo.endCursor : '',
           ...variables,
         },
       })
     },
-    hasPreviousPage: data ? data.pagination?.pageInfo?.hasPreviousPage : false,
-    hasNextPage: data ? data.pagination?.pageInfo?.hasNextPage : false,
+    hasPreviousPage: data ? currentPageInfo.hasPreviousPage : false,
+    hasNextPage: data ? currentPageInfo.hasNextPage : false,
   }
 }
