@@ -161,41 +161,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     relayRoot: 'dmarcSummaryByPeriod.detailTables.fullPass',
   })
 
-  if (graphLoading)
-    return (
-      <LoadingMessage>
-        <Trans>Yearly DMARC Data</Trans>
-      </LoadingMessage>
-    )
-
-  if (dkimFailureLoading)
-    return (
-      <LoadingMessage>
-        <Trans>DKIM Failure Table</Trans>
-      </LoadingMessage>
-    )
-
-  if (dmarcFailureLoading)
-    return (
-      <LoadingMessage>
-        <Trans>DMARC Failure Table</Trans>
-      </LoadingMessage>
-    )
-
-  if (spfFailureLoading)
-    return (
-      <LoadingMessage>
-        <Trans>DMARC Failure Table</Trans>
-      </LoadingMessage>
-    )
-
-  if (fullPassLoading)
-    return (
-      <LoadingMessage>
-        <Trans>DMARC Failure Table</Trans>
-      </LoadingMessage>
-    )
-
   const options = [
     <option
       key="LAST30DAYS"
@@ -248,9 +213,23 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
   }
 
-  // Create dmarc bar graph if not loading and no errors
+  // DMARC bar graph setup
   let graphDisplay
-  if (graphData) {
+
+  // Set DMARC bar graph Loading
+  if (graphLoading) {
+    graphDisplay = (
+      <LoadingMessage>
+        <Trans>DKIM Failure Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // Display graph query error if found
+  else if (graphError) {
+    graphDisplay = <ErrorFallbackMessage error={graphError} />
+  }
+  // Set graph display using data if data exists
+  else if (graphData.findDomainByDomain.yearlyDmarcSummaries.length) {
     const strengths = {
       strong: [
         {
@@ -301,103 +280,83 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       </ErrorBoundary>
     )
   }
+  // If no data exists for DMARC graph, display message saying so
+  else {
+    graphDisplay = (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the DMARC yearly report graph</Trans> *
+      </Heading>
+    )
+  }
 
-  // Create report tables if no errors and message data exist
-  let tableDisplay
-  if (dkimFailureNodes || dmarcFailureNodes) {
-    // Initial sorting category for detail tables
-    const initialSort = [{ id: 'totalMessages', desc: true }]
+  const sourceIpAddress = {
+    Header: i18n._(t`Source IP Address`),
+    accessor: 'sourceIpAddress',
+  }
+  const envelopeFrom = {
+    Header: i18n._(t`Envelope From`),
+    accessor: 'envelopeFrom',
+  }
+  const dkimDomains = {
+    Header: i18n._(t`DKIM Domains`),
+    accessor: 'dkimDomains',
+  }
+  const dkimSelectors = {
+    Header: i18n._(t`DKIM Selectors`),
+    accessor: 'dkimSelectors',
+  }
+  const totalMessages = {
+    Header: i18n._(t`Total Messages`),
+    accessor: 'totalMessages',
+  }
+  const dnsHost = { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' }
+  const spfDomains = {
+    Header: i18n._(t`SPF Domains`),
+    accessor: 'spfDomains',
+  }
+  const headerFrom = {
+    Header: i18n._(t`Header From`),
+    accessor: 'headerFrom',
+  }
+  const guidance = { Header: i18n._(t`Guidance`), accessor: 'guidance' }
+  const spfAligned = {
+    Header: i18n._(t`SPF Aligned`),
+    accessor: 'spfAligned',
+  }
+  const spfResults = {
+    Header: i18n._(t`SPF Results`),
+    accessor: 'spfResults',
+  }
+  const dkimAligned = {
+    Header: i18n._(t`DKIM Aligned`),
+    accessor: 'dkimAligned',
+  }
+  const dkimResults = {
+    Header: i18n._(t`DKIM Results`),
+    accessor: 'dkimResults',
+  }
+  const disposition = {
+    Header: i18n._(t`Disposition`),
+    accessor: 'disposition',
+  }
 
-    const sourceIpAddress = {
-      Header: i18n._(t`Source IP Address`),
-      accessor: 'sourceIpAddress',
-    }
-    const envelopeFrom = {
-      Header: i18n._(t`Envelope From`),
-      accessor: 'envelopeFrom',
-    }
-    const dkimDomains = {
-      Header: i18n._(t`DKIM Domains`),
-      accessor: 'dkimDomains',
-    }
-    const dkimSelectors = {
-      Header: i18n._(t`DKIM Selectors`),
-      accessor: 'dkimSelectors',
-    }
-    const totalMessages = {
-      Header: i18n._(t`Total Messages`),
-      accessor: 'totalMessages',
-    }
-    const dnsHost = { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' }
-    const spfDomains = {
-      Header: i18n._(t`SPF Domains`),
-      accessor: 'spfDomains',
-    }
-    const headerFrom = {
-      Header: i18n._(t`Header From`),
-      accessor: 'headerFrom',
-    }
-    const guidance = { Header: i18n._(t`Guidance`), accessor: 'guidance' }
-    const spfAligned = {
-      Header: i18n._(t`SPF Aligned`),
-      accessor: 'spfAligned',
-    }
-    const spfResults = {
-      Header: i18n._(t`SPF Results`),
-      accessor: 'spfResults',
-    }
-    const dkimAligned = {
-      Header: i18n._(t`DKIM Aligned`),
-      accessor: 'dkimAligned',
-    }
-    const dkimResults = {
-      Header: i18n._(t`DKIM Results`),
-      accessor: 'dkimResults',
-    }
-    const disposition = {
-      Header: i18n._(t`Disposition`),
-      accessor: 'disposition',
-    }
+  // Initial sorting category for detail tables
+  const initialSort = [{ id: 'totalMessages', desc: true }]
+  const displayLimitOptions = [5, 10, 20, 50, 100]
 
-    const fullPassColumns = [
-      {
-        Header: t`Fully Aligned by IP Address`,
-        hidden: true,
-        columns: [
-          sourceIpAddress,
-          dnsHost,
-          envelopeFrom,
-          headerFrom,
-          spfDomains,
-          dkimDomains,
-          dkimSelectors,
-          totalMessages,
-        ],
-      },
-    ]
+  // DKIM Failure Table setup
+  let dkimFailureTable
 
-    const spfFailureColumns = [
-      {
-        Header: t`SPF Failures by IP Address`,
-        hidden: true,
-        columns: [
-          sourceIpAddress,
-          dnsHost,
-          envelopeFrom,
-          headerFrom,
-          spfDomains,
-          spfResults,
-          spfAligned,
-          guidance,
-          totalMessages,
-        ],
-      },
-    ]
-    // Convert boolean values to string
-    spfFailureNodes = spfFailureNodes.map((node) => {
-      return { ...node, spfAligned: node.spfAligned.toString() }
-    })
-
+  // Set DKIM Failure Table Loading
+  if (dkimFailureLoading) {
+    dkimFailureTable = (
+      <LoadingMessage>
+        <Trans>DKIM Failure Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // DKIM Failure query no longer loading, check if data exists
+  else if (dkimFailureNodes.length) {
     const dkimFailureColumns = [
       {
         Header: t`DKIM Failures by IP Address`,
@@ -424,78 +383,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       }
     })
 
-    const dmarcFailureColumns = [
-      {
-        Header: t`DMARC Failures by IP Address`,
-        hidden: true,
-        columns: [
-          sourceIpAddress,
-          dnsHost,
-          envelopeFrom,
-          headerFrom,
-          spfDomains,
-          dkimDomains,
-          dkimSelectors,
-          disposition,
-          totalMessages,
-        ],
-      },
-    ]
-
-    const displayLimitOptions = [5, 10, 20, 50, 100]
-
-    const fullPassPaginationConfig = {
-      previous: fullPassPrevious,
-      hasPreviousPage: fullPassHasPreviousPage,
-      next: fullPassNext,
-      hasNextPage: fullPassHasNextPage,
-      displayLimitOptions: displayLimitOptions,
-    }
-    const fullyAlignedTable = fullPassNodes.length ? (
-      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcReportTable
-          data={fullPassNodes}
-          columns={fullPassColumns}
-          title={t`Fully Aligned by IP Address`}
-          initialSort={initialSort}
-          frontendPagination={false}
-          paginationConfig={fullPassPaginationConfig}
-          selectedDisplayLimit={fullPassSelectedTableDisplayLimit}
-          setSelectedDisplayLimit={setFullPassSelectedTableDisplayLimit}
-        />
-      </ErrorBoundary>
-    ) : (
-      <Heading as="h3" size="lg">
-        * <Trans>No data for the Fully Aligned by IP Address table</Trans> *
-      </Heading>
-    )
-
-    const spfFailurePaginationConfig = {
-      previous: spfFailurePrevious,
-      hasPreviousPage: spfFailureHasPreviousPage,
-      next: spfFailureNext,
-      hasNextPage: spfFailureHasNextPage,
-      displayLimitOptions: displayLimitOptions,
-    }
-    const spfFailureTable = spfFailureNodes.length ? (
-      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <DmarcReportTable
-          data={spfFailureNodes}
-          columns={spfFailureColumns}
-          title={t`SPF Failures by IP Address`}
-          initialSort={initialSort}
-          frontendPagination={false}
-          paginationConfig={spfFailurePaginationConfig}
-          selectedDisplayLimit={spfFailureSelectedTableDisplayLimit}
-          setSelectedDisplayLimit={setSpfFailureSelectedTableDisplayLimit}
-        />
-      </ErrorBoundary>
-    ) : (
-      <Heading as="h3" size="lg">
-        * <Trans>No data for the SPF Failures by IP Address table</Trans> *
-      </Heading>
-    )
-
     const dkimFailurePaginationConfig = {
       previous: dkimFailurePrevious,
       hasPreviousPage: dkimFailureHasPreviousPage,
@@ -503,7 +390,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       hasNextPage: dkimFailureHasNextPage,
       displayLimitOptions: displayLimitOptions,
     }
-    const dkimFailureTable = dkimFailureNodes.length ? (
+    dkimFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <DmarcReportTable
           data={dkimFailureNodes}
@@ -516,11 +403,189 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           setSelectedDisplayLimit={setDkimFailureSelectedTableDisplayLimit}
         />
       </ErrorBoundary>
-    ) : (
+    )
+  }
+  // Display DKIM Failure if found
+  else if (dkimFailureError) {
+    dkimFailureTable = <ErrorFallbackMessage error={dkimFailureError} />
+  }
+  // If no data exists for DKIM Failure table, display message saying so
+  else {
+    dkimFailureTable = (
       <Heading as="h3" size="lg">
         * <Trans>No data for the DKIM Failures by IP Address table</Trans> *
       </Heading>
     )
+  }
+
+  // Fully Aligned Table setup
+  let fullPassTable
+
+  // Set Fully Aligned Table Loading
+  if (fullPassLoading) {
+    fullPassTable = (
+      <LoadingMessage>
+        <Trans>Fully Aligned Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // Full pass query no longer loading, check if data exists
+  else if (fullPassNodes.length) {
+    const fullPassColumns = [
+      {
+        Header: t`Fully Aligned by IP Address`,
+        hidden: true,
+        columns: [
+          sourceIpAddress,
+          envelopeFrom,
+          dkimDomains,
+          dkimSelectors,
+          dnsHost,
+          headerFrom,
+          spfDomains,
+          totalMessages,
+        ],
+      },
+    ]
+
+    const fullPassPaginationConfig = {
+      previous: fullPassPrevious,
+      hasPreviousPage: fullPassHasPreviousPage,
+      next: fullPassNext,
+      hasNextPage: fullPassHasNextPage,
+      displayLimitOptions: displayLimitOptions,
+    }
+    fullPassTable = (
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcReportTable
+          data={fullPassNodes}
+          columns={fullPassColumns}
+          title={t`Fully Aligned by IP Address`}
+          initialSort={initialSort}
+          frontendPagination={false}
+          paginationConfig={fullPassPaginationConfig}
+          selectedDisplayLimit={fullPassSelectedTableDisplayLimit}
+          setSelectedDisplayLimit={setFullPassSelectedTableDisplayLimit}
+        />
+      </ErrorBoundary>
+    )
+  }
+  // Display Fully Aligned Error if found
+  else if (fullPassError) {
+    fullPassTable = <ErrorFallbackMessage error={fullPassError} />
+  }
+  // If no data exists for Fully Aligned table, display message saying so
+  else {
+    fullPassTable = (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the Fully Aligned by IP Address table</Trans> *
+      </Heading>
+    )
+  }
+
+  // SPF Failure Table setup
+  let spfFailureTable
+
+  // Set SPF Failure Table Loading
+  if (spfFailureLoading) {
+    spfFailureTable = (
+      <LoadingMessage>
+        <Trans>SPF Failure Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // SPF Failure query no longer loading, check if data exists
+  else if (spfFailureNodes.length) {
+    const spfFailureColumns = [
+      {
+        Header: t`SPF Failures by IP Address`,
+        hidden: true,
+        columns: [
+          dnsHost,
+          envelopeFrom,
+          guidance,
+          headerFrom,
+          sourceIpAddress,
+          spfAligned,
+          spfDomains,
+          spfResults,
+          totalMessages,
+        ],
+      },
+    ]
+    // Convert boolean values to string
+    spfFailureNodes = spfFailureNodes.map((node) => {
+      return {
+        ...node,
+        spfAligned: node.spfAligned.toString(),
+      }
+    })
+
+    const spfFailurePaginationConfig = {
+      previous: spfFailurePrevious,
+      hasPreviousPage: spfFailureHasPreviousPage,
+      next: spfFailureNext,
+      hasNextPage: spfFailureHasNextPage,
+      displayLimitOptions: displayLimitOptions,
+    }
+    spfFailureTable = (
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcReportTable
+          data={spfFailureNodes}
+          columns={spfFailureColumns}
+          title={t`SPF Failures by IP Address`}
+          initialSort={initialSort}
+          frontendPagination={false}
+          paginationConfig={spfFailurePaginationConfig}
+          selectedDisplayLimit={spfFailureSelectedTableDisplayLimit}
+          setSelectedDisplayLimit={setSpfFailureSelectedTableDisplayLimit}
+        />
+      </ErrorBoundary>
+    )
+  }
+  // Display SPF Failure if found
+  else if (spfFailureError) {
+    spfFailureTable = <ErrorFallbackMessage error={spfFailureError} />
+  }
+  // If no data exists for SPF Failure table, display message saying so
+  else {
+    spfFailureTable = (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the DKIM Failures by IP Address table</Trans> *
+      </Heading>
+    )
+  }
+
+  // DMARC Failure Table setup
+  let dmarcFailureTable
+
+  // Set DMARC Failure Table Loading
+  if (dmarcFailureLoading) {
+    dmarcFailureTable = (
+      <LoadingMessage>
+        <Trans>DMARC Failure Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // DMARC Failure query no longer loading, check if data exists
+  else if (dmarcFailureNodes.length) {
+    const dmarcFailureColumns = [
+      {
+        Header: t`DMARC Failures by IP Address`,
+        hidden: true,
+        columns: [
+          dkimDomains,
+          dkimSelectors,
+          disposition,
+          dnsHost,
+          envelopeFrom,
+          headerFrom,
+          sourceIpAddress,
+          spfDomains,
+          totalMessages,
+        ],
+      },
+    ]
 
     const dmarcFailurePaginationConfig = {
       previous: dmarcFailurePrevious,
@@ -529,7 +594,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       hasNextPage: dmarcFailureHasNextPage,
       displayLimitOptions: displayLimitOptions,
     }
-    const dmarcFailureTable = dmarcFailureNodes.length ? (
+    dmarcFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <DmarcReportTable
           data={dmarcFailureNodes}
@@ -542,23 +607,31 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           setSelectedDisplayLimit={setDmarcFailureSelectedTableDisplayLimit}
         />
       </ErrorBoundary>
-    ) : (
+    )
+  }
+  // Display DMARC Failure if found
+  else if (dmarcFailureError) {
+    dmarcFailureTable = <ErrorFallbackMessage error={dmarcFailureError} />
+  }
+  // If no data exists for DMARC Failure table, display message saying so
+  else {
+    dmarcFailureTable = (
       <Heading as="h3" size="lg">
         * <Trans>No data for the DMARC Failures by IP Address table</Trans> *
       </Heading>
     )
-
-    tableDisplay = (
-      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <Stack spacing="30px">
-          {fullyAlignedTable}
-          {spfFailureTable}
-          {dkimFailureTable}
-          {dmarcFailureTable}
-        </Stack>
-      </ErrorBoundary>
-    )
   }
+
+  const tableDisplay = (
+    <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+      <Stack spacing="30px">
+        {fullPassTable}
+        {spfFailureTable}
+        {dkimFailureTable}
+        {dmarcFailureTable}
+      </Stack>
+    </ErrorBoundary>
+  )
 
   return (
     <Box width="100%" px="4" mx="auto" overflow="hidden">

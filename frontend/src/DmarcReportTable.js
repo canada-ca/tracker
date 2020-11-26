@@ -128,6 +128,7 @@ function DmarcReportTable({ ...props }) {
     setSelectedDisplayLimit,
   } = props
   const [show, setShow] = React.useState(true)
+  const [firstRender, setFirstRender] = React.useState(true)
 
   const handleShow = () => setShow(!show)
 
@@ -175,8 +176,12 @@ function DmarcReportTable({ ...props }) {
   const [goToPageValue, setGoToPageNumber] = useState(pageIndex + 1)
 
   useEffect(() => {
-    setPageSize(selectedDisplayLimit)
-    wrapperRef.current.scrollIntoView()
+    if (!firstRender) {
+      setPageSize(selectedDisplayLimit)
+      wrapperRef.current.scrollIntoView()
+    } else {
+      setFirstRender(false)
+    }
   }, [selectedDisplayLimit])
 
   const handleGoToPageChange = (event) => {
