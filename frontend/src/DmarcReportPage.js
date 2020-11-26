@@ -84,7 +84,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     },
   })
 
-  const {
+  let {
     loading: dkimFailureLoading,
     error: dkimFailureError,
     nodes: dkimFailureNodes,
@@ -126,7 +126,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     relayRoot: 'dmarcSummaryByPeriod.detailTables.dmarcFailure',
   })
 
-  const {
+  let {
     loading: spfFailureLoading,
     error: spfFailureError,
     nodes: spfFailureNodes,
@@ -397,6 +397,10 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         ],
       },
     ]
+    // Convert boolean values to string
+    spfFailureNodes = spfFailureNodes.map((node) => {
+      return { ...node, spfAligned: node.spfAligned.toString() }
+    })
 
     const dkimFailureColumns = [
       {
@@ -416,6 +420,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         ],
       },
     ]
+    // Convert boolean values to string
+    dkimFailureNodes = dkimFailureNodes.map((node) => {
+      return {
+        ...node,
+        dkimAligned: node.dkimAligned.toString(),
+      }
+    })
 
     const dmarcFailureColumns = [
       {
