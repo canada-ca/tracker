@@ -70,7 +70,7 @@ export default function App() {
             </Link>
           )}
 
-          {isLoggedIn() && (
+          {1 && (
             <Link to="/dmarc-summaries">
               <Trans>DMARC Report</Trans>
             </Link>
@@ -165,7 +165,7 @@ export default function App() {
               </RouteIf>
 
               <RouteIf
-                condition={isLoggedIn()}
+                condition={true}
                 alternate="/sign-in"
                 path="/domains"
                 render={({ match: { url } }) => (
@@ -186,7 +186,7 @@ export default function App() {
               />
 
               <RouteIf
-                condition={isLoggedIn()}
+                condition={true}
                 alternate="/sign-in"
                 path="/dmarc-summaries"
                 render={({ match: { url } }) => (
@@ -217,7 +217,7 @@ export default function App() {
               </RouteIf>
 
               <RouteIf
-                condition={isLoggedIn()}
+                condition={true}
                 alternate="/sign-in"
                 path="/dmarc-report/:period?/:year?"
               >

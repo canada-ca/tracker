@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { setQueryAlias } from './setQueryAlias'
 import { indexes } from './indexes'
@@ -9,6 +9,7 @@ export function usePaginatedCollection({
   fetchBackward,
   fetchHeaders = {},
   variables,
+  edgesParent,
 }) {
   const { query: fwdQuery } = setQueryAlias({
     query: fetchForward,
@@ -31,15 +32,21 @@ export function usePaginatedCollection({
 
   let currentEdges
 
-  if (data?.pagination?.edges?.length > recordsPerPage) {
-    currentEdges = data.pagination.edges.slice(
+  if (data?.pagination !== undefined && edgesParent) {
+    currentEdges = edgesParent.split('.').reduce((acc, cur) => {
+      return acc[cur]
+    }, data?.pagination)
+  } else {
+    currentEdges = data?.pagination?.edges
+  }
+
+  if (currentEdges?.length > recordsPerPage) {
+    currentEdges = currentEdges.slice(
       ...indexes({
         page: currentPage,
         recordsPerPage,
       }),
     )
-  } else {
-    currentEdges = data?.pagination?.edges
   }
 
   return {

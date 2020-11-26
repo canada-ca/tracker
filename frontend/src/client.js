@@ -11,6 +11,11 @@ export function createCache() {
           findMyOrganizations: relayStylePagination(),
         },
       },
+      DetailTables: {
+        // Explanation: https://github.com/apollographql/apollo-client/issues/6370
+        // Treats DetailTables as a global singleton
+        keyFields: [],
+      },
     },
   })
 }

@@ -76,7 +76,7 @@ interface Node {
 # Domain object containing information for a given domain.
 type Domain implements Node {
   # The ID of an object
-  id: ID!
+  id: ID! @examples(values: ["exampleid--"]) # faked to enable cache merging
   # Domain that scans will be ran on.
   domain: DomainScalar @examples(
     values: [
