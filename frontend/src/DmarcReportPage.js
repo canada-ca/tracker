@@ -45,6 +45,24 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const [tableData, setTableData] = useState()
   const [reportCalled, setReportCalled] = useState(false)
 
+  const defaultPageSize = 10
+  const [
+    dmarcFailureSelectedTableDisplayLimit,
+    setDmarcFailureSelectedTableDisplayLimit,
+  ] = useState(defaultPageSize)
+  const [
+    dkimFailureSelectedTableDisplayLimit,
+    setDkimFailureSelectedTableDisplayLimit,
+  ] = useState(defaultPageSize)
+  const [
+    spfFailureSelectedTableDisplayLimit,
+    setSpfFailureSelectedTableDisplayLimit,
+  ] = useState(defaultPageSize)
+  const [
+    fullPassSelectedTableDisplayLimit,
+    setFullPassSelectedTableDisplayLimit,
+  ] = useState(defaultPageSize)
+
   // Allows the use of forward/backward navigation
   if (selectedPeriod !== period) setSelectedPeriod(period)
   if (selectedYear !== year) setSelectedPeriod(year)
@@ -416,6 +434,16 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         ],
       },
     ]
+
+    const displayLimitOptions = [5, 10, 20, 50, 100]
+
+    const fullPassPaginationConfig = {
+      previous: fullPassPrevious,
+      hasPreviousPage: fullPassHasPreviousPage,
+      next: fullPassNext,
+      hasNextPage: fullPassHasNextPage,
+      displayLimitOptions: displayLimitOptions,
+    }
     const fullyAlignedTable = fullPassNodes.length ? (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <DmarcReportTable
@@ -424,13 +452,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           title={t`Fully Aligned by IP Address`}
           initialSort={initialSort}
           frontendPagination={false}
-          mb="10px"
-        />
-        <RelayPaginationControls
-          previous={fullPassPrevious}
-          hasPreviousPage={fullPassHasPreviousPage}
-          next={fullPassNext}
-          hasNextPage={fullPassHasNextPage}
+          paginationConfig={fullPassPaginationConfig}
+          selectedDisplayLimit={fullPassSelectedTableDisplayLimit}
+          setSelectedDisplayLimit={setFullPassSelectedTableDisplayLimit}
         />
       </ErrorBoundary>
     ) : (
@@ -438,6 +462,14 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         * <Trans>No data for the Fully Aligned by IP Address table</Trans> *
       </Heading>
     )
+
+    const spfFailurePaginationConfig = {
+      previous: spfFailurePrevious,
+      hasPreviousPage: spfFailureHasPreviousPage,
+      next: spfFailureNext,
+      hasNextPage: spfFailureHasNextPage,
+      displayLimitOptions: displayLimitOptions,
+    }
     const spfFailureTable = spfFailureNodes.length ? (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <DmarcReportTable
@@ -446,13 +478,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           title={t`SPF Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={false}
-          mb="10px"
-        />
-        <RelayPaginationControls
-          previous={spfFailurePrevious}
-          hasPreviousPage={spfFailureHasPreviousPage}
-          next={spfFailureNext}
-          hasNextPage={spfFailureHasNextPage}
+          paginationConfig={spfFailurePaginationConfig}
+          selectedDisplayLimit={spfFailureSelectedTableDisplayLimit}
+          setSelectedDisplayLimit={setSpfFailureSelectedTableDisplayLimit}
         />
       </ErrorBoundary>
     ) : (
@@ -460,6 +488,14 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         * <Trans>No data for the SPF Failures by IP Address table</Trans> *
       </Heading>
     )
+
+    const dkimFailurePaginationConfig = {
+      previous: dkimFailurePrevious,
+      hasPreviousPage: dkimFailureHasPreviousPage,
+      next: dkimFailureNext,
+      hasNextPage: dkimFailureHasNextPage,
+      displayLimitOptions: displayLimitOptions,
+    }
     const dkimFailureTable = dkimFailureNodes.length ? (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <DmarcReportTable
@@ -468,13 +504,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           title={t`DKIM Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={false}
-          mb="10px"
-        />
-        <RelayPaginationControls
-          previous={dkimFailurePrevious}
-          hasPreviousPage={dkimFailureHasPreviousPage}
-          next={dkimFailureNext}
-          hasNextPage={dkimFailureHasNextPage}
+          paginationConfig={dkimFailurePaginationConfig}
+          selectedDisplayLimit={dkimFailureSelectedTableDisplayLimit}
+          setSelectedDisplayLimit={setDkimFailureSelectedTableDisplayLimit}
         />
       </ErrorBoundary>
     ) : (
@@ -482,6 +514,14 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         * <Trans>No data for the DKIM Failures by IP Address table</Trans> *
       </Heading>
     )
+
+    const dmarcFailurePaginationConfig = {
+      previous: dmarcFailurePrevious,
+      hasPreviousPage: dmarcFailureHasPreviousPage,
+      next: dmarcFailureNext,
+      hasNextPage: dmarcFailureHasNextPage,
+      displayLimitOptions: displayLimitOptions,
+    }
     const dmarcFailureTable = dmarcFailureNodes.length ? (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <DmarcReportTable
@@ -490,13 +530,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           title={t`DMARC Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={false}
-          mb="10px"
-        />
-        <RelayPaginationControls
-          previous={dmarcFailurePrevious}
-          hasPreviousPage={dmarcFailureHasPreviousPage}
-          next={dmarcFailureNext}
-          hasNextPage={dmarcFailureHasNextPage}
+          paginationConfig={dmarcFailurePaginationConfig}
+          selectedDisplayLimit={dmarcFailureSelectedTableDisplayLimit}
+          setSelectedDisplayLimit={setDmarcFailureSelectedTableDisplayLimit}
         />
       </ErrorBoundary>
     ) : (
