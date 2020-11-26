@@ -54,14 +54,19 @@ export default function DmarcByDomainPage() {
       </Heading>
     )
 
-  // default tableDisplay to loading, will change to actual display in the if(!loading) block
-  let tableDisplay = (
-    <LoadingMessage>
-      <Trans>Domains Table</Trans>
-    </LoadingMessage>
-  )
+  // DMARC Summary Table setup
+  let tableDisplay
 
-  if (!loading) {
+  // Display loading message
+  if (loading) {
+    tableDisplay = (
+      <LoadingMessage>
+        <Trans>Domains Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // If not loading and data exists, show table
+  else if (nodes.length) {
     const formattedData = []
     nodes.forEach((node) => {
       const domain = node.domain
@@ -141,23 +146,33 @@ export default function DmarcByDomainPage() {
     }
 
     tableDisplay = (
-      <>
-        <DmarcReportTable
-          data={formattedData}
-          columns={percentageColumns}
-          title={i18n._(t`Pass/Fail Ratios by Domain`)}
-          initialSort={initialSort}
-          mb="10px"
-          hideTitleButton={true}
-          linkColumns={[{ column: 'domain', isExternal: false }]}
-          prependLink="domains/"
-          appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
-          frontendPagination={false}
-          paginationConfig={paginationConfig}
-          selectedDisplayLimit={selectedTableDisplayLimit}
-          setSelectedDisplayLimit={setSelectedTableDisplayLimit}
-        />
-      </>
+      <DmarcReportTable
+        data={formattedData}
+        columns={percentageColumns}
+        title={i18n._(t`Pass/Fail Ratios by Domain`)}
+        initialSort={initialSort}
+        mb="10px"
+        hideTitleButton={true}
+        linkColumns={[{ column: 'domain', isExternal: false }]}
+        prependLink="domains/"
+        appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
+        frontendPagination={false}
+        paginationConfig={paginationConfig}
+        selectedDisplayLimit={selectedTableDisplayLimit}
+        setSelectedDisplayLimit={setSelectedTableDisplayLimit}
+      />
+    )
+  }
+  // Display error if exists
+  else if (error) {
+    tableDisplay = <ErrorFallbackMessage error={error} />
+  }
+  // If not loading, no error, and no data, no data exists. Show message
+  else {
+    tableDisplay = (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the DMARC summary table</Trans> *
+      </Heading>
     )
   }
 
