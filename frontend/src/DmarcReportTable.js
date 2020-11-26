@@ -138,8 +138,6 @@ function DmarcReportTable({ ...props }) {
       ? 5
       : 10
 
-  console.log(defaultPageSize)
-
   const {
     getTableProps,
     getTableBodyProps,

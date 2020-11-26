@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useUserState } from './UserState'
-import { useQuery, useLazyQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import {
-  DMARC_REPORT_DETAIL_TABLES,
   DMARC_REPORT_GRAPH,
-  DMARC_REPORT_PAGE,
   PAGINATED_DKIM_FAILURE_REPORT as DKIM_FAILURE_FORWARD,
   REVERSE_PAGINATED_DKIM_FAILURE_REPORT as DKIM_FAILURE_BACKWARD,
   PAGINATED_DMARC_FAILURE_REPORT as DMARC_FAILURE_FORWARD,
@@ -26,7 +24,6 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
-import { RelayPaginationControls } from './RelayPaginationControls'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -35,15 +32,11 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { i18n } = useLingui()
 
   const currentDate = new Date()
-  const [originalPeriod] = useState(period)
-  const [originalYear] = useState(year)
   const [selectedPeriod, setSelectedPeriod] = useState(period)
   const [selectedYear, setSelectedYear] = useState(year)
   const [selectedDate, setSelectedDate] = useState(
     `${selectedPeriod}, ${selectedYear}`,
   )
-  const [tableData, setTableData] = useState()
-  const [reportCalled, setReportCalled] = useState(false)
 
   const defaultPageSize = 10
   const [

@@ -13,8 +13,6 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
-import * as PropTypes from 'prop-types'
-import { RelayPaginationControls } from './RelayPaginationControls'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()

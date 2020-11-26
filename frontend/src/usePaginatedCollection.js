@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { setQueryAlias } from './setQueryAlias'
 import { indexes } from './indexes'
