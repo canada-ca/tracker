@@ -27,6 +27,7 @@ export default function DmarcByDomainPage() {
   const [selectedDate, setSelectedDate] = useState(
     `LAST30DAYS, ${currentDate.getFullYear()}`,
   )
+  const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
 
   const {
     loading,
@@ -40,7 +41,7 @@ export default function DmarcByDomainPage() {
     fetchForward: FORWARD,
     fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
-    recordsPerPage: 10,
+    recordsPerPage: selectedTableDisplayLimit,
     variables: {
       month: selectedPeriod,
       year: selectedYear,
@@ -132,7 +133,15 @@ export default function DmarcByDomainPage() {
       },
     ]
 
-    // Replace table with "Loading..." if waiting for query
+    const displayLimitOptions = [5, 10, 20, 50, 100]
+    const paginationConfig = {
+      previous: previous,
+      hasPreviousPage: hasPreviousPage,
+      next: next,
+      hasNextPage: hasNextPage,
+      displayLimitOptions: displayLimitOptions,
+    }
+
     tableDisplay = (
       <>
         <DmarcReportTable
@@ -146,12 +155,9 @@ export default function DmarcByDomainPage() {
           prependLink="domains/"
           appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
           frontendPagination={false}
-        />
-        <RelayPaginationControls
-          previous={previous}
-          hasPreviousPage={hasPreviousPage}
-          next={next}
-          hasNextPage={hasNextPage}
+          paginationConfig={paginationConfig}
+          selectedDisplayLimit={selectedTableDisplayLimit}
+          setSelectedDisplayLimit={setSelectedTableDisplayLimit}
         />
       </>
     )
