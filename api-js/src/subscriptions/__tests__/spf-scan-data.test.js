@@ -1,7 +1,7 @@
 const {
   REDIS_PORT_NUMBER,
   REDIS_DOMAIN_NAME,
-  SSL_SCAN_CHANNEL,
+  SPF_SCAN_CHANNEL,
   DB_PASS: rootPass,
   DB_URL: url,
 } = process.env
@@ -22,7 +22,7 @@ const { RedisPubSub } = require('graphql-redis-subscriptions')
 const { makeMigrations } = require('../../../migrations')
 const { createQuerySchema } = require('../../queries')
 const { createSubscriptionSchema } = require('../index')
-const { sslGuidanceTagLoader } = require('../../loaders')
+const { spfGuidanceTagLoader } = require('../../loaders')
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the spfScanData subscription', () => {
@@ -36,7 +36,7 @@ describe('given the spfScanData subscription', () => {
     drop,
     migrate,
     options,
-    sslScan,
+    spfScan,
     createSubscriptionMutation
 
   beforeAll(async () => {
@@ -45,9 +45,12 @@ describe('given the spfScanData subscription', () => {
       port: REDIS_PORT_NUMBER,
     }
 
-    sslScan = {
+    spfScan = {
       scan: {
-        guidanceTags: ['ssl1'],
+        lookups: 1,
+        record: 'record',
+        spfDefault: 'spfDefault',
+        guidanceTags: ['spf1'],
       },
     }
 
@@ -71,11 +74,11 @@ describe('given the spfScanData subscription', () => {
               const pub = await new Redis(options)
 
               await redis.subscribe(
-                `${SSL_SCAN_CHANNEL}/${subscriptionId}`,
+                `${SPF_SCAN_CHANNEL}/${subscriptionId}`,
                 (_err, _count) => {
                   pub.publish(
-                    `${SSL_SCAN_CHANNEL}/${subscriptionId}`,
-                    JSON.stringify(sslScan),
+                    `${SPF_SCAN_CHANNEL}/${subscriptionId}`,
+                    JSON.stringify(spfScan),
                   )
                 },
               )
@@ -111,9 +114,9 @@ describe('given the spfScanData subscription', () => {
   })
 
   beforeEach(async () => {
-    await collections.sslGuidanceTags.save({
-      _key: 'ssl1',
-      tagName: 'SSL-TAG',
+    await collections.spfGuidanceTags.save({
+      _key: 'spf1',
+      tagName: 'SPF-TAG',
       guidance: 'Some Interesting Guidance',
       refLinksGuide: [
         {
@@ -159,7 +162,10 @@ describe('given the spfScanData subscription', () => {
       schema,
       parse(`
       subscription {
-        sslScanData (subscriptionId: "uuid-1234") {
+        spfScanData (subscriptionId: "uuid-1234") {
+          lookups
+          record
+          spfDefault
           guidanceTags {
             id
             tagId
@@ -181,7 +187,7 @@ describe('given the spfScanData subscription', () => {
       {
         pubsub,
         loaders: {
-          sslGuidanceTagLoader: sslGuidanceTagLoader(query, '1', {}),
+          spfGuidanceTagLoader: spfGuidanceTagLoader(query, '1', {}),
         },
       },
       {},
@@ -191,12 +197,15 @@ describe('given the spfScanData subscription', () => {
 
     const expectedResult = {
       data: {
-        sslScanData: {
+        spfScanData: {
+          lookups: 1,
+          record: 'record',
+          spfDefault: 'spfDefault',
           guidanceTags: [
             {
-              id: toGlobalId('guidanceTags', 'ssl1'),
-              tagId: 'ssl1',
-              tagName: 'SSL-TAG',
+              id: toGlobalId('guidanceTags', 'spf1'),
+              tagId: 'spf1',
+              tagName: 'SPF-TAG',
               guidance: 'Some Interesting Guidance',
               refLinks: [
                 {
