@@ -11,11 +11,6 @@ steps:
 - name: mikewilliamson/wait-for
   id: wait_arango
   args: ['arangodb:8529']
-- name: node:alpine
-  id: install
-  dir: api-js
-  entrypoint: npm
-  args: ['ci', '--no-optional']
 
 - name: 'gcr.io/cloud-builders/docker'
   id: start_redis
@@ -29,6 +24,7 @@ steps:
 - name: mikewilliamson/wait-for
   id: wait_redis
   args: ['redis:6379']
+
 - name: node:alpine
   id: install
   dir: api-js
