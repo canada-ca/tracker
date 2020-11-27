@@ -221,6 +221,8 @@
     'Successfully removed organization: {0}.': function (a) {
       return ['Successfully removed organization: ', a('0'), '.']
     },
+    'Successfully removed user from organization.':
+      'Successfully removed user from organization.',
     'Successfully sent invitation to service, and organization email.':
       'Successfully sent invitation to service, and organization email.',
     'Successfully two factor authenticated.':
@@ -323,14 +325,12 @@
       'Unable to query domains. Please try again.',
     'Unable to query organizations. Please try again.':
       'Unable to query organizations. Please try again.',
-    'Unable to query user without a username, please try again.':
-      'Unable to query user without a username, please try again.',
-    'Unable to query user, please try again.':
-      'Unable to query user, please try again.',
     'Unable to remove domain. Please try again.':
       'Unable to remove domain. Please try again.',
     'Unable to remove organization. Please try again.':
       'Unable to remove organization. Please try again.',
+    'Unable to remove user from organization. Please try again.':
+      'Unable to remove user from organization. Please try again.',
     'Unable to reset password. Please try again.':
       'Unable to reset password. Please try again.',
     'Unable to retrieve {0} for domain: {domain}.': function (a) {
