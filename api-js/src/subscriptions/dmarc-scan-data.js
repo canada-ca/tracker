@@ -13,7 +13,7 @@ const dmarcScanData = {
       description: 'Subscription ID retrieved from the requestScan mutation.',
     },
   },
-  resolve: async ({ scan }) => scan,
+  resolve: ({ scan }) => scan,
   subscribe: async (_context, { subscriptionId }, { pubsub }) =>
     pubsub.asyncIterator(`${DMARC_SCAN_CHANNEL}/${subscriptionId}`),
 }
