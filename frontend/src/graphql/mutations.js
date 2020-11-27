@@ -53,9 +53,19 @@ export const VALIDATE_TWO_FACTOR = gql`
   }
 `
 
-export const UPDATE_PASSWORD = gql`
-  mutation UpdatePassword($input: UpdateUserPasswordInput!) {
-    updatePassword(input: $input) {
+export const RESET_PASSWORD = gql`
+  mutation ResetPassword(
+    $password: String!
+    $confirmPassword: String!
+    $resetToken: String!
+  ) {
+    resetPassword(
+      input: {
+        password: $password
+        confirmPassword: $confirmPassword
+        resetToken: $resetToken
+      }
+    ) {
       status
     }
   }
@@ -63,7 +73,7 @@ export const UPDATE_PASSWORD = gql`
 
 export const SEND_PASSWORD_RESET_LINK = gql`
   mutation SendPasswordResetLink($userName: EmailAddress!) {
-    sendPasswordResetLink(userName: $userName) {
+    sendPasswordResetLink(input: { userName: $userName }) {
       status
     }
   }
