@@ -3,7 +3,8 @@ const { guidanceTagType } = require('../base/guidance-tags')
 
 const httpsSubType = new GraphQLObjectType({
   name: 'HttpsSub',
-  description: '',
+  description:
+    'HTTPS gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
     implementation: {
       type: GraphQLString,

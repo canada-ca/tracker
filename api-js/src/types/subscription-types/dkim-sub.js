@@ -3,7 +3,8 @@ const { dkimResultSubType } = require('./dkim-result-sub')
 
 const dkimSubType = new GraphQLObjectType({
   name: 'DkimSub',
-  description: '',
+  description:
+    'DKIM gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
     results: {
       type: GraphQLList(dkimResultSubType),

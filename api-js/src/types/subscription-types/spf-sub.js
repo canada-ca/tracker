@@ -1,9 +1,15 @@
-const { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList } = require('graphql')
+const {
+  GraphQLInt,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLList,
+} = require('graphql')
 const { guidanceTagType } = require('../base/guidance-tags')
 
 const spfSubType = new GraphQLObjectType({
   name: 'SpfSub',
-  description: '',
+  description:
+    'SPF gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
     lookups: {
       type: GraphQLInt,

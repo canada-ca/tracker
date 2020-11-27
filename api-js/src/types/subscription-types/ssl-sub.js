@@ -3,7 +3,8 @@ const { guidanceTagType } = require('../base/guidance-tags')
 
 const sslSubType = new GraphQLObjectType({
   name: 'SslSub',
-  description: '',
+  description:
+    'SSL gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
     guidanceTags: {
       type: GraphQLList(guidanceTagType),

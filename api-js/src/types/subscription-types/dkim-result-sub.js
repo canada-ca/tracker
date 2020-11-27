@@ -3,7 +3,7 @@ const { guidanceTagType } = require('../base/guidance-tags')
 
 const dkimResultSubType = new GraphQLObjectType({
   name: 'DkimResultSub',
-  description: '',
+  description: 'Individual one-off scans results for the given dkim selector.',
   fields: () => ({
     selector: {
       type: GraphQLString,

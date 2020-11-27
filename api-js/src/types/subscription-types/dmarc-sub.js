@@ -8,7 +8,8 @@ const { guidanceTagType } = require('../base/guidance-tags')
 
 const dmarcSubType = new GraphQLObjectType({
   name: 'DmarcSub',
-  description: '',
+  description:
+    'DMARC gql object containing the fields for the `dkimScanData` subscription.',
   fields: () => ({
     dmarcPhase: {
       type: GraphQLInt,
