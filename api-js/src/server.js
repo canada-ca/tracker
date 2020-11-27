@@ -107,22 +107,22 @@ export const Server = (
           authorization = connectionParams.authorization
         }
 
-        // const i18n = createI18n(language)
-        // const verify = verifyToken({ i18n })
-        // const token = authorization || ''
+        const i18n = createI18n(language)
+        const verify = verifyToken({ i18n })
+        const token = authorization || ''
 
-        // let userKey
-        // if (token !== '') {
-        //   userKey = verify({ token })
-        // }
+        let userKey
+        if (token !== '') {
+          userKey = verify({ token })
+        }
 
-        // await userRequired({
-        //   i18n,
-        //   userId: userKey,
-        //   userLoaderByKey: userLoaderByKey(context.query),
-        // })()
+        await userRequired({
+          i18n,
+          userId: userKey,
+          userLoaderByKey: userLoaderByKey(context.query),
+        })()
 
-        // console.info(`User: ${userKey}, connected to subscription.`)
+        console.info(`User: ${userKey}, connected to subscription.`)
 
         return {
           language,
