@@ -25,4 +25,25 @@ describe('given the create context function', () => {
       expect(context.userKey).toEqual('1234')
     })
   })
+  describe('connection value is set', () => {
+    it('returns an object with set token', async () => {
+      const token = tokenize({ parameters: { userKey: '1234' } })
+      const context = await createContext({})({
+        req: {},
+        res: {},
+        connection: { context: { authorization: token } },
+      })
+
+      expect(context.userKey).toEqual({ userKey: '1234' })
+    })
+    it('returns an object with a set language', async () => {
+      const context = await createContext({})({
+        req: {},
+        res: {},
+        connection: { context: { language: 'en' } },
+      })
+
+      expect(context.request.language).toEqual('en')
+    })
+  })
 })
