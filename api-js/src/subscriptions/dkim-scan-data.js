@@ -13,11 +13,9 @@ const dkimScanData = {
       description: 'Subscription ID retrieved from the requestScan mutation.',
     },
   },
-  resolve: (payload) => {
-    return payload
-  },
-  subscribe: async (_context, _args, { pubsub }) =>
-    pubsub.asyncIterator(DKIM_SCAN_CHANNEL),
+  resolve: ({ scan }) => scan,
+  subscribe: async (_context, { subscriptionId }, { pubsub }) =>
+    pubsub.asyncIterator(`${DKIM_SCAN_CHANNEL}/${subscriptionId}`),
 }
 
 module.exports = {
