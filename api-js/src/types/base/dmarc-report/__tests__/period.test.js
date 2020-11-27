@@ -1,233 +1,135 @@
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { graphql, GraphQLSchema } = require('graphql')
-const { makeMigrations } = require('../../../../../migrations')
-const { createQuerySchema } = require('../../../../queries')
-const { createMutationSchema } = require('../../../../mutations')
-const bcrypt = require('bcrypt')
+const moment = require('moment')
 
-const { cleanseInput } = require('../../../../validators')
-const {
-  checkDomainPermission,
-  checkDomainOwnership,
-  tokenize,
-  userRequired,
-} = require('../../../../auth')
-const {
-  domainLoaderByDomain,
-  userLoaderByUserName,
-  userLoaderByKey,
-} = require('../../../../loaders')
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const { periodType } = require('../period')
+const { detailTablesType } = require('../detail-tables')
+const { categoryTotalsType } = require('../category-totals')
+const { categoryPercentagesType } = require('../category-percentages')
+const { PeriodEnums } = require('../../../../enums')
+const { Year } = require('../../../../scalars')
 
-describe('given findDomainByDomain query', () => {
-  let query, drop, truncate, migrate, schema, collections, domain, org
+describe('testing the period gql object', () => {
+  describe('testing the field definitions', () => {
+    it('has a month field', () => {
+      const demoType = periodType.getFields()
 
-  beforeAll(async () => {
-    // Create GQL Schema
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
+      expect(demoType).toHaveProperty('month')
+      expect(demoType.month.type).toMatchObject(PeriodEnums)
     })
-  })
+    it('has a year field', () => {
+      const demoType = periodType.getFields()
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
-
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
+      expect(demoType).toHaveProperty('year')
+      expect(demoType.year.type).toMatchObject(Year)
     })
-    domain = await collections.domains.save({
-      domain: 'test.gc.ca',
-      lastRan: null,
-      selectors: ['selector1._domainkey', 'selector2._domainkey'],
-    })
-    await collections.claims.save({
-      _to: domain._id,
-      _from: org._id,
-    })
-    await collections.ownership.save({
-      _to: domain._id,
-      _from: org._id,
-    })
-  })
+    it('has a categoryPercentages field', () => {
+      const demoType = periodType.getFields()
 
-  afterEach(async () => {
-    await drop()
-  })
-
-  describe('find the month and year of the period', () => {
-    let user
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'user',
-      })
-    })
-
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
-    })
-    it('returns month and end', async () => {
-      const moment = jest.fn().mockReturnValue({
-        format() {
-          return 'september'
-        },
-        year() {
-          return '2020'
-        },
-      })
-      const dmarcReportLoader = jest.fn().mockReturnValue({
-        data: {
-          dmarcSummaryByPeriod: {
-            startDate: '',
-            endDate: '',
-          },
-        },
-      })
-
-      const response = await graphql(
-        schema,
-        `
-          query {
-            findDomainByDomain(domain: "test.gc.ca") {
-              dmarcSummaryByPeriod(month: SEPTEMBER, year: "2020") {
-                month
-                year
-              }
-            }
-          }
-        `,
-        null,
-        {
-          userKey: user._key,
-          query: query,
-          moment,
-          auth: {
-            checkDomainPermission: checkDomainPermission({
-              query,
-              userKey: user._key,
-            }),
-            checkDomainOwnership: checkDomainOwnership({
-              query,
-              userKey: user._key,
-            }),
-            tokenize,
-            userRequired: userRequired({
-              userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query),
-            }),
-          },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            domainLoaderByDomain: domainLoaderByDomain(query),
-            dmarcReportLoader,
-            userLoaderByKey: userLoaderByKey(query),
-          },
-        },
+      expect(demoType).toHaveProperty('categoryPercentages')
+      expect(demoType.categoryPercentages.type).toMatchObject(
+        categoryPercentagesType,
       )
+    })
+    it('has a categoryTotals field', () => {
+      const demoType = periodType.getFields()
 
-      const expectedResponse = {
-        data: {
-          findDomainByDomain: {
-            dmarcSummaryByPeriod: {
-              month: 'SEPTEMBER',
-              year: '2020',
-            },
-          },
-        },
-      }
-      expect(response).toEqual(expectedResponse)
-      expect(consoleOutput).toEqual([
-        `User ${user._key} successfully retrieved domain ${domain._key}.`,
-      ])
+      expect(demoType).toHaveProperty('categoryTotals')
+      expect(demoType.categoryTotals.type).toMatchObject(categoryTotalsType)
+    })
+    it('has a detailTables field', () => {
+      const demoType = periodType.getFields()
+
+      expect(demoType).toHaveProperty('detailTables')
+      expect(demoType.detailTables.type).toMatchObject(detailTablesType)
+    })
+  })
+
+  describe('testing the field resolvers', () => {
+    describe('testing the month resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = periodType.getFields()
+
+        expect(
+          demoType.month.resolve({ startDate: '2020-01-01' }, {}, { moment }),
+        ).toEqual('january')
+      })
+    })
+    describe('testing the year resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = periodType.getFields()
+
+        expect(
+          demoType.year.resolve({ startDate: '2020-01-01' }, {}, { moment }),
+        ).toEqual('2020')
+      })
+    })
+    describe('testing the categoryPercentages resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = periodType.getFields()
+
+        const categoryTotals = {
+          pass: 0,
+          'pass-spf-only': 1834,
+          'pass-dkim-only': 0,
+          fail: 63,
+        }
+
+        const expectedResult = {
+          pass: 0,
+          'pass-spf-only': 1834,
+          'pass-dkim-only': 0,
+          fail: 63,
+        }
+
+        expect(
+          demoType.categoryPercentages.resolve({ categoryTotals }),
+        ).toEqual(expectedResult)
+      })
+    })
+    describe('testing the categoryTotals resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = periodType.getFields()
+
+        const categoryTotals = {
+          pass: 0,
+          'pass-spf-only': 1834,
+          'pass-dkim-only': 0,
+          fail: 63,
+        }
+
+        const expectedResult = {
+          pass: 0,
+          'pass-spf-only': 1834,
+          'pass-dkim-only': 0,
+          fail: 63,
+        }
+
+        expect(demoType.categoryTotals.resolve({ categoryTotals })).toEqual(
+          expectedResult,
+        )
+      })
+    })
+    describe('testing the detailTables resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = periodType.getFields()
+
+        const detailTables = {
+          dkimFailure: {},
+          dmarcFailure: {},
+          fullPass: {},
+          spfFailure: {},
+        }
+
+        const expectedResult = {
+          dkimFailure: {},
+          dmarcFailure: {},
+          fullPass: {},
+          spfFailure: {},
+        }
+
+        expect(demoType.detailTables.resolve({ detailTables })).toEqual(
+          expectedResult,
+        )
+      })
     })
   })
 })

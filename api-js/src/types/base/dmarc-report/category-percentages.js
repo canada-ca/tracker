@@ -13,10 +13,10 @@ const categoryPercentagesType = new GraphQLObjectType({
           0,
         )
 
-        if (fail === 0) return 0
+        if (fail <= 0) return 0
 
         const percentage = (fail / total) * 100
-        return percentage.toFixed(2)
+        return Number(percentage.toFixed(2))
       },
     },
     fullPassPercentage: {
@@ -28,10 +28,10 @@ const categoryPercentagesType = new GraphQLObjectType({
           0,
         )
 
-        if (fullPass === 0) return 0
+        if (fullPass <= 0) return 0
 
         const percentage = (fullPass / total) * 100
-        return percentage.toFixed(2)
+        return Number(percentage.toFixed(2))
       },
     },
     passDkimOnlyPercentage: {
@@ -43,10 +43,10 @@ const categoryPercentagesType = new GraphQLObjectType({
           0,
         )
 
-        if (passDkimOnly === 0) return 0
+        if (passDkimOnly <= 0) return 0
 
         const percentage = (passDkimOnly / total) * 100
-        return percentage.toFixed(2)
+        return Number(percentage.toFixed(2))
       },
     },
     passSpfOnlyPercentage: {
@@ -58,10 +58,10 @@ const categoryPercentagesType = new GraphQLObjectType({
           0,
         )
 
-        if (passSpfOnly === 0) return 0
+        if (passSpfOnly <= 0) return 0
 
         const percentage = (passSpfOnly / total) * 100
-        return percentage.toFixed(2)
+        return Number(percentage.toFixed(2))
       },
     },
     totalMessages: {
@@ -72,7 +72,7 @@ const categoryPercentagesType = new GraphQLObjectType({
           (a, b) => a + b,
           0,
         )
-        return total
+        return Number(total)
       },
     },
   }),

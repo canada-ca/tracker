@@ -1,297 +1,158 @@
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { graphql, GraphQLSchema } = require('graphql')
-const { makeMigrations } = require('../../../../../../migrations')
-const { createQuerySchema } = require('../../../../../queries')
-const { createMutationSchema } = require('../../../../../mutations')
-const bcrypt = require('bcrypt')
+const { GraphQLID, GraphQLString, GraphQLInt } = require('graphql')
+const { dmarcFailureTableType } = require('../dmarc-failure-table')
 
-const { cleanseInput } = require('../../../../../validators')
-const {
-  checkDomainPermission,
-  checkDomainOwnership,
-  tokenize,
-  userRequired,
-} = require('../../../../../auth')
-const {
-  domainLoaderByDomain,
-  userLoaderByUserName,
-  userLoaderByKey,
-} = require('../../../../../loaders')
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+describe('given the dmarcFailureTable gql object', () => {
+  describe('testing field definitions', () => {
+    it('has an id field', () => {
+      const demoType = dmarcFailureTableType.getFields()
 
-describe('given findDomainByDomain query', () => {
-  let query, drop, truncate, migrate, schema, collections, domain, org
+      expect(demoType).toHaveProperty('id')
+      expect(demoType.id.type).toMatchObject(GraphQLID)
+    })
+    it('has a dkimDomains field', () => {
+      const demoType = dmarcFailureTableType.getFields()
 
-  beforeAll(async () => {
-    // Create GQL Schema
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
+      expect(demoType).toHaveProperty('dkimDomains')
+      expect(demoType.dkimDomains.type).toMatchObject(GraphQLString)
+    })
+    it('has a dkimSelectors field', () => {
+      const demoType = dmarcFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('dkimSelectors')
+      expect(demoType.dkimSelectors.type).toMatchObject(GraphQLString)
+    })
+    it('has a disposition field', () => {
+      const demoType = dmarcFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('disposition')
+      expect(demoType.disposition.type).toMatchObject(GraphQLString)
+    })
+    it('has a dnsHost field', () => {
+      const demoType = dmarcFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('dnsHost')
+      expect(demoType.dnsHost.type).toMatchObject(GraphQLString)
+    })
+    it('has an envelopeFrom field', () => {
+      const demoType = dmarcFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('envelopeFrom')
+      expect(demoType.envelopeFrom.type).toMatchObject(GraphQLString)
+    })
+    it('has a headerFrom field', () => {
+      const demoType = dmarcFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('headerFrom')
+      expect(demoType.headerFrom.type).toMatchObject(GraphQLString)
+    })
+    it('has a sourceIpAddress field', () => {
+      const demoType = dmarcFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('sourceIpAddress')
+      expect(demoType.sourceIpAddress.type).toMatchObject(GraphQLString)
+    })
+    it('has a spfDomains field', () => {
+      const demoType = dmarcFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('spfDomains')
+      expect(demoType.spfDomains.type).toMatchObject(GraphQLString)
+    })
+    it('has a totalMessages field', () => {
+      const demoType = dmarcFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('totalMessages')
+      expect(demoType.totalMessages.type).toMatchObject(GraphQLInt)
     })
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
+  describe('testing the field resolvers', () => {
+    describe('testing the id resolver', () => {
+      it('returns the resolved result', () => {
+        const demoType = dmarcFailureTableType.getFields()
 
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
-
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    domain = await collections.domains.save({
-      domain: 'test.gc.ca',
-      lastRan: null,
-      selectors: ['selector1._domainkey', 'selector2._domainkey'],
-    })
-    await collections.claims.save({
-      _to: domain._id,
-      _from: org._id,
-    })
-    await collections.ownership.save({
-      _to: domain._id,
-      _from: org._id,
-    })
-  })
-
-  afterEach(async () => {
-    await drop()
-  })
-
-  describe('find the dmarc report dmarc fail information', () => {
-    let user
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'user',
+        expect(demoType.id.resolve({ id: '1' })).toEqual('1')
       })
     })
+    describe('testing the dkimDomains resolver', () => {
+      it('returns the resolved result', () => {
+        const demoType = dmarcFailureTableType.getFields()
 
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
-    })
-    it('returns dmarc fail data', async () => {
-      const dmarcReportLoader = jest.fn().mockReturnValue({
-        data: {
-          dmarcSummaryByPeriod: {
-            detailTables: {
-              dmarcFailure: {
-                edges: [
-                  {
-                    cursor: 'ZmFpbERtYXJjOjE=',
-                    node: {
-                      disposition: 'none',
-                      dkimDomains: '',
-                      dkimSelectors: '',
-                      dnsHost: 'test.dns.gc.ca',
-                      envelopeFrom: 'test.domain.canada.ca',
-                      headerFrom: 'test.domain.canada.ca',
-                      id: 'ZmFpbERtYXJjOjE=',
-                      sourceIpAddress: '123.456.78.91',
-                      spfDomains: 'test.domain.gc.ca',
-                      totalMessages: 30,
-                    },
-                  },
-                ],
-                pageInfo: {
-                  startCursor: 'ZmFpbERtYXJjOjE=',
-                  endCursor: 'ZmFpbERtYXJjOjE=',
-                  hasNextPage: true,
-                  hasPreviousPage: false,
-                },
-              },
-            },
-          },
-        },
+        expect(
+          demoType.dkimDomains.resolve({ dkimDomains: 'dkimDomains' }),
+        ).toEqual('dkimDomains')
       })
+    })
+    describe('testing the dkimSelectors resolver', () => {
+      it('returns the resolved result', () => {
+        const demoType = dmarcFailureTableType.getFields()
 
-      const response = await graphql(
-        schema,
-        `
-          query {
-            findDomainByDomain(domain: "test.gc.ca") {
-              dmarcSummaryByPeriod(month: SEPTEMBER, year: "2020") {
-                detailTables {
-                  dmarcFailure(first: 1) {
-                    edges {
-                      cursor
-                      node {
-                        id
-                        dkimDomains
-                        dkimSelectors
-                        disposition
-                        dnsHost
-                        envelopeFrom
-                        headerFrom
-                        sourceIpAddress
-                        spfDomains
-                        totalMessages
-                      }
-                    }
-                    pageInfo {
-                      startCursor
-                      endCursor
-                      hasNextPage
-                      hasPreviousPage
-                    }
-                  }
-                }
-              }
-            }
-          }
-        `,
-        null,
-        {
-          userKey: user._key,
-          query: query,
-          auth: {
-            checkDomainPermission: checkDomainPermission({
-              query,
-              userKey: user._key,
-            }),
-            checkDomainOwnership: checkDomainOwnership({
-              query,
-              userKey: user._key,
-            }),
-            tokenize,
-            userRequired: userRequired({
-              userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query),
-            }),
-          },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            domainLoaderByDomain: domainLoaderByDomain(query),
-            dmarcReportLoader,
-            userLoaderByKey: userLoaderByKey(query),
-          },
-        },
-      )
+        expect(
+          demoType.dkimSelectors.resolve({ dkimSelectors: 'dkimSelectors' }),
+        ).toEqual('dkimSelectors')
+      })
+    })
+    describe('testing the disposition resolver', () => {
+      it('returns the resolved result', () => {
+        const demoType = dmarcFailureTableType.getFields()
 
-      const expectedResponse = {
-        data: {
-          findDomainByDomain: {
-            dmarcSummaryByPeriod: {
-              detailTables: {
-                dmarcFailure: {
-                  edges: [
-                    {
-                      cursor: 'ZmFpbERtYXJjOjE=',
-                      node: {
-                        disposition: 'none',
-                        dkimDomains: '',
-                        dkimSelectors: '',
-                        dnsHost: 'test.dns.gc.ca',
-                        envelopeFrom: 'test.domain.canada.ca',
-                        headerFrom: 'test.domain.canada.ca',
-                        id: 'ZmFpbERtYXJjOjE=',
-                        sourceIpAddress: '123.456.78.91',
-                        spfDomains: 'test.domain.gc.ca',
-                        totalMessages: 30,
-                      },
-                    },
-                  ],
-                  pageInfo: {
-                    startCursor: 'ZmFpbERtYXJjOjE=',
-                    endCursor: 'ZmFpbERtYXJjOjE=',
-                    hasNextPage: true,
-                    hasPreviousPage: false,
-                  },
-                },
-              },
-            },
-          },
-        },
-      }
-      expect(response).toEqual(expectedResponse)
-      expect(consoleOutput).toEqual([
-        `User ${user._key} successfully retrieved domain ${domain._key}.`,
-      ])
+        expect(
+          demoType.disposition.resolve({ disposition: 'disposition' }),
+        ).toEqual('disposition')
+      })
+    })
+    describe('testing the dnsHost resolver', () => {
+      it('returns the resolved result', () => {
+        const demoType = dmarcFailureTableType.getFields()
+
+        expect(demoType.dnsHost.resolve({ dnsHost: 'dnsHost' })).toEqual(
+          'dnsHost',
+        )
+      })
+    })
+    describe('testing the envelopeFrom resolver', () => {
+      it('returns the resolved result', () => {
+        const demoType = dmarcFailureTableType.getFields()
+
+        expect(
+          demoType.envelopeFrom.resolve({ envelopeFrom: 'envelopeFrom' }),
+        ).toEqual('envelopeFrom')
+      })
+    })
+    describe('testing the headerFrom resolver', () => {
+      it('returns the resolved result', () => {
+        const demoType = dmarcFailureTableType.getFields()
+
+        expect(
+          demoType.headerFrom.resolve({ headerFrom: 'headerFrom' }),
+        ).toEqual('headerFrom')
+      })
+    })
+    describe('testing the sourceIpAddress resolver', () => {
+      it('returns the resolved result', () => {
+        const demoType = dmarcFailureTableType.getFields()
+
+        expect(
+          demoType.sourceIpAddress.resolve({
+            sourceIpAddress: 'sourceIpAddress',
+          }),
+        ).toEqual('sourceIpAddress')
+      })
+    })
+    describe('testing the spfDomains resolver', () => {
+      it('returns the resolved result', () => {
+        const demoType = dmarcFailureTableType.getFields()
+
+        expect(
+          demoType.spfDomains.resolve({ spfDomains: 'spfDomains' }),
+        ).toEqual('spfDomains')
+      })
+    })
+    describe('testing the totalMessages resolvers', () => {
+      it('returns the resolved result', () => {
+        const demoType = dmarcFailureTableType.getFields()
+
+        expect(demoType.totalMessages.resolve({ totalMessages: 5 })).toEqual(5)
+      })
     })
   })
 })

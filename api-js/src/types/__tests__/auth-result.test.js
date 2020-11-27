@@ -1,117 +1,56 @@
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const bcrypt = require('bcrypt')
-const { graphql, GraphQLSchema } = require('graphql')
-const { toGlobalId } = require('graphql-relay')
-const request = require('supertest')
+const { GraphQLString } = require('graphql')
 
-const { makeMigrations } = require('../../../migrations')
-const { createQuerySchema } = require('../../queries')
-const { createMutationSchema } = require('../../mutations')
-const { cleanseInput } = require('../../validators')
-const { userLoaderByUserName } = require('../../loaders')
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const { userType } = require('../base')
+const { authResultType } = require('../auth-result')
 
 describe('given the auth result gql object', () => {
-  let query, drop, truncate, migrate, schema, tokenize
+  describe('testing field definitions', () => {
+    it('has an authToken field', () => {
+      const demoType = authResultType.getFields()
 
-  beforeAll(async () => {
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
+      expect(demoType).toHaveProperty('authToken')
+      expect(demoType.authToken.type).toMatchObject(GraphQLString)
     })
+    it('has a user field', () => {
+      const demoType = authResultType.getFields()
 
-    tokenize = jest.fn().mockReturnValue('token')
+      expect(demoType).toHaveProperty('user')
+      expect(demoType.user.type).toMatchObject(userType)
+    })
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-  })
+  describe('testing the field resolvers', () => {
+    describe('testing the authToken resolver', () => {
+      it('returns the resolved field', () => {
+        const demoType = authResultType.getFields()
 
-  afterEach(() => {
-    consoleOutput = []
-  })
+        expect(demoType.authToken.resolve({ token: 'authToken' })).toEqual(
+          'authToken',
+        )
+      })
+    })
+    describe('testing the user field', () => {
+      it('returns the resolved field', () => {
+        const demoType = authResultType.getFields()
 
-  afterEach(async () => {
-    await drop()
-  })
+        const user = {
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+          tfaValidated: false,
+          emailValidated: false,
+        }
 
-  describe('querying all the fields', () => {
-    it('resolves all fields', async () => {
-      const response = await graphql(
-        schema,
-        `
-          mutation {
-            signUp(
-              input: {
-                displayName: "Test Account"
-                userName: "test.account@istio.actually.exists"
-                password: "testpassword123"
-                confirmPassword: "testpassword123"
-                preferredLang: ENGLISH
-              }
-            ) {
-              authResult {
-                authToken
-                user {
-                  id
-                }
-              }
-            }
-          }
-        `,
-        null,
-        {
-          request,
-          query,
-          auth: {
-            bcrypt,
-            tokenize,
-          },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            userLoaderByUserName: userLoaderByUserName(query),
-          },
-        },
-      )
+        const expectedResult = {
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+          tfaValidated: false,
+          emailValidated: false,
+        }
 
-      const cursor = await query`
-                    FOR user IN users
-                        FILTER user.userName == "test.account@istio.actually.exists"
-                        RETURN user
-                `
-      const users = await cursor.all()
-
-      const expectedResult = {
-        data: {
-          signUp: {
-            authResult: {
-              authToken: 'token',
-              user: {
-                id: `${toGlobalId('users', users[0]._key)}`,
-              },
-            },
-          },
-        },
-      }
-
-      expect(response).toEqual(expectedResult)
-      expect(consoleOutput).toEqual([
-        'User: test.account@istio.actually.exists successfully created a new account.',
-      ])
+        expect(demoType.user.resolve({ user })).toEqual(expectedResult)
+      })
     })
   })
 })

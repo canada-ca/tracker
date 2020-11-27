@@ -29,7 +29,7 @@ const domainStatus = new GraphQLObjectType({
     ssl: {
       type: StatusEnum,
       description: 'SSL Status',
-      resolve: ({ spf }) => spf,
+      resolve: ({ ssl }) => ssl,
     },
   }),
 })

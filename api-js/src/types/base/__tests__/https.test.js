@@ -1,329 +1,288 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { GraphQLID, GraphQLNonNull, GraphQLString } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
-const { graphql, GraphQLSchema } = require('graphql')
+const { GraphQLDateTime } = require('graphql-scalars')
 
-const { createQuerySchema } = require('../../../queries')
-const { createMutationSchema } = require('../../../mutations')
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
-const { checkDomainPermission, userRequired } = require('../../../auth')
 const {
-  httpsLoaderByKey,
-  httpsLoaderConnectionsByDomainId,
-  httpsGuidanceTagLoader,
   httpsGuidanceTagConnectionsLoader,
-  domainLoaderByDomain,
   domainLoaderByKey,
-  userLoaderByKey,
 } = require('../../../loaders')
+const { httpsType, domainType, guidanceTagConnection } = require('../index')
 
 describe('given the https gql object', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    collections,
-    user,
-    domain,
-    schema,
-    org,
-    https
+  describe('testing the field definitions', () => {
+    it('has an id field', () => {
+      const demoType = httpsType.getFields()
 
-  const consoleInfoOutput = []
-  const mockedInfo = (output) => consoleInfoOutput.push(output)
-
-  const consoleWarnOutput = []
-  const mockedWarn = (output) => consoleWarnOutput.push(output)
-
-  const consoleErrorOutput = []
-  const mockedError = (output) => consoleErrorOutput.push(output)
-
-  beforeAll(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-  })
-
-  beforeEach(async () => {
-    await truncate()
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
+      expect(demoType).toHaveProperty('id')
+      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
     })
+    it('has a domain field', () => {
+      const demoType = httpsType.getFields()
 
-    consoleWarnOutput.length = 0
-    consoleErrorOutput.length = 0
-    consoleInfoOutput.length = 0
+      expect(demoType).toHaveProperty('domain')
+      expect(demoType.domain.type).toMatchObject(domainType)
+    })
+    it('has a timestamp field', () => {
+      const demoType = httpsType.getFields()
 
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
+      expect(demoType).toHaveProperty('timestamp')
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
     })
+    it('has a implementation field', () => {
+      const demoType = httpsType.getFields()
 
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
+      expect(demoType).toHaveProperty('implementation')
+      expect(demoType.implementation.type).toMatchObject(GraphQLString)
     })
-    await collections.affiliations.save({
-      _from: org._id,
-      _to: user._id,
-      permission: 'admin',
-    })
-    domain = await collections.domains.save({
-      domain: 'test.domain.gc.ca',
-      slug: 'test-domain-gc-ca',
-    })
-    await collections.claims.save({
-      _from: org._id,
-      _to: domain._id,
-    })
-    https = await collections.https.save({
-      timestamp: '2020-10-02T12:43:39Z',
-      implementation: 'Valid HTTPS',
-      enforced: 'Strict',
-      hsts: 'HSTS Max Age Too Short',
-      hstsAge: '31622400',
-      preloaded: 'HSTS Preloaded',
-      guidanceTags: ['https1'],
-    })
-    await collections.domainsHTTPS.save({
-      _from: domain._id,
-      _to: https._id,
-    })
-    await collections.httpsGuidanceTags.save({
-      _key: 'https1',
-      tagName: 'HTTPS-TAG',
-      guidance: 'Some Interesting Guidance',
-      refLinksGuide: [
-        {
-          description: 'refLinksGuide Description',
-          ref_link: 'www.refLinksGuide.ca',
-        },
-      ],
-      refLinksTechnical: [
-        {
-          description: 'refLinksTechnical Description',
-          ref_link: 'www.refLinksTechnical.ca',
-        },
-      ],
-    })
-  })
+    it('has an enforced field', () => {
+      const demoType = httpsType.getFields()
 
-  afterAll(async () => {
-    await drop()
-  })
+      expect(demoType).toHaveProperty('enforced')
+      expect(demoType.enforced.type).toMatchObject(GraphQLString)
+    })
+    it('has a hsts field', () => {
+      const demoType = httpsType.getFields()
 
-  describe('all fields can be queried', () => {
-    it('resolves all fields', async () => {
-      const { setupI18n } = require('@lingui/core')
-      const englishMessages = require('../../../locale/en/messages')
-      const i18n = setupI18n({
-        language: 'en',
-        locales: ['en'],
-        missing: 'Traduction manquante',
-        catalogs: {
-          en: englishMessages,
-        },
-      })
+      expect(demoType).toHaveProperty('hsts')
+      expect(demoType.hsts.type).toMatchObject(GraphQLString)
+    })
+    it('has a hstsAge field', () => {
+      const demoType = httpsType.getFields()
 
-      const response = await graphql(
-        schema,
-        `
-          query {
-            findDomainByDomain(domain: "test.domain.gc.ca") {
-              id
-              domain
-              web {
-                https(first: 5) {
-                  edges {
-                    node {
-                      id
-                      domain {
-                        id
-                      }
-                      timestamp
-                      implementation
-                      enforced
-                      hsts
-                      hstsAge
-                      preloaded
-                      guidanceTags(first: 5) {
-                        edges {
-                          node {
-                            id
-                            tagId
-                            tagName
-                            guidance
-                            refLinks {
-                              description
-                              refLink
-                            }
-                            refLinksTech {
-                              description
-                              refLink
-                            }
-                          }
-                        }
-                        totalCount
-                        pageInfo {
-                          hasNextPage
-                          hasPreviousPage
-                          startCursor
-                          endCursor
-                        }
-                      }
-                    }
-                  }
-                  totalCount
-                  pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    startCursor
-                    endCursor
-                  }
-                }
-              }
-            }
-          }
-        `,
-        null,
-        {
-          userKey: user._key,
-          query: query,
-          auth: {
-            checkDomainPermission: checkDomainPermission({
-              query,
-              userKey: user._key,
-            }),
-            userRequired: userRequired({
-              userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query),
-            }),
-          },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            httpsLoaderConnectionsByDomainId: httpsLoaderConnectionsByDomainId(
-              query,
-              user._key,
-              cleanseInput,
-            ),
-            httpsLoaderByKey: httpsLoaderByKey(query),
-            httpsGuidanceTagLoader: httpsGuidanceTagLoader(query),
-            httpsGuidanceTagConnectionsLoader: httpsGuidanceTagConnectionsLoader(
-              query,
-              user._key,
-              cleanseInput,
-              i18n,
-            ),
-            domainLoaderByDomain: domainLoaderByDomain(query),
-            domainLoaderByKey: domainLoaderByKey(query),
-            userLoaderByKey: userLoaderByKey(query),
-          },
-        },
+      expect(demoType).toHaveProperty('hstsAge')
+      expect(demoType.hstsAge.type).toMatchObject(GraphQLString)
+    })
+    it('has a preloaded field', () => {
+      const demoType = httpsType.getFields()
+
+      expect(demoType).toHaveProperty('preloaded')
+      expect(demoType.preloaded.type).toMatchObject(GraphQLString)
+    })
+    it('has a guidanceTags field', () => {
+      const demoType = httpsType.getFields()
+
+      expect(demoType).toHaveProperty('guidanceTags')
+      expect(demoType.guidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
       )
+    })
+  })
+  describe('testing the field resolvers', () => {
+    let query,
+      drop,
+      truncate,
+      migrate,
+      collections,
+      user,
+      domain,
+      https,
+      httpsGT
 
-      const expectedResponse = {
-        data: {
-          findDomainByDomain: {
-            id: toGlobalId('domains', domain._key),
-            domain: 'test.domain.gc.ca',
-            web: {
-              https: {
-                edges: [
+    beforeAll(async () => {
+      ;({ migrate } = await ArangoTools({ rootPass, url }))
+      ;({ query, drop, truncate, collections } = await migrate(
+        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+      ))
+    })
+
+    beforeEach(async () => {
+      user = await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+      })
+      domain = await collections.domains.save({
+        domain: 'test.domain.gc.ca',
+        slug: 'test-domain-gc-ca',
+      })
+      https = await collections.https.save({
+        timestamp: '2020-10-02T12:43:39Z',
+        implementation: 'Valid HTTPS',
+        enforced: 'Strict',
+        hsts: 'HSTS Max Age Too Short',
+        hstsAge: '31622400',
+        preloaded: 'HSTS Preloaded',
+        guidanceTags: ['https1'],
+      })
+      await collections.domainsHTTPS.save({
+        _from: domain._id,
+        _to: https._id,
+      })
+      httpsGT = await collections.httpsGuidanceTags.save({
+        _key: 'https1',
+        tagName: 'HTTPS-TAG',
+        guidance: 'Some Interesting Guidance',
+        refLinksGuide: [
+          {
+            description: 'refLinksGuide Description',
+            ref_link: 'www.refLinksGuide.ca',
+          },
+        ],
+        refLinksTechnical: [
+          {
+            description: 'refLinksTechnical Description',
+            ref_link: 'www.refLinksTechnical.ca',
+          },
+        ],
+      })
+    })
+
+    afterEach(async () => {
+      await truncate()
+    })
+
+    afterAll(async () => {
+      await drop()
+    })
+
+    describe('testing the id resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = httpsType.getFields()
+
+        expect(demoType.id.resolve({ id: '1' })).toEqual(
+          toGlobalId('https', '1'),
+        )
+      })
+    })
+    describe('testing the domain resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = httpsType.getFields()
+
+        const loader = domainLoaderByKey(query, user._key, {})
+
+        const expectedResult = {
+          _id: domain._id,
+          _key: domain._key,
+          _rev: domain._rev,
+          id: domain._key,
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        }
+
+        await expect(
+          demoType.domain.resolve(
+            { domainId: domain._id },
+            {},
+            { loaders: { domainLoaderByKey: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the timestamp resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = httpsType.getFields()
+
+        expect(
+          demoType.timestamp.resolve({ timestamp: '2020-10-02T12:43:39Z' }),
+        ).toEqual('2020-10-02T12:43:39Z')
+      })
+    })
+    describe('testing the implementation resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = httpsType.getFields()
+
+        expect(
+          demoType.implementation.resolve({ implementation: 'implementation' }),
+        ).toEqual('implementation')
+      })
+    })
+    describe('testing the enforced resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = httpsType.getFields()
+
+        expect(demoType.enforced.resolve({ enforced: 'enforced' })).toEqual(
+          'enforced',
+        )
+      })
+    })
+    describe('testing the hsts resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = httpsType.getFields()
+
+        expect(demoType.hsts.resolve({ hsts: 'hsts' })).toEqual('hsts')
+      })
+    })
+    describe('testing the hstsAge resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = httpsType.getFields()
+
+        expect(demoType.hstsAge.resolve({ hstsAge: 'hstsAge' })).toEqual(
+          'hstsAge',
+        )
+      })
+    })
+    describe('testing the preloaded resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = httpsType.getFields()
+
+        expect(demoType.preloaded.resolve({ preloaded: 'preloaded' })).toEqual(
+          'preloaded',
+        )
+      })
+    })
+    describe('testing the guidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = httpsType.getFields()
+
+        const loader = httpsGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+        const guidanceTags = ['https1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', httpsGT._key),
+              node: {
+                _id: httpsGT._id,
+                _key: httpsGT._key,
+                _rev: httpsGT._rev,
+                guidance: 'Some Interesting Guidance',
+                id: 'https1',
+                refLinksGuide: [
                   {
-                    node: {
-                      id: toGlobalId('https', https._key),
-                      domain: {
-                        id: toGlobalId('domains', domain._key),
-                      },
-                      timestamp: new Date('2020-10-02T12:43:39Z'),
-                      implementation: 'Valid HTTPS',
-                      enforced: 'Strict',
-                      hsts: 'HSTS Max Age Too Short',
-                      hstsAge: '31622400',
-                      preloaded: 'HSTS Preloaded',
-                      guidanceTags: {
-                        edges: [
-                          {
-                            node: {
-                              id: toGlobalId('guidanceTags', 'https1'),
-                              tagId: 'https1',
-                              tagName: 'HTTPS-TAG',
-                              guidance: 'Some Interesting Guidance',
-                              refLinks: [
-                                {
-                                  description: 'refLinksGuide Description',
-                                  refLink: 'www.refLinksGuide.ca',
-                                },
-                              ],
-                              refLinksTech: [
-                                {
-                                  description: 'refLinksTechnical Description',
-                                  refLink: 'www.refLinksTechnical.ca',
-                                },
-                              ],
-                            },
-                          },
-                        ],
-                        totalCount: 1,
-                        pageInfo: {
-                          hasNextPage: false,
-                          hasPreviousPage: false,
-                          startCursor: toGlobalId('guidanceTags', 'https1'),
-                          endCursor: toGlobalId('guidanceTags', 'https1'),
-                        },
-                      },
-                    },
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
                   },
                 ],
-                totalCount: 1,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  startCursor: toGlobalId('https', https._key),
-                  endCursor: toGlobalId('https', https._key),
-                },
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'https1',
+                tagName: 'HTTPS-TAG',
               },
             },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', httpsGT._key),
+            endCursor: toGlobalId('guidanceTags', httpsGT._key),
           },
-        },
-      }
+        }
 
-      expect(response).toEqual(expectedResponse)
-      expect(consoleInfoOutput).toEqual([
-        `User ${user._key} successfully retrieved domain ${domain._key}.`,
-      ])
+        expect(
+          await demoType.guidanceTags.resolve(
+            { guidanceTags },
+            { first: 1 },
+            { loaders: { httpsGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).toEqual(expectedResult)
+      })
     })
   })
 })

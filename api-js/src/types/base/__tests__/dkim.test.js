@@ -1,217 +1,172 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { GraphQLNonNull, GraphQLID } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
-const { graphql, GraphQLSchema } = require('graphql')
+const { GraphQLDateTime } = require('graphql-scalars')
 
-const { createQuerySchema } = require('../../../queries')
-const { createMutationSchema } = require('../../../mutations')
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
-const { checkDomainPermission, userRequired } = require('../../../auth')
 const {
-  dkimLoaderConnectionsByDomainId,
-  dkimLoaderByKey,
-  domainLoaderByDomain,
   domainLoaderByKey,
-  userLoaderByKey,
+  dkimResultsLoaderConnectionByDkimId,
 } = require('../../../loaders')
+const { dkimType, domainType, dkimResultsConnection } = require('../index')
 
 describe('given the dkimType object', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    collections,
-    user,
-    domain,
-    schema,
-    org,
-    dkim
+  describe('testing its field definitions', () => {
+    it('has an id field', () => {
+      const demoType = dkimType.getFields()
 
-  const consoleInfoOutput = []
-  const mockedInfo = (output) => consoleInfoOutput.push(output)
+      expect(demoType).toHaveProperty('id')
+      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+    })
+    it('has a domain field', () => {
+      const demoType = dkimType.getFields()
 
-  const consoleWarnOutput = []
-  const mockedWarn = (output) => consoleWarnOutput.push(output)
+      expect(demoType).toHaveProperty('domain')
+      expect(demoType.domain.type).toMatchObject(domainType)
+    })
+    it('has a timestamp field', () => {
+      const demoType = dkimType.getFields()
 
-  const consoleErrorOutput = []
-  const mockedError = (output) => consoleErrorOutput.push(output)
+      expect(demoType).toHaveProperty('timestamp')
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
+    })
+    it('has a results field', () => {
+      const demoType = dkimType.getFields()
 
-  beforeAll(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-  })
-
-  beforeEach(async () => {
-    await truncate()
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
-    })
-
-    consoleWarnOutput.length = 0
-    consoleErrorOutput.length = 0
-    consoleInfoOutput.length = 0
-
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    await collections.affiliations.save({
-      _from: org._id,
-      _to: user._id,
-      permission: 'admin',
-    })
-    domain = await collections.domains.save({
-      domain: 'test.domain.gc.ca',
-      slug: 'test-domain-gc-ca',
-    })
-    await collections.claims.save({
-      _from: org._id,
-      _to: domain._id,
-    })
-    dkim = await collections.dkim.save({
-      timestamp: '2020-10-02T12:43:39Z',
-    })
-    await collections.domainsDKIM.save({
-      _from: domain._id,
-      _to: dkim._id,
-    })
-  })
-
-  afterAll(async () => {
-    await drop()
-  })
-  describe('all fields can be queried', () => {
-    it('resolves all fields', async () => {
-      const response = await graphql(
-        schema,
-        `
-          query {
-            findDomainByDomain(domain: "test.domain.gc.ca") {
-              id
-              domain
-              email {
-                dkim(first: 5) {
-                  edges {
-                    node {
-                      id
-                      domain {
-                        domain
-                      }
-                      timestamp
-                    }
-                  }
-                  totalCount
-                  pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    startCursor
-                    endCursor
-                  }
-                }
-              }
-            }
-          }
-        `,
-        null,
-        {
-          userKey: user._key,
-          query: query,
-          auth: {
-            checkDomainPermission: checkDomainPermission({
-              query,
-              userKey: user._key,
-            }),
-            userRequired: userRequired({
-              userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query),
-            }),
-          },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            dkimLoaderConnectionsByDomainId: dkimLoaderConnectionsByDomainId(
-              query,
-              user._key,
-              cleanseInput,
-            ),
-            dkimLoaderByKey: dkimLoaderByKey(query),
-            domainLoaderByDomain: domainLoaderByDomain(query),
-            domainLoaderByKey: domainLoaderByKey(query),
-            userLoaderByKey: userLoaderByKey(query),
-          },
-        },
+      expect(demoType).toHaveProperty('results')
+      expect(demoType.results.type).toMatchObject(
+        dkimResultsConnection.connectionType,
       )
+    })
+  })
+  describe('testing its field resolvers', () => {
+    let query, drop, truncate, migrate, collections, domain, dkim, dkimResult
 
-      const expectedResponse = {
-        data: {
-          findDomainByDomain: {
-            id: toGlobalId('domains', domain._key),
-            domain: 'test.domain.gc.ca',
-            email: {
-              dkim: {
-                edges: [
-                  {
-                    node: {
-                      id: toGlobalId('dkim', dkim._key),
-                      timestamp: new Date('2020-10-02T12:43:39.000Z'),
-                      domain: {
-                        domain: 'test.domain.gc.ca',
-                      },
-                    },
-                  },
-                ],
-                totalCount: 1,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  startCursor: toGlobalId('dkim', dkim._key),
-                  endCursor: toGlobalId('dkim', dkim._key),
-                },
+    beforeAll(async () => {
+      ;({ migrate } = await ArangoTools({ rootPass, url }))
+      ;({ query, drop, truncate, collections } = await migrate(
+        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+      ))
+    })
+
+    beforeEach(async () => {
+      domain = await collections.domains.save({
+        domain: 'test.domain.gc.ca',
+        slug: 'test-domain-gc-ca',
+      })
+      dkim = await collections.dkim.save({
+        timestamp: '2020-10-02T12:43:39Z',
+      })
+      await collections.domainsDKIM.save({
+        _from: domain._id,
+        _to: dkim._id,
+      })
+      dkimResult = await collections.dkimResults.save({
+        selector: 'selector._dkim1',
+        record: 'txtRecord',
+        keyLength: '2048',
+        guidanceTags: ['dkim1'],
+      })
+      await collections.dkimToDkimResults.save({
+        _to: dkimResult._id,
+        _from: dkim._id,
+      })
+    })
+
+    afterEach(async () => {
+      await truncate()
+    })
+
+    afterAll(async () => {
+      await drop()
+    })
+
+    describe('testing the id resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = dkimType.getFields()
+
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('dkim', 1))
+      })
+    })
+    describe('testing the domain resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = dkimType.getFields()
+
+        const loader = domainLoaderByKey(query, '1', {})
+
+        await expect(
+          demoType.domain.resolve(
+            { domainId: domain._id },
+            {},
+            { loaders: { domainLoaderByKey: loader } },
+          ),
+        ).resolves.toEqual({
+          _id: domain._id,
+          _key: domain._key,
+          _rev: domain._rev,
+          id: domain._key,
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        })
+      })
+    })
+    describe('testing the timestamp resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = dkimType.getFields()
+
+        expect(
+          demoType.timestamp.resolve({ timestamp: '2020-10-02T12:43:39Z' }),
+        ).toEqual('2020-10-02T12:43:39Z')
+      })
+    })
+    describe('testing the results resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = dkimType.getFields()
+
+        const loader = dkimResultsLoaderConnectionByDkimId(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('dkimResult', dkimResult._key),
+              node: {
+                _id: dkimResult._id,
+                _key: dkimResult._key,
+                _rev: dkimResult._rev,
+                id: dkimResult._key,
+                dkimId: dkim._id,
+                selector: 'selector._dkim1',
+                record: 'txtRecord',
+                keyLength: '2048',
+                guidanceTags: ['dkim1'],
               },
             },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('dkimResult', dkimResult._key),
+            endCursor: toGlobalId('dkimResult', dkimResult._key),
           },
-        },
-      }
-      expect(response).toEqual(expectedResponse)
-      expect(consoleInfoOutput).toEqual([
-        `User ${user._key} successfully retrieved domain ${domain._key}.`,
-      ])
+        }
+
+        await expect(
+          demoType.results.resolve(
+            { _id: dkim._id },
+            { first: 1 },
+            { loaders: { dkimResultsLoaderConnectionByDkimId: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
     })
   })
 })

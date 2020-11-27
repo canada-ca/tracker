@@ -10,10 +10,11 @@ const {
   connectionDefinitions,
 } = require('graphql-relay')
 const { GraphQLDateTime } = require('graphql-scalars')
+
 const { Domain, Acronym, Slug } = require('../../scalars')
 const { nodeInterface } = require('../node')
-const { domainStatus } = require('./domain-status')
-const { organizationSummaryType } = require('./organization-summary')
+const { domainStatus } = require('../base/domain-status')
+const { organizationSummaryType } = require('../base/organization-summary')
 
 /* Domain related objects */
 const verifiedDomainType = new GraphQLObjectType({
@@ -36,7 +37,7 @@ const verifiedDomainType = new GraphQLObjectType({
       resolve: ({ status }) => status,
     },
     organizations: {
-      type: verifiedOrganizationConnections.connectionType,
+      type: verifiedOrganizationConnection.connectionType,
       args: connectionArgs,
       description: 'The organization that this domain belongs to.',
       resolve: async (
@@ -121,7 +122,8 @@ const verifiedOrganizationType = new GraphQLObjectType({
     },
     summaries: {
       type: organizationSummaryType,
-      description: 'Summaries based on scan types that are preformed on the given organizations domains.',
+      description:
+        'Summaries based on scan types that are preformed on the given organizations domains.',
       resolve: ({ summaries }) => summaries,
     },
     domainCount: {
@@ -151,7 +153,7 @@ const verifiedOrganizationType = new GraphQLObjectType({
     'Verified Organization object containing information for a given Organization.',
 })
 
-const verifiedOrganizationConnections = connectionDefinitions({
+const verifiedOrganizationConnection = connectionDefinitions({
   name: 'VerifiedOrganization',
   nodeType: verifiedOrganizationType,
   connectionFields: () => ({
@@ -167,5 +169,5 @@ module.exports = {
   verifiedDomainType,
   verifiedDomainConnection,
   verifiedOrganizationType,
-  verifiedOrganizationConnections,
+  verifiedOrganizationConnection,
 }

@@ -2,163 +2,205 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
-const { graphql, GraphQLSchema } = require('graphql')
 
-const { createQuerySchema } = require('../../../queries')
-const { createMutationSchema } = require('../../../mutations')
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
-const { checkDomainPermission, userRequired } = require('../../../auth')
 const {
-  domainLoaderByDomain,
   domainLoaderByKey,
-  userLoaderByKey,
+  httpsLoaderConnectionsByDomainId,
+  sslLoaderConnectionsByDomainId,
 } = require('../../../loaders')
+const {
+  webScanType,
+  domainType,
+  httpsConnection,
+  sslConnection,
+} = require('../index')
 
 describe('given the web scan gql object', () => {
-  let query, drop, truncate, migrate, collections, user, domain, schema, org
+  describe('testing the field definitions', () => {
+    it('has a domain field', () => {
+      const demoType = webScanType.getFields()
 
-  const consoleInfoOutput = []
-  const mockedInfo = (output) => consoleInfoOutput.push(output)
-
-  const consoleWarnOutput = []
-  const mockedWarn = (output) => consoleWarnOutput.push(output)
-
-  const consoleErrorOutput = []
-  const mockedError = (output) => consoleErrorOutput.push(output)
-
-  beforeAll(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-  })
-
-  beforeEach(async () => {
-    await truncate()
-    schema = new GraphQLSchema({
-      query: createQuerySchema(),
-      mutation: createMutationSchema(),
+      expect(demoType).toHaveProperty('domain')
+      expect(demoType.domain.type).toMatchObject(domainType)
     })
+    it('has a https field', () => {
+      const demoType = webScanType.getFields()
 
-    consoleWarnOutput.length = 0
-    consoleErrorOutput.length = 0
-    consoleInfoOutput.length = 0
+      expect(demoType).toHaveProperty('https')
+      expect(demoType.https.type).toMatchObject(httpsConnection.connectionType)
+    })
+    it('has a ssl field', () => {
+      const demoType = webScanType.getFields()
 
-    user = await collections.users.save({
-      userName: 'test.account@istio.actually.exists',
-      displayName: 'Test Account',
-      preferredLang: 'french',
-      tfaValidated: false,
-      emailValidated: false,
-    })
-
-    org = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    await collections.affiliations.save({
-      _from: org._id,
-      _to: user._id,
-      permission: 'admin',
-    })
-    domain = await collections.domains.save({
-      domain: 'test.domain.gc.ca',
-      slug: 'test-domain-gc-ca',
-    })
-    await collections.claims.save({
-      _from: org._id,
-      _to: domain._id,
+      expect(demoType).toHaveProperty('ssl')
+      expect(demoType.ssl.type).toMatchObject(sslConnection.connectionType)
     })
   })
 
-  afterAll(async () => {
-    await drop()
-  })
+  describe('testing the field resolvers', () => {
+    let query, drop, truncate, migrate, collections, domain, https, ssl
 
-  describe('all fields can be queried', () => {
-    it('resolves all fields', async () => {
-      const response = await graphql(
-        schema,
-        `
-          query {
-            findDomainByDomain(domain: "test.domain.gc.ca") {
-              id
-              domain
-              web {
-                domain {
-                  id
-                }
-              }
-            }
-          }
-        `,
-        null,
-        {
-          userKey: user._key,
-          query: query,
-          auth: {
-            checkDomainPermission: checkDomainPermission({
-              query,
-              userKey: user._key,
-            }),
-            userRequired: userRequired({
-              userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query),
-            }),
-          },
-          validators: {
-            cleanseInput,
-          },
-          loaders: {
-            domainLoaderByDomain: domainLoaderByDomain(query),
-            domainLoaderByKey: domainLoaderByKey(query),
-            userLoaderByKey: userLoaderByKey(query),
-          },
-        },
-      )
+    beforeAll(async () => {
+      ;({ migrate } = ArangoTools({ rootPass, url }))
+      ;({ query, drop, truncate, collections } = await migrate(
+        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+      ))
+    })
 
-      const expectedResponse = {
-        data: {
-          findDomainByDomain: {
-            id: toGlobalId('domains', domain._key),
-            domain: 'test.domain.gc.ca',
-            web: {
-              domain: {
-                id: toGlobalId('domains', domain._key),
+    beforeEach(async () => {
+      domain = await collections.domains.save({
+        domain: 'test.domain.gc.ca',
+        slug: 'test-domain-gc-ca',
+      })
+      https = await collections.https.save({
+        timestamp: '2020-10-02T12:43:39Z',
+        implementation: 'Valid HTTPS',
+        enforced: 'Strict',
+        hsts: 'HSTS Max Age Too Short',
+        hstsAge: '31622400',
+        preloaded: 'HSTS Preloaded',
+        guidanceTags: ['https1'],
+      })
+      await collections.domainsHTTPS.save({
+        _from: domain._id,
+        _to: https._id,
+      })
+      ssl = await collections.ssl.save({
+        timestamp: '2020-10-02T12:43:39Z',
+        guidanceTags: ['ssl1'],
+      })
+      await collections.domainsSSL.save({
+        _from: domain._id,
+        _to: ssl._id,
+      })
+    })
+
+    afterEach(async () => {
+      await truncate()
+    })
+
+    afterAll(async () => {
+      await drop()
+    })
+
+    describe('testing the domain resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = webScanType.getFields()
+
+        const loader = domainLoaderByKey(query, '1', {})
+
+        const expectedResult = {
+          _id: domain._id,
+          _key: domain._key,
+          _rev: domain._rev,
+          id: domain._key,
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        }
+
+        await expect(
+          demoType.domain.resolve(
+            { _key: domain._key },
+            {},
+            { loaders: { domainLoaderByKey: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the https resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = webScanType.getFields()
+
+        const loader = httpsLoaderConnectionsByDomainId(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('https', https._key),
+              node: {
+                _id: https._id,
+                _key: https._key,
+                _rev: https._rev,
+                domainId: domain._id,
+                enforced: 'Strict',
+                guidanceTags: ['https1'],
+                hsts: 'HSTS Max Age Too Short',
+                hstsAge: '31622400',
+                id: https._key,
+                implementation: 'Valid HTTPS',
+                preloaded: 'HSTS Preloaded',
+                timestamp: '2020-10-02T12:43:39Z',
               },
             },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('https', https._key),
+            endCursor: toGlobalId('https', https._key),
           },
-        },
-      }
+        }
 
-      expect(response).toEqual(expectedResponse)
-      expect(consoleInfoOutput).toEqual([
-        `User ${user._key} successfully retrieved domain ${domain._key}.`,
-      ])
+        await expect(
+          demoType.https.resolve(
+            { _id: domain._id },
+            { first: 1 },
+            { loaders: { httpsLoaderConnectionsByDomainId: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the ssl resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = webScanType.getFields()
+
+        const loader = sslLoaderConnectionsByDomainId(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('ssl', ssl._key),
+              node: {
+                _id: ssl._id,
+                _key: ssl._key,
+                _rev: ssl._rev,
+                domainId: domain._id,
+                guidanceTags: ['ssl1'],
+                id: ssl._key,
+                timestamp: '2020-10-02T12:43:39Z',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('ssl', ssl._key),
+            endCursor: toGlobalId('ssl', ssl._key),
+          },
+        }
+
+        await expect(
+          demoType.ssl.resolve(
+            { _id: domain._id },
+            { first: 1 },
+            { loaders: { sslLoaderConnectionsByDomainId: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
     })
   })
 })
