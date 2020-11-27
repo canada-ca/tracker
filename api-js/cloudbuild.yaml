@@ -9,7 +9,7 @@ steps:
     ]
 
 - name: mikewilliamson/wait-for
-  id: wait
+  id: wait_arango
   args: ['arangodb:8529']
 - name: node:alpine
   id: install
@@ -18,7 +18,7 @@ steps:
   args: ['ci', '--no-optional']
 
 - name: 'gcr.io/cloud-builders/docker'
-  id: start_arango
+  id: start_redis
   entrypoint: /bin/sh
   args:
     [
@@ -27,7 +27,7 @@ steps:
     ]
 
 - name: mikewilliamson/wait-for
-  id: wait
+  id: wait_redis
   args: ['redis:6379']
 - name: node:alpine
   id: install
