@@ -157,4 +157,12 @@ export const INVITE_USER_TO_ORG = gql`
   }
 `
 
+export const REQUEST_SCAN = gql`
+  mutation RequestScan($urlSlug: Slug, $scanType: ScanTypeEnums) {
+    requestScan(input: { urlSlug: $urlSlug, scanType: $scanType }) {
+      status
+    }
+  }
+`
+
 export default ''

@@ -2273,8 +2273,8 @@ msgid "Search for any Government of Canada tracked domain:"
 msgstr "Search for any Government of Canada tracked domain:"
 
 #: src/DomainsPage.js:128
-msgid "Perform a one-off scan on a domain:"
-msgstr "Perform a one-off scan on a domain:"
+msgid "Request a domain to be scanned:"
+msgstr "Request a domain to be scanned:"
 
 #: src/DomainsPage.js:132
 msgid "Enter a domain"
@@ -2283,4 +2283,20 @@ msgstr "Enter a domain"
 #: src/DomainsPage.js:141
 msgid "Scan Domain"
 msgstr "Scan Domain"
+
+#: src/ScanDomain.js:82
+msgid "Select scan type"
+msgstr "Select scan type"
+
+#: src/ScanDomain.js:85
+msgid "WEB"
+msgstr "WEB"
+
+#: src/ScanDomain.js:88
+msgid "MAIL"
+msgstr "MAIL"
+
+#: src/DomainField.js:29
+msgid "Domain URL"
+msgstr "Domain URL"
 

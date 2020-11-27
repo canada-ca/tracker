@@ -38,8 +38,7 @@ describe('<DomainsPage />', () => {
                 cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                 node: {
                   id: 'T3JnYW5pemF0aW9uczoyCg==',
-                  url: 'tbs-sct.gc.ca',
-                  slug: 'tbs-sct-gc-ca',
+                  domain: 'tbs-sct.gc.ca',
                   lastRan: 'somedate',
                   __typename: 'Domains',
                 },
@@ -49,8 +48,7 @@ describe('<DomainsPage />', () => {
                 cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                 node: {
                   id: 'T3JnYW5pemF0aW9uczoxCg==',
-                  url: 'rcmp-grc.gc.ca',
-                  slug: 'rcmp-grc-gc-ca',
+                  domain: 'rcmp-grc.gc.ca',
                   lastRan: 'organization-two',
                   __typename: 'Domains',
                 },
@@ -82,8 +80,7 @@ describe('<DomainsPage />', () => {
                 cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                 node: {
                   id: 'T3JnYW5pemF0aW9uczoyCg==',
-                  url: 'tbs-sct.gc.ca',
-                  slug: 'tbs-sct-gc-ca',
+                  domain: 'tbs-sct.gc.ca',
                   lastRan: 'somedate',
                   __typename: 'Domains',
                 },
@@ -93,8 +90,7 @@ describe('<DomainsPage />', () => {
                 cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                 node: {
                   id: 'T3JnYW5pemF0aW9uczoxCg==',
-                  url: 'rcmp-grc.gc.ca',
-                  slug: 'rcmp-grc-gc-ca',
+                  domain: 'rcmp-grc.gc.ca',
                   lastRan: 'organization-two',
                   __typename: 'Domains',
                 },

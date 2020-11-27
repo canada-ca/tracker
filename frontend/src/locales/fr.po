@@ -2212,8 +2212,8 @@ msgid "Search for any Government of Canada tracked domain:"
 msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
 
 #: src/DomainsPage.js:128
-msgid "Perform a one-time scan on a domain:"
-msgstr "Effectuer un balayage unique sur un domaine:"
+msgid "Request a domain to be scanned:"
+msgstr "Demander qu'un domaine soit scanné:"
 
 #: src/DomainsPage.js:132
 msgid "Enter a domain"
@@ -2222,3 +2222,19 @@ msgstr "Entrez un domaine"
 #: src/DomainsPage.js:141
 msgid "Scan Domain"
 msgstr "Domaine de balayage"
+
+#: src/ScanDomain.js:82
+msgid "Select scan type"
+msgstr "Sélectionnez le type de balayage"
+
+#: src/ScanDomain.js:85
+msgid "WEB"
+msgstr "WEB"
+
+#: src/ScanDomain.js:88
+msgid "MAIL"
+msgstr "COURRIEL"
+
+#: src/DomainField.js:29
+msgid "Domain URL"
+msgstr "URL du domaine"

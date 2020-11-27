@@ -237,8 +237,7 @@ export const PAGINATED_DOMAINS = gql`
         cursor
         node {
           id
-          url
-          slug
+          domain
           lastRan
           __typename
         }
@@ -263,8 +262,7 @@ export const REVERSE_PAGINATED_DOMAINS = gql`
         cursor
         node {
           id
-          url
-          slug
+          domain
           lastRan
           __typename
         }
