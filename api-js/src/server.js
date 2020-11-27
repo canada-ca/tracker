@@ -14,6 +14,7 @@ import { createSubscriptionSchema } from './subscriptions'
 import { createI18n } from './create-i18n'
 import { verifyToken, userRequired } from './auth'
 import { userLoaderByKey } from './user/loaders'
+import { customOnConnect } from './on-connect'
 
 const createSchema = () =>
   new GraphQLSchema({
@@ -74,61 +75,15 @@ export const Server = (
 
   const server = new ApolloServer({
     schema: createSchema(),
-    context: async ({ req, res, connection }) => {
-      if (connection) {
-        req = {
-          headers: {
-            authorization: connection.context.authorization,
-          },
-          language: connection.context.language,
-        }
-        return createContext({ context, req, res })
-      } else {
-        return createContext({ context, req, res })
-      }
-    },
+    context: createContext(context),
     subscriptions: {
-      onConnect: async (connectionParams, webSocket) => {
-        const enLangPos = String(
-          webSocket.upgradeReq.headers['accept-language'],
-        ).indexOf('en')
-        const frLangPos = String(
-          webSocket.upgradeReq.headers['accept-language'],
-        ).indexOf('fr')
-        let language
-        if (frLangPos > enLangPos) {
-          language = 'fr'
-        } else {
-          language = 'en'
-        }
-
-        let authorization
-        if (connectionParams.authorization) {
-          authorization = connectionParams.authorization
-        }
-
-        const i18n = createI18n(language)
-        const verify = verifyToken({ i18n })
-        const token = authorization || ''
-
-        let userKey
-        if (token !== '') {
-          userKey = verify({ token })
-        }
-
-        await userRequired({
-          i18n,
-          userId: userKey,
-          userLoaderByKey: userLoaderByKey(context.query),
-        })()
-
-        console.info(`User: ${userKey}, connected to subscription.`)
-
-        return {
-          language,
-          authorization,
-        }
-      },
+      onConnect: customOnConnect(
+        context,
+        createI18n,
+        verifyToken,
+        userRequired,
+        userLoaderByKey,
+      ),
     },
     validationRules: createValidationRules(
       maxDepth,
