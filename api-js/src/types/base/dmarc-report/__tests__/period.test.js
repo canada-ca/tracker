@@ -1,14 +1,25 @@
+const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const moment = require('moment')
 
+const { makeMigrations } = require('../../../../../migrations')
 const { periodType } = require('../period')
 const { detailTablesType } = require('../detail-tables')
 const { categoryTotalsType } = require('../category-totals')
 const { categoryPercentagesType } = require('../category-percentages')
 const { PeriodEnums } = require('../../../../enums')
-const { Year } = require('../../../../scalars')
+const { Year, Domain } = require('../../../../scalars')
+const { domainLoaderByKey } = require('../../../../loaders')
 
 describe('testing the period gql object', () => {
   describe('testing the field definitions', () => {
+    it('has a domain field', () => {
+      const demoType = periodType.getFields()
+
+      expect(demoType).toHaveProperty('domain')
+      expect(demoType.domain.type).toMatchObject(Domain)
+    })
     it('has a month field', () => {
       const demoType = periodType.getFields()
 
@@ -44,6 +55,42 @@ describe('testing the period gql object', () => {
   })
 
   describe('testing the field resolvers', () => {
+    describe('testing the domain resolver', () => {
+      let query, drop, truncate, migrate, collections, domain
+
+      beforeAll(async () => {
+        ;({ migrate } = await ArangoTools({ rootPass, url }))
+        ;({ query, drop, truncate, collections } = await migrate(
+          makeMigrations({
+            databaseName: dbNameFromFile(__filename),
+            rootPass,
+          }),
+        ))
+
+        domain = await collections.domains.save({
+          domain: 'test.domain.gc.ca',
+        })
+      })
+
+      afterAll(async () => {
+        await truncate()
+        await drop()
+      })
+
+      it('returns the resolved field', async () => {
+        const demoType = periodType.getFields()
+
+        const loader = domainLoaderByKey(query, '1', {})
+
+        await expect(
+          demoType.domain.resolve(
+            { domainKey: domain._key },
+            {},
+            { loaders: { domainLoaderByKey: loader } },
+          ),
+        ).resolves.toEqual('test.domain.gc.ca')
+      })
+    })
     describe('testing the month resolver', () => {
       it('returns the resolved value', () => {
         const demoType = periodType.getFields()
