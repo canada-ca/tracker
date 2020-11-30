@@ -1,4 +1,4 @@
-const { CYPHER_IV, CYPHER_KEY } = process.env
+const { CIPHER_KEY } = process.env
 const crypto = require('crypto')
 const {
   GraphQLObjectType,
@@ -908,16 +908,20 @@ const userType = new GraphQLObjectType({
     phoneNumber: {
       type: GraphQLPhoneNumber,
       description: 'The phone number the user has setup with tfa.',
-      resolve: ({ phoneNumber }) => {
-        const iv = Buffer.from(CYPHER_IV, 'hex')
+      resolve: ({ phoneDetails }) => {
+        const { iv, tag, phoneNumber } = phoneDetails
         const decipher = crypto.createDecipheriv(
-          'aes-256-cbc',
-          Buffer.from(CYPHER_KEY),
+          'aes-256-ccm',
+          String(CIPHER_KEY),
           Buffer.from(iv, 'hex'),
+          {
+            authTagLength: 16,
+          },
         )
-        let decrypted = decipher.update(phoneNumber)
-        decrypted = Buffer.concat([decrypted, decipher.final()])
-        return decrypted.toString()
+        decipher.setAuthTag(Buffer.from(tag, 'hex'))
+        let decrypted = decipher.update(phoneNumber, 'hex', 'utf8')
+        decrypted += decipher.final('utf-8')
+        return decrypted
       },
     },
     preferredLang: {

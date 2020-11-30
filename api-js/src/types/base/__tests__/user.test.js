@@ -1,4 +1,4 @@
-const { DB_PASS: rootPass, DB_URL: url, CYPHER_IV, CYPHER_KEY } = process.env
+const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
 
 const crypto = require('crypto')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
@@ -173,20 +173,31 @@ describe('given the user object', () => {
       it('returns the resolved value', () => {
         const demoType = userType.getFields()
 
-        const phoneNumber = '12345678912'
+        const phoneDetails = {
+          iv: crypto.randomBytes(12).toString('hex'),
+          phoneNumber: '12345678912',
+        }
+
         const cipher = crypto.createCipheriv(
-          'aes-256-cbc',
-          Buffer.from(CYPHER_KEY, 'hex'),
-          Buffer.from(CYPHER_IV, 'hex'),
+          'aes-256-ccm',
+          String(CIPHER_KEY),
+          Buffer.from(phoneDetails.iv, 'hex'),
+          {
+            authTagLength: 16,
+          },
         )
-        let encrypted = cipher.update(phoneNumber)
-        encrypted = Buffer.concat([encrypted, cipher.final()])
+        let encrypted = cipher.update(phoneDetails.phoneNumber, 'utf8', 'hex')
+        encrypted += cipher.final('hex')
 
         expect(
           demoType.phoneNumber.resolve({
-            phoneNumber: encrypted.toString('hex'),
+            phoneDetails: {
+              phoneNumber: encrypted,
+              iv: phoneDetails.iv,
+              tag: cipher.getAuthTag().toString('hex'),
+            },
           }),
-        ).toEqual(phoneNumber)
+        ).toEqual(phoneDetails.phoneNumber)
       })
     })
     describe('testing the preferredLang field', () => {
