@@ -45,6 +45,11 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_NAME
+            - name: RESULT_QUEUE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: RESULT_QUEUE_URL
 
 ---
 
@@ -145,6 +150,11 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_NAME
+            - name: RESULT_QUEUE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: RESULT_QUEUE_URL
 
 ---
 
@@ -195,6 +205,11 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_NAME
+            - name: RESULT_QUEUE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: RESULT_QUEUE_URL
 
 ---
 

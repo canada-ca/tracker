@@ -27,7 +27,7 @@ from sslyze.server_setting import (
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-QUEUE_URL = "http://result-queue.scanners.svc.cluster.local/ssl"
+QUEUE_URL = os.getenv("RESULT_QUEUE_URL") + "/ssl"
 
 
 class TlsVersionEnum(Enum):

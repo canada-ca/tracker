@@ -24,7 +24,7 @@ from starlette.responses import PlainTextResponse, JSONResponse
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-QUEUE_URL = "http://result-queue.scanners.svc.cluster.local/dns"
+QUEUE_URL = os.getenv("RESULT_QUEUE_URL") + "/dns"
 
 
 def dispatch_results(payload, client):
