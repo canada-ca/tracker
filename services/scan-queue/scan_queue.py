@@ -15,9 +15,9 @@ from rq import Queue, Retry, Worker
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 pool = ConnectionPool(host="127.0.0.1", port=6379, db=0)
 
-HTTPS_URL = os.getenv("HTTPS_URL")
-SSL_URL = os.getenv("SSL_URL")
-DNS_URL = os.getenv("DNS_URL")
+HTTPS_URL = os.getenv("HTTPS_URL", "http://https-scanner.scanners.svc.cluster.local")
+SSL_URL = os.getenv("SSL_URL", "http://ssl-scanner.scanners.svc.cluster.local")
+DNS_URL = os.getenv("DNS_URL", "http://dns-scanner.scanners.svc.cluster.local")
 
 redis = Redis(connection_pool=pool)
 https_queue = Queue("https", connection=redis)

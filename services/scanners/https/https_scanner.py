@@ -18,11 +18,11 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 MIN_HSTS_AGE = 31536000  # one year
 
-QUEUE_URL = os.getenv("RESULT_QUEUE_URL") + "/https"
+QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local")
 
 
 def dispatch_results(payload, client):
-    client.post(QUEUE_URL, json=payload)
+    client.post(QUEUE_URL + "/https", json=payload)
     logging.info("Scan results dispatched to result-processor")
 
 

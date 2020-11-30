@@ -13,7 +13,7 @@ DB_PASS = os.getenv("DB_PASS")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
-QUEUE_URL = os.getenv("SCAN_QUEUE_URL")
+QUEUE_URL = os.getenv("SCAN_QUEUE_URL", "http://scan-queue.scanners.svc.cluster.local")
 
 
 def dispatch_https(domain, client):
