@@ -389,7 +389,11 @@ describe('given the domain object', () => {
                 },
               },
             ),
-          ).resolves.toEqual({ endDate: '2020-01-01', startDate: '2020-01-01' })
+          ).resolves.toEqual({
+            endDate: '2020-01-01',
+            startDate: '2020-01-01',
+            domainKey: domainOne._key,
+          })
         })
       })
       describe('user does not have domain ownership permission', () => {
@@ -530,19 +534,71 @@ describe('given the domain object', () => {
           }
 
           const expectedResult = [
-            { endDate: '2019-01-31', startDate: '2019-01-01' },
-            { endDate: '2019-02-28', startDate: '2019-02-01' },
-            { endDate: '2019-03-31', startDate: '2019-03-01' },
-            { endDate: '2019-04-30', startDate: '2019-04-01' },
-            { endDate: '2019-01-31', startDate: '2019-05-01' },
-            { endDate: '2019-06-30', startDate: '2019-06-01' },
-            { endDate: '2019-07-31', startDate: '2019-07-01' },
-            { endDate: '2019-08-31', startDate: '2019-08-01' },
-            { endDate: '2019-09-30', startDate: '2019-09-01' },
-            { endDate: '2019-10-31', startDate: '2019-10-01' },
-            { endDate: '2019-11-30', startDate: '2019-11-01' },
-            { endDate: '2019-12-31', startDate: '2019-12-01' },
-            { endDate: '2020-01-31', startDate: '2020-01-01' },
+            {
+              endDate: '2019-01-31',
+              startDate: '2019-01-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-02-28',
+              startDate: '2019-02-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-03-31',
+              startDate: '2019-03-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-04-30',
+              startDate: '2019-04-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-01-31',
+              startDate: '2019-05-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-06-30',
+              startDate: '2019-06-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-07-31',
+              startDate: '2019-07-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-08-31',
+              startDate: '2019-08-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-09-30',
+              startDate: '2019-09-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-10-31',
+              startDate: '2019-10-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-11-30',
+              startDate: '2019-11-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2019-12-31',
+              startDate: '2019-12-01',
+              domainKey: domainOne._key,
+            },
+            {
+              endDate: '2020-01-31',
+              startDate: '2020-01-01',
+              domainKey: domainOne._key,
+            },
           ]
 
           await expect(
