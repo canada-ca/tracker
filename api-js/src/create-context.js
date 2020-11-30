@@ -85,7 +85,7 @@ module.exports.createContext = ({ context, req: request, res: response }) => {
   let userKey
   const token = request.headers.authorization || ''
   if (token !== '') {
-    userKey = verify({ token })
+    userKey = verify({ token }).userKey
   }
 
   return {
