@@ -28,7 +28,7 @@ def test_dispatch():
     client_stub = stub(post=lambda url, json: None)
 
     dispatched = scan(
-        "http://testdb:8529", "test", "", "", http_client=client_stub
+        "testdb", 8529, "test", "", "", http_client=client_stub
     )
 
     assert dispatched == len(input_domains)

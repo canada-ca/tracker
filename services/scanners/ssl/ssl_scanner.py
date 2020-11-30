@@ -27,7 +27,7 @@ from sslyze.server_setting import (
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-QUEUE_URL = "http://result-queue.scanners.svc.cluster.local/ssl"
+QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local")
 
 
 class TlsVersionEnum(Enum):
@@ -41,7 +41,7 @@ class TlsVersionEnum(Enum):
 
 
 def dispatch_results(payload, client):
-    client.post(QUEUE_URL, json=payload)
+    client.post(QUEUE_URL + "/ssl", json=payload)
     logging.info("Scan results dispatched to result-processor")
 
 

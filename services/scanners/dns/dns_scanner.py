@@ -24,11 +24,11 @@ from starlette.responses import PlainTextResponse, JSONResponse
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-QUEUE_URL = "http://result-queue.scanners.svc.cluster.local/dns"
+QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local")
 
 
 def dispatch_results(payload, client):
-    client.post(QUEUE_URL, json=payload)
+    client.post(QUEUE_URL + "/dns", json=payload)
     logging.info("Scan results dispatched to result-processor")
 
 

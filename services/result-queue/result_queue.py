@@ -15,7 +15,7 @@ from rq import Queue, Retry, Worker
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 pool = ConnectionPool(host="127.0.0.1", port=6379, db=0)
 
-PROCESSOR_URL = "http://result-processor.scanners.svc.cluster.local"
+PROCESSOR_URL = os.getenv("PROCESSOR_URL", "http://result-processor.scanners.svc.cluster.local")
 
 redis = Redis(connection_pool=pool)
 https_queue = Queue("https", connection=redis)
