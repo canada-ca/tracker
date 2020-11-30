@@ -1,6 +1,12 @@
 {
   "name": "tracker-api",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/canada-ca/tracker/tree/master/api-js"
+  },
+  "author": "nsdeschenes",
+  "license": "MIT",
   "scripts": {
     "build": "npm run clean && babel ./src --out-dir dist/src --ignore 'src/**/*.spec.js','src/**/*.test.js' && cp ./index.js dist/ && cp ./migrations.js dist/",
     "start": "node ./dist/index.js",
@@ -15,8 +21,6 @@
     "compile": "npx lingui compile",
     "lin-clean": "npx lingui extract --clean"
   },
-  "author": "nsdeschenes",
-  "license": "MIT",
   "dependencies": {
     "@lingui/core": "^2.9.2",
     "apollo-server": "^2.19.0",
