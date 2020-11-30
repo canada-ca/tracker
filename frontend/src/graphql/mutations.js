@@ -67,18 +67,6 @@ export const AUTHENTICATE = gql`
         user {
           userName
           tfaValidated
-          affiliations {
-            edges {
-              node {
-                permission
-                organization {
-                  acronym
-                  name
-                  slug
-                }
-              }
-            }
-          }
         }
       }
     }
