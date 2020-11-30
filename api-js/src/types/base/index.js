@@ -1,3 +1,5 @@
+const { CYPHER_IV, CYPHER_KEY } = process.env
+const crypto = require('crypto')
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -11,7 +13,11 @@ const {
   connectionDefinitions,
   connectionArgs,
 } = require('graphql-relay')
-const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
+const {
+  GraphQLDateTime,
+  GraphQLEmailAddress,
+  GraphQLPhoneNumber,
+} = require('graphql-scalars')
 const { t } = require('@lingui/macro')
 
 const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
@@ -898,6 +904,21 @@ const userType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Name displayed to other users.',
       resolve: ({ displayName }) => displayName,
+    },
+    phoneNumber: {
+      type: GraphQLPhoneNumber,
+      description: 'The phone number the user has setup with tfa.',
+      resolve: ({ phoneNumber }) => {
+        const iv = Buffer.from(CYPHER_IV, 'hex')
+        const decipher = crypto.createDecipheriv(
+          'aes-256-cbc',
+          Buffer.from(CYPHER_KEY),
+          Buffer.from(iv, 'hex'),
+        )
+        let decrypted = decipher.update(phoneNumber)
+        decrypted = Buffer.concat([decrypted, decipher.final()])
+        return decrypted.toString()
+      },
     },
     preferredLang: {
       type: LanguageEnums,

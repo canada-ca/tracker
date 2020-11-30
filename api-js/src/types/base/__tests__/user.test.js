@@ -1,5 +1,6 @@
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const { DB_PASS: rootPass, DB_URL: url, CYPHER_IV, CYPHER_KEY } = process.env
 
+const crypto = require('crypto')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const {
   GraphQLNonNull,
@@ -8,7 +9,7 @@ const {
   GraphQLBoolean,
 } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
-const { GraphQLEmailAddress } = require('graphql-scalars')
+const { GraphQLEmailAddress, GraphQLPhoneNumber } = require('graphql-scalars')
 
 const { makeMigrations } = require('../../../../migrations')
 const { affiliationLoaderByUserId } = require('../../../loaders')
@@ -35,6 +36,12 @@ describe('given the user object', () => {
 
       expect(demoType).toHaveProperty('displayName')
       expect(demoType.displayName.type).toMatchObject(GraphQLString)
+    })
+    it('has a phoneNumber field', () => {
+      const demoType = userType.getFields()
+
+      expect(demoType).toHaveProperty('phoneNumber')
+      expect(demoType.phoneNumber.type).toMatchObject(GraphQLPhoneNumber)
     })
     it('has a preferredLang field', () => {
       const demoType = userType.getFields()
@@ -160,6 +167,26 @@ describe('given the user object', () => {
         expect(
           demoType.displayName.resolve({ displayName: 'display name' }),
         ).toEqual('display name')
+      })
+    })
+    describe('testing the phoneNumber field', () => {
+      it('returns the resolved value', () => {
+        const demoType = userType.getFields()
+
+        const phoneNumber = '12345678912'
+        const cipher = crypto.createCipheriv(
+          'aes-256-cbc',
+          Buffer.from(CYPHER_KEY, 'hex'),
+          Buffer.from(CYPHER_IV, 'hex'),
+        )
+        let encrypted = cipher.update(phoneNumber)
+        encrypted = Buffer.concat([encrypted, cipher.final()])
+
+        expect(
+          demoType.phoneNumber.resolve({
+            phoneNumber: encrypted.toString('hex'),
+          }),
+        ).toEqual(phoneNumber)
       })
     })
     describe('testing the preferredLang field', () => {
