@@ -22,7 +22,7 @@ describe('given the create context function', () => {
         res: {},
       })
 
-      expect(context.userKey).toEqual({ userKey: '1234' })
+      expect(context.userKey).toEqual('1234')
     })
   })
 })
