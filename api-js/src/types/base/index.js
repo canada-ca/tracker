@@ -118,6 +118,7 @@ const domainType = new GraphQLObjectType({
         const {
           data: { dmarcSummaryByPeriod },
         } = await dmarcReportLoader({ info, domain, userKey, tokenize })
+        dmarcSummaryByPeriod.domainKey = _key
         return dmarcSummaryByPeriod
       },
     },
@@ -151,7 +152,10 @@ const domainType = new GraphQLObjectType({
         const {
           data: { yearlyDmarcSummaries },
         } = await dmarcReportLoader({ info, domain, userKey, tokenize })
-        return yearlyDmarcSummaries
+        return yearlyDmarcSummaries.map((report) => {
+          report.domainKey = _key
+          return report
+        })
       },
     },
   }),
