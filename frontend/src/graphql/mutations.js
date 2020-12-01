@@ -91,19 +91,31 @@ export const UPDATE_USER_PROFILE = gql`
   mutation UpdateUserProfile(
     $displayName: String
     $userName: EmailAddress
-    $password: String
-    $confirmPassword: String
     $preferredLang: LanguageEnums
-    $currentPassword: String
   ) {
     updateUserProfile(
       input: {
         displayName: $displayName
         userName: $userName
-        password: $password
-        confirmPassword: $confirmPassword
         preferredLang: $preferredLang
+      }
+    ) {
+      status
+    }
+  }
+`
+
+export const UPDATE_USER_PASSWORD = gql`
+  mutation UpdateUserPassword(
+    $currentPassword: String!
+    $updatedPassword: String!
+    $updatedPasswordConfirm: String!
+  ) {
+    updateUserPassword(
+      input: {
         currentPassword: $currentPassword
+        updatedPassword: $updatedPassword
+        updatedPasswordConfirm: $updatedPasswordConfirm
       }
     ) {
       status

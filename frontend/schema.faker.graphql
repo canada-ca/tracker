@@ -308,7 +308,7 @@ type User implements Node {
   # Name displayed to other users.
   displayName: String @fake(type: firstName)
   # Users preferred language.
-  preferredLang: LanguageEnums @examples(values: ["English", "French"])
+  preferredLang: LanguageEnums @examples(values: ["ENGLISH", "FRENCH"])
   # Has the user completed two factor authentication.
   tfaValidated: Boolean @examples(values: [false, true])
   # Has the user email verified their account.

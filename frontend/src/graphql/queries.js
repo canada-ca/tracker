@@ -327,14 +327,25 @@ export const QUERY_USERLIST = gql`
 
 export const QUERY_USER = gql`
   query UserPage($userName: EmailAddress!) {
-    userPage(userName: $userName) {
+    userPage: findUserByUsername(userName: $userName) {
+      id
       userName
-      tfa
-      lang
       displayName
-      userAffiliations {
-        admin
-        organization
+      preferredLang
+      tfaValidated
+      emailValidated
+      affiliations {
+        edges {
+          node {
+            permission
+            organization {
+              id
+              name
+              slug
+              verified
+            }
+          }
+        }
       }
     }
   }

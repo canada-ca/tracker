@@ -18,7 +18,7 @@ import {
 import WithPseudoBox from './withPseudoBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import { UPDATE_USER_PROFILE } from './graphql/mutations'
+import { UPDATE_USER_PASSWORD } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
 import { object, string as yupString } from 'yup'
@@ -33,8 +33,8 @@ function EditableUserPassword() {
   const toast = useToast()
   const initialFocusRef = useRef()
 
-  const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE,
+  const [updateUserPassword, { error: _updateUserPasswordError }] = useMutation(
+    UPDATE_USER_PASSWORD,
     {
       context: {
         headers: {
@@ -125,13 +125,12 @@ function EditableUserPassword() {
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
                   // Submit update detail mutation
-                  await updateUserProfile({
+                  console.log(values)
+                  await updateUserPassword({
                     variables: {
-                      input: {
-                        password: values.password,
-                        confirmPassword: values.confirmPassword,
-                        currentPassword: values.currentPassword,
-                      },
+                      updatedPassword: values.password,
+                      updatedPasswordConfirm: values.confirmPassword,
+                      currentPassword: values.currentPassword,
                     },
                   })
                 }}
