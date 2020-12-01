@@ -160,8 +160,8 @@
         "guidance": "Public key used for multiple domains",
         "refLinksGuide": [
             {
-                "description": "A.3.4 Deploy DKIM for All Domains and Senders",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
+                "description": "A.5.3 Rotate DKIM Keys",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna53"
             }
         ],
         "refLinksTechnical": [""]
