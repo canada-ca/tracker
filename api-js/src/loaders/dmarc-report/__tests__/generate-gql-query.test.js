@@ -57,7 +57,7 @@ describe('given the generateGqlQuery function', () => {
       })
     })
     describe('categoryTotals field is set', () => {
-      it('returns query with categoryTotals, and fields present', () => {
+      it('returns query with categoryTotals, with all sub fields set', () => {
         const gqlGen = generateGqlQuery({ generateDetailTableFields })
 
         const info = {
@@ -77,6 +77,21 @@ describe('given the generateGqlQuery function', () => {
                             value: 'fail',
                           },
                         },
+                        {
+                          name: {
+                            value: 'fullPass',
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'passDkimOnly',
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'passSpfOnly',
+                          },
+                        },
                       ],
                     },
                   },
@@ -88,7 +103,58 @@ describe('given the generateGqlQuery function', () => {
 
         const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
         expect(gqlQuery).toEqual(
-          '{\ntestQuery(\ndomain: "test.domain.ca"\n){\n\ncategoryTotals {\nfail\n}\n\n\n}\n}',
+          '{\ntestQuery(\ndomain: "test.domain.ca"\n){\n\ncategoryTotals {\nfail fullPass passDkimOnly passSpfOnly\n}\n\n\n}\n}',
+        )
+      })
+    })
+    describe('categoryPercentages field is set', () => {
+      it('returns query with categoryPercentages, with all sub fields set', () => {
+        const gqlGen = generateGqlQuery({ generateDetailTableFields })
+
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'categoryPercentages',
+                    },
+                    selectionSet: {
+                      selections: [
+                        {
+                          name: {
+                            value: 'fail',
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'fullPass',
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'passDkimOnly',
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'passSpfOnly',
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        }
+
+        const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
+        expect(gqlQuery).toEqual(
+          '{\ntestQuery(\ndomain: "test.domain.ca"\n){\n\ncategoryTotals {\nfail fullPass passDkimOnly passSpfOnly\n}\n\n\n}\n}',
         )
       })
     })
