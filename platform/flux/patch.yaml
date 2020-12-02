@@ -28,6 +28,7 @@ spec:
             - --git-email=fluxcd@users.noreply.github.com
             - --git-url=git@github.com:canada-ca/tracker.git
             - --sync-garbage-collection
+            - --git-timeout=120s
           resources:
             requests:
               cpu: 500m
