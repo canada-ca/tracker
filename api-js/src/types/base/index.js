@@ -891,8 +891,8 @@ const organizationConnection = connectionDefinitions({
   }),
 })
 
-const userType = new GraphQLObjectType({
-  name: 'User',
+const userPersonalType = new GraphQLObjectType({
+  name: 'PersonalUser',
   fields: () => ({
     id: globalIdField('users'),
     userName: {
@@ -955,14 +955,23 @@ const userType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-  description: `This object can be queried to retrieve the current logged in users
-information or if the user is an org or super admin they can query a user
-by their user name`,
+  description: `This object is used for showing personal user details, 
+and is used for only showing the details of the querying user.`,
 })
 
-const userConnection = connectionDefinitions({
-  name: 'User',
-  nodeType: userType,
+const userSharedType = new GraphQLObjectType({
+  name: 'SharedUser',
+  fields: () => ({
+    id: globalIdField('users'),
+    userName: {
+      type: GraphQLEmailAddress,
+      description: 'Users email address.',
+      resolve: ({ userName }) => userName,
+    },
+  }),
+  interfaces: [nodeInterface],
+  description: `This object is used for showing none personal user details, 
+and is used for limiting admins to the personal details of users.`,
 })
 
 const userAffiliationsType = new GraphQLObjectType({
@@ -975,7 +984,7 @@ const userAffiliationsType = new GraphQLObjectType({
       resolve: ({ permission }) => permission,
     },
     user: {
-      type: userType,
+      type: userSharedType,
       description: 'The affiliated users information.',
       resolve: async ({ _to }, _args, { loaders: { userLoaderByKey } }) => {
         const userKey = _to.split('/')[1]
@@ -1032,8 +1041,8 @@ module.exports = {
   sslType,
   sslConnection,
   webScanType,
-  userType,
-  userConnection,
+  userPersonalType,
+  userSharedType,
   userAffiliationsType,
   userAffiliationsConnection,
 }
