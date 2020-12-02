@@ -13,11 +13,11 @@ const sendAuthTextMsg = (notifyClient, i18n) => async ({ user }) => {
     { authTagLength: 16 },
   )
   decipher.setAuthTag(Buffer.from(tag, 'hex'))
-  let decrypted = decipher.update(encryptedData, 'hex', 'utf8')
-  decrypted += decipher.final('utf8')
+  let phoneNumber = decipher.update(encryptedData, 'hex', 'utf8')
+  phoneNumber += decipher.final('utf8')
 
   try {
-    await notifyClient.sendSms(templateId, decrypted, {
+    await notifyClient.sendSms(templateId, phoneNumber, {
       personalisation: {
         tfa_code: user.tfaCode,
       },
