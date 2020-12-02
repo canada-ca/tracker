@@ -81,7 +81,7 @@ const updateUserProfile = new mutationWithClientMutationId({
         Buffer.from(iv, 'hex'),
         { authTagLength: 16 },
       )
-      decipher.setAuthTag(tag)
+      decipher.setAuthTag(Buffer.from(tag, 'hex'))
       let decrypted = decipher.update(encryptedData, 'hex', 'utf8')
       decrypted += decipher.final('utf8')
 
@@ -111,8 +111,8 @@ const updateUserProfile = new mutationWithClientMutationId({
       displayName: displayName || user.displayName,
       userName: userName || user.userName,
       preferredLang: preferredLang || user.preferredLang,
-      updatedPhoneDetails,
-      phoneValidated,
+      phoneDetails: updatedPhoneDetails,
+      phoneValidated: phoneValidated || user.phoneValidated,
     }
 
     try {
