@@ -26,7 +26,7 @@
     "apollo-server": "^2.19.0",
     "apollo-server-express": "^2.19.0",
     "arango-tools": "0.0.9",
-    "arangojs": "^7.1.0",
+    "arangojs": "^7.2.0",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
