@@ -79,7 +79,7 @@ def Server(process_name, queues=default_queues):
         logging.info("DNS scan request received.")
         try:
             payload = request.get_json(force=True)
-            designated_queue = flask_app.config["queues"].get("ssl", None)
+            designated_queue = flask_app.config["queues"].get("dns", None)
             designated_queue.enqueue(
                 dispatch_dns,
                 payload,
