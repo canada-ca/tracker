@@ -8,8 +8,8 @@ const { makeMigrations } = require('../../../../migrations')
 const { userLoaderByKey, orgLoaderByKey } = require('../../../loaders')
 const {
   userAffiliationsType,
-  userType,
   organizationType,
+  userSharedType,
 } = require('../../index')
 const { RoleEnums } = require('../../../enums')
 
@@ -31,7 +31,7 @@ describe('given the user affiliation object', () => {
       const demoType = userAffiliationsType.getFields()
 
       expect(demoType).toHaveProperty('user')
-      expect(demoType.user.type).toMatchObject(userType)
+      expect(demoType.user.type).toMatchObject(userSharedType)
     })
     it('has an organization field', () => {
       const demoType = userAffiliationsType.getFields()

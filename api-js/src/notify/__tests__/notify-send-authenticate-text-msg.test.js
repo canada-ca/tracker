@@ -1,3 +1,6 @@
+const { CIPHER_KEY } = process.env
+
+const crypto = require('crypto')
 const { setupI18n } = require('@lingui/core')
 
 const englishMessages = require('../../locale/en/messages')
@@ -32,9 +35,25 @@ describe('given the sendAuthTextMsg function', () => {
       const notifyClient = {
         sendSms,
       }
+      const phoneDetails = {
+        iv: crypto.randomBytes(12).toString('hex'),
+      }
+      const cipher = crypto.createCipheriv(
+        'aes-256-ccm',
+        String(CIPHER_KEY),
+        Buffer.from(phoneDetails.iv, 'hex'),
+        { authTagLength: 16 },
+      )
+      let encrypted = cipher.update('+12345678901', 'utf8', 'hex')
+      encrypted += cipher.final('hex')
+
+      phoneDetails.phoneNumber = encrypted
+      phoneDetails.tag = cipher.getAuthTag().toString('hex')
+
       const user = {
         phoneNumber: '+12345678901',
         tfaCode: 123456,
+        phoneDetails,
       }
 
       const mockedSendAuthTextMsg = sendAuthTextMsg(notifyClient, i18n)
@@ -71,9 +90,25 @@ describe('given the sendAuthTextMsg function', () => {
         const notifyClient = {
           sendSms,
         }
+        const phoneDetails = {
+          iv: crypto.randomBytes(12).toString('hex'),
+        }
+        const cipher = crypto.createCipheriv(
+          'aes-256-ccm',
+          String(CIPHER_KEY),
+          Buffer.from(phoneDetails.iv, 'hex'),
+          { authTagLength: 16 },
+        )
+        let encrypted = cipher.update('+12345678901', 'utf8', 'hex')
+        encrypted += cipher.final('hex')
+
+        phoneDetails.phoneNumber = encrypted
+        phoneDetails.tag = cipher.getAuthTag().toString('hex')
+
         const user = {
           phoneNumber: '+12345678901',
           tfaCode: 123456,
+          phoneDetails,
         }
 
         try {
@@ -111,9 +146,25 @@ describe('given the sendAuthTextMsg function', () => {
         const notifyClient = {
           sendSms,
         }
+        const phoneDetails = {
+          iv: crypto.randomBytes(12).toString('hex'),
+        }
+        const cipher = crypto.createCipheriv(
+          'aes-256-ccm',
+          String(CIPHER_KEY),
+          Buffer.from(phoneDetails.iv, 'hex'),
+          { authTagLength: 16 },
+        )
+        let encrypted = cipher.update('+12345678901', 'utf8', 'hex')
+        encrypted += cipher.final('hex')
+
+        phoneDetails.phoneNumber = encrypted
+        phoneDetails.tag = cipher.getAuthTag().toString('hex')
+
         const user = {
           phoneNumber: '+12345678901',
           tfaCode: 123456,
+          phoneDetails,
         }
 
         try {

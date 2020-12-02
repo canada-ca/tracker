@@ -1,3 +1,5 @@
+const { CIPHER_KEY } = process.env
+const crypto = require('crypto')
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -11,7 +13,11 @@ const {
   connectionDefinitions,
   connectionArgs,
 } = require('graphql-relay')
-const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
+const {
+  GraphQLDateTime,
+  GraphQLEmailAddress,
+  GraphQLPhoneNumber,
+} = require('graphql-scalars')
 const { t } = require('@lingui/macro')
 
 const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
@@ -889,8 +895,8 @@ const organizationConnection = connectionDefinitions({
   }),
 })
 
-const userType = new GraphQLObjectType({
-  name: 'User',
+const userPersonalType = new GraphQLObjectType({
+  name: 'PersonalUser',
   fields: () => ({
     id: globalIdField('users'),
     userName: {
@@ -902,6 +908,23 @@ const userType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Name displayed to other users.',
       resolve: ({ displayName }) => displayName,
+    },
+    phoneNumber: {
+      type: GraphQLPhoneNumber,
+      description: 'The phone number the user has setup with tfa.',
+      resolve: ({ phoneDetails }) => {
+        const { iv, tag, phoneNumber: encrypted } = phoneDetails
+        const decipher = crypto.createDecipheriv(
+          'aes-256-ccm',
+          String(CIPHER_KEY),
+          Buffer.from(iv, 'hex'),
+          { authTagLength: 16 },
+        )
+        decipher.setAuthTag(Buffer.from(tag, 'hex'))
+        let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+        decrypted += decipher.final('utf8')
+        return decrypted
+      },
     },
     preferredLang: {
       type: LanguageEnums,
@@ -936,14 +959,23 @@ const userType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-  description: `This object can be queried to retrieve the current logged in users
-information or if the user is an org or super admin they can query a user
-by their user name`,
+  description: `This object is used for showing personal user details, 
+and is used for only showing the details of the querying user.`,
 })
 
-const userConnection = connectionDefinitions({
-  name: 'User',
-  nodeType: userType,
+const userSharedType = new GraphQLObjectType({
+  name: 'SharedUser',
+  fields: () => ({
+    id: globalIdField('users'),
+    userName: {
+      type: GraphQLEmailAddress,
+      description: 'Users email address.',
+      resolve: ({ userName }) => userName,
+    },
+  }),
+  interfaces: [nodeInterface],
+  description: `This object is used for showing none personal user details, 
+and is used for limiting admins to the personal details of users.`,
 })
 
 const userAffiliationsType = new GraphQLObjectType({
@@ -956,7 +988,7 @@ const userAffiliationsType = new GraphQLObjectType({
       resolve: ({ permission }) => permission,
     },
     user: {
-      type: userType,
+      type: userSharedType,
       description: 'The affiliated users information.',
       resolve: async ({ _to }, _args, { loaders: { userLoaderByKey } }) => {
         const userKey = _to.split('/')[1]
@@ -1013,8 +1045,8 @@ module.exports = {
   sslType,
   sslConnection,
   webScanType,
-  userType,
-  userConnection,
+  userPersonalType,
+  userSharedType,
   userAffiliationsType,
   userAffiliationsConnection,
 }

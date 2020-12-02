@@ -1,5 +1,8 @@
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
+
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
+const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { setupI18n } = require('@lingui/core')
 
@@ -12,10 +15,13 @@ const { cleanseInput } = require('../../../validators')
 const { tokenize } = require('../../../auth')
 const { userLoaderByUserName, userLoaderByKey } = require('../../../loaders')
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
-
 describe('authenticate user account', () => {
-  let query, drop, truncate, migrate, schema, i18n
+  let query, drop, truncate, migrate, collections, schema, i18n
+
+  let consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -23,62 +29,31 @@ describe('authenticate user account', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    // Generate DB Items
+    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ query, drop, truncate, collections } = await migrate(
+      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+    ))
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
+
+    await collections.users.save({
+      displayName: 'Test Account',
+      userName: 'test.account@istio.actually.exists',
+      preferredLang: 'french',
+    })
     consoleOutput = []
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -94,7 +69,7 @@ describe('authenticate user account', () => {
         },
       })
     })
-    describe('given successful update of users password', () => {
+    describe('given successful update of users profile', () => {
       describe('user updates their display name', () => {
         it('returns a successful status message', async () => {
           let cursor = await query`
@@ -274,7 +249,299 @@ describe('authenticate user account', () => {
           expect(user.preferredLang).toEqual('english')
         })
       })
-      describe('user updates display name, user name, and preferred language', () => {
+      describe('user attempts to update their phone number', () => {
+        describe('user is phone validated', () => {
+          describe('user updates their phone number', () => {
+            beforeEach(async () => {
+              await truncate()
+              const updatedPhoneDetails = {
+                iv: crypto.randomBytes(12).toString('hex'),
+              }
+              const cipher = crypto.createCipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(updatedPhoneDetails.iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
+              encrypted += cipher.final('hex')
+
+              updatedPhoneDetails.phoneNumber = encrypted
+              updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'french',
+                phoneValidated: true,
+                phoneDetails: updatedPhoneDetails,
+              })
+            })
+            it('returns a successful status message', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { phoneNumber: "+98765432112" }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'Profile successfully updated.',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+
+              const { iv, tag, phoneNumber: encrypted } = user.phoneDetails
+              const decipher = crypto.createDecipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              decipher.setAuthTag(Buffer.from(tag, 'hex'))
+              let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+              decrypted += decipher.final('utf8')
+
+              expect(decrypted).toEqual('+98765432112')
+            })
+          })
+          describe('phone number is the same', () => {
+            beforeEach(async () => {
+              await truncate()
+              const updatedPhoneDetails = {
+                iv: crypto.randomBytes(12).toString('hex'),
+              }
+              const cipher = crypto.createCipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(updatedPhoneDetails.iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
+              encrypted += cipher.final('hex')
+
+              updatedPhoneDetails.phoneNumber = encrypted
+              updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'french',
+                phoneValidated: true,
+                phoneDetails: updatedPhoneDetails,
+              })
+            })
+            it('returns a successful status message', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { phoneNumber: "+12345678998" }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'Profile successfully updated.',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+
+              const { iv, tag, phoneNumber: encrypted } = user.phoneDetails
+              const decipher = crypto.createDecipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              decipher.setAuthTag(Buffer.from(tag, 'hex'))
+              let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+              decrypted += decipher.final('utf8')
+
+              expect(decrypted).toEqual('+12345678998')
+            })
+          })
+        })
+        describe('user is not phone validated', () => {
+          beforeEach(async () => {
+            await truncate()
+
+            await collections.users.save({
+              displayName: 'Test Account',
+              userName: 'test.account@istio.actually.exists',
+              preferredLang: 'french',
+              phoneValidated: false,
+            })
+          })
+          it('does not update their phone number', async () => {
+            let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+            let user = await cursor.next()
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(input: { phoneNumber: "+12345678998" }) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: userLoaderByUserName(query),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const expectedResponse = {
+              data: {
+                updateUserProfile: {
+                  status: 'Profile successfully updated.',
+                },
+              },
+            }
+
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully updated their profile.`,
+            ])
+
+            cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+            user = await cursor.next()
+
+            expect(typeof user.phoneDetails).toEqual('undefined')
+          })
+        })
+      })
+      describe('user updates display name, user name, preferred language, and phone number', () => {
+        let updatedPhoneDetails
+        beforeEach(async () => {
+          await truncate()
+          updatedPhoneDetails = {
+            iv: crypto.randomBytes(12).toString('hex'),
+          }
+          const cipher = crypto.createCipheriv(
+            'aes-256-ccm',
+            String(CIPHER_KEY),
+            Buffer.from(updatedPhoneDetails.iv, 'hex'),
+            { authTagLength: 16 },
+          )
+          let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
+          encrypted += cipher.final('hex')
+
+          updatedPhoneDetails.phoneNumber = encrypted
+          updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+
+          await collections.users.save({
+            displayName: 'Test Account',
+            userName: 'test.account@istio.actually.exists',
+            preferredLang: 'french',
+            phoneValidated: true,
+            phoneDetails: updatedPhoneDetails,
+          })
+        })
         it('returns a successful status message', async () => {
           let cursor = await query`
             FOR user IN users
@@ -292,6 +559,7 @@ describe('authenticate user account', () => {
                     displayName: "John Smith"
                     userName: "john.smith@istio.actually.works"
                     preferredLang: ENGLISH
+                    phoneNumber: "+12345678998"
                   }
                 ) {
                   status
@@ -339,10 +607,22 @@ describe('authenticate user account', () => {
           expect(user.displayName).toEqual('John Smith')
           expect(user.userName).toEqual('john.smith@istio.actually.works')
           expect(user.preferredLang).toEqual('english')
+          const { iv, tag, phoneNumber: encrypted } = user.phoneDetails
+          const decipher = crypto.createDecipheriv(
+            'aes-256-ccm',
+            String(CIPHER_KEY),
+            Buffer.from(iv, 'hex'),
+            { authTagLength: 16 },
+          )
+          decipher.setAuthTag(Buffer.from(tag, 'hex'))
+          let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+          decrypted += decipher.final('utf8')
+
+          expect(decrypted).toEqual('+12345678998')
         })
       })
     })
-    describe('given unsuccessful update of users password', () => {
+    describe('given unsuccessful update of users profile', () => {
       describe('user id is undefined', () => {
         it('returns an error message', async () => {
           const response = await graphql(
@@ -435,7 +715,7 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('database error occurs when updating password', () => {
+      describe('database error occurs when updating profile', () => {
         it('returns an error message', async () => {
           const cursor = await query`
             FOR user IN users
@@ -447,7 +727,7 @@ describe('authenticate user account', () => {
           const userNameLoader = userLoaderByUserName(query)
           const idLoader = userLoaderByKey(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -469,7 +749,7 @@ describe('authenticate user account', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -509,7 +789,7 @@ describe('authenticate user account', () => {
         },
       })
     })
-    describe('given successful update of users password', () => {
+    describe('given successful update of users profile', () => {
       describe('user updates their display name', () => {
         it('returns a successful status message', async () => {
           let cursor = await query`
@@ -757,7 +1037,7 @@ describe('authenticate user account', () => {
         })
       })
     })
-    describe('given unsuccessful update of users password', () => {
+    describe('given unsuccessful update of users profile', () => {
       describe('user id is undefined', () => {
         it('returns an error message', async () => {
           const response = await graphql(
@@ -846,7 +1126,7 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('database error occurs when updating password', () => {
+      describe('database error occurs when updating profile', () => {
         it('returns an error message', async () => {
           const cursor = await query`
             FOR user IN users
@@ -858,7 +1138,7 @@ describe('authenticate user account', () => {
           const userNameLoader = userLoaderByUserName(query)
           const idLoader = userLoaderByKey(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -880,7 +1160,7 @@ describe('authenticate user account', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               userKey: user._key,
               auth: {
                 bcrypt,

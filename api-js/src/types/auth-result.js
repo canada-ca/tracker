@@ -1,5 +1,5 @@
 const { GraphQLObjectType, GraphQLString } = require('graphql')
-const { userType } = require('./base')
+const { userPersonalType } = require('./base')
 
 const authResultType = new GraphQLObjectType({
   name: 'AuthResult',
@@ -11,7 +11,7 @@ const authResultType = new GraphQLObjectType({
       resolve: ({ token }) => token,
     },
     user: {
-      type: userType,
+      type: userPersonalType,
       description: `User that has just been created or signed in.`,
       resolve: ({ user }) => user,
     },

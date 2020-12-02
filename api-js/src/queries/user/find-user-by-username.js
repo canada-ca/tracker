@@ -1,10 +1,10 @@
 const { GraphQLEmailAddress } = require('graphql-scalars')
 const { t } = require('@lingui/macro')
-const { userType } = require('../../types')
+const { userSharedType } = require('../../types')
 const { GraphQLNonNull } = require('graphql')
 
 const findUserByUsername = {
-  type: userType,
+  type: userSharedType,
   args: {
     userName: {
       type: GraphQLNonNull(GraphQLEmailAddress),

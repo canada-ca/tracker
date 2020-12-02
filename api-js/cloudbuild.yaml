@@ -45,6 +45,7 @@ steps:
   - SCALAR_COST=$_SCALAR_COST
   - OBJECT_COST=$_OBJECT_COST
   - LIST_FACTOR=$_LIST_FACTOR
+  - CIPHER_KEY=$_CIPHER_KEY
 
 - name: node:alpine
   id: lingui-extract
