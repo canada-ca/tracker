@@ -33,7 +33,7 @@ const domainType = new GraphQLObjectType({
       resolve: ({ domain }) => domain,
     },
     lastRan: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: 'The last time that a scan was ran on this domain.',
       resolve: ({ lastRan }) => lastRan,
     },
@@ -284,7 +284,7 @@ const dkimType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => timestamp,
     },
@@ -407,7 +407,7 @@ const dmarcType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => timestamp,
     },
@@ -492,7 +492,7 @@ const spfType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: `The time the scan was initiated.`,
       resolve: ({ timestamp }) => timestamp,
     },
@@ -635,7 +635,7 @@ const httpsType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: `The time the scan was initiated.`,
       resolve: ({ timestamp }) => timestamp,
     },
@@ -714,7 +714,7 @@ const sslType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => timestamp,
     },

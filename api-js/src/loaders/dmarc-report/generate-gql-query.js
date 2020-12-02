@@ -12,13 +12,10 @@ const generateGqlQuery = ({ generateDetailTableFields }) => ({
       info.fieldNodes[0].selectionSet.selections.forEach((field) => {
         if (field.name.value === 'month' || field.name.value === 'year') {
           startEndDateStr = 'startDate\nendDate\n'
-        } else if (field.name.value === 'categoryTotals') {
-          const selectionArr = []
+        } else if (field.name.value === 'categoryTotals' || field.name.value === 'categoryPercentages') {
+          let selectionArr = []
           if (field.selectionSet.selections.length !== 0) {
-            field.selectionSet.selections.forEach((subField) => {
-              selectionArr.push(subField.name.value)
-            })
-
+            selectionArr = ['fail', 'fullPass', 'passDkimOnly', 'passSpfOnly']
             const selections = selectionArr.join(' ')
             categoryTotalsStr = `categoryTotals {\n${selections}\n}\n`
           }

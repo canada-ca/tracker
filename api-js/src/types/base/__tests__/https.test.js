@@ -3,7 +3,6 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { GraphQLID, GraphQLNonNull, GraphQLString } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
-const { GraphQLDateTime } = require('graphql-scalars')
 
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
@@ -31,7 +30,7 @@ describe('given the https gql object', () => {
       const demoType = httpsType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLString)
     })
     it('has a implementation field', () => {
       const demoType = httpsType.getFields()

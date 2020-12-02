@@ -8,7 +8,6 @@ const {
   GraphQLString,
 } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
-const { GraphQLDateTime } = require('graphql-scalars')
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
 const {
@@ -35,7 +34,7 @@ describe('given the spfType object', () => {
       const demoType = spfType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLString)
     })
     it('has a lookups field', () => {
       const demoType = spfType.getFields()
