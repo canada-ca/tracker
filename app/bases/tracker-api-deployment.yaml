@@ -39,6 +39,11 @@ spec:
             secretKeyRef:
               name: api
               key: DB_URL
+        - name: CIPHER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: CIPHER_KEY
         - name: AUTHENTICATED_KEY
           valueFrom:
             secretKeyRef:
