@@ -1,9 +1,8 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { GraphQLNonNull, GraphQLID } = require('graphql')
+const { GraphQLNonNull, GraphQLID, GraphQLString } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
-const { GraphQLDateTime } = require('graphql-scalars')
 
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
@@ -31,7 +30,7 @@ describe('given the ssl gql object', () => {
       const demoType = sslType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLString)
     })
     it('has a guidanceTags field', () => {
       const demoType = sslType.getFields()

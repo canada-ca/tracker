@@ -1,9 +1,8 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { GraphQLNonNull, GraphQLID, GraphQLList } = require('graphql')
+const { GraphQLNonNull, GraphQLID, GraphQLList, GraphQLString } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
-const { GraphQLDateTime } = require('graphql-scalars')
 
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
@@ -40,7 +39,7 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('lastRan')
-      expect(demoType.lastRan.type).toMatchObject(GraphQLDateTime)
+      expect(demoType.lastRan.type).toMatchObject(GraphQLString)
     })
     it('has a selectors field', () => {
       const demoType = domainType.getFields()

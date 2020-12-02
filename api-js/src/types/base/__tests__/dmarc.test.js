@@ -16,7 +16,6 @@ const {
   domainLoaderByKey,
 } = require('../../../loaders')
 const { dmarcType, domainType, guidanceTagConnection } = require('../index')
-const { GraphQLDateTime } = require('graphql-scalars')
 
 describe('given the dmarcType object', () => {
   describe('testing its field definitions', () => {
@@ -36,7 +35,7 @@ describe('given the dmarcType object', () => {
       const demoType = dmarcType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLString)
     })
     it('has a dmarcPhase field', () => {
       const demoType = dmarcType.getFields()
