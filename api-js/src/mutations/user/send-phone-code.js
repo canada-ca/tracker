@@ -52,7 +52,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
 
     if (typeof user === 'undefined') {
       console.warn(
-        `User attempted to send TFA text message, however no account is associated with this key ${userKey}.`,
+        `User attempted to send TFA text message, however no account is associated with this key: ${userKey}.`,
       )
       throw new Error(i18n._(t`Unable to send TFA code, please try again.`))
     }
