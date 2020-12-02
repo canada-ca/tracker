@@ -31,6 +31,11 @@ describe('given the findUserByUsername query', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    // Generate DB Items
+    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ query, drop, truncate, collections } = await migrate(
+      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+    ))
   })
 
   let consoleOutput = []
@@ -42,12 +47,6 @@ describe('given the findUserByUsername query', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -90,6 +89,10 @@ describe('given the findUserByUsername query', () => {
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -127,10 +130,6 @@ describe('given the findUserByUsername query', () => {
                   ) {
                     id
                     userName
-                    displayName
-                    preferredLang
-                    tfaValidated
-                    emailValidated
                   }
                 }
               `,
@@ -162,10 +161,6 @@ describe('given the findUserByUsername query', () => {
               data: {
                 findUserByUsername: {
                   id: toGlobalId('users', userTwo._key),
-                  displayName: 'Test Account Two',
-                  emailValidated: false,
-                  preferredLang: 'FRENCH',
-                  tfaValidated: false,
                   userName: 'test.accounttwo@istio.actually.exists',
                 },
               },
@@ -196,10 +191,6 @@ describe('given the findUserByUsername query', () => {
                   ) {
                     id
                     userName
-                    displayName
-                    preferredLang
-                    tfaValidated
-                    emailValidated
                   }
                 }
               `,
@@ -231,10 +222,6 @@ describe('given the findUserByUsername query', () => {
               data: {
                 findUserByUsername: {
                   id: toGlobalId('users', userTwo._key),
-                  displayName: 'Test Account Two',
-                  emailValidated: false,
-                  preferredLang: 'FRENCH',
-                  tfaValidated: false,
                   userName: 'test.accounttwo@istio.actually.exists',
                 },
               },
@@ -268,10 +255,6 @@ describe('given the findUserByUsername query', () => {
                 ) {
                   id
                   userName
-                  displayName
-                  preferredLang
-                  tfaValidated
-                  emailValidated
                 }
               }
             `,
@@ -326,10 +309,6 @@ describe('given the findUserByUsername query', () => {
                 ) {
                   id
                   userName
-                  displayName
-                  preferredLang
-                  tfaValidated
-                  emailValidated
                 }
               }
             `,
@@ -401,10 +380,6 @@ describe('given the findUserByUsername query', () => {
                   ) {
                     id
                     userName
-                    displayName
-                    preferredLang
-                    tfaValidated
-                    emailValidated
                   }
                 }
               `,
@@ -436,10 +411,6 @@ describe('given the findUserByUsername query', () => {
               data: {
                 findUserByUsername: {
                   id: toGlobalId('users', userTwo._key),
-                  displayName: 'Test Account Two',
-                  emailValidated: false,
-                  preferredLang: 'FRENCH',
-                  tfaValidated: false,
                   userName: 'test.accounttwo@istio.actually.exists',
                 },
               },
@@ -470,10 +441,6 @@ describe('given the findUserByUsername query', () => {
                   ) {
                     id
                     userName
-                    displayName
-                    preferredLang
-                    tfaValidated
-                    emailValidated
                   }
                 }
               `,
@@ -505,10 +472,6 @@ describe('given the findUserByUsername query', () => {
               data: {
                 findUserByUsername: {
                   id: toGlobalId('users', userTwo._key),
-                  displayName: 'Test Account Two',
-                  emailValidated: false,
-                  preferredLang: 'FRENCH',
-                  tfaValidated: false,
                   userName: 'test.accounttwo@istio.actually.exists',
                 },
               },
@@ -542,10 +505,6 @@ describe('given the findUserByUsername query', () => {
                 ) {
                   id
                   userName
-                  displayName
-                  preferredLang
-                  tfaValidated
-                  emailValidated
                 }
               }
             `,
@@ -598,10 +557,6 @@ describe('given the findUserByUsername query', () => {
                 ) {
                   id
                   userName
-                  displayName
-                  preferredLang
-                  tfaValidated
-                  emailValidated
                 }
               }
             `,

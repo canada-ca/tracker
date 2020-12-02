@@ -1,6 +1,6 @@
 const { GraphQLString } = require('graphql')
 
-const { userType } = require('../base')
+const { userPersonalType } = require('../base')
 const { authResultType } = require('../auth-result')
 
 describe('given the auth result gql object', () => {
@@ -15,7 +15,7 @@ describe('given the auth result gql object', () => {
       const demoType = authResultType.getFields()
 
       expect(demoType).toHaveProperty('user')
-      expect(demoType.user.type).toMatchObject(userType)
+      expect(demoType.user.type).toMatchObject(userPersonalType)
     })
   })
 

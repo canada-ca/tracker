@@ -14,55 +14,55 @@ const { GraphQLEmailAddress, GraphQLPhoneNumber } = require('graphql-scalars')
 const { makeMigrations } = require('../../../../migrations')
 const { affiliationLoaderByUserId } = require('../../../loaders')
 const { cleanseInput } = require('../../../validators')
-const { userType, userAffiliationsConnection } = require('../../index')
+const { userPersonalType, userAffiliationsConnection } = require('../../index')
 const { LanguageEnums } = require('../../../enums')
 
 describe('given the user object', () => {
   describe('testing the field definitions', () => {
     it('has an id field', () => {
-      const demoType = userType.getFields()
+      const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('id')
       expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
     })
     it('has a userName field', () => {
-      const demoType = userType.getFields()
+      const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('userName')
       expect(demoType.userName.type).toMatchObject(GraphQLEmailAddress)
     })
     it('has a displayName field', () => {
-      const demoType = userType.getFields()
+      const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('displayName')
       expect(demoType.displayName.type).toMatchObject(GraphQLString)
     })
     it('has a phoneNumber field', () => {
-      const demoType = userType.getFields()
+      const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('phoneNumber')
       expect(demoType.phoneNumber.type).toMatchObject(GraphQLPhoneNumber)
     })
     it('has a preferredLang field', () => {
-      const demoType = userType.getFields()
+      const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('preferredLang')
       expect(demoType.preferredLang.type).toMatchObject(LanguageEnums)
     })
     it('has a tfaValidated field', () => {
-      const demoType = userType.getFields()
+      const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('tfaValidated')
       expect(demoType.tfaValidated.type).toMatchObject(GraphQLBoolean)
     })
     it('has a emailValidated field', () => {
-      const demoType = userType.getFields()
+      const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('emailValidated')
       expect(demoType.emailValidated.type).toMatchObject(GraphQLBoolean)
     })
     it('has an affiliations field', () => {
-      const demoType = userType.getFields()
+      const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('affiliations')
       expect(demoType.affiliations.type).toMatchObject(
@@ -144,7 +144,7 @@ describe('given the user object', () => {
 
     describe('testing the id resolver', () => {
       it('returns the resolved field', () => {
-        const demoType = userType.getFields()
+        const demoType = userPersonalType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
           toGlobalId('users', '1'),
@@ -153,7 +153,7 @@ describe('given the user object', () => {
     })
     describe('testing the userName field', () => {
       it('returns the resolved value', () => {
-        const demoType = userType.getFields()
+        const demoType = userPersonalType.getFields()
 
         expect(
           demoType.userName.resolve({ userName: 'test@email.gc.ca' }),
@@ -162,7 +162,7 @@ describe('given the user object', () => {
     })
     describe('testing the displayName field', () => {
       it('returns the resolved value', () => {
-        const demoType = userType.getFields()
+        const demoType = userPersonalType.getFields()
 
         expect(
           demoType.displayName.resolve({ displayName: 'display name' }),
@@ -171,7 +171,7 @@ describe('given the user object', () => {
     })
     describe('testing the phoneNumber field', () => {
       it('returns the resolved value', () => {
-        const demoType = userType.getFields()
+        const demoType = userPersonalType.getFields()
 
         const phoneDetails = {
           iv: crypto.randomBytes(12).toString('hex'),
@@ -202,7 +202,7 @@ describe('given the user object', () => {
     })
     describe('testing the preferredLang field', () => {
       it('returns the resolved value', () => {
-        const demoType = userType.getFields()
+        const demoType = userPersonalType.getFields()
 
         expect(
           demoType.preferredLang.resolve({ preferredLang: 'english' }),
@@ -211,7 +211,7 @@ describe('given the user object', () => {
     })
     describe('testing the tfaValidated field', () => {
       it('returns the resolved value', () => {
-        const demoType = userType.getFields()
+        const demoType = userPersonalType.getFields()
 
         expect(demoType.tfaValidated.resolve({ tfaValidated: true })).toEqual(
           true,
@@ -220,7 +220,7 @@ describe('given the user object', () => {
     })
     describe('testing the emailValidated field', () => {
       it('returns the resolved value', () => {
-        const demoType = userType.getFields()
+        const demoType = userPersonalType.getFields()
 
         expect(
           demoType.emailValidated.resolve({ emailValidated: true }),
@@ -229,7 +229,7 @@ describe('given the user object', () => {
     })
     describe('testing the affiliations field', () => {
       it('returns the resolved value', async () => {
-        const demoType = userType.getFields()
+        const demoType = userPersonalType.getFields()
 
         const loader = affiliationLoaderByUserId(
           query,
