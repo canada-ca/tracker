@@ -34,7 +34,7 @@ def scan_https(domain):
         # Return scan results for the designated domain
         return res_dict[domain]
     except Exception as e:
-        logging.error("An error occurred while scanning domain - %s", str(e))
+        logging.error(f"An error occurred while scanning domain: {e}")
         return None
 
 
@@ -188,13 +188,13 @@ def Server(server_client=requests):
                         "domain_key": domain_key
                     }
                 )
-                logging.info("Scan results: {str(scan_results)}")
+                logging.info(f"Scan results: {str(scan_results)}")
             else:
                 raise Exception("HTTPS scan not completed")
 
         except Exception as e:
             signal.alarm(0)
-            msg = "An unexpected error occurred while attempting to process HTTPS scan request: ({type(e).__name__}: {str(e)})"
+            msg = f"An unexpected error occurred while attempting to process HTTPS scan request: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
@@ -206,7 +206,7 @@ def Server(server_client=requests):
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
         dispatch_results(outbound_payload, server_client)
-        msg = "HTTPS scan completed in {elapsed_time.total_seconds()} seconds."
+        msg = f"HTTPS scan completed in {elapsed_time.total_seconds()} seconds."
         logging.info(msg)
 
         return PlainTextResponse(msg)

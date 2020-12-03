@@ -45,7 +45,7 @@ async def scan_dmarc(domain):
         scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True)))
     except (DNSException, SPFError, DMARCError) as e:
         logging.error(
-            "Failed to check the given domains for DMARC/SPF records. (%s)" % str(e)
+            f"Failed to check the given domains for DMARC/SPF records. ({e})"
         )
         return None
 
@@ -72,7 +72,7 @@ async def scan_dmarc(domain):
         else:
             try:
                 # Request txt record to ensure that "rua" domain accepts DMARC reports.
-                rua_scan_result = dns.resolver.query(
+                rua_scan_result = resolver.query(
                     f"{domain}._report._dmarc.{rua_domain}", "TXT"
                 )
                 rua_txt_value = (
@@ -83,8 +83,8 @@ async def scan_dmarc(domain):
                     rua_txt_value == "v=DMARC1"
                 )
                 logging.info("External reporting arrangement verified.")
-            except (DNSException, SPFError, DMARCError) as e:
-                logging.error("Failed to validate rua address: %s" % str(e))
+            except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN) as e:
+                logging.error(f"Failed to validate rua address {rua_domain}: {e}")
                 rua["accepting"] = "undetermined"
 
     for ruf in scan_result["dmarc"]["tags"].get("ruf", {}).get("value", []):
@@ -110,7 +110,7 @@ async def scan_dmarc(domain):
         else:
             try:
                 # Request txt record to ensure that "ruf" domain accepts DMARC reports.
-                ruf_scan_result = dns.resolver.query(
+                ruf_scan_result = resolver.query(
                     f"{domain}._report._dmarc.{ruf_domain}", "TXT"
                 )
                 ruf_txt_value = (
@@ -121,8 +121,8 @@ async def scan_dmarc(domain):
                     ruf_txt_value == "v=DMARC1"
                 )
                 logging.info("External reporting arrangement verified.")
-            except (DNSException, SPFError, DMARCError) as e:
-                logging.error("Failed to validate ruf address: %s" % str(e))
+            except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN) as e:
+                logging.error(f"Failed to validate ruf address {ruf_domain}: {e}")
                 ruf["accepting"] = "undetermined"
 
     logging.info("DMARC scan completed")
@@ -169,9 +169,9 @@ def load_pk(name, s=None):
             pk = parse_public_key(base64.b64decode(pub[b"p"]))
             keysize = bitsize(pk["modulus"])
         except KeyError:
-            raise KeyFormatError("incomplete public key: %s" % s)
+            raise KeyFormatError(f"incomplete public key: {s}")
         except (TypeError, UnparsableKeyError) as e:
-            raise KeyFormatError("could not parse public key (%s): %s" % (pub[b"p"], e))
+            raise KeyFormatError(f"could not parse public key ({pub[b"p"]}): {e}")
         ktag = b"rsa"
     return pk, keysize, ktag
 
@@ -300,13 +300,13 @@ def Server(server_client=requests):
                         "domain_key": domain_key
                     }
                 )
-                logging.info("Scan results: {str(scan_results)}")
+                logging.info(f"Scan results: {str(scan_results)}")
             else:
                 raise Exception("DNS scan not completed")
 
         except Exception as e:
             signal.alarm(0)
-            msg = "An unexpected error occurred while attempting to process DNS scan request: ({type(e).__name__}: {str(e)})"
+            msg = f"An unexpected error occurred while attempting to process DNS scan request: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
@@ -318,7 +318,7 @@ def Server(server_client=requests):
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
         dispatch_results(outbound_payload, server_client)
-        msg = "DNS scan completed in {elapsed_time.total_seconds()} seconds."
+        msg = f"DNS scan completed in {elapsed_time.total_seconds()} seconds."
         logging.info(msg)
 
         return PlainTextResponse(msg)
