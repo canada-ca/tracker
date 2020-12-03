@@ -171,7 +171,7 @@ def load_pk(name, s=None):
         except KeyError:
             raise KeyFormatError(f"incomplete public key: {s}")
         except (TypeError, UnparsableKeyError) as e:
-            raise KeyFormatError(f"could not parse public key ({pub[b"p"]}): {e}")
+            raise KeyFormatError(f"could not parse public key ({pub[b'p']}): {e}")
         ktag = b"rsa"
     return pk, keysize, ktag
 
