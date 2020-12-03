@@ -10,3 +10,4 @@ dnspython
 tldextract
 PyNaCl
 pretend
+uvloop
