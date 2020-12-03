@@ -578,7 +578,8 @@ PROCESS = {"https": process_https, "ssl": process_ssl, "dns": process_dns}
 def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS):
 
     # Establish DB connection
-    arango_client = ArangoClient(hosts=db_host)
+    connection_string = f"http://{db_host}:{db_port}"
+    arango_client = ArangoClient(hosts=connection_string)
     db = arango_client.db(db_name, username=db_user, password=db_pass)
 
     async def process(result_request):

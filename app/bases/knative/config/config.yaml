@@ -23,28 +23,6 @@ spec:
         - name: https-scanner
           image: gcr.io/track-compliance/scanners/https # The URL to the image of the app
           env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_PASS
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_HOST
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_NAME
             - name: RESULT_QUEUE_URL
               valueFrom:
                 secretKeyRef:
@@ -94,7 +72,7 @@ spec:
                   name: scanners
                   key: DB_HOST
             - name: DB_PORT
-              value: "5432"
+              value: "8529"
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
@@ -128,28 +106,6 @@ spec:
         - name: ssl-scanner
           image: gcr.io/track-compliance/scanners/ssl # The URL to the image of the app
           env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_PASS
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_HOST
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_NAME
             - name: RESULT_QUEUE_URL
               valueFrom:
                 secretKeyRef:
@@ -183,28 +139,6 @@ spec:
         - name: dns-scanner
           image: gcr.io/track-compliance/scanners/dns # The URL to the image of the app
           env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_PASS
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_HOST
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_NAME
             - name: RESULT_QUEUE_URL
               valueFrom:
                 secretKeyRef:
