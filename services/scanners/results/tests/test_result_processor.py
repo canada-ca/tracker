@@ -94,7 +94,7 @@ def test_insert_https():
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
     test_app = Server(
-        db_host="http://testdb:8529", db_name="test", db_user="", db_pass=""
+        db_host="testdb", db_name="test", db_user="", db_pass="", db_port=8529
     )
     test_client = TestClient(test_app)
 
@@ -121,7 +121,7 @@ def test_insert_ssl():
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
     test_app = Server(
-        db_host="http://testdb:8529", db_name="test", db_user="", db_pass=""
+        db_host="testdb", db_name="test", db_user="", db_pass="", db_port=8529
     )
     test_client = TestClient(test_app)
 
@@ -148,7 +148,7 @@ def test_insert_dns():
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
     test_app = Server(
-        db_host="http://testdb:8529", db_name="test", db_user="", db_pass=""
+        db_host="testdb", db_name="test", db_user="", db_pass="", db_port=8529
     )
     test_client = TestClient(test_app)
 

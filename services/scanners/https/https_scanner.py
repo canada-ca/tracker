@@ -23,7 +23,7 @@ QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.clus
 
 def dispatch_results(payload, client):
     client.post(QUEUE_URL + "/https", json=payload)
-    logging.info("Scan results dispatched to result-processor")
+    logging.info("Scan results dispatched to result queue")
 
 
 def scan_https(domain):

@@ -42,7 +42,7 @@ class TlsVersionEnum(Enum):
 
 def dispatch_results(payload, client):
     client.post(QUEUE_URL + "/ssl", json=payload)
-    logging.info("Scan results dispatched to result-processor")
+    logging.info("Scan results dispatched to result queue")
 
 
 def get_server_info(domain):

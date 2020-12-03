@@ -29,7 +29,7 @@ QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.clus
 
 def dispatch_results(payload, client):
     client.post(QUEUE_URL + "/dns", json=payload)
-    logging.info("Scan results dispatched to result-processor")
+    logging.info("Scan results dispatched to result queue")
 
 
 async def scan_dmarc(domain):
@@ -49,7 +49,7 @@ async def scan_dmarc(domain):
         )
         return None
 
-    for rua in scan_result["dmarc"]["tags"]["rua"]["value"]:
+    for rua in scan_result["dmarc"]["tags"].get("rua", {}).get("value", []):
         # Retrieve 'rua' tag address.
         rua_addr = rua["address"]
 
@@ -87,7 +87,7 @@ async def scan_dmarc(domain):
                 logging.error("Failed to validate rua address: %s" % str(e))
                 rua["accepting"] = "undetermined"
 
-    for ruf in scan_result["dmarc"]["tags"]["ruf"]["value"]:
+    for ruf in scan_result["dmarc"]["tags"].get("ruf", {}).get("value", []):
         # Retrieve 'ruf' tag address.
         ruf_addr = ruf["address"]
 
