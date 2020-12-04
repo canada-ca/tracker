@@ -11,14 +11,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: src/mutations/user/send-phone-code.js:45
+#: src/mutations/user/send-phone-code.js:47
 #: src/mutations/user/update-user-password.js:54
-#: src/mutations/user/update-user-profile.js:55
+#: src/mutations/user/update-user-profile.js:62
 #: src/mutations/user/verify-phone-number.js:34
 msgid "Authentication error, please sign in again."
 msgstr "todo"
 
-#: src/auth/check-domain-permission.js:20
 #: src/auth/check-permission.js:17
 #: src/auth/check-permission.js:44
 msgid "Authentication error. Please sign in again."
@@ -30,7 +29,7 @@ msgstr "todo"
 msgid "Authentication error. Please sign in."
 msgstr "todo"
 
-#: src/types/base/index.js:866
+#: src/types/base/index.js:875
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "todo"
 
@@ -158,6 +157,13 @@ msgstr "todo"
 msgid "Passwords do not match."
 msgstr "todo"
 
+#: src/auth/check-domain-permission.js:22
+#: src/auth/check-domain-permission.js:34
+#: src/auth/check-domain-permission.js:55
+#: src/auth/check-domain-permission.js:66
+msgid "Permission check error. Unable to request domain information."
+msgstr "todo"
+
 #: src/auth/check-user-is-admin-for-user.js:19
 #: src/auth/check-user-is-admin-for-user.js:29
 #: src/auth/check-user-is-admin-for-user.js:60
@@ -165,7 +171,7 @@ msgstr "todo"
 msgid "Permission error, not an admin for this user."
 msgstr "todo"
 
-#: src/mutations/user/update-user-profile.js:91
+#: src/mutations/user/update-user-profile.js:134
 msgid "Profile successfully updated."
 msgstr "todo"
 
@@ -238,7 +244,7 @@ msgstr "todo"
 msgid "Successfully removed organization: {0}."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/remove-user-from-org.js:118
+#: src/mutations/user-affiliations/remove-user-from-org.js:161
 msgid "Successfully removed user from organization."
 msgstr "todo"
 
@@ -262,7 +268,7 @@ msgstr "todo"
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "todo"
 
-#: src/mutations/user/send-phone-code.js:106
+#: src/mutations/user/send-phone-code.js:124
 msgid "Two factor code has been successfully sent, you will receive a text message shortly."
 msgstr "todo"
 
@@ -271,7 +277,7 @@ msgstr "todo"
 #: src/mutations/user/authenticate.js:83
 #: src/mutations/user/authenticate.js:101
 #: src/notify/notify-send-authenticate-email.js:16
-#: src/notify/notify-send-authenticate-text-msg.js:17
+#: src/notify/notify-send-authenticate-text-msg.js:30
 msgid "Unable to authenticate. Please try again."
 msgstr "todo"
 
@@ -320,7 +326,6 @@ msgstr "todo"
 msgid "Unable to find dmarc scan. Please try again."
 msgstr "todo"
 
-#: src/auth/check-domain-permission.js:29
 #: src/loaders/domains/load-domain-by-domain.js:18
 #: src/loaders/domains/load-domain-by-domain.js:30
 #: src/loaders/domains/load-domain-by-key.js:18
@@ -540,8 +545,11 @@ msgstr "todo"
 #: src/mutations/user-affiliations/remove-user-from-org.js:52
 #: src/mutations/user-affiliations/remove-user-from-org.js:63
 #: src/mutations/user-affiliations/remove-user-from-org.js:74
-#: src/mutations/user-affiliations/remove-user-from-org.js:102
-#: src/mutations/user-affiliations/remove-user-from-org.js:113
+#: src/mutations/user-affiliations/remove-user-from-org.js:91
+#: src/mutations/user-affiliations/remove-user-from-org.js:100
+#: src/mutations/user-affiliations/remove-user-from-org.js:143
+#: src/mutations/user-affiliations/remove-user-from-org.js:154
+#: src/mutations/user-affiliations/remove-user-from-org.js:168
 msgid "Unable to remove user from organization. Please try again."
 msgstr "todo"
 
@@ -556,9 +564,9 @@ msgstr "todo"
 msgid "Unable to retrieve {0} for domain: {domain}."
 msgstr "todo"
 
-#: src/mutations/user/send-phone-code.js:55
-#: src/mutations/user/send-phone-code.js:73
-#: src/mutations/user/send-phone-code.js:87
+#: src/mutations/user/send-phone-code.js:57
+#: src/mutations/user/send-phone-code.js:75
+#: src/mutations/user/send-phone-code.js:105
 msgid "Unable to send TFA code, please try again."
 msgstr "todo"
 
@@ -634,8 +642,8 @@ msgstr "todo"
 msgid "Unable to update password. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/update-user-profile.js:65
-#: src/mutations/user/update-user-profile.js:86
+#: src/mutations/user/update-user-profile.js:72
+#: src/mutations/user/update-user-profile.js:129
 msgid "Unable to update profile. Please try again."
 msgstr "todo"
 
