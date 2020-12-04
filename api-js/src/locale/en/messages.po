@@ -158,9 +158,8 @@ msgid "Passwords do not match."
 msgstr "Passwords do not match."
 
 #: src/auth/check-domain-permission.js:22
-#: src/auth/check-domain-permission.js:34
-#: src/auth/check-domain-permission.js:55
-#: src/auth/check-domain-permission.js:66
+#: src/auth/check-domain-permission.js:43
+#: src/auth/check-domain-permission.js:54
 msgid "Permission check error. Unable to request domain information."
 msgstr "Permission check error. Unable to request domain information."
 
@@ -232,7 +231,7 @@ msgstr "Requesting {amount} records on the `spf` connection exceeds the `{argSet
 msgid "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 
-#: src/mutations/scans/request-scan.js:123
+#: src/mutations/scans/request-scan.js:132
 msgid "Successfully dispatched one time scan."
 msgstr "Successfully dispatched one time scan."
 
@@ -305,9 +304,9 @@ msgstr "Unable to create domain. Please try again."
 msgid "Unable to create organization. Please try again."
 msgstr "Unable to create organization. Please try again."
 
-#: src/mutations/scans/request-scan.js:86
-#: src/mutations/scans/request-scan.js:100
-#: src/mutations/scans/request-scan.js:114
+#: src/mutations/scans/request-scan.js:95
+#: src/mutations/scans/request-scan.js:109
+#: src/mutations/scans/request-scan.js:123
 msgid "Unable to dispatch one time scan. Please try again."
 msgstr "Unable to dispatch one time scan. Please try again."
 
@@ -563,7 +562,8 @@ msgstr "Unable to remove organization. Please try again."
 msgid "Unable to remove user from organization. Please try again."
 msgstr "Unable to remove user from organization. Please try again."
 
-#: src/mutations/scans/request-scan.js:64
+#: src/mutations/scans/request-scan.js:61
+#: src/mutations/scans/request-scan.js:73
 msgid "Unable to request a on time scan on this domain."
 msgstr "Unable to request a on time scan on this domain."
 
