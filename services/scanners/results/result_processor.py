@@ -482,7 +482,7 @@ def insert_dns(report, tags, domain_key, db):
             }
         )
 
-        db.collection("dkim").insert({"timestamp": timestamp})
+        dkimEntry = db.collection("dkim").insert({"timestamp": timestamp})
         for selector in report["dkim"].keys():
             keyModulus = report["dkim"][selector]["public_key_modulus"]
 
@@ -505,7 +505,7 @@ def insert_dns(report, tags, domain_key, db):
 
                     time_delta = current_timestamp - previous_timestamp
 
-                    if (time_delta.total_seconds > 31536000) and ("dkim10" not in tags["dkim"][selector]):
+                    if (time_delta.total_seconds() > 31536000) and ("dkim10" not in tags["dkim"][selector]):
                         tags["dkim"][selector].append("dkim10")
 
             dkimResultsEntry = db.collection("dkimResults").insert(
