@@ -259,41 +259,172 @@ describe('given the generateGqlQuery function', () => {
         )
       })
     })
-    describe('in argument is set', () => {
-      const gqlGen = generateGqlQuery({ generateDetailTableFields })
+    describe('int argument is set', () => {
+      it('returns gql query with a string argument', () => {
+        const gqlGen = generateGqlQuery({ generateDetailTableFields })
 
-      const info = {
-        fieldName: 'testQuery',
-        fieldNodes: [
-          {
-            selectionSet: {
-              selections: [
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'month',
+                    },
+                  },
+                ],
+              },
+              arguments: [
                 {
                   name: {
-                    value: 'month',
+                    value: 'testArgument',
+                  },
+                  value: {
+                    value: 5,
+                    kind: 'IntValue',
                   },
                 },
               ],
             },
-            arguments: [
-              {
-                name: {
-                  value: 'testArgument',
-                },
-                value: {
-                  value: 5,
-                  kind: 'IntValue',
-                },
-              },
-            ],
-          },
-        ],
-      }
+          ],
+        }
 
-      const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
-      expect(gqlQuery).toEqual(
-        '{\ntestQuery(\ntestArgument: 5\ndomain: "test.domain.ca"\n){\nstartDate\nendDate\n\n\n\n}\n}',
-      )
+        const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
+        expect(gqlQuery).toEqual(
+          '{\ntestQuery(\ntestArgument: 5\ndomain: "test.domain.ca"\n){\nstartDate\nendDate\n\n\n\n}\n}',
+        )
+      })
+    })
+    describe('string variable argument is set', () => {
+      it('returns a gql query with a string argument set', () => {
+        const gqlGen = generateGqlQuery({ generateDetailTableFields })
+
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'month',
+                    },
+                  },
+                ],
+              },
+              arguments: [
+                {
+                  name: {
+                    value: 'testArgument',
+                  },
+                  value: {
+                    name: {
+                      value: 'varString',
+                    },
+                    kind: 'Variable',
+                  },
+                },
+              ],
+            },
+          ],
+          variableValues: {
+            varString: 'testString',
+          },
+        }
+
+        const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
+        expect(gqlQuery).toEqual(
+          '{\ntestQuery(\ntestArgument: "testString"\ndomain: "test.domain.ca"\n){\nstartDate\nendDate\n\n\n\n}\n}',
+        )
+      })
+    })
+    describe('other variable argument is set', () => {
+      it('returns a gql query with an other argument set', () => {
+        const gqlGen = generateGqlQuery({ generateDetailTableFields })
+
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'month',
+                    },
+                  },
+                ],
+              },
+              arguments: [
+                {
+                  name: {
+                    value: 'testArgument',
+                  },
+                  value: {
+                    name: {
+                      value: 'varOther',
+                    },
+                    kind: 'Variable',
+                  },
+                },
+              ],
+            },
+          ],
+          variableValues: {
+            varOther: 5,
+          },
+        }
+
+        const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
+        expect(gqlQuery).toEqual(
+          '{\ntestQuery(\ntestArgument: 5\ndomain: "test.domain.ca"\n){\nstartDate\nendDate\n\n\n\n}\n}',
+        )
+      })
+    })
+    describe('month variable argument is set', () => {
+      it('returns a gql query with a month argument set', () => {
+        const gqlGen = generateGqlQuery({ generateDetailTableFields })
+
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'month',
+                    },
+                  },
+                ],
+              },
+              arguments: [
+                {
+                  name: {
+                    value: 'month',
+                  },
+                  value: {
+                    name: {
+                      value: 'month',
+                    },
+                    kind: 'Variable',
+                  },
+                },
+              ],
+            },
+          ],
+          variableValues: {
+            month: 'Last30days',
+          },
+        }
+
+        const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
+        expect(gqlQuery).toEqual(
+          '{\ntestQuery(\nmonth: LAST30DAYS\ndomain: "test.domain.ca"\n){\nstartDate\nendDate\n\n\n\n}\n}',
+        )
+      })
     })
   })
   describe('edge case occurs', () => {
