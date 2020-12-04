@@ -80,6 +80,7 @@
       'todo',
     'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
+    'Successfully dispatched one time scan.': 'todo',
     'Successfully invited user to organization, and sent notification email.':
       'todo',
     'Successfully removed domain: {0} from {1}.': 'todo',
@@ -97,6 +98,7 @@
     'Unable to check permission. Please try again.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
+    'Unable to dispatch one time scan. Please try again.': 'todo',
     'Unable to find dkim guidance tags. Please try again.': 'todo',
     'Unable to find dkim result. Please try again.': 'todo',
     'Unable to find dkim scan. Please try again.': 'todo',
@@ -141,6 +143,7 @@
     'Unable to remove domain. Please try again.': 'todo',
     'Unable to remove organization. Please try again.': 'todo',
     'Unable to remove user from organization. Please try again.': 'todo',
+    'Unable to request a on time scan on this domain.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
     'Unable to retrieve {0} for domain: {domain}.': 'todo',
     'Unable to send TFA code, please try again.': 'todo',

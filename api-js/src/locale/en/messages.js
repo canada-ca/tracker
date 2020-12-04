@@ -215,6 +215,8 @@
         '` limit of 100 records.',
       ]
     },
+    'Successfully dispatched one time scan.':
+      'Successfully dispatched one time scan.',
     'Successfully invited user to organization, and sent notification email.':
       'Successfully invited user to organization, and sent notification email.',
     'Successfully removed domain: {0} from {1}.': function (a) {
@@ -245,6 +247,8 @@
       'Unable to create domain. Please try again.',
     'Unable to create organization. Please try again.':
       'Unable to create organization. Please try again.',
+    'Unable to dispatch one time scan. Please try again.':
+      'Unable to dispatch one time scan. Please try again.',
     'Unable to find dkim guidance tags. Please try again.':
       'Unable to find dkim guidance tags. Please try again.',
     'Unable to find dkim result. Please try again.':
@@ -333,6 +337,8 @@
       'Unable to remove organization. Please try again.',
     'Unable to remove user from organization. Please try again.':
       'Unable to remove user from organization. Please try again.',
+    'Unable to request a on time scan on this domain.':
+      'Unable to request a on time scan on this domain.',
     'Unable to reset password. Please try again.':
       'Unable to reset password. Please try again.',
     'Unable to retrieve {0} for domain: {domain}.': function (a) {

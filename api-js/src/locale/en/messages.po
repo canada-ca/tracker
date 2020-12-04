@@ -232,6 +232,10 @@ msgstr "Requesting {amount} records on the `spf` connection exceeds the `{argSet
 msgid "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 
+#: src/mutations/scans/request-scan.js:123
+msgid "Successfully dispatched one time scan."
+msgstr "Successfully dispatched one time scan."
+
 #: src/mutations/user-affiliations/invite-user-to-org.js:186
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "Successfully invited user to organization, and sent notification email."
@@ -300,6 +304,12 @@ msgstr "Unable to create domain. Please try again."
 #: src/mutations/organizations/create-organization.js:219
 msgid "Unable to create organization. Please try again."
 msgstr "Unable to create organization. Please try again."
+
+#: src/mutations/scans/request-scan.js:86
+#: src/mutations/scans/request-scan.js:100
+#: src/mutations/scans/request-scan.js:114
+msgid "Unable to dispatch one time scan. Please try again."
+msgstr "Unable to dispatch one time scan. Please try again."
 
 #: src/loaders/guidance-tags/load-dkim-guidance-tags.js:18
 #: src/loaders/guidance-tags/load-dkim-guidance-tags.js:32
@@ -552,6 +562,10 @@ msgstr "Unable to remove organization. Please try again."
 #: src/mutations/user-affiliations/remove-user-from-org.js:168
 msgid "Unable to remove user from organization. Please try again."
 msgstr "Unable to remove user from organization. Please try again."
+
+#: src/mutations/scans/request-scan.js:64
+msgid "Unable to request a on time scan on this domain."
+msgstr "Unable to request a on time scan on this domain."
 
 #: src/mutations/user/reset-password.js:60
 #: src/mutations/user/reset-password.js:70

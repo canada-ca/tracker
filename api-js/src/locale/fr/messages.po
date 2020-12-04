@@ -232,6 +232,10 @@ msgstr "todo"
 msgid "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
+#: src/mutations/scans/request-scan.js:123
+msgid "Successfully dispatched one time scan."
+msgstr "todo"
+
 #: src/mutations/user-affiliations/invite-user-to-org.js:186
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "todo"
@@ -299,6 +303,12 @@ msgstr "todo"
 #: src/mutations/organizations/create-organization.js:208
 #: src/mutations/organizations/create-organization.js:219
 msgid "Unable to create organization. Please try again."
+msgstr "todo"
+
+#: src/mutations/scans/request-scan.js:86
+#: src/mutations/scans/request-scan.js:100
+#: src/mutations/scans/request-scan.js:114
+msgid "Unable to dispatch one time scan. Please try again."
 msgstr "todo"
 
 #: src/loaders/guidance-tags/load-dkim-guidance-tags.js:18
@@ -551,6 +561,10 @@ msgstr "todo"
 #: src/mutations/user-affiliations/remove-user-from-org.js:154
 #: src/mutations/user-affiliations/remove-user-from-org.js:168
 msgid "Unable to remove user from organization. Please try again."
+msgstr "todo"
+
+#: src/mutations/scans/request-scan.js:64
+msgid "Unable to request a on time scan on this domain."
 msgstr "todo"
 
 #: src/mutations/user/reset-password.js:60
