@@ -1,4 +1,4 @@
-const generateDetailTableFields = ({ subField }) => {
+const generateDetailTableFields = ({ subField, variables }) => {
   const nodeSelections = []
   const pageInfoSelections = []
   let paginationArgs = ''
@@ -12,9 +12,21 @@ const generateDetailTableFields = ({ subField }) => {
     if (subField.arguments.length !== 0) {
       subField.arguments.forEach((arg) => {
         if (arg.name.value === 'first' || arg.name.value === 'last')
-          paginationArr.push(`${arg.name.value}: ${arg.value.value}`)
+          if (arg.value.kind === 'Variable') {
+            paginationArr.push(
+              `${arg.name.value}: ${variables[arg.value.name.value]}`,
+            )
+          } else {
+            paginationArr.push(`${arg.name.value}: ${arg.value.value}`)
+          }
         else if (arg.name.value === 'before' || arg.name.value === 'after')
-          paginationArr.push(`${arg.name.value}: "${arg.value.value}"`)
+          if (arg.value.kind === 'Variable') {
+            paginationArr.push(
+              `${arg.name.value}: "${variables[arg.value.name.value]}"`,
+            )
+          } else {
+            paginationArr.push(`${arg.name.value}: "${arg.value.value}"`)
+          }
       })
       paginationArgs = paginationArr.join(' ')
     }
