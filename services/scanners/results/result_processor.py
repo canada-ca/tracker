@@ -463,12 +463,17 @@ def insert_dns(report, tags, domain_key, db):
                 "guidanceTags": tags["dmarc"],
             }
         )
+        spfRecord = report["spf"].get("record", None)
+        if spfRecord is None:
+            spfDefault = None
+        else:
+            spfDefault = spfRecord[-4:].lower()
         spfEntry = db.collection("spf").insert(
             {
                 "timestamp": str(datetime.datetime.utcnow()),
-                "record": report["spf"].get("record", None),
+                "record": spfRecord,
                 "lookups": report["spf"].get("dns_lookups", None),
-                "spfDefault": report["spf"].get("record", "none")[-4:].lower(),
+                "spfDefault": spfDefault,
                 "rawJson": report["spf"],
                 "guidanceTags": tags["spf"],
             }
@@ -483,7 +488,7 @@ def insert_dns(report, tags, domain_key, db):
             for previous_dkim_result in previous_dkim_results:
                 edges = db.collection("dkimToDkimResults").find({"_to": previous_dkim_result["_id"]})
                 for edge in edges:
-                    previous_dkim = db.collection("dkim").get({"_id": previous_dkim_result["_id"]})
+                    previous_dkim = db.collection("dkim").get({"_id": edge["_from"]})
 
                     # Check if PK was used for another domain
                     previous_dkim_domain_query = db.collection("domainsDKIM").find({"_to": previous_dkim["_id"]}, limit=1)
