@@ -89,12 +89,13 @@ module.exports.createContext = ({ context, req: request, res: response }) => {
   }
 
   return {
-    i18n,
     ...context,
+    i18n,
     request,
     response,
     userKey,
     moment,
+    fetch,
     auth: {
       bcrypt,
       checkDomainOwnership: checkDomainOwnership({ i18n, userKey, query }),
