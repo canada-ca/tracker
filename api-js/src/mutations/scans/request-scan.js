@@ -5,7 +5,6 @@ const {
 } = process.env
 
 const { t } = require('@lingui/macro')
-const { v4: uuidv4 } = require('uuid')
 const { GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 
@@ -40,6 +39,7 @@ const requestScan = new mutationWithClientMutationId({
       i18n,
       fetch,
       userKey,
+      uuidv4,
       auth: { checkDomainPermission, userRequired },
       loaders: { domainLoaderByDomain },
       validators: { cleanseInput },
@@ -52,6 +52,15 @@ const requestScan = new mutationWithClientMutationId({
 
     // Check to see if domain exists
     const domain = await domainLoaderByDomain.load(requestedDomain)
+
+    if (typeof domain === 'undefined') {
+      console.warn(
+        `User: ${userKey} attempted to run a one time scan on: ${requestedDomain} however domain cannot be found.`,
+      )
+      throw new Error(
+        i18n._(t`Unable to request a on time scan on this domain.`),
+      )
+    }
 
     // Check to see if user has access to domain
     const permission = await checkDomainPermission({ domainId: domain._id })
@@ -116,7 +125,7 @@ const requestScan = new mutationWithClientMutationId({
     }
 
     console.info(
-      `User: ${userKey} successfully dispatched a one time scan on domain: ${domain.domain}`,
+      `User: ${userKey} successfully dispatched a one time scan on domain: ${domain.domain}.`,
     )
     return {
       subscriptionId: uuid,

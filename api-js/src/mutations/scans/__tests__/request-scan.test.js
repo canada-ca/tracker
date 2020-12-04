@@ -3,8 +3,8 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
-const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
+const { v4: uuidv4 } = require('uuid')
 
 const englishMessages = require('../../../locale/en/messages')
 const frenchMessages = require('../../../locale/fr/messages')
@@ -16,7 +16,6 @@ const { domainLoaderByDomain, userLoaderByKey } = require('../../../loaders')
 const { cleanseInput } = require('../../../validators')
 
 describe('requesting a one time scan', () => {
-  const fetch = fetchMock
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
@@ -116,8 +115,10 @@ describe('requesting a one time scan', () => {
       })
     })
     describe('given a successful request', () => {
+      let mockUUID
       beforeEach(() => {
         fetch.mockResponseOnce(JSON.stringify({ data: '12345' }))
+        mockUUID = jest.fn().mockReturnValue('uuid-token-1234')
       })
       describe('user is a super admin', () => {
         beforeEach(async () => {
@@ -142,6 +143,7 @@ describe('requesting a one time scan', () => {
               i18n,
               fetch,
               userKey: user._key,
+              uuidv4: mockUUID,
               auth: {
                 checkDomainPermission: checkDomainPermission({
                   i18n,
@@ -165,12 +167,71 @@ describe('requesting a one time scan', () => {
             },
           )
 
-          const expectedResponse = {}
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                subscriptionId: 'uuid-token-1234',
+              },
+            },
+          }
 
-          // expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([''])
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
         })
-        it('returns a status message', async () => {})
+        it('returns a status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                status: 'Successfully dispatched one time scan.',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
       })
       describe('user is an org admin', () => {
         beforeEach(async () => {
@@ -180,8 +241,110 @@ describe('requesting a one time scan', () => {
             permission: 'admin',
           })
         })
-        it('returns a subscriptionId', async () => {})
-        it('returns a status message', async () => {})
+        it('returns a subscriptionId', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  subscriptionId
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                subscriptionId: 'uuid-token-1234',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
+        it('returns a status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                status: 'Successfully dispatched one time scan.',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
       })
       describe('user is an org user', () => {
         beforeEach(async () => {
@@ -191,16 +354,164 @@ describe('requesting a one time scan', () => {
             permission: 'user',
           })
         })
-        it('returns a subscriptionId', async () => {})
-        it('returns a status message', async () => {})
+        it('returns a subscriptionId', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  subscriptionId
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                subscriptionId: 'uuid-token-1234',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
+        it('returns a status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                status: 'Successfully dispatched one time scan.',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
       })
     })
     describe('given an unsuccessful request', () => {
-      describe('user is not logged in', () => {
-        it('returns an error message', async () => {})
-      })
       describe('domain cannot be found', () => {
-        it('returns an error message', async () => {})
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test-domain.gc.ca" }) {
+                  subscriptionId
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              'Unable to request a on time scan on this domain.',
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to run a one time scan on: test-domain.gc.ca however domain cannot be found.`,
+          ])
+        })
       })
       describe('user does not have domain permission', () => {
         beforeEach(async () => {
@@ -237,7 +548,56 @@ describe('requesting a one time scan', () => {
               permission: 'admin',
             })
           })
-          it('returns an error message', async () => {})
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  requestScan(input: { domain: "test.gc.ca" }) {
+                    subscriptionId
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                fetch,
+                userKey: user._key,
+                uuidv4,
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    query,
+                    userKey: user._key,
+                  }),
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoaderByDomain(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to request a on time scan on this domain.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to run a one time scan on: test.gc.ca however they do not have permission to do so.`,
+            ])
+          })
         })
         describe('user is a user in another org', () => {
           beforeEach(async () => {
@@ -247,18 +607,238 @@ describe('requesting a one time scan', () => {
               permission: 'user',
             })
           })
-          it('returns an error message', async () => {})
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  requestScan(input: { domain: "test.gc.ca" }) {
+                    subscriptionId
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                fetch,
+                userKey: user._key,
+                uuidv4,
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    query,
+                    userKey: user._key,
+                  }),
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoaderByDomain(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to request a on time scan on this domain.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to run a one time scan on: test.gc.ca however they do not have permission to do so.`,
+            ])
+          })
         })
       })
       describe('fetch error occurs', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
+        })
         describe('when sending dns scan request', () => {
-          it('returns an error message', async () => {})
+          beforeEach(() => {
+            const fetch = fetchMock
+            fetch.mockRejectOnce(Error('Fetch Error occurred.'))
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  requestScan(input: { domain: "test.gc.ca" }) {
+                    subscriptionId
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                fetch,
+                userKey: user._key,
+                uuidv4,
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    query,
+                    userKey: user._key,
+                  }),
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoaderByDomain(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to dispatch one time scan. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Fetch error when dispatching dns scan for user: ${user._key}, on domain: test.gc.ca, error: Error: Fetch Error occurred.`,
+            ])
+          })
         })
         describe('when sending https scan request', () => {
-          it('returns an error message', async () => {})
+          beforeEach(() => {
+            const fetch = fetchMock
+            fetch
+              .mockResponseOnce(JSON.stringify({ data: '12345' }))
+              .mockRejectOnce(Error('Fetch Error occurred.'))
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  requestScan(input: { domain: "test.gc.ca" }) {
+                    subscriptionId
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                fetch,
+                userKey: user._key,
+                uuidv4,
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    query,
+                    userKey: user._key,
+                  }),
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoaderByDomain(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to dispatch one time scan. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Fetch error when dispatching https scan for user: ${user._key}, on domain: test.gc.ca, error: Error: Fetch Error occurred.`,
+            ])
+          })
         })
         describe('when sending ssl scan request', () => {
-          it('returns an error message', async () => {})
+          beforeEach(() => {
+            const fetch = fetchMock
+            fetch
+              .mockResponseOnce(JSON.stringify({ data: '12345' }))
+              .mockResponseOnce(JSON.stringify({ data: '12345' }))
+              .mockRejectOnce(Error('Fetch Error occurred.'))
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  requestScan(input: { domain: "test.gc.ca" }) {
+                    subscriptionId
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                fetch,
+                userKey: user._key,
+                uuidv4,
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    query,
+                    userKey: user._key,
+                  }),
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoaderByDomain(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to dispatch one time scan. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Fetch error when dispatching ssl scan for user: ${user._key}, on domain: test.gc.ca, error: Error: Fetch Error occurred.`,
+            ])
+          })
         })
       })
     })
@@ -273,6 +853,711 @@ describe('requesting a one time scan', () => {
           en: englishMessages,
           fr: frenchMessages,
         },
+      })
+    })
+    describe('given a successful request', () => {
+      let mockUUID
+      beforeEach(() => {
+        const fetch = fetchMock
+        fetch.mockResponseOnce(JSON.stringify({ data: '12345' }))
+        mockUUID = jest.fn().mockReturnValue('uuid-token-1234')
+      })
+      describe('user is a super admin', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: 'organizations/SA',
+            _to: user._id,
+            permission: 'super_admin',
+          })
+        })
+        it('returns a subscriptionId', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  subscriptionId
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                subscriptionId: 'uuid-token-1234',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
+        it('returns a status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                status: 'todo',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
+      })
+      describe('user is an org admin', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+        })
+        it('returns a subscriptionId', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  subscriptionId
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                subscriptionId: 'uuid-token-1234',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
+        it('returns a status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                status: 'todo',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
+      })
+      describe('user is an org user', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
+        })
+        it('returns a subscriptionId', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  subscriptionId
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                subscriptionId: 'uuid-token-1234',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
+        it('returns a status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test.gc.ca" }) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4: mockUUID,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              requestScan: {
+                status: 'todo',
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully dispatched a one time scan on domain: test.gc.ca.`,
+          ])
+        })
+      })
+    })
+    describe('given an unsuccessful request', () => {
+      describe('domain cannot be found', () => {
+        it('returns an error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                requestScan(input: { domain: "test-domain.gc.ca" }) {
+                  subscriptionId
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              fetch,
+              userKey: user._key,
+              uuidv4,
+              auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  query,
+                  userKey: user._key,
+                }),
+                userRequired: userRequired({
+                  i18n,
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(
+                  query,
+                  user._key,
+                  i18n,
+                ),
+              },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to run a one time scan on: test-domain.gc.ca however domain cannot be found.`,
+          ])
+        })
+      })
+      describe('user does not have domain permission', () => {
+        beforeEach(async () => {
+          org2 = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
+        describe('user is admin to another org', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org2._id,
+              _to: user._id,
+              permission: 'admin',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  requestScan(input: { domain: "test.gc.ca" }) {
+                    subscriptionId
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                fetch,
+                userKey: user._key,
+                uuidv4,
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    query,
+                    userKey: user._key,
+                  }),
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoaderByDomain(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to run a one time scan on: test.gc.ca however they do not have permission to do so.`,
+            ])
+          })
+        })
+        describe('user is a user in another org', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org2._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  requestScan(input: { domain: "test.gc.ca" }) {
+                    subscriptionId
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                fetch,
+                userKey: user._key,
+                uuidv4,
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    query,
+                    userKey: user._key,
+                  }),
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoaderByDomain(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to run a one time scan on: test.gc.ca however they do not have permission to do so.`,
+            ])
+          })
+        })
+      })
+      describe('fetch error occurs', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
+        })
+        describe('when sending dns scan request', () => {
+          beforeEach(() => {
+            const fetch = fetchMock
+            fetch.mockRejectOnce(Error('Fetch Error occurred.'))
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  requestScan(input: { domain: "test.gc.ca" }) {
+                    subscriptionId
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                fetch,
+                userKey: user._key,
+                uuidv4,
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    query,
+                    userKey: user._key,
+                  }),
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoaderByDomain(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Fetch error when dispatching dns scan for user: ${user._key}, on domain: test.gc.ca, error: Error: Fetch Error occurred.`,
+            ])
+          })
+        })
+        describe('when sending https scan request', () => {
+          beforeEach(() => {
+            const fetch = fetchMock
+            fetch
+              .mockResponseOnce(JSON.stringify({ data: '12345' }))
+              .mockRejectOnce(Error('Fetch Error occurred.'))
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  requestScan(input: { domain: "test.gc.ca" }) {
+                    subscriptionId
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                fetch,
+                userKey: user._key,
+                uuidv4,
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    query,
+                    userKey: user._key,
+                  }),
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoaderByDomain(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Fetch error when dispatching https scan for user: ${user._key}, on domain: test.gc.ca, error: Error: Fetch Error occurred.`,
+            ])
+          })
+        })
+        describe('when sending ssl scan request', () => {
+          beforeEach(() => {
+            const fetch = fetchMock
+            fetch
+              .mockResponseOnce(JSON.stringify({ data: '12345' }))
+              .mockResponseOnce(JSON.stringify({ data: '12345' }))
+              .mockRejectOnce(Error('Fetch Error occurred.'))
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  requestScan(input: { domain: "test.gc.ca" }) {
+                    subscriptionId
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                fetch,
+                userKey: user._key,
+                uuidv4,
+                auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    query,
+                    userKey: user._key,
+                  }),
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoaderByDomain(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
+                validators: { cleanseInput },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Fetch error when dispatching ssl scan for user: ${user._key}, on domain: test.gc.ca, error: Error: Fetch Error occurred.`,
+            ])
+          })
+        })
       })
     })
   })
