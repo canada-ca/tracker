@@ -357,10 +357,11 @@ def process_dns(results):
 
 
 def insert_https(report, tags, domain_key, db):
+    timestamp = str(datetime.datetime.utcnow())
     try:
         httpsEntry = db.collection("https").insert(
             {
-                "timestamp": str(datetime.datetime.utcnow()),
+                "timestamp": timestamp,
                 "implementation": report.get("implementation", None),
                 "enforced": report.get("enforced", None),
                 "hsts": report.get("hsts", None),
@@ -411,10 +412,11 @@ def insert_https(report, tags, domain_key, db):
 
 
 def insert_ssl(report, tags, domain_key, db):
+    timestamp = str(datetime.datetime.utcnow())
     try:
         sslEntry = db.collection("ssl").insert(
             {
-                "timestamp": str(datetime.datetime.utcnow()),
+                "timestamp": timestamp,
                 "rawJson": report,
                 "guidanceTags": tags,
             }
@@ -442,10 +444,11 @@ def insert_ssl(report, tags, domain_key, db):
 
 
 def insert_dns(report, tags, domain_key, db):
+    timestamp = str(datetime.datetime.utcnow())
     try:
         dmarcEntry = db.collection("dmarc").insert(
             {
-                "timestamp": str(datetime.datetime.utcnow()),
+                "timestamp": timestamp,
                 "record": report["dmarc"].get("record", None),
                 "pPolicy": report["dmarc"]
                 .get("tags", {})
@@ -470,7 +473,7 @@ def insert_dns(report, tags, domain_key, db):
             spfDefault = spfRecord[-4:].lower()
         spfEntry = db.collection("spf").insert(
             {
-                "timestamp": str(datetime.datetime.utcnow()),
+                "timestamp": timestamp,
                 "record": spfRecord,
                 "lookups": report["spf"].get("dns_lookups", None),
                 "spfDefault": spfDefault,
@@ -479,7 +482,7 @@ def insert_dns(report, tags, domain_key, db):
             }
         )
 
-        dkimEntry = db.collection("dkim").insert({"timestamp": str(datetime.datetime.utcnow())})
+        db.collection("dkim").insert({"timestamp": timestamp})
         for selector in report["dkim"].keys():
             keyModulus = report["dkim"][selector]["public_key_modulus"]
 
@@ -497,7 +500,7 @@ def insert_dns(report, tags, domain_key, db):
                         tags["dkim"][selector].append("dkim14")
 
                     # Check if PK is older than 1 year
-                    current_timestamp = datetime.datetime.strptime(dkimEntry["timestamp"], '%Y-%m-%d %H:%M:%S.%f')
+                    current_timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S.%f')
                     previous_timestamp = datetime.datetime.strptime(previous_dkim["timestamp"], '%Y-%m-%d %H:%M:%S.%f')
 
                     time_delta = current_timestamp - previous_timestamp
