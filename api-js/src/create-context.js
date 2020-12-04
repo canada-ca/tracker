@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const moment = require('moment')
 const fetch = require('isomorphic-fetch')
+const { v4: uuidv4 } = require('uuid')
 
 const { createI18n } = require('./create-i18n')
 const { cleanseInput, slugify } = require('./validators')
@@ -96,6 +97,7 @@ module.exports.createContext = ({ context, req: request, res: response }) => {
     userKey,
     moment,
     fetch,
+    uuidv4,
     auth: {
       bcrypt,
       checkDomainOwnership: checkDomainOwnership({ i18n, userKey, query }),
