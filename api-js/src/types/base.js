@@ -12,6 +12,7 @@ const {
   globalIdField,
   connectionDefinitions,
   connectionArgs,
+  nodeDefinitions,
 } = require('graphql-relay')
 const {
   GraphQLDateTime,
@@ -22,11 +23,20 @@ const { t } = require('@lingui/macro')
 
 const { RoleEnums, LanguageEnums, PeriodEnums } = require('../enums')
 const { Acronym, Domain, Slug, Selectors, Year } = require('../scalars')
-const { nodeInterface } = require('./node')
 const { periodType } = require('./dmarc-report')
 const { domainStatus } = require('./domain-status')
 const { organizationSummaryType } = require('./organization-summary')
 const { refLinksType } = require('./ref-links')
+
+const { nodeField, nodesField, nodeInterface } = nodeDefinitions(
+  (_globalId) => {},
+  (object) => {
+    switch (object) {
+      default:
+        return null
+    }
+  },
+)
 
 /* Domain related objects */
 const domainType = new GraphQLObjectType({
@@ -1221,6 +1231,8 @@ module.exports = {
   httpsConnection,
   guidanceTagType,
   guidanceTagConnection,
+  nodeField,
+  nodesField,
   organizationType,
   organizationConnection,
   spfType,
