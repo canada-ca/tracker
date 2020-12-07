@@ -114,11 +114,11 @@ spec:
             secretKeyRef:
               name: api
               key: DNS_SCANNER_ENDPOINT
-        - name: HTTPS_SCAN_CHANNEL
+        - name: HTTPS_SCANNER_ENDPOINT
           valueFrom:
             secretKeyRef:
               name: api
-              key: HTTPS_SCAN_CHANNEL
+              key: HTTPS_SCANNER_ENDPOINT
         - name: SSL_SCANNER_ENDPOINT
           valueFrom:
             secretKeyRef:
