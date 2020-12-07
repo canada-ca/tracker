@@ -1,4 +1,4 @@
-const { StatusEnum } = require('../../../enums')
+const { StatusEnum } = require('../../enums')
 const { domainStatus } = require('../domain-status')
 
 describe('given the domainStatus object', () => {

@@ -4,12 +4,12 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { GraphQLID, GraphQLNonNull, GraphQLString } = require('graphql')
 
-const { makeMigrations } = require('../../../../migrations')
-const { cleanseInput } = require('../../../validators')
+const { makeMigrations } = require('../../../migrations')
+const { cleanseInput } = require('../../validators')
 const {
   dkimLoaderByKey,
   dkimGuidanceTagConnectionsLoader,
-} = require('../../../loaders')
+} = require('../../loaders')
 const { dkimResultsType, dkimType, guidanceTagConnection } = require('../index')
 
 describe('given the dkim result object', () => {

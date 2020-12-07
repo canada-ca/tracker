@@ -11,11 +11,11 @@ const {
 const { toGlobalId } = require('graphql-relay')
 const { GraphQLEmailAddress, GraphQLPhoneNumber } = require('graphql-scalars')
 
-const { makeMigrations } = require('../../../../migrations')
-const { affiliationLoaderByUserId } = require('../../../loaders')
-const { cleanseInput } = require('../../../validators')
-const { userPersonalType, userAffiliationsConnection } = require('../../index')
-const { LanguageEnums } = require('../../../enums')
+const { makeMigrations } = require('../../../migrations')
+const { affiliationLoaderByUserId } = require('../../loaders')
+const { cleanseInput } = require('../../validators')
+const { userPersonalType, userAffiliationsConnection } = require('../index')
+const { LanguageEnums } = require('../../enums')
 
 describe('given the user object', () => {
   describe('testing the field definitions', () => {

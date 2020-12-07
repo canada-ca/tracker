@@ -4,14 +4,14 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { GraphQLNonNull, GraphQLID } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 
-const { makeMigrations } = require('../../../../migrations')
-const { userLoaderByKey, orgLoaderByKey } = require('../../../loaders')
+const { makeMigrations } = require('../../../migrations')
+const { userLoaderByKey, orgLoaderByKey } = require('../../loaders')
 const {
   userAffiliationsType,
   organizationType,
   userSharedType,
-} = require('../../index')
-const { RoleEnums } = require('../../../enums')
+} = require('../index')
+const { RoleEnums } = require('../../enums')
 
 describe('given the user affiliation object', () => {
   describe('testing the field definitions', () => {

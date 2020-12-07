@@ -10,15 +10,15 @@ const {
 } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 
-const { makeMigrations } = require('../../../../migrations')
-const { cleanseInput } = require('../../../validators')
-const { verifiedDomainLoaderConnectionsByOrgId } = require('../../../loaders')
+const { makeMigrations } = require('../../../migrations')
+const { cleanseInput } = require('../../validators')
+const { verifiedDomainLoaderConnectionsByOrgId } = require('../../loaders')
 const {
   verifiedOrganizationType,
   verifiedDomainConnection,
-} = require('../verified-objects')
-const { organizationSummaryType } = require('../../base/organization-summary')
-const { Acronym, Slug } = require('../../../scalars')
+} = require('../index')
+const { organizationSummaryType } = require('../organization-summary')
+const { Acronym, Slug } = require('../../scalars')
 
 describe('given the verified organization object', () => {
   describe('testing the field definitions', () => {

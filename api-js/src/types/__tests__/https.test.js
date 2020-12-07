@@ -4,12 +4,12 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { GraphQLID, GraphQLNonNull, GraphQLString } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 
-const { makeMigrations } = require('../../../../migrations')
-const { cleanseInput } = require('../../../validators')
+const { makeMigrations } = require('../../../migrations')
+const { cleanseInput } = require('../../validators')
 const {
   httpsGuidanceTagConnectionsLoader,
   domainLoaderByKey,
-} = require('../../../loaders')
+} = require('../../loaders')
 const { httpsType, domainType, guidanceTagConnection } = require('../index')
 
 describe('given the https gql object', () => {

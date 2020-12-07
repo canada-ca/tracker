@@ -4,13 +4,13 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { GraphQLNonNull, GraphQLID, GraphQLList, GraphQLString } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 
-const { makeMigrations } = require('../../../../migrations')
-const { cleanseInput } = require('../../../validators')
-const { userRequired, tokenize } = require('../../../auth')
+const { makeMigrations } = require('../../../migrations')
+const { cleanseInput } = require('../../validators')
+const { userRequired, tokenize } = require('../../auth')
 const {
   orgLoaderConnectionArgsByDomainId,
   userLoaderByKey,
-} = require('../../../loaders')
+} = require('../../loaders')
 const { domainStatus } = require('../domain-status')
 const { periodType } = require('../dmarc-report')
 const {
@@ -19,7 +19,7 @@ const {
   emailScanType,
   webScanType,
 } = require('../index')
-const { Domain, Selectors } = require('../../../scalars')
+const { Domain, Selectors } = require('../../scalars')
 
 describe('given the domain object', () => {
   describe('testing its field definitions', () => {

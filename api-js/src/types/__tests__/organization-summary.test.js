@@ -1,5 +1,5 @@
 const { organizationSummaryType } = require('../organization-summary')
-const { categorizedSummaryType } = require('../../categorized-summary')
+const { categorizedSummaryType } = require('../categorized-summary')
 
 describe('given the organization summary object', () => {
   describe('testing field definitions', () => {

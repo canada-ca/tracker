@@ -6,7 +6,7 @@ const {
 } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 
-const { guidanceTagType } = require('../guidance-tag')
+const { guidanceTagType } = require('../index')
 const { refLinksType } = require('../ref-links')
 
 describe('given the guidanceTag gql object', () => {

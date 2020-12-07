@@ -1,74 +1,61 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { toGlobalId } = require('graphql-relay')
 const {
   GraphQLNonNull,
   GraphQLID,
-  GraphQLString,
   GraphQLInt,
+  GraphQLString,
 } = require('graphql')
-
-const { makeMigrations } = require('../../../../migrations')
-const { cleanseInput } = require('../../../validators')
+const { toGlobalId } = require('graphql-relay')
+const { makeMigrations } = require('../../../migrations')
+const { cleanseInput } = require('../../validators')
 const {
-  dmarcGuidanceTagConnectionsLoader,
   domainLoaderByKey,
-} = require('../../../loaders')
-const { dmarcType, domainType, guidanceTagConnection } = require('../index')
+  spfGuidanceTagConnectionsLoader,
+} = require('../../loaders')
+const { spfType, domainType, guidanceTagConnection } = require('../index')
 
-describe('given the dmarcType object', () => {
-  describe('testing its field definitions', () => {
+describe('given the spfType object', () => {
+  describe('testing the field definitions', () => {
     it('has an id field', () => {
-      const demoType = dmarcType.getFields()
+      const demoType = spfType.getFields()
 
       expect(demoType).toHaveProperty('id')
       expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
     })
     it('has a domain field', () => {
-      const demoType = dmarcType.getFields()
+      const demoType = spfType.getFields()
 
       expect(demoType).toHaveProperty('domain')
       expect(demoType.domain.type).toMatchObject(domainType)
     })
     it('has a timestamp field', () => {
-      const demoType = dmarcType.getFields()
+      const demoType = spfType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
       expect(demoType.timestamp.type).toMatchObject(GraphQLString)
     })
-    it('has a dmarcPhase field', () => {
-      const demoType = dmarcType.getFields()
+    it('has a lookups field', () => {
+      const demoType = spfType.getFields()
 
-      expect(demoType).toHaveProperty('dmarcPhase')
-      expect(demoType.dmarcPhase.type).toMatchObject(GraphQLInt)
+      expect(demoType).toHaveProperty('lookups')
+      expect(demoType.lookups.type).toMatchObject(GraphQLInt)
     })
     it('has a record field', () => {
-      const demoType = dmarcType.getFields()
+      const demoType = spfType.getFields()
 
       expect(demoType).toHaveProperty('record')
       expect(demoType.record.type).toMatchObject(GraphQLString)
     })
-    it('has a pPolicy field', () => {
-      const demoType = dmarcType.getFields()
+    it('has a spfDefault field', () => {
+      const demoType = spfType.getFields()
 
-      expect(demoType).toHaveProperty('pPolicy')
-      expect(demoType.pPolicy.type).toEqual(GraphQLString)
-    })
-    it('has a spPolicy field', () => {
-      const demoType = dmarcType.getFields()
-
-      expect(demoType).toHaveProperty('spPolicy')
-      expect(demoType.spPolicy.type).toMatchObject(GraphQLString)
-    })
-    it('has a pct field', () => {
-      const demoType = dmarcType.getFields()
-
-      expect(demoType).toHaveProperty('pct')
-      expect(demoType.pct.type).toMatchObject(GraphQLInt)
+      expect(demoType).toHaveProperty('spfDefault')
+      expect(demoType.spfDefault.type).toMatchObject(GraphQLString)
     })
     it('has a guidanceTags field', () => {
-      const demoType = dmarcType.getFields()
+      const demoType = spfType.getFields()
 
       expect(demoType).toHaveProperty('guidanceTags')
       expect(demoType.guidanceTags.type).toMatchObject(
@@ -77,8 +64,8 @@ describe('given the dmarcType object', () => {
     })
   })
 
-  describe('testing its field resolvers', () => {
-    let query, drop, truncate, migrate, collections, domain, dmarc, dmarcGT
+  describe('testing the field resolvers', () => {
+    let query, drop, truncate, migrate, collections, domain, spf, spfGT
 
     beforeAll(async () => {
       ;({ migrate } = await ArangoTools({ rootPass, url }))
@@ -92,22 +79,20 @@ describe('given the dmarcType object', () => {
         domain: 'test.domain.gc.ca',
         slug: 'test-domain-gc-ca',
       })
-      dmarc = await collections.dmarc.save({
+      spf = await collections.spf.save({
         timestamp: '2020-10-02T12:43:39Z',
-        dmarcPhase: 1,
+        lookups: 5,
         record: 'txtRecord',
-        pPolicy: 'pPolicy',
-        spPolicy: 'spPolicy',
-        pct: 100,
-        guidanceTags: ['dmarc1'],
+        spfDefault: 'default',
+        guidanceTags: ['spf1'],
       })
-      await collections.domainsDMARC.save({
+      await collections.domainsSPF.save({
         _from: domain._id,
-        _to: dmarc._id,
+        _to: spf._id,
       })
-      dmarcGT = await collections.dmarcGuidanceTags.save({
-        _key: 'dmarc1',
-        tagName: 'DMARC-TAG',
+      spfGT = await collections.spfGuidanceTags.save({
+        _key: 'spf1',
+        tagName: 'SPF-TAG',
         guidance: 'Some Interesting Guidance',
         refLinksGuide: [
           {
@@ -132,18 +117,27 @@ describe('given the dmarcType object', () => {
       await drop()
     })
 
-    describe('testing the id field resolver', () => {
+    describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
-        const demoType = dmarcType.getFields()
+        const demoType = spfType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('dmarc', 1))
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('spf', '1'))
       })
     })
     describe('testing the domain resolver', () => {
       it('returns the resolved value', async () => {
-        const demoType = dmarcType.getFields()
+        const demoType = spfType.getFields()
 
         const loader = domainLoaderByKey(query, '1', {})
+
+        const expectedResult = {
+          _id: domain._id,
+          _key: domain._key,
+          _rev: domain._rev,
+          id: domain._key,
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        }
 
         await expect(
           demoType.domain.resolve(
@@ -151,88 +145,66 @@ describe('given the dmarcType object', () => {
             {},
             { loaders: { domainLoaderByKey: loader } },
           ),
-        ).resolves.toEqual({
-          _id: domain._id,
-          _key: domain._key,
-          _rev: domain._rev,
-          id: domain._key,
-          domain: 'test.domain.gc.ca',
-          slug: 'test-domain-gc-ca',
-        })
+        ).resolves.toEqual(expectedResult)
       })
     })
     describe('testing the timestamp resolver', () => {
       it('returns the resolved value', () => {
-        const demoType = dmarcType.getFields()
+        const demoType = spfType.getFields()
 
         expect(
           demoType.timestamp.resolve({ timestamp: '2020-10-02T12:43:39Z' }),
         ).toEqual('2020-10-02T12:43:39Z')
       })
     })
-    describe('testing the dmarcPhase resolver', () => {
+    describe('testing the lookups resolver', () => {
       it('returns the resolved value', () => {
-        const demoType = dmarcType.getFields()
+        const demoType = spfType.getFields()
 
-        expect(demoType.dmarcPhase.resolve({ dmarcPhase: 1 })).toEqual(1)
+        expect(demoType.lookups.resolve({ lookups: 1 })).toEqual(1)
       })
     })
     describe('testing the record resolver', () => {
       it('returns the resolved value', () => {
-        const demoType = dmarcType.getFields()
+        const demoType = spfType.getFields()
 
         expect(demoType.record.resolve({ record: 'txtRecord' })).toEqual(
           'txtRecord',
         )
       })
     })
-    describe('testing the pPolicy resolver', () => {
+    describe('testing the spfDefault resolver', () => {
       it('returns the resolved value', () => {
-        const demoType = dmarcType.getFields()
+        const demoType = spfType.getFields()
 
-        expect(demoType.pPolicy.resolve({ pPolicy: 'pPolicy' })).toEqual(
-          'pPolicy',
-        )
-      })
-    })
-    describe('testing the spPolicy resolver', () => {
-      it('returns the resolved value', () => {
-        const demoType = dmarcType.getFields()
-
-        expect(demoType.spPolicy.resolve({ spPolicy: 'spPolicy' })).toEqual(
-          'spPolicy',
-        )
-      })
-    })
-    describe('testing the pct resolver', () => {
-      it('returns the resolved value', () => {
-        const demoType = dmarcType.getFields()
-
-        expect(demoType.pct.resolve({ pct: 100 })).toEqual(100)
+        expect(
+          demoType.spfDefault.resolve({ spfDefault: 'spfDefault' }),
+        ).toEqual('spfDefault')
       })
     })
     describe('testing the guidanceTags resolver', () => {
       it('returns the resolved value', async () => {
-        const demoType = dmarcType.getFields()
+        const demoType = spfType.getFields()
 
-        const loader = dmarcGuidanceTagConnectionsLoader(
+        const loader = spfGuidanceTagConnectionsLoader(
           query,
           '1',
           cleanseInput,
           {},
         )
-        const guidanceTags = ['dmarc1']
+
+        const guidanceTags = ['spf1']
 
         const expectedResult = {
           edges: [
             {
-              cursor: toGlobalId('guidanceTags', dmarcGT._key),
+              cursor: toGlobalId('guidanceTags', spfGT._key),
               node: {
-                _id: dmarcGT._id,
-                _key: dmarcGT._key,
-                _rev: dmarcGT._rev,
+                _id: spfGT._id,
+                _key: spfGT._key,
+                _rev: spfGT._rev,
+                id: spfGT._key,
                 guidance: 'Some Interesting Guidance',
-                id: dmarcGT._key,
                 refLinksGuide: [
                   {
                     description: 'refLinksGuide Description',
@@ -245,8 +217,8 @@ describe('given the dmarcType object', () => {
                     ref_link: 'www.refLinksTechnical.ca',
                   },
                 ],
-                tagId: 'dmarc1',
-                tagName: 'DMARC-TAG',
+                tagId: 'spf1',
+                tagName: 'SPF-TAG',
               },
             },
           ],
@@ -254,8 +226,8 @@ describe('given the dmarcType object', () => {
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', dmarcGT._key),
-            endCursor: toGlobalId('guidanceTags', dmarcGT._key),
+            startCursor: toGlobalId('guidanceTags', spfGT._key),
+            endCursor: toGlobalId('guidanceTags', spfGT._key),
           },
         }
 
@@ -263,7 +235,7 @@ describe('given the dmarcType object', () => {
           demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

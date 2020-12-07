@@ -1,5 +1,5 @@
 const { GraphQLInt } = require('graphql')
-const { verifiedOrganizationConnection } = require('../verified-objects')
+const { verifiedOrganizationConnection } = require('../index')
 
 describe('given the verified organization connection object', () => {
   describe('testing its field definitions', () => {

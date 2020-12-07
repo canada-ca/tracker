@@ -3,13 +3,13 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 
-const { makeMigrations } = require('../../../../migrations')
-const { cleanseInput } = require('../../../validators')
+const { makeMigrations } = require('../../../migrations')
+const { cleanseInput } = require('../../validators')
 const {
   domainLoaderByKey,
   httpsLoaderConnectionsByDomainId,
   sslLoaderConnectionsByDomainId,
-} = require('../../../loaders')
+} = require('../../loaders')
 const {
   webScanType,
   domainType,

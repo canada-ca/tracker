@@ -11,21 +11,21 @@ const {
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
 
-const englishMessages = require('../../../locale/en/messages')
-const frenchMessages = require('../../../locale/fr/messages')
-const { makeMigrations } = require('../../../../migrations')
-const { cleanseInput } = require('../../../validators')
+const englishMessages = require('../../locale/en/messages')
+const frenchMessages = require('../../locale/fr/messages')
+const { makeMigrations } = require('../../../migrations')
+const { cleanseInput } = require('../../validators')
 const {
   domainLoaderConnectionsByOrgId,
   affiliationLoaderByOrgId,
-} = require('../../../loaders')
+} = require('../../loaders')
 const {
   organizationType,
   domainConnection,
   userAffiliationsConnection,
 } = require('../index')
 const { organizationSummaryType } = require('../organization-summary')
-const { Acronym, Slug } = require('../../../scalars')
+const { Acronym, Slug } = require('../../scalars')
 
 describe('given the organization object', () => {
   describe('testing the field definitions', () => {

@@ -5,7 +5,7 @@ const {
 const { toGlobalId } = require('graphql-relay')
 const { GraphQLEmailAddress } = require('graphql-scalars')
 
-const { userSharedType } = require('../../index')
+const { userSharedType } = require('../index')
 
 describe('given the user object', () => {
   describe('testing the field definitions', () => {

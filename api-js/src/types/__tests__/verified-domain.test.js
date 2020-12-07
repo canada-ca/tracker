@@ -5,15 +5,15 @@ const { GraphQLNonNull, GraphQLID } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 const { GraphQLDateTime } = require('graphql-scalars')
 
-const { makeMigrations } = require('../../../../migrations')
-const { cleanseInput } = require('../../../validators')
-const { verifiedOrgLoaderConnectionsByDomainId } = require('../../../loaders')
+const { makeMigrations } = require('../../../migrations')
+const { cleanseInput } = require('../../validators')
+const { verifiedOrgLoaderConnectionsByDomainId } = require('../../loaders')
 const {
   verifiedDomainType,
   verifiedOrganizationConnection,
-} = require('../verified-objects')
-const { domainStatus } = require('../../base/domain-status')
-const { Domain } = require('../../../scalars')
+} = require('../index')
+const { domainStatus } = require('../domain-status')
+const { Domain } = require('../../scalars')
 
 describe('given the verified domains object', () => {
   describe('testing the field definitions', () => {

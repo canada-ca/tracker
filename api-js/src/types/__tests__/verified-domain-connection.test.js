@@ -1,5 +1,5 @@
 const { GraphQLInt } = require('graphql')
-const { verifiedDomainConnection } = require('../verified-objects')
+const { verifiedDomainConnection } = require('../index')
 
 describe('given the verified domain connection object', () => {
   describe('testing its field definitions', () => {

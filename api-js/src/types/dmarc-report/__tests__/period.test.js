@@ -3,14 +3,14 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const moment = require('moment')
 
-const { makeMigrations } = require('../../../../../migrations')
+const { makeMigrations } = require('../../../../migrations')
 const { periodType } = require('../period')
 const { detailTablesType } = require('../detail-tables')
 const { categoryTotalsType } = require('../category-totals')
 const { categoryPercentagesType } = require('../category-percentages')
-const { PeriodEnums } = require('../../../../enums')
-const { Year, Domain } = require('../../../../scalars')
-const { domainLoaderByKey } = require('../../../../loaders')
+const { PeriodEnums } = require('../../../enums')
+const { Year, Domain } = require('../../../scalars')
+const { domainLoaderByKey } = require('../../../loaders')
 
 describe('testing the period gql object', () => {
   describe('testing the field definitions', () => {
