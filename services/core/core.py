@@ -99,16 +99,17 @@ def retrieve_guidance(
 
 
 def update_guidance(
-    guidance_data, host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_PASS
+    guidance_data, host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_PASS, port=DB_PORT
 ):
     logging.info(f"Updating guidance...")
 
     # Establish DB connection
-    client = ArangoClient(hosts=host)
+    connection_string = f"http://{host}:{port}"
+    client = ArangoClient(hosts=connection_string)
     db = client.db(name, username=user, password=password)
 
     for entry in guidance_data:
-        if entry["file"] == "scanSummaryCriteria":
+        if entry["file"] == "scanSummaryCriteria.json":
             if not db.has_collection("scanSummaryCriteria"):
                 db.create_collection("scanSummaryCriteria")
             for criteria_type, criteria in entry["guidance"].items():
@@ -141,16 +142,16 @@ def update_guidance(
                     db.collection("scanSummaryCriteria").update_match(
                         {"_key": criteria_type},
                         {
-                            "pass": criteria["pass"],
-                            "fail": criteria["fail"],
-                            "info": criteria["info"],
+                            "pass": criteria.get("pass", []),
+                            "fail": criteria.get("fail", []),
+                            "info": criteria.get("info", []),
                         },
                     )
                     logging.info(f"Scan summary criteria {criteria_type} updated.")
                 else:
                     logging.info(f"Scan summary criteria {criteria_type} not updated.")
 
-        elif entry["file"] == "chartSummaryCriteria":
+        elif entry["file"] == "chartSummaryCriteria.json":
             if not db.has_collection("chartSummaryCriteria"):
                 db.create_collection("chartSummaryCriteria")
             for criteria_type, criteria in entry["guidance"].items():
@@ -180,14 +181,15 @@ def update_guidance(
                 elif criteria_updated:
                     db.collection("chartSummaryCriteria").update_match(
                         {"_key": criteria_type},
-                        {"pass": criteria["pass"], "fail": criteria["fail"]},
+                        {"pass": criteria.get("pass", []), "fail": criteria.get("fail", [])},
                     )
                     logging.info(f"Chart summary criteria {criteria_type} updated.")
                 else:
                     logging.info(f"Chart summary criteria {criteria_type} not updated.")
 
         else:
-            tag_type = entry["file"].split("tags_")[1]
+            file_name = entry["file"].split(".json")[0]
+            tag_type = file_name.split("tags_")[1]
             if not db.has_collection(f"{tag_type}GuidanceTags"):
                 db.create_collection(f"{tag_type}GuidanceTags")
             for tag_key, tag_data in entry["guidance"].items():
@@ -231,11 +233,12 @@ def update_guidance(
     logging.info(f"Guidance update completed.")
 
 
-def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_PASS):
+def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_PASS, port=DB_PORT):
     logging.info(f"Updating scan summaries...")
 
     # Establish DB connection
-    client = ArangoClient(hosts=host)
+    connection_string = f"http://{host}:{port}"
+    client = ArangoClient(hosts=connection_string)
     db = client.db(name, username=user, password=password)
 
     if not db.has_collection("scanSummaries"):
@@ -276,11 +279,12 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_
     logging.info(f"Scan summary update completed.")
 
 
-def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_PASS):
+def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_PASS, port=DB_PORT):
     logging.info(f"Updating chart summaries...")
 
     # Establish DB connection
-    client = ArangoClient(hosts=host)
+    connection_string = f"http://{host}:{port}"
+    client = ArangoClient(hosts=connection_string)
     db = client.db(name, username=user, password=password)
 
     if not db.has_collection("chartSummaries"):
@@ -326,11 +330,12 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB
     logging.info(f"Chart summary update completed.")
 
 
-def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_PASS):
+def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_PASS, port=DB_PORT):
     logging.info(f"Updating organization summary values...")
 
     # Establish DB connection
-    client = ArangoClient(hosts=host)
+    connection_string = f"http://{host}:{port}"
+    client = ArangoClient(hosts=connection_string)
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):

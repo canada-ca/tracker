@@ -114,7 +114,7 @@ def test_update_guidance():
     test_guidance.append({"file": "tags_ssl", "guidance": ssl_tag_data})
     test_guidance.append({"file": "tags_aggregate", "guidance": aggregate_tag_data})
     update_guidance(
-        test_guidance, host="http://testdb:8529", name="test", user="", password=""
+        test_guidance, host="testdb", name="test", user="", password="", port=8529
     )
     for key, data in scan_summary_criteria_data.items():
         test_criteria = {"_key": key}
@@ -220,7 +220,7 @@ def test_update_guidance():
 
 
 def test_update_scan_summaries():
-    update_scan_summaries(host="http://testdb:8529", name="test", user="", password="")
+    update_scan_summaries(host="testdb", name="test", user="", password="", port=8529)
 
     httpsScanSummary = db.collection("scanSummaries").get({"_key": "https"})
     assert httpsScanSummary == {
@@ -274,7 +274,7 @@ def test_update_scan_summaries():
 
 
 def test_update_chart_summaries():
-    update_chart_summaries(host="http://testdb:8529", name="test", user="", password="")
+    update_chart_summaries(host="testdb", name="test", user="", password="", port=8529)
 
     webSummary = db.collection("chartSummaries").get({"_key": "web"})
     assert webSummary == {
@@ -298,7 +298,7 @@ def test_update_chart_summaries():
 
 
 def test_update_org_summaries():
-    update_org_summaries(host="http://testdb:8529", name="test", user="", password="")
+    update_org_summaries(host="testdb", name="test", user="", password="", port=8529)
 
     organization = db.collection("organizations").get({"_key": "testorg"})
     assert organization["summaries"] == {
