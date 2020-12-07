@@ -29,6 +29,7 @@ describe('given the load domain connection using org id function', () => {
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
+  
   beforeAll(async () => {
     console.error = mockedError
     console.warn = mockedWarn
@@ -39,7 +40,6 @@ describe('given the load domain connection using org id function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     consoleOutput = []
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
@@ -93,9 +93,14 @@ describe('given the load domain connection using org id function', () => {
     })
   })
 
+  afterEach(async () => {
+    await truncate()
+  })
+
   afterAll(async () => {
     await drop()
   })
+
   describe('given a successful load', () => {
     describe('using no cursor', () => {
       it('returns multiple domains', async () => {
@@ -364,6 +369,124 @@ describe('given the load domain connection using org id function', () => {
         }
 
         expect(domains).toEqual(expectedStructure)
+      })
+    })
+    describe('using ownership filter', () => {
+      let domainThree
+      beforeEach(async () => {
+        domainThree = await collections.domains.save({
+          domain: 'test3.domain.canada.ca',
+        })
+        await collections.claims.save({
+          _from: org._id,
+          _to: domainThree._id,
+        })
+        await collections.ownership.save({
+          _from: org._id,
+          _to: domainThree._id,
+        })
+      })
+      describe('ownership is set to true', () => {
+        it('returns only a domain belonging to a domain that owns it', async () => {
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+          )
+  
+          const domainLoader = domainLoaderByKey(query)
+          const expectedDomains = await domainLoader.loadMany([
+            domainThree._key,
+          ])
+  
+          expectedDomains[0].id = expectedDomains[0]._key
+  
+          const connectionArgs = {
+            first: 5,
+          }
+          const domains = await connectionLoader({
+            orgId: org._id,
+            ownership: true,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('domains', expectedDomains[0]._key),
+                node: {
+                  ...expectedDomains[0],
+                },
+              },
+            ],
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: toGlobalId('domains', expectedDomains[0]._key),
+              endCursor: toGlobalId('domains', expectedDomains[0]._key),
+            },
+            totalCount: 1,
+          }
+  
+          expect(domains).toEqual(expectedStructure)
+        })
+      })
+      describe('ownership is set to false', () => {
+        it('returns all domains', async () => {
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+          )
+  
+          const domainLoader = domainLoaderByKey(query)
+          const expectedDomains = await domainLoader.loadMany([
+            domain._key,
+            domainTwo._key,
+            domainThree._key,
+          ])
+  
+          const connectionArgs = {
+            first: 5,
+          }
+          const domains = await connectionLoader({
+            orgId: org._id,
+            ownership: false,
+            ...connectionArgs,
+          })
+  
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('domains', expectedDomains[0]._key),
+                node: {
+                  ...expectedDomains[0],
+                },
+              },
+              {
+                cursor: toGlobalId('domains', expectedDomains[1]._key),
+                node: {
+                  ...expectedDomains[1],
+                },
+              },
+              {
+                cursor: toGlobalId('domains', expectedDomains[2]._key),
+                node: {
+                  ...expectedDomains[2],
+                },
+              },
+            ],
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: toGlobalId('domains', expectedDomains[0]._key),
+              endCursor: toGlobalId('domains', expectedDomains[2]._key),
+            },
+            totalCount: 3,
+          }
+  
+          expect(domains).toEqual(expectedStructure)
+        })
       })
     })
   })

@@ -834,7 +834,14 @@ const organizationType = new GraphQLObjectType({
     domains: {
       type: domainConnection.connectionType,
       description: 'The domains which are associated with this organization.',
-      args: connectionArgs,
+      args: {
+        ownership: {
+          type: GraphQLBoolean,
+          description:
+            'Limit domains to those that belong to an organization that has ownership.',
+        },
+        ...connectionArgs,
+      },
       resolve: async (
         { _id },
         args,
