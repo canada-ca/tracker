@@ -24,6 +24,53 @@ const i18n = setupI18n({
   },
 })
 
+const domains = {
+  pageInfo: {
+    hasNextPage: false,
+    hasPreviousPage: false,
+  },
+  edges: [
+    {
+      node: {
+        id: 'OTY2NTI4OTY4NA==',
+        domain: 'tbs-sct.gc.ca',
+        lastRan: '2020-06-18T00:42:12.414Z',
+        email: {
+          dmarc: {
+            edges: [
+              {
+                node: {
+                  timestamp: '2020-02-10T22:00:27.555Z',
+                  dmarcPhase: 2,
+                  pPolicy: 'missing',
+                  spPolicy: 'missing',
+                  pct: 60,
+                },
+              },
+            ],
+          },
+        },
+        web: {
+          https: {
+            edges: [
+              {
+                node: {
+                  timestamp: '2019-12-22T09:18:56.523Z',
+                  implementation: 'Bad Hostname',
+                  enforced: 'Strict',
+                  hsts: 'HSTS Fully Implemented',
+                  hstsAge: '21672901',
+                  preloaded: 'HSTS Preloaded',
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  ],
+}
+
 describe('<Organisations />', () => {
   describe('given a list of organizations', () => {
     it('displays a list of organizations', async () => {
@@ -46,6 +93,7 @@ describe('<Organisations />', () => {
                       slug: 'organization-one',
                       domainCount: 5,
                       verified: false,
+                      domains,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -59,6 +107,7 @@ describe('<Organisations />', () => {
                       slug: 'organization-two',
                       domainCount: 5,
                       verified: false,
+                      domains,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -123,6 +172,7 @@ describe('<Organisations />', () => {
                       slug: 'organization-one',
                       domainCount: 5,
                       verified: false,
+                      domains,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -158,6 +208,7 @@ describe('<Organisations />', () => {
                       slug: 'organization-two',
                       domainCount: 5,
                       verified: false,
+                      domains,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -193,6 +244,7 @@ describe('<Organisations />', () => {
                       slug: 'organization-two',
                       domainCount: 5,
                       verified: false,
+                      domains,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -272,6 +324,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-one',
                         domainCount: 5,
                         verified: false,
+                        domains,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -307,6 +360,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-two',
                         domainCount: 5,
                         verified: false,
+                        domains,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -342,6 +396,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-one',
                         domainCount: 5,
                         verified: false,
+                        domains,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -429,6 +484,7 @@ describe('<Organisations />', () => {
                     slug: 'organization-one',
                     domainCount: 5,
                     verified: false,
+                    domains,
                     __typename: 'Organizations',
                   },
                   __typename: 'OrganizationsEdge',
@@ -465,6 +521,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-one',
                         domainCount: 5,
                         verified: false,
+                        domains,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -500,6 +557,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-two',
                         domainCount: 5,
                         verified: false,
+                        domains,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -535,6 +593,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-two',
                         domainCount: 5,
                         verified: false,
+                        domains,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',

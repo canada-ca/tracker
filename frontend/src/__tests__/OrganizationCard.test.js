@@ -17,6 +17,53 @@ const i18n = setupI18n({
   },
 })
 
+const domains = {
+  pageInfo: {
+    hasNextPage: false,
+    hasPreviousPage: false,
+  },
+  edges: [
+    {
+      node: {
+        id: 'OTY2NTI4OTY4NA==',
+        domain: 'tbs-sct.gc.ca',
+        lastRan: '2020-06-18T00:42:12.414Z',
+        email: {
+          dmarc: {
+            edges: [
+              {
+                node: {
+                  timestamp: '2020-02-10T22:00:27.555Z',
+                  dmarcPhase: 2,
+                  pPolicy: 'missing',
+                  spPolicy: 'missing',
+                  pct: 60,
+                },
+              },
+            ],
+          },
+        },
+        web: {
+          https: {
+            edges: [
+              {
+                node: {
+                  timestamp: '2019-12-22T09:18:56.523Z',
+                  implementation: 'Bad Hostname',
+                  enforced: 'Strict',
+                  hsts: 'HSTS Fully Implemented',
+                  hstsAge: '21672901',
+                  preloaded: 'HSTS Preloaded',
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  ],
+}
+
 describe('<OrganizationsCard />', () => {
   it('successfully renders card with org name and number of services', async () => {
     const { getByText } = render(
@@ -29,6 +76,8 @@ describe('<OrganizationsCard />', () => {
                 name="Treasury Board Secretariat"
                 acronym="TBS"
                 domainCount={7}
+                verified={false}
+                domains={domains}
               />
             </I18nProvider>
           </ThemeProvider>

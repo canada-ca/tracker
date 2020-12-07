@@ -92,10 +92,15 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                 ifEmpty={() => <Trans>No Domains</Trans>}
                 mb="4"
               >
-                {({ id, domain, lastRan }, index) => (
+                {({ id, domain, lastRan, web, email }, index) => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <Box key={`${id}:${index}`}>
-                      <DomainCard url={domain} lastRan={lastRan} />
+                      <DomainCard
+                        url={domain}
+                        lastRan={lastRan}
+                        web={web}
+                        email={email}
+                      />
                       <Divider borderColor="gray.900" />
                     </Box>
                   </ErrorBoundary>

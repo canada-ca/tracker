@@ -12,6 +12,46 @@ export const PAGINATED_ORGANIZATIONS = gql`
           slug
           domainCount
           verified
+          domains {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+            }
+            edges {
+              node {
+                id
+                domain
+                lastRan
+                email {
+                  dmarc {
+                    edges {
+                      node {
+                        timestamp
+                        dmarcPhase
+                        pPolicy
+                        spPolicy
+                        pct
+                      }
+                    }
+                  }
+                }
+                web {
+                  https {
+                    edges {
+                      node {
+                        timestamp
+                        implementation
+                        enforced
+                        hsts
+                        hstsAge
+                        preloaded
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
       pageInfo {
@@ -36,6 +76,46 @@ export const REVERSE_PAGINATED_ORGANIZATIONS = gql`
           slug
           domainCount
           verified
+          domains {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+            }
+            edges {
+              node {
+                id
+                domain
+                lastRan
+                email {
+                  dmarc {
+                    edges {
+                      node {
+                        timestamp
+                        dmarcPhase
+                        pPolicy
+                        spPolicy
+                        pct
+                      }
+                    }
+                  }
+                }
+                web {
+                  https {
+                    edges {
+                      node {
+                        timestamp
+                        implementation
+                        enforced
+                        hsts
+                        hstsAge
+                        preloaded
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
       pageInfo {
@@ -205,6 +285,33 @@ export const ORG_DETAILS_PAGE = gql`
             id
             domain
             lastRan
+            email {
+              dmarc {
+                edges {
+                  node {
+                    timestamp
+                    dmarcPhase
+                    pPolicy
+                    spPolicy
+                    pct
+                  }
+                }
+              }
+            }
+            web {
+              https {
+                edges {
+                  node {
+                    timestamp
+                    implementation
+                    enforced
+                    hsts
+                    hstsAge
+                    preloaded
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -239,6 +346,33 @@ export const PAGINATED_DOMAINS = gql`
           id
           domain
           lastRan
+          email {
+            dmarc {
+              edges {
+                node {
+                  timestamp
+                  dmarcPhase
+                  pPolicy
+                  spPolicy
+                  pct
+                }
+              }
+            }
+          }
+          web {
+            https {
+              edges {
+                node {
+                  timestamp
+                  implementation
+                  enforced
+                  hsts
+                  hstsAge
+                  preloaded
+                }
+              }
+            }
+          }
           __typename
         }
         __typename
@@ -264,6 +398,33 @@ export const REVERSE_PAGINATED_DOMAINS = gql`
           id
           domain
           lastRan
+          email {
+            dmarc {
+              edges {
+                node {
+                  timestamp
+                  dmarcPhase
+                  pPolicy
+                  spPolicy
+                  pct
+                }
+              }
+            }
+          }
+          web {
+            https {
+              edges {
+                node {
+                  timestamp
+                  implementation
+                  enforced
+                  hsts
+                  hstsAge
+                  preloaded
+                }
+              }
+            }
+          }
           __typename
         }
         __typename

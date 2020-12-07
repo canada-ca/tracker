@@ -17,6 +17,39 @@ const i18n = setupI18n({
   },
 })
 
+const email = {
+  dmarc: {
+    edges: [
+      {
+        node: {
+          timestamp: '2020-02-10T22:00:27.555Z',
+          dmarcPhase: 2,
+          pPolicy: 'missing',
+          spPolicy: 'missing',
+          pct: 60,
+        },
+      },
+    ],
+  },
+}
+
+const web = {
+  https: {
+    edges: [
+      {
+        node: {
+          timestamp: '2019-12-22T09:18:56.523Z',
+          implementation: 'Bad Hostname',
+          enforced: 'Strict',
+          hsts: 'HSTS Fully Implemented',
+          hstsAge: '21672901',
+          preloaded: 'HSTS Preloaded',
+        },
+      },
+    ],
+  },
+}
+
 describe('<OrganizationsCard />', () => {
   it('successfully renders card with domain name and date of last scan', async () => {
     const { getByText } = render(
@@ -27,6 +60,8 @@ describe('<OrganizationsCard />', () => {
               <DomainCard
                 url="tbs-sct.gc.ca"
                 lastRan="2020-09-10T00:34:26.429Z"
+                web={web}
+                email={email}
               />
             </I18nProvider>
           </ThemeProvider>
@@ -46,7 +81,12 @@ describe('<OrganizationsCard />', () => {
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <DomainCard url="tbs-sct.gc.ca" lastRan={null} />
+              <DomainCard
+                url="tbs-sct.gc.ca"
+                lastRan={null}
+                web={web}
+                email={email}
+              />
             </I18nProvider>
           </ThemeProvider>
         </MemoryRouter>

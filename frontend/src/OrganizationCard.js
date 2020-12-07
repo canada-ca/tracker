@@ -10,7 +10,7 @@ import {
   Icon,
 } from '@chakra-ui/core'
 import { useRouteMatch, useHistory } from 'react-router-dom'
-import { string, number, bool } from 'prop-types'
+import { string, number, bool, object } from 'prop-types'
 import { Trans } from '@lingui/macro'
 
 export function OrganizationCard({
@@ -19,12 +19,36 @@ export function OrganizationCard({
   slug,
   domainCount,
   verified,
+  domains,
   ...rest
 }) {
   const { path, _url } = useRouteMatch()
   const history = useHistory()
   const webValue = Math.floor(Math.random() * 10) * 10 + 10
-  const emailValue = Math.floor(Math.random() * 10) * 10 + 10
+
+  // const webValuu = () => {
+  //   const web = domains?.edges[0]?.node?.web.https.edges.map(({ node }) => {
+  //     return node.implementation
+  //   })
+  //   return web
+  // }
+
+  const emailValue = () => {
+    let percentageSum = 0
+    const dmarc = domains?.edges[0]?.node?.email?.dmarc?.edges.map(
+      ({ node }) => {
+        return node.pct
+      },
+    )
+    for (let i = 0; i < dmarc?.length; i++) {
+      percentageSum = percentageSum + dmarc[i]
+    }
+    if (dmarc?.length) {
+      return 100 - Math.floor(percentageSum / dmarc?.length)
+    } else {
+      return 0
+    }
+  }
 
   return (
     <ListItem {...rest}>
@@ -82,7 +106,7 @@ export function OrganizationCard({
           mb={['2', '0']}
         >
           <Text fontWeight="bold">
-            <Trans>Web Configuration</Trans>
+            <Trans>Web Configuration (mocked)</Trans>
           </Text>
           <Text>{webValue}%</Text>
           <Progress value={webValue} bg="gray.300" w={['50%', '100%']} />
@@ -92,8 +116,8 @@ export function OrganizationCard({
           <Text fontWeight="bold">
             <Trans>Email Configuration</Trans>
           </Text>
-          <Text>{emailValue}%</Text>
-          <Progress value={emailValue} bg="gray.300" w={['50%', '100%']} />
+          <Text>{emailValue()}%</Text>
+          <Progress value={emailValue()} bg="gray.300" w={['50%', '100%']} />
         </Box>
       </PseudoBox>
     </ListItem>
@@ -106,4 +130,5 @@ OrganizationCard.propTypes = {
   slug: string.isRequired,
   domainCount: number.isRequired,
   verified: bool,
+  domains: object,
 }

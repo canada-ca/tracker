@@ -137,10 +137,15 @@ export default function OrganizationDetails() {
                 )}
                 mb="4"
               >
-                {({ id, domain, lastRan }, index) => (
+                {({ id, domain, lastRan, web, email }, index) => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <Box key={`${id}:${index}`}>
-                      <DomainCard url={domain} lastRan={lastRan} />
+                      <DomainCard
+                        url={domain}
+                        lastRan={lastRan}
+                        web={web}
+                        email={email}
+                      />
                       <Divider borderColor="gray.900" />
                     </Box>
                   </ErrorBoundary>
