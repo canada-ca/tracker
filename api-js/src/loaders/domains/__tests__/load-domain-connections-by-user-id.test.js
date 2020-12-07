@@ -26,6 +26,7 @@ describe('given the load domain connections by user id function', () => {
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
+
   beforeAll(async () => {
     console.error = mockedError
     console.warn = mockedWarn
@@ -37,7 +38,7 @@ describe('given the load domain connections by user id function', () => {
 
   beforeEach(async () => {
     await truncate()
-    await collections.users.save({
+    user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
       preferredLang: 'french',
@@ -68,12 +69,6 @@ describe('given the load domain connections by user id function', () => {
         },
       },
     })
-    const userCursor = await query`
-    FOR user IN users
-      FILTER user.userName == "test.account@istio.actually.exists"
-      RETURN user
-  `
-    user = await userCursor.next()
     await collections.affiliations.save({
       _from: org._id,
       _to: user._id,
@@ -99,26 +94,11 @@ describe('given the load domain connections by user id function', () => {
     })
     consoleOutput = []
   })
+
   afterEach(async () => {
-    await query`
-      LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-      LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-      RETURN true
-    `
-    await query`
-      FOR affiliation IN affiliations
-        REMOVE affiliation IN affiliations
-    `
-    await query`
-      LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userKey: e._to })
-      LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-      RETURN true
-    `
-    await query`
-      FOR claim IN claims
-        REMOVE claim IN claims
-    `
+    await truncate()
   })
+
   afterAll(async () => {
     await drop()
   })
@@ -346,6 +326,118 @@ describe('given the load domain connections by user id function', () => {
           }
 
           expect(domains).toEqual(expectedStructure)
+        })
+      })
+      describe('using ownership', () => {
+        let domainThree
+        beforeEach(async () => {
+          domainThree = await collections.domains.save({
+            domain: 'test3.gc.ca',
+            lastRan: null,
+            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+          })
+          await collections.claims.save({
+            _to: domainThree._id,
+            _from: org._id,
+          })
+          await collections.ownership.save({
+            _to: domainThree._id,
+            _from: org._id,
+          })
+        })
+        describe('ownership is set to true', () => {
+          it('returns only a domain belonging to a domain that owns it', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+            )
+
+            const domainLoader = domainLoaderByKey(query)
+            const expectedDomains = await domainLoader.loadMany([
+              domainThree._key,
+            ])
+
+            const connectionArgs = {
+              first: 1,
+              ownership: true,
+            }
+            const domains = await connectionLoader({ ...connectionArgs })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('domains', expectedDomains[0]._key),
+                  node: {
+                    ...expectedDomains[0],
+                  },
+                },
+              ],
+              totalCount: 1,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('domains', expectedDomains[0]._key),
+                endCursor: toGlobalId('domains', expectedDomains[0]._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+        describe('ownership is set to false', () => {
+          it('returns all domains an org has claimed', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+            )
+
+            const domainLoader = domainLoaderByKey(query)
+            const expectedDomains = await domainLoader.loadMany([
+              domainOne._key,
+              domainTwo._key,
+              domainThree._key,
+            ])
+
+            const connectionArgs = {
+              first: 3,
+              ownership: false,
+            }
+            const domains = await connectionLoader({ ...connectionArgs })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('domains', expectedDomains[0]._key),
+                  node: {
+                    ...expectedDomains[0],
+                  },
+                },
+                {
+                  cursor: toGlobalId('domains', expectedDomains[1]._key),
+                  node: {
+                    ...expectedDomains[1],
+                  },
+                },
+                {
+                  cursor: toGlobalId('domains', expectedDomains[2]._key),
+                  node: {
+                    ...expectedDomains[2],
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('domains', expectedDomains[0]._key),
+                endCursor: toGlobalId('domains', expectedDomains[2]._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
         })
       })
     })
