@@ -102,17 +102,17 @@ claims.insert({"_from": org["_id"], "_to": domain3["_id"]})
 def test_update_guidance():
     test_guidance = []
     test_guidance.append(
-        {"file": "scanSummaryCriteria", "guidance": scan_summary_criteria_data}
+        {"file": "scanSummaryCriteria.json", "guidance": scan_summary_criteria_data}
     )
     test_guidance.append(
-        {"file": "chartSummaryCriteria", "guidance": chart_summary_criteria_data}
+        {"file": "chartSummaryCriteria.json", "guidance": chart_summary_criteria_data}
     )
-    test_guidance.append({"file": "tags_dkim", "guidance": dkim_tag_data})
-    test_guidance.append({"file": "tags_dmarc", "guidance": dmarc_tag_data})
-    test_guidance.append({"file": "tags_spf", "guidance": spf_tag_data})
-    test_guidance.append({"file": "tags_https", "guidance": https_tag_data})
-    test_guidance.append({"file": "tags_ssl", "guidance": ssl_tag_data})
-    test_guidance.append({"file": "tags_aggregate", "guidance": aggregate_tag_data})
+    test_guidance.append({"file": "tags_dkim.json", "guidance": dkim_tag_data})
+    test_guidance.append({"file": "tags_dmarc.json", "guidance": dmarc_tag_data})
+    test_guidance.append({"file": "tags_spf.json", "guidance": spf_tag_data})
+    test_guidance.append({"file": "tags_https.json", "guidance": https_tag_data})
+    test_guidance.append({"file": "tags_ssl.json", "guidance": ssl_tag_data})
+    test_guidance.append({"file": "tags_aggregate.json", "guidance": aggregate_tag_data})
     update_guidance(
         test_guidance, host="testdb", name="test", user="", password="", port=8529
     )
