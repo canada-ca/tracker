@@ -74,7 +74,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "file-loader": "^6.1.1",
     "fs-extra": "^9.0.1",
-    "html-webpack-plugin": "^5.0.0-alpha.6",
+    "html-webpack-plugin": "^5.0.0-alpha.15",
     "jest": "^26.6.2",
     "jest-emotion": "^10.0.32",
     "mq-polyfill": "^1.1.8",
