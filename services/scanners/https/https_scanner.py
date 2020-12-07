@@ -155,9 +155,6 @@ def Server(server_client=requests):
         def timeout_handler(signum, frame):
             msg = "Timeout while performing scan"
             logging.error(msg)
-            dispatch_results(
-                {"scan_type": "https", "uuid": uuid, "results": {}}, server_client
-            )
             return PlainTextResponse(msg)
 
         try:
@@ -198,7 +195,7 @@ def Server(server_client=requests):
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "https", "uuid": uuid, "results": {}}, server_client
+                {"scan_type": "https", "uuid": uuid, "domain_key": domain_key, "results": {}}, server_client
             )
             return PlainTextResponse(msg)
 
