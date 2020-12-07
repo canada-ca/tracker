@@ -2,8 +2,8 @@ const { GraphQLObjectType } = require('graphql')
 const { categoryPercentagesType } = require('./category-percentages')
 const { categoryTotalsType } = require('./category-totals')
 const { detailTablesType } = require('./detail-tables')
-const { PeriodEnums } = require('../../../enums')
-const { Domain, Year } = require('../../../scalars')
+const { PeriodEnums } = require('../../enums')
+const { Domain, Year } = require('../../scalars')
 
 const periodType = new GraphQLObjectType({
   name: 'Period',

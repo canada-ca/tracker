@@ -20,13 +20,13 @@ const {
 } = require('graphql-scalars')
 const { t } = require('@lingui/macro')
 
-const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
-const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
-const { nodeInterface } = require('../node')
+const { RoleEnums, LanguageEnums, PeriodEnums } = require('../enums')
+const { Acronym, Domain, Slug, Selectors, Year } = require('../scalars')
+const { nodeInterface } = require('./node')
 const { periodType } = require('./dmarc-report')
-const { guidanceTagType } = require('./guidance-tags')
 const { domainStatus } = require('./domain-status')
 const { organizationSummaryType } = require('./organization-summary')
+const { refLinksType } = require('./ref-links')
 
 /* Domain related objects */
 const domainType = new GraphQLObjectType({
@@ -759,18 +759,6 @@ const sslConnection = connectionDefinitions({
   }),
 })
 
-const guidanceTagConnection = connectionDefinitions({
-  name: 'GuidanceTag',
-  nodeType: guidanceTagType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of guidance tags for a given scan type.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
-})
-
 /* End domain related objects */
 
 const organizationType = new GraphQLObjectType({
@@ -1025,6 +1013,200 @@ const userAffiliationsConnection = connectionDefinitions({
   }),
 })
 
+const guidanceTagType = new GraphQLObjectType({
+  name: 'GuidanceTag',
+  description:
+    'Details for a given guidance tag based on https://github.com/canada-ca/tracker/wiki/Guidance-Tags',
+  fields: () => ({
+    id: globalIdField('guidanceTags'),
+    tagId: {
+      type: GraphQLString,
+      description: 'The guidance tag ID.',
+      resolve: ({ tagId }) => tagId,
+    },
+    tagName: {
+      type: GraphQLString,
+      description: 'The guidance tag name.',
+      resolve: ({ tagName }) => tagName,
+    },
+    guidance: {
+      type: GraphQLString,
+      description:
+        'Guidance for changes to record, or to maintain current stance.',
+      resolve: ({ guidance }) => guidance,
+    },
+    refLinks: {
+      type: GraphQLList(refLinksType),
+      description: 'Links to implementation guidance for a given tag.',
+      resolve: ({ refLinksGuide }) => refLinksGuide,
+    },
+    refLinksTech: {
+      type: GraphQLList(refLinksType),
+      description: 'Links to technical information for a given tag.',
+      resolve: ({ refLinksTechnical }) => refLinksTechnical,
+    },
+  }),
+  interfaces: [nodeInterface],
+})
+
+const guidanceTagConnection = connectionDefinitions({
+  name: 'GuidanceTag',
+  nodeType: guidanceTagType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of guidance tags for a given scan type.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
+})
+
+const verifiedDomainType = new GraphQLObjectType({
+  name: 'VerifiedDomain',
+  fields: () => ({
+    id: globalIdField('verifiedDomains'),
+    domain: {
+      type: Domain,
+      description: 'Domain that scans will be ran on.',
+      resolve: ({ domain }) => domain,
+    },
+    lastRan: {
+      type: GraphQLDateTime,
+      description: 'The last time that a scan was ran on this domain.',
+      resolve: ({ lastRan }) => lastRan,
+    },
+    status: {
+      type: domainStatus,
+      description: 'The domains scan status, based on the latest scan data.',
+      resolve: ({ status }) => status,
+    },
+    organizations: {
+      type: verifiedOrganizationConnection.connectionType,
+      args: connectionArgs,
+      description: 'The organization that this domain belongs to.',
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { verifiedOrgLoaderConnectionsByDomainId } },
+      ) => {
+        const orgs = await verifiedOrgLoaderConnectionsByDomainId({
+          domainId: _id,
+          ...args,
+        })
+        return orgs
+      },
+    },
+  }),
+  interfaces: [nodeInterface],
+  description: 'Domain object containing information for a given domain.',
+})
+
+const verifiedDomainConnection = connectionDefinitions({
+  name: 'VerifiedDomain',
+  nodeType: verifiedDomainType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of verified domains.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
+})
+
+const verifiedOrganizationType = new GraphQLObjectType({
+  name: 'VerifiedOrganization',
+  fields: () => ({
+    id: globalIdField('verifiedOrganizations'),
+    acronym: {
+      type: Acronym,
+      description: 'The organizations acronym.',
+      resolve: ({ acronym }) => acronym,
+    },
+    name: {
+      type: GraphQLString,
+      description: 'The full name of the organization.',
+      resolve: ({ name }) => name,
+    },
+    slug: {
+      type: Slug,
+      description: 'Slugified name of the organization.',
+      resolve: ({ slug }) => slug,
+    },
+    zone: {
+      type: GraphQLString,
+      description: 'The zone which the organization belongs to.',
+      resolve: ({ zone }) => zone,
+    },
+    sector: {
+      type: GraphQLString,
+      description: 'The sector which the organization belongs to.',
+      resolve: ({ sector }) => sector,
+    },
+    country: {
+      type: GraphQLString,
+      description: 'The country in which the organization resides.',
+      resolve: ({ country }) => country,
+    },
+    province: {
+      type: GraphQLString,
+      description: 'The province in which the organization resides.',
+      resolve: ({ province }) => province,
+    },
+    city: {
+      type: GraphQLString,
+      description: 'The city in which the organization resides.',
+      resolve: ({ city }) => city,
+    },
+    verified: {
+      type: GraphQLBoolean,
+      description: 'Wether the organization is a verified organization.',
+      resolve: ({ verified }) => verified,
+    },
+    summaries: {
+      type: organizationSummaryType,
+      description:
+        'Summaries based on scan types that are preformed on the given organizations domains.',
+      resolve: ({ summaries }) => summaries,
+    },
+    domainCount: {
+      type: GraphQLInt,
+      description: 'The number of domains associated with this organization.',
+      resolve: ({ domainCount }) => domainCount,
+    },
+    domains: {
+      type: verifiedDomainConnection.connectionType,
+      description: 'The domains which are associated with this organization.',
+      args: connectionArgs,
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { verifiedDomainLoaderConnectionsByOrgId } },
+      ) => {
+        const domains = await verifiedDomainLoaderConnectionsByOrgId({
+          orgId: _id,
+          ...args,
+        })
+        return domains
+      },
+    },
+  }),
+  interfaces: [nodeInterface],
+  description:
+    'Verified Organization object containing information for a given Organization.',
+})
+
+const verifiedOrganizationConnection = connectionDefinitions({
+  name: 'VerifiedOrganization',
+  nodeType: verifiedOrganizationType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of verified organizations.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
+})
+
 module.exports = {
   dkimType,
   dkimConnection,
@@ -1037,6 +1219,7 @@ module.exports = {
   emailScanType,
   httpsType,
   httpsConnection,
+  guidanceTagType,
   guidanceTagConnection,
   organizationType,
   organizationConnection,
@@ -1049,4 +1232,8 @@ module.exports = {
   userSharedType,
   userAffiliationsType,
   userAffiliationsConnection,
+  verifiedDomainType,
+  verifiedDomainConnection,
+  verifiedOrganizationType,
+  verifiedOrganizationConnection,
 }

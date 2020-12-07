@@ -1,7 +1,7 @@
 const { GraphQLObjectType } = require('graphql')
 const { t } = require('@lingui/macro')
 
-const { categorizedSummaryType } = require('../categorized-summary')
+const { categorizedSummaryType } = require('./categorized-summary')
 
 const organizationSummaryType = new GraphQLObjectType({
   name: 'OrganizationSummary',

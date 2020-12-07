@@ -1,5 +1,4 @@
 const baseTypes = require('./base')
-const verifiedTypes = require('./verified-objects')
 const { authResultType } = require('./auth-result')
 const { categorizedSummaryType } = require('./categorized-summary')
 const { nodeField, nodeInterface } = require('./node')
@@ -12,6 +11,4 @@ module.exports = {
   authResultType,
   categorizedSummaryType,
   ...baseTypes,
-  // Verified Types
-  ...verifiedTypes,
 }

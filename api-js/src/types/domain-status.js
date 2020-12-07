@@ -1,5 +1,5 @@
 const { GraphQLObjectType } = require('graphql')
-const { StatusEnum } = require('../../enums')
+const { StatusEnum } = require('../enums')
 
 const domainStatus = new GraphQLObjectType({
   name: 'DomainStatus',
