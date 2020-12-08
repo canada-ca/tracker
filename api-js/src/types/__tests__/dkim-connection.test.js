@@ -14,7 +14,7 @@ describe('given the dkim connection object', () => {
     describe('testing the totalCount resolver', () => {
       it('returns the resolved value', () => {
         const demoType = dkimConnection.connectionType.getFields()
-  
+
         expect(demoType.totalCount.resolve({ totalCount: 1 })).toEqual(1)
       })
     })

@@ -14,7 +14,7 @@ describe('given the verified domain connection object', () => {
     describe('testing the totalCount resolver', () => {
       it('returns the resolved value', () => {
         const demoType = verifiedDomainConnection.connectionType.getFields()
-  
+
         expect(demoType.totalCount.resolve({ totalCount: 1 })).toEqual(1)
       })
     })

@@ -88,9 +88,9 @@ describe('given the dkimFailureTable gql object', () => {
       it('returns resolved value', () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(
-          demoType.dkimAligned.resolve({ dkimAligned: true }),
-        ).toEqual(true)
+        expect(demoType.dkimAligned.resolve({ dkimAligned: true })).toEqual(
+          true,
+        )
       })
     })
     describe('testing the dkimDomains resolver', () => {

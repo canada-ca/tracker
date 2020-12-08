@@ -53,12 +53,14 @@ const generateGqlQuery = ({ generateDetailTableFields }) => ({
             if (arg.value.kind === 'Variable')
               if (arg.value.name.value === 'month') {
                 queryArgs.push(
-                  `${arg.name.value}: ${
-                    String(info.variableValues[arg.value.name.value]).toUpperCase()
-                  }`,
+                  `${arg.name.value}: ${String(
+                    info.variableValues[arg.value.name.value],
+                  ).toUpperCase()}`,
                 )
               } else {
-                if (typeof info.variableValues[arg.value.name.value] === 'string') {
+                if (
+                  typeof info.variableValues[arg.value.name.value] === 'string'
+                ) {
                   queryArgs.push(
                     `${arg.name.value}: "${
                       info.variableValues[arg.value.name.value]
