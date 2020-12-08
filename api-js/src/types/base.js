@@ -305,7 +305,7 @@ const dkimType = new GraphQLObjectType({
       resolve: ({ timestamp }) => timestamp,
     },
     results: {
-      type: dkimResultsConnection.connectionType,
+      type: dkimResultConnection.connectionType,
       args: {
         ...connectionArgs,
       },
@@ -343,7 +343,7 @@ const dkimConnection = connectionDefinitions({
   }),
 })
 
-const dkimResultsType = new GraphQLObjectType({
+const dkimResultType = new GraphQLObjectType({
   name: 'DKIMResult',
   fields: () => ({
     id: globalIdField('dkimResult'),
@@ -395,9 +395,9 @@ const dkimResultsType = new GraphQLObjectType({
   description: 'Individual scans results for the given dkim selector.',
 })
 
-const dkimResultsConnection = connectionDefinitions({
+const dkimResultConnection = connectionDefinitions({
   name: 'DKIMResult',
-  nodeType: dkimResultsType,
+  nodeType: dkimResultType,
   connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
@@ -1227,8 +1227,8 @@ const verifiedOrganizationConnection = connectionDefinitions({
 module.exports = {
   dkimType,
   dkimConnection,
-  dkimResultsType,
-  dkimResultsConnection,
+  dkimResultType,
+  dkimResultConnection,
   dmarcType,
   dmarcConnection,
   domainType,
