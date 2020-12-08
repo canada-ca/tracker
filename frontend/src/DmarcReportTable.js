@@ -220,7 +220,7 @@ function DmarcReportTable({ ...props }) {
               return (
                 <Link
                   as={RouteLink}
-                  to={`${prependLink}${slugify(cell.value)}${appendLink}`}
+                  to={`${prependLink}${cell.value}${appendLink}`}
                 >
                   {cell.render('Cell')}
                 </Link>
