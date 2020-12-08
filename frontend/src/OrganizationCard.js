@@ -106,7 +106,7 @@ export function OrganizationCard({
           mb={['2', '0']}
         >
           <Text fontWeight="bold">
-            <Trans>Web Configuration (mocked)</Trans>
+            <Trans>Web Configuration</Trans>
           </Text>
           <Text>{webValue}%</Text>
           <Progress value={webValue} bg="gray.300" w={['50%', '100%']} />

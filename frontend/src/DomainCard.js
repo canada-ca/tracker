@@ -77,7 +77,7 @@ export function DomainCard({ url, lastRan, web, email, ...rest }) {
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
             <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              HTTPS Implemented:
+              {t`HTTPS Implemented`}:
             </Text>
             {implementation === 'Valid HTTPS' ? (
               <Icon name="check-circle" color="strong" size="icons.sm" />
@@ -89,7 +89,7 @@ export function DomainCard({ url, lastRan, web, email, ...rest }) {
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
             <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              HTTPS Enforced:
+              {t`HTTPS Enforced`}:
             </Text>
             {enforced === 'Strict' ? (
               <Icon name="check-circle" color="strong" size="icons.sm" />

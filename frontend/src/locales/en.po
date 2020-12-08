@@ -2300,3 +2300,10 @@ msgstr "MAIL"
 msgid "Domain URL"
 msgstr "Domain URL"
 
+#: src.DomainCard.js:80
+msgid "HTTPS Implemented"
+msgstr "HTTPS Implemented"
+
+#: src.DomainCard.js:92
+msgid "HTTPS Enforced"
+msgstr "HTTPS Enforced"
