@@ -10,7 +10,7 @@ const {
   domainLoaderByKey,
   dkimResultsLoaderConnectionByDkimId,
 } = require('../../loaders')
-const { dkimType, domainType, dkimResultsConnection } = require('../index')
+const { dkimType, domainType, dkimResultConnection } = require('../index')
 
 describe('given the dkimType object', () => {
   describe('testing its field definitions', () => {
@@ -37,7 +37,7 @@ describe('given the dkimType object', () => {
 
       expect(demoType).toHaveProperty('results')
       expect(demoType.results.type).toMatchObject(
-        dkimResultsConnection.connectionType,
+        dkimResultConnection.connectionType,
       )
     })
   })
