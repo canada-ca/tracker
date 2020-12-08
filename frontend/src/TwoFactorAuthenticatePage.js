@@ -41,7 +41,6 @@ export default function TwoFactorAuthenticatePage() {
         jwt: authenticate.authResult.authToken,
         tfa: authenticate.authResult.user.tfaValidated,
         userName: authenticate.authResult.user.userName,
-        affiliations: authenticate.authResult.user.affiliations,
       })
       // // redirect to the home page.
       history.push('/')
