@@ -18,6 +18,7 @@ const {
   GraphQLDateTime,
   GraphQLEmailAddress,
   GraphQLPhoneNumber,
+  GraphQLJSON,
 } = require('graphql-scalars')
 const { t } = require('@lingui/macro')
 
@@ -372,6 +373,11 @@ const dkimResultsType = new GraphQLObjectType({
       description: 'Size of the Public Key in bits',
       resolve: ({ keyLength }) => keyLength,
     },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
+    },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
       args: {
@@ -454,6 +460,11 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       description: `The percentage of messages to which the DMARC policy is to be applied.`,
       resolve: ({ pct }) => pct,
     },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
+    },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
       args: {
@@ -526,6 +537,11 @@ const spfType = new GraphQLObjectType({
       type: GraphQLString,
       description: `Instruction of what a recipient should do if there is not a match to your SPF record.`,
       resolve: ({ spfDefault }) => spfDefault,
+    },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
@@ -680,6 +696,11 @@ const httpsType = new GraphQLObjectType({
       description: `Denotes whether the domain has been submitted and included within HSTS preload list.`,
       resolve: ({ preloaded }) => preloaded,
     },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
+    },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
       args: {
@@ -733,6 +754,11 @@ const sslType = new GraphQLObjectType({
       type: GraphQLString,
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => timestamp,
+    },
+    rawJson: {
+      type: GraphQLJSON,
+      description: 'Raw scan result.',
+      resolve: ({ rawJson }) => JSON.stringify(rawJson),
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
