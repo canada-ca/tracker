@@ -3,6 +3,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { GraphQLNonNull, GraphQLID, GraphQLString } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
+const { GraphQLJSON } = require('graphql-scalars')
 
 const { makeMigrations } = require('../../../migrations')
 const { cleanseInput } = require('../../validators')
@@ -31,6 +32,12 @@ describe('given the ssl gql object', () => {
 
       expect(demoType).toHaveProperty('timestamp')
       expect(demoType.timestamp.type).toMatchObject(GraphQLString)
+    })
+    it('has a rawJson field', () => {
+      const demoType = sslType.getFields()
+
+      expect(demoType).toHaveProperty('rawJson')
+      expect(demoType.rawJson.type).toEqual(GraphQLJSON)
     })
     it('has a guidanceTags field', () => {
       const demoType = sslType.getFields()
@@ -130,6 +137,15 @@ describe('given the ssl gql object', () => {
         expect(
           demoType.timestamp.resolve({ timestamp: '2020-10-02T12:43:39Z' }),
         ).toEqual('2020-10-02T12:43:39Z')
+      })
+    })
+    describe('testing the rawJSON resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = sslType.getFields()
+
+        const rawJson = { item: 1234 }
+
+        expect(demoType.rawJson.resolve({ rawJson })).toEqual(JSON.stringify(rawJson))
       })
     })
     describe('testing the guidanceTags resolver', () => {

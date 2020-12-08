@@ -1,13 +1,14 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { toGlobalId } = require('graphql-relay')
 const {
   GraphQLNonNull,
   GraphQLID,
   GraphQLString,
   GraphQLInt,
 } = require('graphql')
+const { toGlobalId } = require('graphql-relay')
+const { GraphQLJSON } = require('graphql-scalars')
 
 const { makeMigrations } = require('../../../migrations')
 const { cleanseInput } = require('../../validators')
@@ -66,6 +67,12 @@ describe('given the dmarcType object', () => {
 
       expect(demoType).toHaveProperty('pct')
       expect(demoType.pct.type).toMatchObject(GraphQLInt)
+    })
+    it('has a rawJson field', () => {
+      const demoType = dmarcType.getFields()
+
+      expect(demoType).toHaveProperty('rawJson')
+      expect(demoType.rawJson.type).toEqual(GraphQLJSON)
     })
     it('has a guidanceTags field', () => {
       const demoType = dmarcType.getFields()
@@ -209,6 +216,15 @@ describe('given the dmarcType object', () => {
         const demoType = dmarcType.getFields()
 
         expect(demoType.pct.resolve({ pct: 100 })).toEqual(100)
+      })
+    })
+    describe('testing the rawJSON resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = dmarcType.getFields()
+
+        const rawJson = { item: 1234 }
+
+        expect(demoType.rawJson.resolve({ rawJson })).toEqual(JSON.stringify(rawJson))
       })
     })
     describe('testing the guidanceTags resolver', () => {
