@@ -10,7 +10,6 @@ export function UserCard({ userName, displayName, tfa, role }) {
     <PseudoBox
       width="100%"
       display={{ md: 'flex' }}
-      alignItems="center"
       onClick={() => {
         history.push({
           pathname: '/user',
@@ -21,17 +20,23 @@ export function UserCard({ userName, displayName, tfa, role }) {
       p="8"
       as="button"
     >
-      <Box flexShrink="0" minW="10%">
-        <Text mt="1" fontSize="md" fontWeight="semibold">
+      <Box flexShrink="0" w={['100%', '10%']} textAlign="left" mb={['1', '0']}>
+        <Text fontSize="md" fontWeight="semibold">
           {displayName}
         </Text>
       </Box>
-      <Box flexShrink="0" minW="20%" ml={{ md: 2 }} mr={{ md: 2 }}>
+      <Box flexShrink="0" w={['100%', '30%']} textAlign="left" mb={['1', '0']}>
         <Text fontSize="md">{userName}</Text>
       </Box>
       {role && (
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+        <Box
+          flexShrink="0"
+          w={['100%', '15%']}
+          textAlign="left"
+          mb={['1', '0']}
+        >
           <Stack isInline align="center">
+            <Text fontWeight="bold">Role:</Text>
             <Badge
               color="primary"
               bg="transparent"
@@ -40,12 +45,14 @@ export function UserCard({ userName, displayName, tfa, role }) {
             >
               {role}
             </Badge>
-            {tfa !== null && (
-              <Badge variantColor={tfa ? 'green' : 'red'}>
-                <Trans>2FA</Trans>
-              </Badge>
-            )}
           </Stack>
+        </Box>
+      )}
+      {tfa !== null && (
+        <Box flexShrink="0" w={['100%', '10%']} textAlign="left">
+          <Badge variantColor={tfa ? 'green' : 'red'}>
+            <Trans>TFA Validated</Trans>
+          </Badge>
         </Box>
       )}
     </PseudoBox>

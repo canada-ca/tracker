@@ -119,17 +119,19 @@ describe('<OrganizationDetails />', () => {
                     hasPreviousPage: false,
                   },
                   totalCount: 5,
-                  edges: {
-                    node: {
-                      permission: 'ADMIN',
-                      user: {
-                        id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
-                        userName: 'testuser@testemail.gc.ca',
-                        displayName: 'testuser',
-                        tfaValidated: false,
+                  edges: [
+                    {
+                      node: {
+                        permission: 'ADMIN',
+                        user: {
+                          id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
+                          userName: 'testuser@testemail.gc.ca',
+                          displayName: 'testuser',
+                          tfaValidated: false,
+                        },
                       },
                     },
-                  },
+                  ],
                 },
               },
             },

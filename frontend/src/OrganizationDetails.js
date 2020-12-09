@@ -20,7 +20,6 @@ import {
 import { ORG_DETAILS_PAGE } from './graphql/queries'
 import { useUserState } from './UserState'
 import { useParams, useHistory } from 'react-router-dom'
-import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -28,6 +27,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { DomainCard } from './DomainCard'
 import { ListOf } from './ListOf'
 import { PaginationButtons } from './PaginationButtons'
+import { UserCard } from './UserCard'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
@@ -62,6 +62,11 @@ export default function OrganizationDetails() {
   let domains = []
   if (data?.organization?.domains?.edges) {
     domains = data.organization.domains.edges.map((e) => e.node)
+  }
+
+  let users = []
+  if (data?.organization?.affiliations?.edges) {
+    users = data.organization.affiliations.edges.map((e) => e.node)
   }
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -166,13 +171,29 @@ export default function OrganizationDetails() {
           </TabPanel>
           {isLoggedIn() && (
             <TabPanel>
-              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                <UserList
-                  userListData={data.organization.affiliations}
-                  orgName={orgName}
-                  orgSlug={orgSlug}
-                />
-              </ErrorBoundary>
+              <ListOf
+                elements={users}
+                ifEmpty={() => (
+                  <Text fontSize="xl" fontWeight="bold">
+                    <Trans>No Users</Trans>
+                  </Text>
+                )}
+                mb="4"
+              >
+                {({ permission, user }, index) => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <Box key={`${user.id}:${index}`}>
+                      <UserCard
+                        userName={user.userName}
+                        role={permission}
+                        displayName={user.displayName}
+                        tfa={user.tfaValidated}
+                      />
+                      <Divider borderColor="gray.900" />
+                    </Box>
+                  </ErrorBoundary>
+                )}
+              </ListOf>
             </TabPanel>
           )}
         </TabPanels>
