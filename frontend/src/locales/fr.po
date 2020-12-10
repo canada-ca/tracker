@@ -1705,7 +1705,7 @@ msgstr "Septembre"
 
 #: src/OrganizationCard.js:67
 msgid "Services: {domainCount}"
-msgstr "Services"
+msgstr "Services: {domainCount}"
 
 #: src/DmarcReportGuidance.js:554
 #~ msgid "Show Guidance"
@@ -2239,10 +2239,3 @@ msgstr "COURRIEL"
 msgid "Domain URL"
 msgstr "URL du domaine"
 
-#: src.DomainCard.js:80
-msgid "HTTPS Implemented"
-msgstr "Mise en œuvre du HTTPS"
-
-#: src.DomainCard.js:92
-msgid "HTTPS Enforced"
-msgstr "HTTPS appliqué"

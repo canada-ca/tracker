@@ -14,8 +14,18 @@ import { useHistory } from 'react-router-dom'
 import { object, string } from 'prop-types'
 import { slugify } from './slugify'
 
-export function DomainCard({ url, lastRan, web, email, ...rest }) {
+export function DomainCard({ url, lastRan, ...rest }) {
   const history = useHistory()
+  const webProtocols = [
+    'HTTPS',
+    'HSTS',
+    t`HSTS Preloaded`,
+    'SSL',
+    t`Protocols & Ciphers`,
+    t`Certificate Use`,
+  ]
+  const emailProtocols = ['SPF', 'DKIM', 'DMARC']
+
   const generateWebStatus = () => {
     const randNum = Math.floor(Math.random() * 100 + 1)
     let statusIcon
@@ -26,16 +36,6 @@ export function DomainCard({ url, lastRan, web, email, ...rest }) {
     }
     return statusIcon
   }
-
-  let implementation = ''
-  let enforced = ''
-  let hsts = ''
-  let preloaded = ''
-  let dmarcPhase = 0
-
-  web?.https?.edges[0] &&
-    ({ implementation, enforced, hsts, preloaded } = web.https.edges[0].node)
-  email?.dmarc?.edges[0] && ({ dmarcPhase } = email?.dmarc?.edges[0]?.node)
 
   return (
     <ListItem {...rest}>
@@ -65,7 +65,7 @@ export function DomainCard({ url, lastRan, web, email, ...rest }) {
               <Text fontWeight="bold">
                 <Trans>Last scanned:</Trans>
               </Text>
-              {lastRan}
+              {lastRan.substring(0, 16)}
             </Box>
           ) : (
             <Text fontWeight="bold" fontSize="sm">
@@ -74,106 +74,36 @@ export function DomainCard({ url, lastRan, web, email, ...rest }) {
           )}
         </Box>
         <Divider orientation={['horizontal', 'vertical']} />
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              {t`HTTPS Implemented`}:
-            </Text>
-            {implementation === 'Valid HTTPS' ? (
-              <Icon name="check-circle" color="strong" size="icons.sm" />
-            ) : (
-              <Icon name="warning" color="weak" size="icons.sm" />
-            )}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              {t`HTTPS Enforced`}:
-            </Text>
-            {enforced === 'Strict' ? (
-              <Icon name="check-circle" color="strong" size="icons.sm" />
-            ) : (
-              <Icon name="warning" color="weak" size="icons.sm" />
-            )}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              HSTS:
-            </Text>
-            {hsts === 'HSTS Fully Implemented' ? (
-              <Icon name="check-circle" color="strong" size="icons.sm" />
-            ) : (
-              <Icon name="warning" color="weak" size="icons.sm" />
-            )}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              {t`HSTS Preloaded`}:
-            </Text>
-            {preloaded === 'HSTS Preloaded' ? (
-              <Icon name="check-circle" color="strong" size="icons.sm" />
-            ) : (
-              <Icon name="warning" color="weak" size="icons.sm" />
-            )}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              SSL:
-            </Text>
-            {generateWebStatus()}
-          </Stack>
-        </Box>
-        {/* <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              {t`Protocols & Ciphers`}:
-            </Text>
-            {generateWebStatus()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              {t`Certificate Use`}:
-            </Text>
-            {generateWebStatus()}
-          </Stack>
-        </Box> */}
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              SPF:
-            </Text>
-            {generateWebStatus()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              DKIM:
-            </Text>
-            {generateWebStatus()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              DMARC:
-            </Text>
-            {dmarcPhase === 4 ? (
-              <Icon name="check-circle" color="strong" size="icons.sm" />
-            ) : (
-              <Icon name="warning" color="weak" size="icons.sm" />
-            )}
-          </Stack>
-        </Box>
+        {webProtocols.map((protocol) => {
+          return (
+            <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} key={protocol}>
+              <Stack
+                align={['right', 'center']}
+                flexDirection={['row', 'column']}
+              >
+                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                  {protocol}:
+                </Text>
+                {generateWebStatus()}
+              </Stack>
+            </Box>
+          )
+        })}
+        {emailProtocols.map((protocol) => {
+          return (
+            <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} key={protocol}>
+              <Stack
+                align={['right', 'center']}
+                flexDirection={['row', 'column']}
+              >
+                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                  {protocol}:
+                </Text>
+                {generateWebStatus()}
+              </Stack>
+            </Box>
+          )
+        })}
       </PseudoBox>
     </ListItem>
   )
