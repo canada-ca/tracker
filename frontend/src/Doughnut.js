@@ -55,6 +55,11 @@ export const Doughnut = ({
       </svg>
 
       {arcs.map(({ title, count, percentage }, index) => {
+        if (percentage % 1 >= 0.5) {
+          percentage = Math.ceil(percentage)
+        } else {
+          percentage = Math.floor(percentage)
+        }
         return (
           <Box
             key={`legend:${index}`}

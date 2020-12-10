@@ -104,6 +104,7 @@ export function OrganizationCard({
           ml={{ md: 2 }}
           mr={{ md: 2 }}
           mb={['2', '0']}
+          textAlign="left"
         >
           <Text fontWeight="bold">
             <Trans>Web Configuration</Trans>
@@ -112,7 +113,7 @@ export function OrganizationCard({
           <Progress value={webValue} bg="gray.300" w={['50%', '100%']} />
         </Box>
         <Divider orientation="vertical" />
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} textAlign="left">
           <Text fontWeight="bold">
             <Trans>Email Configuration</Trans>
           </Text>
