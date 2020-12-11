@@ -3,6 +3,12 @@ const generateGqlQuery = ({ generateDetailTableFields }) => ({
   domain,
 }) => {
   const detailTables = []
+  const detailTablesFields = [
+    'dkimFailure',
+    'dmarcFailure',
+    'fullPass',
+    'spfFailure',
+  ]
   let categoryTotalsStr = ''
   let detailTablesStr = ''
   let startEndDateStr = ''
@@ -25,17 +31,19 @@ const generateGqlQuery = ({ generateDetailTableFields }) => ({
         } else if (field.name.value === 'detailTables') {
           if (field.selectionSet.selections.length !== 0) {
             field.selectionSet.selections.forEach((subField) => {
-              const {
-                paginationArgs,
-                pageInfoSelection,
-                edgeSelection,
-              } = generateDetailTableFields({
-                subField,
-                variables: info.variableValues,
-              })
-              detailTables.push(
-                `${subField.name.value} (\n${paginationArgs}\n){\n${pageInfoSelection}\n${edgeSelection}\n}\n`,
-              )
+              if (detailTablesFields.includes(subField.name.value)) {
+                const {
+                  paginationArgs,
+                  pageInfoSelection,
+                  edgeSelection,
+                } = generateDetailTableFields({
+                  subField,
+                  variables: info.variableValues,
+                })
+                detailTables.push(
+                  `${subField.name.value} (\n${paginationArgs}\n){\n${pageInfoSelection}\n${edgeSelection}\n}\n`,
+                )
+              }
             })
           }
         }

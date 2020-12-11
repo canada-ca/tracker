@@ -159,7 +159,7 @@ describe('given the generateGqlQuery function', () => {
       })
     })
     describe('detailTables field is set', () => {
-      it('returns query with detailTables field', () => {
+      it('returns query with only detailTables field', () => {
         const gqlGen = generateGqlQuery({ generateDetailTableFields })
 
         const info = {
@@ -206,6 +206,134 @@ describe('given the generateGqlQuery function', () => {
                             ],
                           },
                         },
+                        {
+                          name: {
+                            value: 'dkimFailure',
+                          },
+                          selectionSet: {
+                            selections: [
+                              {
+                                name: {
+                                  value: 'edges',
+                                },
+                                selectionSet: {
+                                  selections: [
+                                    {
+                                      name: {
+                                        value: 'node',
+                                      },
+                                      selectionSet: {
+                                        selections: [
+                                          {
+                                            name: {
+                                              value: 'id',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'dmarcFailure',
+                          },
+                          selectionSet: {
+                            selections: [
+                              {
+                                name: {
+                                  value: 'edges',
+                                },
+                                selectionSet: {
+                                  selections: [
+                                    {
+                                      name: {
+                                        value: 'node',
+                                      },
+                                      selectionSet: {
+                                        selections: [
+                                          {
+                                            name: {
+                                              value: 'id',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'spfFailure',
+                          },
+                          selectionSet: {
+                            selections: [
+                              {
+                                name: {
+                                  value: 'edges',
+                                },
+                                selectionSet: {
+                                  selections: [
+                                    {
+                                      name: {
+                                        value: 'node',
+                                      },
+                                      selectionSet: {
+                                        selections: [
+                                          {
+                                            name: {
+                                              value: 'id',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'randomField',
+                          },
+                          selectionSet: {
+                            selections: [
+                              {
+                                name: {
+                                  value: 'edges',
+                                },
+                                selectionSet: {
+                                  selections: [
+                                    {
+                                      name: {
+                                        value: 'node',
+                                      },
+                                      selectionSet: {
+                                        selections: [
+                                          {
+                                            name: {
+                                              value: 'id',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
                       ],
                     },
                   },
@@ -217,7 +345,66 @@ describe('given the generateGqlQuery function', () => {
 
         const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
         expect(gqlQuery).toEqual(
-          '{\ntestQuery(\ndomain: "test.domain.ca"\n){\n\n\ndetailTables {\nfullPass (\n\n){\n\nedges {\n\nnode{\nid\n}\n}\n\n}\n\n}\n\n}\n}',
+          `{
+testQuery(
+domain: "test.domain.ca"
+){
+
+
+detailTables {
+fullPass (
+
+){
+
+edges {
+
+node{
+id
+}
+}
+
+}
+ dkimFailure (
+
+){
+
+edges {
+
+node{
+id
+}
+}
+
+}
+ dmarcFailure (
+
+){
+
+edges {
+
+node{
+id
+}
+}
+
+}
+ spfFailure (
+
+){
+
+edges {
+
+node{
+id
+}
+}
+
+}
+
+}
+
+}
+}`,
         )
       })
     })
