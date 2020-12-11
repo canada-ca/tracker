@@ -32,28 +32,29 @@ describe('create a domain', () => {
     user,
     org
 
+  let consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
+
   beforeAll(async () => {
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-  })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
     // Generate DB Items
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate, collections, transaction } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
-    await truncate()
+  })
+
+  beforeEach(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
+
     await graphql(
       schema,
       `
@@ -91,6 +92,7 @@ describe('create a domain', () => {
       },
     )
     org = await collections.organizations.save({
+      verified: false,
       orgDetails: {
         en: {
           slug: 'treasury-board-secretariat',
@@ -124,6 +126,10 @@ describe('create a domain', () => {
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -1213,18 +1219,8 @@ describe('create a domain', () => {
               cleanseInput,
             )
 
-            query = jest
+            const mockedQuery = jest
               .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'user'
-                },
-              })
-              .mockReturnValueOnce({
-                next() {
-                  return 'user'
-                },
-              })
               .mockRejectedValue(new Error('Database error occurred.'))
 
             const response = await graphql(
@@ -1261,7 +1257,7 @@ describe('create a domain', () => {
                 request: {
                   language: 'en',
                 },
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
@@ -1314,7 +1310,7 @@ describe('create a domain', () => {
               cleanseInput,
             )
 
-            transaction = jest.fn().mockReturnValueOnce({
+            const mockedTransaction = jest.fn().mockReturnValueOnce({
               run() {
                 return 'user'
               },
@@ -1359,7 +1355,7 @@ describe('create a domain', () => {
                 },
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
@@ -1649,18 +1645,8 @@ describe('create a domain', () => {
               cleanseInput,
             )
 
-            query = jest
+            const mockedQuery = jest
               .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'user'
-                },
-              })
-              .mockReturnValueOnce({
-                next() {
-                  return 'user'
-                },
-              })
               .mockRejectedValue(new Error('Database error occurred.'))
 
             const response = await graphql(
@@ -1697,7 +1683,7 @@ describe('create a domain', () => {
                 request: {
                   language: 'en',
                 },
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
@@ -1748,7 +1734,7 @@ describe('create a domain', () => {
               cleanseInput,
             )
 
-            transaction = jest.fn().mockReturnValueOnce({
+            const mockedTransaction = jest.fn().mockReturnValueOnce({
               run() {
                 return 'user'
               },
@@ -1793,7 +1779,7 @@ describe('create a domain', () => {
                 },
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({

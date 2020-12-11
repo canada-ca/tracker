@@ -39,10 +39,8 @@ const removeDomain = new mutationWithClientMutationId({
     },
   ) => {
     // Cleanse Input
-    const { type: _domainType, id: domainId } = fromGlobalId(
-      cleanseInput(args.domainId),
-    )
-    const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
+    const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
+    const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get User
     await userRequired()
@@ -64,25 +62,28 @@ const removeDomain = new mutationWithClientMutationId({
     // Check to see if org exists
     if (typeof org === 'undefined') {
       console.warn(
-        `User: ${userKey} attempted to remove ${domain.slug} in org: ${orgId} however there is no organization associated with that id.`,
+        `User: ${userKey} attempted to remove domain: ${domain._key} in org: ${orgId} however there is no organization associated with that id.`,
       )
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+    }
+
+    if (org.verified) {
+      console.warn(
+        `User: ${userKey} attempted to remove a domain from an organization: ${org._key} that is verified.`,
+      )
+      throw new Error(
+        i18n._(
+          t`Unable to remove domains belonging to verified organizations.`,
+        ),
+      )
     }
 
     // Get permission
     const permission = await checkPermission({ orgId: org._id })
 
-    // Check to see if domain belongs to verified check org
-    if (org.verified && permission !== 'super_admin') {
-      console.warn(
-        `User: ${userKey} attempted to remove ${domain.slug} in ${org.slug} but does not have permission to remove a domain from a verified check org.`,
-      )
-      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-    }
-
     if (permission !== 'super_admin' && permission !== 'admin') {
       console.warn(
-        `User: ${userKey} attempted to remove ${domain.slug} in ${org.slug} however they do not have permission in that org.`,
+        `User: ${userKey} attempted to remove domain: ${domain._key} in org: ${org._key} however they do not have permission in that org.`,
       )
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
@@ -95,7 +96,7 @@ const removeDomain = new mutationWithClientMutationId({
       `
     } catch (err) {
       console.error(
-        `Database error occurred for user: ${userKey}, when counting domain claims for domain: ${domain.slug}, error: ${err}`,
+        `Database error occurred for user: ${userKey}, when counting domain claims for domain: ${domain._key}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
@@ -166,7 +167,7 @@ const removeDomain = new mutationWithClientMutationId({
         ])
       } catch (err) {
         console.error(
-          `Transaction error occurred while user: ${userKey} attempted to remove scan data for ${domain.slug} in org: ${org.slug}, error: ${err}`,
+          `Transaction error occurred while user: ${userKey} attempted to remove scan data for domain: ${domain._key} in org: ${org._key}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
@@ -183,7 +184,7 @@ const removeDomain = new mutationWithClientMutationId({
         })
       } catch (err) {
         console.error(
-          `Transaction error occurred while user: ${userKey} attempted to remove ${domain.slug} in org: ${org.slug}, error: ${err}`,
+          `Transaction error occurred while user: ${userKey} attempted to remove domain: ${domain._key} in org: ${org._key}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
@@ -204,7 +205,7 @@ const removeDomain = new mutationWithClientMutationId({
         })
       } catch (err) {
         console.error(
-          `Transaction error occurred while user: ${userKey} attempted to remove claim for ${domain.slug} in org: ${org.slug}, error: ${err}`,
+          `Transaction error occurred while user: ${userKey} attempted to remove claim for domain: ${domain._key} in org: ${org._key}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
@@ -215,13 +216,13 @@ const removeDomain = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(
-        `Transaction commit error occurred while user: ${userKey} attempted to remove ${domain.slug} in org: ${org.slug}, error: ${err}`,
+        `Transaction commit error occurred while user: ${userKey} attempted to remove domain: ${domain._key} in org: ${org._key}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
     console.info(
-      `User: ${userKey} successfully removed domain: ${domain.slug} from org: ${org.slug}.`,
+      `User: ${userKey} successfully removed domain: ${domain._key} from org: ${org._key}.`,
     )
     return {
       status: i18n._(

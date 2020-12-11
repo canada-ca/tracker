@@ -69,6 +69,17 @@ const createDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
+    if (org.verified) {
+      console.warn(
+        `User: ${userKey} attempted to create a domain to an organization: ${orgId} that is verified.`,
+      )
+      throw new Error(
+        i18n._(
+          t`Unable to create domains belonging to verified organizations.`,
+        ),
+      )
+    }
+
     // Check to see if user belongs to org
     const permission = await checkPermission({ orgId: org._id })
 
@@ -129,13 +140,23 @@ const createDomain = new mutationWithClientMutationId({
     // Setup Transaction
     const trx = await transaction(collectionStrings)
 
+    let insertedDomain
     if (typeof checkDomain === 'undefined') {
-      const insertedDomain = await trx.run(() =>
-        collections.domains.save(insertDomain),
-      )
-      await trx.run(() =>
-        collections.claims.save({ _from: org._id, _to: insertedDomain._id }),
-      )
+      try {
+        insertedDomain = await trx.run(() =>
+          collections.domains.save(insertDomain),
+        )
+        await trx.run(() =>
+          collections.claims.save({ _from: org._id, _to: insertedDomain._id }),
+        )
+      } catch (err) {
+        console.error(
+          `Transaction run error occurred while creating new domain: ${err}`,
+        )
+        throw new Error(
+          i18n._(t`Unable to create new domain. Please try again.`),
+        )
+      }
     } else {
       const selectorList = checkDomain.selectors
       selectors.forEach((selector) => {
@@ -145,25 +166,34 @@ const createDomain = new mutationWithClientMutationId({
       })
       insertDomain.selectors = selectorList
 
-      await trx.run(
-        async () =>
-          await query`
-        UPSERT { _key: ${checkDomain._key} }
-          INSERT ${insertDomain}
-          UPDATE ${insertDomain}
-          IN domains
-      `,
-      )
-      await trx.run(() =>
-        collections.claims.save({ _from: org._id, _to: checkDomain._id }),
-      )
+      try {
+        await trx.run(
+          async () =>
+            await query`
+          UPSERT { _key: ${checkDomain._key} }
+            INSERT ${insertDomain}
+            UPDATE ${insertDomain}
+            IN domains
+        `,
+        )
+        await trx.run(() =>
+          collections.claims.save({ _from: org._id, _to: checkDomain._id }),
+        )
+      } catch (err) {
+        console.error(
+          `Transaction run error occurred while upserting new domain: ${err}`,
+        )
+        throw new Error(
+          i18n._(t`Unable to create new domain. Please try again.`),
+        )
+      }
     }
 
     try {
       await trx.commit()
     } catch (err) {
       console.error(
-        `Database error occurred while committing create domain transaction: ${err}`,
+        `Transaction commit error occurred while committing new domain: ${err}`,
       )
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }

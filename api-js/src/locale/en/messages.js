@@ -245,6 +245,8 @@
       'Unable to check permission. Please try again.',
     'Unable to create domain. Please try again.':
       'Unable to create domain. Please try again.',
+    'Unable to create domains belonging to verified organizations.':
+      'Unable to create domains belonging to verified organizations.',
     'Unable to create organization. Please try again.':
       'Unable to create organization. Please try again.',
     'Unable to dispatch one time scan. Please try again.':
@@ -333,6 +335,8 @@
       'Unable to query organizations. Please try again.',
     'Unable to remove domain. Please try again.':
       'Unable to remove domain. Please try again.',
+    'Unable to remove domains belonging to verified organizations.':
+      'Unable to remove domains belonging to verified organizations.',
     'Unable to remove organization. Please try again.':
       'Unable to remove organization. Please try again.',
     'Unable to remove user from organization. Please try again.':
@@ -362,6 +366,8 @@
       'Unable to two factor authenticate. Please try again.',
     'Unable to update domain. Please try again.':
       'Unable to update domain. Please try again.',
+    'Unable to update domains belonging to verified organizations.':
+      'Unable to update domains belonging to verified organizations.',
     'Unable to update organization. Please try again.':
       'Unable to update organization. Please try again.',
     'Unable to update password, current password does not match. Please try again.':

@@ -84,6 +84,11 @@ const updateDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
+    if (org.verified) {
+      console.warn(`User: ${userKey} attempted to update a domain belonging to an organization: ${orgId} that is verified.`)
+      throw new Error(i18n._(t`Unable to update domains belonging to verified organizations.`))
+    }
+
     // Check permission
     const permission = await checkPermission({ orgId: org._id })
 

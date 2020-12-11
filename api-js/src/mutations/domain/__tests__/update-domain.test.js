@@ -23,6 +23,10 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('updating a domain', () => {
   let query, drop, truncate, migrate, schema, collections, transaction
+  let consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -30,22 +34,17 @@ describe('updating a domain', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-  })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
     // Generate DB Items
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate, collections, transaction } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
-    await truncate()
+  })
+
+  beforeEach(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     await graphql(
       schema,
       `
@@ -86,6 +85,10 @@ describe('updating a domain', () => {
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -93,6 +96,7 @@ describe('updating a domain', () => {
     let org, user, domain
     beforeEach(async () => {
       org = await collections.organizations.save({
+        verified: false,
         orgDetails: {
           en: {
             slug: 'treasury-board-secretariat',
@@ -861,6 +865,268 @@ describe('updating a domain', () => {
           ])
         })
       })
+      describe('user attempts to update domain belonging to verified org', () => {
+        let org, user, domain
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: true,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            lastRan: null,
+            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+          })
+          await collections.claims.save({
+            _to: domain._id,
+            _from: org._id,
+          })
+
+          const userCursor = await query`
+        FOR user IN users
+          FILTER user.userName == "test.account@istio.actually.exists"
+          RETURN user
+      `
+          user = await userCursor.next()
+        })
+        describe('user is a super admin', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _to: user._id,
+              _from: org._id,
+              permission: 'super_admin',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateDomain (
+                  input: {
+                    domainId: "${toGlobalId('domains', domain._key)}"
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.canada.ca"
+                    selectors: [
+                      "selector3._domainkey",
+                      "selector4._domainkey"
+                    ]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  domainLoaderByKey: domainLoaderByKey(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update domains belonging to verified organizations.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to update a domain belonging to an organization: ${org._key} that is verified.`,
+            ])
+          })
+        })
+        describe('user is an org admin', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _to: user._id,
+              _from: org._id,
+              permission: 'admin',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateDomain (
+                  input: {
+                    domainId: "${toGlobalId('domains', domain._key)}"
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.canada.ca"
+                    selectors: [
+                      "selector3._domainkey",
+                      "selector4._domainkey"
+                    ]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  domainLoaderByKey: domainLoaderByKey(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update domains belonging to verified organizations.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to update a domain belonging to an organization: ${org._key} that is verified.`,
+            ])
+          })
+        })
+        describe('user is an org user', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _to: user._id,
+              _from: org._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateDomain (
+                  input: {
+                    domainId: "${toGlobalId('domains', domain._key)}"
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.canada.ca"
+                    selectors: [
+                      "selector3._domainkey",
+                      "selector4._domainkey"
+                    ]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  domainLoaderByKey: domainLoaderByKey(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update domains belonging to verified organizations.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to update a domain belonging to an organization: ${org._key} that is verified.`,
+            ])
+          })
+        })
+      })
       describe('organization cannot be found', () => {
         let user, domain
         beforeEach(async () => {
@@ -1260,329 +1526,316 @@ describe('updating a domain', () => {
           ])
         })
       })
-    })
-    describe('database error occurs', () => {
-      let org, user, domain
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-        domain = await collections.domains.save({
-          domain: 'test.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-
-        const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-        user = await userCursor.next()
-
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
-        })
-      })
-      describe('while checking for edge connections', () => {
-        it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
-          query = jest
-            .fn()
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
+      describe('database error occurs', () => {
+        let org, user, domain
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
               },
-            })
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
               },
-            })
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateDomain (
-                input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  domain: "test.canada.ca"
-                  selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
-                  ]
-                }
-              ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  userLoaderByKey: userLoader,
-                }),
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError('Unable to update domain. Please try again.'),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} attempted to update domain: ${domain._key}, error: Error: Database error occurred.`,
-          ])
-        })
-      })
-    })
-    describe('transaction error occurs', () => {
-      let org, user, domain
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-        domain = await collections.domains.save({
-          domain: 'test.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        await collections.claims.save({
-          _to: domain._id,
-          _from: org._id,
-        })
-
-        const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-        user = await userCursor.next()
-
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
-        })
-      })
-      describe('when running domain upsert', () => {
-        it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
-          transaction = jest.fn().mockReturnValue({
-            run() {
-              throw new Error('Transaction error occurred.')
             },
           })
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              updateDomain (
-                input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  domain: "test.canada.ca"
-                  selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
-                  ]
-                }
-              ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
-                }
-              }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
-                }),
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError('Unable to update domain. Please try again.'),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction run error occurred when user: ${user._key} attempted to update domain: ${domain._key}, error: Error: Transaction error occurred.`,
-          ])
-        })
-      })
-      describe('when committing transaction', () => {
-        it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
-          transaction = jest.fn().mockReturnValue({
-            run() {
-              return undefined
-            },
-            commit() {
-              throw new Error('Transaction error occurred.')
-            },
+          domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            lastRan: null,
+            selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
 
-          const response = await graphql(
-            schema,
+          const userCursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
             `
-            mutation {
-              updateDomain (
-                input: {
-                  domainId: "${toGlobalId('domains', domain._key)}"
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  domain: "test.canada.ca"
-                  selectors: [
-                    "selector3._domainkey",
-                    "selector4._domainkey"
-                  ]
-                }
-              ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+          user = await userCursor.next()
+
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+        })
+        describe('while checking for edge connections', () => {
+          it('returns an error message', async () => {
+            const mockedQuery = jest
+              .fn()
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateDomain (
+                  input: {
+                    domainId: "${toGlobalId('domains', domain._key)}"
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.canada.ca"
+                    selectors: [
+                      "selector3._domainkey",
+                      "selector4._domainkey"
+                    ]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
                 }
               }
-            }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
+              `,
+              null,
+              {
+                i18n,
+                query: mockedQuery,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  domainLoaderByKey: domainLoaderByKey(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
                   userLoaderByKey: userLoaderByKey(query),
-                }),
+                },
               },
-              validators: {
-                cleanseInput,
-                slugify,
+            )
+
+            const error = [
+              new GraphQLError('Unable to update domain. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while user: ${user._key} attempted to update domain: ${domain._key}, error: Error: Database error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('transaction error occurs', () => {
+        let org, user, domain
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
               },
-              loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
               },
             },
-          )
+          })
+          domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            lastRan: null,
+            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+          })
+          await collections.claims.save({
+            _to: domain._id,
+            _from: org._id,
+          })
 
-          const error = [
-            new GraphQLError('Unable to update domain. Please try again.'),
-          ]
+          const userCursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
+            `
+          user = await userCursor.next()
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction commit error occurred when user: ${user._key} attempted to update domain: ${domain._key}, error: Error: Transaction error occurred.`,
-          ])
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+        })
+        describe('when running domain upsert', () => {
+          it('returns an error message', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              run() {
+                throw new Error('Transaction error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateDomain (
+                  input: {
+                    domainId: "${toGlobalId('domains', domain._key)}"
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.canada.ca"
+                    selectors: [
+                      "selector3._domainkey",
+                      "selector4._domainkey"
+                    ]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  domainLoaderByKey: domainLoaderByKey(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update domain. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction run error occurred when user: ${user._key} attempted to update domain: ${domain._key}, error: Error: Transaction error occurred.`,
+            ])
+          })
+        })
+        describe('when committing transaction', () => {
+          it('returns an error message', async () => {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              run() {
+                return undefined
+              },
+              commit() {
+                throw new Error('Transaction error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateDomain (
+                  input: {
+                    domainId: "${toGlobalId('domains', domain._key)}"
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.canada.ca"
+                    selectors: [
+                      "selector3._domainkey",
+                      "selector4._domainkey"
+                    ]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  domainLoaderByKey: domainLoaderByKey(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to update domain. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction commit error occurred when user: ${user._key} attempted to update domain: ${domain._key}, error: Error: Transaction error occurred.`,
+            ])
+          })
         })
       })
     })
@@ -1667,6 +1920,268 @@ describe('updating a domain', () => {
           ])
         })
       })
+      describe('user attempts to update domain belonging to verified org', () => {
+        let org, user, domain
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: true,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            lastRan: null,
+            selectors: ['selector1._domainkey', 'selector2._domainkey'],
+          })
+          await collections.claims.save({
+            _to: domain._id,
+            _from: org._id,
+          })
+
+          const userCursor = await query`
+        FOR user IN users
+          FILTER user.userName == "test.account@istio.actually.exists"
+          RETURN user
+      `
+          user = await userCursor.next()
+        })
+        describe('user is a super admin', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _to: user._id,
+              _from: org._id,
+              permission: 'super_admin',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateDomain (
+                  input: {
+                    domainId: "${toGlobalId('domains', domain._key)}"
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.canada.ca"
+                    selectors: [
+                      "selector3._domainkey",
+                      "selector4._domainkey"
+                    ]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  domainLoaderByKey: domainLoaderByKey(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('todo'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to update a domain belonging to an organization: ${org._key} that is verified.`,
+            ])
+          })
+        })
+        describe('user is an org admin', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _to: user._id,
+              _from: org._id,
+              permission: 'admin',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateDomain (
+                  input: {
+                    domainId: "${toGlobalId('domains', domain._key)}"
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.canada.ca"
+                    selectors: [
+                      "selector3._domainkey",
+                      "selector4._domainkey"
+                    ]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  domainLoaderByKey: domainLoaderByKey(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('todo'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to update a domain belonging to an organization: ${org._key} that is verified.`,
+            ])
+          })
+        })
+        describe('user is an org user', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _to: user._id,
+              _from: org._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+              mutation {
+                updateDomain (
+                  input: {
+                    domainId: "${toGlobalId('domains', domain._key)}"
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.canada.ca"
+                    selectors: [
+                      "selector3._domainkey",
+                      "selector4._domainkey"
+                    ]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                }
+              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  domainLoaderByKey: domainLoaderByKey(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError('todo'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to update a domain belonging to an organization: ${org._key} that is verified.`,
+            ])
+          })
+        })
+      })
       describe('organization cannot be found', () => {
         let user, domain
         beforeEach(async () => {
@@ -2107,22 +2622,8 @@ describe('updating a domain', () => {
       })
       describe('while checking for edge connections', () => {
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
-          query = jest
+          const mockedQuery = jest
             .fn()
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
-              },
-            })
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
-              },
-            })
             .mockRejectedValue(new Error('Database error occurred.'))
 
           const response = await graphql(
@@ -2152,7 +2653,7 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               collections,
               transaction,
               userKey: user._key,
@@ -2160,7 +2661,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoader,
+                  userLoaderByKey: userLoaderByKey(query),
                 }),
               },
               validators: {
@@ -2168,9 +2669,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -2236,11 +2737,7 @@ describe('updating a domain', () => {
       })
       describe('when running domain upsert', () => {
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
-          transaction = jest.fn().mockReturnValue({
+          const mockedTransaction = jest.fn().mockReturnValue({
             run() {
               throw new Error('Transaction error occurred.')
             },
@@ -2275,7 +2772,7 @@ describe('updating a domain', () => {
               i18n,
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -2289,9 +2786,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -2306,11 +2803,7 @@ describe('updating a domain', () => {
       })
       describe('when committing transaction', () => {
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
-          transaction = jest.fn().mockReturnValue({
+          const mockedTransaction = jest.fn().mockReturnValue({
             run() {
               return undefined
             },
@@ -2348,7 +2841,7 @@ describe('updating a domain', () => {
               i18n,
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -2362,9 +2855,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )

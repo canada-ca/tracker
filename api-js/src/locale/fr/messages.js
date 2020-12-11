@@ -97,6 +97,7 @@
     'Unable to authenticate. Please try again.': 'todo',
     'Unable to check permission. Please try again.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
+    'Unable to create domains belonging to verified organizations.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
     'Unable to dispatch one time scan. Please try again.': 'todo',
     'Unable to find dkim guidance tags. Please try again.': 'todo',
@@ -141,6 +142,7 @@
     'Unable to query domains. Please try again.': 'todo',
     'Unable to query organizations. Please try again.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
+    'Unable to remove domains belonging to verified organizations.': 'todo',
     'Unable to remove organization. Please try again.': 'todo',
     'Unable to remove user from organization. Please try again.': 'todo',
     'Unable to request a on time scan on this domain.': 'todo',
@@ -156,6 +158,7 @@
     'Unable to sign up. Please try again.': 'todo',
     'Unable to two factor authenticate. Please try again.': 'todo',
     'Unable to update domain. Please try again.': 'todo',
+    'Unable to update domains belonging to verified organizations.': 'todo',
     'Unable to update organization. Please try again.': 'todo',
     'Unable to update password, current password does not match. Please try again.':
       'todo',

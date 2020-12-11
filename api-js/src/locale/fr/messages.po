@@ -29,7 +29,7 @@ msgstr "todo"
 msgid "Authentication error. Please sign in."
 msgstr "todo"
 
-#: src/types/base/index.js:875
+#: src/types/base.js:880
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "todo"
 
@@ -97,8 +97,8 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:44
-#: src/loaders/domains/load-domain-connections-by-user-id.js:42
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:51
+#: src/loaders/domains/load-domain-connections-by-user-id.js:49
 msgid "Passing both `first` and `last` to paginate the `domain` connection is not supported."
 msgstr "todo"
 
@@ -179,8 +179,8 @@ msgstr "todo"
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:67
-#: src/loaders/domains/load-domain-connections-by-user-id.js:65
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:74
+#: src/loaders/domains/load-domain-connections-by-user-id.js:72
 msgid "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
@@ -239,7 +239,7 @@ msgstr "todo"
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "todo"
 
-#: src/mutations/domain/remove-domain.js:228
+#: src/mutations/domain/remove-domain.js:233
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "todo"
 
@@ -290,11 +290,15 @@ msgid "Unable to check permission. Please try again."
 msgstr "todo"
 
 #: src/mutations/domain/create-domain.js:69
-#: src/mutations/domain/create-domain.js:83
-#: src/mutations/domain/create-domain.js:108
-#: src/mutations/domain/create-domain.js:117
-#: src/mutations/domain/create-domain.js:168
+#: src/mutations/domain/create-domain.js:88
+#: src/mutations/domain/create-domain.js:113
+#: src/mutations/domain/create-domain.js:122
+#: src/mutations/domain/create-domain.js:173
 msgid "Unable to create domain. Please try again."
+msgstr "todo"
+
+#: src/mutations/domain/create-domain.js:74
+msgid "Unable to create domains belonging to verified organizations."
 msgstr "todo"
 
 #: src/mutations/organizations/create-organization.js:133
@@ -451,12 +455,12 @@ msgstr "todo"
 msgid "Unable to load dmarc scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:144
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:154
-#: src/loaders/domains/load-domain-connections-by-user-id.js:149
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:151
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:161
+#: src/loaders/domains/load-domain-connections-by-user-id.js:157
 #: src/loaders/verified-domains/load-verified-domain-connections.js:142
 #: src/loaders/verified-domains/load-verified-domain-connections.js:152
-#: src/queries/domains/find-my-domains.js:24
+#: src/queries/domains/find-my-domains.js:30
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
@@ -522,7 +526,7 @@ msgstr "todo"
 msgid "Unable to query affiliations. Please try again."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-user-id.js:139
+#: src/loaders/domains/load-domain-connections-by-user-id.js:147
 msgid "Unable to query domains. Please try again."
 msgstr "todo"
 
@@ -532,14 +536,18 @@ msgstr "todo"
 
 #: src/mutations/domain/remove-domain.js:58
 #: src/mutations/domain/remove-domain.js:69
-#: src/mutations/domain/remove-domain.js:80
-#: src/mutations/domain/remove-domain.js:87
-#: src/mutations/domain/remove-domain.js:100
-#: src/mutations/domain/remove-domain.js:171
-#: src/mutations/domain/remove-domain.js:188
-#: src/mutations/domain/remove-domain.js:209
-#: src/mutations/domain/remove-domain.js:220
+#: src/mutations/domain/remove-domain.js:85
+#: src/mutations/domain/remove-domain.js:92
+#: src/mutations/domain/remove-domain.js:105
+#: src/mutations/domain/remove-domain.js:176
+#: src/mutations/domain/remove-domain.js:193
+#: src/mutations/domain/remove-domain.js:214
+#: src/mutations/domain/remove-domain.js:225
 msgid "Unable to remove domain. Please try again."
+msgstr "todo"
+
+#: src/mutations/domain/remove-domain.js:74
+msgid "Unable to remove domains belonging to verified organizations."
 msgstr "todo"
 
 #: src/mutations/organizations/remove-organization.js:52
@@ -623,12 +631,16 @@ msgstr "todo"
 
 #: src/mutations/domain/update-domain.js:74
 #: src/mutations/domain/update-domain.js:84
-#: src/mutations/domain/update-domain.js:98
-#: src/mutations/domain/update-domain.js:113
-#: src/mutations/domain/update-domain.js:120
-#: src/mutations/domain/update-domain.js:153
-#: src/mutations/domain/update-domain.js:163
+#: src/mutations/domain/update-domain.js:103
+#: src/mutations/domain/update-domain.js:118
+#: src/mutations/domain/update-domain.js:125
+#: src/mutations/domain/update-domain.js:158
+#: src/mutations/domain/update-domain.js:168
 msgid "Unable to update domain. Please try again."
+msgstr "todo"
+
+#: src/mutations/domain/update-domain.js:89
+msgid "Unable to update domains belonging to verified organizations."
 msgstr "todo"
 
 #: src/mutations/organizations/update-organization.js:137
@@ -740,8 +752,8 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:35
-#: src/loaders/domains/load-domain-connections-by-user-id.js:33
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:42
+#: src/loaders/domains/load-domain-connections-by-user-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `domain` connection."
 msgstr "todo"
 
@@ -780,8 +792,8 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:82
-#: src/loaders/domains/load-domain-connections-by-user-id.js:80
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:89
+#: src/loaders/domains/load-domain-connections-by-user-id.js:87
 #: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:96
 #: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:77
 #: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:88
@@ -821,8 +833,8 @@ msgstr "todo"
 msgid "`{argSet}` on the `dmarc` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:56
-#: src/loaders/domains/load-domain-connections-by-user-id.js:54
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:63
+#: src/loaders/domains/load-domain-connections-by-user-id.js:61
 msgid "`{argSet}` on the `domain` connection cannot be less than zero."
 msgstr "todo"
 
@@ -863,14 +875,14 @@ msgstr "todo"
 
 #: src/queries/summaries/mail-summary.js:22
 #: src/queries/summaries/web-summary.js:22
-#: src/types/base/organization-summary.js:22
-#: src/types/base/organization-summary.js:46
+#: src/types/organization-summary.js:22
+#: src/types/organization-summary.js:46
 msgid "fail"
 msgstr "todo"
 
 #: src/queries/summaries/mail-summary.js:17
 #: src/queries/summaries/web-summary.js:17
-#: src/types/base/organization-summary.js:17
-#: src/types/base/organization-summary.js:41
+#: src/types/organization-summary.js:17
+#: src/types/organization-summary.js:41
 msgid "pass"
 msgstr "todo"
