@@ -650,6 +650,47 @@ describe('given the generateDetailTableFields function', () => {
           })
         })
       })
+      describe('node have random field set', () => {
+        it('returns an empty string', () => {
+          const subField = {
+            selectionSet: {
+              selections: [
+                {
+                  name: {
+                    value: 'edges',
+                  },
+                  selectionSet: {
+                    selections: [
+                      {
+                        name: {
+                          value: 'node',
+                        },
+                        selectionSet: {
+                          selections: [
+                            {
+                              name: {
+                                value: 'randomValue',
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          }
+
+          const detailTableField = generateDetailTableFields({ subField })
+
+          expect(detailTableField).toEqual({
+            edgeSelection: '',
+            pageInfoSelection: '',
+            paginationArgs: '',
+          })
+        })
+      })
       describe('pageInfo selectionSet.selections is length zero', () => {
         it('returns empty args', () => {
           const subField = {
@@ -661,6 +702,38 @@ describe('given the generateDetailTableFields function', () => {
                   },
                   selectionSet: {
                     selections: [],
+                  },
+                },
+              ],
+            },
+          }
+
+          const detailTableField = generateDetailTableFields({ subField })
+
+          expect(detailTableField).toEqual({
+            edgeSelection: '',
+            pageInfoSelection: '',
+            paginationArgs: '',
+          })
+        })
+      })
+      describe('pageInfo having random field set', () => {
+        it('returns subfield gql string with empty pageInfo selection', () => {
+          const subField = {
+            selectionSet: {
+              selections: [
+                {
+                  name: {
+                    value: 'pageInfo',
+                  },
+                  selectionSet: {
+                    selections: [
+                      {
+                        name: {
+                          value: 'randomValue',
+                        },
+                      },
+                    ],
                   },
                 },
               ],
