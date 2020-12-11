@@ -51,7 +51,7 @@ const removeDomain = new mutationWithClientMutationId({
     // Check to see if domain exists
     if (typeof domain === 'undefined') {
       console.warn(
-        `User: ${userKey} attempted to remove ${domainId} however no domain is associated with that id.`,
+        `User: ${userKey} attempted to remove domain: ${domainId} however no domain is associated with that id.`,
       )
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
@@ -92,7 +92,7 @@ const removeDomain = new mutationWithClientMutationId({
     let countCursor
     try {
       countCursor = await query`
-        FOR v, e IN 1..1 ANY ${domain._id} claims RETURN True
+        FOR v, e IN 1..1 ANY ${domain._id} claims RETURN true
       `
     } catch (err) {
       console.error(
@@ -116,58 +116,58 @@ const removeDomain = new mutationWithClientMutationId({
         await Promise.all([
           trx.run(async () => {
             await query`
-            LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
-            FOR domainEdge in domainEdges
-              LET dkimEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsDKIM RETURN { edgeKey: e._key, dkimId: e._to })
-              LET removeDkimEdges = (FOR dkimEdge IN dkimEdges REMOVE dkimEdge.edgeKey IN domainsDKIM)
-              LET removeDkim = (FOR dkimEdge IN dkimEdges LET key = PARSE_IDENTIFIER(dkimEdge.dkimId).key REMOVE key IN dkim)
-            RETURN true
-          `
+              LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
+              FOR domainEdge in domainEdges
+                LET dkimEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsDKIM RETURN { edgeKey: e._key, dkimId: e._to })
+                LET removeDkimEdges = (FOR dkimEdge IN dkimEdges REMOVE dkimEdge.edgeKey IN domainsDKIM)
+                LET removeDkim = (FOR dkimEdge IN dkimEdges LET key = PARSE_IDENTIFIER(dkimEdge.dkimId).key REMOVE key IN dkim)
+              RETURN true
+            `
           }),
           trx.run(async () => {
             await query`
-            LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
-            FOR domainEdge in domainEdges
-              LET dmarcEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsDMARC RETURN { edgeKey: e._key, dmarcId: e._to })
-              LET removeDmarcEdges = (FOR dmarcEdge IN dmarcEdges REMOVE dmarcEdge.edgeKey IN domainsDMARC)
-              LET removeDmarc = (FOR dmarcEdge IN dmarcEdges LET key = PARSE_IDENTIFIER(dmarcEdge.dmarcId).key REMOVE key IN dmarc)
-            RETURN true
-          `
+              LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
+              FOR domainEdge in domainEdges
+                LET dmarcEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsDMARC RETURN { edgeKey: e._key, dmarcId: e._to })
+                LET removeDmarcEdges = (FOR dmarcEdge IN dmarcEdges REMOVE dmarcEdge.edgeKey IN domainsDMARC)
+                LET removeDmarc = (FOR dmarcEdge IN dmarcEdges LET key = PARSE_IDENTIFIER(dmarcEdge.dmarcId).key REMOVE key IN dmarc)
+              RETURN true
+            `
           }),
           trx.run(async () => {
             await query`
-            LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
-            FOR domainEdge in domainEdges
-              LET spfEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsSPF RETURN { edgeKey: e._key, spfId: e._to })
-              LET removeSpfEdges = (FOR spfEdge IN spfEdges REMOVE spfEdge.edgeKey IN domainsSPF)
-              LET removeSpf = (FOR spfEdge IN spfEdges LET key = PARSE_IDENTIFIER(spfEdge.spfId).key REMOVE key IN spf)
-            RETURN true
-          `
+              LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
+              FOR domainEdge in domainEdges
+                LET spfEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsSPF RETURN { edgeKey: e._key, spfId: e._to })
+                LET removeSpfEdges = (FOR spfEdge IN spfEdges REMOVE spfEdge.edgeKey IN domainsSPF)
+                LET removeSpf = (FOR spfEdge IN spfEdges LET key = PARSE_IDENTIFIER(spfEdge.spfId).key REMOVE key IN spf)
+              RETURN true
+            `
           }),
           trx.run(async () => {
             await query`
-            LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
-            FOR domainEdge in domainEdges
-              LET httpsEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsHTTPS RETURN { edgeKey: e._key, httpsId: e._to })
-              LET removeHttpsEdges = (FOR httpsEdge IN httpsEdges REMOVE httpsEdge.edgeKey IN domainsHTTPS)
-              LET removeHttps = (FOR httpsEdge IN httpsEdges LET key = PARSE_IDENTIFIER(httpsEdge.httpsId).key REMOVE key IN https)
-            RETURN true
-          `
+              LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
+              FOR domainEdge in domainEdges
+                LET httpsEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsHTTPS RETURN { edgeKey: e._key, httpsId: e._to })
+                LET removeHttpsEdges = (FOR httpsEdge IN httpsEdges REMOVE httpsEdge.edgeKey IN domainsHTTPS)
+                LET removeHttps = (FOR httpsEdge IN httpsEdges LET key = PARSE_IDENTIFIER(httpsEdge.httpsId).key REMOVE key IN https)
+              RETURN true
+            `
           }),
           trx.run(async () => {
             await query`
-            LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
-            FOR domainEdge in domainEdges
-              LET sslEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsSSL RETURN { edgeKey: e._key, sslId: e._to})
-              LET removeSslEdges = (FOR sslEdge IN sslEdges REMOVE sslEdge.edgeKey IN domainsSSL)
-              LET removeSsl = (FOR sslEdge IN sslEdges LET key = PARSE_IDENTIFIER(sslEdge.sslId).key REMOVE key IN ssl)
-            RETURN true
-          `
+              LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
+              FOR domainEdge in domainEdges
+                LET sslEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsSSL RETURN { edgeKey: e._key, sslId: e._to})
+                LET removeSslEdges = (FOR sslEdge IN sslEdges REMOVE sslEdge.edgeKey IN domainsSSL)
+                LET removeSsl = (FOR sslEdge IN sslEdges LET key = PARSE_IDENTIFIER(sslEdge.sslId).key REMOVE key IN ssl)
+              RETURN true
+            `
           }),
         ])
       } catch (err) {
         console.error(
-          `Transaction error occurred while user: ${userKey} attempted to remove scan data for domain: ${domain._key} in org: ${org._key}, error: ${err}`,
+          `Transaction run error occurred for user: ${userKey} when removing scan data for domain: ${domain._key}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
@@ -176,15 +176,15 @@ const removeDomain = new mutationWithClientMutationId({
       try {
         await trx.run(async () => {
           await query`
-          LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
-          LET removeDomainEdges = (FOR domainEdge in domainEdges REMOVE domainEdge.edgeKey IN claims)
-          LET removeDomain = (FOR domainEdge in domainEdges LET key = PARSE_IDENTIFIER(domainEdge.domainId).key REMOVE key IN domains)
-          RETURN true
-        `
+            LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
+            LET removeDomainEdges = (FOR domainEdge in domainEdges REMOVE domainEdge.edgeKey IN claims)
+            LET removeDomain = (FOR domainEdge in domainEdges LET key = PARSE_IDENTIFIER(domainEdge.domainId).key REMOVE key IN domains)
+            RETURN true
+          `
         })
       } catch (err) {
         console.error(
-          `Transaction error occurred while user: ${userKey} attempted to remove domain: ${domain._key} in org: ${org._key}, error: ${err}`,
+          `Transaction run error occurred for user: ${userKey} removing domain: ${domain._key} from org: ${org._key}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
@@ -205,7 +205,7 @@ const removeDomain = new mutationWithClientMutationId({
         })
       } catch (err) {
         console.error(
-          `Transaction error occurred while user: ${userKey} attempted to remove claim for domain: ${domain._key} in org: ${org._key}, error: ${err}`,
+          `Transaction run error occurred for user: ${userKey} removing claim for domain: ${domain._key} in org: ${org._key}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
@@ -216,7 +216,7 @@ const removeDomain = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(
-        `Transaction commit error occurred while user: ${userKey} attempted to remove domain: ${domain._key} in org: ${org._key}, error: ${err}`,
+        `Transaction commit error occurred for user: ${userKey} removing domain: ${domain._key} from org: ${org._key}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
