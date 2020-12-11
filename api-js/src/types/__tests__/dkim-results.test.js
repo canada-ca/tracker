@@ -3,6 +3,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { GraphQLID, GraphQLNonNull, GraphQLString } = require('graphql')
+const { GraphQLJSON } = require('graphql-scalars')
 
 const { makeMigrations } = require('../../../migrations')
 const { cleanseInput } = require('../../validators')
@@ -43,6 +44,12 @@ describe('given the dkim result object', () => {
 
       expect(demoType).toHaveProperty('keyLength')
       expect(demoType.keyLength.type).toMatchObject(GraphQLString)
+    })
+    it('has a rawJson field', () => {
+      const demoType = dkimResultsType.getFields()
+
+      expect(demoType).toHaveProperty('rawJson')
+      expect(demoType.rawJson.type).toEqual(GraphQLJSON)
     })
     it('has a guidanceTags field', () => {
       const demoType = dkimResultsType.getFields()
@@ -156,6 +163,15 @@ describe('given the dkim result object', () => {
         expect(demoType.keyLength.resolve({ keyLength: '2048' })).toEqual(
           '2048',
         )
+      })
+    })
+    describe('testing the rawJSON resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = dkimResultsType.getFields()
+
+        const rawJson = { item: 1234 }
+
+        expect(demoType.rawJson.resolve({ rawJson })).toEqual(JSON.stringify(rawJson))
       })
     })
     describe('testing the guidanceTags resolver', () => {
