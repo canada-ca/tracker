@@ -8,10 +8,7 @@ const englishMessages = require('../../../locale/en/messages')
 const frenchMessages = require('../../../locale/fr/messages')
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
-const {
-  verifiedDomainLoaderConnections,
-  domainLoaderByKey,
-} = require('../..')
+const { verifiedDomainLoaderConnections, domainLoaderByKey } = require('../..')
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the load domain connection using org id function', () => {

@@ -1,7 +1,4 @@
-const {
-  GraphQLNonNull,
-  GraphQLID,
-} = require('graphql')
+const { GraphQLNonNull, GraphQLID } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 const { GraphQLEmailAddress } = require('graphql-scalars')
 

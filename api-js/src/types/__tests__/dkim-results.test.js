@@ -11,36 +11,36 @@ const {
   dkimLoaderByKey,
   dkimGuidanceTagConnectionsLoader,
 } = require('../../loaders')
-const { dkimResultsType, dkimType, guidanceTagConnection } = require('../index')
+const { dkimResultType, dkimType, guidanceTagConnection } = require('../index')
 
 describe('given the dkim result object', () => {
   describe('testing its field definitions', () => {
     it('has an id field', () => {
-      const demoType = dkimResultsType.getFields()
+      const demoType = dkimResultType.getFields()
 
       expect(demoType).toHaveProperty('id')
       expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
     })
     it('has a dkim field', () => {
-      const demoType = dkimResultsType.getFields()
+      const demoType = dkimResultType.getFields()
 
       expect(demoType).toHaveProperty('dkim')
       expect(demoType.dkim.type).toEqual(dkimType)
     })
     it('has a selector field', () => {
-      const demoType = dkimResultsType.getFields()
+      const demoType = dkimResultType.getFields()
 
       expect(demoType).toHaveProperty('selector')
       expect(demoType.selector.type).toEqual(GraphQLString)
     })
     it('has a record field', () => {
-      const demoType = dkimResultsType.getFields()
+      const demoType = dkimResultType.getFields()
 
       expect(demoType).toHaveProperty('record')
       expect(demoType.record.type).toMatchObject(GraphQLString)
     })
     it('has a keyLength field', () => {
-      const demoType = dkimResultsType.getFields()
+      const demoType = dkimResultType.getFields()
 
       expect(demoType).toHaveProperty('keyLength')
       expect(demoType.keyLength.type).toMatchObject(GraphQLString)
@@ -52,7 +52,7 @@ describe('given the dkim result object', () => {
       expect(demoType.rawJson.type).toEqual(GraphQLJSON)
     })
     it('has a guidanceTags field', () => {
-      const demoType = dkimResultsType.getFields()
+      const demoType = dkimResultType.getFields()
 
       expect(demoType).toHaveProperty('guidanceTags')
       expect(demoType.guidanceTags.type).toEqual(
@@ -110,7 +110,7 @@ describe('given the dkim result object', () => {
 
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
-        const demoType = dkimResultsType.getFields()
+        const demoType = dkimResultType.getFields()
 
         expect(demoType.id.resolve({ id: '1' })).toEqual(
           toGlobalId('dkimResult', 1),
@@ -119,7 +119,7 @@ describe('given the dkim result object', () => {
     })
     describe('testing the dkim resolver', () => {
       it('returns the resolved value', async () => {
-        const demoType = dkimResultsType.getFields()
+        const demoType = dkimResultType.getFields()
 
         const loader = dkimLoaderByKey(query, '1', {})
 
@@ -140,7 +140,7 @@ describe('given the dkim result object', () => {
     })
     describe('testing the selector field', () => {
       it('returns the resolved value', () => {
-        const demoType = dkimResultsType.getFields()
+        const demoType = dkimResultType.getFields()
 
         expect(
           demoType.selector.resolve({ selector: 'selector._dkim1' }),
@@ -149,7 +149,7 @@ describe('given the dkim result object', () => {
     })
     describe('testing the record resolver', () => {
       it('returns the resolved value', () => {
-        const demoType = dkimResultsType.getFields()
+        const demoType = dkimResultType.getFields()
 
         expect(demoType.record.resolve({ record: 'txtRecord' })).toEqual(
           'txtRecord',
@@ -158,7 +158,7 @@ describe('given the dkim result object', () => {
     })
     describe('testing the keyLength resolver', () => {
       it('returns the resolved value', () => {
-        const demoType = dkimResultsType.getFields()
+        const demoType = dkimResultType.getFields()
 
         expect(demoType.keyLength.resolve({ keyLength: '2048' })).toEqual(
           '2048',
@@ -176,7 +176,7 @@ describe('given the dkim result object', () => {
     })
     describe('testing the guidanceTags resolver', () => {
       it('returns the resolved value', async () => {
-        const demoType = dkimResultsType.getFields()
+        const demoType = dkimResultType.getFields()
 
         const loader = dkimGuidanceTagConnectionsLoader(
           query,

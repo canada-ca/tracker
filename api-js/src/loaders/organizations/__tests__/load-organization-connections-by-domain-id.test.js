@@ -9,10 +9,7 @@ const englishMessages = require('../../../locale/en/messages')
 const frenchMessages = require('../../../locale/fr/messages')
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
-const {
-  orgLoaderConnectionArgsByDomainId,
-  orgLoaderByKey,
-} = require('../..')
+const { orgLoaderConnectionArgsByDomainId, orgLoaderByKey } = require('../..')
 
 describe('given the load organizations connection function', () => {
   let query,

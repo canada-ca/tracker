@@ -123,9 +123,12 @@ describe('given the generateDetailTableFields function', () => {
             const variables = {
               first: 5,
             }
-  
-            const detailTableField = generateDetailTableFields({ subField, variables })
-  
+
+            const detailTableField = generateDetailTableFields({
+              subField,
+              variables,
+            })
+
             expect(detailTableField).toEqual({
               edgeSelection: '',
               pageInfoSelection: '',
@@ -154,9 +157,12 @@ describe('given the generateDetailTableFields function', () => {
             const variables = {
               last: 5,
             }
-  
-            const detailTableField = generateDetailTableFields({ subField, variables })
-  
+
+            const detailTableField = generateDetailTableFields({
+              subField,
+              variables,
+            })
+
             expect(detailTableField).toEqual({
               edgeSelection: '',
               pageInfoSelection: '',
@@ -185,9 +191,12 @@ describe('given the generateDetailTableFields function', () => {
             const variables = {
               before: 'SGVsbG8xMjM0',
             }
-  
-            const detailTableField = generateDetailTableFields({ subField, variables })
-  
+
+            const detailTableField = generateDetailTableFields({
+              subField,
+              variables,
+            })
+
             expect(detailTableField).toEqual({
               edgeSelection: '',
               pageInfoSelection: '',
@@ -216,9 +225,12 @@ describe('given the generateDetailTableFields function', () => {
             const variables = {
               after: 'SGVsbG8xMjM0',
             }
-  
-            const detailTableField = generateDetailTableFields({ subField, variables })
-  
+
+            const detailTableField = generateDetailTableFields({
+              subField,
+              variables,
+            })
+
             expect(detailTableField).toEqual({
               edgeSelection: '',
               pageInfoSelection: '',

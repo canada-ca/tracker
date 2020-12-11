@@ -155,7 +155,9 @@ const removeUserFromOrg = new mutationWithClientMutationId({
         )
       }
 
-      console.info(`User: ${userKey} successfully removed user: ${requestedUser._key} from org: ${requestedOrg._key}.`)
+      console.info(
+        `User: ${userKey} successfully removed user: ${requestedUser._key} from org: ${requestedOrg._key}.`,
+      )
 
       return {
         status: i18n._(t`Successfully removed user from organization.`),

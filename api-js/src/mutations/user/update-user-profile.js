@@ -93,7 +93,7 @@ const updateUserProfile = new mutationWithClientMutationId({
           'aes-256-ccm',
           String(CIPHER_KEY),
           Buffer.from(updatedPhoneDetails.iv, 'hex'),
-          { authTagLength: 16},
+          { authTagLength: 16 },
         )
         let encrypted = cipher.update(phoneNumber, 'utf8', 'hex')
         encrypted += cipher.final('hex')

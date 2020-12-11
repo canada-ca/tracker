@@ -9,10 +9,7 @@ const englishMessages = require('../../../locale/en/messages')
 const frenchMessages = require('../../../locale/fr/messages')
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
-const {
-  dmarcLoaderConnectionsByDomainId,
-  dmarcLoaderByKey,
-} = require('../..')
+const { dmarcLoaderConnectionsByDomainId, dmarcLoaderByKey } = require('../..')
 
 describe('when given the load dmarc connection function', () => {
   let query, drop, truncate, migrate, collections, user, domain, i18n

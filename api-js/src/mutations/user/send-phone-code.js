@@ -87,7 +87,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
     )
     let encrypted = cipher.update(phoneNumber, 'utf8', 'hex')
     encrypted += cipher.final('hex')
-    
+
     phoneDetails.phoneNumber = encrypted
     phoneDetails.tag = cipher.getAuthTag().toString('hex')
 

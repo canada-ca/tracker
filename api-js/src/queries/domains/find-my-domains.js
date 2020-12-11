@@ -10,7 +10,8 @@ const findMyDomains = {
   args: {
     ownership: {
       type: GraphQLBoolean,
-      description: 'Limit domains to those that belong to an organization that has ownership.',
+      description:
+        'Limit domains to those that belong to an organization that has ownership.',
     },
     ...connectionArgs,
   },

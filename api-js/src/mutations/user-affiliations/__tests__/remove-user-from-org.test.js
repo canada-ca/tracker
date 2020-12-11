@@ -1574,11 +1574,7 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1641,11 +1637,7 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1708,11 +1700,7 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1775,11 +1763,7 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1842,11 +1826,7 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1910,11 +1890,7 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1984,11 +1960,7 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2061,11 +2033,7 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2126,11 +2094,7 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

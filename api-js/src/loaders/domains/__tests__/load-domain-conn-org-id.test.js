@@ -8,10 +8,7 @@ const englishMessages = require('../../../locale/en/messages')
 const frenchMessages = require('../../../locale/fr/messages')
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
-const {
-  domainLoaderConnectionsByOrgId,
-  domainLoaderByKey,
-} = require('../..')
+const { domainLoaderConnectionsByOrgId, domainLoaderByKey } = require('../..')
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the load domain connection using org id function', () => {
@@ -29,7 +26,7 @@ describe('given the load domain connection using org id function', () => {
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
-  
+
   beforeAll(async () => {
     console.error = mockedError
     console.warn = mockedWarn
@@ -393,14 +390,14 @@ describe('given the load domain connection using org id function', () => {
             user._key,
             cleanseInput,
           )
-  
+
           const domainLoader = domainLoaderByKey(query)
           const expectedDomains = await domainLoader.loadMany([
             domainThree._key,
           ])
-  
+
           expectedDomains[0].id = expectedDomains[0]._key
-  
+
           const connectionArgs = {
             first: 5,
           }
@@ -409,7 +406,7 @@ describe('given the load domain connection using org id function', () => {
             ownership: true,
             ...connectionArgs,
           })
-  
+
           const expectedStructure = {
             edges: [
               {
@@ -427,7 +424,7 @@ describe('given the load domain connection using org id function', () => {
             },
             totalCount: 1,
           }
-  
+
           expect(domains).toEqual(expectedStructure)
         })
       })
@@ -438,14 +435,14 @@ describe('given the load domain connection using org id function', () => {
             user._key,
             cleanseInput,
           )
-  
+
           const domainLoader = domainLoaderByKey(query)
           const expectedDomains = await domainLoader.loadMany([
             domain._key,
             domainTwo._key,
             domainThree._key,
           ])
-  
+
           const connectionArgs = {
             first: 5,
           }
@@ -454,7 +451,7 @@ describe('given the load domain connection using org id function', () => {
             ownership: false,
             ...connectionArgs,
           })
-  
+
           const expectedStructure = {
             edges: [
               {
@@ -484,7 +481,7 @@ describe('given the load domain connection using org id function', () => {
             },
             totalCount: 3,
           }
-  
+
           expect(domains).toEqual(expectedStructure)
         })
       })
