@@ -46,7 +46,7 @@ describe('given the dkim result object', () => {
       expect(demoType.keyLength.type).toMatchObject(GraphQLString)
     })
     it('has a rawJson field', () => {
-      const demoType = dkimResultsType.getFields()
+      const demoType = dkimResultType.getFields()
 
       expect(demoType).toHaveProperty('rawJson')
       expect(demoType.rawJson.type).toEqual(GraphQLJSON)
@@ -167,7 +167,7 @@ describe('given the dkim result object', () => {
     })
     describe('testing the rawJSON resolver', () => {
       it('returns the resolved value', () => {
-        const demoType = dkimResultsType.getFields()
+        const demoType = dkimResultType.getFields()
 
         const rawJson = { item: 1234 }
 
