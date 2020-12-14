@@ -247,6 +247,8 @@
       'Unable to create domain. Please try again.',
     'Unable to create domains belonging to verified organizations.':
       'Unable to create domains belonging to verified organizations.',
+    'Unable to create new domain. Please try again.':
+      'Unable to create new domain. Please try again.',
     'Unable to create organization. Please try again.':
       'Unable to create organization. Please try again.',
     'Unable to dispatch one time scan. Please try again.':

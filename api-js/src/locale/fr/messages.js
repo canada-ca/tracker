@@ -98,6 +98,7 @@
     'Unable to check permission. Please try again.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
     'Unable to create domains belonging to verified organizations.': 'todo',
+    'Unable to create new domain. Please try again.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
     'Unable to dispatch one time scan. Please try again.': 'todo',
     'Unable to find dkim guidance tags. Please try again.': 'todo',
