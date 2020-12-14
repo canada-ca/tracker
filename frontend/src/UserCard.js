@@ -36,7 +36,6 @@ export function UserCard({ userName, displayName, tfa, role }) {
           mb={['1', '0']}
         >
           <Stack isInline align="center">
-            <Text fontWeight="bold">Role:</Text>
             <Badge
               color="primary"
               bg="transparent"
@@ -51,7 +50,7 @@ export function UserCard({ userName, displayName, tfa, role }) {
       {tfa !== null && (
         <Box flexShrink="0" w={['100%', '10%']} textAlign="left">
           <Badge variantColor={tfa ? 'green' : 'red'}>
-            <Trans>TFA Validated</Trans>
+            <Trans>2FA Validated</Trans>
           </Badge>
         </Box>
       )}

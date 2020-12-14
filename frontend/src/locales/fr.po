@@ -26,8 +26,8 @@ msgid "*search bars do not actively search databases currently. They are used to
 msgstr "*Les barres de recherche ne recherchent pas activement les bases de données actuellement. Elles sont utilisées pour démontrer la fonction du bouton 'Ajouter'"
 
 #: src/UserCard.js:44
-msgid "2FA"
-msgstr ""
+msgid "2FA Validated"
+msgstr "2FA Validé"
 
 #: src/guidanceTagConstants.js:5
 msgid "3.2.2 Third Parties and DKIM"
