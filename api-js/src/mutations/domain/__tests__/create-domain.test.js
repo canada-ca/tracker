@@ -91,32 +91,6 @@ describe('create a domain', () => {
         },
       },
     )
-    org = await collections.organizations.save({
-      verified: false,
-      orgDetails: {
-        en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-
     const userCursor = await query`
       FOR user IN users
         RETURN user
@@ -134,6 +108,33 @@ describe('create a domain', () => {
   })
 
   describe('given a successful domain creation', () => {
+    beforeEach(async () => {
+      org = await collections.organizations.save({
+        verified: false,
+        orgDetails: {
+          en: {
+            slug: 'treasury-board-secretariat',
+            acronym: 'TBS',
+            name: 'Treasury Board of Canada Secretariat',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+          fr: {
+            slug: 'secretariat-conseil-tresor',
+            acronym: 'SCT',
+            name: 'Secrétariat du Conseil Trésor du Canada',
+            zone: 'FED',
+            sector: 'TBS',
+            country: 'Canada',
+            province: 'Ontario',
+            city: 'Ottawa',
+          },
+        },
+      })
+    })
     describe('user has super admin permission level', () => {
       describe('user belongs to the same org', () => {
         beforeEach(async () => {
@@ -581,6 +582,7 @@ describe('create a domain', () => {
       let secondOrg
       beforeEach(async () => {
         secondOrg = await collections.organizations.save({
+          verified: false,
           orgDetails: {
             en: {
               slug: 'communications-security-establishment',
@@ -1042,6 +1044,33 @@ describe('create a domain', () => {
         })
       })
       describe('user does not belong to organization', () => {
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
         it('returns an error', async () => {
           const response = await graphql(
             schema,
@@ -1115,6 +1144,31 @@ describe('create a domain', () => {
       })
       describe('the domain already exists in the given organization', () => {
         beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1199,7 +1253,135 @@ describe('create a domain', () => {
           ])
         })
       })
+      describe('adding domain to a verified organization', () => {
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: true,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
+        it('returns an error', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                createDomain(
+                  input: {
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.gc.ca"
+                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    organizations (first: 5) {
+                      edges{ 
+                        node {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+              validators: { cleanseInput, slugify },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              'Unable to create domains belonging to verified organizations.',
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to create a domain to an organization: ${org._key} that is verified.`,
+          ])
+        })
+      })
       describe('database error occurs', () => {
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
         describe('when checking to see if org already contains domain', () => {
           beforeEach(async () => {
             await collections.affiliations.save({
@@ -1287,7 +1469,382 @@ describe('create a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while running check to see if domain already exists in an org: Error: Database error occurred.`,
+              `Database error occurred while user: ${user._key} running check to see if domain already exists in an org: Error: Database error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('cursor error occurs', () => {
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
+        describe('when checking to see if org already contains domain', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const domainLoader = domainLoaderByDomain(query)
+            const orgIdLoader = orgLoaderByKey(query, 'en')
+            const userKeyLoader = userLoaderByKey(query)
+            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+            )
+
+            const cursor = {
+              next() {
+                throw new Error('Cursor error occurred.')
+              },
+            }
+
+            const mockedQuery = jest.fn().mockReturnValue(cursor)
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      organizations (first: 5) {
+                        edges{ 
+                          node {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query: mockedQuery,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userKeyLoader,
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoader,
+                  orgLoaderByKey: orgIdLoader,
+                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
+                  userLoaderByKey: userKeyLoader,
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to create domain. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred while user: ${user._key} running check to see if domain already exists in an org: Error: Cursor error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('transaction error occurs', () => {
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
+        describe('when domain is being created for the first time', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const domainLoader = domainLoaderByDomain(query)
+            const orgIdLoader = orgLoaderByKey(query, 'en')
+            const userKeyLoader = userLoaderByKey(query)
+            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValueOnce({
+              run() {
+                throw new Error('Database error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      organizations (first: 5) {
+                        edges{ 
+                          node {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoader,
+                  orgLoaderByKey: orgIdLoader,
+                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
+                  userLoaderByKey: userKeyLoader,
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to create domain. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction run error occurred while user: ${user._key} creating new domain: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when domain is being added to a new org', () => {
+          let secondOrg
+          beforeEach(async () => {
+            secondOrg = await collections.organizations.save({
+              verified: false,
+              orgDetails: {
+                en: {
+                  slug: 'communications-security-establishment',
+                  acronym: 'CSE',
+                  name: 'Communications Security Establishment',
+                  zone: 'FED',
+                  sector: 'DND',
+                  country: 'Canada',
+                  province: 'Ontario',
+                  city: 'Ottawa',
+                },
+                fr: {
+                  slug: 'centre-de-la-securite-des-telecommunications',
+                  acronym: 'CST',
+                  name: 'Centre de la Securite des Telecommunications',
+                  zone: 'FED',
+                  sector: 'DND',
+                  country: 'Canada',
+                  province: 'Ontario',
+                  city: 'Ottawa',
+                },
+              },
+            })
+            const domain = await collections.domains.save({
+              domain: 'test.gc.ca',
+              selectors: [],
+            })
+            await collections.claims.save({
+              _from: secondOrg._id,
+              _to: domain._id,
+            })
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const domainLoader = domainLoaderByDomain(query)
+            const orgIdLoader = orgLoaderByKey(query, 'en')
+            const userKeyLoader = userLoaderByKey(query)
+            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValueOnce({
+              run() {
+                throw new Error('Database error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      organizations (first: 5) {
+                        edges{ 
+                          node {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoader,
+                  orgLoaderByKey: orgIdLoader,
+                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
+                  userLoaderByKey: userKeyLoader,
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to create new domain. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction run error occurred while user: ${user._key} upserting new domain: Error: Database error occurred.`,
             ])
           })
         })
@@ -1383,7 +1940,7 @@ describe('create a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while committing create domain transaction: Error: Database error occurred.`,
+              `Transaction commit error occurred while user: ${user._key} committing new domain: Error: Database error occurred.`,
             ])
           })
         })
@@ -1472,6 +2029,33 @@ describe('create a domain', () => {
         })
       })
       describe('user does not belong to organization', () => {
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
         it('returns an error', async () => {
           const response = await graphql(
             schema,
@@ -1543,6 +2127,31 @@ describe('create a domain', () => {
       })
       describe('the domain already exists in the given organization', () => {
         beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1625,7 +2234,131 @@ describe('create a domain', () => {
           ])
         })
       })
+      describe('adding domain to a verified organization', () => {
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: true,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
+        it('returns an error', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                createDomain(
+                  input: {
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.gc.ca"
+                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    organizations (first: 5) {
+                      edges{ 
+                        node {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+              validators: { cleanseInput, slugify },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to create a domain to an organization: ${org._key} that is verified.`,
+          ])
+        })
+      })
       describe('database error occurs', () => {
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
         describe('when checking to see if org already contains domain', () => {
           beforeEach(async () => {
             await collections.affiliations.save({
@@ -1711,7 +2444,374 @@ describe('create a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while running check to see if domain already exists in an org: Error: Database error occurred.`,
+              `Database error occurred while user: ${user._key} running check to see if domain already exists in an org: Error: Database error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('cursor error occurs', () => {
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
+        describe('when checking to see if org already contains domain', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const domainLoader = domainLoaderByDomain(query)
+            const orgIdLoader = orgLoaderByKey(query, 'en')
+            const userKeyLoader = userLoaderByKey(query)
+            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+            )
+
+            const cursor = {
+              next() {
+                throw new Error('Cursor error occurred.')
+              },
+            }
+
+            const mockedQuery = jest.fn().mockReturnValue(cursor)
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      organizations (first: 5) {
+                        edges{ 
+                          node {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query: mockedQuery,
+                collections,
+                transaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userKeyLoader,
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoader,
+                  orgLoaderByKey: orgIdLoader,
+                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
+                  userLoaderByKey: userKeyLoader,
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Cursor error occurred while user: ${user._key} running check to see if domain already exists in an org: Error: Cursor error occurred.`,
+            ])
+          })
+        })
+      })
+      describe('transaction error occurs', () => {
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            verified: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
+        describe('when domain is being created for the first time', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const domainLoader = domainLoaderByDomain(query)
+            const orgIdLoader = orgLoaderByKey(query, 'en')
+            const userKeyLoader = userLoaderByKey(query)
+            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValueOnce({
+              run() {
+                throw new Error('Database error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      organizations (first: 5) {
+                        edges{ 
+                          node {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoader,
+                  orgLoaderByKey: orgIdLoader,
+                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
+                  userLoaderByKey: userKeyLoader,
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction run error occurred while user: ${user._key} creating new domain: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when domain is being added to a new org', () => {
+          let secondOrg
+          beforeEach(async () => {
+            secondOrg = await collections.organizations.save({
+              verified: false,
+              orgDetails: {
+                en: {
+                  slug: 'communications-security-establishment',
+                  acronym: 'CSE',
+                  name: 'Communications Security Establishment',
+                  zone: 'FED',
+                  sector: 'DND',
+                  country: 'Canada',
+                  province: 'Ontario',
+                  city: 'Ottawa',
+                },
+                fr: {
+                  slug: 'centre-de-la-securite-des-telecommunications',
+                  acronym: 'CST',
+                  name: 'Centre de la Securite des Telecommunications',
+                  zone: 'FED',
+                  sector: 'DND',
+                  country: 'Canada',
+                  province: 'Ontario',
+                  city: 'Ottawa',
+                },
+              },
+            })
+            const domain = await collections.domains.save({
+              domain: 'test.gc.ca',
+              selectors: [],
+            })
+            await collections.claims.save({
+              _from: secondOrg._id,
+              _to: domain._id,
+            })
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const domainLoader = domainLoaderByDomain(query)
+            const orgIdLoader = orgLoaderByKey(query, 'en')
+            const userKeyLoader = userLoaderByKey(query)
+            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+            )
+
+            const mockedTransaction = jest.fn().mockReturnValueOnce({
+              run() {
+                throw new Error('Database error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      organizations (first: 5) {
+                        edges{ 
+                          node {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections,
+                transaction: mockedTransaction,
+                userKey: user._key,
+                auth: {
+                  checkPermission: checkPermission({
+                    userKey: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
+                },
+                loaders: {
+                  domainLoaderByDomain: domainLoader,
+                  orgLoaderByKey: orgIdLoader,
+                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
+                  userLoaderByKey: userKeyLoader,
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction run error occurred while user: ${user._key} upserting new domain: Error: Database error occurred.`,
             ])
           })
         })
@@ -1805,7 +2905,7 @@ describe('create a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while committing create domain transaction: Error: Database error occurred.`,
+              `Transaction commit error occurred while user: ${user._key} committing new domain: Error: Database error occurred.`,
             ])
           })
         })
