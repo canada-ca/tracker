@@ -1128,7 +1128,6 @@ describe('removing a domain', () => {
           `
           user = await userCursor.next()
         })
-
         it('returns an error message', async () => {
           const response = await graphql(
             schema,
