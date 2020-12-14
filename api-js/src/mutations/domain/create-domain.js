@@ -114,12 +114,20 @@ const createDomain = new mutationWithClientMutationId({
       `
     } catch (err) {
       console.error(
-        `Database error occurred while running check to see if domain already exists in an org: ${err}`,
+        `Database error occurred while user: ${userKey} running check to see if domain already exists in an org: ${err}`,
       )
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
-    const checkOrgDomain = await checkDomainCursor.next()
+    let checkOrgDomain
+    try {
+      checkOrgDomain = await checkDomainCursor.next()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred while user: ${userKey} running check to see if domain already exists in an org: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+    }
 
     if (typeof checkOrgDomain !== 'undefined') {
       console.warn(
@@ -151,10 +159,10 @@ const createDomain = new mutationWithClientMutationId({
         )
       } catch (err) {
         console.error(
-          `Transaction run error occurred while creating new domain: ${err}`,
+          `Transaction run error occurred while user: ${userKey} creating new domain: ${err}`,
         )
         throw new Error(
-          i18n._(t`Unable to create new domain. Please try again.`),
+          i18n._(t`Unable to create domain. Please try again.`),
         )
       }
     } else {
@@ -181,7 +189,7 @@ const createDomain = new mutationWithClientMutationId({
         )
       } catch (err) {
         console.error(
-          `Transaction run error occurred while upserting new domain: ${err}`,
+          `Transaction run error occurred while user: ${userKey} upserting new domain: ${err}`,
         )
         throw new Error(
           i18n._(t`Unable to create new domain. Please try again.`),
@@ -193,7 +201,7 @@ const createDomain = new mutationWithClientMutationId({
       await trx.commit()
     } catch (err) {
       console.error(
-        `Transaction commit error occurred while committing new domain: ${err}`,
+        `Transaction commit error occurred while user: ${userKey} committing new domain: ${err}`,
       )
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
