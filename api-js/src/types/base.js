@@ -110,7 +110,7 @@ const domainType = new GraphQLObjectType({
       type: periodType,
       resolve: async (
         { _id, _key, domain },
-        __,
+        { month },
         {
           userKey,
           loaders: { dmarcReportLoader },
@@ -136,6 +136,7 @@ const domainType = new GraphQLObjectType({
           data: { dmarcSummaryByPeriod },
         } = await dmarcReportLoader({ info, domain, userKey, tokenize })
         dmarcSummaryByPeriod.domainKey = _key
+        dmarcSummaryByPeriod.selectedMonth = month
         return dmarcSummaryByPeriod
       },
     },
@@ -146,6 +147,7 @@ const domainType = new GraphQLObjectType({
         { _id, _key, domain },
         __,
         {
+          moment,
           userKey,
           loaders: { dmarcReportLoader },
           auth: { checkDomainOwnership, userRequired, tokenize },
@@ -171,6 +173,9 @@ const domainType = new GraphQLObjectType({
         } = await dmarcReportLoader({ info, domain, userKey, tokenize })
         return yearlyDmarcSummaries.map((report) => {
           report.domainKey = _key
+          report.selectedMonth = String(
+            moment(report.startDate).format('MMMM'),
+          ).toLowerCase()
           return report
         })
       },
