@@ -19,12 +19,21 @@ export function OrganizationCard({
   slug,
   domainCount,
   verified,
+  summaries,
   ...rest
 }) {
   const { path, _url } = useRouteMatch()
   const history = useHistory()
-  const webValue = Math.floor(Math.random() * 10) * 10 + 10
-  const emailValue = Math.floor(Math.random() * 10) * 10 + 10
+  let webValue = 0
+  let mailValue = 0
+  const webSummary = summaries.web.categories.filter((cat) => {
+    return cat.name === 'pass'
+  })
+  const mailSummary = summaries.mail.categories.filter((cat) => {
+    return cat.name === 'pass'
+  })
+  if (webSummary[0]?.percentage) webValue = webSummary[0]?.percentage
+  if (mailSummary[0]?.percentage) mailValue = mailSummary[0]?.percentage
 
   return (
     <ListItem {...rest}>
@@ -93,8 +102,8 @@ export function OrganizationCard({
           <Text fontWeight="bold">
             <Trans>Email Configuration</Trans>
           </Text>
-          <Text>{emailValue}%</Text>
-          <Progress value={emailValue} bg="gray.300" />
+          <Text>{mailValue}%</Text>
+          <Progress value={mailValue} bg="gray.300" />
         </Box>
       </PseudoBox>
     </ListItem>
@@ -107,5 +116,6 @@ OrganizationCard.propTypes = {
   slug: string.isRequired,
   domainCount: number.isRequired,
   verified: bool,
+  summaries: object,
   domains: object,
 }

@@ -124,6 +124,7 @@ export default function OrganizationDetails() {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <OrganizationSummary
+                summaries={data.organization.summaries}
                 domainCount={data.organization.domainCount}
                 userCount={data.organization.affiliations.totalCount}
                 city={data.organization.city}
@@ -142,10 +143,14 @@ export default function OrganizationDetails() {
                 )}
                 mb="4"
               >
-                {({ id, domain, lastRan }, index) => (
+                {({ id, domain, lastRan, status }, index) => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <Box key={`${id}:${index}`}>
-                      <DomainCard url={domain} lastRan={lastRan} />
+                      <DomainCard
+                        url={domain}
+                        lastRan={lastRan}
+                        status={status}
+                      />
                       <Divider borderColor="gray.900" />
                     </Box>
                   </ErrorBoundary>

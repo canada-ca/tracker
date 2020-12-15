@@ -17,20 +17,37 @@ const i18n = setupI18n({
   },
 })
 
-const domains = {
-  pageInfo: {
-    hasNextPage: false,
-    hasPreviousPage: false,
-  },
-  edges: [
-    {
-      node: {
-        id: 'OTY2NTI4OTY4NA==',
-        domain: 'tbs-sct.gc.ca',
-        lastRan: '2020-06-18T00:42:12.414Z',
+const summaries = {
+  mail: {
+    total: 23452,
+    categories: [
+      {
+        name: 'pass',
+        count: 6577,
+        percentage: 23.4,
       },
-    },
-  ],
+      {
+        name: 'fail',
+        count: 7435,
+        percentage: 43.5,
+      },
+    ],
+  },
+  web: {
+    total: 57896,
+    categories: [
+      {
+        name: 'pass',
+        count: 6577,
+        percentage: 23.4,
+      },
+      {
+        name: 'fail',
+        count: 7435,
+        percentage: 43.5,
+      },
+    ],
+  },
 }
 
 describe('<OrganizationsCard />', () => {
@@ -46,7 +63,7 @@ describe('<OrganizationsCard />', () => {
                 acronym="TBS"
                 domainCount={7}
                 verified={false}
-                domains={domains}
+                summaries={summaries}
               />
             </I18nProvider>
           </ThemeProvider>

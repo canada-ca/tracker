@@ -8,7 +8,6 @@ import { WelcomeMessage } from './WelcomeMessage'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
-
 export function LandingPage() {
   return (
     <Layout>

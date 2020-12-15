@@ -12,6 +12,24 @@ export const PAGINATED_ORGANIZATIONS = gql`
           slug
           domainCount
           verified
+          summaries {
+            mail {
+              total
+              categories {
+                name
+                count
+                percentage
+              }
+            }
+            web {
+              total
+              categories {
+                name
+                count
+                percentage
+              }
+            }
+          }
         }
       }
       pageInfo {
@@ -36,6 +54,24 @@ export const REVERSE_PAGINATED_ORGANIZATIONS = gql`
           slug
           domainCount
           verified
+          summaries {
+            mail {
+              total
+              categories {
+                name
+                count
+                percentage
+              }
+            }
+            web {
+              total
+              categories {
+                name
+                count
+                percentage
+              }
+            }
+          }
         }
       }
       pageInfo {
@@ -195,6 +231,24 @@ export const ORG_DETAILS_PAGE = gql`
       city
       province
       verified
+      summaries {
+        mail {
+          total
+          categories {
+            name
+            count
+            percentage
+          }
+        }
+        web {
+          total
+          categories {
+            name
+            count
+            percentage
+          }
+        }
+      }
       domains {
         pageInfo {
           hasNextPage
@@ -205,6 +259,13 @@ export const ORG_DETAILS_PAGE = gql`
             id
             domain
             lastRan
+            status {
+              dkim
+              dmarc
+              https
+              spf
+              ssl
+            }
           }
         }
       }
@@ -239,6 +300,13 @@ export const PAGINATED_DOMAINS = gql`
           id
           domain
           lastRan
+          status {
+            dkim
+            dmarc
+            https
+            spf
+            ssl
+          }
           __typename
         }
         __typename
@@ -264,6 +332,13 @@ export const REVERSE_PAGINATED_DOMAINS = gql`
           id
           domain
           lastRan
+          status {
+            dkim
+            dmarc
+            https
+            spf
+            ssl
+          }
           __typename
         }
         __typename

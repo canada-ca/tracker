@@ -1,5 +1,5 @@
 import React from 'react'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import {
   Text,
   ListItem,
@@ -14,22 +14,13 @@ import { useHistory } from 'react-router-dom'
 import { object, string } from 'prop-types'
 import { slugify } from './slugify'
 
-export function DomainCard({ url, lastRan, ...rest }) {
+export function DomainCard({ url, lastRan, status, ...rest }) {
   const history = useHistory()
-  const webProtocols = [
-    'HTTPS',
-    'HSTS',
-    t`HSTS Preloaded`,
-    'SSL',
-    t`Protocols & Ciphers`,
-    t`Certificate Use`,
-  ]
-  const emailProtocols = ['SPF', 'DKIM', 'DMARC']
+  const { dkim, dmarc, https, spf, ssl } = status
 
-  const generateWebStatus = () => {
-    const randNum = Math.floor(Math.random() * 100 + 1)
+  const generateStatusIcon = (status) => {
     let statusIcon
-    if (randNum < 70) {
+    if (status === 'PASS') {
       statusIcon = <Icon name="check-circle" color="strong" size="icons.sm" />
     } else {
       statusIcon = <Icon name="warning" color="weak" size="icons.sm" />
@@ -74,36 +65,46 @@ export function DomainCard({ url, lastRan, ...rest }) {
           )}
         </Box>
         <Divider orientation={['horizontal', 'vertical']} />
-        {webProtocols.map((protocol) => {
-          return (
-            <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} key={protocol}>
-              <Stack
-                align={['right', 'center']}
-                flexDirection={['row', 'column']}
-              >
-                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-                  {protocol}:
-                </Text>
-                {generateWebStatus()}
-              </Stack>
-            </Box>
-          )
-        })}
-        {emailProtocols.map((protocol) => {
-          return (
-            <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} key={protocol}>
-              <Stack
-                align={['right', 'center']}
-                flexDirection={['row', 'column']}
-              >
-                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-                  {protocol}:
-                </Text>
-                {generateWebStatus()}
-              </Stack>
-            </Box>
-          )
-        })}
+        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
+            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+              HTTPS:
+            </Text>
+            {generateStatusIcon(https)}
+          </Stack>
+        </Box>
+        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
+            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+              SSL:
+            </Text>
+            {generateStatusIcon(ssl)}
+          </Stack>
+        </Box>
+        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
+            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+              SPF:
+            </Text>
+            {generateStatusIcon(spf)}
+          </Stack>
+        </Box>
+        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
+            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+              DKIM:
+            </Text>
+            {generateStatusIcon(dkim)}
+          </Stack>
+        </Box>
+        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
+            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+              DMARC:
+            </Text>
+            {generateStatusIcon(dmarc)}
+          </Stack>
+        </Box>
       </PseudoBox>
     </ListItem>
   )
@@ -112,6 +113,5 @@ export function DomainCard({ url, lastRan, ...rest }) {
 DomainCard.propTypes = {
   url: string.isRequired,
   lastRan: string,
-  web: object,
-  email: object,
+  status: object,
 }

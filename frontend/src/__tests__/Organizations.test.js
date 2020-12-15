@@ -24,6 +24,39 @@ const i18n = setupI18n({
   },
 })
 
+const summaries = {
+  mail: {
+    total: 86954,
+    categories: [
+      {
+        name: 'pass',
+        count: 7435,
+        percentage: 50,
+      },
+      {
+        name: 'fail',
+        count: 7435,
+        percentage: 43.5,
+      },
+    ],
+  },
+  web: {
+    total: 54386,
+    categories: [
+      {
+        name: 'pass',
+        count: 7435,
+        percentage: 50,
+      },
+      {
+        name: 'fail',
+        count: 7435,
+        percentage: 43.5,
+      },
+    ],
+  },
+}
+
 describe('<Organisations />', () => {
   describe('given a list of organizations', () => {
     it('displays a list of organizations', async () => {
@@ -46,7 +79,7 @@ describe('<Organisations />', () => {
                       slug: 'organization-one',
                       domainCount: 5,
                       verified: false,
-
+                      summaries,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -60,7 +93,7 @@ describe('<Organisations />', () => {
                       slug: 'organization-two',
                       domainCount: 5,
                       verified: false,
-
+                      summaries,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -125,7 +158,7 @@ describe('<Organisations />', () => {
                       slug: 'organization-one',
                       domainCount: 5,
                       verified: false,
-
+                      summaries,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -161,7 +194,7 @@ describe('<Organisations />', () => {
                       slug: 'organization-two',
                       domainCount: 5,
                       verified: false,
-
+                      summaries,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -197,7 +230,7 @@ describe('<Organisations />', () => {
                       slug: 'organization-two',
                       domainCount: 5,
                       verified: false,
-
+                      summaries,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -277,7 +310,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-one',
                         domainCount: 5,
                         verified: false,
-
+                        summaries,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -313,7 +346,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-two',
                         domainCount: 5,
                         verified: false,
-
+                        summaries,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -349,7 +382,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-one',
                         domainCount: 5,
                         verified: false,
-
+                        summaries,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -437,7 +470,7 @@ describe('<Organisations />', () => {
                     slug: 'organization-one',
                     domainCount: 5,
                     verified: false,
-
+                    summaries,
                     __typename: 'Organizations',
                   },
                   __typename: 'OrganizationsEdge',
@@ -474,7 +507,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-one',
                         domainCount: 5,
                         verified: false,
-
+                        summaries,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -510,7 +543,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-two',
                         domainCount: 5,
                         verified: false,
-
+                        summaries,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',
@@ -546,7 +579,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-two',
                         domainCount: 5,
                         verified: false,
-
+                        summaries,
                         __typename: 'Organizations',
                       },
                       __typename: 'OrganizationsEdge',

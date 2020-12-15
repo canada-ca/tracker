@@ -67,6 +67,38 @@ describe('<OrganizationDetails />', () => {
                 city: 'Ottawa',
                 province: 'ON',
                 verified: true,
+                summaries: {
+                  mail: {
+                    total: 86954,
+                    categories: [
+                      {
+                        name: 'pass',
+                        count: 7435,
+                        percentage: 50,
+                      },
+                      {
+                        name: 'fail',
+                        count: 7435,
+                        percentage: 43.5,
+                      },
+                    ],
+                  },
+                  web: {
+                    total: 54386,
+                    categories: [
+                      {
+                        name: 'pass',
+                        count: 7435,
+                        percentage: 50,
+                      },
+                      {
+                        name: 'fail',
+                        count: 7435,
+                        percentage: 43.5,
+                      },
+                    ],
+                  },
+                },
                 domains: {
                   pageInfo: {
                     hasNextPage: false,
@@ -78,6 +110,13 @@ describe('<OrganizationDetails />', () => {
                         id: 'OTY2NTI4OTY4NA==',
                         domain: 'tbs-sct.gc.ca',
                         lastRan: '2020-06-18T00:42:12.414Z',
+                        status: {
+                          dkim: 'PASS',
+                          dmarc: 'PASS',
+                          https: 'PASS',
+                          spf: 'PASS',
+                          ssl: 'PASS',
+                        },
                       },
                     },
                   ],
@@ -102,50 +141,6 @@ describe('<OrganizationDetails />', () => {
                     },
                   ],
                 },
-              },
-            },
-          },
-        },
-        {
-          request: {
-            query: WEB_AND_EMAIL_SUMMARIES,
-          },
-          result: {
-            data: {
-              webSummary: {
-                categories: [
-                  {
-                    name: 'full-pass',
-                    count: 7468,
-                    percentage: 56.6,
-                  },
-                  {
-                    name: 'full-fail',
-                    count: 5738,
-                    percentage: 43.4,
-                  },
-                ],
-                total: 13206,
-              },
-              emailSummary: {
-                categories: [
-                  {
-                    name: 'full-pass',
-                    count: 2091,
-                    percentage: 11.2,
-                  },
-                  {
-                    name: 'full-fail',
-                    count: 8604,
-                    percentage: 46.2,
-                  },
-                  {
-                    name: 'partial-pass',
-                    count: 7918,
-                    percentage: 42.5,
-                  },
-                ],
-                total: 18613,
               },
             },
           },

@@ -40,6 +40,13 @@ describe('<DomainsPage />', () => {
                   id: 'T3JnYW5pemF0aW9uczoyCg==',
                   domain: 'tbs-sct.gc.ca',
                   lastRan: 'somedate',
+                  status: {
+                    dkim: 'PASS',
+                    dmarc: 'PASS',
+                    https: 'PASS',
+                    spf: 'PASS',
+                    ssl: 'PASS',
+                  },
                   __typename: 'Domains',
                 },
                 __typename: 'DomainsEdge',
@@ -50,36 +57,12 @@ describe('<DomainsPage />', () => {
                   id: 'T3JnYW5pemF0aW9uczoxCg==',
                   domain: 'rcmp-grc.gc.ca',
                   lastRan: 'organization-two',
-                  email: {
-                    dmarc: {
-                      edges: [
-                        {
-                          node: {
-                            timestamp: '2020-02-10T22:00:27.555Z',
-                            dmarcPhase: 2,
-                            pPolicy: 'missing',
-                            spPolicy: 'missing',
-                            pct: 60,
-                          },
-                        },
-                      ],
-                    },
-                  },
-                  web: {
-                    https: {
-                      edges: [
-                        {
-                          node: {
-                            timestamp: '2019-12-22T09:18:56.523Z',
-                            implementation: 'Bad Hostname',
-                            enforced: 'Strict',
-                            hsts: 'HSTS Fully Implemented',
-                            hstsAge: '21672901',
-                            preloaded: 'HSTS Preloaded',
-                          },
-                        },
-                      ],
-                    },
+                  status: {
+                    dkim: 'PASS',
+                    dmarc: 'PASS',
+                    https: 'PASS',
+                    spf: 'PASS',
+                    ssl: 'PASS',
                   },
                   __typename: 'Domains',
                 },
@@ -113,6 +96,13 @@ describe('<DomainsPage />', () => {
                   id: 'T3JnYW5pemF0aW9uczoyCg==',
                   domain: 'tbs-sct.gc.ca',
                   lastRan: 'somedate',
+                  status: {
+                    dkim: 'PASS',
+                    dmarc: 'PASS',
+                    https: 'PASS',
+                    spf: 'PASS',
+                    ssl: 'PASS',
+                  },
                   __typename: 'Domains',
                 },
                 __typename: 'DomainsEdge',
@@ -123,6 +113,13 @@ describe('<DomainsPage />', () => {
                   id: 'T3JnYW5pemF0aW9uczoxCg==',
                   domain: 'rcmp-grc.gc.ca',
                   lastRan: 'organization-two',
+                  status: {
+                    dkim: 'PASS',
+                    dmarc: 'PASS',
+                    https: 'PASS',
+                    spf: 'PASS',
+                    ssl: 'PASS',
+                  },
                   __typename: 'Domains',
                 },
                 __typename: 'DomainsEdge',
