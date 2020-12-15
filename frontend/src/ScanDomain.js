@@ -69,7 +69,9 @@ export function ScanDomain() {
                 </Text>
                 <DomainField width={['100%', '75%']} name="domain" mb="4" />
                 <Stack mb="4">
-                  <Text fontWeight="bold">Scan Type:</Text>
+                  <Text fontWeight="bold">
+                    <Trans>Scan Type:</Trans>
+                  </Text>
                   <Select
                     aria-label={t`Select scan type`}
                     width={['100%', '25%']}

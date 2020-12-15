@@ -2292,6 +2292,10 @@ msgstr "Scan Domain"
 msgid "Select scan type"
 msgstr "Select scan type"
 
+#: src/ScanDomain.js:73
+msgid "Scan Type:"
+msgstr "Scan Type:"
+
 #: src/ScanDomain.js:85
 msgid "WEB"
 msgstr "WEB"
@@ -2303,4 +2307,8 @@ msgstr "MAIL"
 #: src/DomainField.js:29
 msgid "Domain URL"
 msgstr "Domain URL"
+
+#: src/DomainField.js:29
+msgid "Domain URL:"
+msgstr "Domain URL:"
 
