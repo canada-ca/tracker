@@ -901,8 +901,8 @@ msgid "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
 msgstr ""
 
 #: src/OrganizationSummary.js:13
-msgid "Internet facing services:"
-msgstr "Services d'accès à Internet:"
+msgid "Internet facing services"
+msgstr "Services d'accès à Internet"
 
 #: src/Organization.js:19
 msgid "Internet facing services: {domainCount}"
@@ -1943,8 +1943,12 @@ msgid "Users"
 msgstr "Utilisateurs"
 
 #: src/OrganizationSummary.js:20
-msgid "Users joined:"
-msgstr "Les utilisateurs se sont inscrits :"
+msgid "Total users"
+msgstr "total des utilisateurs"
+
+#: src/OrganizationSummary.js:23
+msgid "Based in:"
+msgstr "Basé à:"
 
 #: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"

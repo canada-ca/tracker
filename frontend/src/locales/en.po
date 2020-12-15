@@ -2004,8 +2004,12 @@ msgid "Users"
 msgstr "Users"
 
 #: src/OrganizationSummary.js:20
-msgid "Users joined:"
-msgstr "Users joined:"
+msgid "Total users"
+msgstr "Total users"
+
+#: src/OrganizationSummary.js:23
+msgid "Based in:"
+msgstr "Based in:"
 
 #: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"
