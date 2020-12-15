@@ -25,8 +25,7 @@ const periodType = new GraphQLObjectType({
     month: {
       type: PeriodEnums,
       description: 'Start date of data collection.',
-      resolve: ({ startDate }, _, { moment }) =>
-        String(moment(startDate).format('MMMM')).toLowerCase(),
+      resolve: ({ selectedMonth }) => selectedMonth,
     },
     year: {
       type: Year,
