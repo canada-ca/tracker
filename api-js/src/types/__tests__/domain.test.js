@@ -1,5 +1,6 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const moment = require('moment')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const {
   GraphQLNonNull,
@@ -541,66 +542,79 @@ describe('given the domain object', () => {
             {
               endDate: '2019-01-31',
               startDate: '2019-01-01',
+              selectedMonth: 'january',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-02-28',
               startDate: '2019-02-01',
+              selectedMonth: 'february',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-03-31',
               startDate: '2019-03-01',
+              selectedMonth: 'march',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-04-30',
               startDate: '2019-04-01',
+              selectedMonth: 'april',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-01-31',
               startDate: '2019-05-01',
+              selectedMonth: 'may',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-06-30',
               startDate: '2019-06-01',
+              selectedMonth: 'june',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-07-31',
               startDate: '2019-07-01',
+              selectedMonth: 'july',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-08-31',
               startDate: '2019-08-01',
+              selectedMonth: 'august',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-09-30',
               startDate: '2019-09-01',
+              selectedMonth: 'september',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-10-31',
               startDate: '2019-10-01',
+              selectedMonth: 'october',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-11-30',
               startDate: '2019-11-01',
+              selectedMonth: 'november',
               domainKey: domainOne._key,
             },
             {
               endDate: '2019-12-31',
               startDate: '2019-12-01',
+              selectedMonth: 'december',
               domainKey: domainOne._key,
             },
             {
               endDate: '2020-01-31',
               startDate: '2020-01-01',
+              selectedMonth: 'january',
               domainKey: domainOne._key,
             },
           ]
@@ -610,6 +624,7 @@ describe('given the domain object', () => {
               data,
               {},
               {
+                moment,
                 userKey: user._key,
                 loaders: { dmarcReportLoader: mockDmarcReportLoader },
                 auth: {

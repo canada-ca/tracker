@@ -96,7 +96,7 @@ describe('testing the period gql object', () => {
         const demoType = periodType.getFields()
 
         expect(
-          demoType.month.resolve({ startDate: '2020-01-01' }, {}, { moment }),
+          demoType.month.resolve({ selectedMonth: 'january' }),
         ).toEqual('january')
       })
     })
