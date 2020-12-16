@@ -4,11 +4,21 @@ import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import DmarcReportPage from '../DmarcReportPage'
-import { DMARC_REPORT_PAGE } from '../graphql/queries'
+import {
+  DMARC_REPORT_GRAPH,
+  PAGINATED_DKIM_FAILURE_REPORT as DKIM_FAILURE_FORWARD,
+  PAGINATED_DMARC_FAILURE_REPORT as DMARC_FAILURE_FORWARD,
+  PAGINATED_FULL_PASS_REPORT as FULL_PASS_FORWARD,
+  PAGINATED_SPF_FAILURE_REPORT as SPF_FAILURE_FORWARD,
+} from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { rawDmarcReportSummaryData } from '../fixtures/dmarcReportSummaryData'
+import { rawDmarcReportGraphData } from '../fixtures/dmarcReportGraphData'
+import { rawDkimFailureData } from '../fixtures/dkimFailureData'
+import { rawDmarcFailureData } from '../fixtures/dmarcFailureData'
+import { rawSpfFailureData } from '../fixtures/spfFailureData'
+import { rawFullPassData } from '../fixtures/fullPassData'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -23,14 +33,233 @@ const i18n = setupI18n({
 const mocks = [
   {
     request: {
-      query: DMARC_REPORT_PAGE,
+      query: DMARC_REPORT_GRAPH,
+      variables: {
+        domain: 'test-domain',
+      },
+    },
+    result: { data: rawDmarcReportGraphData },
+  },
+  {
+    request: {
+      query: DKIM_FAILURE_FORWARD,
       variables: {
         domain: 'test-domain',
         month: 'LAST30DAYS',
         year: '2020',
+        first: 50,
+        after: '',
       },
     },
-    result: rawDmarcReportSummaryData,
+    result: { data: rawDkimFailureData },
+  },
+  {
+    request: {
+      query: DMARC_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawDmarcFailureData },
+  },
+  {
+    request: {
+      query: SPF_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawSpfFailureData },
+  },
+  {
+    request: {
+      query: SPF_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawSpfFailureData },
+  },
+  {
+    request: {
+      query: FULL_PASS_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawFullPassData },
+  },
+  {
+    request: {
+      query: FULL_PASS_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawFullPassData },
+  },
+  {
+    request: {
+      query: DKIM_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawDkimFailureData },
+  },
+  {
+    request: {
+      query: DKIM_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawDkimFailureData },
+  },
+  {
+    request: {
+      query: DKIM_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawDkimFailureData },
+  },
+  {
+    request: {
+      query: DMARC_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawDmarcFailureData },
+  },
+  {
+    request: {
+      query: DMARC_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawDmarcFailureData },
+  },
+  {
+    request: {
+      query: DMARC_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawDmarcFailureData },
+  },
+  {
+    request: {
+      query: SPF_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawSpfFailureData },
+  },
+  {
+    request: {
+      query: SPF_FAILURE_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawSpfFailureData },
+  },
+  {
+    request: {
+      query: FULL_PASS_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawFullPassData },
+  },
+  {
+    request: {
+      query: FULL_PASS_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawFullPassData },
+  },
+  {
+    request: {
+      query: FULL_PASS_FORWARD,
+      variables: {
+        domain: 'test-domain',
+        month: 'LAST30DAYS',
+        year: '2020',
+        first: 50,
+        after: '',
+      },
+    },
+    result: { data: rawFullPassData },
   },
 ]
 
@@ -144,6 +373,9 @@ describe('<DmarcReportPage />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/^Fully Aligned by IP Address$/i))
+    await waitFor(() => getAllByText(/DKIM Failures by IP Address/i))
+    await waitFor(() => getAllByText(/SPF Failures by IP Address/i))
+    await waitFor(() => getAllByText(/Fully Aligned by IP Address/i))
+    await waitFor(() => getAllByText(/DMARC Failures by IP Address/i))
   })
 })
