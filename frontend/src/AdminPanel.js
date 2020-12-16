@@ -16,7 +16,7 @@ export default function AdminPanel({ orgSlug, permission }) {
   const toast = useToast()
 
   const { loading, error, data } = useQuery(ADMIN_PANEL, {
-    variables: { orgSlug: orgSlug },
+    variables: { orgSlug: orgSlug, domainsFirst: 5, affiliationsFirst: 5 },
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -44,7 +44,7 @@ export default function AdminPanel({ orgSlug, permission }) {
   }
   // Current api returns an error if no domains found
   // TODO: Remove includes check when api is ready
-  if (error && !error.includes('Error, unable to find domains')) {
+  if (error) {
     return <ErrorFallbackMessage error={error} />
   }
 

@@ -25,13 +25,13 @@ import { object, string as yupString } from 'yup'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
-export default function UserList({ permission, userListData, orgName, orgId }) {
+export default function UserList({ permission, userListData, orgId }) {
   let users = []
   if (userListData && userListData.edges) {
     users = userListData.edges
   }
 
-  const [userList, setUserList] = useState(users)
+  const [userList] = useState(users)
   const [currentPage, setCurrentPage] = useState(1)
   const [usersPerPage] = useState(4)
   const toast = useToast()
@@ -115,32 +115,32 @@ export default function UserList({ permission, userListData, orgName, orgId }) {
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   // TODO: Add mutation to this
-  const removeUser = (user) => {
-    console.log(user)
-    const temp = userList.filter((c) => c.node.userId !== user.userId)
-    if (temp) {
-      setUserList(temp)
-      if (currentUsers.length <= 1 && userList.length > 1)
-        setCurrentPage(Math.ceil(userList.length / usersPerPage) - 1)
-      toast({
-        title: 'User removed',
-        description: `${user.user.userName} was removed from ${orgName}`,
-        status: 'info',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    } else {
-      toast({
-        title: 'An error occurred.',
-        description: `${user.displayName} could not be removed from ${orgName}`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    }
-  }
+  // const removeUser = (user) => {
+  //   console.log(user)
+  //   const temp = userList.filter((c) => c.node.userId !== user.userId)
+  //   if (temp) {
+  //     setUserList(temp)
+  //     if (currentUsers.length <= 1 && userList.length > 1)
+  //       setCurrentPage(Math.ceil(userList.length / usersPerPage) - 1)
+  //     toast({
+  //       title: 'User removed',
+  //       description: `${user.user.userName} was removed from ${orgName}`,
+  //       status: 'info',
+  //       duration: 9000,
+  //       isClosable: true,
+  //       position: 'top-left',
+  //     })
+  //   } else {
+  //     toast({
+  //       title: 'An error occurred.',
+  //       description: `${user.displayName} could not be removed from ${orgName}`,
+  //       status: 'error',
+  //       duration: 9000,
+  //       isClosable: true,
+  //       position: 'top-left',
+  //     })
+  //   }
+  // }
 
   const handleClick = (role, userName) => {
     updateUserRole({
@@ -243,7 +243,7 @@ export default function UserList({ permission, userListData, orgName, orgId }) {
           return (
             <Box key={`${node.user.userName}:${index}`}>
               <Stack isInline align="center">
-                {/* TODO: IMPLEMENT USER REMOVAL (NEEDS API SUPPORT NOV-23-2020 */}
+                {/*TODO: IMPLEMENT USER REMOVAL (NEEDS API SUPPORT NOV-23-2020*/}
                 {/*<TrackerButton*/}
                 {/*  variant="danger"*/}
                 {/*  onClick={() => removeUser(node)}*/}
