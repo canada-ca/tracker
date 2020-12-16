@@ -4,13 +4,9 @@ import { useQuery } from '@apollo/client'
 import {
   DMARC_REPORT_GRAPH,
   PAGINATED_DKIM_FAILURE_REPORT as DKIM_FAILURE_FORWARD,
-  REVERSE_PAGINATED_DKIM_FAILURE_REPORT as DKIM_FAILURE_BACKWARD,
   PAGINATED_DMARC_FAILURE_REPORT as DMARC_FAILURE_FORWARD,
-  REVERSE_PAGINATED_DMARC_FAILURE_REPORT as DMARC_FAILURE_BACKWARD,
-  PAGINATED_SPF_FAILURE_REPORT as SPF_FAILURE_FORWARD,
-  REVERSE_PAGINATED_SPF_FAILURE_REPORT as SPF_FAILURE_BACKWARD,
   PAGINATED_FULL_PASS_REPORT as FULL_PASS_FORWARD,
-  REVERSE_PAGINATED_FULL_PASS_REPORT as FULL_PASS_BACKWARD,
+  PAGINATED_SPF_FAILURE_REPORT as SPF_FAILURE_FORWARD,
 } from './graphql/queries'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import { Box, Heading, IconButton, Select, Stack, Text } from '@chakra-ui/core'
@@ -18,12 +14,11 @@ import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { number } from 'prop-types'
-import { useParams, useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
-import { usePaginatedCollection } from './usePaginatedCollection'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -37,24 +32,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const [selectedDate, setSelectedDate] = useState(
     `${selectedPeriod}, ${selectedYear}`,
   )
-
-  const defaultPageSize = 10
-  const [
-    dmarcFailureSelectedTableDisplayLimit,
-    setDmarcFailureSelectedTableDisplayLimit,
-  ] = useState(defaultPageSize)
-  const [
-    dkimFailureSelectedTableDisplayLimit,
-    setDkimFailureSelectedTableDisplayLimit,
-  ] = useState(defaultPageSize)
-  const [
-    spfFailureSelectedTableDisplayLimit,
-    setSpfFailureSelectedTableDisplayLimit,
-  ] = useState(defaultPageSize)
-  const [
-    fullPassSelectedTableDisplayLimit,
-    setFullPassSelectedTableDisplayLimit,
-  ] = useState(defaultPageSize)
 
   // Allows the use of forward/backward navigation
   if (selectedPeriod !== period) setSelectedPeriod(period)
@@ -77,88 +54,71 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     },
   })
 
-  let {
-    loading: dkimFailureLoading,
-    error: dkimFailureError,
-    nodes: dkimFailureNodes,
-    next: dkimFailureNext,
-    previous: dkimFailurePrevious,
-    hasNextPage: dkimFailureHasNextPage,
-    hasPreviousPage: dkimFailureHasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: DKIM_FAILURE_FORWARD,
-    fetchBackward: DKIM_FAILURE_BACKWARD,
-    fetchHeaders: { authorization: currentUser.jwt },
-    recordsPerPage: 10,
-    variables: {
-      month: selectedPeriod,
-      year: selectedYear,
-      domain: domainSlug,
+  const { loading: dkimLoading, error: dkimError, data: dkimData } = useQuery(
+    DKIM_FAILURE_FORWARD,
+    {
+      context: {
+        headers: { authorization: currentUser.jwt },
+      },
+      variables: {
+        month: selectedPeriod,
+        year: selectedYear,
+        domain: domainSlug,
+        first: 50,
+        after: '',
+      },
     },
-    relayRoot: 'dmarcSummaryByPeriod.detailTables.dkimFailure',
-  })
+  )
 
   const {
     loading: dmarcFailureLoading,
     error: dmarcFailureError,
-    nodes: dmarcFailureNodes,
-    next: dmarcFailureNext,
-    previous: dmarcFailurePrevious,
-    hasNextPage: dmarcFailureHasNextPage,
-    hasPreviousPage: dmarcFailureHasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: DMARC_FAILURE_FORWARD,
-    fetchBackward: DMARC_FAILURE_BACKWARD,
-    fetchHeaders: { authorization: currentUser.jwt },
-    recordsPerPage: 10,
+    data: dmarcFailureData,
+  } = useQuery(DMARC_FAILURE_FORWARD, {
+    context: {
+      headers: { authorization: currentUser.jwt },
+    },
     variables: {
       month: selectedPeriod,
       year: selectedYear,
       domain: domainSlug,
+      first: 50,
+      after: '',
     },
-    relayRoot: 'dmarcSummaryByPeriod.detailTables.dmarcFailure',
   })
 
-  let {
+  const {
     loading: spfFailureLoading,
     error: spfFailureError,
-    nodes: spfFailureNodes,
-    next: spfFailureNext,
-    previous: spfFailurePrevious,
-    hasNextPage: spfFailureHasNextPage,
-    hasPreviousPage: spfFailureHasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: SPF_FAILURE_FORWARD,
-    fetchBackward: SPF_FAILURE_BACKWARD,
-    fetchHeaders: { authorization: currentUser.jwt },
-    recordsPerPage: 10,
+    data: spfFailureData,
+  } = useQuery(SPF_FAILURE_FORWARD, {
+    context: {
+      headers: { authorization: currentUser.jwt },
+    },
     variables: {
       month: selectedPeriod,
       year: selectedYear,
       domain: domainSlug,
+      first: 50,
+      after: '',
     },
-    relayRoot: 'dmarcSummaryByPeriod.detailTables.spfFailure',
   })
 
   const {
     loading: fullPassLoading,
     error: fullPassError,
-    nodes: fullPassNodes,
-    next: fullPassNext,
-    previous: fullPassPrevious,
-    hasNextPage: fullPassHasNextPage,
-    hasPreviousPage: fullPassHasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: FULL_PASS_FORWARD,
-    fetchBackward: FULL_PASS_BACKWARD,
-    fetchHeaders: { authorization: currentUser.jwt },
-    recordsPerPage: 10,
+    data: fullPassData,
+  } = useQuery(FULL_PASS_FORWARD, {
+    context: {
+      headers: { authorization: currentUser.jwt },
+    },
     variables: {
       month: selectedPeriod,
       year: selectedYear,
       domain: domainSlug,
+      first: 50,
+      after: '',
     },
-    relayRoot: 'dmarcSummaryByPeriod.detailTables.fullPass',
   })
 
   const options = [
@@ -220,7 +180,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   if (graphLoading) {
     graphDisplay = (
       <LoadingMessage>
-        <Trans>DKIM Failure Table</Trans>
+        <Trans>Yearly DMARC Graph</Trans>
       </LoadingMessage>
     )
   }
@@ -229,7 +189,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     graphDisplay = <ErrorFallbackMessage error={graphError} />
   }
   // Set graph display using data if data exists
-  else if (graphData.findDomainByDomain.yearlyDmarcSummaries.length) {
+  else if (graphData?.findDomainByDomain?.yearlyDmarcSummaries?.length > 0) {
     const strengths = {
       strong: [
         {
@@ -342,13 +302,12 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   // Initial sorting category for detail tables
   const initialSort = [{ id: 'totalMessages', desc: true }]
-  const displayLimitOptions = [5, 10, 20, 50, 100]
 
   // DKIM Failure Table setup
   let dkimFailureTable
 
   // Set DKIM Failure Table Loading
-  if (dkimFailureLoading) {
+  if (dkimLoading) {
     dkimFailureTable = (
       <LoadingMessage>
         <Trans>DKIM Failure Table</Trans>
@@ -356,7 +315,10 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
   }
   // DKIM Failure query no longer loading, check if data exists
-  else if (dkimFailureNodes.length) {
+  else if (
+    dkimData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+      ?.dkimFailure?.edges.length > 0
+  ) {
     const dkimFailureColumns = [
       {
         Header: t`DKIM Failures by IP Address`,
@@ -375,39 +337,31 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         ],
       },
     ]
-    // Convert boolean values to string
-    dkimFailureNodes = dkimFailureNodes.map((node) => {
-      return {
-        ...node,
-        dkimAligned: node.dkimAligned.toString(),
-      }
-    })
+    // Convert boolean values to string and properly format
+    const dkimFailureNodes = dkimData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dkimFailure.edges.map(
+      (edge) => {
+        const node = { ...edge.node }
+        node.dkimAligned = node.dkimAligned.toString()
+        return node
+      },
+    )
 
-    const dkimFailurePaginationConfig = {
-      previous: dkimFailurePrevious,
-      hasPreviousPage: dkimFailureHasPreviousPage,
-      next: dkimFailureNext,
-      hasNextPage: dkimFailureHasNextPage,
-      displayLimitOptions: displayLimitOptions,
-    }
     dkimFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <DmarcReportTable
+          mt="30px"
           data={dkimFailureNodes}
           columns={dkimFailureColumns}
           title={t`DKIM Failures by IP Address`}
           initialSort={initialSort}
-          frontendPagination={false}
-          paginationConfig={dkimFailurePaginationConfig}
-          selectedDisplayLimit={dkimFailureSelectedTableDisplayLimit}
-          setSelectedDisplayLimit={setDkimFailureSelectedTableDisplayLimit}
+          frontendPagination={true}
         />
       </ErrorBoundary>
     )
   }
   // Display DKIM Failure if found
-  else if (dkimFailureError) {
-    dkimFailureTable = <ErrorFallbackMessage error={dkimFailureError} />
+  else if (dkimError) {
+    dkimFailureTable = <ErrorFallbackMessage error={dkimError} />
   }
   // If no data exists for DKIM Failure table, display message saying so
   else {
@@ -430,7 +384,10 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
   }
   // Full pass query no longer loading, check if data exists
-  else if (fullPassNodes.length) {
+  else if (
+    fullPassData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+      ?.fullPass?.edges.length > 0
+  ) {
     const fullPassColumns = [
       {
         Header: t`Fully Aligned by IP Address`,
@@ -448,13 +405,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       },
     ]
 
-    const fullPassPaginationConfig = {
-      previous: fullPassPrevious,
-      hasPreviousPage: fullPassHasPreviousPage,
-      next: fullPassNext,
-      hasNextPage: fullPassHasNextPage,
-      displayLimitOptions: displayLimitOptions,
-    }
+    // Convert boolean values to string and properly format
+    const fullPassNodes = fullPassData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.fullPass.edges.map(
+      (edge) => {
+        return { ...edge.node }
+      },
+    )
+
     fullPassTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <DmarcReportTable
@@ -462,10 +419,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           columns={fullPassColumns}
           title={t`Fully Aligned by IP Address`}
           initialSort={initialSort}
-          frontendPagination={false}
-          paginationConfig={fullPassPaginationConfig}
-          selectedDisplayLimit={fullPassSelectedTableDisplayLimit}
-          setSelectedDisplayLimit={setFullPassSelectedTableDisplayLimit}
+          frontendPagination={true}
         />
       </ErrorBoundary>
     )
@@ -495,7 +449,10 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
   }
   // SPF Failure query no longer loading, check if data exists
-  else if (spfFailureNodes.length) {
+  else if (
+    spfFailureData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+      ?.spfFailure?.edges.length > 0
+  ) {
     const spfFailureColumns = [
       {
         Header: t`SPF Failures by IP Address`,
@@ -513,32 +470,24 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         ],
       },
     ]
-    // Convert boolean values to string
-    spfFailureNodes = spfFailureNodes.map((node) => {
-      return {
-        ...node,
-        spfAligned: node.spfAligned.toString(),
-      }
-    })
+    // Convert boolean values to string and properly format
+    const spfFailureNodes = spfFailureData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.spfFailure.edges.map(
+      (edge) => {
+        const node = { ...edge.node }
+        node.spfAligned = node.spfAligned.toString()
+        return node
+      },
+    )
 
-    const spfFailurePaginationConfig = {
-      previous: spfFailurePrevious,
-      hasPreviousPage: spfFailureHasPreviousPage,
-      next: spfFailureNext,
-      hasNextPage: spfFailureHasNextPage,
-      displayLimitOptions: displayLimitOptions,
-    }
     spfFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <DmarcReportTable
+          mt="30px"
           data={spfFailureNodes}
           columns={spfFailureColumns}
           title={t`SPF Failures by IP Address`}
           initialSort={initialSort}
-          frontendPagination={false}
-          paginationConfig={spfFailurePaginationConfig}
-          selectedDisplayLimit={spfFailureSelectedTableDisplayLimit}
-          setSelectedDisplayLimit={setSpfFailureSelectedTableDisplayLimit}
+          frontendPagination={true}
         />
       </ErrorBoundary>
     )
@@ -551,7 +500,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   else {
     spfFailureTable = (
       <Heading as="h3" size="lg">
-        * <Trans>No data for the DKIM Failures by IP Address table</Trans> *
+        * <Trans>No data for the SPF Failures by IP Address table</Trans> *
       </Heading>
     )
   }
@@ -568,7 +517,10 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
   }
   // DMARC Failure query no longer loading, check if data exists
-  else if (dmarcFailureNodes.length) {
+  else if (
+    dmarcFailureData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+      ?.dmarcFailure?.edges.length > 0
+  ) {
     const dmarcFailureColumns = [
       {
         Header: t`DMARC Failures by IP Address`,
@@ -587,24 +539,22 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       },
     ]
 
-    const dmarcFailurePaginationConfig = {
-      previous: dmarcFailurePrevious,
-      hasPreviousPage: dmarcFailureHasPreviousPage,
-      next: dmarcFailureNext,
-      hasNextPage: dmarcFailureHasNextPage,
-      displayLimitOptions: displayLimitOptions,
-    }
+    // Convert boolean values to string and properly format
+    const dmarcFailureNodes = dmarcFailureData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
+      (edge) => {
+        return { ...edge.node }
+      },
+    )
+
     dmarcFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <DmarcReportTable
+          mt="30px"
           data={dmarcFailureNodes}
           columns={dmarcFailureColumns}
           title={t`DMARC Failures by IP Address`}
           initialSort={initialSort}
-          frontendPagination={false}
-          paginationConfig={dmarcFailurePaginationConfig}
-          selectedDisplayLimit={dmarcFailureSelectedTableDisplayLimit}
-          setSelectedDisplayLimit={setDmarcFailureSelectedTableDisplayLimit}
+          frontendPagination={true}
         />
       </ErrorBoundary>
     )
@@ -624,12 +574,10 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-      <Stack spacing="30px">
-        {fullPassTable}
-        {spfFailureTable}
-        {dkimFailureTable}
-        {dmarcFailureTable}
-      </Stack>
+      {fullPassTable}
+      {spfFailureTable}
+      {dkimFailureTable}
+      {dmarcFailureTable}
     </ErrorBoundary>
   )
 

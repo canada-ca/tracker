@@ -26,7 +26,7 @@ export function RelayPaginationControls({
       <Button
         id="previousPageBtn"
         onClick={previous}
-        disable={!!hasPreviousPage}
+        isDisabled={!hasPreviousPage}
         aria-label="Previous page"
       >
         <Trans>Previous</Trans>
@@ -35,7 +35,7 @@ export function RelayPaginationControls({
       <Button
         id="nextPageBtn"
         onClick={next}
-        disable={!!hasNextPage}
+        isDisabled={!hasNextPage}
         aria-label="Next page"
       >
         <Trans>Next</Trans>

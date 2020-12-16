@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import {
-  useTable,
-  usePagination,
-  useSortBy,
   useFilters,
   useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable,
 } from 'react-table'
 import { array, bool, func, number, shape, string } from 'prop-types'
 import {
@@ -23,7 +23,6 @@ import {
 import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import WithPseudoBox from './withPseudoBox'
-import { slugify } from './slugify'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
 import { RelayPaginationControls } from './RelayPaginationControls'
 
@@ -124,20 +123,26 @@ function DmarcReportTable({ ...props }) {
     appendLink,
     frontendPagination,
     paginationConfig,
-    selectedDisplayLimit,
+    selectedDisplayLimit = window.matchMedia('screen and (max-width: 760px)')
+      .matches
+      ? 5
+      : 10,
     setSelectedDisplayLimit,
+    currentPage,
+    setCurrentPage,
   } = props
   const [show, setShow] = React.useState(true)
   const [firstRender, setFirstRender] = React.useState(true)
 
+  console.log(data)
+
   const handleShow = () => setShow(!show)
 
-  const defaultPageSize =
-    selectedDisplayLimit ||
-    // default limit if not given
-    window.matchMedia('screen and (max-width: 760px)').matches
-      ? 5
-      : 10
+  // ||
+  // // default limit if not given
+  // window.matchMedia('screen and (max-width: 760px)').matches
+  //   ? 5
+  //   : 10
 
   const {
     getTableProps,
@@ -164,7 +169,7 @@ function DmarcReportTable({ ...props }) {
       data,
       initialState: {
         sortBy: initialSort,
-        pageSize: defaultPageSize,
+        pageSize: selectedDisplayLimit,
       },
     },
     useFilters,
@@ -313,13 +318,22 @@ function DmarcReportTable({ ...props }) {
     </Box>
   ) : (
     <RelayPaginationControls
-      previous={paginationConfig.previous}
+      previous={() => {
+        paginationConfig.previous()
+      }}
       hasPreviousPage={paginationConfig.hasPreviousPage}
-      next={paginationConfig.next}
+      next={() => {
+        if (paginationConfig.hasNextPage && !canNextPage)
+          paginationConfig.next()
+        else {
+          setCurrentPage(currentPage + 1)
+        }
+      }}
       hasNextPage={paginationConfig.hasNextPage}
       selectedDisplayLimit={selectedDisplayLimit}
       setSelectedDisplayLimit={setSelectedDisplayLimit}
       displayLimitOptions={paginationConfig.displayLimitOptions}
+      gotoPage={gotoPage}
       mt="10px"
     />
   )
@@ -422,6 +436,8 @@ DmarcReportTable.propTypes = {
   }),
   selectedDisplayLimit: number,
   setSelectedDisplayLimit: func,
+  currentPage: number,
+  setCurrentPage: func,
 }
 
 DmarcReportTable.defaultProps = {

@@ -44,6 +44,7 @@ export default function DmarcByDomainPage() {
       month: selectedPeriod,
       year: selectedYear,
     },
+    relayRoot: 'findMyDomains',
   })
 
   // TODO: Properly handle these errors
@@ -66,7 +67,7 @@ export default function DmarcByDomainPage() {
     )
   }
   // If not loading and data exists, show table
-  else if (nodes.length) {
+  else if (nodes.length > 0) {
     const formattedData = []
     nodes.forEach((node) => {
       const domain = node.domain
