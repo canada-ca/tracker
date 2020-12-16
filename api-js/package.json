@@ -54,7 +54,7 @@
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
     "@babel/node": "^7.12.10",
-    "@babel/preset-env": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
     "@lingui/cli": "^2.9.2",
     "@lingui/loader": "^2.9.2",
     "@lingui/macro": "^2.9.2",
