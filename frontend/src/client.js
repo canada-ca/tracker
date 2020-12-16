@@ -11,10 +11,23 @@ export function createCache() {
           findMyOrganizations: relayStylePagination(),
         },
       },
+      Period: {
+        keyFields: ['month', 'year', 'domain'],
+        fields: {
+          detailTables: {
+            merge(existing = {}, incoming) {
+              return { ...existing, ...incoming }
+            },
+          },
+        },
+      },
       DetailTables: {
-        // Explanation: https://github.com/apollographql/apollo-client/issues/6370
-        // Treats DetailTables as a global singleton
-        keyFields: [],
+        fields: {
+          dkimFailure: relayStylePagination(),
+          dmarcFailure: relayStylePagination(),
+          spfFailure: relayStylePagination(),
+          fullPass: relayStylePagination(),
+        },
       },
     },
   })
@@ -24,7 +37,7 @@ export const cache = createCache()
 
 export const client = new ApolloClient({
   link: new HttpLink({
-    uri: '/graphql',
+    uri: 'https://pulse.alpha.canada.ca/graphql',
   }),
   cache,
 })
