@@ -76,7 +76,7 @@ interface Node {
 # Domain object containing information for a given domain.
 type Domain implements Node {
   # The ID of an object
-  id: ID! @examples(values: ["exampleid--"]) # faked to enable cache merging
+  id: ID!
   # Domain that scans will be ran on.
   domain: DomainScalar @examples(
     values: [
@@ -235,7 +235,7 @@ type DomainConnection {
   # Information to aid in pagination.
   pageInfo: PageInfo!
   # A list of edges.
-  edges: [DomainEdge] @listLength(min: 0, max: 1)
+  edges: [DomainEdge] @listLength(min: 0, max: 10)
   # The total amount of domains the user has access to.
   totalCount: Int @fake(
     type: number
@@ -771,6 +771,32 @@ type SSL implements Node {
 
 # Object that contains information for each data collection period.
 type Period {
+    domain: DomainScalar @examples(
+    values: [
+      "javascript:alert('XSS')"
+      "javascript:eval('aler'+(!![]+[])[+[]])('xss')"
+      "rcmp-grc.gc.ca"
+      "tbs-sct.gc.ca"
+      "canada.ca"
+      "cra-arc.gc.ca"
+      "pm.gc.ca"
+      "cse-cst.gc.ca"
+      "forces.gc.ca"
+      "jAva&Tab;script:alert('XSS')"
+      "cra.arc.gc.ca"
+      "cra-arc.gc.ca"
+      "cse-cst.gc.ca"
+      "cyber.gc.ca"
+      "dfait-maeci.gc.ca"
+      "dfo-mpo.gc.ca"
+      "ec.gc.ca"
+      "forces.gc.ca"
+      "gccollab.ca"
+      "gccollaboration.ca"
+      "goc-gdc.ca"
+      "hc-sc.gc.ca"
+    ]
+  )
   # Start date of data collection.
   month: PeriodEnums
   # End date of data collection.
