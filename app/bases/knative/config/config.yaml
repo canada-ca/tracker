@@ -78,6 +78,17 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_NAME
+            - name: REPO_NAME
+              value: "ITSP.40.062"
+            - name: REPO_OWNER
+              value: "CybercentreCanada"
+            - name: GUIDANCE_DIR
+              value: "transport-layer-security"
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: GITHUB_TOKEN
 
 ---
 

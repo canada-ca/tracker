@@ -9,3 +9,4 @@ pyopenssl>=17.5.0
 pretend
 uvloop
 httptools
+scapy
