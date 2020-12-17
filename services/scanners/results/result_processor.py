@@ -169,9 +169,9 @@ def process_ssl(results, guidance, domain_key, db):
                 tags.append("ssl3")
             if "3des" in cipher.lower():
                 tags.append("ssl4")
-            if cipher.lower() in (guidance["ciphers"]["1.2"]["recommended"]+guidance["ciphers"]["1.3"]["recommended"]):
+            if cipher in (guidance["ciphers"]["1.2"]["recommended"]+guidance["ciphers"]["1.3"]["recommended"]):
                 strong_ciphers.append(cipher)
-            elif cipher.lower() in (guidance["ciphers"]["1.2"]["sufficient"]+guidance["ciphers"]["1.3"]["sufficient"]):
+            elif cipher in (guidance["ciphers"]["1.2"]["sufficient"]+guidance["ciphers"]["1.3"]["sufficient"]):
                 acceptable_ciphers.append(cipher)
             else:
                 weak_ciphers.append(cipher)
