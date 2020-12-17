@@ -4,7 +4,6 @@ import { TrackerButton } from './TrackerButton'
 import { Formik } from 'formik'
 import { Stack, Box, Text, Select, useToast } from '@chakra-ui/core'
 import { REQUEST_SCAN } from './graphql/mutations'
-import { slugify } from './slugify'
 import { useMutation } from '@apollo/client'
 import { LoadingMessage } from './LoadingMessage'
 import { fieldRequirements } from './fieldRequirements'
@@ -49,7 +48,7 @@ export function ScanDomain() {
         onSubmit={async (values) => {
           requestScan({
             variables: {
-              urlSlug: slugify(values.domain),
+              urlSlug: values.domain,
               scanType: values.scanType,
             },
           })

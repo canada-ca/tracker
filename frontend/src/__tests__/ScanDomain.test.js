@@ -27,7 +27,7 @@ const i18n = setupI18n({
 const fillIn = (element, { with: value }) =>
   fireEvent.change(element, { target: { value } })
 const clickOn = (element) => fireEvent.click(element)
-const values = { domain: 'cse-cst-gc-ca', scanType: 'WEB' }
+const values = { domain: 'cse-cst.gc.ca', scanType: 'WEB' }
 
 describe('<ScanDomain />', () => {
   const mocks = [
