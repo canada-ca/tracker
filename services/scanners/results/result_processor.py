@@ -185,7 +185,7 @@ def process_ssl(results, guidance, domain_key, db):
                 weak_curves.append(curve)
 
         for algorithm in (guidance["signature_algorithms"]["recommended"] + guidance["signature_algorithms"]["sufficient"]):
-            if results["signature algorithm"].lower() in algorithm:
+            if results["signature_algorithm"].lower() in algorithm:
                 tags.append("ssl5")
                 break
 
