@@ -35,7 +35,7 @@ describe('<Organisations />', () => {
           },
           result: {
             data: {
-              pagination: {
+              findMyOrganizations: {
                 edges: [
                   {
                     cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -110,7 +110,7 @@ describe('<Organisations />', () => {
           },
           result: {
             data: {
-              pagination: {
+              findMyOrganizations: {
                 edges: [
                   {
                     cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -144,7 +144,7 @@ describe('<Organisations />', () => {
           },
           result: {
             data: {
-              pagination: {
+              findMyOrganizations: {
                 edges: [
                   {
                     cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -178,7 +178,7 @@ describe('<Organisations />', () => {
           },
           result: {
             data: {
-              pagination: {
+              findMyOrganizations: {
                 edges: [
                   {
                     cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -256,7 +256,7 @@ describe('<Organisations />', () => {
             },
             result: {
               data: {
-                pagination: {
+                findMyOrganizations: {
                   edges: [
                     {
                       cursor: 'Y3Vyc29yOnYyOpHOAAfgfQ==',
@@ -290,7 +290,7 @@ describe('<Organisations />', () => {
             },
             result: {
               data: {
-                pagination: {
+                findMyOrganizations: {
                   edges: [
                     {
                       cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -324,7 +324,7 @@ describe('<Organisations />', () => {
             },
             result: {
               data: {
-                pagination: {
+                findMyOrganizations: {
                   edges: [
                     {
                       cursor: 'Y3Vyc29yOnYyOpHOAAfgfQ==',
@@ -410,7 +410,7 @@ describe('<Organisations />', () => {
           query: PAGINATED_ORGANIZATIONS,
           variables: { first: 1 },
           data: {
-            pagination: {
+            findMyOrganizations: {
               edges: [
                 {
                   cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -445,7 +445,7 @@ describe('<Organisations />', () => {
             },
             result: {
               data: {
-                pagination: {
+                findMyOrganizations: {
                   edges: [
                     {
                       cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -479,7 +479,7 @@ describe('<Organisations />', () => {
             },
             result: {
               data: {
-                pagination: {
+                findMyOrganizations: {
                   edges: [
                     {
                       cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -513,7 +513,7 @@ describe('<Organisations />', () => {
             },
             result: {
               data: {
-                pagination: {
+                findMyOrganizations: {
                   edges: [
                     {
                       cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
