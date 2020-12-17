@@ -269,7 +269,7 @@ export const ORG_DETAILS_PAGE = gql`
 
 export const PAGINATED_DOMAINS = gql`
   query Domains($first: Int, $after: String) {
-    pagination: findMyDomains(first: $first, after: $after) {
+    findMyDomains(first: $first, after: $after) {
       edges {
         cursor
         node {

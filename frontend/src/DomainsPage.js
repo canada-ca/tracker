@@ -47,6 +47,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
     fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
+    relayRoot: 'findMyDomains',
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -84,10 +85,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                 <InputLeftElement>
                   <Icon name="search" color="gray.300" />
                 </InputLeftElement>
-                <Input
-                  type="text"
-                  placeholder={t`Search for a domain`}
-                />
+                <Input type="text" placeholder={t`Search for a domain`} />
               </InputGroup>
 
               <ListOf
