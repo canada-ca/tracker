@@ -4,59 +4,58 @@ export const rawDmarcReportSummaryTableData = {
       edges: [
         {
           node: {
-            domain: 'forces.gc.ca',
+            id: 'testid1=',
+            domain: 'domain1.ca',
             dmarcSummaryByPeriod: {
+              month: 'LAST30DAYS',
+              year: '2020',
+              domain: 'domain1.ca',
               categoryPercentages: {
-                failPercentage: 57.89,
-                fullPassPercentage: 54.38,
-                passDkimOnlyPercentage: 93.48,
-                passSpfOnlyPercentage: 25.64,
-                totalMessages: 23452,
+                failPercentage: 31.5,
+                fullPassPercentage: 1.88,
+                passDkimOnlyPercentage: 4.51,
+                passSpfOnlyPercentage: 4.12,
+                totalMessages: 7803,
                 __typename: 'CategoryPercentages',
               },
               __typename: 'Period',
             },
             __typename: 'Domain',
           },
+
           __typename: 'DomainEdge',
         },
         {
           node: {
-            domain: 'rcmp-grc.gc.ca',
+            id: 'testid2=',
+            domain: 'domain2.ca',
             dmarcSummaryByPeriod: {
+              month: 'LAST30DAYS',
+              year: '2020',
+              domain: 'domain2.ca',
               categoryPercentages: {
-                failPercentage: 93.48,
-                fullPassPercentage: 57.89,
-                passDkimOnlyPercentage: 54.38,
-                passSpfOnlyPercentage: 57.89,
-                totalMessages: 86954,
+                failPercentage: 31.5,
+                fullPassPercentage: 1.88,
+                passDkimOnlyPercentage: 4.51,
+                passSpfOnlyPercentage: 4.12,
+                totalMessages: 7803,
                 __typename: 'CategoryPercentages',
               },
               __typename: 'Period',
             },
             __typename: 'Domain',
           },
-          __typename: 'DomainEdge',
-        },
-        {
-          node: {
-            domain: 'tbs-sct.gc.ca',
-            dmarcSummaryByPeriod: {
-              categoryPercentages: {
-                failPercentage: 57.89,
-                fullPassPercentage: 25.64,
-                passDkimOnlyPercentage: 57.89,
-                passSpfOnlyPercentage: 25.64,
-                totalMessages: 54386,
-                __typename: 'CategoryPercentages',
-              },
-              __typename: 'Period',
-            },
-            __typename: 'Domain',
-          },
+
           __typename: 'DomainEdge',
         },
       ],
+      pageInfo: {
+        hasNextPage: false,
+        endCursor: 'endcursor=',
+        hasPreviousPage: false,
+        startCursor: 'startcursor=',
+        __typename: 'PageInfo',
+      },
       __typename: 'DomainConnection',
     },
   },
