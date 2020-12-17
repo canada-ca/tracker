@@ -1,42 +1,13 @@
 import React from 'react'
-import { Trans, t } from '@lingui/macro'
-import { useToast, SimpleGrid } from '@chakra-ui/core'
+import { t } from '@lingui/macro'
+import { SimpleGrid } from '@chakra-ui/core'
 import SummaryCard from './SummaryCard'
-import { string } from 'prop-types'
+import { object } from 'prop-types'
 import theme from './theme/canada'
-import { useQuery } from '@apollo/client'
-import { WEB_AND_EMAIL_SUMMARIES } from './graphql/queries'
-import { LoadingMessage } from './LoadingMessage'
-import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 const { colors } = theme
 
-export function SummaryGroup() {
-  const toast = useToast()
-
-  const { loading, error, data } = useQuery(WEB_AND_EMAIL_SUMMARIES, {
-    onError: ({ message }) => {
-      toast({
-        title: 'Error',
-        description: message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-  })
-
-  if (error) return <ErrorFallbackMessage error={error} />
-
-  if (loading) {
-    return (
-      <LoadingMessage>
-        <Trans>Summary Cards</Trans>
-      </LoadingMessage>
-    )
-  }
-
+export function SummaryGroup({ web, mail }) {
   return (
     <SimpleGrid
       columns={[1, 1, 1, 2]}
@@ -59,7 +30,7 @@ export function SummaryGroup() {
             color: colors.strong,
           },
         }}
-        data={data.webSummary}
+        data={web}
       />
       <SummaryCard
         title={t`Email Configuration`}
@@ -74,13 +45,13 @@ export function SummaryGroup() {
             color: colors.weak,
           },
         }}
-        data={data.mailSummary}
+        data={mail}
       />
     </SimpleGrid>
   )
 }
 
 SummaryGroup.propTypes = {
-  title: string,
-  description: string,
+  web: object,
+  mail: object,
 }
