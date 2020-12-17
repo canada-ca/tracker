@@ -158,16 +158,20 @@ def process_https(results, domain_key, db):
 def process_ssl(results, guidance, domain_key, db):
     timestamp = str(datetime.datetime.utcnow())
     tags = []
-    strong_ciphers=acceptable_ciphers=weak_ciphers = []
-    strong_curves=acceptable_curves=weak_curves = []
+    strong_ciphers = []
+    acceptable_ciphers = []
+    weak_ciphers = []
+    strong_curves = []
+    acceptable_curves = []
+    weak_curves = []
 
     if results.get("missing", None) is not None:
         tags.append("ssl2")
     else:
         for cipher in results["cipher_list"]:
-            if "rc4" in cipher.lower():
+            if "RC4" in cipher:
                 tags.append("ssl3")
-            if "3des" in cipher.lower():
+            if "3DES" in cipher:
                 tags.append("ssl4")
             if cipher in (guidance["ciphers"]["1.2"]["recommended"]+guidance["ciphers"]["1.3"]["recommended"]):
                 strong_ciphers.append(cipher)
