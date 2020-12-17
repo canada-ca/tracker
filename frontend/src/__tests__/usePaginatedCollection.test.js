@@ -200,6 +200,7 @@ describe('usePaginatedCollection', () => {
           fetchForward: FORWARD,
           fetchBackward: BACKWARD,
           recordsPerPage: 1,
+          relayRoot: 'pagination',
         })
 
         return (
@@ -538,6 +539,7 @@ describe('usePaginatedCollection', () => {
           fetchForward: forward,
           fetchBackward: forward,
           recordsPerPage: 10,
+          relayRoot: 'pagination',
         })
 
         return (
@@ -678,6 +680,7 @@ describe('usePaginatedCollection', () => {
           fetchForward: FORWARD,
           fetchBackward: BACKWARD,
           recordsPerPage: 1,
+          relayRoot: 'pagination',
         })
 
         return (
@@ -768,6 +771,7 @@ describe('usePaginatedCollection', () => {
             fetchForward: FORWARD,
             fetchBackward: BACKWARD,
             recordsPerPage: 1,
+            relayRoot: 'pagination',
           }),
         { wrapper },
       )
