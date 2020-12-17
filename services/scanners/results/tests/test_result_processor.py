@@ -107,7 +107,7 @@ def test_ssl():
 
     mock_retrieve_guidance = stub(retrieve=lambda: tls_guidance_data)
     test_app = Server(
-        db_host="testdb", db_name="test", db_user="", db_pass="", db_port=8529, tls_guidance=tls_guidance_data
+        db_host="testdb", db_name="test", db_user="", db_pass="", db_port=8529, tls_guidance=mock_retrieve_guidance
     )
     test_client = TestClient(test_app)
 
