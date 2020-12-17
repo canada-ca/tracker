@@ -6,7 +6,7 @@ import { object, string, ref } from 'yup'
 import { Formik } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
-import { UPDATE_PASSWORD } from './graphql/mutations'
+import { RESET_PASSWORD } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 
@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
       .oneOf([ref('password')], t`Passwords must match`),
   })
 
-  const [updatePassword, { loading }] = useMutation(UPDATE_PASSWORD, {
+  const [resetPassword, { loading }] = useMutation(RESET_PASSWORD, {
     onError(error) {
       toast({
         title: error.message,
@@ -59,13 +59,11 @@ export default function ResetPasswordPage() {
           confirmPassword: '',
         }}
         onSubmit={async (values) => {
-          updatePassword({
+          resetPassword({
             variables: {
-              input: {
-                resetToken: resetToken,
-                password: values.password,
-                confirmPassword: values.confirmPassword,
-              },
+              password: values.password,
+              confirmPassword: values.confirmPassword,
+              resetToken: resetToken,
             },
           })
         }}

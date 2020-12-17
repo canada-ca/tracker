@@ -53,9 +53,19 @@ export const VALIDATE_TWO_FACTOR = gql`
   }
 `
 
-export const UPDATE_PASSWORD = gql`
-  mutation UpdatePassword($input: UpdateUserPasswordInput!) {
-    updatePassword(input: $input) {
+export const RESET_PASSWORD = gql`
+  mutation ResetPassword(
+    $password: String!
+    $confirmPassword: String!
+    $resetToken: String!
+  ) {
+    resetPassword(
+      input: {
+        password: $password
+        confirmPassword: $confirmPassword
+        resetToken: $resetToken
+      }
+    ) {
       status
     }
   }
@@ -63,7 +73,7 @@ export const UPDATE_PASSWORD = gql`
 
 export const SEND_PASSWORD_RESET_LINK = gql`
   mutation SendPasswordResetLink($userName: EmailAddress!) {
-    sendPasswordResetLink(userName: $userName) {
+    sendPasswordResetLink(input: { userName: $userName }) {
       status
     }
   }
@@ -81,19 +91,31 @@ export const UPDATE_USER_PROFILE = gql`
   mutation UpdateUserProfile(
     $displayName: String
     $userName: EmailAddress
-    $password: String
-    $confirmPassword: String
     $preferredLang: LanguageEnums
-    $currentPassword: String
   ) {
     updateUserProfile(
       input: {
         displayName: $displayName
         userName: $userName
-        password: $password
-        confirmPassword: $confirmPassword
         preferredLang: $preferredLang
+      }
+    ) {
+      status
+    }
+  }
+`
+
+export const UPDATE_USER_PASSWORD = gql`
+  mutation UpdateUserPassword(
+    $currentPassword: String!
+    $updatedPassword: String!
+    $updatedPasswordConfirm: String!
+  ) {
+    updateUserPassword(
+      input: {
         currentPassword: $currentPassword
+        updatedPassword: $updatedPassword
+        updatedPasswordConfirm: $updatedPasswordConfirm
       }
     ) {
       status
@@ -152,6 +174,14 @@ export const INVITE_USER_TO_ORG = gql`
         preferredLanguage: $preferredLanguage
       }
     ) {
+      status
+    }
+  }
+`
+
+export const REQUEST_SCAN = gql`
+  mutation RequestScan($urlSlug: Slug, $scanType: ScanTypeEnums) {
+    requestScan(input: { urlSlug: $urlSlug, scanType: $scanType }) {
       status
     }
   }

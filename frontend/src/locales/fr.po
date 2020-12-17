@@ -26,8 +26,8 @@ msgid "*search bars do not actively search databases currently. They are used to
 msgstr "*Les barres de recherche ne recherchent pas activement les bases de données actuellement. Elles sont utilisées pour démontrer la fonction du bouton 'Ajouter'"
 
 #: src/UserCard.js:44
-msgid "2FA"
-msgstr ""
+msgid "2FA Validated"
+msgstr "2FA Validé"
 
 #: src/guidanceTagConstants.js:5
 msgid "3.2.2 Third Parties and DKIM"
@@ -901,8 +901,8 @@ msgid "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
 msgstr ""
 
 #: src/OrganizationSummary.js:13
-msgid "Internet facing services:"
-msgstr "Services d'accès à Internet:"
+msgid "Internet facing services"
+msgstr "Services d'accès à Internet"
 
 #: src/Organization.js:19
 msgid "Internet facing services: {domainCount}"
@@ -1705,7 +1705,7 @@ msgstr "Septembre"
 
 #: src/OrganizationCard.js:67
 msgid "Services: {domainCount}"
-msgstr "Services"
+msgstr "Services: {domainCount}"
 
 #: src/DmarcReportGuidance.js:554
 #~ msgid "Show Guidance"
@@ -1943,8 +1943,12 @@ msgid "Users"
 msgstr "Utilisateurs"
 
 #: src/OrganizationSummary.js:20
-msgid "Users joined:"
-msgstr "Les utilisateurs se sont inscrits :"
+msgid "Total users"
+msgstr "total des utilisateurs"
+
+#: src/OrganizationSummary.js:23
+msgid "Based in:"
+msgstr "Basé à:"
 
 #: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"
@@ -2212,8 +2216,8 @@ msgid "Search for any Government of Canada tracked domain:"
 msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
 
 #: src/DomainsPage.js:128
-msgid "Perform a one-time scan on a domain:"
-msgstr "Effectuer un balayage unique sur un domaine:"
+msgid "Request a domain to be scanned:"
+msgstr "Demander qu'un domaine soit scanné:"
 
 #: src/DomainsPage.js:132
 msgid "Enter a domain"
@@ -2222,3 +2226,27 @@ msgstr "Entrez un domaine"
 #: src/DomainsPage.js:141
 msgid "Scan Domain"
 msgstr "Domaine de balayage"
+
+#: src/ScanDomain.js:82
+msgid "Select scan type"
+msgstr "Sélectionnez le type de balayage"
+
+#: src/ScanDomain.js:73
+msgid "Scan Type:"
+msgstr "Type de balayage:"
+
+#: src/ScanDomain.js:85
+msgid "WEB"
+msgstr "WEB"
+
+#: src/ScanDomain.js:88
+msgid "MAIL"
+msgstr "COURRIEL"
+
+#: src/DomainField.js:29
+msgid "Domain URL"
+msgstr "URL du domaine"
+
+#: src/DomainField.js:29
+msgid "Domain URL:"
+msgstr "URL du domaine:"

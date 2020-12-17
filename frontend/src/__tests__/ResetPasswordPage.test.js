@@ -7,7 +7,7 @@ import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import ResetPasswordPage from '../ResetPasswordPage'
-import { UPDATE_PASSWORD } from '../graphql/mutations'
+import { RESET_PASSWORD } from '../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -22,7 +22,7 @@ const i18n = setupI18n({
 const mocks = [
   {
     request: {
-      query: UPDATE_PASSWORD,
+      query: RESET_PASSWORD,
     },
     result: {
       data: {

@@ -26,8 +26,8 @@ msgid "*search bars do not actively search databases currently. They are used to
 msgstr "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
 
 #: src/UserCard.js:44
-msgid "2FA"
-msgstr "2FA"
+msgid "2FA Validated"
+msgstr "2FA Validated"
 
 #: src/guidanceTagConstants.js:5
 msgid "3.2.2 Third Parties and DKIM"
@@ -2004,8 +2004,12 @@ msgid "Users"
 msgstr "Users"
 
 #: src/OrganizationSummary.js:20
-msgid "Users joined:"
-msgstr "Users joined:"
+msgid "Total users"
+msgstr "Total users"
+
+#: src/OrganizationSummary.js:23
+msgid "Based in:"
+msgstr "Based in:"
 
 #: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"
@@ -2273,8 +2277,8 @@ msgid "Search for any Government of Canada tracked domain:"
 msgstr "Search for any Government of Canada tracked domain:"
 
 #: src/DomainsPage.js:128
-msgid "Perform a one-off scan on a domain:"
-msgstr "Perform a one-off scan on a domain:"
+msgid "Request a domain to be scanned:"
+msgstr "Request a domain to be scanned:"
 
 #: src/DomainsPage.js:132
 msgid "Enter a domain"
@@ -2283,4 +2287,28 @@ msgstr "Enter a domain"
 #: src/DomainsPage.js:141
 msgid "Scan Domain"
 msgstr "Scan Domain"
+
+#: src/ScanDomain.js:82
+msgid "Select scan type"
+msgstr "Select scan type"
+
+#: src/ScanDomain.js:73
+msgid "Scan Type:"
+msgstr "Scan Type:"
+
+#: src/ScanDomain.js:85
+msgid "WEB"
+msgstr "WEB"
+
+#: src/ScanDomain.js:88
+msgid "MAIL"
+msgstr "MAIL"
+
+#: src/DomainField.js:29
+msgid "Domain URL"
+msgstr "Domain URL"
+
+#: src/DomainField.js:29
+msgid "Domain URL:"
+msgstr "Domain URL:"
 

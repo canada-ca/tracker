@@ -11,6 +11,25 @@ export const PAGINATED_ORGANIZATIONS = gql`
           name
           slug
           domainCount
+          verified
+          summaries {
+            mail {
+              total
+              categories {
+                name
+                count
+                percentage
+              }
+            }
+            web {
+              total
+              categories {
+                name
+                count
+                percentage
+              }
+            }
+          }
         }
       }
       pageInfo {
@@ -34,6 +53,25 @@ export const REVERSE_PAGINATED_ORGANIZATIONS = gql`
           name
           slug
           domainCount
+          verified
+          summaries {
+            mail {
+              total
+              categories {
+                name
+                count
+                percentage
+              }
+            }
+            web {
+              total
+              categories {
+                name
+                count
+                percentage
+              }
+            }
+          }
         }
       }
       pageInfo {
@@ -185,33 +223,68 @@ export const ADMIN_PANEL = gql`
 
 export const ORG_DETAILS_PAGE = gql`
   query OrgDetails($slug: Slug!) {
-    organization: findOrganizationDetailBySlug(slug: $slug) {
+    organization: findOrganizationBySlug(orgSlug: $slug) {
       id
       name
       acronym
+      domainCount
+      city
       province
-      domains {
-        edges {
-          node {
-            id
-            url
-            lastRan
+      verified
+      summaries {
+        mail {
+          total
+          categories {
+            name
+            count
+            percentage
+          }
+        }
+        web {
+          total
+          categories {
+            name
+            count
+            percentage
           }
         }
       }
-    }
-    userList(orgSlug: $slug) {
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
+      domains {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          node {
+            id
+            domain
+            lastRan
+            status {
+              dkim
+              dmarc
+              https
+              spf
+              ssl
+            }
+          }
+        }
       }
-      edges {
-        node {
-          id
-          userName
-          role
-          tfa
-          displayName
+      affiliations {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        totalCount
+        edges {
+          node {
+            permission
+            user {
+              id
+              userName
+              displayName
+              tfaValidated
+            }
+          }
         }
       }
     }
@@ -225,9 +298,15 @@ export const PAGINATED_DOMAINS = gql`
         cursor
         node {
           id
-          url
-          slug
+          domain
           lastRan
+          status {
+            dkim
+            dmarc
+            https
+            spf
+            ssl
+          }
           __typename
         }
         __typename
@@ -251,9 +330,15 @@ export const REVERSE_PAGINATED_DOMAINS = gql`
         cursor
         node {
           id
-          url
-          slug
+          domain
           lastRan
+          status {
+            dkim
+            dmarc
+            https
+            spf
+            ssl
+          }
           __typename
         }
         __typename
@@ -317,14 +402,25 @@ export const QUERY_USERLIST = gql`
 
 export const QUERY_USER = gql`
   query UserPage($userName: EmailAddress!) {
-    userPage(userName: $userName) {
+    userPage: findUserByUsername(userName: $userName) {
+      id
       userName
-      tfa
-      lang
       displayName
-      userAffiliations {
-        admin
-        organization
+      preferredLang
+      tfaValidated
+      emailValidated
+      affiliations {
+        edges {
+          node {
+            permission
+            organization {
+              id
+              name
+              slug
+              verified
+            }
+          }
+        }
       }
     }
   }

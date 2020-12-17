@@ -17,6 +17,39 @@ const i18n = setupI18n({
   },
 })
 
+const summaries = {
+  mail: {
+    total: 23452,
+    categories: [
+      {
+        name: 'pass',
+        count: 6577,
+        percentage: 23.4,
+      },
+      {
+        name: 'fail',
+        count: 7435,
+        percentage: 43.5,
+      },
+    ],
+  },
+  web: {
+    total: 57896,
+    categories: [
+      {
+        name: 'pass',
+        count: 6577,
+        percentage: 23.4,
+      },
+      {
+        name: 'fail',
+        count: 7435,
+        percentage: 43.5,
+      },
+    ],
+  },
+}
+
 describe('<OrganizationsCard />', () => {
   it('successfully renders card with org name and number of services', async () => {
     const { getByText } = render(
@@ -29,6 +62,8 @@ describe('<OrganizationsCard />', () => {
                 name="Treasury Board Secretariat"
                 acronym="TBS"
                 domainCount={7}
+                verified={false}
+                summaries={summaries}
               />
             </I18nProvider>
           </ThemeProvider>

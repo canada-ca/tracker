@@ -76,7 +76,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
 
         <TabPanels>
           <TabPanel>
-            <Text fontSize="2xl" mb="2">
+            <Text fontSize="2xl" mb="2" textAlign={['center', 'left']}>
               <Trans>Search for any Government of Canada tracked domain:</Trans>
             </Text>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -84,10 +84,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                 <InputLeftElement>
                   <Icon name="search" color="gray.300" />
                 </InputLeftElement>
-                <Input
-                  type="text"
-                  placeholder={t`Search for a domain`}
-                />
+                <Input type="text" placeholder={t`Search for a domain`} />
               </InputGroup>
 
               <ListOf
@@ -95,10 +92,14 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                 ifEmpty={() => <Trans>No Domains</Trans>}
                 mb="4"
               >
-                {({ id, url, slug, lastRan }, index) => (
+                {({ id, domain, lastRan, status }, index) => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <Box key={`${slug}:${id}:${index}`}>
-                      <DomainCard url={url} lastRan={lastRan} />
+                    <Box key={`${id}:${index}`}>
+                      <DomainCard
+                        url={domain}
+                        lastRan={lastRan}
+                        status={status}
+                      />
                       <Divider borderColor="gray.900" />
                     </Box>
                   </ErrorBoundary>
