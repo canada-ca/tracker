@@ -26,7 +26,11 @@ describe('<AdminPanel />', () => {
       {
         request: {
           query: ADMIN_PANEL,
-          variables: { orgSlug: 'test-org' },
+          variables: {
+            orgSlug: 'test-org',
+            domainsFirst: 5,
+            affiliationsFirst: 5,
+          },
         },
         result: rawAdminPanelData,
       },
