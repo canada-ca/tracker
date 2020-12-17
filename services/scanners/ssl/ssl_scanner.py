@@ -8,6 +8,7 @@ import emoji
 import asyncio
 import traceback
 import signal
+import scapy
 import datetime as dt
 from enum import Enum
 from OpenSSL import SSL
@@ -124,10 +125,11 @@ def scan_ssl(domain):
 
     designated_scans = set()
 
-    # Scan for common vulnerabilities and certificate info
+    # Scan for common vulnerabilities, certificate info, elliptic curves
     designated_scans.add(ScanCommand.OPENSSL_CCS_INJECTION)
     designated_scans.add(ScanCommand.HEARTBLEED)
     designated_scans.add(ScanCommand.CERTIFICATE_INFO)
+    designated_scans.add(ScanCommand.ELLIPTIC_CURVES)
 
     # Test supported SSL/TLS
     if "SSL_2_0" in tls_supported:
@@ -210,18 +212,12 @@ def scan_ssl(domain):
             except TypeError:
                 res["signature_algorithm"] = None
 
-    rc4 = False
-    triple_des = False
-
-    # Check for RC4/3DES ciphers
-    for cipher in res["TLS"]["accepted_cipher_list"]:
-        if "RC4" in cipher:
-            rc4 = True
-        if "3DES" in cipher:
-            triple_des = True
-
-    res["rc4"] = rc4
-    res["3des"] = triple_des
+        elif name == "elliptic_curves":
+            logging.info("Parsing Elliptic Curve Scan results...")
+            res["supports_ecdh_key_exchange"] = result.supports_ecdh_key_exchange
+            res["supported_curves"] = []
+            for curve in result.supported_curves:
+                res["supported_curves"].append(curve.name)
 
     return res
 
@@ -236,15 +232,6 @@ def process_results(results):
         report = {"missing": True}
 
     else:
-        ###
-        # BOD 18-01 (cyber.dhs.gov) cares about SSLv2, SSLv3, RC4, and 3DES.
-        any_rc4 = results.get("rc4", "False")
-
-        any_3des = results.get("3des", "False")
-
-        ###
-        # ITPIN cares about usage of TLS 1.0/1.1/1.2
-
         for version in [
             "SSL_2_0",
             "SSL_3_0",
@@ -258,39 +245,11 @@ def process_results(results):
             else:
                 report[version] = False
 
-        signature_algorithm = results.get("signature_algorithm", "unknown")
-
-        heartbleed = results.get("is_vulnerable_to_heartbleed", False)
-        ccs_injection = results.get("is_vulnerable_to_ccs_injection", False)
-
-        if signature_algorithm in ["SHA256", "SHA384", "AEAD"]:
-            good_cert = True
-        else:
-            good_cert = False
-
-        strong_ciphers = []
-        acceptable_ciphers = []
-        weak_ciphers = []
-        for cipher in results["TLS"]["accepted_cipher_list"]:
-            if "RC4" in cipher or "3DES" in cipher:
-                weak_ciphers.append(cipher)
-            elif ("ECDHE" in cipher) and ("GCM" in cipher or "CHACHA20" in cipher):
-                strong_ciphers.append(cipher)
-            elif "ECDHE" in cipher or "DHE" in cipher:
-                acceptable_ciphers.append(cipher)
-            else:
-                weak_ciphers.append(cipher)
-
-        report["rc4"] = any_rc4
-        report["3des"] = any_3des
-        report["strong_ciphers"] = strong_ciphers
-        report["acceptable_ciphers"] = acceptable_ciphers
-        report["weak_ciphers"] = weak_ciphers
-        report["acceptable_certificate"] = good_cert
-        report["signature_algorithm"] = signature_algorithm
+        report["cipher_list"] = results["TLS"]["accepted_cipher_list"]
+        report["signature_algorithm"] = results.get("signature_algorithm", "unknown")
         report["preferred_cipher"] = results["TLS"]["preferred_cipher"]
-        report["heartbleed"] = heartbleed
-        report["openssl_ccs_injection"] = ccs_injection
+        report["heartbleed"] = results.get("is_vulnerable_to_heartbleed", False)
+        report["openssl_ccs_injection"] = results.get("is_vulnerable_to_ccs_injection", False)
 
     logging.info(f"Processed SSL scan results: {str(report)}")
     return report

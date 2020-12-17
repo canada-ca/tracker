@@ -2,6 +2,7 @@ import pytest
 import datetime
 from starlette.testclient import TestClient
 from arango import ArangoClient
+from pretend import stub
 from result_processor import *
 from test_data import *
 
@@ -72,24 +73,7 @@ test_db.collection("domains").insert(
 )
 
 
-def test_process_https():
-    tags = process_https(https_result_data)
-    assert tags == expected_https_tags
-
-
-def test_process_ssl():
-    tags = process_ssl(ssl_result_data)
-    assert tags == expected_ssl_tags
-
-
-def test_process_dns():
-    tags = process_dns(dns_result_data)
-    assert tags["dmarc"] == expected_dmarc_tags
-    assert tags["spf"] == expected_spf_tags
-    assert tags["dkim"]["selector1"] == expected_dkim_tags
-
-
-def test_insert_https():
+def test_https():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
@@ -116,12 +100,14 @@ def test_insert_https():
     assert inserted_results["guidanceTags"] == expected_https_tags
 
 
-def test_insert_ssl():
+def test_ssl():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
+
+    mock_retrieve_guidance = stub(retrieve=lambda: tls_guidance_data)
     test_app = Server(
-        db_host="testdb", db_name="test", db_user="", db_pass="", db_port=8529
+        db_host="testdb", db_name="test", db_user="", db_pass="", db_port=8529, tls_guidance=mock_retrieve_guidance.retrieve
     )
     test_client = TestClient(test_app)
 
@@ -143,7 +129,7 @@ def test_insert_ssl():
     assert inserted_results["guidanceTags"] == expected_ssl_tags
 
 
-def test_insert_dns():
+def test_dns():
     db = arango_client.db("test", username="", password="")
     domain_query = db.collection("domains").find({"domain": "cyber.gc.ca"}, limit=1)
     domain = domain_query.next()
