@@ -126,10 +126,9 @@ export const FloatingMenu = () => {
                 <Stack spacing="16px">
                   <FloatingMenuLink to="/" text={t`Home`} />
 
-                  <FloatingMenuLink
-                    to="/admin"
-                    text={t`Admin Portal`}
-                  />
+                  <FloatingMenuLink to="/admin" text={t`Admin Portal`} />
+
+                  <FloatingMenuLink to="/domains" text={t`Domains`} />
 
                   <Divider
                     borderWidth="2px"
@@ -227,7 +226,7 @@ export const FloatingMenu = () => {
         </Drawer>
       </Stack>
     </Box>
-  );
+  )
 }
 
 FloatingMenu.propTypes = {}

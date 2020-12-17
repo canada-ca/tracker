@@ -33,10 +33,15 @@ spec:
                     name: scanners
                     key: DB_HOST
               - name: DB_PORT
-                value: "5432"
+                value: "8529"
               - name: DB_NAME
                 valueFrom:
                   secretKeyRef:
                     name: scanners
                     key: DB_NAME
+              - name: SCAN_QUEUE_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: scanners
+                    key: SCAN_QUEUE_URL
           restartPolicy: OnFailure

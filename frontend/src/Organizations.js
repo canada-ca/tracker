@@ -69,7 +69,10 @@ export default function Organisations({ orgsPerPage = 10 }) {
           ifEmpty={() => <Trans>No Organizations</Trans>}
           mb="4"
         >
-          {({ name, slug, acronym, domainCount }, index) => (
+          {(
+            { name, slug, acronym, domainCount, verified, summaries },
+            index,
+          ) => (
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <Box key={`${slug}:${index}`}>
                 <OrganizationCard
@@ -77,6 +80,8 @@ export default function Organisations({ orgsPerPage = 10 }) {
                   name={name}
                   acronym={acronym}
                   domainCount={domainCount}
+                  verified={verified}
+                  summaries={summaries}
                 />
                 <Divider borderColor="gray.900" />
               </Box>

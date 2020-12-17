@@ -34,37 +34,32 @@ describe('<App/>', () => {
               webSummary: {
                 categories: [
                   {
-                    name: 'full-pass',
-                    count: 1214,
-                    percentage: 13.5,
+                    name: 'pass',
+                    count: 7468,
+                    percentage: 56.6,
                   },
                   {
-                    name: 'full-fail',
-                    count: 7798,
-                    percentage: 86.5,
+                    name: 'fail',
+                    count: 5738,
+                    percentage: 43.4,
                   },
                 ],
-                total: 9012,
+                total: 13206,
               },
-              emailSummary: {
+              mailSummary: {
                 categories: [
                   {
-                    name: 'full-pass',
-                    count: 5872,
-                    percentage: 25.5,
+                    name: 'pass',
+                    count: 2091,
+                    percentage: 11.2,
                   },
                   {
-                    name: 'full-fail',
-                    count: 9949,
-                    percentage: 43.2,
-                  },
-                  {
-                    name: 'partial-pass',
-                    count: 7216,
-                    percentage: 31.3,
+                    name: 'fail',
+                    count: 8604,
+                    percentage: 46.2,
                   },
                 ],
-                total: 23037,
+                total: 18613,
               },
             },
           },

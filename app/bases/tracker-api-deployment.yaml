@@ -39,6 +39,11 @@ spec:
             secretKeyRef:
               name: api
               key: DB_URL
+        - name: CIPHER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: CIPHER_KEY
         - name: AUTHENTICATED_KEY
           valueFrom:
             secretKeyRef:
@@ -104,6 +109,21 @@ spec:
             secretKeyRef:
               name: api
               key: OBJECT_COST
+        - name: DNS_SCANNER_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DNS_SCANNER_ENDPOINT
+        - name: HTTPS_SCANNER_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: HTTPS_SCANNER_ENDPOINT
+        - name: SSL_SCANNER_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SSL_SCANNER_ENDPOINT
         resources:
           limits:
             cpu: 300m

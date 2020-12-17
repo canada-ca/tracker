@@ -182,7 +182,7 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User attempted to send TFA text message, however no account is associated with 1.`,
+            `User attempted to send TFA text message, however no account is associated with this key: 1.`,
           ])
         })
       })
@@ -485,7 +485,7 @@ describe('user send password reset email', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User attempted to send TFA text message, however no account is associated with 1.`,
+            `User attempted to send TFA text message, however no account is associated with this key: 1.`,
           ])
         })
       })

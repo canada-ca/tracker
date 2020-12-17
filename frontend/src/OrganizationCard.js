@@ -7,9 +7,10 @@ import {
   Box,
   Stack,
   Divider,
+  Icon,
 } from '@chakra-ui/core'
 import { useRouteMatch, useHistory } from 'react-router-dom'
-import { string, number } from 'prop-types'
+import { string, number, bool, object } from 'prop-types'
 import { Trans } from '@lingui/macro'
 
 export function OrganizationCard({
@@ -17,12 +18,22 @@ export function OrganizationCard({
   acronym,
   slug,
   domainCount,
+  verified,
+  summaries,
   ...rest
 }) {
   const { path, _url } = useRouteMatch()
   const history = useHistory()
-  const webValue = Math.floor(Math.random() * 10) * 10 + 10
-  const emailValue = Math.floor(Math.random() * 10) * 10 + 10
+  let webValue = 0
+  let mailValue = 0
+  const webSummary = summaries.web.categories.filter((cat) => {
+    return cat.name === 'pass'
+  })
+  const mailSummary = summaries.mail.categories.filter((cat) => {
+    return cat.name === 'pass'
+  })
+  if (webSummary[0]?.percentage) webValue = webSummary[0]?.percentage
+  if (mailSummary[0]?.percentage) mailValue = mailSummary[0]?.percentage
 
   return (
     <ListItem {...rest}>
@@ -52,6 +63,9 @@ export function OrganizationCard({
             <Text mt="1" fontSize={['lg', 'md']} fontWeight="semibold">
               ({acronym})
             </Text>
+            {verified && (
+              <Icon name="check-circle" color="blue.500" size="icons.sm" />
+            )}
           </Stack>
         </Box>
         <Divider orientation="vertical" />
@@ -75,20 +89,21 @@ export function OrganizationCard({
           ml={{ md: 2 }}
           mr={{ md: 2 }}
           mb={['2', '0']}
+          textAlign="left"
         >
           <Text fontWeight="bold">
             <Trans>Web Configuration</Trans>
           </Text>
           <Text>{webValue}%</Text>
-          <Progress value={webValue} bg="gray.300" w={['50%', '100%']} />
+          <Progress value={webValue} bg="gray.300" />
         </Box>
         <Divider orientation="vertical" />
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} textAlign="left">
           <Text fontWeight="bold">
             <Trans>Email Configuration</Trans>
           </Text>
-          <Text>{emailValue}%</Text>
-          <Progress value={emailValue} bg="gray.300" w={['50%', '100%']} />
+          <Text>{mailValue}%</Text>
+          <Progress value={mailValue} bg="gray.300" />
         </Box>
       </PseudoBox>
     </ListItem>
@@ -100,4 +115,7 @@ OrganizationCard.propTypes = {
   acronym: string.isRequired,
   slug: string.isRequired,
   domainCount: number.isRequired,
+  verified: bool,
+  summaries: object,
+  domains: object,
 }

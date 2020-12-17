@@ -3,6 +3,8 @@ kind: Kustomization
 resources:
 - ../bases
 - selfsigned-issuer.yaml
+patchesStrategicMerge:
+- arangodb.yaml
 secretGenerator:
 - envs:
   - arangodb.env

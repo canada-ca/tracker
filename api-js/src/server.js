@@ -75,6 +75,8 @@ const Server = (
       objectCost,
       listFactor,
     ),
+    introspection: true,
+    playground: true,
   })
 
   server.applyMiddleware({ app })

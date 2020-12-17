@@ -5,7 +5,6 @@ import requests
 import datetime
 import traceback
 from arango import ArangoClient
-from uuid import uuid4 as unique_id
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -14,8 +13,7 @@ DB_PASS = os.getenv("DB_PASS")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
-
-QUEUE_URL = "http://scan-queue.scanners.svc.cluster.local"
+QUEUE_URL = os.getenv("SCAN_QUEUE_URL", "http://scan-queue.scanners.svc.cluster.local")
 
 
 def dispatch_https(domain, client):
@@ -46,11 +44,12 @@ def dispatch_dns(domain, client):
     client.post(QUEUE_URL + "/dns", json=payload)
 
 
-def scan(db_host, db_name, user_name, password, http_client=requests):
+def scan(db_host, db_port, db_name, user_name, password, http_client=requests):
     logging.info("Retrieving domains for scheduled scan...")
     try:
         # Establish DB connection
-        arango_client = ArangoClient(hosts=db_host)
+        connection_string = f"http://{db_host}:{db_port}"
+        arango_client = ArangoClient(hosts=connection_string)
         db = arango_client.db(db_name, username=user_name, password=password)
 
         logging.info("Querying domains...")
@@ -80,5 +79,5 @@ def scan(db_host, db_name, user_name, password, http_client=requests):
     return count
 
 if __name__ == "__main__":
-    dispatched_count = scan(DB_HOST, DB_NAME, DB_USER, DB_PASS)
+    dispatched_count = scan(DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS)
     logging.info(f"Dispatched scans for {dispatched_count} domains.")

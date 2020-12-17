@@ -204,4 +204,4 @@ expected_dmarc_tags = [
     "dmarc17",
 ]
 expected_spf_tags = ["spf12", "spf8"]
-expected_dkim_scan_tags = ["dkim6"]
+expected_dkim_tags = ["dkim6"]

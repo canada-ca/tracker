@@ -1,6 +1,29 @@
-const generateDetailTableFields = ({ subField }) => {
+const generateDetailTableFields = ({ subField, variables }) => {
   const nodeSelections = []
+  const nodeFields = [
+    'id',
+    'dkimAligned',
+    'dkimDomains',
+    'dkimSelectors',
+    'dkimResults',
+    'disposition',
+    'dnsHost',
+    'envelopFrom',
+    'headerFrom',
+    'guidance',
+    'sourceIpAddress',
+    'spfAligned',
+    'spfDomains',
+    'spfResults',
+    'totalMessages',
+  ]
   const pageInfoSelections = []
+  const pageInfoFields = [
+    'hasNextPage',
+    'hasPreviousPage',
+    'startCursor',
+    'endCursor',
+  ]
   let paginationArgs = ''
   let cursor = ''
   let edgeSelection = ''
@@ -12,9 +35,21 @@ const generateDetailTableFields = ({ subField }) => {
     if (subField.arguments.length !== 0) {
       subField.arguments.forEach((arg) => {
         if (arg.name.value === 'first' || arg.name.value === 'last')
-          paginationArr.push(`${arg.name.value}: ${arg.value.value}`)
+          if (arg.value.kind === 'Variable') {
+            paginationArr.push(
+              `${arg.name.value}: ${variables[arg.value.name.value]}`,
+            )
+          } else {
+            paginationArr.push(`${arg.name.value}: ${arg.value.value}`)
+          }
         else if (arg.name.value === 'before' || arg.name.value === 'after')
-          paginationArr.push(`${arg.name.value}: "${arg.value.value}"`)
+          if (arg.value.kind === 'Variable') {
+            paginationArr.push(
+              `${arg.name.value}: "${variables[arg.value.name.value]}"`,
+            )
+          } else {
+            paginationArr.push(`${arg.name.value}: "${arg.value.value}"`)
+          }
       })
       paginationArgs = paginationArr.join(' ')
     }
@@ -31,7 +66,9 @@ const generateDetailTableFields = ({ subField }) => {
                   cursor = 'cursor'
                 } else if (subSelection.name.value === 'node') {
                   subSelection.selectionSet.selections.forEach((nodeField) => {
-                    nodeSelections.push(nodeField.name.value)
+                    if (nodeFields.includes(nodeField.name.value)) {
+                      nodeSelections.push(nodeField.name.value)
+                    }
                   })
                 }
               })
@@ -47,11 +84,15 @@ const generateDetailTableFields = ({ subField }) => {
           } else if (subSubField.name.value === 'pageInfo') {
             if (subSubField.selectionSet.selections.length !== 0) {
               subSubField.selectionSet.selections.forEach((subSelection) => {
-                pageInfoSelections.push(subSelection.name.value)
+                if (pageInfoFields.includes(subSelection.name.value)) {
+                  pageInfoSelections.push(subSelection.name.value)
+                }
               })
-              pageInfoSelection = `pageInfo {\n${pageInfoSelections.join(
-                ' ',
-              )}\n}\n`
+              if (pageInfoSelections.length > 0) {
+                pageInfoSelection = `pageInfo {\n${pageInfoSelections.join(
+                  ' ',
+                )}\n}\n`
+              }
             }
           }
         })

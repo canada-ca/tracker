@@ -7,11 +7,18 @@ const domainLoaderConnectionsByUserId = (
   userKey,
   cleanseInput,
   i18n,
-) => async ({ after, before, first, last }) => {
+) => async ({ after, before, first, last, ownership }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
   const userDBId = `users/${userKey}`
+
+  let ownershipOrgsOnly = aql`LET claimDomainKeys = (FOR v, e IN 1..1 OUTBOUND orgId claims RETURN v._key)`
+  if (typeof ownership !== 'undefined') {
+    if (ownership) {
+      ownershipOrgsOnly = aql`LET claimDomainKeys = (FOR v, e IN 1..1 OUTBOUND orgId ownership RETURN v._key)`
+    }
+  }
 
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -93,8 +100,9 @@ const domainLoaderConnectionsByUserId = (
     requestedDomainInfo = await query`
     LET domainKeys = UNIQUE(FLATTEN(
       LET keys = []
-      FOR userAffiliation IN (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
-          LET claimDomainKeys = (FOR v, e IN 1..1 OUTBOUND userAffiliation claims RETURN v._key)
+      LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
+      FOR orgId IN orgIds 
+          ${ownershipOrgsOnly}
           RETURN APPEND(keys, claimDomainKeys)
     ))
     

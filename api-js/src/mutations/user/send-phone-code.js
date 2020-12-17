@@ -1,3 +1,5 @@
+const { CIPHER_KEY } = process.env
+const crypto = require('crypto')
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { GraphQLPhoneNumber } = require('graphql-scalars')
@@ -50,7 +52,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
 
     if (typeof user === 'undefined') {
       console.warn(
-        `User attempted to send TFA text message, however no account is associated with ${userKey}.`,
+        `User attempted to send TFA text message, however no account is associated with this key: ${userKey}.`,
       )
       throw new Error(i18n._(t`Unable to send TFA code, please try again.`))
     }
@@ -73,11 +75,27 @@ const sendPhoneCode = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to send TFA code, please try again.`))
     }
 
+    const phoneDetails = {
+      iv: crypto.randomBytes(12).toString('hex'),
+    }
+
+    const cipher = crypto.createCipheriv(
+      'aes-256-ccm',
+      String(CIPHER_KEY),
+      Buffer.from(phoneDetails.iv, 'hex'),
+      { authTagLength: 16 },
+    )
+    let encrypted = cipher.update(phoneNumber, 'utf8', 'hex')
+    encrypted += cipher.final('hex')
+
+    phoneDetails.phoneNumber = encrypted
+    phoneDetails.tag = cipher.getAuthTag().toString('hex')
+
     try {
       await query`
         UPSERT { _key: ${user._key} }
-          INSERT { phoneNumber: ${phoneNumber} }
-          UPDATE { phoneNumber: ${phoneNumber} }
+          INSERT { phoneDetails: ${phoneDetails} }
+          UPDATE { phoneDetails: ${phoneDetails} }
           IN users
       `
     } catch (err) {

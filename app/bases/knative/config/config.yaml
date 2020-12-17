@@ -17,34 +17,17 @@ spec:
         autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "25"
     spec:
-      timeoutSeconds: 900
+      timeoutSeconds: 600
       containerConcurrency: 8
       containers:
         - name: https-scanner
           image: gcr.io/track-compliance/scanners/https # The URL to the image of the app
           env:
-            - name: DB_USER
+            - name: RESULT_QUEUE_URL
               valueFrom:
                 secretKeyRef:
                   name: scanners
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_PASS
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_HOST
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_NAME
+                  key: RESULT_QUEUE_URL
 
 ---
 
@@ -67,7 +50,7 @@ spec:
         autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "4"
     spec:
-      timeoutSeconds: 900
+      timeoutSeconds: 600
       containerConcurrency: 1
       containers:
         - name: result-processor
@@ -89,7 +72,7 @@ spec:
                   name: scanners
                   key: DB_HOST
             - name: DB_PORT
-              value: "5432"
+              value: "8529"
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
@@ -117,34 +100,17 @@ spec:
         autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "20"
     spec:
-      timeoutSeconds: 900
+      timeoutSeconds: 600
       containerConcurrency: 8
       containers:
         - name: ssl-scanner
           image: gcr.io/track-compliance/scanners/ssl # The URL to the image of the app
           env:
-            - name: DB_USER
+            - name: RESULT_QUEUE_URL
               valueFrom:
                 secretKeyRef:
                   name: scanners
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_PASS
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_HOST
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_NAME
+                  key: RESULT_QUEUE_URL
 
 ---
 
@@ -167,34 +133,17 @@ spec:
         autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "20"
     spec:
-      timeoutSeconds: 900
+      timeoutSeconds: 600
       containerConcurrency: 8
       containers:
         - name: dns-scanner
           image: gcr.io/track-compliance/scanners/dns # The URL to the image of the app
           env:
-            - name: DB_USER
+            - name: RESULT_QUEUE_URL
               valueFrom:
                 secretKeyRef:
                   name: scanners
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_PASS
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_HOST
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_NAME
+                  key: RESULT_QUEUE_URL
 
 ---
 

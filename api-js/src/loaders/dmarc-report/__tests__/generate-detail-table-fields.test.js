@@ -3,148 +3,239 @@ const { generateDetailTableFields } = require('../..')
 describe('given the generateDetailTableFields function', () => {
   describe('given a successful generation', () => {
     describe('pagination args are set', () => {
-      describe('having first argument', () => {
-        it('returns paginationArgs with first field set', () => {
-          const subField = {
-            arguments: [
-              {
-                name: {
-                  value: 'first',
+      describe('pagination args are written in', () => {
+        describe('having first argument', () => {
+          it('returns paginationArgs with first field set', () => {
+            const subField = {
+              arguments: [
+                {
+                  name: {
+                    value: 'first',
+                  },
+                  value: {
+                    value: 5,
+                  },
                 },
-                value: {
-                  value: 5,
+              ],
+            }
+
+            const detailTableField = generateDetailTableFields({ subField })
+
+            expect(detailTableField).toEqual({
+              edgeSelection: '',
+              pageInfoSelection: '',
+              paginationArgs: 'first: 5',
+            })
+          })
+        })
+        describe('having last argument ', () => {
+          it('returns subfield gql string with last argument set', () => {
+            const subField = {
+              arguments: [
+                {
+                  name: {
+                    value: 'last',
+                  },
+                  value: {
+                    value: 5,
+                  },
                 },
-              },
-            ],
-          }
+              ],
+            }
 
-          const detailTableField = generateDetailTableFields({ subField })
+            const detailTableField = generateDetailTableFields({ subField })
 
-          expect(detailTableField).toEqual({
-            edgeSelection: '',
-            pageInfoSelection: '',
-            paginationArgs: 'first: 5',
+            expect(detailTableField).toEqual({
+              edgeSelection: '',
+              pageInfoSelection: '',
+              paginationArgs: 'last: 5',
+            })
+          })
+        })
+        describe('having before argument', () => {
+          it('returns subfield gql string with before argument set', () => {
+            const subField = {
+              arguments: [
+                {
+                  name: {
+                    value: 'before',
+                  },
+                  value: {
+                    value: 'SGVsbG8xMjM0',
+                  },
+                },
+              ],
+            }
+
+            const detailTableField = generateDetailTableFields({ subField })
+
+            expect(detailTableField).toEqual({
+              edgeSelection: '',
+              pageInfoSelection: '',
+              paginationArgs: 'before: "SGVsbG8xMjM0"',
+            })
+          })
+        })
+        describe('having after argument', () => {
+          it('returns subfield gql string with after argument set', () => {
+            const subField = {
+              arguments: [
+                {
+                  name: {
+                    value: 'after',
+                  },
+                  value: {
+                    value: 'SGVsbG8xMjM0',
+                  },
+                },
+              ],
+            }
+
+            const detailTableField = generateDetailTableFields({ subField })
+
+            expect(detailTableField).toEqual({
+              edgeSelection: '',
+              pageInfoSelection: '',
+              paginationArgs: 'after: "SGVsbG8xMjM0"',
+            })
           })
         })
       })
-      describe('having last argument ', () => {
-        it('returns subfield gql string with last argument set', () => {
-          const subField = {
-            arguments: [
-              {
-                name: {
-                  value: 'last',
+      describe('pagination args are set as variables', () => {
+        describe('having first argument', () => {
+          it('returns paginationArgs with first field set', () => {
+            const subField = {
+              arguments: [
+                {
+                  name: {
+                    value: 'first',
+                  },
+                  value: {
+                    name: {
+                      value: 'first',
+                    },
+                    kind: 'Variable',
+                  },
                 },
-                value: {
-                  value: 5,
-                },
-              },
-            ],
-          }
+              ],
+            }
 
-          const detailTableField = generateDetailTableFields({ subField })
+            const variables = {
+              first: 5,
+            }
 
-          expect(detailTableField).toEqual({
-            edgeSelection: '',
-            pageInfoSelection: '',
-            paginationArgs: 'last: 5',
+            const detailTableField = generateDetailTableFields({
+              subField,
+              variables,
+            })
+
+            expect(detailTableField).toEqual({
+              edgeSelection: '',
+              pageInfoSelection: '',
+              paginationArgs: 'first: 5',
+            })
           })
         })
-      })
-      describe('having before argument', () => {
-        it('returns subfield gql string with before argument set', () => {
-          const subField = {
-            arguments: [
-              {
-                name: {
-                  value: 'before',
+        describe('having last argument ', () => {
+          it('returns subfield gql string with last argument set', () => {
+            const subField = {
+              arguments: [
+                {
+                  name: {
+                    value: 'last',
+                  },
+                  value: {
+                    name: {
+                      value: 'last',
+                    },
+                    kind: 'Variable',
+                  },
                 },
-                value: {
-                  value: 'SGVsbG8xMjM0',
-                },
-              },
-            ],
-          }
+              ],
+            }
 
-          const detailTableField = generateDetailTableFields({ subField })
+            const variables = {
+              last: 5,
+            }
 
-          expect(detailTableField).toEqual({
-            edgeSelection: '',
-            pageInfoSelection: '',
-            paginationArgs: 'before: "SGVsbG8xMjM0"',
+            const detailTableField = generateDetailTableFields({
+              subField,
+              variables,
+            })
+
+            expect(detailTableField).toEqual({
+              edgeSelection: '',
+              pageInfoSelection: '',
+              paginationArgs: 'last: 5',
+            })
           })
         })
-      })
-      describe('having after argument', () => {
-        it('returns subfield gql string with after argument set', () => {
-          const subField = {
-            arguments: [
-              {
-                name: {
-                  value: 'after',
+        describe('having before argument', () => {
+          it('returns subfield gql string with before argument set', () => {
+            const subField = {
+              arguments: [
+                {
+                  name: {
+                    value: 'before',
+                  },
+                  value: {
+                    name: {
+                      value: 'before',
+                    },
+                    kind: 'Variable',
+                  },
                 },
-                value: {
-                  value: 'SGVsbG8xMjM0',
-                },
-              },
-            ],
-          }
+              ],
+            }
 
-          const detailTableField = generateDetailTableFields({ subField })
+            const variables = {
+              before: 'SGVsbG8xMjM0',
+            }
 
-          expect(detailTableField).toEqual({
-            edgeSelection: '',
-            pageInfoSelection: '',
-            paginationArgs: 'after: "SGVsbG8xMjM0"',
+            const detailTableField = generateDetailTableFields({
+              subField,
+              variables,
+            })
+
+            expect(detailTableField).toEqual({
+              edgeSelection: '',
+              pageInfoSelection: '',
+              paginationArgs: 'before: "SGVsbG8xMjM0"',
+            })
           })
         })
-      })
-      describe('having all arguments set', () => {
-        it('returns paginationArgs with all arguments set', () => {
-          const subField = {
-            arguments: [
-              {
-                name: {
-                  value: 'first',
+        describe('having after argument', () => {
+          it('returns subfield gql string with after argument set', () => {
+            const subField = {
+              arguments: [
+                {
+                  name: {
+                    value: 'after',
+                  },
+                  value: {
+                    name: {
+                      value: 'after',
+                    },
+                    kind: 'Variable',
+                  },
                 },
-                value: {
-                  value: 5,
-                },
-              },
-              {
-                name: {
-                  value: 'last',
-                },
-                value: {
-                  value: 5,
-                },
-              },
-              {
-                name: {
-                  value: 'before',
-                },
-                value: {
-                  value: 'SGVsbG8xMjM0',
-                },
-              },
-              {
-                name: {
-                  value: 'after',
-                },
-                value: {
-                  value: 'SGVsbG8xMjM0',
-                },
-              },
-            ],
-          }
+              ],
+            }
 
-          const detailTableField = generateDetailTableFields({ subField })
+            const variables = {
+              after: 'SGVsbG8xMjM0',
+            }
 
-          expect(detailTableField).toEqual({
-            edgeSelection: '',
-            pageInfoSelection: '',
-            paginationArgs:
-              'first: 5 last: 5 before: "SGVsbG8xMjM0" after: "SGVsbG8xMjM0"',
+            const detailTableField = generateDetailTableFields({
+              subField,
+              variables,
+            })
+
+            expect(detailTableField).toEqual({
+              edgeSelection: '',
+              pageInfoSelection: '',
+              paginationArgs: 'after: "SGVsbG8xMjM0"',
+            })
           })
         })
       })
@@ -559,6 +650,47 @@ describe('given the generateDetailTableFields function', () => {
           })
         })
       })
+      describe('node have random field set', () => {
+        it('returns an empty string', () => {
+          const subField = {
+            selectionSet: {
+              selections: [
+                {
+                  name: {
+                    value: 'edges',
+                  },
+                  selectionSet: {
+                    selections: [
+                      {
+                        name: {
+                          value: 'node',
+                        },
+                        selectionSet: {
+                          selections: [
+                            {
+                              name: {
+                                value: 'randomValue',
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          }
+
+          const detailTableField = generateDetailTableFields({ subField })
+
+          expect(detailTableField).toEqual({
+            edgeSelection: '',
+            pageInfoSelection: '',
+            paginationArgs: '',
+          })
+        })
+      })
       describe('pageInfo selectionSet.selections is length zero', () => {
         it('returns empty args', () => {
           const subField = {
@@ -570,6 +702,38 @@ describe('given the generateDetailTableFields function', () => {
                   },
                   selectionSet: {
                     selections: [],
+                  },
+                },
+              ],
+            },
+          }
+
+          const detailTableField = generateDetailTableFields({ subField })
+
+          expect(detailTableField).toEqual({
+            edgeSelection: '',
+            pageInfoSelection: '',
+            paginationArgs: '',
+          })
+        })
+      })
+      describe('pageInfo having random field set', () => {
+        it('returns subfield gql string with empty pageInfo selection', () => {
+          const subField = {
+            selectionSet: {
+              selections: [
+                {
+                  name: {
+                    value: 'pageInfo',
+                  },
+                  selectionSet: {
+                    selections: [
+                      {
+                        name: {
+                          value: 'randomValue',
+                        },
+                      },
+                    ],
                   },
                 },
               ],

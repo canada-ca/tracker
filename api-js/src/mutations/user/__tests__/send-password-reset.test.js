@@ -11,10 +11,10 @@ const { makeMigrations } = require('../../../../migrations')
 const { createQuerySchema } = require('../../../queries')
 const { createMutationSchema } = require('../..')
 const { cleanseInput } = require('../../../validators')
-const { tokenize } = require('../../../auth')
 const { userLoaderByUserName } = require('../../../loaders')
 
 const mockNotify = jest.fn()
+const tokenize = jest.fn().mockReturnValue('token')
 
 describe('user send password reset email', () => {
   const originalInfo = console.info

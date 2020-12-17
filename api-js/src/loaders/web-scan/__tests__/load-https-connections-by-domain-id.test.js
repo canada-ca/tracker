@@ -9,10 +9,7 @@ const englishMessages = require('../../../locale/en/messages')
 const frenchMessages = require('../../../locale/fr/messages')
 const { makeMigrations } = require('../../../../migrations')
 const { cleanseInput } = require('../../../validators')
-const {
-  httpsLoaderConnectionsByDomainId,
-  httpsLoaderByKey,
-} = require('../..')
+const { httpsLoaderConnectionsByDomainId, httpsLoaderByKey } = require('../..')
 
 describe('given the load https connection function', () => {
   let query, drop, truncate, migrate, collections, user, domain, i18n

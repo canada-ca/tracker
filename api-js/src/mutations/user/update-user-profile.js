@@ -1,6 +1,8 @@
+const { CIPHER_KEY } = process.env
+const crypto = require('crypto')
 const { GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
-const { GraphQLEmailAddress } = require('graphql-scalars')
+const { GraphQLEmailAddress, GraphQLPhoneNumber } = require('graphql-scalars')
 const { t } = require('@lingui/macro')
 const { LanguageEnums } = require('../../enums')
 
@@ -21,6 +23,10 @@ const updateUserProfile = new mutationWithClientMutationId({
       type: LanguageEnums,
       description:
         'The updated preferred language the user wishes to change to.',
+    },
+    phoneNumber: {
+      type: GraphQLPhoneNumber,
+      description: 'The updated phone number the user wishes to change to.',
     },
   }),
   outputFields: () => ({
@@ -46,6 +52,7 @@ const updateUserProfile = new mutationWithClientMutationId({
     const displayName = cleanseInput(args.displayName)
     const userName = cleanseInput(args.userName).toLowerCase()
     const preferredLang = cleanseInput(args.preferredLang)
+    const phoneNumber = cleanseInput(args.phoneNumber)
 
     // Make sure userKey is not undefined
     if (typeof userKey === 'undefined') {
@@ -65,11 +72,47 @@ const updateUserProfile = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
 
+    let updatedPhoneDetails, phoneValidated
+    if (user.phoneValidated && typeof phoneNumber !== 'undefined') {
+      const { iv, tag, phoneNumber: encryptedData } = user.phoneDetails
+      const decipher = crypto.createDecipheriv(
+        'aes-256-ccm',
+        String(CIPHER_KEY),
+        Buffer.from(iv, 'hex'),
+        { authTagLength: 16 },
+      )
+      decipher.setAuthTag(Buffer.from(tag, 'hex'))
+      let decrypted = decipher.update(encryptedData, 'hex', 'utf8')
+      decrypted += decipher.final('utf8')
+
+      if (decrypted !== phoneNumber) {
+        updatedPhoneDetails = {
+          iv: crypto.randomBytes(12).toString('hex'),
+        }
+        const cipher = crypto.createCipheriv(
+          'aes-256-ccm',
+          String(CIPHER_KEY),
+          Buffer.from(updatedPhoneDetails.iv, 'hex'),
+          { authTagLength: 16 },
+        )
+        let encrypted = cipher.update(phoneNumber, 'utf8', 'hex')
+        encrypted += cipher.final('hex')
+
+        updatedPhoneDetails.phoneNumber = encrypted
+        updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+      } else {
+        phoneValidated = true
+        updatedPhoneDetails = user.phoneDetails
+      }
+    }
+
     // Create object containing updated data
     const updatedUser = {
       displayName: displayName || user.displayName,
       userName: userName || user.userName,
       preferredLang: preferredLang || user.preferredLang,
+      phoneDetails: updatedPhoneDetails,
+      phoneValidated: phoneValidated || user.phoneValidated,
     }
 
     try {

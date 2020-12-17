@@ -5,3 +5,4 @@ bases:
 resources:
 - knative-istio-networking.yaml
 - knative-serving-core.yaml
+- domain-config.yaml

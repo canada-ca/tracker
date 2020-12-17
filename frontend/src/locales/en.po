@@ -25,9 +25,9 @@ msgstr "*All data represented is mocked for demonstration purposes"
 msgid "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
 msgstr "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
 
-#: src/UserCard.js:45
-msgid "2FA"
-msgstr "2FA"
+#: src/UserCard.js:44
+msgid "2FA Validated"
+msgstr "2FA Validated"
 
 #: src/guidanceTagConstants.js:5
 msgid "3.2.2 Third Parties and DKIM"
@@ -2093,8 +2093,12 @@ msgid "Users"
 msgstr "Users"
 
 #: src/OrganizationSummary.js:20
-msgid "Users joined:"
-msgstr "Users joined:"
+msgid "Total users"
+msgstr "Total users"
+
+#: src/OrganizationSummary.js:23
+msgid "Based in:"
+msgstr "Based in:"
 
 #: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"
@@ -2316,3 +2320,96 @@ msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 #: src/OrganizationDetails.js:95
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/LoadingMessage.js:12
+msgid "Loading {children}..."
+msgstr "Loading {children}..."
+
+#: src/ErrorFallbackMessage.js:12
+msgid "An error has occurred."
+msgstr "An error has occurred."
+
+#: src/ErrorFallbackMessage.js:22
+msgid "This component is currently unavailable. Try reloading the page."
+msgstr "This component is currently unavailable. Try reloading the page."
+
+#: src/SummaryGroup.js:39
+msgid "Summary Cards"
+msgstr "Summary Cards"
+
+#: src/AdminPage.js:41
+msgid "User Affiliations"
+msgstr "User Affiliations"
+
+#: src/AdminPanel.js:40
+msgid "Organization Info"
+msgstr "Organization Info"
+
+#: src/DmarcByDomainPage.js:163
+msgid "Domains Table"
+msgstr "Domains Table"
+
+#: src/DmarcGuidancePage.js:34
+msgid "Guidance Tags"
+msgstr "Guidance Tags"
+
+#: src/OrganizationDetails.js:59
+msgid "Organization Details"
+msgstr "Organization Details"
+
+#: src/QRcodePage.js:25
+msgid "QR Code"
+msgstr "QR Code"
+
+#: src/Organizations.js:69
+msgid "Search for an organization"
+msgstr "Search for an organization"
+
+#: src/DomainsPage.js:75
+msgid "Search"
+msgstr "Search"
+
+#: src/DomainsPage.js:78
+msgid "Scan"
+msgstr "Scan"
+
+#: src/DomainsPage.js:85
+msgid "Search for any Government of Canada tracked domain:"
+msgstr "Search for any Government of Canada tracked domain:"
+
+#: src/DomainsPage.js:128
+msgid "Request a domain to be scanned:"
+msgstr "Request a domain to be scanned:"
+
+#: src/DomainsPage.js:132
+msgid "Enter a domain"
+msgstr "Enter a domain"
+
+#: src/DomainsPage.js:141
+msgid "Scan Domain"
+msgstr "Scan Domain"
+
+#: src/ScanDomain.js:82
+msgid "Select scan type"
+msgstr "Select scan type"
+
+#: src/ScanDomain.js:73
+msgid "Scan Type:"
+msgstr "Scan Type:"
+
+#: src/ScanDomain.js:85
+msgid "WEB"
+msgstr "WEB"
+
+#: src/ScanDomain.js:88
+msgid "MAIL"
+msgstr "MAIL"
+
+#: src/DomainField.js:29
+msgid "Domain URL"
+msgstr "Domain URL"
+
+#: src/DomainField.js:29
+msgid "Domain URL:"
+msgstr "Domain URL:"
+

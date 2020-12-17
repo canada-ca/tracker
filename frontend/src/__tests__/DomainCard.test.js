@@ -16,6 +16,13 @@ const i18n = setupI18n({
     en: {},
   },
 })
+const status = {
+  dkim: 'PASS',
+  dmarc: 'PASS',
+  https: 'PASS',
+  spf: 'PASS',
+  ssl: 'PASS',
+}
 
 describe('<OrganizationsCard />', () => {
   it('successfully renders card with domain name and date of last scan', async () => {
@@ -27,6 +34,7 @@ describe('<OrganizationsCard />', () => {
               <DomainCard
                 url="tbs-sct.gc.ca"
                 lastRan="2020-09-10T00:34:26.429Z"
+                status={status}
               />
             </I18nProvider>
           </ThemeProvider>
@@ -36,7 +44,7 @@ describe('<OrganizationsCard />', () => {
 
     const domain = getByText(/tbs-sct.gc.ca/i)
     expect(domain).toBeDefined()
-    const lastRan = getByText(/2020-09-10T00:34:26.429Z/i)
+    const lastRan = getByText(/2020-09-10T00:34/i)
     expect(lastRan).toBeDefined()
   })
 
@@ -46,7 +54,7 @@ describe('<OrganizationsCard />', () => {
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <DomainCard url="tbs-sct.gc.ca" lastRan={null} />
+              <DomainCard url="tbs-sct.gc.ca" lastRan={null} status={status} />
             </I18nProvider>
           </ThemeProvider>
         </MemoryRouter>

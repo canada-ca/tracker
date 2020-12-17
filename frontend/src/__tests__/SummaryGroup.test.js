@@ -17,47 +17,38 @@ const i18n = setupI18n({
   },
 })
 
-const mocks = [
-  {
-    request: {
-      query: WEB_AND_EMAIL_SUMMARIES,
-    },
-    result: {
-      data: {
-        webSummary: {
-          categories: [
-            {
-              name: 'pass',
-              count: 7468,
-              percentage: 56.6,
-            },
-            {
-              name: 'fail',
-              count: 5738,
-              percentage: 43.4,
-            },
-          ],
-          total: 13206,
-        },
-        mailSummary: {
-          categories: [
-            {
-              name: 'pass',
-              count: 2091,
-              percentage: 11.2,
-            },
-            {
-              name: 'fail',
-              count: 8604,
-              percentage: 46.2,
-            },
-          ],
-          total: 18613,
-        },
+const data = {
+  webSummary: {
+    categories: [
+      {
+        name: 'pass',
+        count: 7468,
+        percentage: 56.6,
       },
-    },
+      {
+        name: 'fail',
+        count: 5738,
+        percentage: 43.4,
+      },
+    ],
+    total: 13206,
   },
-]
+  mailSummary: {
+    categories: [
+      {
+        name: 'pass',
+        count: 2091,
+        percentage: 11.2,
+      },
+      {
+        name: 'fail',
+        count: 8604,
+        percentage: 46.2,
+      },
+    ],
+    total: 18613,
+  },
+}
 
 describe('<SummaryGroup />', () => {
   describe('given the data for web and email summaries', () => {
@@ -65,8 +56,8 @@ describe('<SummaryGroup />', () => {
       const { getAllByText } = render(
         <I18nProvider i18n={i18n}>
           <ThemeProvider theme={theme}>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <SummaryGroup title="title" description="description" />
+            <MockedProvider>
+              <SummaryGroup web={data.webSummary} mail={data.mailSummary} />
             </MockedProvider>
           </ThemeProvider>
         </I18nProvider>,

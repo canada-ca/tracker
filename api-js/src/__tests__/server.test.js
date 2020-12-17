@@ -93,10 +93,14 @@ describe('parse server', () => {
           )
             .post('/graphql')
             .set('Accept', 'application/json')
-            .send({ query: '{findVerifiedDomains (first: 5) { edges { node { id }}}}' })
+            .send({
+              query: '{findVerifiedDomains (first: 5) { edges { node { id }}}}',
+            })
 
           expect(response.status).toEqual(400)
-          expect(response.text).toEqual(expect.stringContaining('exceeds maximum operation depth'))
+          expect(response.text).toEqual(
+            expect.stringContaining('exceeds maximum operation depth'),
+          )
         })
       })
     })

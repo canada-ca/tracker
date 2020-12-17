@@ -78,6 +78,8 @@
     'Password was successfully reset.': 'Password was successfully reset.',
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
+    'Permission check error. Unable to request domain information.':
+      'Permission check error. Unable to request domain information.',
     'Permission error, not an admin for this user.':
       'Permission error, not an admin for this user.',
     'Profile successfully updated.': 'Profile successfully updated.',
@@ -213,6 +215,8 @@
         '` limit of 100 records.',
       ]
     },
+    'Successfully dispatched one time scan.':
+      'Successfully dispatched one time scan.',
     'Successfully invited user to organization, and sent notification email.':
       'Successfully invited user to organization, and sent notification email.',
     'Successfully removed domain: {0} from {1}.': function (a) {
@@ -221,6 +225,8 @@
     'Successfully removed organization: {0}.': function (a) {
       return ['Successfully removed organization: ', a('0'), '.']
     },
+    'Successfully removed user from organization.':
+      'Successfully removed user from organization.',
     'Successfully sent invitation to service, and organization email.':
       'Successfully sent invitation to service, and organization email.',
     'Successfully two factor authenticated.':
@@ -241,6 +247,8 @@
       'Unable to create domain. Please try again.',
     'Unable to create organization. Please try again.':
       'Unable to create organization. Please try again.',
+    'Unable to dispatch one time scan. Please try again.':
+      'Unable to dispatch one time scan. Please try again.',
     'Unable to find dkim guidance tags. Please try again.':
       'Unable to find dkim guidance tags. Please try again.',
     'Unable to find dkim result. Please try again.':
@@ -323,14 +331,14 @@
       'Unable to query domains. Please try again.',
     'Unable to query organizations. Please try again.':
       'Unable to query organizations. Please try again.',
-    'Unable to query user without a username, please try again.':
-      'Unable to query user without a username, please try again.',
-    'Unable to query user, please try again.':
-      'Unable to query user, please try again.',
     'Unable to remove domain. Please try again.':
       'Unable to remove domain. Please try again.',
     'Unable to remove organization. Please try again.':
       'Unable to remove organization. Please try again.',
+    'Unable to remove user from organization. Please try again.':
+      'Unable to remove user from organization. Please try again.',
+    'Unable to request a on time scan on this domain.':
+      'Unable to request a on time scan on this domain.',
     'Unable to reset password. Please try again.':
       'Unable to reset password. Please try again.',
     'Unable to retrieve {0} for domain: {domain}.': function (a) {

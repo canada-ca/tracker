@@ -27,7 +27,7 @@ from sslyze.server_setting import (
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-QUEUE_URL = "http://result-queue.scanners.svc.cluster.local/ssl"
+QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local")
 
 
 class TlsVersionEnum(Enum):
@@ -41,8 +41,8 @@ class TlsVersionEnum(Enum):
 
 
 def dispatch_results(payload, client):
-    client.post(QUEUE_URL, json=payload)
-    logging.info("Scan results dispatched to result-processor")
+    client.post(QUEUE_URL + "/ssl", json=payload)
+    logging.info("Scan results dispatched to result queue")
 
 
 def get_server_info(domain):
@@ -60,8 +60,7 @@ def get_server_info(domain):
         server_tester = ServerConnectivityTester()
 
         logging.info(
-            "\nTesting connectivity with %s:%s..."
-            % (server_location.hostname, server_location.port)
+            f"Testing connectivity with {server_location.hostname}:{server_location.port}..."
         )
         # Test connection to server and retrieve info
         server_info = server_tester.perform(server_location)
@@ -101,7 +100,7 @@ def get_supported_tls(highest_supported, domain):
             supported.append(version)
         except Exception as e:
             logging.info(
-                "Failed to connect using %s: (%s) - %s" % (version, type(e), e)
+                f"Failed to connect using %{version}: ({type(e)}) - {e}"
             )
 
     return supported
@@ -306,9 +305,6 @@ def Server(server_client=requests):
         def timeout_handler(signum, frame):
             msg = "Timeout while performing scan"
             logging.error(msg)
-            dispatch_results(
-                {"scan_type": "ssl", "uuid": uuid, "results": {}}, server_client
-            )
             return PlainTextResponse(msg)
 
         try:
@@ -339,13 +335,13 @@ def Server(server_client=requests):
                         "domain_key": domain_key
                     }
                 )
-                logging.info("Scan results: {str(scan_results)}")
+                logging.info(f"Scan results: {str(scan_results)}")
             else:
                 raise Exception("SSL scan not completed")
 
         except ServerHostnameCouldNotBeResolved as e:
             signal.alarm(0)
-            msg = "The designated domain could not be resolved: ({type(e).__name__}: {str(e)})"
+            msg = f"The designated domain could not be resolved: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             dispatch_results(
                 {"scan_type": "ssl", "uuid": uuid, "results": {}}, server_client
@@ -354,11 +350,11 @@ def Server(server_client=requests):
 
         except Exception as e:
             signal.alarm(0)
-            msg = "An unexpected error occurred while attempting to process SSL scan request: ({type(e).__name__}: {str(e)})"
+            msg = f"An unexpected error occurred while attempting to process SSL scan request: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "ssl", "uuid": uuid, "results": {}}, server_client
+                {"scan_type": "ssl", "uuid": uuid, "domain_key": domain_key, "results": {}}, server_client
             )
             return PlainTextResponse(msg)
 
@@ -366,7 +362,7 @@ def Server(server_client=requests):
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
         dispatch_results(outbound_payload, server_client)
-        msg = "SSL scan completed in {elapsed_time.total_seconds()} seconds."
+        msg = f"SSL scan completed in {elapsed_time.total_seconds()} seconds."
         logging.info(msg)
 
         return PlainTextResponse(msg)

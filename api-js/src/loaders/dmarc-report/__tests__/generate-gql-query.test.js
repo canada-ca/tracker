@@ -57,7 +57,7 @@ describe('given the generateGqlQuery function', () => {
       })
     })
     describe('categoryTotals field is set', () => {
-      it('returns query with categoryTotals, and fields present', () => {
+      it('returns query with categoryTotals, with all sub fields set', () => {
         const gqlGen = generateGqlQuery({ generateDetailTableFields })
 
         const info = {
@@ -77,6 +77,21 @@ describe('given the generateGqlQuery function', () => {
                             value: 'fail',
                           },
                         },
+                        {
+                          name: {
+                            value: 'fullPass',
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'passDkimOnly',
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'passSpfOnly',
+                          },
+                        },
                       ],
                     },
                   },
@@ -88,12 +103,63 @@ describe('given the generateGqlQuery function', () => {
 
         const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
         expect(gqlQuery).toEqual(
-          '{\ntestQuery(\ndomain: "test.domain.ca"\n){\n\ncategoryTotals {\nfail\n}\n\n\n}\n}',
+          '{\ntestQuery(\ndomain: "test.domain.ca"\n){\n\ncategoryTotals {\nfail fullPass passDkimOnly passSpfOnly\n}\n\n\n}\n}',
+        )
+      })
+    })
+    describe('categoryPercentages field is set', () => {
+      it('returns query with categoryPercentages, with all sub fields set', () => {
+        const gqlGen = generateGqlQuery({ generateDetailTableFields })
+
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'categoryPercentages',
+                    },
+                    selectionSet: {
+                      selections: [
+                        {
+                          name: {
+                            value: 'fail',
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'fullPass',
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'passDkimOnly',
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'passSpfOnly',
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        }
+
+        const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
+        expect(gqlQuery).toEqual(
+          '{\ntestQuery(\ndomain: "test.domain.ca"\n){\n\ncategoryTotals {\nfail fullPass passDkimOnly passSpfOnly\n}\n\n\n}\n}',
         )
       })
     })
     describe('detailTables field is set', () => {
-      it('returns query with detailTables field', () => {
+      it('returns query with only detailTables field', () => {
         const gqlGen = generateGqlQuery({ generateDetailTableFields })
 
         const info = {
@@ -140,6 +206,134 @@ describe('given the generateGqlQuery function', () => {
                             ],
                           },
                         },
+                        {
+                          name: {
+                            value: 'dkimFailure',
+                          },
+                          selectionSet: {
+                            selections: [
+                              {
+                                name: {
+                                  value: 'edges',
+                                },
+                                selectionSet: {
+                                  selections: [
+                                    {
+                                      name: {
+                                        value: 'node',
+                                      },
+                                      selectionSet: {
+                                        selections: [
+                                          {
+                                            name: {
+                                              value: 'id',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'dmarcFailure',
+                          },
+                          selectionSet: {
+                            selections: [
+                              {
+                                name: {
+                                  value: 'edges',
+                                },
+                                selectionSet: {
+                                  selections: [
+                                    {
+                                      name: {
+                                        value: 'node',
+                                      },
+                                      selectionSet: {
+                                        selections: [
+                                          {
+                                            name: {
+                                              value: 'id',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'spfFailure',
+                          },
+                          selectionSet: {
+                            selections: [
+                              {
+                                name: {
+                                  value: 'edges',
+                                },
+                                selectionSet: {
+                                  selections: [
+                                    {
+                                      name: {
+                                        value: 'node',
+                                      },
+                                      selectionSet: {
+                                        selections: [
+                                          {
+                                            name: {
+                                              value: 'id',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          name: {
+                            value: 'randomField',
+                          },
+                          selectionSet: {
+                            selections: [
+                              {
+                                name: {
+                                  value: 'edges',
+                                },
+                                selectionSet: {
+                                  selections: [
+                                    {
+                                      name: {
+                                        value: 'node',
+                                      },
+                                      selectionSet: {
+                                        selections: [
+                                          {
+                                            name: {
+                                              value: 'id',
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
                       ],
                     },
                   },
@@ -151,7 +345,66 @@ describe('given the generateGqlQuery function', () => {
 
         const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
         expect(gqlQuery).toEqual(
-          '{\ntestQuery(\ndomain: "test.domain.ca"\n){\n\n\ndetailTables {\nfullPass (\n\n){\n\nedges {\n\nnode{\nid\n}\n}\n\n}\n\n}\n\n}\n}',
+          `{
+testQuery(
+domain: "test.domain.ca"
+){
+
+
+detailTables {
+fullPass (
+
+){
+
+edges {
+
+node{
+id
+}
+}
+
+}
+ dkimFailure (
+
+){
+
+edges {
+
+node{
+id
+}
+}
+
+}
+ dmarcFailure (
+
+){
+
+edges {
+
+node{
+id
+}
+}
+
+}
+ spfFailure (
+
+){
+
+edges {
+
+node{
+id
+}
+}
+
+}
+
+}
+
+}
+}`,
         )
       })
     })
@@ -193,41 +446,172 @@ describe('given the generateGqlQuery function', () => {
         )
       })
     })
-    describe('in argument is set', () => {
-      const gqlGen = generateGqlQuery({ generateDetailTableFields })
+    describe('int argument is set', () => {
+      it('returns gql query with a string argument', () => {
+        const gqlGen = generateGqlQuery({ generateDetailTableFields })
 
-      const info = {
-        fieldName: 'testQuery',
-        fieldNodes: [
-          {
-            selectionSet: {
-              selections: [
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'month',
+                    },
+                  },
+                ],
+              },
+              arguments: [
                 {
                   name: {
-                    value: 'month',
+                    value: 'testArgument',
+                  },
+                  value: {
+                    value: 5,
+                    kind: 'IntValue',
                   },
                 },
               ],
             },
-            arguments: [
-              {
-                name: {
-                  value: 'testArgument',
-                },
-                value: {
-                  value: 5,
-                  kind: 'IntValue',
-                },
-              },
-            ],
-          },
-        ],
-      }
+          ],
+        }
 
-      const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
-      expect(gqlQuery).toEqual(
-        '{\ntestQuery(\ntestArgument: 5\ndomain: "test.domain.ca"\n){\nstartDate\nendDate\n\n\n\n}\n}',
-      )
+        const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
+        expect(gqlQuery).toEqual(
+          '{\ntestQuery(\ntestArgument: 5\ndomain: "test.domain.ca"\n){\nstartDate\nendDate\n\n\n\n}\n}',
+        )
+      })
+    })
+    describe('string variable argument is set', () => {
+      it('returns a gql query with a string argument set', () => {
+        const gqlGen = generateGqlQuery({ generateDetailTableFields })
+
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'month',
+                    },
+                  },
+                ],
+              },
+              arguments: [
+                {
+                  name: {
+                    value: 'testArgument',
+                  },
+                  value: {
+                    name: {
+                      value: 'varString',
+                    },
+                    kind: 'Variable',
+                  },
+                },
+              ],
+            },
+          ],
+          variableValues: {
+            varString: 'testString',
+          },
+        }
+
+        const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
+        expect(gqlQuery).toEqual(
+          '{\ntestQuery(\ntestArgument: "testString"\ndomain: "test.domain.ca"\n){\nstartDate\nendDate\n\n\n\n}\n}',
+        )
+      })
+    })
+    describe('other variable argument is set', () => {
+      it('returns a gql query with an other argument set', () => {
+        const gqlGen = generateGqlQuery({ generateDetailTableFields })
+
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'month',
+                    },
+                  },
+                ],
+              },
+              arguments: [
+                {
+                  name: {
+                    value: 'testArgument',
+                  },
+                  value: {
+                    name: {
+                      value: 'varOther',
+                    },
+                    kind: 'Variable',
+                  },
+                },
+              ],
+            },
+          ],
+          variableValues: {
+            varOther: 5,
+          },
+        }
+
+        const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
+        expect(gqlQuery).toEqual(
+          '{\ntestQuery(\ntestArgument: 5\ndomain: "test.domain.ca"\n){\nstartDate\nendDate\n\n\n\n}\n}',
+        )
+      })
+    })
+    describe('month variable argument is set', () => {
+      it('returns a gql query with a month argument set', () => {
+        const gqlGen = generateGqlQuery({ generateDetailTableFields })
+
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'month',
+                    },
+                  },
+                ],
+              },
+              arguments: [
+                {
+                  name: {
+                    value: 'month',
+                  },
+                  value: {
+                    name: {
+                      value: 'month',
+                    },
+                    kind: 'Variable',
+                  },
+                },
+              ],
+            },
+          ],
+          variableValues: {
+            month: 'Last30days',
+          },
+        }
+
+        const gqlQuery = gqlGen({ info, domain: 'test.domain.ca' })
+        expect(gqlQuery).toEqual(
+          '{\ntestQuery(\nmonth: LAST30DAYS\ndomain: "test.domain.ca"\n){\nstartDate\nendDate\n\n\n\n}\n}',
+        )
+      })
     })
   })
   describe('edge case occurs', () => {

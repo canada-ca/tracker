@@ -26,29 +26,34 @@ describe('<UserPage />', () => {
     {
       request: {
         query: QUERY_USER,
-        variables: { userName },
+        variables: { userName: userName },
       },
       result: {
         data: {
           userPage: {
+            id: 'ODk3MDg5MzI2MA==',
             userName: userName,
-            tfa: false,
-            lang: 'English',
-            displayName: 'testUser',
-            userAffiliations: [
-              {
-                admin: false,
-                organization: 'ASDF',
-              },
-              {
-                admin: false,
-                organization: 'GC',
-              },
-              {
-                admin: false,
-                organization: 'ABC',
-              },
-            ],
+            displayName: 'Test User',
+            preferredLang: 'ENGLISH',
+            tfaValidated: false,
+            emailValidated: false,
+            affiliations: {
+              edges: [
+                {
+                  node: {
+                    permission: 'ADMIN',
+                    organization: {
+                      id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
+                      acronym: 'CSE',
+                      name: 'Test Org',
+                      slug: 'test-org',
+                      verified: false,
+                      domainCount: 3,
+                    },
+                  },
+                },
+              ],
+            },
           },
         },
       },

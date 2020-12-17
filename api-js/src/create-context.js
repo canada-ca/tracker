@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const moment = require('moment')
 const fetch = require('isomorphic-fetch')
+const { v4: uuidv4 } = require('uuid')
 
 const { createI18n } = require('./create-i18n')
 const { cleanseInput, slugify } = require('./validators')
@@ -85,22 +86,28 @@ module.exports.createContext = ({ context, req: request, res: response }) => {
   let userKey
   const token = request.headers.authorization || ''
   if (token !== '') {
-    userKey = verify({ token })
+    userKey = verify({ token }).userKey
   }
 
   return {
-    i18n,
     ...context,
+    i18n,
     request,
     response,
     userKey,
     moment,
+    fetch,
+    uuidv4,
     auth: {
       bcrypt,
       checkDomainOwnership: checkDomainOwnership({ i18n, userKey, query }),
       checkDomainPermission: checkDomainPermission({ i18n, userKey, query }),
       checkPermission: checkPermission({ i18n, userKey, query }),
-      checkUserIsAdminForUser: checkUserIsAdminForUser({ i18n, userKey, query }),
+      checkUserIsAdminForUser: checkUserIsAdminForUser({
+        i18n,
+        userKey,
+        query,
+      }),
       tokenize,
       userRequired: userRequired({
         i18n,

@@ -28,7 +28,7 @@ describe('<UserCard />', () => {
                 userName="testuser@testemail.gc.ca"
                 displayName="Test User"
                 tfa={true}
-                role="USER_READ"
+                role="USER"
               />
             </I18nProvider>
           </ThemeProvider>
@@ -36,7 +36,7 @@ describe('<UserCard />', () => {
       </MockedProvider>,
     )
 
-    const tfaBadge = getByText(/2FA/i)
+    const tfaBadge = getByText(/2FA Validated/i)
     expect(tfaBadge).toBeDefined()
     expect(tfaBadge).toHaveStyle('background-color: rgb(198, 246, 213)')
   })
@@ -51,7 +51,7 @@ describe('<UserCard />', () => {
                 userName="testuser@testemail.gc.ca"
                 displayName="Test User"
                 tfa={false}
-                role="USER_READ"
+                role="USER"
               />
             </I18nProvider>
           </ThemeProvider>
@@ -59,7 +59,7 @@ describe('<UserCard />', () => {
       </MockedProvider>,
     )
 
-    const tfaBadge = getByText(/2FA/i)
+    const tfaBadge = getByText(/2FA Validated/i)
     expect(tfaBadge).toBeDefined()
     expect(tfaBadge).toHaveStyle('background-color: rgb(254, 215, 215)')
   })

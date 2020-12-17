@@ -7,11 +7,18 @@ const domainLoaderConnectionsByOrgId = (
   userKey,
   cleanseInput,
   i18n,
-) => async ({ orgId, after, before, first, last }) => {
+) => async ({ orgId, after, before, first, last, ownership }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
   const userDBId = `users/${userKey}`
+
+  let ownershipOrgsOnly = aql`LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} claims RETURN v._key)`
+  if (typeof ownership !== 'undefined') {
+    if (ownership) {
+      ownershipOrgsOnly = aql`LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} ownership RETURN v._key)`
+    }
+  }
 
   let afterId
   if (typeof after !== 'undefined') {
@@ -98,7 +105,7 @@ const domainLoaderConnectionsByOrgId = (
       LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
       LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
       LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
-      LET claimKeys = (FOR v, e IN 1..1 OUTBOUND ${orgId} claims RETURN v._key)
+      ${ownershipOrgsOnly}
       LET orgKeys = INTERSECTION(keys, claimKeys)
         RETURN claimKeys
     ))

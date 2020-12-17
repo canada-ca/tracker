@@ -22,7 +22,6 @@ describe('given the check domain permission function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -67,6 +66,10 @@ describe('given the check domain permission function', () => {
     consoleOutput = []
   })
 
+  afterEach(async () => {
+    await truncate()
+  })
+
   afterAll(async () => {
     await drop()
   })
@@ -81,35 +84,24 @@ describe('given the check domain permission function', () => {
       `
       user = await userCursor.next()
     })
+    describe('user is a super admin', () => {
+      beforeEach(async () => {
+        await collections.affiliations.save({
+          _from: 'organizations/SA',
+          _to: user._id,
+          permission: 'super_admin',
+        })
+      })
+      it('will return true', async () => {
+        const testCheckDomainPermission = checkDomainPermission({
+          query,
+          userKey: user._key,
+        })
+        permitted = await testCheckDomainPermission({ domainId: domain._id })
+        expect(permitted).toEqual(true)
+      })
+    })
     describe('if the user belongs to an org which has a claim for a given organization', () => {
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-      })
-      describe('if the user has super-admin-level permissions', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'super_admin',
-          })
-        })
-        it('will return true', async () => {
-          const testCheckDomainPermission = checkDomainPermission({
-            query,
-            userKey: user._key,
-          })
-          permitted = await testCheckDomainPermission({ domainId: domain._id })
-          expect(permitted).toEqual(true)
-        })
-      })
       describe('if the user has admin-level permissions', () => {
         beforeEach(async () => {
           await collections.affiliations.save({
@@ -180,7 +172,7 @@ describe('given the check domain permission function', () => {
           },
         })
       })
-      describe('if a database error is encountered during permission check', () => {
+      describe('if a database error is encountered during super admin permission check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
           mockQuery = jest
@@ -195,10 +187,38 @@ describe('given the check domain permission function', () => {
             await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Authentication error. Please sign in again.'),
+              new Error(
+                'Permission check error. Unable to request domain information.',
+              ),
             )
             expect(consoleOutput).toEqual([
-              `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Database error occurred.`,
+              `Database error when retrieving super admin claims for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
+            ])
+          }
+        })
+      })
+      describe('if a database error is encountered during permission check', () => {
+        let mockQuery
+        it('returns an appropriate error message', async () => {
+          mockQuery = jest
+            .fn()
+            .mockReturnValueOnce({ count: 0 })
+            .mockRejectedValue(new Error('Database error occurred.'))
+          try {
+            const testCheckDomainPermission = checkDomainPermission({
+              i18n,
+              query: mockQuery,
+              userKey: user._key,
+            })
+            await testCheckDomainPermission({ domainId: domain._id })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Permission check error. Unable to request domain information.',
+              ),
+            )
+            expect(consoleOutput).toEqual([
+              `Database error when retrieving affiliated organization claims for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
             ])
           }
         })
@@ -211,7 +231,10 @@ describe('given the check domain permission function', () => {
               throw new Error('Cursor error occurred.')
             },
           }
-          mockQuery = jest.fn().mockReturnValue(cursor)
+          mockQuery = jest
+            .fn()
+            .mockReturnValueOnce({ count: 0 })
+            .mockReturnValue(cursor)
           try {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
@@ -221,10 +244,12 @@ describe('given the check domain permission function', () => {
             await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to find domain. Please try again.'),
+              new Error(
+                'Permission check error. Unable to request domain information.',
+              ),
             )
             expect(consoleOutput).toEqual([
-              `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Cursor error occurred.`,
+              `Cursor error when retrieving affiliated organization claims for user: ${user._id} and domain: ${domain._id}: Error: Cursor error occurred.`,
             ])
           }
         })
@@ -242,7 +267,7 @@ describe('given the check domain permission function', () => {
           },
         })
       })
-      describe('if a database error is encountered during permission check', () => {
+      describe('if a database error is encountered during super admin permission check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
           mockQuery = jest
@@ -258,7 +283,29 @@ describe('given the check domain permission function', () => {
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
             expect(consoleOutput).toEqual([
-              `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Database error occurred.`,
+              `Database error when retrieving super admin claims for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
+            ])
+          }
+        })
+      })
+      describe('if a database error is encountered during permission check', () => {
+        let mockQuery
+        it('returns an appropriate error message', async () => {
+          mockQuery = jest
+            .fn()
+            .mockReturnValueOnce({ count: 0 })
+            .mockRejectedValue(new Error('Database error occurred.'))
+          try {
+            const testCheckDomainPermission = checkDomainPermission({
+              i18n,
+              query: mockQuery,
+              userKey: user._key,
+            })
+            await testCheckDomainPermission({ domainId: domain._id })
+          } catch (err) {
+            expect(err).toEqual(new Error('todo'))
+            expect(consoleOutput).toEqual([
+              `Database error when retrieving affiliated organization claims for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
             ])
           }
         })
@@ -271,7 +318,10 @@ describe('given the check domain permission function', () => {
               throw new Error('Cursor error occurred.')
             },
           }
-          mockQuery = jest.fn().mockReturnValue(cursor)
+          mockQuery = jest
+            .fn()
+            .mockReturnValueOnce({ count: 1 })
+            .mockReturnValue(cursor)
           try {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
@@ -282,7 +332,7 @@ describe('given the check domain permission function', () => {
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
             expect(consoleOutput).toEqual([
-              `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Cursor error occurred.`,
+              `Cursor error when retrieving affiliated organization claims for user: ${user._id} and domain:${domain._id}: Error: Cursor error occurred.`,
             ])
           }
         })

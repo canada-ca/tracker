@@ -25,9 +25,9 @@ msgstr "*Toutes les données représentées sont simulées à des fins de démon
 msgid "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
 msgstr "*Les barres de recherche ne recherchent pas activement les bases de données actuellement. Elles sont utilisées pour démontrer la fonction du bouton 'Ajouter'"
 
-#: src/UserCard.js:45
-msgid "2FA"
-msgstr ""
+#: src/UserCard.js:44
+msgid "2FA Validated"
+msgstr "2FA Validé"
 
 #: src/guidanceTagConstants.js:5
 msgid "3.2.2 Third Parties and DKIM"
@@ -936,8 +936,8 @@ msgid "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
 msgstr ""
 
 #: src/OrganizationSummary.js:13
-msgid "Internet facing services:"
-msgstr "Services d'accès à Internet:"
+msgid "Internet facing services"
+msgstr "Services d'accès à Internet"
 
 #: src/Organization.js:19
 msgid "Internet facing services: {domainCount}"
@@ -1767,7 +1767,7 @@ msgstr "Septembre"
 
 #: src/OrganizationCard.js:67
 msgid "Services: {domainCount}"
-msgstr "Services"
+msgstr "Services: {domainCount}"
 
 #: src/DmarcReportGuidance.js:554
 #~ msgid "Show Guidance"
@@ -2035,8 +2035,12 @@ msgid "Users"
 msgstr "Utilisateurs"
 
 #: src/OrganizationSummary.js:20
-msgid "Users joined:"
-msgstr "Les utilisateurs se sont inscrits :"
+msgid "Total users"
+msgstr "total des utilisateurs"
+
+#: src/OrganizationSummary.js:23
+msgid "Based in:"
+msgstr "Basé à:"
 
 #: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"
@@ -2258,3 +2262,95 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 #: src/OrganizationDetails.js:95
 msgid "{orgName}"
 msgstr ""
+
+#: src/LoadingMessage.js:12
+msgid "Loading {children}..."
+msgstr "Chargement {children}..."
+
+#: src/ErrorFallbackMessage.js:12
+msgid "An error has occurred."
+msgstr "Une erreur s'est produite."
+
+#: src/ErrorFallbackMessage.js:22
+msgid "This component is currently unavailable. Try reloading the page."
+msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la page."
+
+#: src/SummaryGroup.js:39
+msgid "Summary Cards"
+msgstr "Fiches de synthèse"
+
+#: src/AdminPage.js:41
+msgid "User Affiliations"
+msgstr "Affiliations des utilisateurs"
+
+#: src/AdminPanel.js:40
+msgid "Organization Info"
+msgstr "Informations sur l'organisation"
+
+#: src/DmarcByDomainPage.js:163
+msgid "Domains Table"
+msgstr "Tableau des domaines"
+
+#: src/DmarcGuidancePage.js:34
+msgid "Guidance Tags"
+msgstr "Étiquettes d'orientation"
+
+#: src/OrganizationDetails.js:59
+msgid "Organization Details"
+msgstr "Détails de l'organisation"
+
+#: src/QRcodePage.js:25
+msgid "QR Code"
+msgstr "Code QR"
+
+#: src/Organizations.js:69
+msgid "Search for an organization"
+msgstr "Rechercher une organisation"
+
+#: src/DomainsPage.js:75
+msgid "Search"
+msgstr "Recherchez"
+
+#: src/DomainsPage.js:78
+msgid "Scan"
+msgstr "Scanner"
+
+#: src/DomainsPage.js:85
+msgid "Search for any Government of Canada tracked domain:"
+msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
+
+#: src/DomainsPage.js:128
+msgid "Request a domain to be scanned:"
+msgstr "Demander qu'un domaine soit scanné:"
+
+#: src/DomainsPage.js:132
+msgid "Enter a domain"
+msgstr "Entrez un domaine"
+
+#: src/DomainsPage.js:141
+msgid "Scan Domain"
+msgstr "Domaine de balayage"
+
+#: src/ScanDomain.js:82
+msgid "Select scan type"
+msgstr "Sélectionnez le type de balayage"
+
+#: src/ScanDomain.js:73
+msgid "Scan Type:"
+msgstr "Type de balayage:"
+
+#: src/ScanDomain.js:85
+msgid "WEB"
+msgstr "WEB"
+
+#: src/ScanDomain.js:88
+msgid "MAIL"
+msgstr "COURRIEL"
+
+#: src/DomainField.js:29
+msgid "Domain URL"
+msgstr "URL du domaine"
+
+#: src/DomainField.js:29
+msgid "Domain URL:"
+msgstr "URL du domaine:"

@@ -14,7 +14,7 @@ spec:
       template:
         spec:
           containers:
-          - name: autoscan
+          - name: core
             image: gcr.io/track-compliance/services/core
             env:
               - name: DB_USER

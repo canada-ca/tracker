@@ -15,9 +15,9 @@ from rq import Queue, Retry, Worker
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 pool = ConnectionPool(host="127.0.0.1", port=6379, db=0)
 
-HTTPS_URL = "http://https-scanner.scanners.svc.cluster.local"
-SSL_URL = "http://ssl-scanner.scanners.svc.cluster.local"
-DNS_URL = "http://dns-scanner.scanners.svc.cluster.local"
+HTTPS_URL = os.getenv("HTTPS_URL", "http://https-scanner.scanners.svc.cluster.local")
+SSL_URL = os.getenv("SSL_URL", "http://ssl-scanner.scanners.svc.cluster.local")
+DNS_URL = os.getenv("DNS_URL", "http://dns-scanner.scanners.svc.cluster.local")
 
 redis = Redis(connection_pool=pool)
 https_queue = Queue("https", connection=redis)
@@ -79,7 +79,7 @@ def Server(process_name, queues=default_queues):
         logging.info("DNS scan request received.")
         try:
             payload = request.get_json(force=True)
-            designated_queue = flask_app.config["queues"].get("ssl", None)
+            designated_queue = flask_app.config["queues"].get("dns", None)
             designated_queue.enqueue(
                 dispatch_dns,
                 payload,

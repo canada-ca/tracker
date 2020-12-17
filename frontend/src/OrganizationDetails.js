@@ -14,11 +14,12 @@ import {
   TabPanel,
   Box,
   Divider,
+  Text,
+  Icon,
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
 import { useUserState } from './UserState'
 import { useParams, useHistory } from 'react-router-dom'
-import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -26,6 +27,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { DomainCard } from './DomainCard'
 import { ListOf } from './ListOf'
 import { PaginationButtons } from './PaginationButtons'
+import { UserCard } from './UserCard'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
@@ -62,6 +64,11 @@ export default function OrganizationDetails() {
     domains = data.organization.domains.edges.map((e) => e.node)
   }
 
+  let users = []
+  if (data?.organization?.affiliations?.edges) {
+    users = data.organization.affiliations.edges.map((e) => e.node)
+  }
+
   const [currentPage, setCurrentPage] = useState(1)
   const [domainsPerPage] = useState(10)
 
@@ -94,6 +101,9 @@ export default function OrganizationDetails() {
         <Heading as="h1" textAlign={['center', 'left']}>
           <Trans>{orgName}</Trans>
         </Heading>
+        {data.organization.verified && (
+          <Icon name="check-circle" color="blue.500" size="icons.lg" />
+        )}
       </Stack>
       <Tabs isFitted>
         <TabList mb="4">
@@ -113,20 +123,34 @@ export default function OrganizationDetails() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationSummary />
+              <OrganizationSummary
+                summaries={data.organization.summaries}
+                domainCount={data.organization.domainCount}
+                userCount={data.organization.affiliations.totalCount}
+                city={data.organization.city}
+                province={data.organization.province}
+              />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <ListOf
                 elements={currentDomains}
-                ifEmpty={() => <Trans>No Domains</Trans>}
+                ifEmpty={() => (
+                  <Text fontSize="xl" fontWeight="bold">
+                    <Trans>No Domains</Trans>
+                  </Text>
+                )}
                 mb="4"
               >
-                {({ id, url, lastRan }, index) => (
+                {({ id, domain, lastRan, status }, index) => (
                   <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                     <Box key={`${id}:${index}`}>
-                      <DomainCard url={url} lastRan={lastRan} />
+                      <DomainCard
+                        url={domain}
+                        lastRan={lastRan}
+                        status={status}
+                      />
                       <Divider borderColor="gray.900" />
                     </Box>
                   </ErrorBoundary>
@@ -147,13 +171,29 @@ export default function OrganizationDetails() {
           </TabPanel>
           {isLoggedIn() && (
             <TabPanel>
-              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                <UserList
-                  userListData={data.userList}
-                  orgName={orgName}
-                  orgSlug={orgSlug}
-                />
-              </ErrorBoundary>
+              <ListOf
+                elements={users}
+                ifEmpty={() => (
+                  <Text fontSize="xl" fontWeight="bold">
+                    <Trans>No Users</Trans>
+                  </Text>
+                )}
+                mb="4"
+              >
+                {({ permission, user }, index) => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <Box key={`${user.id}:${index}`}>
+                      <UserCard
+                        userName={user.userName}
+                        role={permission}
+                        displayName={user.displayName}
+                        tfa={user.tfaValidated}
+                      />
+                      <Divider borderColor="gray.900" />
+                    </Box>
+                  </ErrorBoundary>
+                )}
+              </ListOf>
             </TabPanel>
           )}
         </TabPanels>
