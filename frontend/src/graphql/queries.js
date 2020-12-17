@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations($after: String, $first: Int) {
-    pagination: findMyOrganizations(after: $after, first: $first) {
+    findMyOrganizations(after: $after, first: $first) {
       edges {
         cursor
         node {

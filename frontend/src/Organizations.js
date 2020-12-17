@@ -40,6 +40,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
     fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: orgsPerPage,
+    relayRoot: 'findMyOrganizations',
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -61,10 +62,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
           <InputLeftElement>
             <Icon name="search" color="gray.300" />
           </InputLeftElement>
-          <Input
-            type="text"
-            placeholder={t`Search for an organization`}
-          />
+          <Input type="text" placeholder={t`Search for an organization`} />
         </InputGroup>
         <ListOf
           elements={nodes}
@@ -104,7 +102,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
         </Trans>
       </ErrorBoundary>
     </Layout>
-  );
+  )
 }
 
 Organisations.propTypes = { orgsPerPage: number }
