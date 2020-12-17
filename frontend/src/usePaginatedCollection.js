@@ -40,8 +40,6 @@ export function usePaginatedCollection({
     )
   }
 
-  console.log(currentEdges?.map((e) => e.node))
-
   return {
     loading,
     error,
@@ -63,14 +61,6 @@ export function usePaginatedCollection({
     },
     previous: () => {
       setCurrentPage(currentPage > 2 ? currentPage - 1 : 1)
-      // return fetchMore({
-      //   query: fetchBackward,
-      //   variables: {
-      //     ...variables,
-      //     last: recordsPerPage,
-      //     before: data ? currentPageInfo.startCursor : '',
-      //   },
-      // })
     },
     hasPreviousPage: currentPage > 1,
     hasNextPage: currentPageInfo?.hasNextPage || currentPage < totalPages,
