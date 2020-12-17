@@ -8,3 +8,4 @@ python-arango
 pretend
 uvloop
 httptools
+gql[all]
