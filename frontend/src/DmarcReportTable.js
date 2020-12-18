@@ -134,8 +134,6 @@ function DmarcReportTable({ ...props }) {
   const [show, setShow] = React.useState(true)
   const [firstRender, setFirstRender] = React.useState(true)
 
-  console.log(data)
-
   const handleShow = () => setShow(!show)
 
   // ||

@@ -125,7 +125,6 @@ function EditableUserPassword() {
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
                   // Submit update detail mutation
-                  console.log(values)
                   await updateUserPassword({
                     variables: {
                       updatedPassword: values.password,
