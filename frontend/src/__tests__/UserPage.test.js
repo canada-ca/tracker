@@ -7,7 +7,7 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
-import { QUERY_USER } from '../graphql/queries'
+import { QUERY_CURRENT_USER } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -25,8 +25,8 @@ describe('<UserPage />', () => {
   const mocks = [
     {
       request: {
-        query: QUERY_USER,
-        variables: { userName: userName },
+        query: QUERY_CURRENT_USER,
+        // variables: { userName: userName },
       },
       result: {
         data: {

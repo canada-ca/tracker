@@ -1,21 +1,21 @@
 import React from 'react'
 import { Badge, Box, Text, PseudoBox, Stack } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import { bool, string } from 'prop-types'
 
 export function UserCard({ userName, tfa, role }) {
-  const history = useHistory()
+  // const history = useHistory()
   return (
     <PseudoBox
       width="100%"
-      onClick={() => {
-        history.push({
-          pathname: '/user',
-          state: { detail: userName },
-        })
-      }}
-      _hover={{ borderColor: 'gray.200', bg: 'gray.200' }}
+      // onClick={() => {
+      //   history.push({
+      //     pathname: '/user',
+      //     state: { detail: userName },
+      //   })
+      // }}
+      // _hover={{ borderColor: 'gray.200', bg: 'gray.200' }}
       p="8"
       as="button"
     >

@@ -60,55 +60,55 @@ describe('<UserList />', () => {
     )
   })
 
-  it('redirects to userPage when a list element is clicked', async () => {
-    // create a history object and inject it so we can inspect it afterwards
-    // for the side effects of our form submission (a redirect to /!).
-    const history = createMemoryHistory({
-      initialEntries: ['/user-list'],
-      initialIndex: 0,
-    })
+  // it('redirects to userPage when a list element is clicked', async () => {
+  //   // create a history object and inject it so we can inspect it afterwards
+  //   // for the side effects of our form submission (a redirect to /!).
+  //   const history = createMemoryHistory({
+  //     initialEntries: ['/user-list'],
+  //     initialIndex: 0,
+  //   })
 
-    // Set the inital history item to user-list
-    const { getByText } = render(
-      <UserStateProvider
-        initialState={{
-          userName: 'testuser@testemail.gc.ca',
-          jwt: 'string',
-          tfa: false,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <Router history={history}>
-              <MockedProvider>
-                <UserList
-                  permission={'SUPER_ADMIN'}
-                  userListData={data.findOrganizationBySlug.affiliations}
-                  orgId={data.findOrganizationBySlug.id}
-                  orgName={data.findOrganizationBySlug.name}
-                />
-              </MockedProvider>
-            </Router>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
-    )
+  //   // Set the inital history item to user-list
+  //   const { getByText } = render(
+  //     <UserStateProvider
+  //       initialState={{
+  //         userName: 'testuser@testemail.gc.ca',
+  //         jwt: 'string',
+  //         tfa: false,
+  //       }}
+  //     >
+  //       <ThemeProvider theme={theme}>
+  //         <I18nProvider i18n={i18n}>
+  //           <Router history={history}>
+  //             <MockedProvider>
+  //               <UserList
+  //                 permission={'SUPER_ADMIN'}
+  //                 userListData={data.findOrganizationBySlug.affiliations}
+  //                 orgId={data.findOrganizationBySlug.id}
+  //                 orgName={data.findOrganizationBySlug.name}
+  //               />
+  //             </MockedProvider>
+  //           </Router>
+  //         </I18nProvider>
+  //       </ThemeProvider>
+  //     </UserStateProvider>,
+  //   )
 
-    const foundUserCard = await waitFor(() =>
-      getByText(
-        data.findOrganizationBySlug.affiliations.edges[0].node.user.userName,
-      ),
-    )
+  //   const foundUserCard = await waitFor(() =>
+  //     getByText(
+  //       data.findOrganizationBySlug.affiliations.edges[0].node.user.userName,
+  //     ),
+  //   )
 
-    const leftClick = { button: 0 }
-    fireEvent.click(foundUserCard, leftClick)
-    // default `button` property for click events is set to `0` which is a left click.
+  //   const leftClick = { button: 0 }
+  //   fireEvent.click(foundUserCard, leftClick)
+  //   // default `button` property for click events is set to `0` which is a left click.
 
-    await waitFor(() => {
-      // Path should be '/user', so expect that value
-      expect(history.location.pathname).toEqual('/user')
-    })
-  })
+  //   await waitFor(() => {
+  //     // Path should be '/user', so expect that value
+  //     expect(history.location.pathname).toEqual('/user')
+  //   })
+  // })
 
   describe('Admin profile userlist', () => {
     it('updateUserRole elements render', async () => {

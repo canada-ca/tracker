@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/core'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
-import { QUERY_USER } from './graphql/queries'
+import { QUERY_CURRENT_USER } from './graphql/queries'
 import { Trans } from '@lingui/macro'
 import EditableUserLanguage from './EditableUserLanguage'
 import EditableUserDisplayName from './EditableUserDisplayName'
@@ -30,18 +30,30 @@ export default function UserPage() {
   const history = useHistory()
   const { currentUser } = useUserState()
 
+  // const {
+  //   loading: queryUserLoading,
+  //   error: queryUserError,
+  //   data: queryUserData,
+  // } = useQuery(QUERY_USER, {
+  //   context: {
+  //     headers: {
+  //       authorization: currentUser.jwt,
+  //     },
+  //   },
+  //   variables: {
+  //     userName: currentUser.userName,
+  //   },
+  // })
+
   const {
     loading: queryUserLoading,
     error: queryUserError,
     data: queryUserData,
-  } = useQuery(QUERY_USER, {
+  } = useQuery(QUERY_CURRENT_USER, {
     context: {
       headers: {
         authorization: currentUser.jwt,
       },
-    },
-    variables: {
-      userName: currentUser.userName,
     },
   })
 
