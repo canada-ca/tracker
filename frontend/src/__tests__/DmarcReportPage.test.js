@@ -19,6 +19,7 @@ import { rawDkimFailureData } from '../fixtures/dkimFailureData'
 import { rawDmarcFailureData } from '../fixtures/dmarcFailureData'
 import { rawSpfFailureData } from '../fixtures/spfFailureData'
 import { rawFullPassData } from '../fixtures/fullPassData'
+import { createCache } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -30,6 +31,14 @@ const i18n = setupI18n({
   },
 })
 
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+  })),
+})
+
 const mocks = [
   {
     request: {
@@ -38,7 +47,7 @@ const mocks = [
         domain: 'test-domain',
       },
     },
-    result: { data: rawDmarcReportGraphData },
+    result: rawDmarcReportGraphData,
   },
   {
     request: {
@@ -51,20 +60,20 @@ const mocks = [
         after: '',
       },
     },
-    result: { data: rawDkimFailureData },
+    result: rawDkimFailureData,
   },
   {
     request: {
       query: DMARC_FAILURE_FORWARD,
       variables: {
-        domain: 'test-domain',
         month: 'LAST30DAYS',
         year: '2020',
+        domain: 'test-domain',
         first: 50,
         after: '',
       },
     },
-    result: { data: rawDmarcFailureData },
+    result: rawDmarcFailureData,
   },
   {
     request: {
@@ -77,20 +86,7 @@ const mocks = [
         after: '',
       },
     },
-    result: { data: rawSpfFailureData },
-  },
-  {
-    request: {
-      query: SPF_FAILURE_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawSpfFailureData },
+    result: rawSpfFailureData,
   },
   {
     request: {
@@ -103,173 +99,9 @@ const mocks = [
         after: '',
       },
     },
-    result: { data: rawFullPassData },
-  },
-  {
-    request: {
-      query: FULL_PASS_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawFullPassData },
-  },
-  {
-    request: {
-      query: DKIM_FAILURE_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawDkimFailureData },
-  },
-  {
-    request: {
-      query: DKIM_FAILURE_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawDkimFailureData },
-  },
-  {
-    request: {
-      query: DKIM_FAILURE_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawDkimFailureData },
-  },
-  {
-    request: {
-      query: DMARC_FAILURE_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawDmarcFailureData },
-  },
-  {
-    request: {
-      query: DMARC_FAILURE_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawDmarcFailureData },
-  },
-  {
-    request: {
-      query: DMARC_FAILURE_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawDmarcFailureData },
-  },
-  {
-    request: {
-      query: SPF_FAILURE_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawSpfFailureData },
-  },
-  {
-    request: {
-      query: SPF_FAILURE_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawSpfFailureData },
-  },
-  {
-    request: {
-      query: FULL_PASS_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawFullPassData },
-  },
-  {
-    request: {
-      query: FULL_PASS_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawFullPassData },
-  },
-  {
-    request: {
-      query: FULL_PASS_FORWARD,
-      variables: {
-        domain: 'test-domain',
-        month: 'LAST30DAYS',
-        year: '2020',
-        first: 50,
-        after: '',
-      },
-    },
-    result: { data: rawFullPassData },
+    result: rawFullPassData,
   },
 ]
-
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-  })),
-})
 
 describe('<DmarcReportPage />', () => {
   it('renders header', async () => {
@@ -286,7 +118,7 @@ describe('<DmarcReportPage />', () => {
               initialIndex={0}
             >
               <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                <MockedProvider mocks={mocks} addTypename={false}>
+                <MockedProvider mocks={mocks} cache={createCache()}>
                   <DmarcReportPage summaryListResponsiveWidth={500} />
                 </MockedProvider>
               </Route>
@@ -312,7 +144,7 @@ describe('<DmarcReportPage />', () => {
               initialIndex={0}
             >
               <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                <MockedProvider mocks={mocks} addTypename={false}>
+                <MockedProvider mocks={mocks} cache={createCache()}>
                   <DmarcReportPage summaryListResponsiveWidth={500} />
                 </MockedProvider>
               </Route>
@@ -338,7 +170,7 @@ describe('<DmarcReportPage />', () => {
               initialIndex={0}
             >
               <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                <MockedProvider mocks={mocks} addTypename={false}>
+                <MockedProvider mocks={mocks} cache={createCache()}>
                   <DmarcReportPage summaryListResponsiveWidth={500} />
                 </MockedProvider>
               </Route>
@@ -364,7 +196,7 @@ describe('<DmarcReportPage />', () => {
               initialIndex={0}
             >
               <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
-                <MockedProvider mocks={mocks} addTypename={false}>
+                <MockedProvider mocks={mocks} cache={createCache()}>
                   <DmarcReportPage summaryListResponsiveWidth={500} />
                 </MockedProvider>
               </Route>

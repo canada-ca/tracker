@@ -601,9 +601,7 @@ export const REVERSE_PAGINATED_DKIM_FAILURE_REPORT = gql`
   ) {
     findDomainByDomain(domain: $domain) {
       id
-      __typename
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        __typename
         domain
         month
         year
@@ -646,9 +644,7 @@ export const PAGINATED_DMARC_FAILURE_REPORT = gql`
   ) {
     findDomainByDomain(domain: $domain) {
       id
-      __typename
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        __typename
         domain
         month
         year
@@ -690,9 +686,7 @@ export const REVERSE_PAGINATED_DMARC_FAILURE_REPORT = gql`
   ) {
     findDomainByDomain(domain: $domain) {
       id
-      __typename
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        __typename
         domain
         month
         year
@@ -734,9 +728,7 @@ export const PAGINATED_SPF_FAILURE_REPORT = gql`
   ) {
     findDomainByDomain(domain: $domain) {
       id
-      __typename
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        __typename
         domain
         month
         year
@@ -778,9 +770,7 @@ export const REVERSE_PAGINATED_SPF_FAILURE_REPORT = gql`
   ) {
     findDomainByDomain(domain: $domain) {
       id
-      __typename
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        __typename
         domain
         month
         year
@@ -822,9 +812,7 @@ export const PAGINATED_FULL_PASS_REPORT = gql`
   ) {
     findDomainByDomain(domain: $domain) {
       id
-      __typename
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        __typename
         domain
         month
         year
@@ -866,9 +854,7 @@ export const REVERSE_PAGINATED_FULL_PASS_REPORT = gql`
   ) {
     findDomainByDomain(domain: $domain) {
       id
-      __typename
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        __typename
         domain
         month
         year

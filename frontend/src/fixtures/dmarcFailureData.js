@@ -1,40 +1,43 @@
 export const rawDmarcFailureData = {
-  findDomainByDomain: {
-    id: 'test-id=',
-    __typename: 'Domain',
-    dmarcSummaryByPeriod: {
-      __typename: 'Period',
-      domain: 'test-domain',
-      month: 'LAST30DAYS',
-      year: '2020',
-      detailTables: {
-        dmarcFailure: {
-          edges: [
-            {
-              node: {
-                dkimDomains: '',
-                dkimSelectors: '',
-                disposition: 'none',
-                dnsHost: 'testDns',
-                envelopeFrom: null,
-                headerFrom: 'testHeader',
-                sourceIpAddress: '321.321.321.321',
-                spfDomains: 'testSpfDomains',
-                totalMessages: 200,
+  data: {
+    findDomainByDomain: {
+      id: 'testid=',
+      __typename: 'Domain',
+      dmarcSummaryByPeriod: {
+        __typename: 'Period',
+        domain: 'test.domain.ca',
+        month: 'LAST30DAYS',
+        year: '2020',
+        detailTables: {
+          dmarcFailure: {
+            edges: [
+              {
+                node: {
+                  dkimDomains: '',
+                  dkimSelectors: '',
+                  disposition: 'none',
+                  dnsHost: 'test.dns.ca',
+                  envelopeFrom: null,
+                  headerFrom: 'test.header.ca',
+                  sourceIpAddress: '123.123.123.123',
+                  spfDomains: 'test.spf.ca',
+                  totalMessages: 112,
+                  __typename: 'DmarcFailureTable',
+                },
+                __typename: 'DmarcFailureTableEdge',
               },
-              __typename: 'DmarcFailureTableEdge',
+            ],
+            pageInfo: {
+              hasNextPage: false,
+              endCursor: 'endcursor',
+              hasPreviousPage: false,
+              startCursor: 'startcursor=',
+              __typename: 'PageInfo',
             },
-          ],
-          pageInfo: {
-            hasNextPage: false,
-            endCursor: 'end-cursor=',
-            hasPreviousPage: false,
-            startCursor: 'start-cursor=',
-            __typename: 'PageInfo',
+            __typename: 'DmarcFailureTableConnection',
           },
-          __typename: 'DmarcFailureTableConnection',
+          __typename: 'DetailTables',
         },
-        __typename: 'DetailTables',
       },
     },
   },
