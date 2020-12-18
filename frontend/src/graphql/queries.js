@@ -418,6 +418,33 @@ export const QUERY_USER = gql`
     userPage: findUserByUsername(userName: $userName) {
       id
       userName
+      displayName
+      preferredLang
+      tfaValidated
+      emailValidated
+      affiliations {
+        edges {
+          node {
+            permission
+            organization {
+              id
+              name
+              slug
+              verified
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const QUERY_CURRENT_USER = gql`
+  query UserPage {
+    userPage: findMe {
+      id
+      userName
+      displayName
       preferredLang
       tfaValidated
       emailValidated
