@@ -237,39 +237,6 @@ export const ADMIN_PANEL = gql`
   }
 `
 
-// disabled since user list doesn't work yet (Oct-26)
-// export const ADMIN_PANEL = gql`
-//   query Domains($number: Int, $cursor: String, $slug: Slug!) {
-//     domains: findMyDomains(first: $number, after: $cursor) {
-//       edges {
-//         node {
-//           domain
-//           lastRan
-//         }
-//       }
-//       pageInfo {
-//         endCursor
-//         hasNextPage
-//       }
-//     }
-//     userList(orgSlug: $slug) {
-//       pageInfo {
-//         hasNextPage
-//         hasPreviousPage
-//       }
-//       edges {
-//         node {
-//           id
-//           userName
-//           role
-//           tfa
-//           displayName
-//         }
-//       }
-//     }
-//   }
-// `
-
 export const ORG_DETAILS_PAGE = gql`
   query OrgDetails($slug: Slug!) {
     organization: findOrganizationBySlug(orgSlug: $slug) {
@@ -330,7 +297,6 @@ export const ORG_DETAILS_PAGE = gql`
             user {
               id
               userName
-              displayName
               tfaValidated
             }
           }
@@ -442,7 +408,6 @@ export const QUERY_USERLIST = gql`
           userName
           role
           tfa
-          displayName
         }
       }
     }
@@ -454,7 +419,6 @@ export const QUERY_USER = gql`
     userPage: findUserByUsername(userName: $userName) {
       id
       userName
-      displayName
       preferredLang
       tfaValidated
       emailValidated
