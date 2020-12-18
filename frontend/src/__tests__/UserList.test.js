@@ -1,6 +1,6 @@
 import React from 'react'
 import UserList from '../UserList'
-import { AUTHENTICATE, UPDATE_USER_ROLE } from '../graphql/mutations'
+import { UPDATE_USER_ROLE } from '../graphql/mutations'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'

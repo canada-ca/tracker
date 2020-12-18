@@ -243,14 +243,14 @@ export default function UserList({ permission, userListData, orgId }) {
           return (
             <Box key={`${node.user.userName}:${index}`}>
               <Stack isInline align="center">
-                {/*TODO: IMPLEMENT USER REMOVAL (NEEDS API SUPPORT NOV-23-2020*/}
-                {/*<TrackerButton*/}
-                {/*  variant="danger"*/}
-                {/*  onClick={() => removeUser(node)}*/}
-                {/*  px="3"*/}
-                {/*>*/}
-                {/*  <Icon name="minus" />*/}
-                {/*</TrackerButton>*/}
+                {/* TODO: IMPLEMENT USER REMOVAL (NEEDS API SUPPORT NOV-23-2020 */}
+                {/* <TrackerButton */}
+                {/*   variant="danger" */}
+                {/*   onClick={() => removeUser(node)} */}
+                {/*   px="3" */}
+                {/* > */}
+                {/*   <Icon name="minus" /> */}
+                {/* </TrackerButton> */}
                 <UserCard
                   userName={node.user.userName}
                   role={userRole}
