@@ -11,7 +11,7 @@ export const userOrgAffiliationsData = {
                 slug: 'test-organization',
                 __typename: 'Organization',
               },
-              permission: 'SUPER_ADMIN',
+              permission: 'ADMIN',
               __typename: 'UserAffiliations',
             },
             __typename: 'UserAffiliationsEdge',
@@ -77,18 +77,6 @@ export const rawAdminPanelData = {
               permission: 'SUPER_ADMIN',
               user: {
                 userName: 'test.user@email.com',
-                __typename: 'SharedUser',
-              },
-              __typename: 'UserAffiliations',
-            },
-            __typename: 'UserAffiliationsEdge',
-          },
-          {
-            node: {
-              id: 'testid3==',
-              permission: 'SUPER_ADMIN',
-              user: {
-                userName: 'test.user2@email.com',
                 __typename: 'SharedUser',
               },
               __typename: 'UserAffiliations',

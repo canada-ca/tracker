@@ -126,7 +126,7 @@ describe('<UserList />', () => {
                 data.findOrganizationBySlug.affiliations.edges[0].node.user
                   .userName,
               orgId: data.findOrganizationBySlug.id,
-              role: 'ADMIN',
+              role: 'SUPER_ADMIN',
             },
           },
           result: {
@@ -175,7 +175,7 @@ describe('<UserList />', () => {
       })
 
       // change input on select to ADMIN
-      fireEvent.change(userRole, { target: { value: 'ADMIN' } })
+      fireEvent.change(userRole, { target: { value: 'SUPER_ADMIN' } })
 
       await waitFor(() => {
         const newRole = getByDisplayValue(/ADMIN/i)

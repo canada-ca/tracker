@@ -253,7 +253,6 @@ export default function UserList({ permission, userListData, orgId }) {
                 {/*</TrackerButton>*/}
                 <UserCard
                   userName={node.user.userName}
-                  displayName={node.user.displayName}
                   role={userRole}
                   tfa={node.user.tfaValidated}
                 />
