@@ -266,7 +266,7 @@ type DomainConnection {
   # Information to aid in pagination.
   pageInfo: PageInfo!
   # A list of edges.
-  edges: [DomainEdge] @listLength(min: 0, max: 5)
+  edges: [DomainEdge] @listLength(min: 0, max: 10)
   # The total amount of domains the user has access to.
   totalCount: Int
     @fake(
@@ -834,10 +834,36 @@ type SSL implements Node {
 
 # Object that contains information for each data collection period.
 type Period {
+    domain: DomainScalar @examples(
+    values: [
+      "javascript:alert('XSS')"
+      "javascript:eval('aler'+(!![]+[])[+[]])('xss')"
+      "rcmp-grc.gc.ca"
+      "tbs-sct.gc.ca"
+      "canada.ca"
+      "cra-arc.gc.ca"
+      "pm.gc.ca"
+      "cse-cst.gc.ca"
+      "forces.gc.ca"
+      "jAva&Tab;script:alert('XSS')"
+      "cra.arc.gc.ca"
+      "cra-arc.gc.ca"
+      "cse-cst.gc.ca"
+      "cyber.gc.ca"
+      "dfait-maeci.gc.ca"
+      "dfo-mpo.gc.ca"
+      "ec.gc.ca"
+      "forces.gc.ca"
+      "gccollab.ca"
+      "gccollaboration.ca"
+      "goc-gdc.ca"
+      "hc-sc.gc.ca"
+    ]
+  )
   # Start date of data collection.
   month: PeriodEnums
   # End date of data collection.
-  year: Year
+  year: Year @examples(values: [2019, 2020])
   # Category percentages based on the category totals.
   categoryPercentages: CategoryPercentages
   # Category totals for quick viewing.

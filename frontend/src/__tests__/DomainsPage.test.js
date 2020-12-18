@@ -32,7 +32,7 @@ describe('<DomainsPage />', () => {
       },
       result: {
         data: {
-          pagination: {
+          findMyDomains: {
             edges: [
               {
                 cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -88,7 +88,7 @@ describe('<DomainsPage />', () => {
       },
       result: {
         data: {
-          pagination: {
+          findMyDomains: {
             edges: [
               {
                 cursor: 'YXJyYXljb25uZWN0aW9uOjA=',

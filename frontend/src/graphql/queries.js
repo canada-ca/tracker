@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations($after: String, $first: Int) {
-    pagination: findMyOrganizations(after: $after, first: $first) {
+    findMyOrganizations(after: $after, first: $first) {
       edges {
         cursor
         node {
@@ -189,33 +189,49 @@ export const ORGANIZATIONS = gql`
 `
 
 export const ADMIN_PANEL = gql`
-  query Domains($number: Int, $cursor: String, $slug: Slug!) {
-    domains: findMyDomains(first: $number, after: $cursor) {
-      edges {
-        node {
-          url
-          slug
-          lastRan
+  query AdminPanel(
+    $orgSlug: Slug!
+    $domainsFirst: Int
+    $domainsCursor: String
+    $affiliationsFirst: Int
+    $affiliationsCursor: String
+  ) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
+      name
+      domains(first: $domainsFirst, after: $domainsCursor) {
+        edges {
+          node {
+            id
+            domain
+            lastRan
+          }
         }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-    }
-    userList(orgSlug: $slug) {
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-      }
-      edges {
-        node {
-          id
-          userName
-          role
-          tfa
-          displayName
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
         }
+        totalCount
+      }
+      affiliations(first: $affiliationsFirst, after: $affiliationsCursor) {
+        edges {
+          node {
+            id
+            permission
+            user {
+              userName
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        totalCount
       }
     }
   }
@@ -281,8 +297,6 @@ export const ORG_DETAILS_PAGE = gql`
             user {
               id
               userName
-              displayName
-              tfaValidated
             }
           }
         }
@@ -293,7 +307,7 @@ export const ORG_DETAILS_PAGE = gql`
 
 export const PAGINATED_DOMAINS = gql`
   query Domains($first: Int, $after: String) {
-    pagination: findMyDomains(first: $first, after: $after) {
+    findMyDomains(first: $first, after: $after) {
       edges {
         cursor
         node {
@@ -393,7 +407,6 @@ export const QUERY_USERLIST = gql`
           userName
           role
           tfa
-          displayName
         }
       }
     }
@@ -405,7 +418,6 @@ export const QUERY_USER = gql`
     userPage: findUserByUsername(userName: $userName) {
       id
       userName
-      displayName
       preferredLang
       tfaValidated
       emailValidated
@@ -427,16 +439,18 @@ export const QUERY_USER = gql`
 `
 
 export const DMARC_REPORT_SUMMARY_LIST = gql`
-  query DmarcReportSummaryList($domainSlug: Slug!) {
-    dmarcReportSummaryList(domainSlug: $domainSlug) {
-      month
-      year
-      categoryTotals {
-        fullPass
-        passSpfOnly
-        passDkimOnly
-        fail
-        total
+  query DmarcReportSummaryList($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      id
+      yearlyDmarcSummaries {
+        month
+        year
+        categoryTotals {
+          passSpfOnly
+          passDkimOnly
+          fullPass
+          fail
+        }
       }
     }
   }
@@ -478,6 +492,448 @@ export const DMARC_REPORT_SUMMARY = gql`
   }
 `
 
+export const DMARC_REPORT_GRAPH = gql`
+  query DmarcReportGraph($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      id
+      yearlyDmarcSummaries {
+        month
+        year
+        domain
+        categoryTotals {
+          passSpfOnly
+          passDkimOnly
+          fullPass
+          fail
+        }
+      }
+    }
+  }
+`
+
+export const PAGINATED_DKIM_FAILURE_REPORT = gql`
+  query PaginatedDkimFailureReport(
+    $domain: DomainScalar!
+    $month: PeriodEnums!
+    $year: Year!
+    $after: String
+    $first: Int
+  ) {
+    findDomainByDomain(domain: $domain) {
+      id
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        domain
+        month
+        year
+        detailTables {
+          dkimFailure(after: $after, first: $first) {
+            edges {
+              node {
+                dkimAligned
+                dkimDomains
+                dkimResults
+                dkimSelectors
+                dnsHost
+                envelopeFrom
+                guidance
+                headerFrom
+                sourceIpAddress
+                totalMessages
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+              hasPreviousPage
+              startCursor
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_DKIM_FAILURE_REPORT = gql`
+  query ReversePaginatedDkimFailureReport(
+    $domain: DomainScalar!
+    $month: PeriodEnums!
+    $year: Year!
+    $before: String
+    $last: Int
+  ) {
+    findDomainByDomain(domain: $domain) {
+      id
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        domain
+        month
+        year
+        detailTables {
+          dkimFailure(before: $before, last: $last) {
+            edges {
+              node {
+                dkimAligned
+                dkimDomains
+                dkimResults
+                dkimSelectors
+                dnsHost
+                envelopeFrom
+                guidance
+                headerFrom
+                sourceIpAddress
+                totalMessages
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+              hasPreviousPage
+              startCursor
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const PAGINATED_DMARC_FAILURE_REPORT = gql`
+  query PaginatedDmarcFailureReport(
+    $domain: DomainScalar!
+    $month: PeriodEnums!
+    $year: Year!
+    $after: String
+    $first: Int
+  ) {
+    findDomainByDomain(domain: $domain) {
+      id
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        domain
+        month
+        year
+        detailTables {
+          dmarcFailure(after: $after, first: $first) {
+            edges {
+              node {
+                dkimDomains
+                dkimSelectors
+                disposition
+                dnsHost
+                envelopeFrom
+                headerFrom
+                sourceIpAddress
+                spfDomains
+                totalMessages
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+              hasPreviousPage
+              startCursor
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_DMARC_FAILURE_REPORT = gql`
+  query ReversePaginatedDmarcFailureReport(
+    $domain: DomainScalar!
+    $month: PeriodEnums!
+    $year: Year!
+    $before: String
+    $last: Int
+  ) {
+    findDomainByDomain(domain: $domain) {
+      id
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        domain
+        month
+        year
+        detailTables {
+          dmarcFailure(before: $before, last: $last) {
+            edges {
+              node {
+                dkimDomains
+                dkimSelectors
+                disposition
+                dnsHost
+                envelopeFrom
+                headerFrom
+                sourceIpAddress
+                spfDomains
+                totalMessages
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+              hasPreviousPage
+              startCursor
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const PAGINATED_SPF_FAILURE_REPORT = gql`
+  query PaginatedSpfFailureReport(
+    $domain: DomainScalar!
+    $month: PeriodEnums!
+    $year: Year!
+    $after: String
+    $first: Int
+  ) {
+    findDomainByDomain(domain: $domain) {
+      id
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        domain
+        month
+        year
+        detailTables {
+          spfFailure(after: $after, first: $first) {
+            edges {
+              node {
+                dnsHost
+                envelopeFrom
+                guidance
+                headerFrom
+                sourceIpAddress
+                spfAligned
+                spfDomains
+                spfResults
+                totalMessages
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+              hasPreviousPage
+              startCursor
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_SPF_FAILURE_REPORT = gql`
+  query ReversePaginatedSpfFailureReport(
+    $domain: DomainScalar!
+    $month: PeriodEnums!
+    $year: Year!
+    $before: String
+    $last: Int
+  ) {
+    findDomainByDomain(domain: $domain) {
+      id
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        domain
+        month
+        year
+        detailTables {
+          spfFailure(before: $before, last: $last) {
+            edges {
+              node {
+                dnsHost
+                envelopeFrom
+                guidance
+                headerFrom
+                sourceIpAddress
+                spfAligned
+                spfDomains
+                spfResults
+                totalMessages
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+              hasPreviousPage
+              startCursor
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const PAGINATED_FULL_PASS_REPORT = gql`
+  query PaginatedFullPassReport(
+    $domain: DomainScalar!
+    $month: PeriodEnums!
+    $year: Year!
+    $first: Int
+    $after: String
+  ) {
+    findDomainByDomain(domain: $domain) {
+      id
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        domain
+        month
+        year
+        detailTables {
+          fullPass(after: $after, first: $first) {
+            edges {
+              cursor
+              node {
+                sourceIpAddress
+                envelopeFrom
+                dkimDomains
+                dkimSelectors
+                dnsHost
+                headerFrom
+                spfDomains
+                totalMessages
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+              hasPreviousPage
+              startCursor
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_FULL_PASS_REPORT = gql`
+  query ReversePaginatedFullPassReport(
+    $domain: DomainScalar!
+    $month: PeriodEnums!
+    $year: Year!
+    $before: String
+    $last: Int
+  ) {
+    findDomainByDomain(domain: $domain) {
+      id
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        domain
+        month
+        year
+        detailTables {
+          fullPass(before: $before, last: $last) {
+            edges {
+              node {
+                sourceIpAddress
+                envelopeFrom
+                dkimDomains
+                dkimSelectors
+                dnsHost
+                headerFrom
+                spfDomains
+                totalMessages
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+              hasPreviousPage
+              startCursor
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+// export const DMARC_REPORT_PAGE = gql`
+//   query DmarcReportPage(
+//     $domain: DomainScalar!
+//     $month: PeriodEnums!
+//     $year: Year!
+//   ) {
+//     findDomainByDomain(domain: $domain) {
+//       id
+//       yearlyDmarcSummaries {
+//         month
+//         year
+//         categoryTotals {
+//           passSpfOnly
+//           passDkimOnly
+//           fullPass
+//           fail
+//         }
+//       }
+//       dmarcSummaryByPeriod(month: $month, year: $year) {
+//         detailTables {
+//           dkimFailure {
+//             edges {
+//               node {
+//                 dkimAligned
+//                 dkimDomains
+//                 dkimResults
+//                 dkimSelectors
+//                 dnsHost
+//                 envelopeFrom
+//                 guidance
+//                 headerFrom
+//                 sourceIpAddress
+//                 totalMessages
+//               }
+//             }
+//           }
+//           dmarcFailure {
+//             edges {
+//               node {
+//                 dkimDomains
+//                 dkimSelectors
+//                 disposition
+//                 dnsHost
+//                 envelopeFrom
+//                 headerFrom
+//                 sourceIpAddress
+//                 spfDomains
+//                 totalMessages
+//               }
+//             }
+//           }
+//           fullPass {
+//             edges {
+//               node {
+//                 sourceIpAddress
+//                 envelopeFrom
+//                 dkimDomains
+//                 dkimSelectors
+//                 dnsHost
+//                 headerFrom
+//                 spfDomains
+//                 totalMessages
+//               }
+//             }
+//           }
+//           spfFailure {
+//             edges {
+//               node {
+//                 dnsHost
+//                 envelopeFrom
+//                 guidance
+//                 headerFrom
+//                 sourceIpAddress
+//                 spfAligned
+//                 spfDomains
+//                 spfResults
+//                 totalMessages
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// `
+
 export const DEMO_DMARC_REPORT_SUMMARY = gql`
   query DmarcReportSummary(
     $domainSlug: Slug!
@@ -504,77 +960,74 @@ export const DEMO_DMARC_REPORT_SUMMARY = gql`
 
 export const DMARC_REPORT_DETAIL_TABLES = gql`
   query DmarcReportDetailTables(
-    $domainSlug: Slug!
-    $period: PeriodEnums!
+    $domain: DomainScalar!
+    $month: PeriodEnums!
     $year: Year!
   ) {
-    dmarcReportDetailTables(
-      domainSlug: $domainSlug
-      period: $period
-      year: $year
-    ) {
-      month
-      year
-      detailTables {
-        fullPass {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-          dkimDomains
-          dkimSelectors
-        }
-        spfFailure {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-        }
-        spfMisaligned {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-        }
-        dkimFailure {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          dkimDomains
-          dkimSelectors
-        }
-        dkimMisaligned {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          dkimDomains
-          dkimSelectors
-        }
-        dmarcFailure {
-          sourceIpAddress
-          envelopeFrom
-          totalMessages
-          countryCode
-          prefixOrg
-          dnsHost
-          spfDomains
-          dkimDomains
-          dkimSelectors
+    findDomainByDomain(domain: $domain) {
+      id
+      dmarcSummaryByPeriod(month: $month, year: $year) {
+        detailTables {
+          dkimFailure {
+            edges {
+              node {
+                dkimAligned
+                dkimDomains
+                dkimResults
+                dkimSelectors
+                dnsHost
+                envelopeFrom
+                guidance
+                headerFrom
+                sourceIpAddress
+                totalMessages
+              }
+            }
+          }
+          dmarcFailure {
+            edges {
+              node {
+                dkimDomains
+                dkimSelectors
+                disposition
+                dnsHost
+                envelopeFrom
+                headerFrom
+                sourceIpAddress
+                spfDomains
+                totalMessages
+              }
+            }
+          }
+          fullPass {
+            edges {
+              node {
+                sourceIpAddress
+                envelopeFrom
+                dkimDomains
+                dkimSelectors
+                dnsHost
+                headerFrom
+                spfDomains
+                totalMessages
+              }
+            }
+          }
+          spfFailure {
+            edges {
+              node {
+                dnsHost
+                envelopeFrom
+                guidance
+                headerFrom
+                sourceIpAddress
+                spfAligned
+                spfDomains
+                spfResults
+                totalMessages
+              }
+            }
+          }
         }
       }
     }
@@ -660,32 +1113,90 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
   }
 `
 
-export const DMARC_REPORT_SUMMARY_TABLE = gql`
-  query DmarcReportSummaryTable($period: PeriodEnums!, $year: Year!) {
-    dmarcReportSummaryTable(period: $period, year: $year) {
-      month
-      year
-      domains {
-        domain
-        fullPassPercentage
-        passSpfOnlyPercentage
-        passDkimOnlyPercentage
-        failPercentage
-        totalMessages
+export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
+  query PaginatedDmarcReportSummaryTable(
+    $month: PeriodEnums!
+    $year: Year!
+    $after: String
+    $first: Int
+  ) {
+    findMyDomains(after: $after, first: $first, ownership: true) {
+      edges {
+        node {
+          id
+          domain
+          dmarcSummaryByPeriod(month: $month, year: $year) {
+            month
+            year
+            domain
+            categoryPercentages {
+              failPercentage
+              fullPassPercentage
+              passDkimOnlyPercentage
+              passSpfOnlyPercentage
+              totalMessages
+            }
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+      }
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
+  query FindMyDomains(
+    $month: PeriodEnums!
+    $year: Year!
+    $before: String
+    $last: Int
+  ) {
+    findMyDomains(before: $before, last: $last) {
+      edges {
+        node {
+          domain
+          dmarcSummaryByPeriod(month: $month, year: $year) {
+            domain
+            categoryPercentages {
+              failPercentage
+              fullPassPercentage
+              passDkimOnlyPercentage
+              passSpfOnlyPercentage
+              totalMessages
+            }
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
       }
     }
   }
 `
 
 export const USER_AFFILIATIONS = gql`
-  query UserAffiliations {
-    user {
-      affiliations {
+  query UserAffiliations(
+    $after: String
+    $first: Int
+    $before: String
+    $last: Int
+  ) {
+    findMe {
+      affiliations(after: $after, first: $first, before: $before, last: $last) {
         edges {
           node {
             organization {
               id
               acronym
+              slug
             }
             permission
           }

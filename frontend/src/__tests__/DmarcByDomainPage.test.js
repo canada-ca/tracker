@@ -3,7 +3,7 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import { DMARC_REPORT_SUMMARY_TABLE } from '../graphql/queries'
+import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
@@ -20,21 +20,6 @@ const i18n = setupI18n({
   },
 })
 
-const mocks = [
-  {
-    request: {
-      query: DMARC_REPORT_SUMMARY_TABLE,
-      variables: {
-        period: 'LAST30DAYS',
-        year: '2020',
-      },
-    },
-    result: {
-      data: rawDmarcReportSummaryTableData,
-    },
-  },
-]
-
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
@@ -45,6 +30,19 @@ Object.defineProperty(window, 'matchMedia', {
 
 describe('<DmarcByDomainPage />', () => {
   it('renders page header', async () => {
+    const mocks = [
+      {
+        request: {
+          query: FORWARD,
+          variables: {
+            month: 'LAST30DAYS',
+            year: '2020',
+            first: 10,
+          },
+        },
+        result: rawDmarcReportSummaryTableData,
+      },
+    ]
     const { getAllByText } = render(
       <UserStateProvider
         initialState={{ userName: null, jwt: null, tfa: null }}
@@ -64,6 +62,15 @@ describe('<DmarcByDomainPage />', () => {
   })
 
   it('renders date selector', async () => {
+    const mocks = [
+      {
+        request: {
+          query: FORWARD,
+          variables: { first: 10, month: 'LAST30DAYS', year: '2020' },
+        },
+        result: rawDmarcReportSummaryTableData,
+      },
+    ]
     const { getAllByText } = render(
       <UserStateProvider
         initialState={{ userName: null, jwt: null, tfa: null }}
@@ -83,6 +90,19 @@ describe('<DmarcByDomainPage />', () => {
   })
 
   it('renders summary table', async () => {
+    const mocks = [
+      {
+        request: {
+          query: FORWARD,
+          variables: {
+            month: 'LAST30DAYS',
+            year: '2020',
+            first: 10,
+          },
+        },
+        result: rawDmarcReportSummaryTableData,
+      },
+    ]
     const { getAllByText } = render(
       <UserStateProvider
         initialState={{ userName: null, jwt: null, tfa: null }}

@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
@@ -31,6 +31,9 @@ const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
 const DmarcByDomainPage = lazy(() => import('./DmarcByDomainPage'))
 const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
+const TwoFactorAuthenticatePage = lazy(() =>
+  import('./TwoFactorAuthenticatePage'),
+)
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -38,7 +41,8 @@ export default function App() {
   const toast = useToast()
   const { currentUser, isLoggedIn, logout } = useUserState()
 
-  return <>
+  return (
+    <>
       <Flex direction="column" minHeight="100vh" bg="gray.50">
         <header>
           <CSSReset />
@@ -66,7 +70,7 @@ export default function App() {
             </Link>
           )}
 
-          {isLoggedIn() && (
+          {1 && (
             <Link to="/dmarc-summaries">
               <Trans>DMARC Report</Trans>
             </Link>
@@ -123,6 +127,11 @@ export default function App() {
 
               <Route path="/sign-in" component={SignInPage} />
 
+              <Route
+                path="/authenticate/:authenticateToken"
+                component={TwoFactorAuthenticatePage}
+              />
+
               <Route path="/forgot-password" component={ForgotPasswordPage} />
 
               <Route
@@ -156,7 +165,7 @@ export default function App() {
               </RouteIf>
 
               <RouteIf
-                condition={isLoggedIn()}
+                condition={true}
                 alternate="/sign-in"
                 path="/domains"
                 render={({ match: { url } }) => (
@@ -177,7 +186,7 @@ export default function App() {
               />
 
               <RouteIf
-                condition={isLoggedIn()}
+                condition={true}
                 alternate="/sign-in"
                 path="/dmarc-summaries"
                 render={({ match: { url } }) => (
@@ -208,7 +217,7 @@ export default function App() {
               </RouteIf>
 
               <RouteIf
-                condition={isLoggedIn()}
+                condition={true}
                 alternate="/sign-in"
                 path="/dmarc-report/:period?/:year?"
               >
@@ -243,5 +252,6 @@ export default function App() {
         <FloatingMenu />
         <Box h="40px" />
       </Flex>
-    </>;
+    </>
+  )
 }

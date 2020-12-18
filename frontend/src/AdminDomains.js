@@ -23,7 +23,7 @@ import {
 } from '@chakra-ui/core'
 import { PaginationButtons } from './PaginationButtons'
 import { Domain } from './Domain'
-import { string, object, func } from 'prop-types'
+import { string, object } from 'prop-types'
 import { ListOf } from './ListOf'
 import { TrackerButton } from './TrackerButton'
 import { useMutation } from '@apollo/client'
@@ -32,17 +32,16 @@ import {
   REMOVE_DOMAIN,
   UPDATE_DOMAIN,
 } from './graphql/mutations'
-import { slugify } from './slugify'
 import { Field, Formik } from 'formik'
 import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
 import { object as yupObject, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { useUserState } from './UserState'
 
-export function AdminDomains({ domainsData, orgName }) {
+export function AdminDomains({ domainsData, orgSlug, orgId }) {
   let domains = []
   if (domainsData && domainsData.edges) {
-    domains = domainsData.edges.map((e) => e.node)
+    domains = domainsData.edges.map((edge) => edge.node)
   }
 
   const [domainList, setDomainList] = useState(domains)
@@ -50,6 +49,7 @@ export function AdminDomains({ domainsData, orgName }) {
   const [domainsPerPage] = useState(4)
   const [domainSearch, setDomainSearch] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()
+  const [editingDomainId, setEditingDomainId] = useState()
   const toast = useToast()
   const {
     isOpen: updateIsOpen,
@@ -61,7 +61,8 @@ export function AdminDomains({ domainsData, orgName }) {
     onOpen: removeOnOpen,
     onClose: removeOnClose,
   } = useDisclosure()
-  const [selectedRemoveDomain, setSelectedRemoveDomain] = useState()
+  const [selectedRemoveDomainUrl, setSelectedRemoveDomainUrl] = useState()
+  const [selectedRemoveDomainId, setSelectedRemoveDomainId] = useState()
   const initialFocusRef = useRef()
   const { currentUser } = useUserState()
 
@@ -88,7 +89,7 @@ export function AdminDomains({ domainsData, orgName }) {
   }, [domainList]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
-    refetchQueries: ['Domains'],
+    refetchQueries: ['AdminPanel'],
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -104,10 +105,10 @@ export function AdminDomains({ domainsData, orgName }) {
         position: 'top-left',
       })
     },
-    onCompleted() {
+    onCompleted(mutationReturnData) {
       toast({
         title: t`Domain added`,
-        description: t`Domain was added to ${orgName}`,
+        description: t`${mutationReturnData.createDomain.domain.domain} was added to ${orgSlug}`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -125,7 +126,7 @@ export function AdminDomains({ domainsData, orgName }) {
           authorization: currentUser.jwt,
         },
       },
-      refetchQueries: ['Domains'],
+      refetchQueries: ['AdminPanel'],
       onError(error) {
         toast({
           title: t`An error occurred.`,
@@ -140,7 +141,7 @@ export function AdminDomains({ domainsData, orgName }) {
         removeOnClose()
         toast({
           title: t`Domain removed`,
-          description: t`Domain removed from ${orgName}`,
+          description: t`Domain removed from ${orgSlug}`,
           status: 'info',
           duration: 9000,
           isClosable: true,
@@ -151,7 +152,7 @@ export function AdminDomains({ domainsData, orgName }) {
   )
 
   const [updateDomain] = useMutation(UPDATE_DOMAIN, {
-    refetchQueries: ['Domains'],
+    refetchQueries: ['AdminPanel'],
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -167,10 +168,10 @@ export function AdminDomains({ domainsData, orgName }) {
         position: 'top-left',
       })
     },
-    onCompleted() {
+    onCompleted(mutationReturnData) {
       toast({
         title: t`Domain updated`,
-        description: t`Domain from ${orgName} successfully updated`,
+        description: t`${editingDomainUrl} from ${orgSlug} successfully updated to ${mutationReturnData.updateDomain.domain.domain}`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -219,8 +220,8 @@ export function AdminDomains({ domainsData, orgName }) {
           } else {
             createDomain({
               variables: {
-                orgSlug: slugify(orgName),
-                url: domainSearch,
+                orgId: orgId,
+                domain: domainSearch,
                 selectors: [],
               },
             })
@@ -243,11 +244,12 @@ export function AdminDomains({ domainsData, orgName }) {
                 </Text>
               )}
             >
-              {({ url, lastRan }, index) => (
+              {({ id: domainId, domain, lastRan }, index) => (
                 <Stack key={'admindomain' + index} isInline align="center">
                   <TrackerButton
                     onClick={() => {
-                      setSelectedRemoveDomain(url)
+                      setSelectedRemoveDomainUrl(domain)
+                      setSelectedRemoveDomainId(domainId)
                       removeOnOpen()
                     }}
                     variant="danger"
@@ -261,13 +263,14 @@ export function AdminDomains({ domainsData, orgName }) {
                     px="2"
                     fontSize="xs"
                     onClick={() => {
-                      setEditingDomainUrl(url)
+                      setEditingDomainUrl(domain)
+                      setEditingDomainId(domainId)
                       updateOnOpen()
                     }}
                   >
                     <Icon name="edit" />
                   </TrackerButton>
-                  <Domain url={url} lastRan={lastRan} />
+                  <Domain url={domain} lastRan={lastRan} />
                 </Stack>
               )}
             </ListOf>
@@ -306,9 +309,10 @@ export function AdminDomains({ domainsData, orgName }) {
                   // Submit update detail mutation
                   await updateDomain({
                     variables: {
-                      currentUrl: editingDomainUrl,
-                      updatedUrl: values.newDomainUrl,
-                      updatedSelectors: [],
+                      domainId: editingDomainId,
+                      orgId: orgId,
+                      domain: values.newDomainUrl,
+                      selectors: [],
                     },
                   })
                 }}
@@ -389,7 +393,7 @@ export function AdminDomains({ domainsData, orgName }) {
                   <Text>
                     <Trans>Confirm removal of domain:</Trans>
                   </Text>
-                  <Text fontWeight="bold">{selectedRemoveDomain}</Text>
+                  <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
                 </Stack>
               </ModalBody>
 
@@ -400,7 +404,10 @@ export function AdminDomains({ domainsData, orgName }) {
                   mr={4}
                   onClick={() =>
                     removeDomain({
-                      variables: { url: selectedRemoveDomain },
+                      variables: {
+                        domainId: selectedRemoveDomainId,
+                        orgId: orgId,
+                      },
                     })
                   }
                 >
@@ -416,7 +423,7 @@ export function AdminDomains({ domainsData, orgName }) {
 }
 
 AdminDomains.propTypes = {
-  domainsData: object,
-  orgName: string,
-  refetchFunc: func,
+  domainsData: object.isRequired,
+  orgSlug: string.isRequired,
+  orgId: string.isRequired,
 }

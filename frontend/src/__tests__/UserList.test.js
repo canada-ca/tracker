@@ -1,6 +1,6 @@
 import React from 'react'
 import UserList from '../UserList'
-import { UPDATE_USER_ROLES } from '../graphql/mutations'
+import { UPDATE_USER_ROLE } from '../graphql/mutations'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
@@ -8,7 +8,9 @@ import { I18nProvider } from '@lingui/react'
 import { createMemoryHistory } from 'history'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
+
 import { setupI18n } from '@lingui/core'
+import { rawAdminPanelData } from '../fixtures/adminPanelData'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -20,28 +22,11 @@ const i18n = setupI18n({
   },
 })
 
-describe('<UserList />', () => {
-  const data = {
-    pageInfo: {
-      hasNextPage: false,
-      hasPreviousPage: false,
-    },
-    edges: [
-      {
-        node: {
-          id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
-          userName: 'testuser@testemail.gc.ca',
-          admin: true,
-          tfa: false,
-          displayName: 'Test User Esq.',
-        },
-      },
-    ],
-  }
+const data = rawAdminPanelData.data
 
+describe('<UserList />', () => {
   it('successfully renders with mocked data', async () => {
-    // Set the inital history item to user-list
-    const { getAllByText } = render(
+    const { getByText } = render(
       <UserStateProvider
         initialState={{
           userName: 'testuser@testemail.gc.ca',
@@ -53,7 +38,12 @@ describe('<UserList />', () => {
           <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']}>
               <MockedProvider>
-                <UserList userListData={data} />
+                <UserList
+                  permission={'SUPER_ADMIN'}
+                  userListData={data.findOrganizationBySlug.affiliations}
+                  orgId={data.findOrganizationBySlug.id}
+                  orgName={data.findOrganizationBySlug.name}
+                />
               </MockedProvider>
             </MemoryRouter>
           </I18nProvider>
@@ -61,12 +51,13 @@ describe('<UserList />', () => {
       </UserStateProvider>,
     )
 
-    //
-    // Get all of the mocked user cards, and expect there to be only one entry.
-    await waitFor(() => {
-      const userCards = getAllByText('testuser@testemail.gc.ca')
-      expect(userCards).toHaveLength(1)
-    })
+    await waitFor(() =>
+      expect(
+        getByText(
+          data.findOrganizationBySlug.affiliations.edges[0].node.user.userName,
+        ),
+      ).toBeInTheDocument(),
+    )
   })
 
   it('redirects to userPage when a list element is clicked', async () => {
@@ -78,7 +69,7 @@ describe('<UserList />', () => {
     })
 
     // Set the inital history item to user-list
-    const { getAllByText } = render(
+    const { getByText } = render(
       <UserStateProvider
         initialState={{
           userName: 'testuser@testemail.gc.ca',
@@ -90,7 +81,12 @@ describe('<UserList />', () => {
           <I18nProvider i18n={i18n}>
             <Router history={history}>
               <MockedProvider>
-                <UserList userListData={data} />
+                <UserList
+                  permission={'SUPER_ADMIN'}
+                  userListData={data.findOrganizationBySlug.affiliations}
+                  orgId={data.findOrganizationBySlug.id}
+                  orgName={data.findOrganizationBySlug.name}
+                />
               </MockedProvider>
             </Router>
           </I18nProvider>
@@ -98,14 +94,14 @@ describe('<UserList />', () => {
       </UserStateProvider>,
     )
 
-    // Get all of the mocked user cards, and expect there to be only one entry.
-    const userCards = await waitFor(() =>
-      getAllByText('testuser@testemail.gc.ca'),
+    const foundUserCard = await waitFor(() =>
+      getByText(
+        data.findOrganizationBySlug.affiliations.edges[0].node.user.userName,
+      ),
     )
-    expect(userCards).toHaveLength(1)
 
     const leftClick = { button: 0 }
-    fireEvent.click(userCards[0], leftClick)
+    fireEvent.click(foundUserCard, leftClick)
     // default `button` property for click events is set to `0` which is a left click.
 
     await waitFor(() => {
@@ -124,13 +120,13 @@ describe('<UserList />', () => {
       const mocks = [
         {
           request: {
-            query: UPDATE_USER_ROLES,
+            query: UPDATE_USER_ROLE,
             variables: {
-              input: {
-                orgSlug: 'test-org-slug',
-                role: 'USER_WRITE',
-                userName: 'testuser@testemail.gc.ca',
-              },
+              userName:
+                data.findOrganizationBySlug.affiliations.edges[0].node.user
+                  .userName,
+              orgId: data.findOrganizationBySlug.id,
+              role: 'SUPER_ADMIN',
             },
           },
           result: {
@@ -143,7 +139,12 @@ describe('<UserList />', () => {
         },
       ]
 
-      const { getAllByText, getByDisplayValue, getByText, getByLabelText } = render(
+      const {
+        getAllByText,
+        getByDisplayValue,
+        getByText,
+        getByLabelText,
+      } = render(
         <UserStateProvider
           initialState={{
             userName: 'testadmin@testemail.gc.ca',
@@ -156,9 +157,10 @@ describe('<UserList />', () => {
               <Router history={history}>
                 <MockedProvider mocks={mocks} addTypename={false}>
                   <UserList
-                    userListData={data}
-                    permission="SUPER_ADMIN"
-                    orgSlug="test-org-slug"
+                    permission={'SUPER_ADMIN'}
+                    userListData={data.findOrganizationBySlug.affiliations}
+                    orgId={data.findOrganizationBySlug.id}
+                    orgName={data.findOrganizationBySlug.name}
                   />
                 </MockedProvider>
               </Router>
@@ -172,17 +174,16 @@ describe('<UserList />', () => {
         expect(userRole.type).toEqual('select-one')
       })
 
-      // change input on select to WRITE
-      fireEvent.change(userRole, { target: { value: 'USER_WRITE' } })
+      // change input on select to ADMIN
+      fireEvent.change(userRole, { target: { value: 'SUPER_ADMIN' } })
 
       await waitFor(() => {
-        const newRole = getByDisplayValue(/WRITE/i)
+        const newRole = getByDisplayValue(/ADMIN/i)
         expect(newRole.type).toEqual('select-one')
       })
 
       // Apply changes button
       const updateButton = await waitFor(() => getAllByText(/Apply/i))
-      expect(updateButton).toHaveLength(1)
 
       const leftClick = { button: 0 }
       fireEvent.click(updateButton[0], leftClick)
@@ -190,8 +191,7 @@ describe('<UserList />', () => {
 
       // await changes
       await waitFor(() => {
-        const newRole = getByText(/Role updated/i)
-        expect(newRole).toBeInTheDocument()
+        expect(getByText(/Role updated/i)).toBeInTheDocument()
       })
     })
   })

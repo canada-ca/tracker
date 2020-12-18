@@ -1,44 +1,43 @@
 import { useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { setQueryAlias } from './setQueryAlias'
 import { indexes } from './indexes'
 
 export function usePaginatedCollection({
   recordsPerPage = 10,
   fetchForward,
-  fetchBackward,
   fetchHeaders = {},
+  variables,
+  relayRoot,
 }) {
-  const { query: fwdQuery } = setQueryAlias({
-    query: fetchForward,
-    alias: 'pagination',
-  })
-
-  const { query: bkwrdQuery } = setQueryAlias({
-    query: fetchBackward,
-    alias: 'pagination',
-  })
-
   const [currentPage, setCurrentPage] = useState(1)
 
-  const { loading, error, data, fetchMore } = useQuery(fwdQuery, {
-    variables: { first: recordsPerPage },
+  const { loading, error, data, fetchMore } = useQuery(fetchForward, {
+    variables: { first: recordsPerPage, ...variables },
     context: {
       headers: fetchHeaders,
     },
   })
 
-  let currentEdges
+  let currentEdges = []
+  let currentPageInfo = {}
 
-  if (data?.pagination?.edges?.length > recordsPerPage) {
-    currentEdges = data.pagination.edges.slice(
+  if (data) {
+    currentEdges = relayRoot.split('.').reduce((acc, cur) => {
+      return acc[cur]
+    }, data)
+    currentPageInfo = currentEdges?.pageInfo
+    currentEdges = currentEdges?.edges || []
+  }
+
+  const totalPages = Math.ceil(currentEdges.length / recordsPerPage)
+
+  if (currentEdges?.length > recordsPerPage) {
+    currentEdges = currentEdges.slice(
       ...indexes({
         page: currentPage,
         recordsPerPage,
       }),
     )
-  } else {
-    currentEdges = data?.pagination?.edges
   }
 
   return {
@@ -46,27 +45,24 @@ export function usePaginatedCollection({
     error,
     edges: currentEdges,
     nodes: currentEdges?.map((e) => e.node),
-    next: () => {
+    currentPage,
+    setCurrentPage,
+    next: async () => {
+      if (currentPage === totalPages) {
+        await fetchMore({
+          variables: {
+            ...variables,
+            first: recordsPerPage,
+            after: currentPageInfo.endCursor,
+          },
+        })
+      }
       setCurrentPage(currentPage + 1)
-      return fetchMore({
-        variables: {
-          first: recordsPerPage,
-          after:
-            data && data.pagination ? data.pagination.pageInfo.endCursor : '',
-        },
-      })
     },
     previous: () => {
       setCurrentPage(currentPage > 2 ? currentPage - 1 : 1)
-      return fetchMore({
-        query: bkwrdQuery,
-        variables: {
-          last: recordsPerPage,
-          before: data ? data.pagination?.pageInfo?.endCursor : '',
-        },
-      })
     },
-    hasPreviousPage: data ? data.pagination?.pageInfo?.hasPreviousPage : false,
-    hasNextPage: data ? data.pagination?.pageInfo?.hasNextPage : false,
+    hasPreviousPage: currentPage > 1,
+    hasNextPage: currentPageInfo?.hasNextPage || currentPage < totalPages,
   }
 }

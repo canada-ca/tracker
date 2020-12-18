@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { useUserState } from './UserState'
-import { useQuery } from '@apollo/client'
-import { DMARC_REPORT_SUMMARY_TABLE } from './graphql/queries'
-import { Box, Heading, Text, Stack, Select } from '@chakra-ui/core'
+import {
+  PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD,
+  REVERSE_PAGINATED_DMARC_REPORT_SUMMARY_TABLE as BACKWARD,
+} from './graphql/queries'
+import { Box, Heading, Select, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -10,6 +12,7 @@ import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
+import { usePaginatedCollection } from './usePaginatedCollection'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -22,92 +25,164 @@ export default function DmarcByDomainPage() {
   const [selectedDate, setSelectedDate] = useState(
     `LAST30DAYS, ${currentDate.getFullYear()}`,
   )
+  const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
 
   const {
-    loading: tableLoading,
-    error: tableError,
-    data: tableData,
-  } = useQuery(DMARC_REPORT_SUMMARY_TABLE, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
+    loading,
+    error,
+    nodes,
+    next,
+    previous,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    fetchBackward: BACKWARD,
+    fetchHeaders: { authorization: currentUser.jwt },
+    recordsPerPage: selectedTableDisplayLimit,
     variables: {
-      period: selectedPeriod,
+      month: selectedPeriod,
       year: selectedYear,
     },
+    relayRoot: 'findMyDomains',
   })
 
   // TODO: Properly handle these errors
-  if (tableError)
+  if (error)
     return (
       <Heading as="h3" size="lg" textAlign="center">
         <Trans>Error while querying for DMARC report summary table</Trans>
       </Heading>
     )
 
-  // Initial sorting category for detail tables
-  const initialSort = [{ id: 'totalMessages', desc: true }]
+  // DMARC Summary Table setup
+  let tableDisplay
 
-  const [
-    domain,
-    totalMessages,
-    fullPassPercentage,
-    passSpfOnlyPercentage,
-    passDkimOnlyPercentage,
-    failPercentage,
-  ] = [
-    {
-      Header: t`Domain`,
-      accessor: 'domain',
-    },
-    {
-      Header: t`Total Messages`,
-      accessor: 'totalMessages',
-      Cell: ({ value }) => value.toLocaleString(i18n.locale),
-      style: { textAlign: 'right' },
-    },
-    {
-      Header: t`Full Pass %`,
-      accessor: 'fullPassPercentage',
-      Cell: ({ value }) => `${value}%`,
-      style: { textAlign: 'right' },
-    },
-    {
-      Header: t`Fail DKIM %`,
-      accessor: 'passSpfOnlyPercentage',
-      Cell: ({ value }) => `${value}%`,
-      style: { textAlign: 'right' },
-    },
-    {
-      Header: t`Fail SPF %`,
-      accessor: 'passDkimOnlyPercentage',
-      Cell: ({ value }) => `${value}%`,
-      style: { textAlign: 'right' },
-    },
-    {
-      Header: t`Full Fail %`,
-      accessor: 'failPercentage',
-      Cell: ({ value }) => `${value}%`,
-      style: { textAlign: 'right' },
-    },
-  ]
+  // Display loading message
+  if (loading) {
+    tableDisplay = (
+      <LoadingMessage>
+        <Trans>Domains Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // If not loading and data exists, show table
+  else if (nodes.length > 0) {
+    const formattedData = []
+    nodes.forEach((node) => {
+      const domain = node.domain
+      const percentages = node.dmarcSummaryByPeriod.categoryPercentages
+      formattedData.push({ domain, ...percentages })
+    })
 
-  const percentageColumns = [
-    {
-      Header: t`DMARC Messages`,
-      hidden: true,
-      columns: [
-        domain,
-        totalMessages,
-        fullPassPercentage,
-        passDkimOnlyPercentage,
-        passSpfOnlyPercentage,
-        failPercentage,
-      ],
-    },
-  ]
+    // Initial sorting category for detail tables
+    const initialSort = [{ id: 'totalMessages', desc: true }]
+
+    const [
+      domain,
+      totalMessages,
+      fullPassPercentage,
+      passSpfOnlyPercentage,
+      passDkimOnlyPercentage,
+      failPercentage,
+    ] = [
+      {
+        Header: i18n._(t`Domain`),
+        accessor: 'domain',
+      },
+      {
+        Header: i18n._(t`Total Messages`),
+        accessor: 'totalMessages',
+        Cell: ({ value }) => value.toLocaleString(i18n.locale),
+        style: { textAlign: 'right' },
+      },
+      {
+        Header: i18n._(t`Full Pass %`),
+        accessor: 'fullPassPercentage',
+        Cell: ({ value }) => `${value}%`,
+        style: { textAlign: 'right' },
+      },
+      {
+        Header: i18n._(t`Fail DKIM %`),
+        accessor: 'passSpfOnlyPercentage',
+        Cell: ({ value }) => `${value}%`,
+        style: { textAlign: 'right' },
+      },
+      {
+        Header: i18n._(t`Fail SPF %`),
+        accessor: 'passDkimOnlyPercentage',
+        Cell: ({ value }) => `${value}%`,
+        style: { textAlign: 'right' },
+      },
+      {
+        Header: i18n._(t`Full Fail %`),
+        accessor: 'failPercentage',
+        Cell: ({ value }) => `${value}%`,
+        style: { textAlign: 'right' },
+      },
+    ]
+
+    const percentageColumns = [
+      {
+        Header: i18n._(t`DMARC Messages`),
+        hidden: true,
+        columns: [
+          domain,
+          totalMessages,
+          fullPassPercentage,
+          passDkimOnlyPercentage,
+          passSpfOnlyPercentage,
+          failPercentage,
+        ],
+      },
+    ]
+
+    const displayLimitOptions = [5, 10, 20, 50, 100]
+    const paginationConfig = {
+      previous: previous,
+      hasPreviousPage: hasPreviousPage,
+      next: next,
+      hasNextPage: hasNextPage,
+      displayLimitOptions: displayLimitOptions,
+    }
+
+    tableDisplay = (
+      <DmarcReportTable
+        data={formattedData}
+        columns={percentageColumns}
+        title={i18n._(t`Pass/Fail Ratios by Domain`)}
+        initialSort={initialSort}
+        mb="10px"
+        hideTitleButton={true}
+        linkColumns={[{ column: 'domain', isExternal: false }]}
+        prependLink="domains/"
+        appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
+        frontendPagination={false}
+        paginationConfig={paginationConfig}
+        selectedDisplayLimit={selectedTableDisplayLimit}
+        setSelectedDisplayLimit={setSelectedTableDisplayLimit}
+      />
+    )
+  }
+  // Display error if exists
+  else if (error) {
+    tableDisplay = <ErrorFallbackMessage error={error} />
+  }
+  // If not loading, no error, and no data, no data exists. Show message
+  else {
+    tableDisplay = (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the DMARC summary table</Trans> *
+      </Heading>
+    )
+  }
+
+  const handleChange = (e) => {
+    setSelectedDate(e.target.value)
+    const [newPeriod, newYear] = e.target.value.split(', ')
+    setSelectedPeriod(newPeriod)
+    setSelectedYear(newYear)
+  }
 
   const options = [
     <option
@@ -125,8 +200,9 @@ export default function DmarcByDomainPage() {
       const value = `${months[months.length + i].toUpperCase()}, ${
         currentDate.getFullYear() - 1
       }`
-      const translatedValue = `${months[months.length + i]
-        .toUpperCase()}, ${currentDate.getFullYear() - 1}`
+      const translatedValue = `${months[months.length + i].toUpperCase()}, ${
+        currentDate.getFullYear() - 1
+      }`
 
       options.push(
         <option key={value} value={value}>
@@ -137,8 +213,9 @@ export default function DmarcByDomainPage() {
     // handle current year
     else {
       const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${months[i]
-        .toUpperCase()}, ${currentDate.getFullYear()}`
+      const translatedValue = `${months[
+        i
+      ].toUpperCase()}, ${currentDate.getFullYear()}`
 
       options.push(
         <option key={value} value={value}>
@@ -147,32 +224,6 @@ export default function DmarcByDomainPage() {
       )
     }
   }
-
-  const handleChange = (e) => {
-    setSelectedDate(e.target.value)
-    const [newPeriod, newYear] = e.target.value.split(', ')
-    setSelectedPeriod(newPeriod)
-    setSelectedYear(newYear)
-  }
-
-  // Replace table with "Loading..." if waiting for query
-  const tableDisplay = tableLoading ? (
-    <LoadingMessage>
-      <Trans>Domains Table</Trans>
-    </LoadingMessage>
-  ) : (
-    <DmarcReportTable
-      data={tableData.dmarcReportSummaryTable.domains}
-      columns={percentageColumns}
-      title={t`Pass/Fail Ratios by Domain`}
-      initialSort={initialSort}
-      mb="30px"
-      hideTitleButton={true}
-      linkColumns={[{ column: 'domain', isExternal: false }]}
-      prependLink="domains/"
-      appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
-    />
-  )
 
   return (
     <Box width="100%">

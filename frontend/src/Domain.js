@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/core'
 import { sanitizeUrl } from './sanitizeUrl'
 import { Link as RouteLink } from 'react-router-dom'
-import { slugify } from './slugify'
 
 export function Domain({ url, lastRan, ...rest }) {
   return (
@@ -39,7 +38,7 @@ export function Domain({ url, lastRan, ...rest }) {
             <Text fontWeight="bold">
               <Trans>Last scanned:</Trans>
             </Text>
-            <Link as={RouteLink} to={`domains/${slugify(url)}`}>
+            <Link as={RouteLink} to={`domains/${url}`}>
               {lastRan}
               <Icon name="link" mx="2px" />
             </Link>

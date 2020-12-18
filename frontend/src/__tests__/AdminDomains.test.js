@@ -25,8 +25,8 @@ describe('<AdminDomains />', () => {
       edges: [
         {
           node: {
-            url: 'canada.ca',
-            slug: 'org-slug-test',
+            id: 'domainId',
+            domain: 'canada.ca',
             lastRan: null,
           },
         },
@@ -48,7 +48,11 @@ describe('<AdminDomains />', () => {
           <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']}>
               <MockedProvider>
-                <AdminDomains domainsData={mocks} />
+                <AdminDomains
+                  domainsData={mocks}
+                  orgId={'orgId'}
+                  orgSlug={'orgSlug'}
+                />
               </MockedProvider>
             </MemoryRouter>
           </I18nProvider>

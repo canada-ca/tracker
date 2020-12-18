@@ -2,15 +2,19 @@ import React, { useState } from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import {
-  DMARC_REPORT_DETAIL_TABLES,
-  DMARC_REPORT_SUMMARY_LIST,
+  DMARC_REPORT_GRAPH,
+  PAGINATED_DKIM_FAILURE_REPORT as DKIM_FAILURE_FORWARD,
+  PAGINATED_DMARC_FAILURE_REPORT as DMARC_FAILURE_FORWARD,
+  PAGINATED_FULL_PASS_REPORT as FULL_PASS_FORWARD,
+  PAGINATED_SPF_FAILURE_REPORT as SPF_FAILURE_FORWARD,
 } from './graphql/queries'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import { Box, Heading, IconButton, Select, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { number } from 'prop-types'
-import { useParams, useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -20,51 +24,102 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
+  const { i18n } = useLingui()
 
   const currentDate = new Date()
-  const [selectedPeriod, setSelectedPeriod] = useState(period || 'LAST30DAYS')
-  const [selectedYear, setSelectedYear] = useState(
-    year || currentDate.getFullYear().toString(),
-  )
+  const [selectedPeriod, setSelectedPeriod] = useState(period)
+  const [selectedYear, setSelectedYear] = useState(year)
   const [selectedDate, setSelectedDate] = useState(
     `${selectedPeriod}, ${selectedYear}`,
   )
 
-  const { loading: barLoading, error: barError, data: barData } = useQuery(
-    DMARC_REPORT_SUMMARY_LIST,
-    {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
-      variables: { domainSlug: domainSlug },
-    },
-  )
+  // Allows the use of forward/backward navigation
+  if (selectedPeriod !== period) setSelectedPeriod(period)
+  if (selectedYear !== year) setSelectedPeriod(year)
+  if (selectedDate !== `${period}, ${year}`)
+    setSelectedDate(`${period}, ${year}`)
 
   const {
-    loading: tableLoading,
-    error: tableError,
-    data: tableData,
-  } = useQuery(DMARC_REPORT_DETAIL_TABLES, {
+    loading: graphLoading,
+    error: graphError,
+    data: graphData,
+  } = useQuery(DMARC_REPORT_GRAPH, {
     context: {
       headers: {
         authorization: currentUser.jwt,
       },
     },
     variables: {
-      domainSlug: domainSlug,
-      period: selectedPeriod,
-      year: selectedYear,
+      domain: domainSlug,
     },
   })
 
-  if (tableLoading && barLoading)
-    return (
-      <LoadingMessage>
-        <Trans>DMARC Report</Trans>
-      </LoadingMessage>
-    )
+  const { loading: dkimLoading, error: dkimError, data: dkimData } = useQuery(
+    DKIM_FAILURE_FORWARD,
+    {
+      context: {
+        headers: { authorization: currentUser.jwt },
+      },
+      variables: {
+        month: selectedPeriod,
+        year: selectedYear,
+        domain: domainSlug,
+        first: 50,
+        after: '',
+      },
+    },
+  )
+
+  const {
+    loading: dmarcFailureLoading,
+    error: dmarcFailureError,
+    data: dmarcFailureData,
+  } = useQuery(DMARC_FAILURE_FORWARD, {
+    context: {
+      headers: { authorization: currentUser.jwt },
+    },
+    variables: {
+      month: selectedPeriod,
+      year: selectedYear,
+      domain: domainSlug,
+      first: 50,
+      after: '',
+    },
+  })
+
+  const {
+    loading: spfFailureLoading,
+    error: spfFailureError,
+    data: spfFailureData,
+  } = useQuery(SPF_FAILURE_FORWARD, {
+    context: {
+      headers: { authorization: currentUser.jwt },
+    },
+    variables: {
+      month: selectedPeriod,
+      year: selectedYear,
+      domain: domainSlug,
+      first: 50,
+      after: '',
+    },
+  })
+
+  const {
+    loading: fullPassLoading,
+    error: fullPassError,
+    data: fullPassData,
+  } = useQuery(FULL_PASS_FORWARD, {
+    context: {
+      headers: { authorization: currentUser.jwt },
+    },
+    variables: {
+      month: selectedPeriod,
+      year: selectedYear,
+      domain: domainSlug,
+      first: 50,
+      after: '',
+    },
+  })
 
   const options = [
     <option
@@ -113,12 +168,28 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     const [newPeriod, newYear] = e.target.value.split(', ')
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
-    history.push(`/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`)
+    history.replace(
+      `/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`,
+    )
   }
 
-  // Create dmarc bar graph if not loading and no errors
-  let barDisplay
-  if (!barLoading && !barError) {
+  // DMARC bar graph setup
+  let graphDisplay
+
+  // Set DMARC bar graph Loading
+  if (graphLoading) {
+    graphDisplay = (
+      <LoadingMessage>
+        <Trans>Yearly DMARC Graph</Trans>
+      </LoadingMessage>
+    )
+  }
+  // Display graph query error if found
+  else if (graphError) {
+    graphDisplay = <ErrorFallbackMessage error={graphError} />
+  }
+  // Set graph display using data if data exists
+  else if (graphData?.findDomainByDomain?.yearlyDmarcSummaries?.length > 0) {
     const strengths = {
       strong: [
         {
@@ -146,74 +217,177 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       ],
     }
 
-    const formattedBarData = {
-      periods: barData.dmarcReportSummaryList.map((entry) => {
-        return { month: entry.month, year: entry.year, ...entry.categoryTotals }
-      }),
+    const formattedGraphData = {
+      periods: graphData.findDomainByDomain.yearlyDmarcSummaries.map(
+        (entry) => {
+          return {
+            month: entry.month,
+            year: entry.year,
+            ...entry.categoryTotals,
+          }
+        },
+      ),
     }
-    formattedBarData.strengths = strengths
-
-    barDisplay = (
-      <DmarcTimeGraph
-        data={formattedBarData}
-        width="100%"
-        mr="400px"
-        responsiveWidth={summaryListResponsiveWidth}
-      />
+    formattedGraphData.strengths = strengths
+    graphDisplay = (
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcTimeGraph
+          data={formattedGraphData}
+          width="100%"
+          mr="400px"
+          responsiveWidth={summaryListResponsiveWidth}
+        />
+      </ErrorBoundary>
     )
-  } else {
-    // handle errors / loading
-    barDisplay = (
-      <Heading as="h3" size="lg" textAlign="center">
-        {barLoading ? (
-          // <Trans>Loading...</Trans>
-          <LoadingMessage />
-        ) : barError ? (
-          <Trans>Error while querying for summary bar graph</Trans>
-        ) : (
-          ''
-        )}
+  }
+  // If no data exists for DMARC graph, display message saying so
+  else {
+    graphDisplay = (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the DMARC yearly report graph</Trans> *
       </Heading>
     )
   }
 
-  // Create report tables if no errors and message data exist
-  let tableDisplay
-  if (!tableError && !tableLoading) {
-    const detailTablesData = tableData.dmarcReportDetailTables.detailTables
+  const sourceIpAddress = {
+    Header: i18n._(t`Source IP Address`),
+    accessor: 'sourceIpAddress',
+  }
+  const envelopeFrom = {
+    Header: i18n._(t`Envelope From`),
+    accessor: 'envelopeFrom',
+  }
+  const dkimDomains = {
+    Header: i18n._(t`DKIM Domains`),
+    accessor: 'dkimDomains',
+  }
+  const dkimSelectors = {
+    Header: i18n._(t`DKIM Selectors`),
+    accessor: 'dkimSelectors',
+  }
+  const totalMessages = {
+    Header: i18n._(t`Total Messages`),
+    accessor: 'totalMessages',
+  }
+  const dnsHost = { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' }
+  const spfDomains = {
+    Header: i18n._(t`SPF Domains`),
+    accessor: 'spfDomains',
+  }
+  const headerFrom = {
+    Header: i18n._(t`Header From`),
+    accessor: 'headerFrom',
+  }
+  const guidance = { Header: i18n._(t`Guidance`), accessor: 'guidance' }
+  const spfAligned = {
+    Header: i18n._(t`SPF Aligned`),
+    accessor: 'spfAligned',
+  }
+  const spfResults = {
+    Header: i18n._(t`SPF Results`),
+    accessor: 'spfResults',
+  }
+  const dkimAligned = {
+    Header: i18n._(t`DKIM Aligned`),
+    accessor: 'dkimAligned',
+  }
+  const dkimResults = {
+    Header: i18n._(t`DKIM Results`),
+    accessor: 'dkimResults',
+  }
+  const disposition = {
+    Header: i18n._(t`Disposition`),
+    accessor: 'disposition',
+  }
 
-    const fullPassData = detailTablesData.fullPass
-    const spfFailureData = detailTablesData.spfFailure
-    const spfMisalignedData = detailTablesData.spfMisaligned
-    const dkimFailureData = detailTablesData.dkimFailure
-    const dkimMisalignedData = detailTablesData.dkimMisaligned
-    const dmarcFailureData = detailTablesData.dmarcFailure
+  // Initial sorting category for detail tables
+  const initialSort = [{ id: 'totalMessages', desc: true }]
 
-    // Initial sorting category for detail tables
-    const initialSort = [{ id: 'totalMessages', desc: true }]
+  // DKIM Failure Table setup
+  let dkimFailureTable
 
-    const [
-      sourceIpAddress,
-      envelopeFrom,
-      dkimDomains,
-      dkimSelectors,
-      totalMessages,
-      countryCode,
-      prefixOrg,
-      dnsHost,
-      spfDomains,
-    ] = [
-      { Header: t`Source IP Address`, accessor: 'sourceIpAddress' },
-      { Header: t`Envelope From`, accessor: 'envelopeFrom' },
-      { Header: t`DKIM Domains`, accessor: 'dkimDomains' },
-      { Header: t`DKIM Selectors`, accessor: 'dkimSelectors' },
-      { Header: t`Total Messages`, accessor: 'totalMessages' },
-      { Header: t`Country Code`, accessor: 'countryCode' },
-      { Header: t`Prefix Org`, accessor: 'prefixOrg' },
-      { Header: t`DNS Host`, accessor: 'dnsHost' },
-      { Header: t`SPF Domains`, accessor: 'spfDomains' },
+  // Set DKIM Failure Table Loading
+  if (dkimLoading) {
+    dkimFailureTable = (
+      <LoadingMessage>
+        <Trans>DKIM Failure Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // DKIM Failure query no longer loading, check if data exists
+  else if (
+    dkimData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+      ?.dkimFailure?.edges.length > 0
+  ) {
+    const dkimFailureColumns = [
+      {
+        Header: t`DKIM Failures by IP Address`,
+        hidden: true,
+        columns: [
+          sourceIpAddress,
+          dnsHost,
+          envelopeFrom,
+          headerFrom,
+          dkimDomains,
+          dkimSelectors,
+          dkimResults,
+          dkimAligned,
+          guidance,
+          totalMessages,
+        ],
+      },
     ]
+    // Convert boolean values to string and properly format
+    const dkimFailureNodes = dkimData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dkimFailure.edges.map(
+      (edge) => {
+        const node = { ...edge.node }
+        node.dkimAligned = node.dkimAligned.toString()
+        return node
+      },
+    )
 
+    dkimFailureTable = (
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcReportTable
+          mt="30px"
+          data={dkimFailureNodes}
+          columns={dkimFailureColumns}
+          title={t`DKIM Failures by IP Address`}
+          initialSort={initialSort}
+          frontendPagination={true}
+        />
+      </ErrorBoundary>
+    )
+  }
+  // Display DKIM Failure if found
+  else if (dkimError) {
+    dkimFailureTable = <ErrorFallbackMessage error={dkimError} />
+  }
+  // If no data exists for DKIM Failure table, display message saying so
+  else {
+    dkimFailureTable = (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the DKIM Failures by IP Address table</Trans> *
+      </Heading>
+    )
+  }
+
+  // Fully Aligned Table setup
+  let fullPassTable
+
+  // Set Fully Aligned Table Loading
+  if (fullPassLoading) {
+    fullPassTable = (
+      <LoadingMessage>
+        <Trans>Fully Aligned Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // Full pass query no longer loading, check if data exists
+  else if (
+    fullPassData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+      ?.fullPass?.edges.length > 0
+  ) {
     const fullPassColumns = [
       {
         Header: t`Fully Aligned by IP Address`,
@@ -221,199 +395,191 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         columns: [
           sourceIpAddress,
           envelopeFrom,
-          countryCode,
-          prefixOrg,
-          dnsHost,
-          spfDomains,
           dkimDomains,
           dkimSelectors,
+          dnsHost,
+          headerFrom,
+          spfDomains,
           totalMessages,
         ],
       },
     ]
 
+    // Convert boolean values to string and properly format
+    const fullPassNodes = fullPassData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.fullPass.edges.map(
+      (edge) => {
+        return { ...edge.node }
+      },
+    )
+
+    fullPassTable = (
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcReportTable
+          data={fullPassNodes}
+          columns={fullPassColumns}
+          title={t`Fully Aligned by IP Address`}
+          initialSort={initialSort}
+          frontendPagination={true}
+        />
+      </ErrorBoundary>
+    )
+  }
+  // Display Fully Aligned Error if found
+  else if (fullPassError) {
+    fullPassTable = <ErrorFallbackMessage error={fullPassError} />
+  }
+  // If no data exists for Fully Aligned table, display message saying so
+  else {
+    fullPassTable = (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the Fully Aligned by IP Address table</Trans> *
+      </Heading>
+    )
+  }
+
+  // SPF Failure Table setup
+  let spfFailureTable
+
+  // Set SPF Failure Table Loading
+  if (spfFailureLoading) {
+    spfFailureTable = (
+      <LoadingMessage>
+        <Trans>SPF Failure Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // SPF Failure query no longer loading, check if data exists
+  else if (
+    spfFailureData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+      ?.spfFailure?.edges.length > 0
+  ) {
     const spfFailureColumns = [
       {
         Header: t`SPF Failures by IP Address`,
         hidden: true,
         columns: [
-          sourceIpAddress,
-          envelopeFrom,
-          countryCode,
-          prefixOrg,
           dnsHost,
+          envelopeFrom,
+          guidance,
+          headerFrom,
+          sourceIpAddress,
+          spfAligned,
           spfDomains,
+          spfResults,
           totalMessages,
         ],
       },
     ]
-
-    const spfMisalignedColumns = [
-      {
-        Header: t`SPF Misalignment by IP Address`,
-        hidden: true,
-        columns: [
-          sourceIpAddress,
-          envelopeFrom,
-          countryCode,
-          prefixOrg,
-          dnsHost,
-          spfDomains,
-          totalMessages,
-        ],
+    // Convert boolean values to string and properly format
+    const spfFailureNodes = spfFailureData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.spfFailure.edges.map(
+      (edge) => {
+        const node = { ...edge.node }
+        node.spfAligned = node.spfAligned.toString()
+        return node
       },
-    ]
+    )
 
-    const dkimFailureColumns = [
-      {
-        Header: t`DKIM Failures by IP Address`,
-        hidden: true,
-        columns: [
-          sourceIpAddress,
-          envelopeFrom,
-          countryCode,
-          prefixOrg,
-          dnsHost,
-          dkimDomains,
-          dkimSelectors,
-          totalMessages,
-        ],
-      },
-    ]
+    spfFailureTable = (
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcReportTable
+          mt="30px"
+          data={spfFailureNodes}
+          columns={spfFailureColumns}
+          title={t`SPF Failures by IP Address`}
+          initialSort={initialSort}
+          frontendPagination={true}
+        />
+      </ErrorBoundary>
+    )
+  }
+  // Display SPF Failure if found
+  else if (spfFailureError) {
+    spfFailureTable = <ErrorFallbackMessage error={spfFailureError} />
+  }
+  // If no data exists for SPF Failure table, display message saying so
+  else {
+    spfFailureTable = (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for the SPF Failures by IP Address table</Trans> *
+      </Heading>
+    )
+  }
 
-    const dkimMisalignedColumns = [
-      {
-        Header: t`DKIM Misalignment by IP Address`,
-        hidden: true,
-        columns: [
-          sourceIpAddress,
-          envelopeFrom,
-          countryCode,
-          prefixOrg,
-          dnsHost,
-          dkimDomains,
-          dkimSelectors,
-          totalMessages,
-        ],
-      },
-    ]
+  // DMARC Failure Table setup
+  let dmarcFailureTable
 
+  // Set DMARC Failure Table Loading
+  if (dmarcFailureLoading) {
+    dmarcFailureTable = (
+      <LoadingMessage>
+        <Trans>DMARC Failure Table</Trans>
+      </LoadingMessage>
+    )
+  }
+  // DMARC Failure query no longer loading, check if data exists
+  else if (
+    dmarcFailureData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
+      ?.dmarcFailure?.edges.length > 0
+  ) {
     const dmarcFailureColumns = [
       {
         Header: t`DMARC Failures by IP Address`,
         hidden: true,
         columns: [
-          sourceIpAddress,
-          envelopeFrom,
-          countryCode,
-          prefixOrg,
-          dnsHost,
-          spfDomains,
           dkimDomains,
           dkimSelectors,
+          disposition,
+          dnsHost,
+          envelopeFrom,
+          headerFrom,
+          sourceIpAddress,
+          spfDomains,
           totalMessages,
         ],
       },
     ]
-    const fullyAlignedTable = fullPassData.length ? (
-      <DmarcReportTable
-        data={fullPassData}
-        columns={fullPassColumns}
-        title={t`Fully Aligned by IP Address`}
-        initialSort={initialSort}
-        mb="8"
-      />
-    ) : (
-      <Heading as="h3" size="lg">
-        * <Trans>No data for the Fully Aligned by IP Address table</Trans> *
-      </Heading>
+
+    // Convert boolean values to string and properly format
+    const dmarcFailureNodes = dmarcFailureData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
+      (edge) => {
+        return { ...edge.node }
+      },
     )
-    const spfFailureTable = spfFailureData.length ? (
-      <DmarcReportTable
-        data={spfFailureData}
-        columns={spfFailureColumns}
-        title={t`SPF Failures by IP Address`}
-        initialSort={initialSort}
-      />
-    ) : (
-      <Heading as="h3" size="lg">
-        * <Trans>No data for the SPF Failures by IP Address table</Trans> *
-      </Heading>
+
+    dmarcFailureTable = (
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <DmarcReportTable
+          mt="30px"
+          data={dmarcFailureNodes}
+          columns={dmarcFailureColumns}
+          title={t`DMARC Failures by IP Address`}
+          initialSort={initialSort}
+          frontendPagination={true}
+        />
+      </ErrorBoundary>
     )
-    const spfMisalignedTable = spfMisalignedData.length ? (
-      <DmarcReportTable
-        data={spfMisalignedData}
-        columns={spfMisalignedColumns}
-        title={t`SPF Misalignment by IP Address`}
-        initialSort={initialSort}
-      />
-    ) : (
-      <Heading as="h3" size="lg">
-        * <Trans>No data for the SPF Misalignment by IP Address table</Trans> *
-      </Heading>
-    )
-    const dkimFailureTable = dkimFailureData.length ? (
-      <DmarcReportTable
-        data={dkimFailureData}
-        columns={dkimFailureColumns}
-        title={t`DKIM Failures by IP Address`}
-        initialSort={initialSort}
-      />
-    ) : (
-      <Heading as="h3" size="lg">
-        * <Trans>No data for the DKIM Failures by IP Address table</Trans> *
-      </Heading>
-    )
-    const dkimMisalignmentTable = dkimMisalignedData.length ? (
-      <DmarcReportTable
-        data={dkimMisalignedData}
-        columns={dkimMisalignedColumns}
-        title={t`DKIM Misalignment by IP Address`}
-        initialSort={initialSort}
-      />
-    ) : (
-      <Heading as="h3" size="lg">
-        * <Trans>No data for the DKIM Misalignment by IP Address table</Trans> *
-      </Heading>
-    )
-    const dmarcFailureTable = dkimFailureData.length ? (
-      <DmarcReportTable
-        data={dmarcFailureData}
-        columns={dmarcFailureColumns}
-        title={t`DMARC Failures by IP Address`}
-        initialSort={initialSort}
-      />
-    ) : (
+  }
+  // Display DMARC Failure if found
+  else if (dmarcFailureError) {
+    dmarcFailureTable = <ErrorFallbackMessage error={dmarcFailureError} />
+  }
+  // If no data exists for DMARC Failure table, display message saying so
+  else {
+    dmarcFailureTable = (
       <Heading as="h3" size="lg">
         * <Trans>No data for the DMARC Failures by IP Address table</Trans> *
       </Heading>
     )
-
-    tableDisplay = (
-      <Stack spacing="30px">
-        {fullyAlignedTable}
-        {spfFailureTable}
-        {spfMisalignedTable}
-        {dkimFailureTable}
-        {dkimMisalignmentTable}
-        {dmarcFailureTable}
-      </Stack>
-    )
   }
-  // handle errors / loading
-  else
-    tableDisplay = (
-      <Heading as="h3" size="lg" textAlign="center">
-        {tableLoading ? (
-          // <Trans>Loading...</Trans>
-          <LoadingMessage />
-        ) : tableError ? (
-          <Trans>Error while querying for summary tables</Trans>
-        ) : (
-          ''
-        )}
-      </Heading>
-    )
+
+  const tableDisplay = (
+    <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+      {fullPassTable}
+      {spfFailureTable}
+      {dkimFailureTable}
+      {dmarcFailureTable}
+    </ErrorBoundary>
+  )
 
   return (
     <Box width="100%" px="4" mx="auto" overflow="hidden">
@@ -430,9 +596,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           {domainSlug.toUpperCase()}
         </Heading>
       </Stack>
-      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        {barDisplay}
-      </ErrorBoundary>
+
+      {graphDisplay}
+
       <Stack isInline align="center" mb="16px">
         <Text fontWeight="bold" textAlign="center">
           <Trans>Showing data for period: </Trans>
@@ -445,9 +611,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           {options}
         </Select>
       </Stack>
-      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        {tableDisplay}
-      </ErrorBoundary>
+
+      {tableDisplay}
     </Box>
   )
 }

@@ -40,6 +40,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
     fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: orgsPerPage,
+    relayRoot: 'findMyOrganizations',
   })
 
   if (error) return <ErrorFallbackMessage error={error} />

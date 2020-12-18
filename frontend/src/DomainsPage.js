@@ -47,6 +47,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
     fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
+    relayRoot: 'findMyDomains',
   })
 
   if (error) return <ErrorFallbackMessage error={error} />

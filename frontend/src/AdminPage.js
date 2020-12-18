@@ -11,7 +11,7 @@ import { LoadingMessage } from './LoadingMessage'
 
 export default function AdminPage() {
   const { currentUser } = useUserState()
-  const [orgName, setOrgName] = useState()
+  const [orgDetails, setOrgDetails] = useState()
   const toast = useToast()
 
   const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
@@ -19,6 +19,9 @@ export default function AdminPage() {
       headers: {
         authorization: currentUser.jwt,
       },
+    },
+    variables: {
+      first: 20,
     },
     onError: (error) => {
       const [_, message] = error.message.split(': ')
@@ -46,24 +49,17 @@ export default function AdminPage() {
   }
 
   const adminAffiliations = {}
-  if (data?.user[0]?.affiliations?.edges) {
+  data.findMe.affiliations?.edges.forEach((edge) => {
     const {
-      affiliations: { edges },
-    } = data.user[0]
-    for (let i = 0; i < edges.length; i++) {
-      const {
-        node: {
-          permission,
-          organization: { acronym },
-        },
-      } = edges[i]
-      if (permission === 'ADMIN' || permission === 'SUPER_ADMIN') {
-        adminAffiliations[acronym] = permission
-      }
+      permission,
+      organization: { slug, acronym },
+    } = edge.node
+    if (permission === 'ADMIN' || permission === 'SUPER_ADMIN') {
+      adminAffiliations[acronym] = { slug: slug, permission: permission }
     }
-  }
+  })
 
-  const adminOrgs = Object.keys(adminAffiliations)
+  const adminOrgsAcronyms = Object.keys(adminAffiliations)
 
   const options = [
     <option hidden key="default">
@@ -71,13 +67,13 @@ export default function AdminPage() {
     </option>,
   ]
 
-  for (let i = 0; i < adminOrgs.length; i++) {
+  adminOrgsAcronyms.forEach((acronym) => {
     options.push(
-      <option key={'option' + i} value={adminOrgs[i]}>
-        {adminOrgs[i]}
+      <option key={acronym} value={acronym}>
+        {acronym}
       </option>,
     )
-  }
+  })
 
   if (options.length > 1) {
     return (
@@ -96,17 +92,17 @@ export default function AdminPage() {
               size="lg"
               variant="filled"
               onChange={(e) => {
-                setOrgName(e.target.value)
+                setOrgDetails(adminAffiliations[e.target.value])
               }}
             >
               {options}
             </Select>
           </Stack>
-          {options.length > 1 && orgName ? (
+          {options.length > 1 && orgDetails ? (
             <Stack>
               <AdminPanel
-                orgName={orgName}
-                permission={adminAffiliations[orgName]}
+                orgSlug={orgDetails.slug}
+                permission={orgDetails.permission}
                 mr="4"
               />
               <Trans>

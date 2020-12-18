@@ -4,12 +4,11 @@ import { Trans } from '@lingui/macro'
 import { useHistory } from 'react-router-dom'
 import { bool, string } from 'prop-types'
 
-export function UserCard({ userName, displayName, tfa, role }) {
+export function UserCard({ userName, tfa, role }) {
   const history = useHistory()
   return (
     <PseudoBox
       width="100%"
-      display={{ md: 'flex' }}
       onClick={() => {
         history.push({
           pathname: '/user',
@@ -20,22 +19,13 @@ export function UserCard({ userName, displayName, tfa, role }) {
       p="8"
       as="button"
     >
-      <Box flexShrink="0" w={['100%', '10%']} textAlign="left" mb={['1', '0']}>
-        <Text fontSize="md" fontWeight="semibold">
-          {displayName}
-        </Text>
-      </Box>
-      <Box flexShrink="0" w={['100%', '30%']} textAlign="left" mb={['1', '0']}>
-        <Text fontSize="md">{userName}</Text>
-      </Box>
-      {role && (
-        <Box
-          flexShrink="0"
-          w={['100%', '15%']}
-          textAlign="left"
-          mb={['1', '0']}
-        >
-          <Stack isInline align="center">
+      <Stack isInline align="center" mb={['1', '0']}>
+        <Box>
+          <Text fontSize="md">{userName}</Text>
+        </Box>
+        <Box ml="auto" /> {/* spacer */}
+        {role && (
+          <Box>
             <Badge
               color="primary"
               bg="transparent"
@@ -44,22 +34,21 @@ export function UserCard({ userName, displayName, tfa, role }) {
             >
               {role}
             </Badge>
-          </Stack>
-        </Box>
-      )}
-      {tfa !== null && (
-        <Box flexShrink="0" w={['100%', '10%']} textAlign="left">
-          <Badge variantColor={tfa ? 'green' : 'red'}>
-            <Trans>2FA Validated</Trans>
-          </Badge>
-        </Box>
-      )}
+          </Box>
+        )}
+        {tfa !== null && (
+          <Box>
+            <Badge variantColor={tfa ? 'green' : 'red'}>
+              <Trans>2FA Validated</Trans>
+            </Badge>
+          </Box>
+        )}
+      </Stack>
     </PseudoBox>
   )
 }
 
 UserCard.propTypes = {
-  displayName: string.isRequired,
   userName: string.isRequired,
   role: string,
   tfa: bool,

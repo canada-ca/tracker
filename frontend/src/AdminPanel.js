@@ -1,8 +1,6 @@
 import React from 'react'
 import { Stack, SimpleGrid, useToast } from '@chakra-ui/core'
-import UserList from './UserList'
 import { string } from 'prop-types'
-import { slugify } from './slugify'
 import { ADMIN_PANEL } from './graphql/queries'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
@@ -11,14 +9,14 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { Trans } from '@lingui/macro'
+import UserList from './UserList'
 
-export default function AdminPanel({ orgName, permission }) {
+export default function AdminPanel({ orgSlug, permission }) {
   const { currentUser } = useUserState()
   const toast = useToast()
 
-  // TODO: combine these queries into a single request
-  const { loading, error, data, refetch } = useQuery(ADMIN_PANEL, {
-    variables: { slug: slugify(orgName) },
+  const { loading, error, data } = useQuery(ADMIN_PANEL, {
+    variables: { orgSlug: orgSlug, domainsFirst: 5, affiliationsFirst: 5 },
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -46,7 +44,7 @@ export default function AdminPanel({ orgName, permission }) {
   }
   // Current api returns an error if no domains found
   // TODO: Remove includes check when api is ready
-  if (error && !error.includes('Error, unable to find domains')) {
+  if (error) {
     return <ErrorFallbackMessage error={error} />
   }
 
@@ -55,17 +53,17 @@ export default function AdminPanel({ orgName, permission }) {
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
         <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
           <AdminDomains
-            domainsData={data.domains}
-            orgName={orgName}
-            refetchFunc={refetch}
+            domainsData={data.findOrganizationBySlug.domains}
+            orgId={data.findOrganizationBySlug.id}
+            orgSlug={orgSlug}
           />
         </ErrorBoundary>
         <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
           <UserList
             permission={permission}
-            userListData={data.userList}
-            orgName={orgName}
-            orgSlug={slugify(orgName)}
+            userListData={data.findOrganizationBySlug.affiliations}
+            orgId={data.findOrganizationBySlug.id}
+            orgName={data.findOrganizationBySlug.name}
           />
         </ErrorBoundary>
       </SimpleGrid>
@@ -74,6 +72,6 @@ export default function AdminPanel({ orgName, permission }) {
 }
 
 AdminPanel.propTypes = {
-  orgName: string,
-  permission: string,
+  orgSlug: string.isRequired,
+  permission: string.isRequired,
 }

@@ -186,7 +186,6 @@ export default function OrganizationDetails() {
                       <UserCard
                         userName={user.userName}
                         role={permission}
-                        displayName={user.displayName}
                         tfa={user.tfaValidated}
                       />
                       <Divider borderColor="gray.900" />

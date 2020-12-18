@@ -11,6 +11,24 @@ export function createCache() {
           findMyOrganizations: relayStylePagination(),
         },
       },
+      Period: {
+        keyFields: ['month', 'year', 'domain'],
+        fields: {
+          detailTables: {
+            merge(existing = {}, incoming) {
+              return { ...existing, ...incoming }
+            },
+          },
+        },
+      },
+      DetailTables: {
+        fields: {
+          dkimFailure: relayStylePagination(),
+          dmarcFailure: relayStylePagination(),
+          spfFailure: relayStylePagination(),
+          fullPass: relayStylePagination(),
+        },
+      },
     },
   })
 }
@@ -19,7 +37,7 @@ export const cache = createCache()
 
 export const client = new ApolloClient({
   link: new HttpLink({
-    uri: '/graphql',
+    uri: 'https://pulse.alpha.canada.ca/graphql',
   }),
   cache,
 })

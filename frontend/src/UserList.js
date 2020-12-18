@@ -16,7 +16,7 @@ import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
 import { string, shape, boolean } from 'prop-types'
 import { useMutation } from '@apollo/client'
-import { INVITE_USER_TO_ORG, UPDATE_USER_ROLES } from './graphql/mutations'
+import { INVITE_USER_TO_ORG, UPDATE_USER_ROLE } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
 import { useUserState } from './UserState'
 import { Field, Formik } from 'formik'
@@ -25,18 +25,13 @@ import { object, string as yupString } from 'yup'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
-export default function UserList({
-  permission,
-  userListData,
-  orgName,
-  orgSlug,
-}) {
+export default function UserList({ permission, userListData, orgId }) {
   let users = []
   if (userListData && userListData.edges) {
     users = userListData.edges
   }
 
-  const [userList, setUserList] = useState(users)
+  const [userList] = useState(users)
   const [currentPage, setCurrentPage] = useState(1)
   const [usersPerPage] = useState(4)
   const toast = useToast()
@@ -54,7 +49,7 @@ export default function UserList({
   const indexOfFirstUser = indexOfLastUser - usersPerPage
   const currentUsers = userList.slice(indexOfFirstUser, indexOfLastUser)
 
-  const [updateUserRoles, { loading, error }] = useMutation(UPDATE_USER_ROLES, {
+  const [updateUserRole, { loading, error }] = useMutation(UPDATE_USER_ROLE, {
     onError(error) {
       toast({
         title: error.message,
@@ -119,40 +114,40 @@ export default function UserList({
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
-  const removeUser = (user) => {
-    const temp = userList.filter((c) => c.node.id !== user.id)
-    if (temp) {
-      setUserList(temp)
-      if (currentUsers.length <= 1 && userList.length > 1)
-        setCurrentPage(Math.ceil(userList.length / usersPerPage) - 1)
-      toast({
-        title: 'User removed',
-        description: `${user.displayName} was removed from ${orgName}`,
-        status: 'info',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    } else {
-      toast({
-        title: 'An error occurred.',
-        description: `${user.displayName} could not be removed from ${orgName}`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    }
-  }
+  // TODO: Add mutation to this
+  // const removeUser = (user) => {
+  //   console.log(user)
+  //   const temp = userList.filter((c) => c.node.userId !== user.userId)
+  //   if (temp) {
+  //     setUserList(temp)
+  //     if (currentUsers.length <= 1 && userList.length > 1)
+  //       setCurrentPage(Math.ceil(userList.length / usersPerPage) - 1)
+  //     toast({
+  //       title: 'User removed',
+  //       description: `${user.user.userName} was removed from ${orgName}`,
+  //       status: 'info',
+  //       duration: 9000,
+  //       isClosable: true,
+  //       position: 'top-left',
+  //     })
+  //   } else {
+  //     toast({
+  //       title: 'An error occurred.',
+  //       description: `${user.displayName} could not be removed from ${orgName}`,
+  //       status: 'error',
+  //       duration: 9000,
+  //       isClosable: true,
+  //       position: 'top-left',
+  //     })
+  //   }
+  // }
 
   const handleClick = (role, userName) => {
-    updateUserRoles({
+    updateUserRole({
       variables: {
-        input: {
-          orgSlug: orgSlug,
-          role: role,
-          userName: userName,
-        },
+        orgId: orgId,
+        role: role,
+        userName: userName,
       },
     })
   }
@@ -175,15 +170,15 @@ export default function UserList({
 
       <Formik
         validationSchema={addUserValidationSchema}
-        initialValues={{ userName: '', roleSelect: 'USER_READ' }}
+        initialValues={{ userName: '', roleSelect: 'USER' }}
         initialErrors={{ userName: 'Email cannot be empty' }}
         onSubmit={(values) => {
           addUser({
             variables: {
               userName: values.userName,
               requestedRole: values.roleSelect,
-              orgSlug: orgSlug,
-              preferredLanguage: 'ENGLISH',
+              orgId: orgId,
+              preferredLang: 'ENGLISH',
             },
           })
         }}
@@ -216,9 +211,9 @@ export default function UserList({
                 id="roleSelect"
                 name="roleSelect"
               >
-                <option value="USER_READ">{t`READ`}</option>
-                <option value="USER_WRITE">{t`WRITE`}</option>
+                <option value="USER">{t`USER`}</option>
                 <option value="ADMIN">{t`ADMIN`}</option>
+                <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
               </Field>
             </Stack>
 
@@ -244,73 +239,59 @@ export default function UserList({
         </Text>
       ) : (
         currentUsers.map(({ node }, index) => {
-          let userRole = node.role
-          if (permission) {
-            return (
-              <Box key={`${node.username}:${index}`}>
-                {userRole === 'SUPER_ADMIN' ||
-                (permission === 'ADMIN' && userRole === 'ADMIN') ? (
-                  <Stack key={node.id} isInline align="center">
-                    <UserCard
-                      userName={node.userName}
-                      displayName={node.displayName}
-                      role={userRole}
-                      tfa={null}
-                    />
-                  </Stack>
-                ) : (
-                  <Box key={`${node.username}:${index}`}>
-                    <Stack isInline align="center">
-                      <TrackerButton
-                        variant="danger"
-                        onClick={() => removeUser(node)}
-                        px="3"
-                      >
-                        <Icon name="minus" />
-                      </TrackerButton>
-                      <UserCard
-                        userName={node.userName}
-                        displayName={node.displayName}
-                      />
-                    </Stack>
-                    <Stack isInline justifyContent="flex-end" align="center">
-                      <FormLabel htmlFor="role_select" fontWeight="bold">
-                        <Trans>Role:</Trans>
-                      </FormLabel>
-                      <Select
-                        w="35%"
-                        id="role_select"
-                        size="sm"
-                        name="role"
-                        defaultValue={userRole}
-                        onChange={(e) => (userRole = e.target.value)}
-                      >
-                        <option value="USER_READ">{t`READ`}</option>
-                        <option value="USER_WRITE">{t`WRITE`}</option>
-                        <option value="ADMIN">{t`ADMIN`}</option>
-                      </Select>
-                      <TrackerButton
-                        onClick={() => handleClick(userRole, node.userName)}
-                        variant="primary"
-                        fontSize="sm"
-                        px="3"
-                      >
-                        <Trans>Apply</Trans>
-                      </TrackerButton>
-                    </Stack>
-                  </Box>
-                )}
-              </Box>
-            );
-          }
+          let userRole = node.permission
           return (
-            <UserCard
-              key={node.id}
-              userName={node.userName}
-              tfa={node.tfa}
-              role={node.role}
-              displayName={node.displayName}
-            />
+            <Box key={`${node.user.userName}:${index}`}>
+              <Stack isInline align="center">
+                {/* TODO: IMPLEMENT USER REMOVAL (NEEDS API SUPPORT NOV-23-2020 */}
+                {/* <TrackerButton */}
+                {/*   variant="danger" */}
+                {/*   onClick={() => removeUser(node)} */}
+                {/*   px="3" */}
+                {/* > */}
+                {/*   <Icon name="minus" /> */}
+                {/* </TrackerButton> */}
+                <UserCard
+                  userName={node.user.userName}
+                  role={userRole}
+                  tfa={node.user.tfaValidated}
+                />
+              </Stack>
+              <Stack isInline justifyContent="flex-end" align="center">
+                <FormLabel htmlFor="role_select" fontWeight="bold">
+                  <Trans>Role:</Trans>
+                </FormLabel>
+                <Select
+                  w="35%"
+                  id="role_select"
+                  size="sm"
+                  name="role"
+                  defaultValue={userRole}
+                  onChange={(e) => (userRole = e.target.value)}
+                >
+                  {/* TODO: Implement this conditional rendering in a cleaner way */}
+                  {(userRole === 'USER' ||
+                    (permission === 'SUPER_ADMIN' && userRole === 'ADMIN')) && (
+                    <option value="USER">{t`USER`}</option>
+                  )}
+                  {(userRole === 'USER' || userRole === 'ADMIN') && (
+                    <option value="ADMIN">{t`ADMIN`}</option>
+                  )}
+                  {(userRole === 'SUPER_ADMIN' ||
+                    permission === 'SUPER_ADMIN') && (
+                    <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
+                  )}
+                </Select>
+                <TrackerButton
+                  onClick={() => handleClick(userRole, node.user.userName)}
+                  variant="primary"
+                  fontSize="sm"
+                  px="3"
+                >
+                  <Trans>Apply</Trans>
+                </TrackerButton>
+              </Stack>
+            </Box>
           )
         })
       )}
@@ -324,41 +305,20 @@ export default function UserList({
         />
       )}
     </Stack>
-  );
+  )
 }
-
-/* -- Source code for adding organizations, not being used. --
-
-<Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="25%">
-  <Box mt={2} color="gray.500">
-    Orgs:&nbsp;
-    {// Populate the user-orgs list.
-    edge.node.user.affiliations.edges.map((edge, i, arr) => {
-      if (arr.length - 1 === i) {
-        return (
-          <Text display="inline" key={edge.node.id + i}>
-            {edge.node.organization.acronym}
-          </Text>
-        )
-      }
-      return (
-        <Text display="inline" key={edge.node.id + i}>
-          {edge.node.organization.acronym + ' | '}
-        </Text>
-      )
-    })}
-  </Box>
-</Box> */
 
 UserList.propTypes = {
   userListData: shape({
-    id: string,
-    userName: string,
-    role: string,
-    tfa: boolean,
-    displayName: string,
+    userId: string,
+    permission: string,
+    user: shape({
+      userName: string,
+      tfaValidated: boolean,
+      displayName: string,
+    }),
   }),
   orgName: string,
-  orgSlug: string,
+  orgId: string,
   permission: string,
 }
