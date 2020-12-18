@@ -297,7 +297,6 @@ export const ORG_DETAILS_PAGE = gql`
             user {
               id
               userName
-              tfaValidated
             }
           }
         }
