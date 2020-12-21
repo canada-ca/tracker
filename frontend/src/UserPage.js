@@ -105,7 +105,7 @@ export default function UserPage() {
           mb="4"
         >
           {({ permission, organization }, index) => (
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+            <ErrorBoundary key={`userpage-errorbound-${index}`} FallbackComponent={ErrorFallbackMessage}>
               <Stack
                 mb="2"
                 flexDirection={['column', 'row']}
