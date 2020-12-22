@@ -83,6 +83,7 @@ describe('<ScanDomain />', () => {
       })
     })
   })
+
   describe('given a domain as input', () => {
     it('submits a domain for scan', async () => {
       const { container, getByRole, queryByText } = render(
