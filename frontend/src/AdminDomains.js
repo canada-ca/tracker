@@ -423,7 +423,7 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
 }
 
 AdminDomains.propTypes = {
-  domainsData: object.isRequired,
+  domainsData: object,
   orgSlug: string.isRequired,
   orgId: string.isRequired,
 }

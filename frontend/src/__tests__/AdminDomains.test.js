@@ -19,23 +19,23 @@ const i18n = setupI18n({
   },
 })
 
+const mocks = {
+  edges: [
+    {
+      node: {
+        id: 'domainId',
+        domain: 'canada.ca',
+        lastRan: null,
+      },
+    },
+  ],
+  pageInfo: {
+    hasNextPage: false,
+  },
+}
+
 describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
-    const mocks = {
-      edges: [
-        {
-          node: {
-            id: 'domainId',
-            domain: 'canada.ca',
-            lastRan: null,
-          },
-        },
-      ],
-      pageInfo: {
-        hasNextPage: false,
-      },
-    }
-
     const { getAllByText } = render(
       <UserStateProvider
         initialState={{
@@ -78,7 +78,11 @@ describe('<AdminDomains />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MockedProvider>
-              <AdminDomains domainsData={null} />
+              <AdminDomains
+                orgSlug={'orgSlug'}
+                domainsData={null}
+                orgId={'orgId'}
+              />
             </MockedProvider>
           </I18nProvider>
         </ThemeProvider>
