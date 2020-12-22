@@ -94,8 +94,11 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                 mb="4"
               >
                 {({ id, domain, lastRan, status }, index) => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <Box key={`${id}:${index}`}>
+                  <ErrorBoundary
+                    key={`${id}:${index}`}
+                    FallbackComponent={ErrorFallbackMessage}
+                  >
+                    <Box>
                       <DomainCard
                         url={domain}
                         lastRan={lastRan}
