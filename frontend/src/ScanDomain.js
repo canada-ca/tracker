@@ -66,7 +66,7 @@ export function ScanDomain() {
                 <Text fontSize="2xl" mb="2" textAlign={['center', 'left']}>
                   <Trans>Request a domain to be scanned:</Trans>
                 </Text>
-                <DomainField width={['100%', '75%']} name="domain" mb="4" />
+                <DomainField name="domain" mb="4" />
                 <Stack mb="4">
                   <Text fontWeight="bold">
                     <Trans>Scan Type:</Trans>
