@@ -73,8 +73,11 @@ export default function Organisations({ orgsPerPage = 10 }) {
             { name, slug, acronym, domainCount, verified, summaries },
             index,
           ) => (
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <Box key={`${slug}:${index}`}>
+            <ErrorBoundary
+              key={`${slug}:${index}`}
+              FallbackComponent={ErrorFallbackMessage}
+            >
+              <Box>
                 <OrganizationCard
                   slug={slug}
                   name={name}
