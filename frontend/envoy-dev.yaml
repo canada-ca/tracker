@@ -8,32 +8,25 @@ static_resources:
     - filters:
       - name: envoy.filters.network.http_connection_manager
         typed_config:
-          "@type": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager
-          codec_type: auto
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          codec_type: AUTO
+          http_filters:
+          - name: envoy.filters.http.router
           upgrade_configs:
-            - upgrade_type: websocket
+          - upgrade_type: websocket
           stat_prefix: ingress_http
           route_config:
             name: local_route
             virtual_hosts:
             - name: backend
-              domains:
-                - "*"
+              domains: ["*"]
               routes:
-              - match:
-                  prefix: "/graphql"
-                route:
-                  cluster: api
-              - match:
-                  prefix: "/editor"
-                route:
-                  cluster: api
-              - match:
-                  prefix: "/"
-                route:
-                  cluster: frontend
-          http_filters:
-          - name: envoy.filters.http.router
+              - match: { prefix: "/graphql" }
+                route: { cluster: api }
+              - match: { prefix: "/editor" }
+                route: { cluster: api }
+              - match: { prefix: "/" }
+                route: { cluster: frontend }
   clusters:
   - name: frontend
     connect_timeout: 0.25s
