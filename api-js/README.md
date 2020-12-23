@@ -1,6 +1,6 @@
 # Tracker API
 
-The Tracker API is exclusively focused on serving data, rather than HTML. It is a GraphQL API, chosen because of its composability, legibility and for the way it [enables both security and security automation](https://www.youtube.com/watch?v=gqvyCdyp3Nw).
+The Tracker API is exclusively focused on serving data, rather than HTML. It is a GraphQL API, chosen because of its [composability](https://en.wikipedia.org/wiki/Composability), [legibility](https://www.ribbonfarm.com/2010/07/26/a-big-little-idea-called-legibility/) and for the way it [enables both security and security automation](https://www.youtube.com/watch?v=gqvyCdyp3Nw).
 It is built with the [Express webserver](https://expressjs.com/) using the [express-graphql middleware](https://github.com/graphql/express-graphql), and follows the [Relay specifications for pagination](https://relay.dev/graphql/connections.htm).
 
 #### Installing Dependencies
@@ -30,6 +30,10 @@ COST_LIMIT=100
 SCALAR_COST=1
 OBJECT_COST=1
 LIST_FACTOR=1
+CIPHER_KEY=1234asdf
+DNS_SCANNER_ENDPOINT=dns.scanners
+HTTPS_SCANNER_ENDPOINT=https.scanners
+SSL_SCANNER_ENDPOINT=ssl.scanners
 EOF
 ```
 With that defined you can start the server with these commands.
