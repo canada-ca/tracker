@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@lingui/core": "^2.9.2",
-    "apollo-server": "^2.19.0",
+    "apollo-server": "^2.19.1",
     "apollo-server-express": "^2.19.0",
     "arango-tools": "0.0.9",
     "arangojs": "^7.2.0",
