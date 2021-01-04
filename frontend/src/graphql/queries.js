@@ -1147,7 +1147,7 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
     $after: String
     $first: Int
   ) {
-    findMyDomains(after: $after, first: $first, ownership: true) {
+    findMyDomains(after: $after, first: $first) {
       edges {
         node {
           id

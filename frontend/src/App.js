@@ -70,7 +70,7 @@ export default function App() {
             </Link>
           )}
 
-          {1 && (
+          {isLoggedIn() && (
             <Link to="/dmarc-summaries">
               <Trans>DMARC Report</Trans>
             </Link>

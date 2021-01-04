@@ -1,0 +1,39 @@
+query PaginatedDmarcReportSummaryTable(
+  $month: PeriodEnums!
+  $year: Year!
+  $after: String
+  $first: Int
+) {
+  findMyDomains(after: $after, first: $first, ownership: true) {
+    edges {
+      node {
+        id
+        domain
+        dmarcSummaryByPeriod(month: $month, year: $year) {
+          month
+          year
+          domain
+          categoryPercentages {
+            failPercentage
+            fullPassPercentage
+            passDkimOnlyPercentage
+            passSpfOnlyPercentage
+            totalMessages
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+      hasPreviousPage
+      startCursor
+      __typename
+    }
+    __typename
+  }
+}
