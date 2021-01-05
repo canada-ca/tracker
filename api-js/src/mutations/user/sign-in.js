@@ -1,9 +1,11 @@
+const { SIGN_IN_KEY } = process.env
+
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { GraphQLEmailAddress } = require('graphql-scalars')
 const { t } = require('@lingui/macro')
 
-const { SIGN_IN_KEY } = process.env
+const { signInUnion } = require('../../types')
 
 const signIn = new mutationWithClientMutationId({
   name: 'SignIn',
@@ -20,20 +22,10 @@ const signIn = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    authenticateToken: {
-      type: GraphQLString,
-      description: 'Token used to verify during authentication.',
-      resolve: async (payload) => {
-        return payload.authenticateToken
-      },
-    },
-    status: {
-      type: GraphQLString,
-      description:
-        'Wether the authentication code was sent through text, or email.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+    result: {
+      type: signInUnion,
+      description: '',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -92,49 +84,61 @@ const signIn = new mutationWithClientMutationId({
           throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
 
-        // Generate TFA code
-        const tfaCode = Math.floor(100000 + Math.random() * 900000)
+        if (user.phoneValidated || user.emailValidated) {
+          // Generate TFA code
+          const tfaCode = Math.floor(100000 + Math.random() * 900000)
 
-        // Insert TFA code into DB
-        try {
-          await query`
+          // Insert TFA code into DB
+          try {
+            await query`
                 UPSERT { _key: ${user._key} }
                   INSERT { tfaCode: ${tfaCode} }
                   UPDATE { tfaCode: ${tfaCode} }
                   IN users
               `
-        } catch (err) {
-          console.error(
-            `Database error occurred when inserting ${user._key} TFA code: ${err}`,
-          )
-          throw new Error(i18n._(t`Unable to sign in, please try again.`))
-        }
+          } catch (err) {
+            console.error(
+              `Database error occurred when inserting ${user._key} TFA code: ${err}`,
+            )
+            throw new Error(i18n._(t`Unable to sign in, please try again.`))
+          }
 
-        // Get newly updated user
-        await userLoaderByUserName.clear(userName)
-        user = await userLoaderByUserName.load(userName)
+          // Get newly updated user
+          await userLoaderByUserName.clear(userName)
+          user = await userLoaderByUserName.load(userName)
 
-        // Check to see if user has phone validated
-        let status
-        if (user.phoneValidated) {
-          await sendAuthTextMsg({ user })
-          status = i18n._(
-            t`We've sent you a text message with an authentication code to sign into Pulse.`,
+          // Check to see if user has phone validated
+          let status
+          if (user.phoneValidated) {
+            await sendAuthTextMsg({ user })
+            status = i18n._(
+              t`We've sent you a text message with an authentication code to sign into Pulse.`,
+            )
+          } else {
+            await sendAuthEmail({ user })
+            status = i18n._(
+              t`We've sent you an email with an authentication code to sign into Pulse.`,
+            )
+          }
+
+          console.info(
+            `User: ${user._key} successfully signed in, and sent auth msg.`,
           )
+
+          return {
+            status,
+            authenticateToken: token,
+          }
         } else {
-          await sendAuthEmail({ user })
-          status = i18n._(
-            t`We've sent you an email with an authentication code to sign into Pulse.`,
+          console.info(
+            `User: ${user._key} successfully signed in, and sent auth msg.`,
           )
-        }
-
-        console.info(
-          `User: ${user._key} successfully signed in, and sent auth msg.`,
-        )
-
-        return {
-          status,
-          authenticateToken: token,
+          return {
+            authResult: {
+              token,
+              user,
+            },
+          }
         }
       } else {
         try {
