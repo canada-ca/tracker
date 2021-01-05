@@ -26,24 +26,23 @@ describe('authenticate user account', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-
-    tokenize = jest.fn().mockReturnValue('token')
-  })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
     // Generate DB Items
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
-    await truncate()
+    tokenize = jest.fn().mockReturnValue('token')
+  })
+
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
+
+  beforeEach(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     await graphql(
       schema,
       `
@@ -80,10 +79,14 @@ describe('authenticate user account', () => {
         },
       },
     )
-    consoleOutput = []
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -124,8 +127,17 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -152,9 +164,11 @@ describe('authenticate user account', () => {
           const expectedResponse = {
             data: {
               signIn: {
-                status:
-                  "We've sent you a text message with an authentication code to sign into Pulse.",
-                authenticateToken: 'token',
+                result: {
+                  status:
+                    "We've sent you a text message with an authentication code to sign into Pulse.",
+                  authenticateToken: 'token',
+                },
               },
             },
           }
@@ -173,7 +187,7 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('user is not phone validated', () => {
+      describe('user is email validated validated', () => {
         it('returns status message and authentication token', async () => {
           let cursor = await query`
             FOR user IN users
@@ -184,7 +198,7 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false } IN users
+              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: true } IN users
           `
 
           const response = await graphql(
@@ -197,8 +211,17 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -225,9 +248,11 @@ describe('authenticate user account', () => {
           const expectedResponse = {
             data: {
               signIn: {
-                status:
-                  "We've sent you an email with an authentication code to sign into Pulse.",
-                authenticateToken: 'token',
+                result: {
+                  status:
+                    "We've sent you an email with an authentication code to sign into Pulse.",
+                  authenticateToken: 'token',
+                },
               },
             },
           }
@@ -241,6 +266,89 @@ describe('authenticate user account', () => {
 
           expect(response).toEqual(expectedResponse)
           expect(mockNotify).toHaveBeenCalledWith({ user })
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully signed in, and sent auth msg.`,
+          ])
+        })
+      })
+      describe('user us not validated', () => {
+        it('returns an auth result with an auth token', async () => {
+          let cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key }, user)
+          `
+          let user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: false } IN users
+          `
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              signIn: {
+                result: {
+                  authResult: {
+                    authToken: 'token',
+                  },
+                },
+              },
+            },
+          }
+
+          cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key }, user)
+          `
+          user = await cursor.next()
+
+          expect(response).toEqual(expectedResponse)
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
           ])
@@ -271,8 +379,17 @@ describe('authenticate user account', () => {
                   password: "testpassword123"
                 }
               ) {
-                status
-                authenticateToken
+                result {
+                  ... on TFASignInResult {
+                    authenticateToken
+                    status
+                  }
+                  ... on RegularSignInResult {
+                    authResult {
+                      authToken
+                    }
+                  }
+                }
               }
             }
           `,
@@ -319,8 +436,17 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -378,8 +504,17 @@ describe('authenticate user account', () => {
                     password: "newpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -434,8 +569,17 @@ describe('authenticate user account', () => {
                     password: "newpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -493,8 +637,17 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -540,7 +693,7 @@ describe('authenticate user account', () => {
 
           const userNameLoader = userLoaderByUserName(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -554,15 +707,24 @@ describe('authenticate user account', () => {
                     password: "newpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -604,7 +766,7 @@ describe('authenticate user account', () => {
 
           const userNameLoader = userLoaderByUserName(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -618,15 +780,24 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -664,12 +835,12 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false } IN users
+              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: true } IN users
           `
 
           const userNameLoader = userLoaderByUserName(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockResolvedValueOnce(query)
             .mockRejectedValue(new Error('Database error occurred.'))
@@ -684,15 +855,24 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -758,8 +938,17 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -786,8 +975,10 @@ describe('authenticate user account', () => {
           const expectedResponse = {
             data: {
               signIn: {
-                status: 'todo',
-                authenticateToken: 'token',
+                result: {
+                  status: 'todo',
+                  authenticateToken: 'token',
+                },
               },
             },
           }
@@ -806,7 +997,7 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('user is not phone validated', () => {
+      describe('user is email validated', () => {
         it('returns status message and authentication token', async () => {
           let cursor = await query`
             FOR user IN users
@@ -817,7 +1008,7 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false } IN users
+              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: true } IN users
           `
 
           const response = await graphql(
@@ -830,8 +1021,17 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -858,8 +1058,10 @@ describe('authenticate user account', () => {
           const expectedResponse = {
             data: {
               signIn: {
-                status: 'todo',
-                authenticateToken: 'token',
+                result: {
+                  status: 'todo',
+                  authenticateToken: 'token',
+                },
               },
             },
           }
@@ -873,6 +1075,89 @@ describe('authenticate user account', () => {
 
           expect(response).toEqual(expectedResponse)
           expect(mockNotify).toHaveBeenCalledWith({ user })
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully signed in, and sent auth msg.`,
+          ])
+        })
+      })
+      describe('user us not validated', () => {
+        it('returns an auth result with an auth token', async () => {
+          let cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key }, user)
+          `
+          let user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: false } IN users
+          `
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          )
+
+          const expectedResponse = {
+            data: {
+              signIn: {
+                result: {
+                  authResult: {
+                    authToken: 'token',
+                  },
+                },
+              },
+            },
+          }
+
+          cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key }, user)
+          `
+          user = await cursor.next()
+
+          expect(response).toEqual(expectedResponse)
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
           ])
@@ -903,8 +1188,17 @@ describe('authenticate user account', () => {
                   password: "testpassword123"
                 }
               ) {
-                status
-                authenticateToken
+                result {
+                  ... on TFASignInResult {
+                    authenticateToken
+                    status
+                  }
+                  ... on RegularSignInResult {
+                    authResult {
+                      authToken
+                    }
+                  }
+                }
               }
             }
           `,
@@ -951,8 +1245,17 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -1008,8 +1311,17 @@ describe('authenticate user account', () => {
                     password: "newpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -1062,8 +1374,17 @@ describe('authenticate user account', () => {
                     password: "newpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -1121,8 +1442,17 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
@@ -1164,7 +1494,7 @@ describe('authenticate user account', () => {
 
           const userNameLoader = userLoaderByUserName(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -1178,15 +1508,24 @@ describe('authenticate user account', () => {
                     password: "newpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1226,7 +1565,7 @@ describe('authenticate user account', () => {
 
           const userNameLoader = userLoaderByUserName(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -1240,15 +1579,24 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -1284,12 +1632,12 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false } IN users
+              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: true } IN users
           `
 
           const userNameLoader = userLoaderByUserName(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockResolvedValueOnce(query)
             .mockRejectedValue(new Error('Database error occurred.'))
@@ -1304,15 +1652,24 @@ describe('authenticate user account', () => {
                     password: "testpassword123"
                   }
                 ) {
-                  status
-                  authenticateToken
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      status
+                    }
+                    ... on RegularSignInResult {
+                      authResult {
+                        authToken
+                      }
+                    }
+                  }
                 }
               }
             `,
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,

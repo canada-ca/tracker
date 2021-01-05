@@ -17,7 +17,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotfiy = jest.fn()
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, migrate, schema, i18n
+  let query, drop, truncate, migrate, schema, i18n, user
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -25,22 +25,22 @@ describe('authenticate user account', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-  })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
     // Generate DB Items
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
-    await truncate()
+  })
+
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
+
+  beforeEach(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     await graphql(
       schema,
       `
@@ -77,10 +77,22 @@ describe('authenticate user account', () => {
         },
       },
     )
-    consoleOutput = []
+    const userCursor = await query`
+      FOR user IN users
+        FILTER user.userName == "test.account@istio.actually.exists"
+        UPDATE { _key: user._key, emailValidated: true } IN users
+        RETURN user
+    `
+    user = await userCursor.next()
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    consoleOutput.length = 0
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -98,13 +110,6 @@ describe('authenticate user account', () => {
     })
     describe('given successful update of users password', () => {
       it('returns a successful status message', async () => {
-        const cursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        const user = await cursor.next()
-
         const response = await graphql(
           schema,
           `
@@ -152,7 +157,7 @@ describe('authenticate user account', () => {
           `User: ${user._key} successfully updated their password.`,
         ])
 
-        consoleOutput = []
+        consoleOutput.length = 0
 
         const authenticateResponse = await graphql(
           schema,
@@ -164,7 +169,11 @@ describe('authenticate user account', () => {
                   password: "newtestpassword123"
                 }
               ) {
-                status
+                result {
+                  ... on TFASignInResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -191,8 +200,10 @@ describe('authenticate user account', () => {
         const expectedAuthResponse = {
           data: {
             signIn: {
-              status:
-                "We've sent you an email with an authentication code to sign into Pulse.",
+              result: {
+                status:
+                  "We've sent you an email with an authentication code to sign into Pulse.",
+              },
             },
           },
         }
@@ -298,13 +309,6 @@ describe('authenticate user account', () => {
       })
       describe('the current password does not match the password in the database', () => {
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -353,13 +357,6 @@ describe('authenticate user account', () => {
       })
       describe('the new password does not match the new password confirmation', () => {
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -408,13 +405,6 @@ describe('authenticate user account', () => {
       })
       describe('the new password does not meet GoC requirements', () => {
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -463,17 +453,10 @@ describe('authenticate user account', () => {
       })
       describe('database error occurs when updating password', () => {
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const userNameLoader = userLoaderByUserName(query)
           const idLoader = userLoaderByKey(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -495,7 +478,7 @@ describe('authenticate user account', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               userKey: user._key,
               auth: {
                 bcrypt,
@@ -537,13 +520,6 @@ describe('authenticate user account', () => {
     })
     describe('given successful update of users password', () => {
       it('returns a successful status message', async () => {
-        const cursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        const user = await cursor.next()
-
         const response = await graphql(
           schema,
           `
@@ -591,7 +567,7 @@ describe('authenticate user account', () => {
           `User: ${user._key} successfully updated their password.`,
         ])
 
-        consoleOutput = []
+        consoleOutput.length = 0
 
         const authenticateResponse = await graphql(
           schema,
@@ -603,7 +579,11 @@ describe('authenticate user account', () => {
                   password: "newtestpassword123"
                 }
               ) {
-                status
+                result {
+                  ... on TFASignInResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -630,7 +610,9 @@ describe('authenticate user account', () => {
         const expectedAuthResponse = {
           data: {
             signIn: {
-              status: 'todo',
+              result: {
+                status: 'todo',
+              },
             },
           },
         }
@@ -732,13 +714,6 @@ describe('authenticate user account', () => {
       })
       describe('the current password does not match the password in the database', () => {
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -783,13 +758,6 @@ describe('authenticate user account', () => {
       })
       describe('the new password does not match the new password confirmation', () => {
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -834,13 +802,6 @@ describe('authenticate user account', () => {
       })
       describe('the new password does not meet GoC requirements', () => {
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -885,17 +846,10 @@ describe('authenticate user account', () => {
       })
       describe('database error occurs when updating password', () => {
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await cursor.next()
-
           const userNameLoader = userLoaderByUserName(query)
           const idLoader = userLoaderByKey(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -917,7 +871,7 @@ describe('authenticate user account', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               userKey: user._key,
               auth: {
                 bcrypt,

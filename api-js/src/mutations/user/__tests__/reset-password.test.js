@@ -168,7 +168,17 @@ describe('reset users password', () => {
                   password: "newpassword123"
                 }
               ) {
-                status
+                result {
+                  ... on TFASignInResult {
+                    authenticateToken
+                    status
+                  }
+                  ... on RegularSignInResult {
+                    authResult {
+                      authToken
+                    }
+                  }
+                }
               }
             }
           `,
@@ -178,7 +188,7 @@ describe('reset users password', () => {
             query,
             auth: {
               bcrypt,
-              tokenize,
+              tokenize: jest.fn().mockReturnValue('token'),
             },
             validators: {
               cleanseInput,
@@ -195,8 +205,11 @@ describe('reset users password', () => {
         const expectedTestSignIn = {
           data: {
             signIn: {
-              status:
-                "We've sent you an email with an authentication code to sign into Pulse.",
+              result: {
+                authResult: {
+                  authToken: 'token',
+                },
+              },
             },
           },
         }
@@ -745,7 +758,17 @@ describe('reset users password', () => {
                   password: "newpassword123"
                 }
               ) {
-                status
+                result {
+                  ... on TFASignInResult {
+                    authenticateToken
+                    status
+                  }
+                  ... on RegularSignInResult {
+                    authResult {
+                      authToken
+                    }
+                  }
+                }
               }
             }
           `,
@@ -755,7 +778,7 @@ describe('reset users password', () => {
             query,
             auth: {
               bcrypt,
-              tokenize,
+              tokenize: jest.fn().mockReturnValue('token'),
             },
             validators: {
               cleanseInput,
@@ -772,7 +795,11 @@ describe('reset users password', () => {
         const expectedTestSignIn = {
           data: {
             signIn: {
-              status: 'todo',
+              result: {
+                authResult: {
+                  authToken: 'token',
+                },
+              },
             },
           },
         }
