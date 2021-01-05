@@ -10,7 +10,7 @@ import { Footer } from './Footer'
 import { Navigation } from './Navigation'
 import { Flex, Link, CSSReset, useToast, Box } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
-import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
+// import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -70,7 +70,7 @@ export default function App() {
             </Link>
           )}
 
-          {1 && (
+          {isLoggedIn() && (
             <Link to="/dmarc-summaries">
               <Trans>DMARC Report</Trans>
             </Link>
@@ -113,7 +113,7 @@ export default function App() {
           )}
         </Navigation>
 
-        {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
+        {/* {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />} */}
         <Main>
           <Suspense fallback={<div>Loading...</div>}>
             <Switch>

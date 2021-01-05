@@ -36,7 +36,7 @@ describe('<DmarcByDomainPage />', () => {
           query: FORWARD,
           variables: {
             month: 'LAST30DAYS',
-            year: '2020',
+            year: '2021',
             first: 10,
           },
         },
@@ -66,7 +66,7 @@ describe('<DmarcByDomainPage />', () => {
       {
         request: {
           query: FORWARD,
-          variables: { first: 10, month: 'LAST30DAYS', year: '2020' },
+          variables: { first: 10, month: 'LAST30DAYS', year: '2021' },
         },
         result: rawDmarcReportSummaryTableData,
       },
@@ -96,7 +96,7 @@ describe('<DmarcByDomainPage />', () => {
           query: FORWARD,
           variables: {
             month: 'LAST30DAYS',
-            year: '2020',
+            year: '2021',
             first: 10,
           },
         },
