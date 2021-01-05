@@ -1,7 +1,15 @@
 import React from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { string } from 'prop-types'
-import { Stack, SimpleGrid, Divider, Heading, Icon } from '@chakra-ui/core'
+import {
+  Stack,
+  SimpleGrid,
+  Divider,
+  Heading,
+  Icon,
+  Badge,
+  Box,
+} from '@chakra-ui/core'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { QUERY_CURRENT_USER } from './graphql/queries'
@@ -65,10 +73,27 @@ export default function UserPage() {
         />
       </Stack>
 
-      <Stack Stack p={25} spacing="4">
+      <Stack p={25} spacing="4">
         <Heading as="h1" size="lg" textAlign="left">
           <Trans>Account Details</Trans>
         </Heading>
+        <Box>
+          <Badge
+            variantColor={queryUserData.userPage.tfaValidated ? 'green' : 'red'}
+          >
+            <Trans>2FA Validated</Trans>
+          </Badge>
+        </Box>
+        <Box>
+          <Badge
+            variantColor={
+              queryUserData.userPage.emailValidated ? 'green' : 'red'
+            }
+          >
+            <Trans>Email Validated</Trans>
+          </Badge>
+        </Box>
+
         <TrackerButton
           w={['100%', '50%']}
           variant="primary"

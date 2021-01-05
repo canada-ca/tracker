@@ -26,8 +26,13 @@ msgid "*search bars do not actively search databases currently. They are used to
 msgstr "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
 
 #: src/UserCard.js:44
+#: src/UserPage.js:84
 msgid "2FA Validated"
 msgstr "2FA Validated"
+
+#: src/UserPage.js:93
+msgid "Email Validated"
+msgstr "Email Validated"
 
 #: src/guidanceTagConstants.js:5
 msgid "3.2.2 Third Parties and DKIM"
