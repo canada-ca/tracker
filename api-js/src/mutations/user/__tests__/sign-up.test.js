@@ -73,7 +73,7 @@ describe('user sign up', () => {
                     userName
                     displayName
                     preferredLang
-                    tfaValidated
+                    phoneValidated
                     emailValidated
                   }
                 }
@@ -114,7 +114,7 @@ describe('user sign up', () => {
                   userName: 'test.account@istio.actually.exists',
                   displayName: 'Test Account',
                   preferredLang: 'ENGLISH',
-                  tfaValidated: false,
+                  phoneValidated: false,
                   emailValidated: false,
                 },
               },
@@ -150,7 +150,7 @@ describe('user sign up', () => {
                     userName
                     displayName
                     preferredLang
-                    tfaValidated
+                    phoneValidated
                     emailValidated
                   }
                 }
@@ -190,7 +190,7 @@ describe('user sign up', () => {
                   userName: 'test.account@istio.actually.exists',
                   displayName: 'Test Account',
                   preferredLang: 'FRENCH',
-                  tfaValidated: false,
+                  phoneValidated: false,
                   emailValidated: false,
                 },
               },
@@ -239,7 +239,7 @@ describe('user sign up', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -292,7 +292,7 @@ describe('user sign up', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -330,7 +330,7 @@ describe('user sign up', () => {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
             preferredLang: 'french',
-            tfaValidated: false,
+            phoneValidated: false,
             emailValidated: false,
           })
         })
@@ -354,7 +354,7 @@ describe('user sign up', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -414,7 +414,7 @@ describe('user sign up', () => {
                         userName
                         displayName
                         preferredLang
-                        tfaValidated
+                        phoneValidated
                         emailValidated
                       }
                     }
@@ -479,7 +479,7 @@ describe('user sign up', () => {
                         userName
                         displayName
                         preferredLang
-                        tfaValidated
+                        phoneValidated
                         emailValidated
                       }
                     }
@@ -547,7 +547,7 @@ describe('user sign up', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -600,7 +600,7 @@ describe('user sign up', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -638,7 +638,7 @@ describe('user sign up', () => {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
             preferredLang: 'french',
-            tfaValidated: false,
+            phoneValidated: false,
             emailValidated: false,
           })
         })
@@ -662,7 +662,7 @@ describe('user sign up', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -722,7 +722,7 @@ describe('user sign up', () => {
                         userName
                         displayName
                         preferredLang
-                        tfaValidated
+                        phoneValidated
                         emailValidated
                       }
                     }
@@ -785,7 +785,7 @@ describe('user sign up', () => {
                         userName
                         displayName
                         preferredLang
-                        tfaValidated
+                        phoneValidated
                         emailValidated
                       }
                     }

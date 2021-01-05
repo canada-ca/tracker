@@ -57,7 +57,7 @@ describe('authenticate user account', () => {
         userName: 'test.account@istio.actually.exists',
         displayName: 'Test Account',
         preferredLang: 'french',
-        tfaValidated: false,
+        phoneValidated: false,
         emailValidated: false,
         tfaCode: 123456,
       })
@@ -91,7 +91,7 @@ describe('authenticate user account', () => {
                   userName
                   displayName
                   preferredLang
-                  tfaValidated
+                  phoneValidated
                   emailValidated
                 }
               }
@@ -125,7 +125,7 @@ describe('authenticate user account', () => {
                 userName: 'test.account@istio.actually.exists',
                 displayName: 'Test Account',
                 preferredLang: 'FRENCH',
-                tfaValidated: false,
+                phoneValidated: false,
                 emailValidated: false,
               },
             },
@@ -184,7 +184,7 @@ describe('authenticate user account', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -242,7 +242,7 @@ describe('authenticate user account', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -300,7 +300,7 @@ describe('authenticate user account', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -341,7 +341,7 @@ describe('authenticate user account', () => {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
             preferredLang: 'french',
-            tfaValidated: false,
+            phoneValidated: false,
             emailValidated: false,
             tfaCode: 123456,
           })
@@ -375,7 +375,7 @@ describe('authenticate user account', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -416,7 +416,7 @@ describe('authenticate user account', () => {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
             preferredLang: 'french',
-            tfaValidated: false,
+            phoneValidated: false,
             emailValidated: false,
             tfaCode: 123456,
           })
@@ -455,7 +455,7 @@ describe('authenticate user account', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -526,7 +526,7 @@ describe('authenticate user account', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -582,7 +582,7 @@ describe('authenticate user account', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -638,7 +638,7 @@ describe('authenticate user account', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -677,7 +677,7 @@ describe('authenticate user account', () => {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
             preferredLang: 'french',
-            tfaValidated: false,
+            phoneValidated: false,
             emailValidated: false,
             tfaCode: 123456,
           })
@@ -711,7 +711,7 @@ describe('authenticate user account', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
@@ -750,7 +750,7 @@ describe('authenticate user account', () => {
             userName: 'test.account@istio.actually.exists',
             displayName: 'Test Account',
             preferredLang: 'french',
-            tfaValidated: false,
+            phoneValidated: false,
             emailValidated: false,
             tfaCode: 123456,
           })
@@ -789,7 +789,7 @@ describe('authenticate user account', () => {
                       userName
                       displayName
                       preferredLang
-                      tfaValidated
+                      phoneValidated
                       emailValidated
                     }
                   }
