@@ -25,7 +25,7 @@ export function UserCard({ userName, tfa, role }) {
         )}
         {tfa !== null && (
           <Box>
-            <Badge variantColor={tfa ? 'green' : 'red'}>
+            <Badge variant="solid" variantColor={tfa ? 'green' : 'red'}>
               <Trans>2FA Validated</Trans>
             </Badge>
           </Box>

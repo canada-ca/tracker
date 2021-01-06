@@ -35,6 +35,18 @@ export function OrganizationCard({
   if (webSummary[0]?.percentage) webValue = webSummary[0]?.percentage
   if (mailSummary[0]?.percentage) mailValue = mailSummary[0]?.percentage
 
+  if (webValue % 1 >= 0.5) {
+    webValue = Math.ceil(webValue)
+  } else {
+    webValue = Math.floor(webValue)
+  }
+
+  if (mailValue % 1 >= 0.5) {
+    mailValue = Math.ceil(mailValue)
+  } else {
+    mailValue = Math.floor(mailValue)
+  }
+
   return (
     <ListItem {...rest}>
       <PseudoBox

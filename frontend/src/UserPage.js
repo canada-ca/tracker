@@ -79,6 +79,7 @@ export default function UserPage() {
         </Heading>
         <Box>
           <Badge
+            variant="solid"
             variantColor={queryUserData.userPage.tfaValidated ? 'green' : 'red'}
           >
             <Trans>2FA Validated</Trans>
@@ -86,6 +87,7 @@ export default function UserPage() {
         </Box>
         <Box>
           <Badge
+            variant="solid"
             variantColor={
               queryUserData.userPage.emailValidated ? 'green' : 'red'
             }

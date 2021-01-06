@@ -37,7 +37,7 @@ describe('<UserCard />', () => {
 
     const tfaBadge = getByText(/2FA Validated/i)
     expect(tfaBadge).toBeDefined()
-    expect(tfaBadge).toHaveStyle('background-color: rgb(198, 246, 213)')
+    expect(tfaBadge).toHaveStyle('background-color: rgb(56, 161, 105)')
   })
 
   it('badge is red when TwoFactor value is false', async () => {
@@ -59,6 +59,6 @@ describe('<UserCard />', () => {
 
     const tfaBadge = getByText(/2FA Validated/i)
     expect(tfaBadge).toBeDefined()
-    expect(tfaBadge).toHaveStyle('background-color: rgb(254, 215, 215)')
+    expect(tfaBadge).toHaveStyle('background-color: rgb(229, 62, 62)')
   })
 })
