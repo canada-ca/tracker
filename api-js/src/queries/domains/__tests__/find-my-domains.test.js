@@ -1,5 +1,4 @@
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const bcrypt = require('bcrypt')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
@@ -10,15 +9,15 @@ const { makeMigrations } = require('../../../../migrations')
 const { createQuerySchema } = require('../..')
 const { createMutationSchema } = require('../../../mutations')
 const { cleanseInput } = require('../../../validators')
-const { tokenize } = require('../../../auth')
+const { userRequired } = require('../../../auth')
 const {
   domainLoaderConnectionsByUserId,
-  userLoaderByUserName,
+  userLoaderByKey,
 } = require('../../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findMyDomainsQuery', () => {
-  let query, drop, truncate, migrate, schema, collections, org, i18n
+  let query, drop, truncate, migrate, schema, collections, org, i18n, user
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -26,9 +25,14 @@ describe('given findMyDomainsQuery', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    // Generate DB Items
+    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ query, drop, truncate, collections } = await migrate(
+      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+    ))
   })
 
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
@@ -37,49 +41,13 @@ describe('given findMyDomainsQuery', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
+    consoleOutput.length = 0
+
+    user = await collections.users.save({
+      displayName: 'Test Account',
+      userName: 'test.account@istio.actually.exists',
+      preferredLang: 'french',
+    })
 
     org = await collections.organizations.save({
       orgDetails: {
@@ -108,18 +76,16 @@ describe('given findMyDomainsQuery', () => {
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
   describe('given successful retrieval of domains', () => {
-    let user, domainOne, domainTwo
+    let domainOne, domainTwo
     beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
       await collections.affiliations.save({
         _from: org._id,
         _to: user._id,
@@ -158,26 +124,6 @@ describe('given findMyDomainsQuery', () => {
         _from: org._id,
       })
     })
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
-      await query`
-        LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userKey: e._to })
-        LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-        RETURN true
-      `
-      await query`
-        FOR claim IN claims
-          REMOVE claim IN claims
-      `
-    })
     describe('user queries for their domains', () => {
       it('returns domains', async () => {
         const response = await graphql(
@@ -208,6 +154,13 @@ describe('given findMyDomainsQuery', () => {
           {
             i18n,
             userKey: user._key,
+            auth: {
+              userRequired: userRequired({
+                i18n,
+                userKey: user._key,
+                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+              }),
+            },
             loaders: {
               domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
                 query,
@@ -305,6 +258,9 @@ describe('given findMyDomainsQuery', () => {
             {
               i18n,
               userKey: 1,
+              auth: {
+                userRequired: jest.fn(),
+              },
               loaders: {
                 domainLoaderConnectionsByUserId: mockedLoader,
               },
@@ -370,6 +326,9 @@ describe('given findMyDomainsQuery', () => {
             {
               i18n,
               userKey: 1,
+              auth: {
+                userRequired: jest.fn(),
+              },
               loaders: {
                 domainLoaderConnectionsByUserId: mockedLoader,
               },
