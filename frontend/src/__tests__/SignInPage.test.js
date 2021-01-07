@@ -105,9 +105,9 @@ describe('<SignInPage />', () => {
                 signIn: {
                   result: {
                     authenticateToken: values.authenticateToken,
-                    status: 'email',
+                    sendMethod: 'email',
+                    __typename: 'TFASignInResult',
                   },
-                  __typename: 'TFASignInResult',
                 },
               },
             },
