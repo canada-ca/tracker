@@ -11,9 +11,16 @@ const findMyOrganizations = {
   resolve: async (
     _,
     args,
-    { i18n, userKey, loaders: { orgLoaderConnectionsByUserId } },
+    {
+      i18n,
+      userKey,
+      auth: { userRequired },
+      loaders: { orgLoaderConnectionsByUserId },
+    },
   ) => {
     let orgConnections
+
+    await userRequired()
 
     try {
       orgConnections = await orgLoaderConnectionsByUserId(args)

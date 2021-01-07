@@ -18,9 +18,16 @@ const findMyDomains = {
   resolve: async (
     _,
     args,
-    { i18n, userKey, loaders: { domainLoaderConnectionsByUserId } },
+    {
+      i18n,
+      userKey,
+      auth: { userRequired },
+      loaders: { domainLoaderConnectionsByUserId },
+    },
   ) => {
     let domainConnections
+
+    await userRequired()
 
     try {
       domainConnections = await domainLoaderConnectionsByUserId(args)
