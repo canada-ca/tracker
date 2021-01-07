@@ -48,7 +48,7 @@ export default function SignInPage() {
     },
     onCompleted({ signIn }) {
       // 2FA not enabled
-      if (signIn.__typename === 'RegularSignInResult') {
+      if (signIn.result.__typename === 'RegularSignInResult') {
         login({
           jwt: signIn.result.authResult.authToken,
           tfa: signIn.result.authResult.user.tfaValidated,
@@ -66,7 +66,7 @@ export default function SignInPage() {
         })
       }
       // 2FA enabled
-      else if (signIn.__typename === 'TFASignInResult') {
+      else if (signIn.result.__typename === 'TFASignInResult') {
         // redirect to the authenticate page
         history.push(
           `/authenticate/${signIn.result.sendMethod}/${signIn.result.authenticateToken}`,
