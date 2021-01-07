@@ -19,15 +19,17 @@ import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
+import { useUserState } from './UserState'
+import { useLingui } from '@lingui/react'
 
 export default function SignInPage() {
+  const { login } = useUserState()
+  const { i18n } = useLingui()
   const history = useHistory()
   const toast = useToast()
 
   const validationSchema = object().shape({
-    password: string().required(
-      fieldRequirements.password.required.message,
-    ),
+    password: string().required(fieldRequirements.password.required.message),
     email: string()
       .required(fieldRequirements.email.required.message)
       .email(fieldRequirements.email.email.message),
@@ -45,8 +47,41 @@ export default function SignInPage() {
       })
     },
     onCompleted({ signIn }) {
-      // redirect to the authenticate page
-      history.push(`/authenticate/${signIn.authenticateToken}`)
+      // 2FA not enabled
+      if (signIn.__typename === 'RegularSignInResult') {
+        login({
+          jwt: signIn.result.authResult.authToken,
+          tfa: signIn.result.authResult.user.tfaValidated,
+          userName: signIn.result.authResult.user.userName,
+        })
+        // // redirect to the home page.
+        history.push('/')
+        // // Display a welcome message
+        toast({
+          title: i18n._(t`Sign In.`),
+          description: i18n._(t`Welcome, you are successfully signed in!`),
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+      }
+      // 2FA enabled
+      else if (signIn.__typename === 'TFASignInResult') {
+        // redirect to the authenticate page
+        history.push(
+          `/authenticate/${signIn.result.sendMethod}/${signIn.result.authenticateToken}`,
+        )
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect signIn.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect signIn.result typename.')
+      }
     },
   })
 
