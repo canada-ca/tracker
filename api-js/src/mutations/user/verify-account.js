@@ -82,8 +82,8 @@ const verifyAccount = new mutationWithClientMutationId({
     try {
       await query`
         UPSERT { _key: ${user._key} }
-          INSERT { emailValidated: true }
-          UPDATE { emailValidated: true }
+          INSERT { emailValidated: true, tfaSendMethod: 'email' }
+          UPDATE { emailValidated: true, tfaSendMethod: 'email' }
           IN users
       `
     } catch (err) {
@@ -98,7 +98,9 @@ const verifyAccount = new mutationWithClientMutationId({
     )
 
     return {
-      status: i18n._(t`Successfully verified account.`),
+      status: i18n._(
+        t`Successfully email verified account, and set TFA send method to email.`,
+      ),
     }
   },
 })

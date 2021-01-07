@@ -69,8 +69,8 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
     try {
       await query`
         UPSERT { _key: ${user._key} }
-          INSERT { phoneValidated: true }
-          UPDATE { phoneValidated: true }
+          INSERT { phoneValidated: true, tfaSendMethod: 'phone' }
+          UPDATE { phoneValidated: true, tfaSendMethod: 'phone' }
           IN users
       `
     } catch (err) {
@@ -87,7 +87,7 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
     )
 
     return {
-      status: i18n._(t`Successfully two factor authenticated.`),
+      status: i18n._(t`Successfully verified phone number, and set TFA send method to text.`),
     }
   },
 })
