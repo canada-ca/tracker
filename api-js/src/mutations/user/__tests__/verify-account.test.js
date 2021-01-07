@@ -115,7 +115,7 @@ describe('user send password reset email', () => {
         const expectedResult = {
           data: {
             verifyAccount: {
-              status: 'Successfully verified account.',
+              status: 'Successfully email verified account, and set TFA send method to email.',
             },
           },
         }
