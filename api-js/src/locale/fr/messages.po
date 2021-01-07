@@ -13,7 +13,7 @@ msgstr ""
 
 #: src/mutations/user/send-phone-code.js:47
 #: src/mutations/user/update-user-password.js:54
-#: src/mutations/user/update-user-profile.js:62
+#: src/mutations/user/update-user-profile.js:66
 #: src/mutations/user/verify-phone-number.js:34
 msgid "Authentication error, please sign in again."
 msgstr "todo"
@@ -30,6 +30,7 @@ msgid "Authentication error. Please sign in."
 msgstr "todo"
 
 #: src/types/base.js:911
+#: src/types/base.js:916
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "todo"
 
@@ -170,7 +171,7 @@ msgstr "todo"
 msgid "Permission error, not an admin for this user."
 msgstr "todo"
 
-#: src/mutations/user/update-user-profile.js:134
+#: src/mutations/user/update-user-profile.js:151
 msgid "Profile successfully updated."
 msgstr "todo"
 
@@ -235,6 +236,10 @@ msgstr "todo"
 msgid "Successfully dispatched one time scan."
 msgstr "todo"
 
+#: src/mutations/user/verify-account.js:102
+msgid "Successfully email verified account, and set TFA send method to email."
+msgstr "todo"
+
 #: src/mutations/user-affiliations/invite-user-to-org.js:186
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "todo"
@@ -255,19 +260,16 @@ msgstr "todo"
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "todo"
 
-#: src/mutations/user/verify-phone-number.js:90
-msgid "Successfully two factor authenticated."
-msgstr "todo"
-
-#: src/mutations/user/verify-account.js:101
-msgid "Successfully verified account."
-msgstr "todo"
-
 #: src/mutations/organizations/verify-organization.js:118
 msgid "Successfully verified organization: {0}."
 msgstr "todo"
 
 #: src/mutations/user/sign-in.js:63
+#: src/mutations/user/verify-phone-number.js:90
+msgid "Successfully verified phone number, and set TFA send method to text."
+msgstr "todo"
+
+#: src/mutations/user/sign-in.js:71
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "todo"
 
@@ -457,6 +459,7 @@ msgstr "todo"
 #: src/loaders/verified-domains/load-verified-domain-connections.js:142
 #: src/loaders/verified-domains/load-verified-domain-connections.js:152
 #: src/queries/domains/find-my-domains.js:38
+#: src/queries/domains/find-my-domains.js:31
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
@@ -609,8 +612,8 @@ msgstr "todo"
 msgid "Unable to sign in, please try again."
 msgstr "todo"
 
-#: src/mutations/user/sign-up.js:115
-#: src/mutations/user/sign-up.js:124
+#: src/mutations/user/sign-up.js:116
+#: src/mutations/user/sign-up.js:125
 msgid "Unable to sign up. Please try again."
 msgstr "todo"
 
@@ -656,8 +659,8 @@ msgstr "todo"
 msgid "Unable to update password. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/update-user-profile.js:72
-#: src/mutations/user/update-user-profile.js:129
+#: src/mutations/user/update-user-profile.js:76
+#: src/mutations/user/update-user-profile.js:146
 msgid "Unable to update profile. Please try again."
 msgstr "todo"
 
