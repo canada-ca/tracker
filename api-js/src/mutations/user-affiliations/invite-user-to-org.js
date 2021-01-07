@@ -109,7 +109,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       })
       const createAccountLink = `${request.protocol}://${request.get(
         'host',
-      )}/create-account/${token}`
+      )}/create-user/${token}`
 
       await sendOrgInviteCreateAccount({
         templateId,
