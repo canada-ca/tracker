@@ -78,20 +78,28 @@ export default function UserPage() {
           <Trans>Account Details</Trans>
         </Heading>
         <Box>
-          <Badge
-            variant="solid"
-            variantColor={queryUserData.userPage.tfaValidated ? 'green' : 'red'}
-          >
+          <Icon
+            size="icons.lg"
+            name={queryUserData.userPage.tfaValidated ? 'check' : 'close'}
+            color={
+              queryUserData.userPage.tfaValidated ? 'green.500' : 'red.500'
+            }
+            pr={2}
+          />
+          <Badge variant="outline" color="gray.900">
             <Trans>2FA Validated</Trans>
           </Badge>
         </Box>
         <Box>
-          <Badge
-            variant="solid"
-            variantColor={
-              queryUserData.userPage.emailValidated ? 'green' : 'red'
+          <Icon
+            size="icons.lg"
+            name={queryUserData.userPage.emailValidated ? 'check' : 'close'}
+            color={
+              queryUserData.userPage.emailValidated ? 'green.500' : 'red.500'
             }
-          >
+            pr={2}
+          />
+          <Badge variant="outline" color="gray.900">
             <Trans>Email Validated</Trans>
           </Badge>
         </Box>
