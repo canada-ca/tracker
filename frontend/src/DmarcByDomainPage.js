@@ -47,13 +47,7 @@ export default function DmarcByDomainPage() {
     relayRoot: 'findMyDomains',
   })
 
-  // TODO: Properly handle these errors
-  if (error)
-    return (
-      <Heading as="h3" size="lg" textAlign="center">
-        <Trans>Error while querying for DMARC report summary table</Trans>
-      </Heading>
-    )
+  if (error) return <ErrorFallbackMessage error={error} />
 
   // DMARC Summary Table setup
   let tableDisplay

@@ -448,19 +448,6 @@ export const QUERY_CURRENT_USER = gql`
       preferredLang
       tfaValidated
       emailValidated
-      affiliations {
-        edges {
-          node {
-            permission
-            organization {
-              id
-              name
-              slug
-              verified
-            }
-          }
-        }
-      }
     }
   }
 `

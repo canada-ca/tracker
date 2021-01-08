@@ -26,7 +26,6 @@ describe('<UserPage />', () => {
     {
       request: {
         query: QUERY_CURRENT_USER,
-        // variables: { userName: userName },
       },
       result: {
         data: {
@@ -37,23 +36,6 @@ describe('<UserPage />', () => {
             preferredLang: 'ENGLISH',
             tfaValidated: false,
             emailValidated: false,
-            affiliations: {
-              edges: [
-                {
-                  node: {
-                    permission: 'ADMIN',
-                    organization: {
-                      id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
-                      acronym: 'CSE',
-                      name: 'Test Org',
-                      slug: 'test-org',
-                      verified: false,
-                      domainCount: 3,
-                    },
-                  },
-                },
-              ],
-            },
           },
         },
       },

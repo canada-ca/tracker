@@ -8,7 +8,7 @@ export const rawDmarcReportSummaryTableData = {
             domain: 'domain1.ca',
             dmarcSummaryByPeriod: {
               month: 'LAST30DAYS',
-              year: '2020',
+              year: '2021',
               domain: 'domain1.ca',
               categoryPercentages: {
                 failPercentage: 31.5,
@@ -31,7 +31,7 @@ export const rawDmarcReportSummaryTableData = {
             domain: 'domain2.ca',
             dmarcSummaryByPeriod: {
               month: 'LAST30DAYS',
-              year: '2020',
+              year: '2021',
               domain: 'domain2.ca',
               categoryPercentages: {
                 failPercentage: 31.5,
