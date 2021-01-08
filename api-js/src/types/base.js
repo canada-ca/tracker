@@ -967,10 +967,10 @@ const userPersonalType = new GraphQLObjectType({
       description: 'Users preferred language.',
       resolve: ({ preferredLang }) => preferredLang,
     },
-    tfaValidated: {
+    phoneValidated: {
       type: GraphQLBoolean,
-      description: 'Has the user completed two factor authentication.',
-      resolve: ({ tfaValidated }) => tfaValidated,
+      description: 'Has the user completed phone validation.',
+      resolve: ({ phoneValidated }) => phoneValidated,
     },
     emailValidated: {
       type: GraphQLBoolean,

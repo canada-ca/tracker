@@ -98,7 +98,7 @@ const signUp = new mutationWithClientMutationId({
       userName: userName,
       password: hashedPassword,
       preferredLang: preferredLang,
-      tfaValidated: false,
+      phoneValidated: false,
       emailValidated: false,
       failedLoginAttempts: 0,
     }
