@@ -16,7 +16,7 @@ export default function TwoFactorAuthenticatePage() {
   const history = useHistory()
   const toast = useToast()
   const { i18n } = useLingui()
-  const { authenticateToken } = useParams()
+  const { sendMethod, authenticateToken } = useParams()
 
   const validationSchema = object().shape({
     twoFactorCode: number()
@@ -91,7 +91,11 @@ export default function TwoFactorAuthenticatePage() {
               <Trans>Two Factor Authentication</Trans>
             </Heading>
 
-            <AuthenticateField name="twoFactorCode" mb="4" />
+            <AuthenticateField
+              name="twoFactorCode"
+              mb="4"
+              sendMethod={sendMethod}
+            />
 
             <Button isLoading={isSubmitting} type="submit" variantColor="teal">
               <Trans>Submit</Trans>

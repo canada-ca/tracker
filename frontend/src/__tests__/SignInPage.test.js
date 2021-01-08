@@ -83,77 +83,164 @@ describe('<SignInPage />', () => {
   })
 
   describe('when sign-in succeeds', () => {
-    it('redirects to authenticate', async () => {
-      const values = {
-        email: 'testuser@testemail.ca',
-        password: 'testuserpassword',
-        authenticateToken: 'authenticate-token-test',
-      }
+    describe('and 2fa is enabled', () => {
+      it('redirects to authenticate', async () => {
+        const values = {
+          email: 'testuser@testemail.ca',
+          password: 'testuserpassword',
+          authenticateToken: 'authenticate-token-test',
+        }
 
-      const mocks = [
-        {
-          request: {
-            query: SIGN_IN,
-            variables: {
-              userName: values.email,
-              password: values.password,
+        const mocks = [
+          {
+            request: {
+              query: SIGN_IN,
+              variables: {
+                userName: values.email,
+                password: values.password,
+              },
             },
-          },
-          result: {
-            data: {
-              signIn: {
-                authenticateToken: values.authenticateToken,
+            result: {
+              data: {
+                signIn: {
+                  result: {
+                    authenticateToken: values.authenticateToken,
+                    sendMethod: 'email',
+                    __typename: 'TFASignInResult',
+                  },
+                },
               },
             },
           },
-        },
-      ]
+        ]
 
-      // create a history object and inject it so we can inspect it afterwards
-      // for the side effects of our form submission (a redirect to /!).
-      const history = createMemoryHistory({
-        initialEntries: ['/sign-in'],
-        initialIndex: 0,
-      })
+        // create a history object and inject it so we can inspect it afterwards
+        // for the side effects of our form submission (a redirect to /!).
+        const history = createMemoryHistory({
+          initialEntries: ['/sign-in'],
+          initialIndex: 0,
+        })
 
-      const { container, getByRole } = render(
-        <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfa: null }}
-        >
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <Router history={history}>
-                <MockedProvider mocks={mocks} addTypename={false}>
-                  <SignInPage />
-                </MockedProvider>
-              </Router>
-            </I18nProvider>
-          </ThemeProvider>
-        </UserStateProvider>,
-      )
-
-      const email = container.querySelector('#email')
-      const password = container.querySelector('#password')
-      const form = getByRole('form')
-
-      fireEvent.change(email, {
-        target: {
-          value: values.email,
-        },
-      })
-
-      fireEvent.change(password, {
-        target: {
-          value: values.password,
-        },
-      })
-
-      fireEvent.submit(form)
-
-      await waitFor(() => {
-        expect(history.location.pathname).toEqual(
-          `/authenticate/${values.authenticateToken}`,
+        const { container, getByRole } = render(
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfa: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <MockedProvider mocks={mocks} addTypename={false}>
+                    <SignInPage />
+                  </MockedProvider>
+                </Router>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>,
         )
+
+        const email = container.querySelector('#email')
+        const password = container.querySelector('#password')
+        const form = getByRole('form')
+
+        fireEvent.change(email, {
+          target: {
+            value: values.email,
+          },
+        })
+
+        fireEvent.change(password, {
+          target: {
+            value: values.password,
+          },
+        })
+
+        fireEvent.submit(form)
+
+        await waitFor(() => {
+          expect(history.location.pathname).toEqual(
+            `/authenticate/email/${values.authenticateToken}`,
+          )
+        })
+      })
+    })
+    describe('and 2fa is NOT enabled', () => {
+      it('redirects to home page', async () => {
+        const values = {
+          email: 'testuser@testemail.ca',
+          password: 'testuserpassword',
+        }
+
+        const mocks = [
+          {
+            request: {
+              query: SIGN_IN,
+              variables: {
+                userName: values.email,
+                password: values.password,
+              },
+            },
+            result: {
+              data: {
+                signIn: {
+                  result: {
+                    authResult: {
+                      user: {
+                        userName: 'Thalia.Rosenbaum@gmail.com',
+                        tfa: false,
+                      },
+                      authToken: 'test123stringJWT',
+                    },
+                    __typename: 'RegularSignInResult',
+                  },
+                },
+              },
+            },
+          },
+        ]
+
+        // create a history object and inject it so we can inspect it afterwards
+        // for the side effects of our form submission (a redirect to /!).
+        const history = createMemoryHistory({
+          initialEntries: ['/sign-in'],
+          initialIndex: 0,
+        })
+
+        const { container, getByRole } = render(
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfa: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <MockedProvider mocks={mocks} addTypename={false}>
+                    <SignInPage />
+                  </MockedProvider>
+                </Router>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>,
+        )
+
+        const email = container.querySelector('#email')
+        const password = container.querySelector('#password')
+        const form = getByRole('form')
+
+        fireEvent.change(email, {
+          target: {
+            value: values.email,
+          },
+        })
+
+        fireEvent.change(password, {
+          target: {
+            value: values.password,
+          },
+        })
+
+        fireEvent.submit(form)
+
+        await waitFor(() => {
+          expect(history.location.pathname).toEqual('/')
+        })
       })
     })
   })
