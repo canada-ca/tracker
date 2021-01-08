@@ -171,7 +171,7 @@ describe('reset users password', () => {
                 result {
                   ... on TFASignInResult {
                     authenticateToken
-                    status
+                    sendMethod
                   }
                   ... on RegularSignInResult {
                     authResult {
@@ -761,7 +761,7 @@ describe('reset users password', () => {
                 result {
                   ... on TFASignInResult {
                     authenticateToken
-                    status
+                    sendMethod
                   }
                   ... on RegularSignInResult {
                     authResult {

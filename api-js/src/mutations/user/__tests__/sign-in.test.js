@@ -104,7 +104,7 @@ describe('authenticate user account', () => {
     })
     describe('given successful sign in', () => {
       describe('user is phone validated', () => {
-        it('returns status message and authentication token', async () => {
+        it('returns sendMethod message and authentication token', async () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -130,7 +130,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -165,8 +165,7 @@ describe('authenticate user account', () => {
             data: {
               signIn: {
                 result: {
-                  status:
-                    "We've sent you a text message with an authentication code to sign into Pulse.",
+                  sendMethod: 'text',
                   authenticateToken: 'token',
                 },
               },
@@ -188,7 +187,7 @@ describe('authenticate user account', () => {
         })
       })
       describe('user is email validated validated', () => {
-        it('returns status message and authentication token', async () => {
+        it('returns sendMethod message and authentication token', async () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -214,7 +213,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -249,8 +248,7 @@ describe('authenticate user account', () => {
             data: {
               signIn: {
                 result: {
-                  status:
-                    "We've sent you an email with an authentication code to sign into Pulse.",
+                  sendMethod: 'email',
                   authenticateToken: 'token',
                 },
               },
@@ -298,7 +296,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -382,7 +380,7 @@ describe('authenticate user account', () => {
                 result {
                   ... on TFASignInResult {
                     authenticateToken
-                    status
+                    sendMethod
                   }
                   ... on RegularSignInResult {
                     authResult {
@@ -439,7 +437,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -507,7 +505,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -572,7 +570,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -640,7 +638,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -710,7 +708,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -783,7 +781,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -858,7 +856,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -915,7 +913,7 @@ describe('authenticate user account', () => {
     })
     describe('given successful sign in', () => {
       describe('user is phone validated', () => {
-        it('returns status message and authentication token', async () => {
+        it('returns sendMethod message and authentication token', async () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -941,7 +939,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -976,7 +974,7 @@ describe('authenticate user account', () => {
             data: {
               signIn: {
                 result: {
-                  status: 'todo',
+                  sendMethod: 'text',
                   authenticateToken: 'token',
                 },
               },
@@ -998,7 +996,7 @@ describe('authenticate user account', () => {
         })
       })
       describe('user is email validated', () => {
-        it('returns status message and authentication token', async () => {
+        it('returns sendMethod message and authentication token', async () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -1024,7 +1022,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -1059,7 +1057,7 @@ describe('authenticate user account', () => {
             data: {
               signIn: {
                 result: {
-                  status: 'todo',
+                  sendMethod: 'email',
                   authenticateToken: 'token',
                 },
               },
@@ -1107,7 +1105,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -1191,7 +1189,7 @@ describe('authenticate user account', () => {
                 result {
                   ... on TFASignInResult {
                     authenticateToken
-                    status
+                    sendMethod
                   }
                   ... on RegularSignInResult {
                     authResult {
@@ -1248,7 +1246,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -1314,7 +1312,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -1377,7 +1375,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -1445,7 +1443,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -1511,7 +1509,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -1582,7 +1580,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {
@@ -1655,7 +1653,7 @@ describe('authenticate user account', () => {
                   result {
                     ... on TFASignInResult {
                       authenticateToken
-                      status
+                      sendMethod
                     }
                     ... on RegularSignInResult {
                       authResult {

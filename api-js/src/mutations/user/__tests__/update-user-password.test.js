@@ -171,7 +171,7 @@ describe('authenticate user account', () => {
               ) {
                 result {
                   ... on TFASignInResult {
-                    status
+                    sendMethod
                   }
                 }
               }
@@ -201,8 +201,7 @@ describe('authenticate user account', () => {
           data: {
             signIn: {
               result: {
-                status:
-                  "We've sent you an email with an authentication code to sign into Pulse.",
+                sendMethod: 'email',
               },
             },
           },
@@ -581,7 +580,7 @@ describe('authenticate user account', () => {
               ) {
                 result {
                   ... on TFASignInResult {
-                    status
+                    sendMethod
                   }
                 }
               }
@@ -611,7 +610,7 @@ describe('authenticate user account', () => {
           data: {
             signIn: {
               result: {
-                status: 'todo',
+                sendMethod: 'email',
               },
             },
           },
