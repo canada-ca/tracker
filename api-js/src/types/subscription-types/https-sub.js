@@ -1,5 +1,5 @@
 const { GraphQLObjectType, GraphQLString, GraphQLList } = require('graphql')
-const { guidanceTagType } = require('../base/guidance-tags')
+const { guidanceTagType } = require('../base')
 
 const httpsSubType = new GraphQLObjectType({
   name: 'HttpsSub',

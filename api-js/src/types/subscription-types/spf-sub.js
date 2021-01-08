@@ -4,7 +4,7 @@ const {
   GraphQLString,
   GraphQLList,
 } = require('graphql')
-const { guidanceTagType } = require('../base/guidance-tags')
+const { guidanceTagType } = require('../base')
 
 const spfSubType = new GraphQLObjectType({
   name: 'SpfSub',

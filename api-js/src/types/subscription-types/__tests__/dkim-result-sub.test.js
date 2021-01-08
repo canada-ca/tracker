@@ -4,7 +4,7 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { GraphQLString, GraphQLList } = require('graphql')
 
 const { makeMigrations } = require('../../../../migrations')
-const { guidanceTagType } = require('../../base/guidance-tags')
+const { guidanceTagType } = require('../../base')
 const { dkimResultSubType } = require('../dkim-result-sub')
 const { dkimGuidanceTagLoader } = require('../../../loaders')
 

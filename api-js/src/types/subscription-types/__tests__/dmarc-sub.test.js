@@ -4,7 +4,7 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { GraphQLString, GraphQLList, GraphQLInt } = require('graphql')
 
 const { makeMigrations } = require('../../../../migrations')
-const { guidanceTagType } = require('../../base/guidance-tags')
+const { guidanceTagType } = require('../../base')
 const { dmarcSubType } = require('../dmarc-sub')
 const { dmarcGuidanceTagLoader } = require('../../../loaders')
 
