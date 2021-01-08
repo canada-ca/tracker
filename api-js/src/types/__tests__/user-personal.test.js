@@ -49,11 +49,11 @@ describe('given the user object', () => {
       expect(demoType).toHaveProperty('preferredLang')
       expect(demoType.preferredLang.type).toMatchObject(LanguageEnums)
     })
-    it('has a tfaValidated field', () => {
+    it('has a phoneValidated field', () => {
       const demoType = userPersonalType.getFields()
 
-      expect(demoType).toHaveProperty('tfaValidated')
-      expect(demoType.tfaValidated.type).toMatchObject(GraphQLBoolean)
+      expect(demoType).toHaveProperty('phoneValidated')
+      expect(demoType.phoneValidated.type).toMatchObject(GraphQLBoolean)
     })
     it('has a emailValidated field', () => {
       const demoType = userPersonalType.getFields()
@@ -209,11 +209,11 @@ describe('given the user object', () => {
         ).toEqual('english')
       })
     })
-    describe('testing the tfaValidated field', () => {
+    describe('testing the phoneValidated field', () => {
       it('returns the resolved value', () => {
         const demoType = userPersonalType.getFields()
 
-        expect(demoType.tfaValidated.resolve({ tfaValidated: true })).toEqual(
+        expect(demoType.phoneValidated.resolve({ phoneValidated: true })).toEqual(
           true,
         )
       })

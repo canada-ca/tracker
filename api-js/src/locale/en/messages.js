@@ -392,10 +392,6 @@
     'User role was updated successfully.':
       'User role was updated successfully.',
     'Username already in use.': 'Username already in use.',
-    "We've sent you a text message with an authentication code to sign into Pulse.":
-      "We've sent you a text message with an authentication code to sign into Pulse.",
-    "We've sent you an email with an authentication code to sign into Pulse.":
-      "We've sent you an email with an authentication code to sign into Pulse.",
     'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
       'You must provide a `first` or `last` value to properly paginate the `affiliation`.',
     'You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.':

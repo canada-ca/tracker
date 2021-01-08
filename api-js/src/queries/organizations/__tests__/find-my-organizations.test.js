@@ -1,5 +1,4 @@
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const bcrypt = require('bcrypt')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
@@ -10,10 +9,10 @@ const { makeMigrations } = require('../../../../migrations')
 const { createQuerySchema } = require('../..')
 const { createMutationSchema } = require('../../../mutations')
 const { cleanseInput } = require('../../../validators')
-const { tokenize } = require('../../../auth')
+const { userRequired } = require('../../../auth')
 const {
   orgLoaderConnectionsByUserId,
-  userLoaderByUserName,
+  userLoaderByKey,
 } = require('../../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -35,9 +34,14 @@ describe('given findMyOrganizationsQuery', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    // Generate DB Items
+    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ query, drop, truncate, collections } = await migrate(
+      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+    ))
   })
 
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
@@ -46,49 +50,13 @@ describe('given findMyOrganizationsQuery', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
+    consoleOutput.length = 0
+
+    user = await collections.users.save({
+      displayName: 'Test Account',
+      userName: 'test.account@istio.actually.exists',
+      preferredLang: 'french',
+    })
 
     orgOne = await collections.organizations.save({
       orgDetails: {
@@ -141,6 +109,10 @@ describe('given findMyOrganizationsQuery', () => {
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -157,12 +129,6 @@ describe('given findMyOrganizationsQuery', () => {
       })
     })
     beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
       await collections.affiliations.save({
         _from: orgOne._id,
         _to: user._id,
@@ -173,22 +139,6 @@ describe('given findMyOrganizationsQuery', () => {
         _to: user._id,
         permission: 'user',
       })
-    })
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
     })
     describe('given successful retrieval of domains', () => {
       describe('user queries for their organizations', () => {
@@ -227,6 +177,13 @@ describe('given findMyOrganizationsQuery', () => {
               {
                 i18n,
                 userKey: user._key,
+                auth: {
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
                 loaders: {
                   orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
                     query,
@@ -327,6 +284,9 @@ describe('given findMyOrganizationsQuery', () => {
           {
             i18n,
             userKey: user._key,
+            auth: {
+              userRequired: jest.fn(),
+            },
             loaders: {
               orgLoaderConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
             },
@@ -357,12 +317,6 @@ describe('given findMyOrganizationsQuery', () => {
       })
     })
     beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
       await collections.affiliations.save({
         _from: orgOne._id,
         _to: user._id,
@@ -373,22 +327,6 @@ describe('given findMyOrganizationsQuery', () => {
         _to: user._id,
         permission: 'user',
       })
-    })
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${orgOne._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${orgTwo._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
     })
     describe('given successful retrieval of domains', () => {
       describe('user queries for their organizations', () => {
@@ -427,6 +365,13 @@ describe('given findMyOrganizationsQuery', () => {
               {
                 i18n,
                 userKey: user._key,
+                auth: {
+                  userRequired: userRequired({
+                    i18n,
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  }),
+                },
                 loaders: {
                   orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
                     query,
@@ -527,6 +472,9 @@ describe('given findMyOrganizationsQuery', () => {
           {
             i18n,
             userKey: user._key,
+            auth: {
+              userRequired: jest.fn(),
+            },
             loaders: {
               orgLoaderConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
             },

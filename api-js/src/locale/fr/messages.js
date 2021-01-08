@@ -176,10 +176,6 @@
     'User could not be queried.': 'todo',
     'User role was updated successfully.': 'todo',
     'Username already in use.': 'todo',
-    "We've sent you a text message with an authentication code to sign into Pulse.":
-      'todo',
-    "We've sent you an email with an authentication code to sign into Pulse.":
-      'todo',
     'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.':

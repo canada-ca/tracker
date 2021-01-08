@@ -128,7 +128,7 @@ export default function App() {
               <Route path="/sign-in" component={SignInPage} />
 
               <Route
-                path="/authenticate/:authenticateToken"
+                path="/authenticate/:sendMethod/:authenticateToken"
                 component={TwoFactorAuthenticatePage}
               />
 
