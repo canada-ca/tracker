@@ -1,5 +1,5 @@
 const { stringify } = require('jest-matcher-utils')
-const { slugify } = require('..')
+const { slugify } = require('../slugify')
 
 describe('given a string', () => {
   it('lowers all characters', () => {
@@ -9,9 +9,9 @@ describe('given a string', () => {
     expect(slugify('a lot of spaces')).toEqual('a-lot-of-spaces')
   })
   it('changes special characters to ascii', () => {
-    expect(
-      slugify('á é í ó ú Á É Í Ó Ú ç Ç æ Æ œ Œ ® © € ¥ ª º ¹ ² ½ ¼'),
-    ).toEqual('a-e-i-o-u-a-e-i-o-u-c-c-ae-ae-oe-oe-r-c-eu-y-a-o-1-2-1-2-1-4')
+    expect(slugify('á é í ó ú Á É Í Ó Ú ç Ç ª º ¹ ² ½ ¼')).toEqual(
+      'a-e-i-o-u-a-e-i-o-u-c-c-a-o-1-2-1-2-1-4',
+    )
   })
   describe('if input value is not a string', () => {
     ;[123, {}, [], null, undefined, true].forEach((invalidInput) => {

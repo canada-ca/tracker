@@ -5,7 +5,10 @@ const slugify = (input) => {
     return undefined
   }
 
-  return urlSlug(input)
+  return urlSlug.convert(input, {
+    separator: '-',
+    transformer: urlSlug.LOWERCASE_TRANSFORMER,
+  })
 }
 
 module.exports = {
