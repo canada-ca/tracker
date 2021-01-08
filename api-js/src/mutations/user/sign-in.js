@@ -108,17 +108,13 @@ const signIn = new mutationWithClientMutationId({
           user = await userLoaderByUserName.load(userName)
 
           // Check to see if user has phone validated
-          let status
+          let sendMethod
           if (user.phoneValidated) {
             await sendAuthTextMsg({ user })
-            status = i18n._(
-              t`We've sent you a text message with an authentication code to sign into Pulse.`,
-            )
+            sendMethod = 'text'
           } else {
             await sendAuthEmail({ user })
-            status = i18n._(
-              t`We've sent you an email with an authentication code to sign into Pulse.`,
-            )
+            sendMethod = 'email'
           }
 
           console.info(
@@ -126,7 +122,7 @@ const signIn = new mutationWithClientMutationId({
           )
 
           return {
-            status,
+            sendMethod,
             authenticateToken: token,
           }
         } else {

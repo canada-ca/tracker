@@ -28,11 +28,11 @@ const tfaSignInResult = new GraphQLObjectType({
       description: 'Token used to verify during authentication.',
       resolve: ({ authenticateToken }) => authenticateToken,
     },
-    status: {
+    sendMethod: {
       type: GraphQLString,
       description:
         'Wether the authentication code was sent through text, or email.',
-      resolve: ({ status }) => status,
+      resolve: ({ sendMethod }) => sendMethod,
     },
   }),
 })
@@ -43,7 +43,7 @@ const signInUnion = new GraphQLUnionType({
     'This union is used when signing in to allow non-tfa users to still sign in.',
   types: [regularSignInResult, tfaSignInResult],
   resolveType(value) {
-    if ('status' in value) {
+    if ('sendMethod' in value) {
       return tfaSignInResult
     } else {
       return regularSignInResult
