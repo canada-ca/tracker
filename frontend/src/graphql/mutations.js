@@ -45,8 +45,17 @@ export const SIGN_UP = gql`
 export const SIGN_IN = gql`
   mutation signIn($userName: EmailAddress!, $password: String!) {
     signIn(input: { userName: $userName, password: $password }) {
-      authenticateToken
-      status
+		  result {
+        ... on TFASignInResult {
+          authenticateToken
+          sendMethod
+        }
+        ... on RegularSignInResult {
+          authResult {
+           authToken
+          }
+        }
+      }
     }
   }
 `
