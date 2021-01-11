@@ -420,8 +420,9 @@ export const QUERY_USER = gql`
       userName
       displayName
       preferredLang
-      tfaValidated
+      tfaSendMethod
       emailValidated
+      phoneValidated
       affiliations {
         edges {
           node {
@@ -446,7 +447,8 @@ export const QUERY_CURRENT_USER = gql`
       userName
       displayName
       preferredLang
-      tfaValidated
+      tfaSendMethod
+      phoneValidated
       emailValidated
     }
   }

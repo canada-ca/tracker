@@ -14,7 +14,7 @@ import {
 import { Trans, t } from '@lingui/macro'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
-import { string, shape, boolean } from 'prop-types'
+import { string, shape } from 'prop-types'
 import { useMutation } from '@apollo/client'
 import { INVITE_USER_TO_ORG, UPDATE_USER_ROLE } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
@@ -251,11 +251,7 @@ export default function UserList({ permission, userListData, orgId }) {
                 {/* > */}
                 {/*   <Icon name="minus" /> */}
                 {/* </TrackerButton> */}
-                <UserCard
-                  userName={node.user.userName}
-                  role={userRole}
-                  tfa={node.user.tfaValidated}
-                />
+                <UserCard userName={node.user.userName} role={userRole} />
               </Stack>
               <Stack isInline justifyContent="flex-end" align="center">
                 <FormLabel htmlFor="role_select" fontWeight="bold">
@@ -314,7 +310,6 @@ UserList.propTypes = {
     permission: string,
     user: shape({
       userName: string,
-      tfaValidated: boolean,
       displayName: string,
     }),
   }),

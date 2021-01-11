@@ -25,7 +25,7 @@ describe('<EditableUserLanguage />', () => {
         initialState={{
           userName: 'testUserName@email.com',
           jwt: 'string',
-          tfa: false,
+          tfaSendMethod: false,
         }}
       >
         <MockedProvider addTypename={false}>

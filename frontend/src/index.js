@@ -13,7 +13,7 @@ import { ApolloProvider } from '@apollo/client'
 
 ReactDOM.render(
   <UserStateProvider
-    initialState={{ userName: null, jwt: null, tfa: null, affiliations: null }}
+    initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
   >
     <ApolloProvider client={client}>
       <ThemeProvider theme={canada}>

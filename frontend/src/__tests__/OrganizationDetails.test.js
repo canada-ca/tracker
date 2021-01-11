@@ -154,7 +154,7 @@ describe('<OrganizationDetails />', () => {
               initialState={{
                 userName: 'user@example.com',
                 jwt: 'somestring',
-                tfa: null,
+                tfaSendMethod: null,
               }}
             >
               <MockedProvider mocks={mocks} addTypename={false}>

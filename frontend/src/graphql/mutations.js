@@ -23,7 +23,7 @@ export const SIGN_UP = gql`
         authToken
         user {
           userName
-          tfaValidated
+          tfaSendMethod
           affiliations {
             edges {
               node {
@@ -45,14 +45,18 @@ export const SIGN_UP = gql`
 export const SIGN_IN = gql`
   mutation signIn($userName: EmailAddress!, $password: String!) {
     signIn(input: { userName: $userName, password: $password }) {
-		  result {
+      result {
         ... on TFASignInResult {
           authenticateToken
           sendMethod
         }
         ... on RegularSignInResult {
           authResult {
-           authToken
+            authToken
+            user {
+              userName
+              tfaSendMethod
+            }
           }
         }
       }
@@ -75,7 +79,7 @@ export const AUTHENTICATE = gql`
         authToken
         user {
           userName
-          tfaValidated
+          tfaSendMethod
         }
       }
     }

@@ -37,7 +37,7 @@ describe('<GuidanceTagList />', () => {
   it('renders', async () => {
     const { getAllByText } = render(
       <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfa: null }}
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
