@@ -59,7 +59,7 @@ export default function CreateUserPage() {
     onCompleted({ signUp }) {
       login({
         jwt: signUp.authResult.authToken,
-        tfa: signUp.authResult.user.tfa,
+        tfaSendMethod: signUp.authResult.user.tfaSendMethod,
         userName: signUp.authResult.user.userName,
       })
       // redirect to the home page.

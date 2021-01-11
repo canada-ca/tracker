@@ -17,7 +17,7 @@ describe('useUserState()', () => {
         initialState={{
           userName: null,
           jwt: null,
-          tfa: null,
+          tfaSendMethod: null,
         }}
       >
         <Foo />
@@ -25,7 +25,7 @@ describe('useUserState()', () => {
     )
     await waitFor(() =>
       expect(userState).toMatchObject({
-        currentUser: { jwt: null, tfa: null, userName: null },
+        currentUser: { jwt: null, tfaSendMethod: null, userName: null },
         isLoggedIn: expect.any(Function),
         login: expect.any(Function),
         logout: expect.any(Function),
@@ -41,7 +41,7 @@ describe('<UserStateProvider/>', () => {
       initialState = {
         userName: null,
         jwt: null,
-        tfa: null,
+        tfaSendMethod: null,
       }
     })
 
@@ -59,7 +59,7 @@ describe('<UserStateProvider/>', () => {
         </UserStateProvider>,
       )
       expect(providedState).toMatchObject({
-        currentUser: { jwt: null, tfa: null, userName: null },
+        currentUser: { jwt: null, tfaSendMethod: null, userName: null },
         isLoggedIn: expect.any(Function),
         login: expect.any(Function),
         logout: expect.any(Function),
@@ -71,7 +71,7 @@ describe('<UserStateProvider/>', () => {
         it('sets the currentUser to the values provided', async () => {
           const testUser = {
             jwt: 'string',
-            tfa: true,
+            tfaSendMethod: true,
             userName: 'foo@example.com',
           }
 
@@ -106,7 +106,7 @@ describe('<UserStateProvider/>', () => {
 
           const testUser = {
             jwt: 'string',
-            tfa: true,
+            tfaSendMethod: true,
             userName: 'foo@example.com',
           }
 
@@ -141,7 +141,7 @@ describe('<UserStateProvider/>', () => {
         it('returns true if currentUser object values differ from initialState', async () => {
           const testUser = {
             jwt: 'string',
-            tfa: true,
+            tfaSendMethod: true,
             userName: 'foo@example.com',
           }
 
@@ -172,7 +172,7 @@ describe('<UserStateProvider/>', () => {
         it('returns false if currentUser object values match initialState', async () => {
           const testUser = {
             jwt: 'string',
-            tfa: true,
+            tfaSendMethod: true,
             userName: 'foo@example.com',
           }
 

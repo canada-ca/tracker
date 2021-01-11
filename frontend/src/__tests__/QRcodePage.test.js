@@ -43,7 +43,7 @@ describe('<QRcodePage />', () => {
           initialState={{
             userName: email,
             jwt: null,
-            tfa: null,
+            tfaSendMethod: null,
           }}
         >
           <MockedProvider mocks={mocks}>

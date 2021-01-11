@@ -1,9 +1,18 @@
 import React from 'react'
 import { Badge, Box, Text, PseudoBox, Stack } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
-import { bool, string } from 'prop-types'
+import { string, oneOf } from 'prop-types'
 
-export function UserCard({ userName, tfa, role }) {
+export function UserCard({ userName, tfaSendMethod, role }) {
+  const validationText =
+    tfaSendMethod === 'phone' ? (
+      <Trans>Phone 2FA</Trans>
+    ) : tfaSendMethod === 'email' ? (
+      <Trans>Email 2FA</Trans>
+    ) : (
+      <Trans>2FA not enabled</Trans>
+    )
+
   return (
     <PseudoBox width="100%" p="8">
       <Stack isInline align="center" mb={['1', '0']}>
@@ -23,13 +32,14 @@ export function UserCard({ userName, tfa, role }) {
             </Badge>
           </Box>
         )}
-        {tfa !== null && (
-          <Box>
-            <Badge variant="solid" variantColor={tfa ? 'green' : 'red'}>
-              <Trans>2FA Validated</Trans>
-            </Badge>
-          </Box>
-        )}
+        <Box>
+          <Badge
+            variant="solid"
+            variantColor={tfaSendMethod !== null ? 'green' : 'red'}
+          >
+            {validationText}
+          </Badge>
+        </Box>
       </Stack>
     </PseudoBox>
   )
@@ -38,5 +48,5 @@ export function UserCard({ userName, tfa, role }) {
 UserCard.propTypes = {
   userName: string.isRequired,
   role: string,
-  tfa: bool,
+  tfaSendMethod: oneOf(['phone', 'email']),
 }

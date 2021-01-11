@@ -51,7 +51,7 @@ export default function SignInPage() {
       if (signIn.result.__typename === 'RegularSignInResult') {
         login({
           jwt: signIn.result.authResult.authToken,
-          tfa: signIn.result.authResult.user.tfaValidated,
+          tfaSendMethod: signIn.result.authResult.user.tfaSendMethod,
           userName: signIn.result.authResult.user.userName,
         })
         // // redirect to the home page.

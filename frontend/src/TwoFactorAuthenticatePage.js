@@ -39,7 +39,7 @@ export default function TwoFactorAuthenticatePage() {
     onCompleted({ authenticate }) {
       login({
         jwt: authenticate.authResult.authToken,
-        tfa: authenticate.authResult.user.tfaValidated,
+        tfaSendMethod: authenticate.authResult.user.tfaSendMethod,
         userName: authenticate.authResult.user.userName,
       })
       // // redirect to the home page.

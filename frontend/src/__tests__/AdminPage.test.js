@@ -51,7 +51,11 @@ describe('<AdminPage />', () => {
   it('renders correctly', async () => {
     render(
       <UserStateProvider
-        initialState={{ userName: 'me', jwt: 'longstring', tfa: null }}
+        initialState={{
+          userName: 'me',
+          jwt: 'longstring',
+          tfaSendMethod: null,
+        }}
       >
         <I18nProvider i18n={i18n}>
           <ThemeProvider theme={theme}>

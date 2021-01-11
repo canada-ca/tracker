@@ -53,7 +53,7 @@ describe('<ScanDomain />', () => {
     it('returns error message', async () => {
       const { getByRole, queryByText } = render(
         <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfa: null }}
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -88,7 +88,7 @@ describe('<ScanDomain />', () => {
     it('submits a domain for scan', async () => {
       const { container, getByRole, queryByText } = render(
         <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfa: null }}
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>

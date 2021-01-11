@@ -24,7 +24,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
   it('renders correctly', async () => {
     const { getByText } = render(
       <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfa: null }}
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
@@ -52,7 +52,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
         it('displays an error message', async () => {
           const { getByText } = render(
             <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfa: null }}
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -103,7 +103,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
                 authResult: {
                   user: {
                     userName: 'Thalia.Rosenbaum@gmail.com',
-                    tfa: false,
+                    tfaSendMethod: false,
                   },
                   authToken: 'test123stringJWT',
                 },
@@ -122,7 +122,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
 
       const { container, getByRole } = render(
         <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfa: null }}
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
