@@ -29,7 +29,6 @@ msgstr "todo"
 msgid "Authentication error. Please sign in."
 msgstr "todo"
 
-#: src/types/base.js:911
 #: src/types/base.js:916
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "todo"
@@ -264,12 +263,11 @@ msgstr "todo"
 msgid "Successfully verified organization: {0}."
 msgstr "todo"
 
-#: src/mutations/user/sign-in.js:63
 #: src/mutations/user/verify-phone-number.js:90
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "todo"
 
-#: src/mutations/user/sign-in.js:71
+#: src/mutations/user/sign-in.js:63
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "todo"
 
@@ -459,7 +457,6 @@ msgstr "todo"
 #: src/loaders/verified-domains/load-verified-domain-connections.js:142
 #: src/loaders/verified-domains/load-verified-domain-connections.js:152
 #: src/queries/domains/find-my-domains.js:38
-#: src/queries/domains/find-my-domains.js:31
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
