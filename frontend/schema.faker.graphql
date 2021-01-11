@@ -221,7 +221,7 @@ type DkimFailureTable {
   guidance: String @examples(values: ["agg-dkim-failed", "agg-dkim-strict", "agg-dkim-unsigned"])
   # The address/domain used in the "From" field.
   headerFrom: String @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
-  # IP address of sending server. 
+  # IP address of sending server.
   sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
   # Total messages from this sender.
   totalMessages: Int @examples(values: [1247, 5687])
@@ -459,7 +459,7 @@ type DomainConnection {
   # A list of edges.
   edges: [DomainEdge] @listLength(min: 0, max: 5)
   # The total amount of domains the user has access to.
-  totalCount: Int 
+  totalCount: Int
     @fake(
       type: number
       options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
@@ -934,7 +934,7 @@ type PersonalUser implements Node {
   # Has the user email verified their account.
   emailValidated: Boolean @examples(values: [false, true])
   # The method in which TFA codes are sent.
-  tfaSendMethod: TFASendMethodEnum @examples(values: ["phone", "email"])
+  tfaSendMethod: TFASendMethodEnum @examples(values: ["PHONE", "EMAIL"])
   # Users affiliations to various organizations.
   affiliations(
     after: String
@@ -1339,7 +1339,7 @@ type SSLConnection {
   # A list of edges.
   edges: [SSLEdge] @listLength(min: 0, max: 5)
   # The total amount of https scans for a given domain.
-  totalCount: Int 
+  totalCount: Int
     @fake(
       type: number
       options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
