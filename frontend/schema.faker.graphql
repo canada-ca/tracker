@@ -33,7 +33,7 @@ type AuthResult {
 # being compared.
 type CategorizedSummary {
   # List of SummaryCategory objects with data for different computed categories.
-  categories: [SummaryCategory] @listLength(min: 0, max: 5)
+  categories: [SummaryCategory] @listLength(min: 2, max: 2)
   # Total domains that were check under this summary.
   total: Int @fake(
       type: number
