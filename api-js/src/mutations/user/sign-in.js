@@ -84,7 +84,7 @@ const signIn = new mutationWithClientMutationId({
           throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
 
-        if (user.phoneValidated || user.emailValidated) {
+        if (user.tfaSendMethod !== 'none') {
           // Generate TFA code
           const tfaCode = Math.floor(100000 + Math.random() * 900000)
 
@@ -109,7 +109,7 @@ const signIn = new mutationWithClientMutationId({
 
           // Check to see if user has phone validated
           let sendMethod
-          if (user.phoneValidated) {
+          if (user.tfaSendMethod === 'phone') {
             await sendAuthTextMsg({ user })
             sendMethod = 'text'
           } else {
