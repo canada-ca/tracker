@@ -10,17 +10,15 @@ export function UserCard({ userName, role }) {
           <Text fontSize="md">{userName}</Text>
         </Box>
         {role && (
-          <Box>
-            <Badge
-              color="primary"
-              bg="transparent"
-              borderColor="primary"
-              borderWidth="1px"
-              ml="auto"
-            >
-              {role}
-            </Badge>
-          </Box>
+          <Badge
+            color="primary"
+            bg="transparent"
+            borderColor="primary"
+            borderWidth="1px"
+            ml="auto"
+          >
+            {role}
+          </Badge>
         )}
       </Stack>
     </PseudoBox>
