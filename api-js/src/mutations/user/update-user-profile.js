@@ -4,7 +4,7 @@ const { GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { GraphQLEmailAddress, GraphQLPhoneNumber } = require('graphql-scalars')
 const { t } = require('@lingui/macro')
-const { LanguageEnums } = require('../../enums')
+const { LanguageEnums, TfaSendMethodEnum } = require('../../enums')
 
 const updateUserProfile = new mutationWithClientMutationId({
   name: 'UpdateUserProfile',
@@ -28,14 +28,17 @@ const updateUserProfile = new mutationWithClientMutationId({
       type: GraphQLPhoneNumber,
       description: 'The updated phone number the user wishes to change to.',
     },
+    tfaSendMethod: {
+      type: TfaSendMethodEnum,
+      description:
+        'The method in which the user wishes to have their TFA code sent via.',
+    },
   }),
   outputFields: () => ({
     status: {
       type: GraphQLString,
       description: 'The status if the user profile update was successful.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+      resolve: ({ status }) => status,
     },
   }),
   mutateAndGetPayload: async (
@@ -53,6 +56,7 @@ const updateUserProfile = new mutationWithClientMutationId({
     const userName = cleanseInput(args.userName).toLowerCase()
     const preferredLang = cleanseInput(args.preferredLang)
     const phoneNumber = cleanseInput(args.phoneNumber)
+    const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
 
     // Make sure userKey is not undefined
     if (typeof userKey === 'undefined') {
@@ -106,6 +110,18 @@ const updateUserProfile = new mutationWithClientMutationId({
       }
     }
 
+    let tfaSendMethod
+    if (subTfaSendMethod === 'phone' && user.phoneValidated) {
+      tfaSendMethod = 'phone'
+    } else if (subTfaSendMethod === 'email' && user.emailValidated) {
+      tfaSendMethod = 'email'
+    } else if (
+      subTfaSendMethod === 'none' ||
+      typeof user.tfaSendMethod !== 'undefined'
+    ) {
+      tfaSendMethod = 'none'
+    }
+
     // Create object containing updated data
     const updatedUser = {
       displayName: displayName || user.displayName,
@@ -113,6 +129,7 @@ const updateUserProfile = new mutationWithClientMutationId({
       preferredLang: preferredLang || user.preferredLang,
       phoneDetails: updatedPhoneDetails,
       phoneValidated: phoneValidated || user.phoneValidated,
+      tfaSendMethod: tfaSendMethod,
     }
 
     try {

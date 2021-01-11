@@ -45,6 +45,7 @@ describe('authenticate user account', () => {
       displayName: 'Test Account',
       userName: 'test.account@istio.actually.exists',
       preferredLang: 'french',
+      tfaSendMethod: 'none',
     })
     consoleOutput = []
   })
@@ -72,12 +73,12 @@ describe('authenticate user account', () => {
     describe('given successful update of users profile', () => {
       describe('user updates their display name', () => {
         it('returns a successful status message', async () => {
-          let cursor = await query`
+          const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN user
           `
-          let user = await cursor.next()
+          const user = await cursor.next()
 
           const response = await graphql(
             schema,
@@ -119,6 +120,42 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
+        })
+        it('updates the users display name', async () => {
+          let cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          let user = await cursor.next()
+
+          await graphql(
+            schema,
+            `
+              mutation {
+                updateUserProfile(input: { displayName: "John Doe" }) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userKey: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
 
           cursor = await query`
             FOR user IN users
@@ -131,12 +168,12 @@ describe('authenticate user account', () => {
       })
       describe('user updates their user name', () => {
         it('returns a successful status message', async () => {
-          let cursor = await query`
+          const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN user
           `
-          let user = await cursor.next()
+          const user = await cursor.next()
 
           const response = await graphql(
             schema,
@@ -180,6 +217,44 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
+        })
+        it('updates the user name', async () => {
+          let cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          let user = await cursor.next()
+
+          await graphql(
+            schema,
+            `
+              mutation {
+                updateUserProfile(
+                  input: { userName: "john.doe@istio.actually.works" }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userKey: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
 
           cursor = await query`
             FOR user IN users
@@ -192,12 +267,12 @@ describe('authenticate user account', () => {
       })
       describe('user updates their preferred language', () => {
         it('returns a successful status message', async () => {
-          let cursor = await query`
+          const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN user
           `
-          let user = await cursor.next()
+          const user = await cursor.next()
 
           const response = await graphql(
             schema,
@@ -239,6 +314,42 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
+        })
+        it('updates the preferred language', async () => {
+          let cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          let user = await cursor.next()
+
+          await graphql(
+            schema,
+            `
+              mutation {
+                updateUserProfile(input: { preferredLang: ENGLISH }) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userKey: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
 
           cursor = await query`
             FOR user IN users
@@ -515,110 +626,569 @@ describe('authenticate user account', () => {
           })
         })
       })
-      describe('user updates display name, user name, preferred language, and phone number', () => {
-        let updatedPhoneDetails
-        beforeEach(async () => {
-          await truncate()
-          updatedPhoneDetails = {
-            iv: crypto.randomBytes(12).toString('hex'),
-          }
-          const cipher = crypto.createCipheriv(
-            'aes-256-ccm',
-            String(CIPHER_KEY),
-            Buffer.from(updatedPhoneDetails.iv, 'hex'),
-            { authTagLength: 16 },
-          )
-          let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
-          encrypted += cipher.final('hex')
+      describe('user attempts to update their tfa send method', () => {
+        describe('user attempts to set to phone', () => {
+          describe('user is phone validated', () => {
+            beforeEach(async () => {
+              await truncate()
 
-          updatedPhoneDetails.phoneNumber = encrypted
-          updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+              const updatedPhoneDetails = {
+                iv: crypto.randomBytes(12).toString('hex'),
+              }
+              const cipher = crypto.createCipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(updatedPhoneDetails.iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
+              encrypted += cipher.final('hex')
 
-          await collections.users.save({
-            displayName: 'Test Account',
-            userName: 'test.account@istio.actually.exists',
-            preferredLang: 'french',
-            phoneValidated: true,
-            phoneDetails: updatedPhoneDetails,
+              updatedPhoneDetails.phoneNumber = encrypted
+              updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'english',
+                phoneValidated: true,
+                tfaSendMethod: 'none',
+                phoneDetails: updatedPhoneDetails,
+              })
+            })
+            it('returns message', async () => {
+              const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              const user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'Profile successfully updated.',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+            })
+            it('sets tfaSendMethod to `phone`', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+              expect(user.tfaSendMethod).toEqual('phone')
+            })
+          })
+          describe('user is not phone validated', () => {
+            beforeEach(async () => {
+              await truncate()
+
+              const updatedPhoneDetails = {
+                iv: crypto.randomBytes(12).toString('hex'),
+              }
+              const cipher = crypto.createCipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(updatedPhoneDetails.iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
+              encrypted += cipher.final('hex')
+
+              updatedPhoneDetails.phoneNumber = encrypted
+              updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'english',
+                phoneValidated: false,
+                tfaSendMethod: 'none',
+                phoneDetails: updatedPhoneDetails,
+              })
+            })
+            it('returns message', async () => {
+              const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              const user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'Profile successfully updated.',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+            })
+            it('does not change tfaSendMethod', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+              expect(user.tfaSendMethod).toEqual('none')
+            })
           })
         })
-        it('returns a successful status message', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
+        describe('user attempts to set to email', () => {
+          describe('user is email validated', () => {
+            beforeEach(async () => {
+              await truncate()
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'english',
+                emailValidated: true,
+                tfaSendMethod: 'none',
+              })
+            })
+            it('returns message', async () => {
+              const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              const user = await cursor.next()
 
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
-                    phoneNumber: "+12345678998"
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
+                      status
+                    }
                   }
-                ) {
-                  status
-                }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'Profile successfully updated.',
+                  },
+                },
               }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
 
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                status: 'Profile successfully updated.',
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+            })
+            it('sets tfaSendMethod to `email`', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+              expect(user.tfaSendMethod).toEqual('email')
+            })
+          })
+          describe('user is not email validated', () => {
+            beforeEach(async () => {
+              await truncate()
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'english',
+                emailValidated: false,
+                tfaSendMethod: 'none',
+              })
+            })
+            it('returns message', async () => {
+              const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              const user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'Profile successfully updated.',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+            })
+            it('does not change tfaSendMethod', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+              expect(user.tfaSendMethod).toEqual('none')
+            })
+          })
+        })
+        describe('user attempts to set to none', () => {
+          beforeEach(async () => {
+            await truncate()
+            await collections.users.save({
+              displayName: 'Test Account',
+              userName: 'test.account@istio.actually.exists',
+              preferredLang: 'english',
+              emailValidated: true,
+              tfaSendMethod: 'email',
+            })
+          })
+          it('returns message', async () => {
+            const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+            const user = await cursor.next()
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(input: { tfaSendMethod: NONE }) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: userLoaderByUserName(query),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
               },
-            },
-          }
+            )
 
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
+            const expectedResponse = {
+              data: {
+                updateUserProfile: {
+                  status: 'Profile successfully updated.',
+                },
+              },
+            }
 
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "john.smith@istio.actually.works"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.displayName).toEqual('John Smith')
-          expect(user.userName).toEqual('john.smith@istio.actually.works')
-          expect(user.preferredLang).toEqual('english')
-          const { iv, tag, phoneNumber: encrypted } = user.phoneDetails
-          const decipher = crypto.createDecipheriv(
-            'aes-256-ccm',
-            String(CIPHER_KEY),
-            Buffer.from(iv, 'hex'),
-            { authTagLength: 16 },
-          )
-          decipher.setAuthTag(Buffer.from(tag, 'hex'))
-          let decrypted = decipher.update(encrypted, 'hex', 'utf8')
-          decrypted += decipher.final('utf8')
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully updated their profile.`,
+            ])
+          })
+          it('sets tfaSendMethod to `none`', async () => {
+            let cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
+            `
+            let user = await cursor.next()
 
-          expect(decrypted).toEqual('+12345678998')
+            await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(input: { tfaSendMethod: NONE }) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: userLoaderByUserName(query),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
+            `
+            user = await cursor.next()
+            expect(user.tfaSendMethod).toEqual('none')
+          })
         })
       })
     })
@@ -792,12 +1362,12 @@ describe('authenticate user account', () => {
     describe('given successful update of users profile', () => {
       describe('user updates their display name', () => {
         it('returns a successful status message', async () => {
-          let cursor = await query`
+          const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN user
           `
-          let user = await cursor.next()
+          const user = await cursor.next()
 
           const response = await graphql(
             schema,
@@ -839,6 +1409,42 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
+        })
+        it('updates the users display name', async () => {
+          let cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          let user = await cursor.next()
+
+          await graphql(
+            schema,
+            `
+              mutation {
+                updateUserProfile(input: { displayName: "John Doe" }) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userKey: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
 
           cursor = await query`
             FOR user IN users
@@ -851,12 +1457,12 @@ describe('authenticate user account', () => {
       })
       describe('user updates their user name', () => {
         it('returns a successful status message', async () => {
-          let cursor = await query`
+          const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN user
           `
-          let user = await cursor.next()
+          const user = await cursor.next()
 
           const response = await graphql(
             schema,
@@ -900,6 +1506,44 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
+        })
+        it('updates the user name', async () => {
+          let cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          let user = await cursor.next()
+
+          await graphql(
+            schema,
+            `
+              mutation {
+                updateUserProfile(
+                  input: { userName: "john.doe@istio.actually.works" }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userKey: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
 
           cursor = await query`
             FOR user IN users
@@ -912,12 +1556,12 @@ describe('authenticate user account', () => {
       })
       describe('user updates their preferred language', () => {
         it('returns a successful status message', async () => {
-          let cursor = await query`
+          const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN user
           `
-          let user = await cursor.next()
+          const user = await cursor.next()
 
           const response = await graphql(
             schema,
@@ -959,18 +1603,8 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.preferredLang).toEqual('english')
         })
-      })
-      describe('user updates display name, user name, and preferred language', () => {
-        it('returns a successful status message', async () => {
+        it('updates the preferred language', async () => {
           let cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -978,17 +1612,11 @@ describe('authenticate user account', () => {
           `
           let user = await cursor.next()
 
-          const response = await graphql(
+          await graphql(
             schema,
             `
               mutation {
-                updateUserProfile(
-                  input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
-                  }
-                ) {
+                updateUserProfile(input: { preferredLang: ENGLISH }) {
                   status
                 }
               }
@@ -1012,28 +1640,844 @@ describe('authenticate user account', () => {
             },
           )
 
-          const expectedResponse = {
-            data: {
-              updateUserProfile: {
-                status: 'todo',
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
-
           cursor = await query`
             FOR user IN users
-              FILTER user.userName == "john.smith@istio.actually.works"
+              FILTER user.userName == "test.account@istio.actually.exists"
               RETURN user
           `
           user = await cursor.next()
-          expect(user.displayName).toEqual('John Smith')
-          expect(user.userName).toEqual('john.smith@istio.actually.works')
           expect(user.preferredLang).toEqual('english')
+        })
+      })
+      describe('user attempts to update their phone number', () => {
+        describe('user is phone validated', () => {
+          describe('user updates their phone number', () => {
+            beforeEach(async () => {
+              await truncate()
+              const updatedPhoneDetails = {
+                iv: crypto.randomBytes(12).toString('hex'),
+              }
+              const cipher = crypto.createCipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(updatedPhoneDetails.iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
+              encrypted += cipher.final('hex')
+
+              updatedPhoneDetails.phoneNumber = encrypted
+              updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'french',
+                phoneValidated: true,
+                phoneDetails: updatedPhoneDetails,
+              })
+            })
+            it('returns a successful status message', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { phoneNumber: "+98765432112" }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+
+              const { iv, tag, phoneNumber: encrypted } = user.phoneDetails
+              const decipher = crypto.createDecipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              decipher.setAuthTag(Buffer.from(tag, 'hex'))
+              let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+              decrypted += decipher.final('utf8')
+
+              expect(decrypted).toEqual('+98765432112')
+            })
+          })
+          describe('phone number is the same', () => {
+            beforeEach(async () => {
+              await truncate()
+              const updatedPhoneDetails = {
+                iv: crypto.randomBytes(12).toString('hex'),
+              }
+              const cipher = crypto.createCipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(updatedPhoneDetails.iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
+              encrypted += cipher.final('hex')
+
+              updatedPhoneDetails.phoneNumber = encrypted
+              updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'french',
+                phoneValidated: true,
+                phoneDetails: updatedPhoneDetails,
+              })
+            })
+            it('returns a successful status message', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { phoneNumber: "+12345678998" }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+
+              const { iv, tag, phoneNumber: encrypted } = user.phoneDetails
+              const decipher = crypto.createDecipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              decipher.setAuthTag(Buffer.from(tag, 'hex'))
+              let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+              decrypted += decipher.final('utf8')
+
+              expect(decrypted).toEqual('+12345678998')
+            })
+          })
+        })
+        describe('user is not phone validated', () => {
+          beforeEach(async () => {
+            await truncate()
+
+            await collections.users.save({
+              displayName: 'Test Account',
+              userName: 'test.account@istio.actually.exists',
+              preferredLang: 'french',
+              phoneValidated: false,
+            })
+          })
+          it('does not update their phone number', async () => {
+            let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+            let user = await cursor.next()
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(input: { phoneNumber: "+12345678998" }) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: userLoaderByUserName(query),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const expectedResponse = {
+              data: {
+                updateUserProfile: {
+                  status: 'todo',
+                },
+              },
+            }
+
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully updated their profile.`,
+            ])
+
+            cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+            user = await cursor.next()
+
+            expect(typeof user.phoneDetails).toEqual('undefined')
+          })
+        })
+      })
+      describe('user attempts to update their tfa send method', () => {
+        describe('user attempts to set to phone', () => {
+          describe('user is phone validated', () => {
+            beforeEach(async () => {
+              await truncate()
+
+              const updatedPhoneDetails = {
+                iv: crypto.randomBytes(12).toString('hex'),
+              }
+              const cipher = crypto.createCipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(updatedPhoneDetails.iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
+              encrypted += cipher.final('hex')
+
+              updatedPhoneDetails.phoneNumber = encrypted
+              updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'english',
+                phoneValidated: true,
+                tfaSendMethod: 'none',
+                phoneDetails: updatedPhoneDetails,
+              })
+            })
+            it('returns message', async () => {
+              const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              const user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+            })
+            it('sets tfaSendMethod to `phone`', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+              expect(user.tfaSendMethod).toEqual('phone')
+            })
+          })
+          describe('user is not phone validated', () => {
+            beforeEach(async () => {
+              await truncate()
+
+              const updatedPhoneDetails = {
+                iv: crypto.randomBytes(12).toString('hex'),
+              }
+              const cipher = crypto.createCipheriv(
+                'aes-256-ccm',
+                String(CIPHER_KEY),
+                Buffer.from(updatedPhoneDetails.iv, 'hex'),
+                { authTagLength: 16 },
+              )
+              let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
+              encrypted += cipher.final('hex')
+
+              updatedPhoneDetails.phoneNumber = encrypted
+              updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
+
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'english',
+                phoneValidated: false,
+                tfaSendMethod: 'none',
+                phoneDetails: updatedPhoneDetails,
+              })
+            })
+            it('returns message', async () => {
+              const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              const user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+            })
+            it('does not change tfaSendMethod', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+              expect(user.tfaSendMethod).toEqual('none')
+            })
+          })
+        })
+        describe('user attempts to set to email', () => {
+          describe('user is email validated', () => {
+            beforeEach(async () => {
+              await truncate()
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'english',
+                emailValidated: true,
+                tfaSendMethod: 'none',
+              })
+            })
+            it('returns message', async () => {
+              const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              const user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+            })
+            it('sets tfaSendMethod to `email`', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+              expect(user.tfaSendMethod).toEqual('email')
+            })
+          })
+          describe('user is not email validated', () => {
+            beforeEach(async () => {
+              await truncate()
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test.account@istio.actually.exists',
+                preferredLang: 'english',
+                emailValidated: false,
+                tfaSendMethod: 'none',
+              })
+            })
+            it('returns message', async () => {
+              const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              const user = await cursor.next()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  updateUserProfile: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully updated their profile.`,
+              ])
+            })
+            it('does not change tfaSendMethod', async () => {
+              let cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              let user = await cursor.next()
+
+              await graphql(
+                schema,
+                `
+                  mutation {
+                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  userKey: user._key,
+                  auth: {
+                    bcrypt,
+                    tokenize,
+                  },
+                  validators: {
+                    cleanseInput,
+                  },
+                  loaders: {
+                    userLoaderByUserName: userLoaderByUserName(query),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+              user = await cursor.next()
+              expect(user.tfaSendMethod).toEqual('none')
+            })
+          })
+        })
+        describe('user attempts to set to none', () => {
+          beforeEach(async () => {
+            await truncate()
+            await collections.users.save({
+              displayName: 'Test Account',
+              userName: 'test.account@istio.actually.exists',
+              preferredLang: 'english',
+              emailValidated: true,
+              tfaSendMethod: 'email',
+            })
+          })
+          it('returns message', async () => {
+            const cursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+            const user = await cursor.next()
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(input: { tfaSendMethod: NONE }) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: userLoaderByUserName(query),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const expectedResponse = {
+              data: {
+                updateUserProfile: {
+                  status: 'todo',
+                },
+              },
+            }
+
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully updated their profile.`,
+            ])
+          })
+          it('sets tfaSendMethod to `none`', async () => {
+            let cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
+            `
+            let user = await cursor.next()
+
+            await graphql(
+              schema,
+              `
+                mutation {
+                  updateUserProfile(input: { tfaSendMethod: NONE }) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                userKey: user._key,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: userLoaderByUserName(query),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            cursor = await query`
+              FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
+            `
+            user = await cursor.next()
+            expect(user.tfaSendMethod).toEqual('none')
+          })
         })
       })
     })

@@ -152,6 +152,7 @@ describe('user sign up', () => {
                     preferredLang
                     phoneValidated
                     emailValidated
+                    tfaSendMethod
                   }
                 }
               }
@@ -192,6 +193,7 @@ describe('user sign up', () => {
                   preferredLang: 'FRENCH',
                   phoneValidated: false,
                   emailValidated: false,
+                  tfaSendMethod: 'NONE',
                 },
               },
             },

@@ -103,7 +103,7 @@ describe('authenticate user account', () => {
       })
     })
     describe('given successful sign in', () => {
-      describe('user is phone validated', () => {
+      describe('user has send method set to phone', () => {
         it('returns sendMethod message and authentication token', async () => {
           let cursor = await query`
             FOR user IN users
@@ -114,7 +114,7 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: true } IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'phone' } IN users
           `
 
           const response = await graphql(
@@ -186,7 +186,7 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('user is email validated validated', () => {
+      describe('user has send method set to email', () => {
         it('returns sendMethod message and authentication token', async () => {
           let cursor = await query`
             FOR user IN users
@@ -197,7 +197,7 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: true } IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
           `
 
           const response = await graphql(
@@ -269,7 +269,7 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('user us not validated', () => {
+      describe('user has send method set to none', () => {
         it('returns an auth result with an auth token', async () => {
           let cursor = await query`
             FOR user IN users
@@ -280,7 +280,7 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: false } IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
           `
 
           const response = await graphql(
@@ -833,7 +833,7 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: true } IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
           `
 
           const userNameLoader = userLoaderByUserName(query)
@@ -912,7 +912,7 @@ describe('authenticate user account', () => {
       })
     })
     describe('given successful sign in', () => {
-      describe('user is phone validated', () => {
+      describe('user has send method set to phone', () => {
         it('returns sendMethod message and authentication token', async () => {
           let cursor = await query`
             FOR user IN users
@@ -923,7 +923,7 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: true } IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'phone' } IN users
           `
 
           const response = await graphql(
@@ -995,7 +995,7 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('user is email validated', () => {
+      describe('user has send method set to email', () => {
         it('returns sendMethod message and authentication token', async () => {
           let cursor = await query`
             FOR user IN users
@@ -1006,7 +1006,7 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: true } IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
           `
 
           const response = await graphql(
@@ -1078,7 +1078,7 @@ describe('authenticate user account', () => {
           ])
         })
       })
-      describe('user us not validated', () => {
+      describe('user has send method set to none', () => {
         it('returns an auth result with an auth token', async () => {
           let cursor = await query`
             FOR user IN users
@@ -1089,7 +1089,7 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: false } IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'none' } IN users
           `
 
           const response = await graphql(
@@ -1630,7 +1630,7 @@ describe('authenticate user account', () => {
 
           await query`
             FOR user IN users
-              UPDATE ${user._key} WITH { phoneValidated: false, emailValidated: true } IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
           `
 
           const userNameLoader = userLoaderByUserName(query)

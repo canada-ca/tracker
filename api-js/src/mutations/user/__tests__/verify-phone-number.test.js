@@ -100,7 +100,8 @@ describe('user send password reset email', () => {
         const expectedResult = {
           data: {
             verifyPhoneNumber: {
-              status: 'Successfully two factor authenticated.',
+              status:
+                'Successfully verified phone number, and set TFA send method to text.',
             },
           },
         }

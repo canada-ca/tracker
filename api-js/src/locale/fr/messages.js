@@ -81,15 +81,17 @@
     'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Successfully dispatched one time scan.': 'todo',
+    'Successfully email verified account, and set TFA send method to email.':
+      'todo',
     'Successfully invited user to organization, and sent notification email.':
       'todo',
     'Successfully removed domain: {0} from {1}.': 'todo',
     'Successfully removed organization: {0}.': 'todo',
     'Successfully removed user from organization.': 'todo',
     'Successfully sent invitation to service, and organization email.': 'todo',
-    'Successfully two factor authenticated.': 'todo',
-    'Successfully verified account.': 'todo',
     'Successfully verified organization: {0}.': 'todo',
+    'Successfully verified phone number, and set TFA send method to text.':
+      'todo',
     'Too many failed login attempts, please reset your password, and try again.':
       'todo',
     'Two factor code has been successfully sent, you will receive a text message shortly.':

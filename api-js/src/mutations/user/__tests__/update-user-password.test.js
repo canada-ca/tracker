@@ -80,7 +80,7 @@ describe('authenticate user account', () => {
     const userCursor = await query`
       FOR user IN users
         FILTER user.userName == "test.account@istio.actually.exists"
-        UPDATE { _key: user._key, emailValidated: true } IN users
+        UPDATE { _key: user._key, tfaSendMethod: 'email' } IN users
         RETURN user
     `
     user = await userCursor.next()

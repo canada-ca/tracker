@@ -217,6 +217,8 @@
     },
     'Successfully dispatched one time scan.':
       'Successfully dispatched one time scan.',
+    'Successfully email verified account, and set TFA send method to email.':
+      'Successfully email verified account, and set TFA send method to email.',
     'Successfully invited user to organization, and sent notification email.':
       'Successfully invited user to organization, and sent notification email.',
     'Successfully removed domain: {0} from {1}.': function (a) {
@@ -229,12 +231,11 @@
       'Successfully removed user from organization.',
     'Successfully sent invitation to service, and organization email.':
       'Successfully sent invitation to service, and organization email.',
-    'Successfully two factor authenticated.':
-      'Successfully two factor authenticated.',
-    'Successfully verified account.': 'Successfully verified account.',
     'Successfully verified organization: {0}.': function (a) {
       return ['Successfully verified organization: ', a('0'), '.']
     },
+    'Successfully verified phone number, and set TFA send method to text.':
+      'Successfully verified phone number, and set TFA send method to text.',
     'Too many failed login attempts, please reset your password, and try again.':
       'Too many failed login attempts, please reset your password, and try again.',
     'Two factor code has been successfully sent, you will receive a text message shortly.':

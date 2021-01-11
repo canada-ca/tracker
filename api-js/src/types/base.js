@@ -22,7 +22,12 @@ const {
 } = require('graphql-scalars')
 const { t } = require('@lingui/macro')
 
-const { RoleEnums, LanguageEnums, PeriodEnums } = require('../enums')
+const {
+  RoleEnums,
+  LanguageEnums,
+  PeriodEnums,
+  TfaSendMethodEnum,
+} = require('../enums')
 const { Acronym, Domain, Slug, Selectors, Year } = require('../scalars')
 const { periodType } = require('./dmarc-report')
 const { domainStatus } = require('./domain-status')
@@ -976,6 +981,11 @@ const userPersonalType = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: 'Has the user email verified their account.',
       resolve: ({ emailValidated }) => emailValidated,
+    },
+    tfaSendMethod: {
+      type: TfaSendMethodEnum,
+      description: 'The method in which TFA codes are sent.',
+      resolve: ({ tfaSendMethod }) => tfaSendMethod,
     },
     affiliations: {
       type: userAffiliationsConnection.connectionType,
