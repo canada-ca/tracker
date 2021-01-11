@@ -34,8 +34,9 @@ describe('<UserPage />', () => {
             userName: userName,
             displayName: 'Test User',
             preferredLang: 'ENGLISH',
-            tfaValidated: false,
-            emailValidated: false,
+            tfaSendMethod: 'PHONE',
+            phoneValidated: true,
+            emailValidated: true,
           },
         },
       },
@@ -45,7 +46,7 @@ describe('<UserPage />', () => {
   it('renders without error', async () => {
     const { queryByText } = render(
       <UserStateProvider
-        initialState={{ userName, jwt: 'string', tfaSendMethod: false }}
+        initialState={{ userName, jwt: 'string', tfaSendMethod: null }}
       >
         <MockedProvider mocks={mocks} addTypename={false}>
           <MemoryRouter initialEntries={['/']}>
