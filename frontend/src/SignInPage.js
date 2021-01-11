@@ -69,7 +69,9 @@ export default function SignInPage() {
       else if (signIn.result.__typename === 'TFASignInResult') {
         // redirect to the authenticate page
         history.push(
-          `/authenticate/${signIn.result.sendMethod}/${signIn.result.authenticateToken}`,
+          `/authenticate/${signIn.result.sendMethod.toLowerCase()}/${
+            signIn.result.authenticateToken
+          }`,
         )
       } else {
         toast({

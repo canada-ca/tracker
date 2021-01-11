@@ -10,6 +10,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
@@ -24,40 +25,44 @@ const AuthenticateField = WithPseudoBox(function AuthenticateField({
   const { i18n } = useLingui()
 
   const codeSendMessage =
-    sendMethod === 'email' ? (
+    sendMethod.toLowerCase() === 'email' ? (
       <Trans>
         We've sent you an email with an authentication code to sign into
         Tracker.
       </Trans>
-    ) : (
+    ) : sendMethod.toLowerCase() === 'phone' ? (
       <Trans>
         We've sent an SMS to your registered phone number with an authentication
         code to sign into Tracker.
       </Trans>
+    ) : (
+      ''
     )
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
-      <FormLabel htmlFor="twoFactorCode" fontWeight="bold" mb="2">
-        {codeSendMessage}{' '}
-        <Trans>Please enter your two factor code below.</Trans>
-      </FormLabel>
-      <InputGroup>
-        <InputLeftElement>
-          <Icon name="twoFactor" color="gray.300" size="1.25rem" />
-        </InputLeftElement>
-        <Input
-          {...field}
-          {...props}
-          id="twoFactorCode"
-          ref={forwardedRef}
-          placeholder={i18n._(t`Enter two factor code`)}
-          autoFocus
-          inputMode="numeric"
-        />
-      </InputGroup>
+      <Stack align="center">
+        <FormLabel htmlFor="twoFactorCode" fontWeight="bold" mb="2">
+          {codeSendMessage}{' '}
+          <Trans>Please enter your two factor code below.</Trans>
+        </FormLabel>
+        <InputGroup width="fit-content">
+          <InputLeftElement>
+            <Icon name="twoFactor" color="gray.300" size="1.25rem" />
+          </InputLeftElement>
+          <Input
+            {...field}
+            {...props}
+            id="twoFactorCode"
+            ref={forwardedRef}
+            placeholder={i18n._(t`Enter two factor code`)}
+            autoFocus
+            inputMode="numeric"
+          />
+        </InputGroup>
 
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
+        <FormErrorMessage>{meta.error}</FormErrorMessage>
+      </Stack>
     </FormControl>
   )
 })

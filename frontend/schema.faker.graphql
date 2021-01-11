@@ -1388,7 +1388,7 @@ type TFASignInResult {
   # Token used to verify during authentication.
   authenticateToken: String
   # Wether the authentication code was sent through text, or email.
-  sendMethod: String
+  sendMethod: String @examples(values: ["PHONE", "EMAIL"])
 }
 
 input UpdateDomainInput {
