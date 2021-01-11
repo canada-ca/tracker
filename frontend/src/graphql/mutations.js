@@ -53,6 +53,10 @@ export const SIGN_IN = gql`
         ... on RegularSignInResult {
           authResult {
             authToken
+            user {
+              userName
+              tfaSendMethod
+            }
           }
         }
       }
