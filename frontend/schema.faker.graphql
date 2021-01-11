@@ -1,76 +1,396 @@
-type Query {
-  # Fetches an object given its ID
-  node(
-    # The ID of an object
-    id: ID!
-  ): Node
-  # Retrieve a specific domain by providing a domain.
-  findDomainByDomain(
-    # The domain you wish to retrieve information for.
-    domain: DomainScalar!
-  ): Domain
-  # Select domains a user has access to.
-  findMyDomains(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): DomainConnection
-  # Select organizations a user has access to.
-  findMyOrganizations(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): OrganizationConnection
-  # Select all information on a selected organization that a user has access to.
-  findOrganizationBySlug(
-    # The slugified organization name you want to retrieve data for.
-    orgSlug: Slug!
-  ): Organization
-  # Email summary computed values, used to build summary cards.
-  mailSummary: CategorizedSummary
-  # Web summary computed values, used to build summary cards.
-  webSummary: CategorizedSummary
-  # Query used to check if the user has an admin role.
-  isUserAdmin: Boolean @examples(values: [true, false])
-  # Query a specific user by user name.
-  findUserByUsername(
-    # Email address of user you wish to gather data for.
-    userName: EmailAddress
-  ): User
-  # Query the currently logged in user.
-  findMe: User
-  # Retrieve a specific verified domain by providing a domain.
-  findVerifiedDomainByDomain(
-    # The domain you wish to retrieve information for.
-    domain: DomainScalar!
-  ): VerifiedDomain
-  # Select verified check domains
-  findVerifiedDomains(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): VerifiedDomainConnection
-  # Select all information on a selected verified organization.
-  findVerifiedOrganizationBySlug(
-    # The slugified organization name you want to retrieve data for.
-    orgSlug: Slug!
-  ): VerifiedOrganization
-  # Select organizations a user has access to.
-  findVerifiedOrganizations(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): VerifiedOrganizationConnection
+# Exposes a URL that specifies the behaviour of this scalar.
+directive @specifiedBy(
+  # The URL that specifies the behaviour of this scalar.
+  url: String!
+) on SCALAR
+# A field whose value is an upper case letter or an under score that has a length between 1 and 50.
+scalar Acronym
+
+input AuthenticateInput {
+  # Security code found in text msg, or email inbox.
+  authenticationCode: Int!
+  # The JWT that is retrieved from the sign in mutation.
+  authenticateToken: String!
+  clientMutationId: String
 }
 
-# An object with an ID
-interface Node {
-  # The id of the object.
+type AuthenticatePayload {
+  # The authenticated users information, and JWT.
+  authResult: AuthResult
+  clientMutationId: String
+}
+
+# An object used to return information when users sign up or authenticate.
+type AuthResult {
+  # JWT used for accessing controlled content.
+  authToken: String
+  # User that has just been created or signed in.
+  user: PersonalUser
+}
+
+# This object contains the list of different categories for pre-computed
+# summary data with the computed total for how many domains in total are
+# being compared.
+type CategorizedSummary {
+  # List of SummaryCategory objects with data for different computed categories.
+  categories: [SummaryCategory] @listLength(min: 0, max: 5)
+  # Total domains that were check under this summary.
+  total: Int @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+}
+
+# This object displays the percentages of the category totals.
+type CategoryPercentages {
+  # Percentage of messages that are failing all checks.
+  failPercentage: Float @examples(values: [25.64, 57.89, 54.38, 93.48])
+  # Percentage of messages that are passing all checks.
+  fullPassPercentage: Float @examples(values: [25.64, 57.89, 54.38, 93.48])
+  # Percentage of messages that are passing only dkim.
+  passDkimOnlyPercentage: Float @examples(values: [25.64, 57.89, 54.38, 93.48])
+  # Percentage of messages that are passing only spf.
+  passSpfOnlyPercentage: Float @examples(values: [25.64, 57.89, 54.38, 93.48])
+  # The total amount of messages sent by this domain.
+  totalMessages: Int @examples(values: [86954, 57896, 54386, 93456, 23452])
+}
+
+# This object displays the total amount of messages that fit into each category.
+type CategoryTotals {
+  # Amount of messages that are passing SPF, but failing DKIM.
+  passSpfOnly: Int @examples(values: [8694, 5896, 5436, 9345, 2345])
+  # Amount of messages that are passing DKIM, but failing SPF.
+  passDkimOnly: Int @examples(values: [8694, 5896, 5436, 9345, 2345])
+  # Amount of messages that are passing SPF and DKIM.
+  fullPass: Int @examples(values: [8694, 5896, 5436, 9345, 2345])
+  # Amount of messages that fail both SPF and DKIM.
+  fail: Int @examples(values: [8694, 5896, 5436, 9345, 2345])
+}
+
+input CreateDomainInput {
+  # The global id of the organization you wish to assign this domain to.
+  orgId: ID!
+  # Url that you would like to be added to the database.
+  domain: DomainScalar!
+  # DKIM selector strings corresponding to this domain.
+  selectors: [Selector]
+  clientMutationId: String
+}
+
+type CreateDomainPayload {
+  # The newly created domain.
+  domain: Domain
+  clientMutationId: String
+}
+
+input CreateOrganizationInput {
+  # The English acronym of the organization.
+  acronymEN: Acronym!
+  # The French acronym of the organization.
+  acronymFR: Acronym!
+  # The English name of the organization.
+  nameEN: String!
+  # The French name of the organization.
+  nameFR: String!
+  # The English translation of the zone the organization belongs to.
+  zoneEN: String!
+  # The English translation of the zone the organization belongs to.
+  zoneFR: String!
+  # The English translation of the sector the organization belongs to.
+  sectorEN: String!
+  # The French translation of the sector the organization belongs to.
+  sectorFR: String!
+  # The English translation of the country the organization resides in.
+  countryEN: String!
+  # The French translation of the country the organization resides in.
+  countryFR: String!
+  # The English translation of the province the organization resides in.
+  provinceEN: String!
+  # The French translation of the province the organization resides in.
+  provinceFR: String!
+  # The English translation of the city the organization resides in.
+  cityEN: String!
+  # The French translation of the city the organization resides in.
+  cityFR: String!
+  clientMutationId: String
+}
+
+type CreateOrganizationPayload {
+  # The newly created organization.
+  organization: Organization
+  clientMutationId: String
+}
+
+# A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
+# `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO
+# 8601 standard for representation of dates and times using the Gregorian calendar.
+scalar DateTime
+
+# Object that contains the various senders and details for each category.
+type DetailTables {
+  # List of senders that are failing DKIM checks.
+  dkimFailure(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): DkimFailureTableConnection
+  # List of senders that are failing DMARC checks.
+  dmarcFailure(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): DmarcFailureTableConnection
+  # List of senders that are passing all checks.
+  fullPass(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): FullPassTableConnection
+  # List of senders that are failing SPF checks.
+  spfFailure(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): SpfFailureTableConnection
+}
+
+# DomainKeys Identified Mail (DKIM) permits a person, role, or
+# organization that owns the signing domain to claim some
+# responsibility for a message by associating the domain with the
+# message.  This can be an author's organization, an operational relay,
+# or one of their agents.
+type DKIM implements Node {
+  # The ID of an object
   id: ID!
+  # The domain the scan was ran on.
+  domain: Domain
+  # The time when the scan was initiated.
+  timestamp: String @fake(type: pastDate)
+  # Individual scans results for each dkim selector.
+  results(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): DKIMResultConnection
+}
+
+# A connection to a list of items.
+type DKIMConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [DKIMEdge] @listLength(min: 0, max: 5)
+  # The total amount of dkim scans related to a given domain.
+  totalCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+}
+
+# An edge in a connection.
+type DKIMEdge {
+  # The item at the end of the edge
+  node: DKIM
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# This table contains the data fields for senders who are in the DKIM fail category.
+type DkimFailureTable {
+  # The ID of the object.
+  id: ID
+  # Is DKIM aligned.
+  dkimAligned: Boolean @examples(values: [true, false])
+  # Domains used for DKIM validation
+  dkimDomains: String @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
+  # The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error.
+  dkimResults: String @examples(values: ["", "fail", "permerror"])
+  # Pointer to a DKIM public key record in DNS.
+  dkimSelectors: String @examples(values: ["selector1", "selector2", "selector3"])
+  # Host from reverse DNS of source IP address.
+  dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
+  # Domain from SMTP banner message.
+  envelopeFrom: String @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
+  # Guidance for any issues that were found from the report.
+  guidance: String @examples(values: ["agg-dkim-failed", "agg-dkim-strict", "agg-dkim-unsigned"])
+  # The address/domain used in the "From" field.
+  headerFrom: String @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
+  # IP address of sending server. 
+  sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
+  # Total messages from this sender.
+  totalMessages: Int @examples(values: [1247, 5687])
+}
+
+# A connection to a list of items.
+type DkimFailureTableConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [DkimFailureTableEdge] @listLength(min: 0, max: 5)
+}
+
+# An edge in a connection.
+type DkimFailureTableEdge {
+  # The item at the end of the edge
+  node: DkimFailureTable
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Individual scans results for the given dkim selector.
+type DKIMResult implements Node {
+  # The ID of an object
+  id: ID!
+  # The dkim scan information that this result belongs to.
+  dkim: DKIM
+  # The selector the scan was ran on.
+  selector: String @examples(values: ["selector1", "selector2", "selector3"])
+  # DKIM record retrieved during the scan of the domain.
+  record: String @examples(
+      values: [
+        "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3rvAQg9bl72tae1RFu4zdx1ZE4E8VUbQfxDcm;"
+      ]
+    )
+  # Size of the Public Key in bits
+  keyLength: String @examples(values: ["sub1024", "1024", "2048", "2048plus"])
+  # Raw scan result.
+  rawJson: JSON
+  # Key tags found during scan.
+  guidanceTags(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+}
+
+# A connection to a list of items.
+type DKIMResultConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [DKIMResultEdge] @listLength(min: 0, max: 5)
+  # The total amount of dkim results related to a given domain.
+  totalCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+}
+
+# An edge in a connection.
+type DKIMResultEdge {
+  # The item at the end of the edge
+  node: DKIMResult
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Domain-based Message Authentication, Reporting, and Conformance
+# (DMARC) is a scalable mechanism by which a mail-originating
+# organization can express domain-level policies and preferences for
+# message validation, disposition, and reporting, that a mail-receiving
+# organization can use to improve mail handling.
+type DMARC implements Node {
+  # The ID of an object
+  id: ID!
+  # The domain the scan was ran on.
+  domain: Domain
+  # The time when the scan was initiated.
+  timestamp: String @fake(type: pastDate)
+  # DMARC phase found during scan.
+  dmarcPhase: Int @examples(values: [1, 2, 3, 4])
+  # DMARC record retrieved during scan.
+  record: String @examples(
+    values: [
+      "v=DMARC1; p=none; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1"
+      "v=DMARC1; p=none; sp=none; rua=mailto:dmarc@cyber.gc.ca"
+    ]
+  )
+  # The requested policy you wish mailbox providers to apply
+  # when your email fails DMARC authentication and alignment checks.
+  pPolicy: String @examples(values: ["none", "missing", "quarantine", "reject"])
+  # This tag is used to indicate a requested policy for all
+  # subdomains where mail is failing the DMARC authentication and alignment checks.
+  spPolicy: String @examples(values: ["none", "missing", "quarantine", "reject"])
+  # The percentage of messages to which the DMARC policy is to be applied.
+  pct: Int @examples(values: [0, 20, 60, 70, 90, 100])
+  # Raw scan result.
+  rawJson: JSON
+  # Key tags found during DMARC Scan.
+  guidanceTags(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+}
+
+# A connection to a list of items.
+type DMARCConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [DMARCEdge] @listLength(min: 0, max: 5)
+  # The total amount of dmarc scans related to a given domain.
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
+}
+
+# An edge in a connection.
+type DMARCEdge {
+  # The item at the end of the edge
+  node: DMARC
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# This table contains the data fields for senders who are in the DMARC failure category.
+type DmarcFailureTable {
+  # The ID of the object
+  id: ID
+  # Domains used for DKIM validation
+  dkimDomains: String @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
+  # Pointer to a DKIM public key record in DNS.
+  dkimSelectors: String @examples(values: ["selector1", "selector2", "selector3"])
+  # The DMARC enforcement action that the receiver took, either none, quarantine, or reject.
+  disposition: String @examples(values: ["none", "quarantine", "reject"])
+  # Host from reverse DNS of source IP address.
+  dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
+  # Domain from SMTP banner message.
+  envelopeFrom: String @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
+  # The address/domain used in the "From" field.
+  headerFrom: String @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
+  # IP address of sending server.
+  sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
+  # Domains used for SPF validation.
+  spfDomains: String @examples(values: ["test.spf.gc.ca", "test.spf.canada.ca"])
+  # Total messages from this sender.
+  totalMessages: Int @examples(values: [1247, 5687])
+}
+
+# A connection to a list of items.
+type DmarcFailureTableConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [DmarcFailureTableEdge] @listLength(min: 0, max: 5)
+}
+
+# An edge in a connection.
+type DmarcFailureTableEdge {
+  # The item at the end of the edge
+  node: DmarcFailureTable
+  # A cursor for use in pagination
+  cursor: String!
 }
 
 # Domain object containing information for a given domain.
@@ -78,39 +398,36 @@ type Domain implements Node {
   # The ID of an object
   id: ID!
   # Domain that scans will be ran on.
-  domain: DomainScalar
-    @examples(
-      values: [
-        "javascript:alert('XSS')"
-        "javascript:eval('aler'+(!![]+[])[+[]])('xss')"
-        "rcmp-grc.gc.ca"
-        "tbs-sct.gc.ca"
-        "canada.ca"
-        "cra-arc.gc.ca"
-        "pm.gc.ca"
-        "cse-cst.gc.ca"
-        "forces.gc.ca"
-        "jAva&Tab;script:alert('XSS')"
-        "cra.arc.gc.ca"
-        "cra-arc.gc.ca"
-        "cse-cst.gc.ca"
-        "cyber.gc.ca"
-        "dfait-maeci.gc.ca"
-        "dfo-mpo.gc.ca"
-        "ec.gc.ca"
-        "forces.gc.ca"
-        "gccollab.ca"
-        "gccollaboration.ca"
-        "goc-gdc.ca"
-        "hc-sc.gc.ca"
-      ]
-    )
+  domain: DomainScalar @examples(
+    values: [
+      "javascript:alert('XSS')"
+      "javascript:eval('aler'+(!![]+[])[+[]])('xss')"
+      "rcmp-grc.gc.ca"
+      "tbs-sct.gc.ca"
+      "canada.ca"
+      "cra-arc.gc.ca"
+      "pm.gc.ca"
+      "cse-cst.gc.ca"
+      "forces.gc.ca"
+      "jAva&Tab;script:alert('XSS')"
+      "cra.arc.gc.ca"
+      "cra-arc.gc.ca"
+      "cse-cst.gc.ca"
+      "cyber.gc.ca"
+      "dfait-maeci.gc.ca"
+      "dfo-mpo.gc.ca"
+      "ec.gc.ca"
+      "forces.gc.ca"
+      "gccollab.ca"
+      "gccollaboration.ca"
+      "goc-gdc.ca"
+      "hc-sc.gc.ca"
+    ]
+  )
   # The last time that a scan was ran on this domain.
-  lastRan: DateTime @fake(type: recentDate)
+  lastRan: String @fake(type: recentDate)
   # Domain Keys Identified Mail (DKIM) selector strings associated with domain.
-  selectors: [Selector]
-    @listLength(min: 0, max: 2)
-    @examples(values: ["selector1._domainkey", "selector2._domainkey"])
+  selectors: [Selector] @listLength(min: 0, max: 2)
   # The domains scan status, based on the latest scan data.
   status: DomainStatus
   # The organization that this domain belongs to.
@@ -135,6 +452,28 @@ type Domain implements Node {
   yearlyDmarcSummaries: [Period] @listLength(min: 13, max: 13)
 }
 
+# A connection to a list of items.
+type DomainConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [DomainEdge] @listLength(min: 0, max: 5)
+  # The total amount of domains the user has access to.
+  totalCount: Int 
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+}
+
+# An edge in a connection.
+type DomainEdge {
+  # The item at the end of the edge
+  node: Domain
+  # A cursor for use in pagination
+  cursor: String!
+}
+
 # String that conforms to a domain structure.
 scalar DomainScalar
 
@@ -152,219 +491,9 @@ type DomainStatus {
   ssl: StatusEnum
 }
 
-# A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-scalar DateTime
-
-# A field that conforms to a string, with strings ending in ._domainkey.
-scalar Selector
-
-# A connection to a list of items.
-type OrganizationConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [OrganizationEdge] @listLength(min: 13, max: 13)
-  # The total amount of organizations the user has access to.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# Information about pagination in a connection.
-type PageInfo {
-  # When paginating forwards, are there more items?
-  hasNextPage: Boolean! @examples(values: [true, false])
-  # When paginating backwards, are there more items?
-  hasPreviousPage: Boolean! @examples(values: [true, false])
-  # When paginating backwards, the cursor to continue.
-  startCursor: String
-  # When paginating forwards, the cursor to continue.
-  endCursor: String
-}
-
-# An edge in a connection.
-type OrganizationEdge {
-  # The item at the end of the edge
-  node: Organization
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# Summaries based on domains that the organization has claimed.
-type OrganizationSummary {
-  # Summary based on mail scan results for a given organization.
-  mail: CategorizedSummary
-  # Summary based on web scan results for a given organization.
-  web: CategorizedSummary
-}
-
-# Organization object containing information for a given Organization.
-type Organization implements Node {
-  # The ID of an object
-  id: ID!
-  # The organizations acronym.
-  acronym: Acronym @examples(values: ["TBS", "CSE", "DND"])
-  # The full name of the organization.
-  name: String @fake(type: companyName)
-  # Slugified name of the organization.
-  slug: Slug
-    @examples(
-      values: [
-        "treasury-board-secretariat"
-        "environment-canada"
-        "health-canada"
-        "canada-revenue-agency"
-        "fisheries-and-oceans-canada"
-      ]
-    )
-  # The zone which the organization belongs to.
-  zone: String @examples(values: ["Federal", "Provincial"])
-  # The sector which the organization belongs to.
-  sector: String @examples(values: ["government", "energy", "research"])
-  # The country in which the organization resides.
-  country: String @examples(values: ["Canada"])
-  # The province in which the organization resides.
-  province: String @examples(values: ["Ontario", "Nova Scotia", "Quebec"])
-  # The city in which the organization resides.
-  city: String @examples(values: ["Ottawa", "Halifax", "Montreal"])
-  # Wether the organization is a verified organization.
-  verified: Boolean @examples(values: [true, false])
-  # Summaries based on scan types that are preformed on the given organizations domains.
-  summaries: OrganizationSummary
-  # The number of domains associated with this organization.
-  domainCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-  # The domains which are associated with this organization.
-  domains(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): DomainConnection
-  # Organization affiliations to various users.
-  affiliations(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): UserAffiliationsConnection
-}
-
-# A field whose value is an upper case letter or an under score that has a length between 1 and 50.
-scalar Acronym
-
-# A field whos values contain numbers, letters, dashes, and underscores.
-scalar Slug
-
-# A connection to a list of items.
-type DomainConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [DomainEdge] @listLength(min: 0, max: 10)
-  # The total amount of domains the user has access to.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type DomainEdge {
-  # The item at the end of the edge
-  node: Domain
-
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# A connection to a list of items.
-type UserAffiliationsConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [UserAffiliationsEdge] @listLength(min: 0, max: 5)
-  # The total amount of affiliations the user has access to.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type UserAffiliationsEdge {
-  # The item at the end of the edge
-  node: UserAffiliations
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# User Affiliations containing the permission level for the given organization, the users information, and the organizations information.
-type UserAffiliations implements Node {
-  # The ID of an object
-  id: ID!
-  # Affiliated user's ID
-  userId: ID
-  # User's level of access to a given organization.
-  permission: RoleEnums @examples(values: ["SUPER_ADMIN", "ADMIN", "USER"])
-  # The affiliated users information.
-  user: User
-  # The affiliated organizations information.
-  organization: Organization
-}
-
-# An enum used to assign, and test users roles.
-enum RoleEnums {
-  # A user who has been given access to view an organization.
-  USER
-  # A user who has the same access as a user write account, but can define new user read/write accounts.
-  ADMIN
-  # A user who has the same access as an admin, but can define new admins.
-  SUPER_ADMIN
-}
-
-# This object can be queried to retrieve the current logged in users
-# information or if the user is an org or super admin they can query a user
-# by their user name
-type User implements Node {
-  # The ID of an object
-  id: ID!
-  # Users email address.
-  userName: EmailAddress @fake(type: email)
-  # Name displayed to other users.
-  displayName: String @fake(type: firstName)
-  # Users preferred language.
-  preferredLang: LanguageEnums @examples(values: ["ENGLISH", "FRENCH"])
-  # Has the user completed two factor authentication.
-  tfaValidated: Boolean @examples(values: [false, true])
-  # Has the user email verified their account.
-  emailValidated: Boolean @examples(values: [false, true])
-  # Users affiliations to various organizations.
-  affiliations(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): UserAffiliationsConnection
-}
-
-# A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
+# A field whose value conforms to the standard internet email address format as
+# specified in RFC822: https://www.w3.org/Protocols/rfc822/.
 scalar EmailAddress
-
-# An enum used to define user's language.
-enum LanguageEnums {
-  # Used for defining if English is the preferred language.
-  ENGLISH
-  # Used for defining if French is the preferred language.
-  FRENCH
-}
 
 # Results of DKIM, DMARC, and SPF scans on the given domain.
 type EmailScan {
@@ -405,616 +534,20 @@ type EmailScan {
   ): SPFConnection
 }
 
-# A connection to a list of items.
-type DKIMConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [DKIMEdge] @listLength(min: 0, max: 5)
-  # The total amount of dkim scans related to a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type DKIMEdge {
-  # The item at the end of the edge
-  node: DKIM
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# DomainKeys Identified Mail (DKIM) permits a person, role, or
-# organization that owns the signing domain to claim some
-# responsibility for a message by associating the domain with the
-# message.  This can be an author's organization, an operational relay,
-# or one of their agents.
-type DKIM implements Node {
-  # The ID of an object
-  id: ID!
-  # The domain the scan was ran on.
-  domain: Domain
-  # The time when the scan was initiated.
-  timestamp: DateTime @fake(type: pastDate)
-  # Individual scans results for each dkim selector.
-  results(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): DKIMResultConnection
-}
-
-# A connection to a list of items.
-type DKIMResultConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [DKIMResultEdge] @listLength(min: 0, max: 5)
-  # The total amount of dkim results related to a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type DKIMResultEdge {
-  # The item at the end of the edge
-  node: DKIMResult
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# Individual scans results for the given dkim selector.
-type DKIMResult implements Node {
-  # The ID of an object
-  id: ID!
-  # The dkim scan information that this result belongs to.
-  dkim: DKIM
-  # The selector the scan was ran on.
-  selector: String @examples(values: ["selector1", "selector2", "selector3"])
-  # DKIM record retrieved during the scan of the domain.
-  record: String
-    @examples(
-      values: [
-        "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3rvAQg9bl72tae1RFu4zdx1ZE4E8VUbQfxDcm;"
-      ]
-    )
-  # Size of the Public Key in bits
-  keyLength: String @examples(values: ["sub1024", "1024", "2048", "2048plus"])
-  # Key tags found during scan.
-  guidanceTags(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): GuidanceTagConnection
-}
-
-# A connection to a list of items.
-type GuidanceTagConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [GuidanceTagEdge] @listLength(min: 0, max: 5)
-  # The total amount of guidance tags for a given scan type.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type GuidanceTagEdge {
-  # The item at the end of the edge
-  node: GuidanceTag
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# Details for a given guidance tag based on https://github.com/canada-ca/tracker/wiki/Guidance-Tags
-type GuidanceTag implements Node {
-  # The ID of an object
-  id: ID!
-  # The guidance tag ID.
-  tagId: String
-    @listLength(min: 0, max: 4)
-    @examples(values: ["dkim1", "dkim2", "dkim3", "dkim4"])
-  # The guidance tag name.
-  tagName: String
-    @examples(
-      values: [
-        "DKIM-GC"
-        "DKIM-missing"
-        "DKIM-missing-mx-O365"
-        "DKIM-missing-O365-misconfigured"
-      ]
-    )
-  # Guidance for changes to record, or to maintain current stance.
-  guidance: String
-    @examples(
-      values: [
-        "Government of Canada domains subject to TBS guidelines"
-        "Follow implementation guide"
-        "DKIM record missing but MX uses O365. Follow cloud-specific guidance"
-        "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365."
-      ]
-    )
-  # Links to implementation guidance for a given tag.
-  refLinks: [RefLinks] @listLength(min: 0, max: 4)
-  # Links to technical information for a given tag.
-  refLinksTech: [RefLinks] @listLength(min: 0, max: 4)
-}
-
-# Object containing the information of various links for guidance or technical documentation.
-type RefLinks {
-  # Title of the guidance link.
-  description: String
-    @examples(
-      values: [
-        "IT PIN"
-        "A.3.4 Deploy DKIM for All Domains and senders"
-        "3.2.2 Third Parties and DKIM"
-      ]
-    )
-  # URL for the guidance documentation.
-  refLink: String
-    @examples(
-      values: [
-        ""
-        "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
-        "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
-      ]
-    )
-}
-
-# A connection to a list of items.
-type DMARCConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [DMARCEdge] @listLength(min: 0, max: 5)
-  # The total amount of dmarc scans related to a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type DMARCEdge {
-  # The item at the end of the edge
-  node: DMARC
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# Domain-based Message Authentication, Reporting, and Conformance
-# (DMARC) is a scalable mechanism by which a mail-originating
-# organization can express domain-level policies and preferences for
-# message validation, disposition, and reporting, that a mail-receiving
-# organization can use to improve mail handling.
-type DMARC implements Node {
-  # The ID of an object
-  id: ID!
-  # The domain the scan was ran on.
-  domain: Domain
-  # The time when the scan was initiated.
-  timestamp: DateTime @fake(type: pastDate)
-  # DMARC phase found during scan.
-  dmarcPhase: Int @examples(values: [1, 2, 3, 4])
-  # DMARC record retrieved during scan.
-  record: String
-    @examples(
-      values: [
-        "v=DMARC1; p=none; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1"
-        "v=DMARC1; p=none; sp=none; rua=mailto:dmarc@cyber.gc.ca"
-      ]
-    )
-  # The requested policy you wish mailbox providers to apply
-  # when your email fails DMARC authentication and alignment checks.
-  pPolicy: String @examples(values: ["none", "missing", "quarantine", "reject"])
-  # This tag is used to indicate a requested policy for all
-  # subdomains where mail is failing the DMARC authentication and alignment checks.
-  spPolicy: String
-    @examples(values: ["none", "missing", "quarantine", "reject"])
-  # The percentage of messages to which the DMARC policy is to be applied.
-  pct: Int @examples(values: [0, 20, 60, 70, 90, 100])
-  # Key tags found during DMARC Scan.
-  guidanceTags(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): GuidanceTagConnection
-}
-
-# A connection to a list of items.
-type SPFConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [SPFEdge] @listLength(min: 0, max: 5)
-  # The total amount of spf scans related to a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type SPFEdge {
-  # The item at the end of the edge
-  node: SPF
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# Email on the Internet can be forged in a number of ways.  In
-# particular, existing protocols place no restriction on what a sending
-# host can use as the "MAIL FROM" of a message or the domain given on
-# the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
-# protocol is where ADministrative Management Domains (ADMDs) can explicitly
-# authorize the hosts that are allowed to use their domain names, and a
-# receiving host can check such authorization.
-type SPF implements Node {
-  # The ID of an object
-  id: ID!
-  # The domain the scan was ran on.
-  domain: Domain
-  # The time the scan was initiated.
-  timestamp: DateTime @fake(type: pastDate)
-  # The amount of DNS lookups.
-  lookups: Int @examples(values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-  # SPF record retrieved during the scan of the given domain.
-  record: String
-    @examples(
-      values: [
-        "v=spf1 ip4:40.92.0.0/15 ip4:40.107.0.0/16 ip4:52.100.0.0/14 ip4:104.47.0.0/17 ip6:2a01:111:f400::/48 ip6:2a01:111:f403::/48 -all"
-        "v=spf1 ip4:198.103.111.114/31 ip4:205.193.224.70 ip4:205.193.224.90 ip4:216.13.57.101 ip4:216.13.57.102 ip4:209.82.9.21 ip4:209.82.9.23 ip4:198.103.112.150/31 ip4:205.192.34.113 ip4:205.192.34.56 ip4:205.192.34.58 -all"
-      ]
-    )
-  # Instruction of what a recipient should do if there is not a match to your SPF record.
-  spfDefault: String
-    @examples(values: ["neutral", "softfail", "include", "fail"])
-  # Key tags found during scan.
-  guidanceTags(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): GuidanceTagConnection
-}
-
-# Results of HTTPS, and SSL scan on the given domain.
-type WebScan {
-  # The ID of an object
-  id: ID!
-  # The domain the scan was ran on.
-  domain: Domain
-  # Hyper Text Transfer Protocol Secure scan results.
-  https(
-    # Start date for date filter.
-    starDate: DateTime
-    # End date for date filter.
-    endDate: DateTime
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): HTTPSConnection
-  # Secure Socket Layer scan results.
-  ssl(
-    # Start date for date filter.
-    starDate: DateTime
-    # End date for date filter.
-    endDate: DateTime
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): SSLConnection
-}
-
-# A connection to a list of items.
-type HTTPSConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [HTTPSEdge] @listLength(min: 0, max: 5)
-  # The total amount of https scans for a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type HTTPSEdge {
-  # The item at the end of the edge
-  node: HTTPS
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# Hyper Text Transfer Protocol Secure scan results.
-type HTTPS implements Node {
-  # The ID of an object
-  id: ID!
-  # The domain the scan was ran on.
-  domain: Domain
-  # The time the scan was initiated.
-  timestamp: DateTime @fake(type: pastDate)
-  # State of the HTTPS implementation on the server and any issues therein.
-  implementation: String
-    @examples(
-      values: ["Valid HTTPS", "Downgrades HTTPS", "Bad Chain", "Bad Hostname"]
-    )
-  # Degree to which HTTPS is enforced on the server based on behaviour.
-  enforced: String
-    @examples(values: ["Strict", "Moderate", "Weak", "Not Enforced"])
-  # Presence and completeness of HSTS implementation.
-  hsts: String
-    @examples(
-      values: ["HSTS Fully Implemented", "HSTS Max Age Too Short", "No HSTS"]
-    )
-  # Denotes how long the domain should only be accessed using HTTPS
-  hstsAge: String @examples(values: ["31622400", "21672901"])
-  # Denotes whether the domain has been submitted and included within HSTS preload list.
-  preloaded: String
-    @examples(
-      values: ["HSTS Preloaded", "HSTS Preload Ready", "HSTS Not Preloaded"]
-    )
-  # Key tags found during scan.
-  guidanceTags(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): GuidanceTagConnection
-}
-
-# A connection to a list of items.
-type SSLConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [SSLEdge]
-  # The total amount of https scans for a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type SSLEdge {
-  # The item at the end of the edge
-  node: SSL
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# Enum used to inform front end if there are any issues, info, or the domain passes a given check.
-enum StatusEnum {
-  # If the given check meets the passing requirements.
-  PASS
-  # If the given check has flagged something that can provide information on the domain that aren't scan related.
-  INFO
-  # If the given check does not meet the passing requirements
-  FAIL
-}
-
-# Secure Socket Layer scan results.
-type SSL implements Node {
-  # The ID of an object
-  id: ID!
-  # The domain the scan was ran on.
-  domain: Domain
-  # The time when the scan was initiated.
-  timestamp: DateTime @fake(type: pastDate)
-  # Key tags found during scan.
-  guidanceTags(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): GuidanceTagConnection
-}
-
-# Object that contains information for each data collection period.
-type Period {
-    domain: DomainScalar @examples(
-    values: [
-      "javascript:alert('XSS')"
-      "javascript:eval('aler'+(!![]+[])[+[]])('xss')"
-      "rcmp-grc.gc.ca"
-      "tbs-sct.gc.ca"
-      "canada.ca"
-      "cra-arc.gc.ca"
-      "pm.gc.ca"
-      "cse-cst.gc.ca"
-      "forces.gc.ca"
-      "jAva&Tab;script:alert('XSS')"
-      "cra.arc.gc.ca"
-      "cra-arc.gc.ca"
-      "cse-cst.gc.ca"
-      "cyber.gc.ca"
-      "dfait-maeci.gc.ca"
-      "dfo-mpo.gc.ca"
-      "ec.gc.ca"
-      "forces.gc.ca"
-      "gccollab.ca"
-      "gccollaboration.ca"
-      "goc-gdc.ca"
-      "hc-sc.gc.ca"
-    ]
-  )
-  # Start date of data collection.
-  month: PeriodEnums
-  # End date of data collection.
-  year: Year @examples(values: [2019, 2020])
-  # Category percentages based on the category totals.
-  categoryPercentages: CategoryPercentages
-  # Category totals for quick viewing.
-  categoryTotals: CategoryTotals
-  # Various senders for each category.
-  detailTables: DetailTables
-}
-
-# This object displays the percentages of the category totals.
-type CategoryPercentages {
-  # Percentage of messages that are failing all checks.
-  failPercentage: Float @examples(values: [25.64, 57.89, 54.38, 93.48])
-  # Percentage of messages that are passing all checks.
-  fullPassPercentage: Float @examples(values: [25.64, 57.89, 54.38, 93.48])
-  # Percentage of messages that are passing only dkim.
-  passDkimOnlyPercentage: Float @examples(values: [25.64, 57.89, 54.38, 93.48])
-  # Percentage of messages that are passing only spf.
-  passSpfOnlyPercentage: Float @examples(values: [25.64, 57.89, 54.38, 93.48])
-  # The total amount of messages sent by this domain.
-  totalMessages: Int @examples(values: [86954, 57896, 54386, 93456, 23452])
-}
-
-# This object displays the total amount of messages that fit into each category.
-type CategoryTotals {
-  # Amount of messages that are passing SPF, but failing DKIM.
-  passSpfOnly: Int @examples(values: [8694, 5896, 5436, 9345, 2345])
-  # Amount of messages that are passing DKIM, but failing SPF.
-  passDkimOnly: Int @examples(values: [8694, 5896, 5436, 9345, 2345])
-  # Amount of messages that are passing SPF and DKIM.
-  fullPass: Int @examples(values: [8694, 5896, 5436, 9345, 2345])
-  # Amount of messages that fail both SPF and DKIM.
-  fail: Int @examples(values: [8694, 5896, 5436, 9345, 2345])
-}
-
-# Object that contains the various senders and details for each category.
-type DetailTables {
-  # List of senders that are failing DKIM checks.
-  dkimFailure(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): DkimFailureTableConnection
-  # List of senders that are failing DMARC checks.
-  dmarcFailure(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): DmarcFailureTableConnection
-  # List of senders that are passing all checks.
-  fullPass(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): FullPassTableConnection
-  # List of senders that are failing SPF checks.
-  spfFailure(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): SpfFailureTableConnection
-}
-
-# A connection to a list of items.
-type DkimFailureTableConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [DkimFailureTableEdge] @listLength(min: 0, max: 5)
-}
-
-# An edge in a connection.
-type DkimFailureTableEdge {
-  # The item at the end of the edge
-  node: DkimFailureTable
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# This table contains the data fields for senders who are in the DKIM fail category.
-type DkimFailureTable {
-  # The ID of the object.
-  id: ID
-  # Is DKIM aligned.
-  dkimAligned: Boolean @examples(values: [true, false])
-  # Domains used for DKIM validation
-  dkimDomains: String
-    @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
-  # The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error.
-  dkimResults: String @examples(values: ["", "fail", "permerror"])
-  # Pointer to a DKIM public key record in DNS.
-  dkimSelectors: String
-    @examples(values: ["selector1", "selector2", "selector3"])
-  # Host from reverse DNS of source IP address.
-  dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
-  # Domain from SMTP banner message.
-  envelopeFrom: String
-    @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
-  # Guidance for any issues that were found from the report.
-  guidance: String
-    @examples(
-      values: ["agg-dkim-failed", "agg-dkim-strict", "agg-dkim-unsigned"]
-    )
-  # The address/domain used in the "From" field.
-  headerFrom: String
-    @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
-  # IP address of sending server.
-  sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
-  # Total messages from this sender.
-  totalMessages: Int @examples(values: [1247, 5687])
-}
-
-# A connection to a list of items.
-type DmarcFailureTableConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [DmarcFailureTableEdge] @listLength(min: 0, max: 5)
-}
-
-# An edge in a connection.
-type DmarcFailureTableEdge {
-  # The item at the end of the edge
-  node: DmarcFailureTable
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# This table contains the data fields for senders who are in the DMARC failure category.
-type DmarcFailureTable {
+# This table contains the data fields for senders who are in the Full Pass category.
+type FullPassTable {
   # The ID of the object
   id: ID
   # Domains used for DKIM validation
-  dkimDomains: String
-    @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
+  dkimDomains: String @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
   # Pointer to a DKIM public key record in DNS.
-  dkimSelectors: String
-    @examples(values: ["selector1", "selector2", "selector3"])
-  # The DMARC enforcement action that the receiver took, either none, quarantine, or reject.
-  disposition: String @examples(values: ["none", "quarantine", "reject"])
+  dkimSelectors: String @examples(values: ["selector1", "selector2", "selector3"])
   # Host from reverse DNS of source IP address.
   dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
   # Domain from SMTP banner message.
-  envelopeFrom: String
-    @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
+  envelopeFrom: String @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
   # The address/domain used in the "From" field.
-  headerFrom: String
-    @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
+  headerFrom: String @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
   # IP address of sending server.
   sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
   # Domains used for SPF validation.
@@ -1039,80 +572,318 @@ type FullPassTableEdge {
   cursor: String!
 }
 
-# This table contains the data fields for senders who are in the Full Pass category.
-type FullPassTable {
-  # The ID of the object
-  id: ID
-  # Domains used for DKIM validation
-  dkimDomains: String
-    @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
-  # Pointer to a DKIM public key record in DNS.
-  dkimSelectors: String
-    @examples(values: ["selector1", "selector2", "selector3"])
-  # Host from reverse DNS of source IP address.
-  dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
-  # Domain from SMTP banner message.
-  envelopeFrom: String
-    @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
-  # The address/domain used in the "From" field.
-  headerFrom: String
-    @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
-  # IP address of sending server.
-  sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
-  # Domains used for SPF validation.
-  spfDomains: String @examples(values: ["test.spf.gc.ca", "test.spf.canada.ca"])
-  # Total messages from this sender.
-  totalMessages: Int @examples(values: [1247, 5687])
+# Details for a given guidance tag based on https://github.com/canada-ca/tracker/wiki/Guidance-Tags
+type GuidanceTag implements Node {
+  # The ID of an object
+  id: ID!
+  # The guidance tag ID.
+  tagId: String @listLength(min: 0, max: 4)
+    @examples(
+      values: [
+        "dkim1"
+        "dkim2"
+        "dkim3"
+        "dkim4"
+      ]
+    )
+  # The guidance tag name.
+  tagName: String @examples(
+    values: [
+      "DKIM-GC",
+      "DKIM-missing",
+      "DKIM-missing-mx-O365",
+      "DKIM-missing-O365-misconfigured"
+    ]
+  )
+  # Guidance for changes to record, or to maintain current stance.
+  guidance: String @examples(
+    values: [
+      "Government of Canada domains subject to TBS guidelines",
+      "Follow implementation guide",
+      "DKIM record missing but MX uses O365. Follow cloud-specific guidance",
+      "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365.",
+    ]
+  )
+  # Links to implementation guidance for a given tag.
+  refLinks: [RefLinks] @listLength(min: 0, max: 4)
+  # Links to technical information for a given tag.
+  refLinksTech: [RefLinks] @listLength(min: 0, max: 4)
 }
 
 # A connection to a list of items.
-type SpfFailureTableConnection {
+type GuidanceTagConnection {
   # Information to aid in pagination.
   pageInfo: PageInfo!
   # A list of edges.
-  edges: [SpfFailureTableEdge] @listLength(min: 0, max: 5)
+  edges: [GuidanceTagEdge] @listLength(min: 0, max: 5)
+  # The total amount of guidance tags for a given scan type.
+  totalCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
 }
 
 # An edge in a connection.
-type SpfFailureTableEdge {
+type GuidanceTagEdge {
   # The item at the end of the edge
-  node: SpfFailureTable
+  node: GuidanceTag
   # A cursor for use in pagination
   cursor: String!
 }
 
-# This table contains the data fields for senders who are in the SPF fail category.
-type SpfFailureTable {
-  # The ID of the object
-  id: ID
-  # Host from reverse DNS of source IP address.
-  dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
-  # Domain from SMTP banner message.
-  envelopeFrom: String
-    @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
-  # Guidance for any issues that were found from the report.
-  guidance: String
-    @examples(
-      values: [
-        "agg-spf-no-record"
-        "agg-spf-failed"
-        "agg-spf-strict"
-        "agg-spf-invalid"
-      ]
+# Hyper Text Transfer Protocol Secure scan results.
+type HTTPS implements Node {
+  # The ID of an object
+  id: ID!
+  # The domain the scan was ran on.
+  domain: Domain
+  # The time the scan was initiated.
+  timestamp: String @fake(type: pastDate)
+  # State of the HTTPS implementation on the server and any issues therein.
+  implementation: String @examples(values: ["Valid HTTPS", "Downgrades HTTPS", "Bad Chain", "Bad Hostname"])
+  # Degree to which HTTPS is enforced on the server based on behaviour.
+  enforced: String @examples(values: ["Strict", "Moderate", "Weak", "Not Enforced"])
+  # Presence and completeness of HSTS implementation.
+  hsts: String @examples(values: ["HSTS Fully Implemented", "HSTS Max Age Too Short", "No HSTS"])
+  # Denotes how long the domain should only be accessed using HTTPS
+  hstsAge: String @examples(values: ["31622400", "21672901"])
+  # Denotes whether the domain has been submitted and included within HSTS preload list.
+  preloaded: String @examples(values: ["HSTS Preloaded", "HSTS Preload Ready", "HSTS Not Preloaded"])
+  # Raw scan result.
+  rawJson: JSON
+  # Key tags found during scan.
+  guidanceTags(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+}
+
+# A connection to a list of items.
+type HTTPSConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [HTTPSEdge] @listLength(min: 0, max: 5)
+  # The total amount of https scans for a given domain.
+  totalCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
     )
-  # The address/domain used in the "From" field.
-  headerFrom: String
-    @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
-  # IP address of sending server.
-  sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
-  # Is SPF aligned.
-  spfAligned: Boolean @examples(values: [true, false])
-  # Domains used for SPF validation.
-  spfDomains: String @examples(values: ["test.spf.gc.ca", "test.spf.canada.ca"])
-  # The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error.
-  spfResults: String
-  # Total messages from this sender.
-  totalMessages: Int @examples(values: [1247, 5687])
+}
+
+# An edge in a connection.
+type HTTPSEdge {
+  # The item at the end of the edge
+  node: HTTPS
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+input InviteUserToOrgInput {
+  # Users email that you would like to invite to your org.
+  userName: EmailAddress!
+  # The role which you would like this user to have.
+  requestedRole: RoleEnums!
+  # The organization you wish to invite the user to.
+  orgId: ID!
+  # The language in which the email will be sent in.
+  preferredLang: LanguageEnums!
+  clientMutationId: String
+}
+
+type InviteUserToOrgPayload {
+  # Informs the user if the invite or invite email was successfully sent.
+  status: String
+  clientMutationId: String
+}
+
+# The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+scalar JSON
+
+# An enum used to define user's language.
+enum LanguageEnums {
+  # Used for defining if English is the preferred language.
+  ENGLISH
+  # Used for defining if French is the preferred language.
+  FRENCH
+}
+
+type Mutation {
+  # Mutation used to create a new domain for an organization.
+  createDomain(input: CreateDomainInput!): CreateDomainPayload
+  # This mutation allows the removal of unused domains.
+  removeDomain(input: RemoveDomainInput!): RemoveDomainPayload
+  # Mutation allows the modification of domains if domain is updated through out its life-cycle
+  updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
+  # This mutation allows the creation of an organization inside the database.
+  createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload
+  # This mutation allows the removal of unused organizations.
+  removeOrganization(input: RemoveOrganizationInput!): RemoveOrganizationPayload
+  # Mutation allows the modification of organizations if any changes to the organization may occur.
+  updateOrganization(input: UpdateOrganizationInput!): UpdateOrganizationPayload
+  # Mutation allows the verification of an organization.
+  verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
+  # This mutation is used to run a manual scan on a requested domain.
+  requestScan(input: RequestScanInput!): RequestScanPayload
+  # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
+  authenticate(input: AuthenticateInput!): AuthenticatePayload
+  # This mutation allows the user to take the token they received in their email to reset their password.
+  resetPassword(input: ResetPasswordInput!): ResetPasswordPayload
+  # This mutation is used for re-sending a verification email if it failed during user creation.
+  sendEmailVerification(
+    input: SendEmailVerificationInput!
+  ): SendEmailVerificationPayload
+  # This mutation allows a user to provide their username and request that a
+  # password reset email be sent to their account with a reset token in a url.
+  sendPasswordResetLink(
+    input: SendPasswordResetLinkInput!
+  ): SendPasswordResetLinkPayload
+  # This mutation is used for sending a text message with a random six digit code used to verify the user.
+  sendPhoneCode(input: sendPhoneCodeInput!): sendPhoneCodePayload
+  # This mutation allows users to give their credentials and be taken to the authentication page to verify their account
+  signIn(input: SignInInput!): SignInPayload
+  # This mutation allows for new users to sign up for our sites services.
+  signUp(input: SignUpInput!): SignUpPayload
+  # This mutation allows the user to update their account password.
+  updateUserPassword(input: UpdateUserPasswordInput!): UpdateUserPasswordPayload
+  # This mutation allows the user to update their user profile to change various details of their current profile.
+  updateUserProfile(input: UpdateUserProfileInput!): UpdateUserProfilePayload
+  # This mutation allows the user to verify their account through a token sent in an email.
+  verifyAccount(input: VerifyAccountInput!): VerifyAccountPayload
+  # This mutation allows the user to two factor authenticate.
+  verifyPhoneNumber(input: verifyPhoneNumberInput!): verifyPhoneNumberPayload
+  # This mutation allows admins and higher to invite users to any of their
+  #     organizations, if the invited user does not have an account, they will be
+  #     able to sign-up and be assigned to that organization in one mutation.
+  inviteUserToOrg(input: InviteUserToOrgInput!): InviteUserToOrgPayload
+  removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
+  # This mutation allows super admins, and admins of the given organization to
+  #     update the permission level of a given user that already belongs to the
+  #     given organization.
+  updateUserRole(input: UpdateUserRoleInput!): UpdateUserRolePayload
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+# Organization object containing information for a given Organization.
+type Organization implements Node {
+  # The ID of an object
+  id: ID!
+  # The organizations acronym.
+  acronym: Acronym @examples(values: ["TBS", "CSE", "DND"])
+  # The full name of the organization.
+  name: String @fake(type: companyName)
+  # Slugified name of the organization.
+  slug: Slug @examples(
+    values: [
+      "treasury-board-secretariat"
+      "environment-canada"
+      "health-canada"
+      "canada-revenue-agency"
+      "fisheries-and-oceans-canada"
+    ]
+  )
+  # The zone which the organization belongs to.
+  zone: String @examples(values: ["Federal", "Provincial"])
+  # The sector which the organization belongs to.
+  sector: String @examples(values: ["government", "energy", "research"])
+  # The country in which the organization resides.
+  country: String @examples(values: ["Canada"])
+  # The province in which the organization resides.
+  province: String @examples(values: ["Ontario", "Nova Scotia", "Quebec"])
+  # The city in which the organization resides.
+  city: String @examples(values: ["Ottawa", "Halifax", "Montreal"])
+  # Wether the organization is a verified organization.
+  verified: Boolean @examples(values: [true, false])
+  # Summaries based on scan types that are preformed on the given organizations domains.
+  summaries: OrganizationSummary
+  # The number of domains associated with this organization.
+  domainCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
+  # The domains which are associated with this organization.
+  domains(
+    # Limit domains to those that belong to an organization that has ownership.
+    ownership: Boolean
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): DomainConnection
+  # Organization affiliations to various users.
+  affiliations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): UserAffiliationsConnection
+}
+
+# A connection to a list of items.
+type OrganizationConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [OrganizationEdge] @listLength(min: 1, max: 13)
+  # The total amount of organizations the user has access to.
+  totalCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+}
+
+# An edge in a connection.
+type OrganizationEdge {
+  # The item at the end of the edge
+  node: Organization
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Summaries based on domains that the organization has claimed.
+type OrganizationSummary {
+  # Summary based on mail scan results for a given organization.
+  mail: CategorizedSummary
+  # Summary based on web scan results for a given organization.
+  web: CategorizedSummary
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean! @examples(values: [true, false])
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean! @examples(values: [true, false])
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+# Object that contains information for each data collection period.
+type Period {
+  # The domain that the data in this period belongs to.
+  domain: DomainScalar
+  # Start date of data collection.
+  month: PeriodEnums
+  # End date of data collection.
+  year: Year
+  # Category percentages based on the category totals.
+  categoryPercentages: CategoryPercentages
+  # Category totals for quick viewing.
+  categoryTotals: CategoryTotals
+  # Various senders for each category.
+  detailTables: DetailTables
 }
 
 # An enum used to select information from the dmarc-report-api.
@@ -1145,17 +916,452 @@ enum PeriodEnums {
   LAST30DAYS
 }
 
-# A field that conforms to a 4 digit integer.
-scalar Year
+# This object is used for showing personal user details,
+# and is used for only showing the details of the querying user.
+type PersonalUser implements Node {
+  # The ID of an object
+  id: ID!
+  # Users email address.
+  userName: EmailAddress @fake(type: email)
+  # Name displayed to other users.
+  displayName: String @fake(type: firstName)
+  # The phone number the user has setup with tfa.
+  phoneNumber: PhoneNumber @fake(type: phoneNumber)
+  # Users preferred language.
+  preferredLang: LanguageEnums @examples(values: ["English", "French"])
+  # Has the user completed phone validation.
+  phoneValidated: Boolean @examples(values: [false, true])
+  # Has the user email verified their account.
+  emailValidated: Boolean @examples(values: [false, true])
+  # The method in which TFA codes are sent.
+  tfaSendMethod: TFASendMethodEnum @examples(values: ["phone", "email"])
+  # Users affiliations to various organizations.
+  affiliations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): UserAffiliationsConnection
+}
 
-# This object contains the list of different categories for pre-computed
-# summary data with the computed total for how many domains in total are
-# being compared.
-type CategorizedSummary {
-  # List of SummaryCategory objects with data for different computed categories.
-  categories: [SummaryCategory] @listLength(min: 2, max: 2)
-  # Total domains that were check under this summary.
-  total: Int @examples(values: [86954, 57896, 54386, 93456, 23452])
+# A field whose value conforms to the standard E.164 format as specified in:
+# https://en.wikipedia.org/wiki/E.164. Basically this is +17895551234.
+scalar PhoneNumber
+
+type Query {
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
+  # Fetches objects given their IDs
+  nodes(
+    # The IDs of objects
+    ids: [ID!]!
+  ): [Node]!
+  # Retrieve a specific domain by providing a domain.
+  findDomainByDomain(
+    # The domain you wish to retrieve information for.
+    domain: DomainScalar!
+  ): Domain
+  # Select domains a user has access to.
+  findMyDomains(
+    # Limit domains to those that belong to an organization that has ownership.
+    ownership: Boolean
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): DomainConnection
+  # Select organizations a user has access to.
+  findMyOrganizations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): OrganizationConnection
+  # Select all information on a selected organization that a user has access to.
+  findOrganizationBySlug(
+    # The slugified organization name you want to retrieve data for.
+    orgSlug: Slug!
+  ): Organization
+  # Email summary computed values, used to build summary cards.
+  mailSummary: CategorizedSummary
+  # Web summary computed values, used to build summary cards.
+  webSummary: CategorizedSummary
+  # Query used to check if the user has an admin role.
+  isUserAdmin: Boolean
+  # Query a specific user by user name.
+  findUserByUsername(
+    # Email address of user you wish to gather data for.
+    userName: EmailAddress!
+  ): SharedUser
+  # Query the currently logged in user.
+  findMe: PersonalUser
+  # Retrieve a specific verified domain by providing a domain.
+  findVerifiedDomainByDomain(
+    # The domain you wish to retrieve information for.
+    domain: DomainScalar!
+  ): VerifiedDomain
+  # Select verified check domains
+  findVerifiedDomains(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): VerifiedDomainConnection
+  # Select all information on a selected verified organization.
+  findVerifiedOrganizationBySlug(
+    # The slugified organization name you want to retrieve data for.
+    orgSlug: Slug!
+  ): VerifiedOrganization
+  # Select organizations a user has access to.
+  findVerifiedOrganizations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): VerifiedOrganizationConnection
+}
+
+# Object containing the information of various links for guidance or technical documentation.
+type RefLinks {
+  # Title of the guidance link.
+  description: String @examples(
+    values: [
+      "IT PIN",
+      "A.3.4 Deploy DKIM for All Domains and senders",
+      "3.2.2 Third Parties and DKIM",
+    ]
+  )
+  # URL for the guidance documentation.
+  refLink: String @examples(
+    values: [
+      "",
+      "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34",
+      "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322",
+    ]
+  )
+}
+
+# This object is used when a user has not validated via email or phone.
+type RegularSignInResult {
+  # The authenticated users information, and JWT.
+  authResult: AuthResult
+}
+
+input RemoveDomainInput {
+  # The global id of the domain you wish to remove.
+  domainId: ID!
+  # The organization you wish to remove the domain from.
+  orgId: ID!
+  clientMutationId: String
+}
+
+type RemoveDomainPayload {
+  # Status string to inform the user if the domain was successfully removed.
+  status: String!
+  clientMutationId: String
+}
+
+input RemoveOrganizationInput {
+  # The global id of the organization you wish you remove.
+  orgId: ID!
+  clientMutationId: String
+}
+
+type RemoveOrganizationPayload {
+  # Status string to inform the user if the organization was successfully removed.
+  status: String
+  clientMutationId: String
+}
+
+input RemoveUserFromOrgInput {
+  userId: ID!
+  orgId: ID!
+  clientMutationId: String
+}
+
+type RemoveUserFromOrgPayload {
+  status: String
+  clientMutationId: String
+}
+
+input RequestScanInput {
+  # The domain that the scan will be ran on.
+  domain: DomainScalar
+  clientMutationId: String
+}
+
+type RequestScanPayload {
+  # The id used to specify the channel in the various subscriptions.
+  subscriptionId: String
+  # Informs the user if the scan was dispatched successfully.
+  status: String
+  clientMutationId: String
+}
+
+input ResetPasswordInput {
+  # The users new password.
+  password: String!
+  # A confirmation password to confirm the new password.
+  confirmPassword: String!
+  # The JWT found in the url, redirected from the email they received.
+  resetToken: String!
+  clientMutationId: String
+}
+
+type ResetPasswordPayload {
+  # Informs the user if the password reset was successful, and to redirect to sign in page.
+  status: String
+  clientMutationId: String
+}
+
+# An enum used to assign, and test users roles.
+enum RoleEnums {
+  # A user who has been given access to view an organization.
+  USER
+  # A user who has the same access as a user write account, but can define new user read/write accounts.
+  ADMIN
+  # A user who has the same access as an admin, but can define new admins.
+  SUPER_ADMIN
+}
+
+# A field that conforms to a string, with strings ending in ._domainkey.
+scalar Selector
+
+input SendEmailVerificationInput {
+  # The users email address used for sending the verification email.
+  userName: EmailAddress!
+  clientMutationId: String
+}
+
+type SendEmailVerificationPayload {
+  # Informs the user if the email was sent successfully.
+  status: String
+  clientMutationId: String
+}
+
+input SendPasswordResetLinkInput {
+  # User name for the account you would like to receive a password reset link for.
+  userName: EmailAddress!
+  clientMutationId: String
+}
+
+type SendPasswordResetLinkPayload {
+  # Informs the user if the password reset email was sent successfully.
+  status: String
+  clientMutationId: String
+}
+
+input sendPhoneCodeInput {
+  # The phone number that the text message will be sent to.
+  phoneNumber: PhoneNumber!
+  clientMutationId: String
+}
+
+type sendPhoneCodePayload {
+  # Informs the user if the text message was successfully sent.
+  status: String
+  clientMutationId: String
+}
+
+# This object is used for showing none personal user details,
+# and is used for limiting admins to the personal details of users.
+type SharedUser implements Node {
+  # The ID of an object
+  id: ID!
+  # Users email address.
+  userName: EmailAddress @fake(type: email)
+}
+
+input SignInInput {
+  # The email the user signed up with.
+  userName: EmailAddress!
+  # The password the user signed up with
+  password: String!
+  clientMutationId: String
+}
+
+type SignInPayload {
+  result: SignInUnion
+  clientMutationId: String
+}
+
+# This union is used when signing in to allow non-tfa users to still sign in.
+union SignInUnion = RegularSignInResult | TFASignInResult
+input SignUpInput {
+  # The name that will be displayed to other users.
+  displayName: String!
+  # Email address that the user will use to authenticate with.
+  userName: EmailAddress!
+  # The password the user will authenticate with.
+  password: String!
+  # A secondary password field used to confirm the user entered the correct password.
+  confirmPassword: String!
+  # The users preferred language.
+  preferredLang: LanguageEnums!
+  # A token sent by email, that will assign a user to an organization with a pre-determined role.
+  signUpToken: String
+  clientMutationId: String
+}
+
+type SignUpPayload {
+  # The authenticated users information, and JWT.
+  authResult: AuthResult
+  clientMutationId: String
+}
+
+# A field whos values contain numbers, letters, dashes, and underscores.
+scalar Slug
+
+# Email on the Internet can be forged in a number of ways.  In
+# particular, existing protocols place no restriction on what a sending
+# host can use as the "MAIL FROM" of a message or the domain given on
+# the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
+# protocol is where ADministrative Management Domains (ADMDs) can explicitly
+# authorize the hosts that are allowed to use their domain names, and a
+# receiving host can check such authorization.
+type SPF implements Node {
+  # The ID of an object
+  id: ID!
+  # The domain the scan was ran on.
+  domain: Domain
+  # The time the scan was initiated.
+  timestamp: String @fake(type: pastDate)
+  # The amount of DNS lookups.
+  lookups: Int @examples(values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+  # SPF record retrieved during the scan of the given domain.
+  record: String @examples(
+    values: [
+      "v=spf1 ip4:40.92.0.0/15 ip4:40.107.0.0/16 ip4:52.100.0.0/14 ip4:104.47.0.0/17 ip6:2a01:111:f400::/48 ip6:2a01:111:f403::/48 -all"
+      "v=spf1 ip4:198.103.111.114/31 ip4:205.193.224.70 ip4:205.193.224.90 ip4:216.13.57.101 ip4:216.13.57.102 ip4:209.82.9.21 ip4:209.82.9.23 ip4:198.103.112.150/31 ip4:205.192.34.113 ip4:205.192.34.56 ip4:205.192.34.58 -all"
+    ]
+  )
+  # Instruction of what a recipient should do if there is not a match to your SPF record.
+  spfDefault: String @examples(values: ["neutral", "softfail", "include", "fail"])
+  # Raw scan result.
+  rawJson: JSON
+  # Key tags found during scan.
+  guidanceTags(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+}
+
+# A connection to a list of items.
+type SPFConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [SPFEdge] @listLength(min: 0, max: 5)
+  # The total amount of spf scans related to a given domain.
+  totalCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+}
+
+# An edge in a connection.
+type SPFEdge {
+  # The item at the end of the edge
+  node: SPF
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# This table contains the data fields for senders who are in the SPF fail category.
+type SpfFailureTable {
+  # The ID of the object
+  id: ID
+  # Host from reverse DNS of source IP address.
+  dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
+  # Domain from SMTP banner message.
+  envelopeFrom: String @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
+  # Guidance for any issues that were found from the report.
+  guidance: String @examples(values: ["agg-spf-no-record", "agg-spf-failed", "agg-spf-strict", "agg-spf-invalid"])
+  # The address/domain used in the "From" field.
+  headerFrom: String @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
+  # IP address of sending server.
+  sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
+  # Is SPF aligned.
+  spfAligned: Boolean @examples(values: [true, false])
+  # Domains used for SPF validation.
+  spfDomains: String @examples(values: ["test.spf.gc.ca", "test.spf.canada.ca"])
+  # The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error.
+  spfResults: String
+  # Total messages from this sender.
+  totalMessages: Int @examples(values: [1247, 5687])
+}
+
+# A connection to a list of items.
+type SpfFailureTableConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [SpfFailureTableEdge] @listLength(min: 0, max: 5)
+}
+
+# An edge in a connection.
+type SpfFailureTableEdge {
+  # The item at the end of the edge
+  node: SpfFailureTable
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Secure Socket Layer scan results.
+type SSL implements Node {
+  # The ID of an object
+  id: ID!
+  # The domain the scan was ran on.
+  domain: Domain
+  # The time when the scan was initiated.
+  timestamp: String @fake(type: pastDate)
+  # Raw scan result.
+  rawJson: JSON
+  # Key tags found during scan.
+  guidanceTags(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+}
+
+# A connection to a list of items.
+type SSLConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [SSLEdge] @listLength(min: 0, max: 5)
+  # The total amount of https scans for a given domain.
+  totalCount: Int 
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+}
+
+# An edge in a connection.
+type SSLEdge {
+  # The item at the end of the edge
+  node: SSL
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Enum used to inform front end if there are any issues, info, or the domain passes a given check.
+enum StatusEnum {
+  # If the given check meets the passing requirements.
+  PASS
+  # If the given check has flagged something that can provide information on the domain that aren't scan related.
+  INFO
+  # If the given check does not meet the passing requirements
+  FAIL
 }
 
 # This object contains the information for each type of summary that has been pre-computed
@@ -1168,226 +1374,21 @@ type SummaryCategory {
   percentage: Float @examples(values: [50.0, 43.5, 76.8, 23.4, 54.6])
 }
 
-# Domain object containing information for a given domain.
-type VerifiedDomain implements Node {
-  # The ID of an object
-  id: ID!
-  # Domain that scans will be ran on.
-  domain: DomainScalar
-    @examples(
-      values: [
-        "javascript:alert('XSS')"
-        "javascript:eval('aler'+(!![]+[])[+[]])('xss')"
-        "rcmp-grc.gc.ca"
-        "tbs-sct.gc.ca"
-        "canada.ca"
-        "cra-arc.gc.ca"
-        "pm.gc.ca"
-        "cse-cst.gc.ca"
-        "forces.gc.ca"
-        "jAva&Tab;script:alert('XSS')"
-        "cra.arc.gc.ca"
-        "cra-arc.gc.ca"
-        "cse-cst.gc.ca"
-        "cyber.gc.ca"
-        "dfait-maeci.gc.ca"
-        "dfo-mpo.gc.ca"
-        "ec.gc.ca"
-        "forces.gc.ca"
-        "gccollab.ca"
-        "gccollaboration.ca"
-        "goc-gdc.ca"
-        "hc-sc.gc.ca"
-      ]
-    )
-  # The last time that a scan was ran on this domain.
-  lastRan: DateTime @fake(type: recentDate)
-  # The organization that this domain belongs to.
-  organizations(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): VerifiedOrganizationConnection
+enum TFASendMethodEnum {
+  # Used for defining that the TFA code will be sent via email.
+  EMAIL
+  # Used for defining that the TFA code will be sent via text.
+  PHONE
+  # User has not setup any TFA methods.
+  NONE
 }
 
-# A connection to a list of items.
-type VerifiedOrganizationConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [VerifiedOrganizationEdge] @listLength(min: 0, max: 5)
-  # The total amount of verified organizations.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type VerifiedOrganizationEdge {
-  # The item at the end of the edge
-  node: VerifiedOrganization
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# Verified Organization object containing information for a given Organization.
-type VerifiedOrganization implements Node {
-  # The ID of an object
-  id: ID!
-  # The organizations acronym.
-  acronym: Acronym @examples(values: ["TBS", "CSE", "DND"])
-  # The full name of the organization.
-  name: String @fake(type: companyName)
-  # Slugified name of the organization.
-  slug: Slug
-    @examples(
-      values: [
-        "treasury-board-secretariat"
-        "environment-canada"
-        "health-canada"
-        "canada-revenue-agency"
-        "fisheries-and-oceans-canada"
-      ]
-    )
-  # The zone which the organization belongs to.
-  zone: String @examples(values: ["Federal", "Provincial"])
-  # The sector which the organization belongs to.
-  sector: String @examples(values: ["government", "energy", "research"])
-  # The country in which the organization resides.
-  country: String @examples(values: ["Canada"])
-  # The province in which the organization resides.
-  province: String @examples(values: ["Ontario", "Nova Scotia", "Quebec"])
-  # The city in which the organization resides.
-  city: String @examples(values: ["Ottawa", "Halifax", "Montreal"])
-  # Wether the organization is a verified organization.
-  verified: Boolean @examples(values: [true, false])
-  # The number of domains associated with this organization.
-  domainCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-  # The domains which are associated with this organization.
-  domains(
-    after: String
-    first: Int
-    before: String
-    last: Int
-  ): DomainConnection
-}
-
-# A connection to a list of items.
-type VerifiedDomainConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [VerifiedDomainEdge] @listLength(min: 0, max: 5)
-  # The total amount of verified domains.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type VerifiedDomainEdge {
-  # The item at the end of the edge
-  node: VerifiedDomain
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-type Mutation {
-  # Mutation used to create a new domain for an organization.
-  createDomain(input: CreateDomainInput!): CreateDomainPayload
-  # This mutation allows the removal of unused domains.
-  removeDomain(input: RemoveDomainInput!): RemoveDomainPayload
-  # Mutation allows the modification of domains if domain is updated through out its life-cycle
-  updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
-  # This mutation allows the creation of an organization inside the database.
-  createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload
-  # This mutation allows the removal of unused organizations.
-  removeOrganization(input: RemoveOrganizationInput!): RemoveOrganizationPayload
-  # Mutation allows the modification of organizations if any changes to the organization may occur.
-  updateOrganization(input: UpdateOrganizationInput!): UpdateOrganizationPayload
-  # Mutation allows the verification of an organization.
-  verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
-  # This mutation is used to run a manual scan on a requested domain.
-  requestScan(input: RequestScanInput!): RequestScanPayload
-  # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
-  authenticate(input: AuthenticateInput!): AuthenticatePayload
-  # This mutation allows the user to take the token they received in their email to reset their password.
-  resetPassword(input: ResetPasswordInput!): ResetPasswordPayload
-  # This mutation is used for re-sending a verification email if it failed during user creation.
-  sendEmailVerification(
-    input: SendEmailVerificationInput!
-  ): SendEmailVerificationPayload
-  # This mutation allows a user to provide their username and request that a password reset email be sent to their account with a reset token in a url.
-  sendPasswordResetLink(
-    input: SendPasswordResetLinkInput!
-  ): SendPasswordResetLinkPayload
-  # This mutation is used for sending a text message with a random six digit code used to verify the user.
-  sendPhoneCode(input: sendPhoneCodeInput!): sendPhoneCodePayload
-  # This mutation allows users to give their credentials and be taken to the authentication page to verify their account
-  signIn(input: SignInInput!): SignInPayload
-  # This mutation allows for new users to sign up for our sites services.
-  signUp(input: SignUpInput!): SignUpPayload
-  # This mutation allows the user to update their account password.
-  updateUserPassword(input: UpdateUserPasswordInput!): UpdateUserPasswordPayload
-  # This mutation allows the user to update their user profile to change various details of their current profile.
-  updateUserProfile(input: UpdateUserProfileInput!): UpdateUserProfilePayload
-  # This mutation allows the user to verify their account through a token sent in an email.
-  verifyAccount(input: VerifyAccountInput!): VerifyAccountPayload
-  # This mutation allows the user to two factor authenticate.
-  verifyPhoneNumber(input: verifyPhoneNumberInput!): verifyPhoneNumberPayload
-  # This mutation allows admins and higher to invite users to any of their
-  #     organizations, if the invited user does not have an account, they will be
-  #     able to sign-up and be assigned to that organization in one mutation.
-  inviteUserToOrg(input: InviteUserToOrgInput!): InviteUserToOrgPayload
-  # This mutation allows super admins, and admins of the given organization to
-  #     update the permission level of a given user that already belongs to the
-  #     given organization.
-  updateUserRole(input: UpdateUserRoleInput!): UpdateUserRolePayload
-}
-
-type CreateDomainPayload {
-  # The newly created domain.
-  domain: Domain
-  clientMutationId: String
-}
-
-input CreateDomainInput {
-  # The global id of the organization you wish to assign this domain to.
-  orgId: ID!
-  # Url that you would like to be added to the database.
-  domain: DomainScalar!
-  # DKIM selector strings corresponding to this domain.
-  selectors: [Selector]
-  clientMutationId: String
-}
-
-type RemoveDomainPayload {
-  # Status string to inform the user if the domain was successfully removed.
-  status: String!
-  clientMutationId: String
-}
-
-input RemoveDomainInput {
-  # The global id of the domain you wish to remove.
-  domainId: ID!
-  # The organization you wish to remove the domain from.
-  orgId: ID!
-  clientMutationId: String
-}
-
-type UpdateDomainPayload {
-  # The updated domain.
-  domain: Domain
-  clientMutationId: String
+# This object is used when the user has validated either their email or phone.
+type TFASignInResult {
+  # Token used to verify during authentication.
+  authenticateToken: String
+  # Wether the authentication code was sent through text, or email.
+  sendMethod: String
 }
 
 input UpdateDomainInput {
@@ -1402,59 +1403,9 @@ input UpdateDomainInput {
   clientMutationId: String
 }
 
-type CreateOrganizationPayload {
-  # The newly created organization.
-  organization: Organization
-  clientMutationId: String
-}
-
-input CreateOrganizationInput {
-  # The English acronym of the organization.
-  acronymEN: Acronym!
-  # The French acronym of the organization.
-  acronymFR: Acronym!
-  # The English name of the organization.
-  nameEN: String!
-  # The French name of the organization.
-  nameFR: String!
-  # The English translation of the zone the organization belongs to.
-  zoneEN: String!
-  # The English translation of the zone the organization belongs to.
-  zoneFR: String!
-  # The English translation of the sector the organization belongs to.
-  sectorEN: String!
-  # The French translation of the sector the organization belongs to.
-  sectorFR: String!
-  # The English translation of the country the organization resides in.
-  countryEN: String!
-  # The French translation of the country the organization resides in.
-  countryFR: String!
-  # The English translation of the province the organization resides in.
-  provinceEN: String!
-  # The French translation of the province the organization resides in.
-  provinceFR: String!
-  # The English translation of the city the organization resides in.
-  cityEN: String!
-  # The French translation of the city the organization resides in.
-  cityFR: String!
-  clientMutationId: String
-}
-
-type RemoveOrganizationPayload {
-  # Status string to inform the user if the organization was successfully removed.
-  status: String
-  clientMutationId: String
-}
-
-input RemoveOrganizationInput {
-  # The global id of the organization you wish you remove.
-  orgId: ID!
-  clientMutationId: String
-}
-
-type UpdateOrganizationPayload {
-  # The newly created organization.
-  organization: Organization
+type UpdateDomainPayload {
+  # The updated domain.
+  domain: Domain
   clientMutationId: String
 }
 
@@ -1492,158 +1443,9 @@ input UpdateOrganizationInput {
   clientMutationId: String
 }
 
-type VerifyOrganizationPayload {
-  # Status of organization verification.
-  status: String
-  clientMutationId: String
-}
-
-input VerifyOrganizationInput {
-  # The global id of the organization to be verified.
-  orgId: ID!
-  clientMutationId: String
-}
-
-type RequestScanPayload {
-  # Informs the user if the scan was dispatched successfully.
-  status: String
-  clientMutationId: String
-}
-
-input RequestScanInput {
-  # The domain that the scan will be ran on.
-  urlSlug: Slug
-  # Type of scan to preform on the requested domain ('WEB' or 'MAIL').
-  scanType: ScanTypeEnums
-  clientMutationId: String
-}
-
-# Enum used when requesting a manual scan to determine what type of scan is to be ran.
-enum ScanTypeEnums {
-  # Used for defining if DMARC and DKIM scans should be preformed.
-  MAIL
-  # Used for defining if HTTPS and SSL scans should be preformed.
-  WEB
-}
-
-type AuthenticatePayload {
-  # The authenticated users information, and JWT.
-  authResult: AuthResult
-  clientMutationId: String
-}
-
-# An object used to return information when users sign up or authenticate.
-type AuthResult {
-  # JWT used for accessing controlled content.
-  authToken: String
-  # User that has just been created or signed in.
-  user: User
-}
-
-input AuthenticateInput {
-  # Security code found in text msg, or email inbox.
-  authenticationCode: Int!
-  # The JWT that is retrieved from the sign in mutation.
-  authenticateToken: String!
-  clientMutationId: String
-}
-
-type ResetPasswordPayload {
-  # Informs the user if the password reset was successful, and to redirect to sign in page.
-  status: String
-  clientMutationId: String
-}
-
-input ResetPasswordInput {
-  # The users new password.
-  password: String!
-  # A confirmation password to confirm the new password.
-  confirmPassword: String!
-  # The JWT found in the url, redirected from the email they received.
-  resetToken: String!
-  clientMutationId: String
-}
-
-type SendEmailVerificationPayload {
-  # Informs the user if the email was sent successfully.
-  status: String
-  clientMutationId: String
-}
-
-input SendEmailVerificationInput {
-  # The users email address used for sending the verification email.
-  userName: EmailAddress!
-  clientMutationId: String
-}
-
-type SendPasswordResetLinkPayload {
-  # Informs the user if the password reset email was sent successfully.
-  status: String
-  clientMutationId: String
-}
-
-input SendPasswordResetLinkInput {
-  # User name for the account you would like to receive a password reset link for.
-  userName: EmailAddress!
-  clientMutationId: String
-}
-
-type sendPhoneCodePayload {
-  # Informs the user if the text message was successfully sent.
-  status: String
-  clientMutationId: String
-}
-
-input sendPhoneCodeInput {
-  # The phone number that the text message will be sent to.
-  phoneNumber: PhoneNumber!
-  clientMutationId: String
-}
-
-# A field whose value conforms to the standard E.164 format as specified in: https://en.wikipedia.org/wiki/E.164. Basically this is +17895551234.
-scalar PhoneNumber
-
-type SignInPayload {
-  # Token used to verify during authentication.
-  authenticateToken: String
-  # Wether the authentication code was sent through text, or email.
-  status: String
-  clientMutationId: String
-}
-
-input SignInInput {
-  # The email the user signed up with.
-  userName: EmailAddress!
-  # The password the user signed up with
-  password: String!
-  clientMutationId: String
-}
-
-type SignUpPayload {
-  # The authenticated users information, and JWT.
-  authResult: AuthResult
-  clientMutationId: String
-}
-
-input SignUpInput {
-  # The name that will be displayed to other users.
-  displayName: String!
-  # Email address that the user will use to authenticate with.
-  userName: EmailAddress!
-  # The password the user will authenticate with.
-  password: String!
-  # A secondary password field used to confirm the user entered the correct password.
-  confirmPassword: String!
-  # The users preferred language.
-  preferredLang: LanguageEnums!
-  # A token sent by email, that will assign a user to an organization with a pre-determined role.
-  signUpToken: String
-  clientMutationId: String
-}
-
-type UpdateUserPasswordPayload {
-  # The status if the user profile update was successful.
-  status: String
+type UpdateOrganizationPayload {
+  # The newly created organization.
+  organization: Organization
   clientMutationId: String
 }
 
@@ -1657,7 +1459,7 @@ input UpdateUserPasswordInput {
   clientMutationId: String
 }
 
-type UpdateUserProfilePayload {
+type UpdateUserPasswordPayload {
   # The status if the user profile update was successful.
   status: String
   clientMutationId: String
@@ -1670,53 +1472,15 @@ input UpdateUserProfileInput {
   userName: EmailAddress
   # The updated preferred language the user wishes to change to.
   preferredLang: LanguageEnums
+  # The updated phone number the user wishes to change to.
+  phoneNumber: PhoneNumber
+  # The method in which the user wishes to have their TFA code sent via.
+  tfaSendMethod: TFASendMethodEnum
   clientMutationId: String
 }
 
-type VerifyAccountPayload {
-  # Informs user if account was successfully verified.
-  status: String
-  clientMutationId: String
-}
-
-input VerifyAccountInput {
-  # Token sent via email, and located in url.
-  verifyTokenString: String!
-  clientMutationId: String
-}
-
-type verifyPhoneNumberPayload {
-  # The status of verifying the two factor authentication.
-  status: String
-  clientMutationId: String
-}
-
-input verifyPhoneNumberInput {
-  # The two factor code that was received via text message.
-  twoFactorCode: Int!
-  clientMutationId: String
-}
-
-type InviteUserToOrgPayload {
-  # Informs the user if the invite or invite email was successfully sent.
-  status: String
-  clientMutationId: String
-}
-
-input InviteUserToOrgInput {
-  # Users email that you would like to invite to your org.
-  userName: EmailAddress!
-  # The role which you would like this user to have.
-  requestedRole: RoleEnums!
-  # The organization you wish to invite the user to.
-  orgId: ID!
-  # The language in which the email will be sent in.
-  preferredLang: LanguageEnums!
-  clientMutationId: String
-}
-
-type UpdateUserRolePayload {
-  # Informs the user if the user role update was successful.
+type UpdateUserProfilePayload {
+  # The status if the user profile update was successful.
   status: String
   clientMutationId: String
 }
@@ -1730,3 +1494,242 @@ input UpdateUserRoleInput {
   role: RoleEnums!
   clientMutationId: String
 }
+
+type UpdateUserRolePayload {
+  # Informs the user if the user role update was successful.
+  status: String
+  clientMutationId: String
+}
+
+# User Affiliations containing the permission level for the given organization,
+# the users information, and the organizations information.
+type UserAffiliations implements Node {
+  # The ID of an object
+  id: ID!
+  # User's level of access to a given organization.
+  permission: RoleEnums @examples(values: ["SUPER_ADMIN", "ADMIN", "USER"])
+  # The affiliated users information.
+  user: SharedUser
+  # The affiliated organizations information.
+  organization: Organization
+}
+
+# A connection to a list of items.
+type UserAffiliationsConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [UserAffiliationsEdge] @listLength(min: 0, max: 5)
+  # The total amount of affiliations the user has access to.
+  totalCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+}
+
+# An edge in a connection.
+type UserAffiliationsEdge {
+  # The item at the end of the edge
+  node: UserAffiliations
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Domain object containing information for a given domain.
+type VerifiedDomain implements Node {
+  # The ID of an object
+  id: ID!
+  # Domain that scans will be ran on.
+  domain: DomainScalar @examples(
+    values: [
+      "javascript:alert('XSS')"
+      "javascript:eval('aler'+(!![]+[])[+[]])('xss')"
+      "rcmp-grc.gc.ca"
+      "tbs-sct.gc.ca"
+      "canada.ca"
+      "cra-arc.gc.ca"
+      "pm.gc.ca"
+      "cse-cst.gc.ca"
+      "forces.gc.ca"
+      "jAva&Tab;script:alert('XSS')"
+      "cra.arc.gc.ca"
+      "cra-arc.gc.ca"
+      "cse-cst.gc.ca"
+      "cyber.gc.ca"
+      "dfait-maeci.gc.ca"
+      "dfo-mpo.gc.ca"
+      "ec.gc.ca"
+      "forces.gc.ca"
+      "gccollab.ca"
+      "gccollaboration.ca"
+      "goc-gdc.ca"
+      "hc-sc.gc.ca"
+    ]
+  )
+  # The last time that a scan was ran on this domain.
+  lastRan: DateTime @fake(type: recentDate)
+  # The organization that this domain belongs to.
+  organizations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): VerifiedOrganizationConnection
+}
+
+# A connection to a list of items.
+type VerifiedDomainConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [VerifiedDomainEdge] @listLength(min: 0, max: 5)
+  # The total amount of verified domains.
+  totalCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+}
+
+# An edge in a connection.
+type VerifiedDomainEdge {
+  # The item at the end of the edge
+  node: VerifiedDomain
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Verified Organization object containing information for a given Organization.
+type VerifiedOrganization implements Node {
+  # The ID of an object
+  id: ID!
+  # The organizations acronym.
+  acronym: Acronym @examples(values: ["TBS", "CSE", "DND"])
+  # The full name of the organization.
+  name: String @fake(type: companyName)
+  # Slugified name of the organization.
+  slug: Slug @examples(
+    values: [
+      "treasury-board-secretariat"
+      "environment-canada"
+      "health-canada"
+      "canada-revenue-agency"
+      "fisheries-and-oceans-canada"
+    ]
+  )
+  # The zone which the organization belongs to.
+  zone: String @examples(values: ["Federal", "Provincial"])
+  # The sector which the organization belongs to.
+  sector: String @examples(values: ["government", "energy", "research"])
+  # The country in which the organization resides.
+  country: String @examples(values: ["Canada"])
+  # The province in which the organization resides.
+  province: String @examples(values: ["Ontario", "Nova Scotia", "Quebec"])
+  # The city in which the organization resides.
+  city: String @examples(values: ["Ottawa", "Halifax", "Montreal"])
+  # Wether the organization is a verified organization.
+  verified: Boolean @examples(values: [true, false])
+  # The number of domains associated with this organization.
+  domainCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
+  # The domains which are associated with this organization.
+  domains(
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): VerifiedDomainConnection
+}
+
+# A connection to a list of items.
+type VerifiedOrganizationConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [VerifiedOrganizationEdge] @listLength(min: 0, max: 5)
+  # The total amount of verified organizations.
+  totalCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+}
+
+# An edge in a connection.
+type VerifiedOrganizationEdge {
+  # The item at the end of the edge
+  node: VerifiedOrganization
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+input VerifyAccountInput {
+  # Token sent via email, and located in url.
+  verifyTokenString: String!
+  clientMutationId: String
+}
+
+type VerifyAccountPayload {
+  # Informs user if account was successfully verified.
+  status: String
+  clientMutationId: String
+}
+
+input VerifyOrganizationInput {
+  # The global id of the organization to be verified.
+  orgId: ID!
+  clientMutationId: String
+}
+
+type VerifyOrganizationPayload {
+  # Status of organization verification.
+  status: String
+  clientMutationId: String
+}
+
+input verifyPhoneNumberInput {
+  # The two factor code that was received via text message.
+  twoFactorCode: Int!
+  clientMutationId: String
+}
+
+type verifyPhoneNumberPayload {
+  # The status of verifying the two factor authentication.
+  status: String
+  clientMutationId: String
+}
+
+# Results of HTTPS, and SSL scan on the given domain.
+type WebScan {
+  # The domain the scan was ran on.
+  domain: Domain
+  # Hyper Text Transfer Protocol Secure scan results.
+  https(
+    # Start date for date filter.
+    starDate: DateTime
+    # End date for date filter.
+    endDate: DateTime
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): HTTPSConnection
+  # Secure Socket Layer scan results.
+  ssl(
+    # Start date for date filter.
+    starDate: DateTime
+    # End date for date filter.
+    endDate: DateTime
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): SSLConnection
+}
+
+# A field that conforms to a 4 digit integer.
+scalar Year
+
