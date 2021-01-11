@@ -29,12 +29,14 @@ describe('<TwoFactorAuthenticatePage />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MemoryRouter
-              initialEntries={['/authenticate/authenticate-token-test']}
+              initialEntries={['/authenticate/phone/authenticate-token-test']}
               initialIndex={0}
             >
-              <MockedProvider>
-                <TwoFactorAuthenticatePage />
-              </MockedProvider>
+              <Route path="/authenticate/:sendMethod/:authenticateToken">
+                <MockedProvider>
+                  <TwoFactorAuthenticatePage />
+                </MockedProvider>
+              </Route>
             </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>
@@ -57,11 +59,15 @@ describe('<TwoFactorAuthenticatePage />', () => {
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter
-                    initialEntries={['/authenticate/authenticate-token-test']}
+                    initialEntries={[
+                      '/authenticate/phone/authenticate-token-test',
+                    ]}
                     initialIndex={0}
                   >
                     <MockedProvider>
-                      <TwoFactorAuthenticatePage />
+                      <Route path="/authenticate/:sendMethod/:authenticateToken">
+                        <TwoFactorAuthenticatePage />
+                      </Route>
                     </MockedProvider>
                   </MemoryRouter>
                 </I18nProvider>
@@ -103,7 +109,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
                 authResult: {
                   user: {
                     userName: 'Thalia.Rosenbaum@gmail.com',
-                    tfaSendMethod: false,
+                    tfaSendMethod: 'PHONE',
                   },
                   authToken: 'test123stringJWT',
                 },
@@ -116,7 +122,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
       // create a history object and inject it so we can inspect it afterwards
       // for the side effects of our form submission (a redirect to /!).
       const history = createMemoryHistory({
-        initialEntries: ['/authenticate/authenticate-token-test'],
+        initialEntries: ['/authenticate/phone/authenticate-token-test'],
         initialIndex: 0,
       })
 
@@ -127,7 +133,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <Router history={history}>
-                <Route path="/authenticate/:authenticateToken">
+                <Route path="/authenticate/:sendMethod/:authenticateToken">
                   <MockedProvider mocks={mocks} addTypename={false}>
                     <TwoFactorAuthenticatePage />
                   </MockedProvider>
