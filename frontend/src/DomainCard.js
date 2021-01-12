@@ -15,9 +15,9 @@ import { slugify } from './slugify'
 
 export function DomainCard({ url, lastRan, status, ...rest }) {
   const history = useHistory()
-  const generateStatusIcon = (category) => {
+  const generateStatusIcon = (status) => {
     let statusIcon
-    if (category === 'PASS') {
+    if (status === 'PASS') {
       statusIcon = <Icon name="check-circle" color="strong" size="icons.sm" />
     } else {
       statusIcon = <Icon name="warning" color="weak" size="icons.sm" />
@@ -60,56 +60,90 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
           )}
         </Box>
         <Divider orientation={['horizontal', 'vertical']} />
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} w={['100%', '7%']}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              HTTPS:
-            </Text>
-            {status?.https
-              ? generateStatusIcon(status.https)
-              : generateStatusIcon('FAIL')}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} w={['100%', '7%']}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              SSL:
-            </Text>
-            {status?.ssl
-              ? generateStatusIcon(status.ssl)
-              : generateStatusIcon('FAIL')}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} w={['100%', '7%']}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              SPF:
-            </Text>
-            {status?.spf
-              ? generateStatusIcon(status.spf)
-              : generateStatusIcon('FAIL')}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} w={['100%', '7%']}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              DKIM:
-            </Text>
-            {status?.dkim
-              ? generateStatusIcon(status.dkim)
-              : generateStatusIcon('FAIL')}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} w={['100%', '7%']}>
-          <Stack align={['right', 'center']} flexDirection={['row', 'column']}>
-            <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-              DMARC:
-            </Text>
-            {status?.dmarc
-              ? generateStatusIcon(status.dmarc)
-              : generateStatusIcon('FAIL')}
-          </Stack>
-        </Box>
+        {lastRan && (
+          <Box justifyContent="space-between" display={{ md: 'flex' }}>
+            <Box
+              flexShrink="0"
+              ml={{ md: 2 }}
+              mr={{ md: 2 }}
+              w={['100%', '7%']}
+            >
+              <Stack
+                align={['right', 'center']}
+                flexDirection={['row', 'column']}
+              >
+                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                  HTTPS:
+                </Text>
+                {generateStatusIcon(status.https)}
+              </Stack>
+            </Box>
+            <Box
+              flexShrink="0"
+              ml={{ md: 2 }}
+              mr={{ md: 2 }}
+              w={['100%', '7%']}
+            >
+              <Stack
+                align={['right', 'center']}
+                flexDirection={['row', 'column']}
+              >
+                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                  SSL:
+                </Text>
+                {generateStatusIcon(status.ssl)}
+              </Stack>
+            </Box>
+            <Box
+              flexShrink="0"
+              ml={{ md: 2 }}
+              mr={{ md: 2 }}
+              w={['100%', '7%']}
+            >
+              <Stack
+                align={['right', 'center']}
+                flexDirection={['row', 'column']}
+              >
+                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                  SPF:
+                </Text>
+                {generateStatusIcon(status.spf)}
+              </Stack>
+            </Box>
+            <Box
+              flexShrink="0"
+              ml={{ md: 2 }}
+              mr={{ md: 2 }}
+              w={['100%', '7%']}
+            >
+              <Stack
+                align={['right', 'center']}
+                flexDirection={['row', 'column']}
+              >
+                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                  DKIM:
+                </Text>
+                {generateStatusIcon(status.dkim)}
+              </Stack>
+            </Box>
+            <Box
+              flexShrink="0"
+              ml={{ md: 2 }}
+              mr={{ md: 2 }}
+              w={['100%', '7%']}
+            >
+              <Stack
+                align={['right', 'center']}
+                flexDirection={['row', 'column']}
+              >
+                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                  DMARC:
+                </Text>
+                {generateStatusIcon(status.dmarc)}
+              </Stack>
+            </Box>
+          </Box>
+        )}
       </PseudoBox>
     </ListItem>
   )
