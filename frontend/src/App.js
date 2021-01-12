@@ -60,9 +60,11 @@ export default function App() {
             <Trans>Home</Trans>
           </Link>
 
-          <Link to="/organizations">
-            <Trans>Organizations</Trans>
-          </Link>
+          {isLoggedIn() && (
+            <Link to="/organizations">
+              <Trans>Organizations</Trans>
+            </Link>
+          )}
 
           {isLoggedIn() && (
             <Link to="/domains">
