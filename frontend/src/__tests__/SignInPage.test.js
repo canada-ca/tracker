@@ -25,7 +25,7 @@ describe('<SignInPage />', () => {
     it('displays an error message', async () => {
       const { container, getByText } = render(
         <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfa: null }}
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -55,7 +55,7 @@ describe('<SignInPage />', () => {
     it('displays an error message', async () => {
       const { container } = render(
         <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfa: null }}
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -123,7 +123,7 @@ describe('<SignInPage />', () => {
 
         const { container, getByRole } = render(
           <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfa: null }}
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -185,7 +185,7 @@ describe('<SignInPage />', () => {
                     authResult: {
                       user: {
                         userName: 'Thalia.Rosenbaum@gmail.com',
-                        tfa: false,
+                        tfaSendMethod: false,
                       },
                       authToken: 'test123stringJWT',
                     },
@@ -206,7 +206,7 @@ describe('<SignInPage />', () => {
 
         const { container, getByRole } = render(
           <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfa: null }}
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>

@@ -41,7 +41,7 @@ describe('<AdminDomains />', () => {
         initialState={{
           userName: 'testuser@testemail.gc.ca',
           jwt: 'string',
-          tfa: false,
+          tfaSendMethod: false,
         }}
       >
         <ThemeProvider theme={theme}>
@@ -72,7 +72,7 @@ describe('<AdminDomains />', () => {
         initialState={{
           userName: 'testuser@testemail.gc.ca',
           jwt: 'string',
-          tfa: false,
+          tfaSendMethod: false,
         }}
       >
         <ThemeProvider theme={theme}>

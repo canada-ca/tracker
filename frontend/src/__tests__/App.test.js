@@ -68,7 +68,7 @@ describe('<App/>', () => {
       it('renders the main page', async () => {
         const { getByText } = render(
           <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfa: null }}
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>
@@ -115,7 +115,7 @@ describe('<App/>', () => {
       it('renders the sign-in page', async () => {
         const { getByText } = render(
           <UserStateProvider
-            initialState={{ userName: null, jwt: null, tfa: null }}
+            initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={i18n}>

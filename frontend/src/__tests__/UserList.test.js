@@ -31,7 +31,7 @@ describe('<UserList />', () => {
         initialState={{
           userName: 'testuser@testemail.gc.ca',
           jwt: 'string',
-          tfa: false,
+          tfaSendMethod: false,
         }}
       >
         <ThemeProvider theme={theme}>
@@ -99,7 +99,7 @@ describe('<UserList />', () => {
           initialState={{
             userName: 'testadmin@testemail.gc.ca',
             jwt: 'string',
-            tfa: false,
+            tfaSendMethod: false,
           }}
         >
           <ThemeProvider theme={theme}>

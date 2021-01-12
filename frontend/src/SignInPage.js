@@ -51,7 +51,7 @@ export default function SignInPage() {
       if (signIn.result.__typename === 'RegularSignInResult') {
         login({
           jwt: signIn.result.authResult.authToken,
-          tfa: signIn.result.authResult.user.tfaValidated,
+          tfaSendMethod: signIn.result.authResult.user.tfaSendMethod,
           userName: signIn.result.authResult.user.userName,
         })
         // // redirect to the home page.
@@ -69,7 +69,9 @@ export default function SignInPage() {
       else if (signIn.result.__typename === 'TFASignInResult') {
         // redirect to the authenticate page
         history.push(
-          `/authenticate/${signIn.result.sendMethod}/${signIn.result.authenticateToken}`,
+          `/authenticate/${signIn.result.sendMethod.toLowerCase()}/${
+            signIn.result.authenticateToken
+          }`,
         )
       } else {
         toast({

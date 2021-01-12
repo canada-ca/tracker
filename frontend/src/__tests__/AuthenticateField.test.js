@@ -39,6 +39,7 @@ describe('<AuthenticateField />', () => {
                 <AuthenticateField
                   data-testid="authenticatefield"
                   name="twoFactorCode"
+                  sendMethod="phone"
                 />
               )}
             </Formik>

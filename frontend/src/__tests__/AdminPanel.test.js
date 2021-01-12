@@ -41,7 +41,7 @@ describe('<AdminPanel />', () => {
         initialState={{
           userName: 'testuser@testemail.gc.ca',
           jwt: 'string',
-          tfa: false,
+          tfaSendMethod: false,
         }}
       >
         <I18nProvider i18n={i18n}>

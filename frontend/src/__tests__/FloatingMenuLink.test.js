@@ -25,7 +25,7 @@ describe('<FloatingMenuLink>', () => {
         initialState={{
           userName: 'testUserName@email.com',
           jwt: 'string',
-          tfa: false,
+          tfaSendMethod: false,
         }}
       >
         <MemoryRouter initialEntries={['/']}>
@@ -49,7 +49,7 @@ describe('<FloatingMenuLink>', () => {
           initialState={{
             userName: 'testUserName@email.com',
             jwt: 'string',
-            tfa: false,
+            tfaSendMethod: false,
           }}
         >
           <MemoryRouter initialEntries={['/']}>

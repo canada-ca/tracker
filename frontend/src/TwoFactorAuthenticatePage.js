@@ -2,7 +2,7 @@ import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { number, object } from 'yup'
-import { Box, Button, Heading, useToast } from '@chakra-ui/core'
+import { Box, Button, Heading, useToast, Stack } from '@chakra-ui/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
@@ -39,7 +39,7 @@ export default function TwoFactorAuthenticatePage() {
     onCompleted({ authenticate }) {
       login({
         jwt: authenticate.authResult.authToken,
-        tfa: authenticate.authResult.user.tfaValidated,
+        tfaSendMethod: authenticate.authResult.user.tfaSendMethod,
         userName: authenticate.authResult.user.userName,
       })
       // // redirect to the home page.
@@ -64,7 +64,7 @@ export default function TwoFactorAuthenticatePage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Box px="2em" mx="auto" overflow="hidden">
+    <Box w="100%">
       <Formik
         validationSchema={validationSchema}
         initialValues={{
@@ -97,9 +97,15 @@ export default function TwoFactorAuthenticatePage() {
               sendMethod={sendMethod}
             />
 
-            <Button isLoading={isSubmitting} type="submit" variantColor="teal">
-              <Trans>Submit</Trans>
-            </Button>
+            <Stack align="center">
+              <Button
+                isLoading={isSubmitting}
+                type="submit"
+                variantColor="teal"
+              >
+                <Trans>Submit</Trans>
+              </Button>
+            </Stack>
           </form>
         )}
       </Formik>

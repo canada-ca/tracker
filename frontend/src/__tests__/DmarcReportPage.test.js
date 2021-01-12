@@ -107,7 +107,7 @@ describe('<DmarcReportPage />', () => {
   it('renders header', async () => {
     const { getAllByText } = render(
       <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfa: null }}
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
@@ -133,7 +133,7 @@ describe('<DmarcReportPage />', () => {
   it('renders date selector', async () => {
     const { getAllByText } = render(
       <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfa: null }}
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
@@ -159,7 +159,7 @@ describe('<DmarcReportPage />', () => {
   it('renders bar graph', async () => {
     const { getAllByText } = render(
       <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfa: null }}
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
@@ -185,7 +185,7 @@ describe('<DmarcReportPage />', () => {
   it('renders tables', async () => {
     const { getAllByText } = render(
       <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfa: null }}
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>

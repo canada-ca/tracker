@@ -1,34 +1,24 @@
 import React from 'react'
 import { Badge, Box, Text, PseudoBox, Stack } from '@chakra-ui/core'
-import { Trans } from '@lingui/macro'
-import { bool, string } from 'prop-types'
+import { string } from 'prop-types'
 
-export function UserCard({ userName, tfa, role }) {
+export function UserCard({ userName, role }) {
   return (
     <PseudoBox width="100%" p="8">
       <Stack isInline align="center" mb={['1', '0']}>
         <Box>
           <Text fontSize="md">{userName}</Text>
         </Box>
-        <Box ml="auto" /> {/* spacer */}
         {role && (
-          <Box>
-            <Badge
-              color="primary"
-              bg="transparent"
-              borderColor="primary"
-              borderWidth="1px"
-            >
-              {role}
-            </Badge>
-          </Box>
-        )}
-        {tfa !== null && (
-          <Box>
-            <Badge variant="solid" variantColor={tfa ? 'green' : 'red'}>
-              <Trans>2FA Validated</Trans>
-            </Badge>
-          </Box>
+          <Badge
+            color="primary"
+            bg="transparent"
+            borderColor="primary"
+            borderWidth="1px"
+            ml="auto"
+          >
+            {role}
+          </Badge>
         )}
       </Stack>
     </PseudoBox>
@@ -38,5 +28,4 @@ export function UserCard({ userName, tfa, role }) {
 UserCard.propTypes = {
   userName: string.isRequired,
   role: string,
-  tfa: bool,
 }

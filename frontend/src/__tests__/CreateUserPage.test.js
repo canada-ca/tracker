@@ -39,7 +39,7 @@ describe('<CreateUserPage />', () => {
     it('displays a notification', async () => {
       const { queryByText } = render(
         <UserStateProvider
-          initialState={{ userName: null, jwt: null, tfa: null }}
+          initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
         >
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -74,7 +74,7 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfa: null }}
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -104,7 +104,7 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfa: null }}
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -137,7 +137,7 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfa: null }}
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -168,7 +168,7 @@ describe('<CreateUserPage />', () => {
         it('displays required message', async () => {
           const { container, queryByText } = render(
             <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfa: null }}
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -201,7 +201,7 @@ describe('<CreateUserPage />', () => {
         it('displays required message', async () => {
           const { container, queryByText } = render(
             <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfa: null }}
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
@@ -233,7 +233,7 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <UserStateProvider
-              initialState={{ userName: null, jwt: null, tfa: null }}
+              initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={i18n}>

@@ -18,7 +18,6 @@ const i18n = setupI18n({
   },
 })
 
-
 describe('<FloatingMenu>', () => {
   it('renders', async () => {
     const { getByText } = render(
@@ -26,7 +25,7 @@ describe('<FloatingMenu>', () => {
         initialState={{
           userName: 'testUserName@email.com',
           jwt: 'string',
-          tfa: false,
+          tfaSendMethod: false,
         }}
       >
         <MemoryRouter initialEntries={['/']}>
@@ -47,7 +46,7 @@ describe('<FloatingMenu>', () => {
           initialState={{
             userName: 'testUserName@email.com',
             jwt: 'string',
-            tfa: false,
+            tfaSendMethod: false,
           }}
         >
           <MemoryRouter initialEntries={['/']}>
@@ -75,7 +74,7 @@ describe('<FloatingMenu>', () => {
             initialState={{
               userName: 'testUserName@email.com',
               jwt: 'string',
-              tfa: false,
+              tfaSendMethod: false,
             }}
           >
             <MemoryRouter initialEntries={['/']}>
@@ -115,7 +114,7 @@ describe('<FloatingMenu>', () => {
             initialState={{
               userName: 'testUserName@email.com',
               jwt: 'string',
-              tfa: false,
+              tfaSendMethod: false,
             }}
           >
             <MemoryRouter initialEntries={['/']}>

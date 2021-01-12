@@ -26,7 +26,7 @@ describe('<EditableUserEmail />', () => {
         initialState={{
           userName: 'testUserName@email.com',
           jwt: 'string',
-          tfa: false,
+          tfaSendMethod: false,
         }}
       >
         <MockedProvider addTypename={false}>
@@ -49,7 +49,7 @@ describe('<EditableUserEmail />', () => {
           initialState={{
             userName: 'testUserName@email.com',
             jwt: 'string',
-            tfa: false,
+            tfaSendMethod: false,
           }}
         >
           <MockedProvider addTypename={false}>
@@ -80,7 +80,7 @@ describe('<EditableUserEmail />', () => {
               initialState={{
                 userName: 'testUserName@email.com',
                 jwt: 'string',
-                tfa: false,
+                tfaSendMethod: false,
               }}
             >
               <MockedProvider addTypename={false}>
@@ -105,9 +105,7 @@ describe('<EditableUserEmail />', () => {
           fireEvent.click(confirmButton)
 
           await waitFor(() => {
-            expect(
-              getByText(/Email cannot be empty/i),
-            ).toBeInTheDocument()
+            expect(getByText(/Email cannot be empty/i)).toBeInTheDocument()
           })
         })
       })
