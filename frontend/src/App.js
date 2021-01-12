@@ -145,11 +145,11 @@ export default function App() {
                 render={({ match: { url } }) => (
                   <>
                     <Route path={`${url}`} component={Organizations} exact />
-                    <Route
-                      path={`${url}/:orgSlug`}
-                      component={OrganizationDetails}
-                      exact
-                    />
+                    <Route path={`${url}/:orgSlug`} exact>
+                      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                        <OrganizationDetails />
+                      </ErrorBoundary>
+                    </Route>
                   </>
                 )}
               />

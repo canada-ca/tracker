@@ -134,8 +134,6 @@ describe('<OrganizationDetails />', () => {
                         user: {
                           id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
                           userName: 'testuser@testemail.gc.ca',
-                          displayName: 'testuser',
-                          tfaValidated: false,
                         },
                       },
                     },

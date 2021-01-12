@@ -15,11 +15,9 @@ import { slugify } from './slugify'
 
 export function DomainCard({ url, lastRan, status, ...rest }) {
   const history = useHistory()
-  const { dkim, dmarc, https, spf, ssl } = status
-
-  const generateStatusIcon = (status) => {
+  const generateStatusIcon = (category) => {
     let statusIcon
-    if (status === 'PASS') {
+    if (category === 'PASS') {
       statusIcon = <Icon name="check-circle" color="strong" size="icons.sm" />
     } else {
       statusIcon = <Icon name="warning" color="weak" size="icons.sm" />
@@ -67,7 +65,9 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
             <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
               HTTPS:
             </Text>
-            {generateStatusIcon(https)}
+            {status?.https
+              ? generateStatusIcon(status.https)
+              : generateStatusIcon('FAIL')}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} w={['100%', '7%']}>
@@ -75,7 +75,9 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
             <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
               SSL:
             </Text>
-            {generateStatusIcon(ssl)}
+            {status?.ssl
+              ? generateStatusIcon(status.ssl)
+              : generateStatusIcon('FAIL')}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} w={['100%', '7%']}>
@@ -83,7 +85,9 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
             <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
               SPF:
             </Text>
-            {generateStatusIcon(spf)}
+            {status?.spf
+              ? generateStatusIcon(status.spf)
+              : generateStatusIcon('FAIL')}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} w={['100%', '7%']}>
@@ -91,7 +95,9 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
             <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
               DKIM:
             </Text>
-            {generateStatusIcon(dkim)}
+            {status?.dkim
+              ? generateStatusIcon(status.dkim)
+              : generateStatusIcon('FAIL')}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} w={['100%', '7%']}>
@@ -99,7 +105,9 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
             <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
               DMARC:
             </Text>
-            {generateStatusIcon(dmarc)}
+            {status?.dmarc
+              ? generateStatusIcon(status.dmarc)
+              : generateStatusIcon('FAIL')}
           </Stack>
         </Box>
       </PseudoBox>
