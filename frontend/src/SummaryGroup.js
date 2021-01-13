@@ -26,7 +26,7 @@ export function SummaryGroup({ web, mail }) {
             color: colors.weak,
           },
           pass: {
-            name: t`Policy compliant TLS`,
+            name: t`Compliant TLS`,
             color: colors.strong,
           },
         }}
@@ -37,11 +37,11 @@ export function SummaryGroup({ web, mail }) {
         description={t`Email security settings summary`}
         categoryDisplay={{
           pass: {
-            name: t`Dmarc pass`,
+            name: t`DMARC pass`,
             color: colors.strong,
           },
           fail: {
-            name: t`Dmarc fail`,
+            name: t`DMARC fail`,
             color: colors.weak,
           },
         }}
