@@ -12,16 +12,25 @@ const organizationSummaryType = new GraphQLObjectType({
       description:
         'Summary based on mail scan results for a given organization.',
       resolve: ({ mail }, _, { i18n }) => {
+        let percentPass, percentageFail
+        if (mail.total <= 0) {
+          percentPass = 0
+          percentageFail = 0
+        } else {
+          percentPass = Number(((mail.pass / mail.total) * 100).toFixed(1))
+          percentageFail = Number(((mail.fail / mail.total) * 100).toFixed(1))
+        }
+
         const categories = [
           {
             name: i18n._(t`pass`),
             count: mail.pass,
-            percentage: Number(((mail.pass / mail.total) * 100).toFixed(1)),
+            percentage: percentPass,
           },
           {
             name: i18n._(t`fail`),
             count: mail.fail,
-            percentage: Number(((mail.fail / mail.total) * 100).toFixed(1)),
+            percentage: percentageFail,
           },
         ]
 
@@ -36,16 +45,25 @@ const organizationSummaryType = new GraphQLObjectType({
       description:
         'Summary based on web scan results for a given organization.',
       resolve: ({ web }, _, { i18n }) => {
+        let percentPass, percentageFail
+        if (web.total <= 0) {
+          percentPass = 0
+          percentageFail = 0
+        } else {
+          percentPass = Number(((web.pass / web.total) * 100).toFixed(1))
+          percentageFail = Number(((web.fail / web.total) * 100).toFixed(1))
+        }
+
         const categories = [
           {
             name: i18n._(t`pass`),
             count: web.pass,
-            percentage: Number(((web.pass / web.total) * 100).toFixed(1)),
+            percentage: percentPass,
           },
           {
             name: i18n._(t`fail`),
             count: web.fail,
-            percentage: Number(((web.fail / web.total) * 100).toFixed(1)),
+            percentage: percentageFail,
           },
         ]
 
