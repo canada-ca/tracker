@@ -1,5 +1,4 @@
 const { GraphQLObjectType } = require('graphql')
-const domainMutations = require('./domain')
 const organizationMutations = require('./organizations')
 const scanMutations = require('./scans')
 const userMutations = require('./user')
@@ -9,8 +8,6 @@ const createMutationSchema = () => {
   return new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({
-      // Domain Mutations
-      ...domainMutations,
       // Organization Mutations
       ...organizationMutations,
       // Scan Mutations

@@ -13,7 +13,7 @@ const validate = (value) => {
   return value
 }
 
-module.exports.Year = new GraphQLScalarType({
+export const Year = new GraphQLScalarType({
   name: 'Year',
   description: 'A field that conforms to a 4 digit integer.',
   serialize: validate,
@@ -28,3 +28,7 @@ module.exports.Year = new GraphQLScalarType({
     return validate(ast.value)
   },
 })
+
+module.exports = {
+  Year,
+}

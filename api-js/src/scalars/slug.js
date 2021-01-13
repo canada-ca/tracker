@@ -13,7 +13,7 @@ const validate = (value) => {
   return value
 }
 
-module.exports.Slug = new GraphQLScalarType({
+export const Slug = new GraphQLScalarType({
   name: 'Slug',
   description:
     'A field whos values contain numbers, letters, dashes, and underscores.',
@@ -29,3 +29,7 @@ module.exports.Slug = new GraphQLScalarType({
     return validate(ast.value)
   },
 })
+
+module.exports = {
+  Slug,
+}

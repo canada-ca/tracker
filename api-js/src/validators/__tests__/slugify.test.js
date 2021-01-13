@@ -1,5 +1,5 @@
-const { stringify } = require('jest-matcher-utils')
-const { slugify } = require('../slugify')
+import { stringify } from 'jest-matcher-utils'
+import { slugify } from '../index'
 
 describe('given a string', () => {
   it('lowers all characters', () => {

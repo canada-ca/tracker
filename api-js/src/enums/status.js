@@ -1,6 +1,6 @@
 const { GraphQLEnumType } = require('graphql')
 
-module.exports.StatusEnum = new GraphQLEnumType({
+export const StatusEnum = new GraphQLEnumType({
   name: 'StatusEnum',
   values: {
     PASS: {

@@ -1,6 +1,6 @@
 const { GraphQLEnumType } = require('graphql')
 
-module.exports.PeriodEnums = new GraphQLEnumType({
+export const PeriodEnums = new GraphQLEnumType({
   name: 'PeriodEnums',
   values: {
     JANUARY: {

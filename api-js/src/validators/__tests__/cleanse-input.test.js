@@ -1,4 +1,4 @@
-const { cleanseInput } = require('..')
+import { cleanseInput } from '../index'
 
 describe('given an input validate it', () => {
   describe('string contains symbols', () => {

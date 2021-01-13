@@ -12,7 +12,7 @@ const validate = (value) => {
   return value
 }
 
-module.exports.Selectors = new GraphQLScalarType({
+export const Selectors = new GraphQLScalarType({
   name: 'Selector',
   description:
     'A field that conforms to a string, with strings ending in ._domainkey.',
@@ -28,3 +28,7 @@ module.exports.Selectors = new GraphQLScalarType({
     return validate(ast.value)
   },
 })
+
+module.exports = {
+  Selectors,
+}

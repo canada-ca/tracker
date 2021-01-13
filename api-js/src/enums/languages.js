@@ -1,6 +1,6 @@
 const { GraphQLEnumType } = require('graphql')
 
-module.exports.LanguageEnums = new GraphQLEnumType({
+export const LanguageEnums = new GraphQLEnumType({
   name: 'LanguageEnums',
   values: {
     ENGLISH: {

@@ -1,12 +1,13 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
 const { AUTHENTICATED_KEY } = process.env
 
 const now = () => Math.floor(new Date().getTime() / 1000)
+
 const future = (expPeriod) =>
   Math.floor(new Date((now() + expPeriod * 3600) * 1000) / 1000)
 
-const tokenize = ({
+export const tokenize = ({
   parameters = {},
   expPeriod = 1,
   iat = now(),
@@ -22,7 +23,3 @@ const tokenize = ({
     secret,
     { algorithm: 'HS256' },
   )
-
-module.exports = {
-  tokenize,
-}

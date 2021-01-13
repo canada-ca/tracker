@@ -1,5 +1,5 @@
+import { findMyDomains, findDomainByDomain } from '../domain'
 const { GraphQLObjectType } = require('graphql')
-const domainQueries = require('./domains')
 const userQueries = require('./user')
 const organizationQueries = require('./organizations')
 const summaryQueries = require('./summaries')
@@ -14,7 +14,8 @@ const createQuerySchema = () => {
       node: nodeField,
       nodes: nodesField,
       // Domain Queries
-      ...domainQueries,
+      findMyDomains,
+      findDomainByDomain,
       // Organization Queries
       ...organizationQueries,
       // Summary Queries

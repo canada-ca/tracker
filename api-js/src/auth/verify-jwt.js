@@ -1,9 +1,9 @@
-const { t } = require('@lingui/macro')
-const jwt = require('jsonwebtoken')
+import { t } from '@lingui/macro'
+import jwt from 'jsonwebtoken'
 
 const { AUTHENTICATED_KEY } = process.env
 
-const verifyToken = ({ i18n }) => ({
+export const verifyToken = ({ i18n }) => ({
   token,
   secret = String(AUTHENTICATED_KEY),
 }) => {
@@ -15,8 +15,4 @@ const verifyToken = ({ i18n }) => ({
     throw new Error(i18n._(t`Invalid token, please request a new one.`))
   }
   return decoded.parameters
-}
-
-module.exports = {
-  verifyToken,
 }

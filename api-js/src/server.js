@@ -14,7 +14,7 @@ const { createMutationSchema } = require('./mutations')
 const createSchema = () =>
   new GraphQLSchema({
     query: createQuerySchema(),
-    mutation: createMutationSchema(),
+    // mutation: createMutationSchema(),
   })
 
 const createValidationRules = (

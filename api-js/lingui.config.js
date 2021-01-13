@@ -1,5 +1,5 @@
 module.exports = {
-  compileNamespace: 'cjs',
+  compileNamespace: 'es',
   extractBabelOptions: {},
   fallbackLocale: 'en',
   sourceLocale: 'en',

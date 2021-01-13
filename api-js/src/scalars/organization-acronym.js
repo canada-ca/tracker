@@ -13,7 +13,7 @@ const validate = (value) => {
   return value
 }
 
-module.exports.Acronym = new GraphQLScalarType({
+export const Acronym = new GraphQLScalarType({
   name: 'Acronym',
   description:
     'A field whose value is an upper case letter or an under score that has a length between 1 and 50.',
@@ -29,3 +29,7 @@ module.exports.Acronym = new GraphQLScalarType({
     return validate(ast.value)
   },
 })
+
+module.exports = {
+  Acronym,
+}
