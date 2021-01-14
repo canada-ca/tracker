@@ -108,9 +108,9 @@ function EditableUserTFAMethod({
                 {...getFieldProps('tfaMethod')}
                 w={['40%', '57%']}
               >
-                <option value="NONE">None</option>
-                {emailValidated && <option value="EMAIL">Email</option>}
-                {phoneValidated && <option value="PHONE">Phone</option>}
+                <option value="NONE">{t`None`}</option>
+                {emailValidated && <option value="EMAIL">{t`Email`}</option>}
+                {phoneValidated && <option value="PHONE">{t`Phone`}</option>}
               </Field>
               <TrackerButton
                 type="submitBtn"

@@ -328,6 +328,7 @@ msgstr "Code field must not be empty"
 #: src/EditableUserDisplayName.js:152
 #: src/EditableUserEmail.js:152
 #: src/EditableUserPassword.js:171
+#: src/EditableUserPhoneNumber.js:149
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -2428,3 +2429,76 @@ msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 #: src/OrganizationDetails.js:102
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/PhoneNumberField.js:26
+#: src/EditableUserPhoneNumber:77
+msgid "Phone Number:"
+msgstr "Phone Number:"
+
+#: src/PhoneNumberField.js:26
+msgid "Phone Number"
+msgstr "Phone Number"
+
+#: src/fieldRequirements.js:33
+msgid "Phone number must only contains numbers"
+msgstr "Phone number must only contains numbers"
+
+#: src/fieldRequirements.js:34
+msgid "Phone number field must not be empty"
+msgstr "Phone number field must not be empty"
+
+#: src/EditableUserPhoneNumber.js:46
+msgid "An error occurred while updating your phone number."
+msgstr "An error occurred while updating your phone number."
+
+#: src/EditableUserPhoneNumber.js:56
+msgid "Changed User Phone Number"
+msgstr "Changed User Phone Number"
+
+#: src/EditableUserPhoneNumber.js:57
+msgid "You have successfully updated your phone number."
+msgstr "You have successfully updated your phone number."
+
+#: src/EditableUserPhoneNumber.js:129
+msgid "Current Phone Number:"
+msgstr "Current Phone Number:"
+
+#: src/EditableUserPhoneNumber.js:136
+msgid "New Phone Number:"
+msgstr "New Phone Number:"
+
+#: src/EditableUserTFAMethod.js:38
+msgid "An error occurred while updating your TFA send method."
+msgstr "An error occurred while updating your TFA send method."
+
+#: src/EditableUserTFAMethod.js:48
+msgid "Changed TFA Send Method"
+msgstr "Changed TFA Send Method"
+
+#: src/EditableUserTFAMethod.js:49
+msgid "You have successfully updated your TFA send method."
+msgstr "You have successfully updated your TFA send method."
+
+#: src/EditableUserTFAMethod.js:62
+msgid "TFA Method:"
+msgstr "TFA Method:"
+
+#: src/EditableUserTFAMethod.js:73
+msgid "Phone Validated"
+msgstr "Phone Validated"
+
+#: src/EditableUserTFAMethod.js:73
+msgid "None"
+msgstr "None"
+
+#: src/EditableUserTFAMethod.js:73
+msgid "Email"
+msgstr "Email"
+
+#: src/EditableUserTFAMethod.js:73
+msgid "Phone"
+msgstr "Phone"
+
+#: src/EditableUserTFAMethod.js:73
+msgid "Save TFA Method"
+msgstr "Save TFA Method"
