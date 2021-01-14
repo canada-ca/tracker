@@ -252,10 +252,12 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const sourceIpAddress = {
     Header: i18n._(t`Source IP Address`),
     accessor: 'sourceIpAddress',
+    style: { whiteSpace: 'nowrap' },
   }
   const envelopeFrom = {
     Header: i18n._(t`Envelope From`),
     accessor: 'envelopeFrom',
+    style: { whiteSpace: 'nowrap' },
   }
   const dkimDomains = {
     Header: i18n._(t`DKIM Domains`),
@@ -277,6 +279,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const headerFrom = {
     Header: i18n._(t`Header From`),
     accessor: 'headerFrom',
+    style: { whiteSpace: 'nowrap' },
   }
   const guidance = { Header: i18n._(t`Guidance`), accessor: 'guidance' }
   const spfAligned = {
