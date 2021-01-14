@@ -18,64 +18,142 @@ describe('given the organization summary object', () => {
   })
   describe('testing field resolvers', () => {
     describe('testing mail resolver', () => {
-      it('returns the resolved value', () => {
-        const demoType = organizationSummaryType.getFields()
+      describe('total is zero', () => {
+        it('returns the resolved value', () => {
+          const demoType = organizationSummaryType.getFields()
 
-        const mail = {
-          pass: 50,
-          fail: 1000,
-          total: 1050,
-        }
+          const mail = {
+            pass: 0,
+            fail: 0,
+            total: 0,
+          }
 
-        const i18n = {
-          _: jest.fn().mockReturnValueOnce('pass').mockReturnValueOnce('fail'),
-        }
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('pass')
+              .mockReturnValueOnce('fail'),
+          }
 
-        expect(demoType.mail.resolve({ mail }, {}, { i18n })).toEqual({
-          categories: [
-            {
-              count: 50,
-              name: 'pass',
-              percentage: 4.8,
-            },
-            {
-              count: 1000,
-              name: 'fail',
-              percentage: 95.2,
-            },
-          ],
-          total: 1050,
+          expect(demoType.mail.resolve({ mail }, {}, { i18n })).toEqual({
+            categories: [
+              {
+                count: 0,
+                name: 'pass',
+                percentage: 0,
+              },
+              {
+                count: 0,
+                name: 'fail',
+                percentage: 0,
+              },
+            ],
+            total: 0,
+          })
+        })
+      })
+      describe('total is greater then zero', () => {
+        it('returns the resolved value', () => {
+          const demoType = organizationSummaryType.getFields()
+
+          const mail = {
+            pass: 50,
+            fail: 1000,
+            total: 1050,
+          }
+
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('pass')
+              .mockReturnValueOnce('fail'),
+          }
+
+          expect(demoType.mail.resolve({ mail }, {}, { i18n })).toEqual({
+            categories: [
+              {
+                count: 50,
+                name: 'pass',
+                percentage: 4.8,
+              },
+              {
+                count: 1000,
+                name: 'fail',
+                percentage: 95.2,
+              },
+            ],
+            total: 1050,
+          })
         })
       })
     })
     describe('testing web resolver', () => {
-      it('returns the resolved value', () => {
-        const demoType = organizationSummaryType.getFields()
+      describe('total is zero', () => {
+        it('returns the resolved value', () => {
+          const demoType = organizationSummaryType.getFields()
 
-        const web = {
-          pass: 50,
-          fail: 1000,
-          total: 1050,
-        }
+          const web = {
+            pass: 0,
+            fail: 0,
+            total: 0,
+          }
 
-        const i18n = {
-          _: jest.fn().mockReturnValueOnce('pass').mockReturnValueOnce('fail'),
-        }
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('pass')
+              .mockReturnValueOnce('fail'),
+          }
 
-        expect(demoType.web.resolve({ web }, {}, { i18n })).toEqual({
-          categories: [
-            {
-              count: 50,
-              name: 'pass',
-              percentage: 4.8,
-            },
-            {
-              count: 1000,
-              name: 'fail',
-              percentage: 95.2,
-            },
-          ],
-          total: 1050,
+          expect(demoType.web.resolve({ web }, {}, { i18n })).toEqual({
+            categories: [
+              {
+                count: 0,
+                name: 'pass',
+                percentage: 0,
+              },
+              {
+                count: 0,
+                name: 'fail',
+                percentage: 0,
+              },
+            ],
+            total: 0,
+          })
+        })
+      })
+      describe('total is greater then zero', () => {
+        it('returns the resolved value', () => {
+          const demoType = organizationSummaryType.getFields()
+
+          const web = {
+            pass: 50,
+            fail: 1000,
+            total: 1050,
+          }
+
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('pass')
+              .mockReturnValueOnce('fail'),
+          }
+
+          expect(demoType.web.resolve({ web }, {}, { i18n })).toEqual({
+            categories: [
+              {
+                count: 50,
+                name: 'pass',
+                percentage: 4.8,
+              },
+              {
+                count: 1000,
+                name: 'fail',
+                percentage: 95.2,
+              },
+            ],
+            total: 1050,
+          })
         })
       })
     })
