@@ -327,6 +327,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`DKIM Failures by IP Address`,
         hidden: true,
         columns: [
+          guidance,
+          totalMessages,
           sourceIpAddress,
           dnsHost,
           envelopeFrom,
@@ -335,11 +337,10 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           dkimSelectors,
           dkimResults,
           dkimAligned,
-          guidance,
-          totalMessages,
         ],
       },
     ]
+
     // Convert boolean values to string and properly format
     const dkimFailureNodes = dkimData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dkimFailure.edges.map(
       (edge) => {
@@ -396,14 +397,14 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`Fully Aligned by IP Address`,
         hidden: true,
         columns: [
+          totalMessages,
           sourceIpAddress,
-          envelopeFrom,
-          dkimDomains,
-          dkimSelectors,
           dnsHost,
+          envelopeFrom,
           headerFrom,
           spfDomains,
-          totalMessages,
+          dkimDomains,
+          dkimSelectors,
         ],
       },
     ]
@@ -461,15 +462,15 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`SPF Failures by IP Address`,
         hidden: true,
         columns: [
+          guidance,
+          totalMessages,
+          sourceIpAddress,
           dnsHost,
           envelopeFrom,
-          guidance,
           headerFrom,
-          sourceIpAddress,
-          spfAligned,
           spfDomains,
           spfResults,
-          totalMessages,
+          spfAligned,
         ],
       },
     ]
@@ -529,15 +530,15 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`DMARC Failures by IP Address`,
         hidden: true,
         columns: [
-          dkimDomains,
-          dkimSelectors,
-          disposition,
+          totalMessages,
+          sourceIpAddress,
           dnsHost,
           envelopeFrom,
           headerFrom,
-          sourceIpAddress,
           spfDomains,
-          totalMessages,
+          dkimDomains,
+          dkimSelectors,
+          disposition,
         ],
       },
     ]
