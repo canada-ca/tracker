@@ -2,7 +2,7 @@ import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import { makeMigrations } from '../../../migrations'
-import { userLoaderByKey } from '../../loaders'
+import { userLoaderByKey } from '../../user/loaders'
 import { userRequired } from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
