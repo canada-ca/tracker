@@ -1,9 +1,4 @@
-import {
-  GraphQLID,
-  GraphQLBoolean,
-  GraphQLString,
-  GraphQLInt,
-} from 'graphql'
+import { GraphQLID, GraphQLBoolean, GraphQLString, GraphQLInt } from 'graphql'
 import { dkimFailureTableType } from '../dkim-failure-table'
 
 describe('given the dkimFailureTable gql object', () => {

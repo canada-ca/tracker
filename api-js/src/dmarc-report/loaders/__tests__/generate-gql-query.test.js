@@ -349,40 +349,60 @@ describe('given the generateGqlQuery function', () => {
 testQuery(
 domain: "test.domain.ca"
 ){
+
+
 detailTables {
 fullPass (
+
 ){
+
 edges {
+
 node{
 id
 }
 }
+
 }
  dkimFailure (
+
 ){
+
 edges {
+
 node{
 id
 }
 }
+
 }
  dmarcFailure (
+
 ){
+
 edges {
+
 node{
 id
 }
 }
+
 }
  spfFailure (
+
 ){
+
 edges {
+
 node{
 id
 }
 }
+
 }
+
 }
+
 }
 }`,
         )

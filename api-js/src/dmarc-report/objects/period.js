@@ -2,8 +2,8 @@ import { GraphQLObjectType } from 'graphql'
 import { categoryPercentagesType } from './category-percentages'
 import { categoryTotalsType } from './category-totals'
 import { detailTablesType } from './detail-tables'
-import { PeriodEnums } from '../enums'
-import { Domain, Year } from '../scalars'
+import { PeriodEnums } from '../../enums'
+import { Domain, Year } from '../../scalars'
 
 export const periodType = new GraphQLObjectType({
   name: 'Period',
