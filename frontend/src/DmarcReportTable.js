@@ -45,6 +45,7 @@ td, th {
   padding: 6px;
   border: 1px solid #ccc;
   text-align: left;
+  font-size: 0.9em;
 }
 
 td {
