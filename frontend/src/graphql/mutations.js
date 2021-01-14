@@ -24,18 +24,6 @@ export const SIGN_UP = gql`
         user {
           userName
           tfaSendMethod
-          affiliations {
-            edges {
-              node {
-                permission
-                organization {
-                  acronym
-                  name
-                  slug
-                }
-              }
-            }
-          }
         }
       }
     }
