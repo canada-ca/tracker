@@ -1,11 +1,13 @@
 import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
+
 import { makeMigrations } from '../../../../migrations'
 import { userRequired } from '../../../auth'
-import { createQuerySchema } from '../../../queries'
-import { createMutationSchema } from '../../../mutations'
-import { userLoaderByKey, affiliationLoaderByUserId } from '../../../loaders'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { affiliationLoaderByUserId } from '../../../affiliation/loaders'
+import { userLoaderByKey } from '../../loaders'
 import { cleanseInput } from '../../../validators'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env

@@ -1,11 +1,12 @@
+import { setupI18n } from '@lingui/core'
 import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema } from 'graphql'
-import { setupI18n } from '@lingui/core'
+
 import { makeMigrations } from '../../../../migrations'
 import { checkPermission, userRequired } from '../../../auth'
-import { createQuerySchema } from '../../../queries'
-import { createMutationSchema } from '../../../mutations'
-import { userLoaderByKey } from '../../../loaders'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { userLoaderByKey } from '../../loaders'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 
