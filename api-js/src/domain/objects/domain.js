@@ -12,15 +12,14 @@ import {
   globalIdField,
 } from 'graphql-relay'
 
-import {
-  organizationConnection,
-  emailScanType,
-  webScanType,
-  periodType,
-} from '../types'
-import { Domain, Selectors, Year } from '../scalars'
-import { PeriodEnums } from '../enums'
+import { periodType } from '../../dmarc-report/objects'
+import { emailScanType } from '../../email-scan/objects'
+import { webScanType } from '../../web-scan/objects'
+import { Domain, Selectors, Year } from '../../scalars'
+import { PeriodEnums } from '../../enums'
 import { domainStatus } from './domain-status'
+import { nodeInterface } from '../../node'
+import { organizationConnection } from '../../organization/objects'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -163,7 +162,7 @@ export const domainType = new GraphQLObjectType({
       },
     },
   }),
-  // interfaces: [nodeInterface],
+  interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',
 })
 

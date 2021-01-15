@@ -7,15 +7,12 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { makeMigrations } from '../../../../migrations'
-import { createQuerySchema } from '../../../queries'
-import { createMutationSchema } from '../../../mutations'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkDomainPermission, tokenize, userRequired } from '../../../auth'
-import {
-  userLoaderByUserName,
-  domainLoaderByDomain,
-  userLoaderByKey,
-} from '../../../loaders'
+import { domainLoaderByDomain } from '../../loaders'
+import { userLoaderByUserName, userLoaderByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

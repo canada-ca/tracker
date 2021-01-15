@@ -2,7 +2,7 @@ import { GraphQLNonNull, GraphQLList, GraphQLID } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { Domain, Selectors } from '../../scalars'
-import { domainType } from '../../types'
+import { domainType } from '../objects'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',

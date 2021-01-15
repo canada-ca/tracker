@@ -1,5 +1,5 @@
-const { GraphQLInt } = require('graphql')
-const { domainConnection } = require('../../../types/index')
+import { GraphQLInt } from 'graphql'
+import { domainConnection } from '../../index'
 
 describe('given the domain connection object', () => {
   describe('testing its field definitions', () => {

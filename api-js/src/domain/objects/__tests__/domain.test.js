@@ -1,31 +1,22 @@
+import moment from 'moment'
+import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { GraphQLNonNull, GraphQLID, GraphQLList, GraphQLString } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
+
+import { makeMigrations } from '../../../../migrations'
+import { cleanseInput } from '../../../validators'
+import { userRequired, tokenize } from '../../../auth'
+import { orgLoaderConnectionArgsByDomainId } from '../../../organization/loaders'
+import { organizationConnection } from '../../../organization/objects'
+import { userLoaderByKey } from '../../../user'
+import { domainStatus } from '../domain-status'
+import { periodType } from '../../../dmarc-report/objects'
+import { emailScanType } from '../../../email-scan/objects'
+import { webScanType } from '../../../web-scan/objects'
+import { domainType } from '../../index'
+import { Domain, Selectors } from '../../../scalars'
+
 const { DB_PASS: rootPass, DB_URL: url } = process.env
-
-const moment = require('moment')
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const {
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLList,
-  GraphQLString,
-} = require('graphql')
-const { toGlobalId } = require('graphql-relay')
-
-const { makeMigrations } = require('../../../../migrations')
-const { cleanseInput } = require('../../../validators')
-const { userRequired, tokenize } = require('../../../auth')
-const {
-  orgLoaderConnectionArgsByDomainId,
-  userLoaderByKey,
-} = require('../../../loaders')
-const { domainStatus } = require('../domain-status')
-const { periodType } = require('../dmarc-report')
-const {
-  domainType,
-  organizationConnection,
-  emailScanType,
-  webScanType,
-} = require('../../../types/index')
-const { Domain, Selectors } = require('../../../scalars')
 
 describe('given the domain object', () => {
   describe('testing its field definitions', () => {

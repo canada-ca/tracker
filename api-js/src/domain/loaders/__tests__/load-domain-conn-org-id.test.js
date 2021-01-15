@@ -6,7 +6,10 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { makeMigrations } from '../../../../migrations'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderConnectionsByOrgId, domainLoaderByKey } from '../../../loaders'
+import {
+  domainLoaderConnectionsByOrgId,
+  domainLoaderByKey,
+} from '../index'
 import { toGlobalId } from 'graphql-relay'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env

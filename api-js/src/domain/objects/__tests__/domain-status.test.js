@@ -1,5 +1,5 @@
-const { StatusEnum } = require('../../../enums')
-const { domainStatus } = require('../domain-status')
+import { StatusEnum } from '../../../enums'
+import { domainStatus } from '../domain-status'
 
 describe('given the domainStatus object', () => {
   describe('testing its field definitions', () => {

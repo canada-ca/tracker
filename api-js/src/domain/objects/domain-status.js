@@ -1,5 +1,5 @@
 import { GraphQLObjectType } from 'graphql'
-import { StatusEnum } from '../enums'
+import { StatusEnum } from '../../enums'
 
 export const domainStatus = new GraphQLObjectType({
   name: 'DomainStatus',

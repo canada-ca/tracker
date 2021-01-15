@@ -1,11 +1,10 @@
-
 import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { makeMigrations } from '../../../../migrations'
-import { domainLoaderByDomain } from '../../../loaders'
+import { domainLoaderByDomain } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

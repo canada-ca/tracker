@@ -6,14 +6,12 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { makeMigrations } from '../../../../migrations'
-import { createQuerySchema } from '../../../queries'
-import { createMutationSchema } from '../../../mutations'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { userRequired } from '../../../auth'
-import {
-  domainLoaderConnectionsByUserId,
-  userLoaderByKey,
-} from '../../../loaders'
+import { domainLoaderConnectionsByUserId } from '../../loaders'
+import { userLoaderByKey } from '../../../user'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
