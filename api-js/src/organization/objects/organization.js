@@ -1,10 +1,21 @@
 import { t } from '@lingui/macro'
-import { GraphQLBoolean, GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
-import { connectionArgs, connectionDefinitions, globalIdField } from 'graphql-relay'
+import {
+  GraphQLBoolean,
+  GraphQLInt,
+  GraphQLObjectType,
+  GraphQLString,
+} from 'graphql'
+import {
+  connectionArgs,
+  connectionDefinitions,
+  globalIdField,
+} from 'graphql-relay'
 
-import { domainConnection } from '../../domain'
+import { affiliationConnection } from '../../affiliation/objects'
 import { organizationSummaryType } from './organization-summary'
 import { Acronym, Slug } from '../../scalars'
+import { nodeInterface } from '../../node'
+import { domainConnection } from '../../domain/objects'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -90,7 +101,7 @@ export const organizationType = new GraphQLObjectType({
       },
     },
     affiliations: {
-      type: userAffiliationsConnection.connectionType,
+      type: affiliationConnection.connectionType,
       description: 'Organization affiliations to various users.',
       args: connectionArgs,
       resolve: async (

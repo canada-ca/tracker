@@ -1,5 +1,5 @@
 import { organizationSummaryType } from '../organization-summary'
-import { categorizedSummaryType } from '../../../types/categorized-summary'
+import { categorizedSummaryType } from '../../../summaries/objects'
 
 describe('given the organization summary object', () => {
   describe('testing field definitions', () => {

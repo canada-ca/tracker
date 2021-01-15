@@ -3,7 +3,7 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { Acronym } from '../../scalars'
-import { organizationType } from '../../types'
+import { organizationType } from '../objects'
 
 export const updateOrganization = new mutationWithClientMutationId({
   name: 'UpdateOrganization',

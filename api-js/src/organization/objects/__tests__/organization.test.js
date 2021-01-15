@@ -13,17 +13,12 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { makeMigrations } from '../../../../migrations'
 import { cleanseInput } from '../../../validators'
-import {
-  domainLoaderConnectionsByOrgId,
-  affiliationLoaderByOrgId,
-} from '../../../loaders'
-import {
-  organizationType,
-  domainConnection,
-  userAffiliationsConnection,
-} from '../../../types/index'
-import { organizationSummaryType } from '../organization-summary'
 import { Acronym, Slug } from '../../../scalars'
+import { domainLoaderConnectionsByOrgId } from '../../../domain/loaders'
+import { domainConnection } from '../../../domain/objects/domain'
+import { affiliationLoaderByOrgId } from '../../../affiliation/loaders'
+import { affiliationConnection } from '../../../affiliation/objects'
+import { organizationType, organizationSummaryType } from '../../objects'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -114,7 +109,7 @@ describe('given the organization object', () => {
 
       expect(demoType).toHaveProperty('affiliations')
       expect(demoType.affiliations.type).toMatchObject(
-        userAffiliationsConnection.connectionType,
+        affiliationConnection.connectionType,
       )
     })
   })

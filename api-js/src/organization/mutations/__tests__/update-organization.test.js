@@ -1,22 +1,18 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
-import { makeMigrations } from '../../../../migrations'
-import { createQuerySchema } from '../../../queries'
-import { createMutationSchema } from '../../../mutations'
+import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import bcrypt from 'bcrypt'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
 
+import { makeMigrations } from '../../../../migrations'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-
-import bcrypt from 'bcrypt'
 import { cleanseInput, slugify } from '../../../validators'
 import { checkPermission, tokenize, userRequired } from '../../../auth'
-import {
-  orgLoaderByKey,
-  userLoaderByKey,
-  userLoaderByUserName,
-} from '../../../loaders'
-import { toGlobalId } from 'graphql-relay'
+import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { orgLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

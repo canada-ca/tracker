@@ -1,21 +1,18 @@
 import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import bcrypt from 'bcrypt'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
+
 import { makeMigrations } from '../../../../migrations'
-import { createQuerySchema } from '../../../queries'
-import { createMutationSchema } from '../../../mutations'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-
-import bcrypt from 'bcrypt'
 import { cleanseInput, slugify } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
-import {
-  orgLoaderBySlug,
-  userLoaderByKey,
-  userLoaderByUserName,
-} from '../../../loaders'
+import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { orgLoaderBySlug } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 

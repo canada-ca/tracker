@@ -1,7 +1,7 @@
 import { GraphQLObjectType } from 'graphql'
 import { t } from '@lingui/macro'
 
-import { categorizedSummaryType } from './categorized-summary'
+import { categorizedSummaryType } from '../../summaries'
 
 export const organizationSummaryType = new GraphQLObjectType({
   name: 'OrganizationSummary',
