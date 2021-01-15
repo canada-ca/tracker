@@ -3,17 +3,14 @@ import { toGlobalId } from 'graphql-relay'
 
 import { makeMigrations } from '../../../../migrations'
 import { cleanseInput } from '../../../validators'
+import { domainLoaderByKey } from '../../../domain/loaders'
+import { domainType } from '../../../domain/objects'
 import {
-  domainLoaderByKey,
   httpsLoaderConnectionsByDomainId,
   sslLoaderConnectionsByDomainId,
-} from '../../../loaders'
-import {
-  webScanType,
-  domainType,
-  httpsConnection,
-  sslConnection,
-} from '../index'
+} from '../../loaders'
+
+import { webScanType, httpsConnection, sslConnection } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

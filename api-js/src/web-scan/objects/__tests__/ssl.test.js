@@ -5,11 +5,11 @@ import { GraphQLJSON } from 'graphql-scalars'
 
 import { makeMigrations } from '../../../../migrations'
 import { cleanseInput } from '../../../validators'
-import {
-  sslGuidanceTagConnectionsLoader,
-  domainLoaderByKey,
-} from '../../../loaders'
-import { sslType, domainType, guidanceTagConnection } from '../index'
+import { domainLoaderByKey } from '../../../domain/loaders'
+import { domainType } from '../../../domain/objects'
+import { sslGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
+import { guidanceTagConnection } from '../../../guidance-tag/objects'
+import { sslType } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
