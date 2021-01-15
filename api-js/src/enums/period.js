@@ -1,4 +1,4 @@
-const { GraphQLEnumType } = require('graphql')
+import { GraphQLEnumType } from 'graphql'
 
 export const PeriodEnums = new GraphQLEnumType({
   name: 'PeriodEnums',
