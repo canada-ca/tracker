@@ -10,7 +10,7 @@ import { cleanseInput } from '../../../validators'
 import {
   spfGuidanceTagConnectionsLoader,
   spfGuidanceTagLoader,
-} from '../../../loaders'
+} from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
