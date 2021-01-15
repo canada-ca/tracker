@@ -2,8 +2,8 @@ import { GraphQLInt, GraphQLObjectType } from 'graphql'
 import { connectionDefinitions, globalIdField } from 'graphql-relay'
 
 import { RoleEnums } from '../../enums'
-import { organizationType } from '../../organization'
-import { userSharedType } from '../../user'
+import { organizationType } from '../../organization/objects'
+import { userSharedType } from '../../user/objects'
 import { nodeInterface } from '../../node'
 
 export const affiliationType = new GraphQLObjectType({
