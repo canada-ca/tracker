@@ -2,8 +2,10 @@ import { GraphQLObjectType } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 import { GraphQLDateTime } from 'graphql-scalars'
 
-import { domainType } from '../../domain'
+import { domainType } from '../../domain/objects'
 import { dkimConnection } from './dkim'
+import { dmarcConnection } from './dmarc'
+import { spfConnection } from './spf'
 
 export const emailScanType = new GraphQLObjectType({
   name: 'EmailScan',

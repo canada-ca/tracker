@@ -1,8 +1,14 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
-import { connectionArgs, connectionDefinitions, globalIdField } from 'graphql-relay'
-import { GraphQLJSON } from 'graphql-scalars' 
+import {
+  connectionArgs,
+  connectionDefinitions,
+  globalIdField,
+} from 'graphql-relay'
+import { GraphQLJSON } from 'graphql-scalars'
 
-import { domainType } from '../../domain'
+import { domainType } from '../../domain/objects'
+import { nodeInterface } from '../../node'
+import { guidanceTagConnection } from '../../guidance-tag'
 
 export const dmarcType = new GraphQLObjectType({
   name: 'DMARC',

@@ -1,8 +1,13 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
-import { connectionArgs, connectionDefinitions, globalIdField } from 'graphql-relay'
+import {
+  connectionArgs,
+  connectionDefinitions,
+  globalIdField,
+} from 'graphql-relay'
 
-import { domainType } from '../../domain'
+import { domainType } from '../../domain/objects'
 import { dkimResultConnection } from './dkim-result'
+import { nodeInterface } from '../../node'
 
 export const dkimType = new GraphQLObjectType({
   name: 'DKIM',
