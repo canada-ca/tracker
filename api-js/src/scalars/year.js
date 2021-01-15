@@ -1,4 +1,4 @@
-const { GraphQLScalarType, Kind, GraphQLError } = require('graphql')
+import { GraphQLScalarType, Kind, GraphQLError } from 'graphql'
 
 const validate = (value) => {
   const YEAR_REGEX = /^\d{4}$/
@@ -28,7 +28,3 @@ export const Year = new GraphQLScalarType({
     return validate(ast.value)
   },
 })
-
-module.exports = {
-  Year,
-}

@@ -1,5 +1,5 @@
-const { Kind, GraphQLError, GraphQLScalarType } = require('graphql')
-const psl = require('psl')
+import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
+import psl from 'psl'
 
 const validate = (value) => {
   if (typeof value !== typeof 'string') {

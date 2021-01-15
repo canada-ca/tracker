@@ -1,4 +1,4 @@
-const { Kind, GraphQLError, GraphQLScalarType } = require('graphql')
+import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
 
 const validate = (value) => {
   const ACRONYM_REGEX = /^[A-Z0-9_-]{1,50}$/
@@ -29,7 +29,3 @@ export const Acronym = new GraphQLScalarType({
     return validate(ast.value)
   },
 })
-
-module.exports = {
-  Acronym,
-}

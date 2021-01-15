@@ -1,4 +1,4 @@
-const { Kind, GraphQLError, GraphQLScalarType } = require('graphql')
+import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
 
 const validate = (value) => {
   const SLUG_REGEX = /\w+\._domainkey/
@@ -28,7 +28,3 @@ export const Selectors = new GraphQLScalarType({
     return validate(ast.value)
   },
 })
-
-module.exports = {
-  Selectors,
-}

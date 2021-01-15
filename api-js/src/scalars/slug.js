@@ -1,4 +1,4 @@
-const { Kind, GraphQLError, GraphQLScalarType } = require('graphql')
+import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
 
 const validate = (value) => {
   const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
@@ -29,7 +29,3 @@ export const Slug = new GraphQLScalarType({
     return validate(ast.value)
   },
 })
-
-module.exports = {
-  Slug,
-}
