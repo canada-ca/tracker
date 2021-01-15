@@ -1,4 +1,4 @@
-const makeMigrations = ({ databaseName, rootPass }) => [
+export const makeMigrations = ({ databaseName, rootPass }) => [
   {
     type: 'database',
     databaseName,

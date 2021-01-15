@@ -6,7 +6,9 @@ import {
 } from 'graphql-relay'
 import { GraphQLJSON } from 'graphql-scalars'
 
-import { domainType } from '../../domain'
+import { domainType } from '../../domain/objects'
+import { guidanceTagConnection } from '../../guidance-tag'
+import { nodeInterface } from '../../node'
 
 export const sslType = new GraphQLObjectType({
   name: 'SSL',

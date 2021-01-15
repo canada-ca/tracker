@@ -1,5 +1,9 @@
-const dotenv = require('dotenv-safe')
-dotenv.config()
+import { ArangoTools } from 'arango-tools'
+import { Server } from './src/server'
+import { makeMigrations } from './migrations'
+
+require('dotenv-safe').config()
+
 const {
   PORT = 4000,
   DB_PASS: rootPass,
@@ -11,10 +15,6 @@ const {
   OBJECT_COST: objectCost,
   LIST_FACTOR: listFactor,
 } = process.env
-
-const { ArangoTools } = require('arango-tools')
-const { Server } = require('./src/server')
-const { makeMigrations } = require('./migrations')
 
 ;(async () => {
   const { migrate } = await ArangoTools({ rootPass, url })

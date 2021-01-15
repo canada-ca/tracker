@@ -1,20 +1,20 @@
-const cors = require('cors')
-const express = require('express')
-const http = require('http')
-const { ApolloServer } = require('apollo-server-express')
-const requestLanguage = require('express-request-language')
-const { GraphQLSchema } = require('graphql')
-const depthLimit = require('graphql-depth-limit')
-const { createComplexityLimitRule } = require('graphql-validation-complexity')
+import cors from 'cors'
+import express from 'express'
+import http from 'http'
+import { ApolloServer } from 'apollo-server-express'
+import requestLanguage from 'express-request-language'
+import { GraphQLSchema } from 'graphql'
+import depthLimit from 'graphql-depth-limit'
+import { createComplexityLimitRule } from 'graphql-validation-complexity'
 
-const { createContext } = require('./create-context')
-const { createQuerySchema } = require('./queries')
-const { createMutationSchema } = require('./mutations')
+import { createContext } from './create-context'
+import { createQuerySchema } from './query'
+import { createMutationSchema } from './mutation'
 
 const createSchema = () =>
   new GraphQLSchema({
     query: createQuerySchema(),
-    // mutation: createMutationSchema(),
+    mutation: createMutationSchema(),
   })
 
 const createValidationRules = (
@@ -38,7 +38,7 @@ const createValidationRules = (
   ]
 }
 
-const Server = (
+export const Server = (
   PORT,
   maxDepth,
   complexityCost,
@@ -92,8 +92,4 @@ const Server = (
     `🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`,
   )
   return httpServer
-}
-
-module.exports = {
-  Server,
 }

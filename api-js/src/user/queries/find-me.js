@@ -1,4 +1,4 @@
-import { userPersonalType } from '../../types'
+import { userPersonalType } from '../objects'
 
 export const findMe = {
   type: userPersonalType,

@@ -1,7 +1,8 @@
 import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
-import { userSharedType } from '../../types'
 import { GraphQLNonNull } from 'graphql'
+
+import { userSharedType } from '../objects'
 
 export const findUserByUsername = {
   type: userSharedType,
