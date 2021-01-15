@@ -116,6 +116,7 @@ export default function UserPage() {
           <Trans>Enable 2FA</Trans>
         </TrackerButton>
 
+        {/* removing until this functionality has been implemented  
         <TrackerButton
           w={['100%', '50%']}
           variant="primary"
@@ -126,6 +127,8 @@ export default function UserPage() {
           <Icon name="edit" />
           <Trans>Manage API keys</Trans>
         </TrackerButton>
+        */}
+
         <Divider />
       </Stack>
     </SimpleGrid>
