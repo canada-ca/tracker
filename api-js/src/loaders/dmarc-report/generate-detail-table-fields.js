@@ -8,7 +8,7 @@ const generateDetailTableFields = ({ subField, variables }) => {
     'dkimResults',
     'disposition',
     'dnsHost',
-    'envelopFrom',
+    'envelopeFrom',
     'headerFrom',
     'guidance',
     'sourceIpAddress',
