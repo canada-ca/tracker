@@ -471,12 +471,15 @@ msgstr "Unable to invite yourself to an org. Please try again."
 msgid "Unable to load affiliations. Please try again."
 msgstr "Unable to load affiliations. Please try again."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:15
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:139
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:149
 msgid "Unable to load dkim failures. Please try again."
 msgstr "Unable to load dkim failures. Please try again."
 
+=======
+>>>>>>> fix translation issues
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:142
 msgid "Unable to load dkim guidance tags. Please try again."
@@ -492,12 +495,15 @@ msgstr "Unable to load dkim results. Please try again."
 msgid "Unable to load dkim scans. Please try again."
 msgstr "Unable to load dkim scans. Please try again."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:15
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:139
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:149
 msgid "Unable to load dmarc failures. Please try again."
 msgstr "Unable to load dmarc failures. Please try again."
 
+=======
+>>>>>>> fix translation issues
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:142
 msgid "Unable to load dmarc guidance tags. Please try again."
@@ -508,6 +514,7 @@ msgstr "Unable to load dmarc guidance tags. Please try again."
 msgid "Unable to load dmarc scans. Please try again."
 msgstr "Unable to load dmarc scans. Please try again."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:177
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:189
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:21
@@ -517,6 +524,8 @@ msgstr "Unable to load dmarc scans. Please try again."
 msgid "Unable to load dmarc summaries. Please try again."
 msgstr "Unable to load dmarc summaries. Please try again."
 
+=======
+>>>>>>> fix translation issues
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:151
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:161
 #: src/domain/loaders/load-domain-connections-by-user-id.js:157
@@ -526,12 +535,15 @@ msgstr "Unable to load dmarc summaries. Please try again."
 msgid "Unable to load domains. Please try again."
 msgstr "Unable to load domains. Please try again."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:15
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:139
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:149
 msgid "Unable to load full passes. Please try again."
 msgstr "Unable to load full passes. Please try again."
 
+=======
+>>>>>>> fix translation issues
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:142
 msgid "Unable to load https guidance tags. Please try again."
@@ -553,12 +565,15 @@ msgstr "Unable to load mail summary. Please try again."
 msgid "Unable to load organizations. Please try again."
 msgstr "Unable to load organizations. Please try again."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:15
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:139
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:149
 msgid "Unable to load spf failures. Please try again."
 msgstr "Unable to load spf failures. Please try again."
 
+=======
+>>>>>>> fix translation issues
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:142
 msgid "Unable to load spf guidance tags. Please try again."
@@ -656,11 +671,14 @@ msgstr "Unable to reset password. Please try again."
 msgid "Unable to retrieve {0} for domain: {domain}."
 msgstr "Unable to retrieve {0} for domain: {domain}."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:34
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:49
 msgid "Unable to select dmarc reports for this period and year."
 msgstr "Unable to select dmarc reports for this period and year."
 
+=======
+>>>>>>> fix translation issues
 #: src/user/mutations/send-phone-code.js:58
 #: src/user/mutations/send-phone-code.js:76
 #: src/user/mutations/send-phone-code.js:106
@@ -685,10 +703,17 @@ msgid "Unable to send verification email. Please try again."
 msgstr "Unable to send verification email. Please try again."
 
 #: src/user/mutations/sign-in.js:53
+<<<<<<< HEAD
 #: src/user/mutations/sign-in.js:79
 #: src/user/mutations/sign-in.js:98
 #: src/user/mutations/sign-in.js:157
 #: src/user/mutations/sign-in.js:162
+=======
+#: src/user/mutations/sign-in.js:84
+#: src/user/mutations/sign-in.js:103
+#: src/user/mutations/sign-in.js:152
+#: src/user/mutations/sign-in.js:157
+>>>>>>> fix translation issues
 msgid "Unable to sign in, please try again."
 msgstr "Unable to sign in, please try again."
 
@@ -798,6 +823,7 @@ msgstr "User role was updated successfully."
 msgid "Username already in use."
 msgstr "Username already in use."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:37
 msgid "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
@@ -814,6 +840,8 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Ful
 msgid "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
 
+=======
+>>>>>>> fix translation issues
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:33
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:33
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
@@ -827,10 +855,13 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `dki
 msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:62
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
 
+=======
+>>>>>>> fix translation issues
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
@@ -875,6 +906,7 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `ver
 msgid "You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:20
 msgid "You must provide a `period` value to access the `dmarcSummaries` connection."
 msgstr "You must provide a `period` value to access the `dmarcSummaries` connection."
@@ -890,6 +922,10 @@ msgstr "You must provide a `year` value to access the `dmarcSummaries` connectio
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:109
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:84
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:84
+=======
+#: src/affiliation/loaders/load-affiliations-by-org-id.js:80
+#: src/affiliation/loaders/load-affiliations-by-user-id.js:80
+>>>>>>> fix translation issues
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:89
 #: src/domain/loaders/load-domain-connections-by-user-id.js:87
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:96
@@ -912,6 +948,7 @@ msgstr "You must provide a `year` value to access the `dmarcSummaries` connectio
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
 msgstr "`{argSet}` must be of type `number` not `{typeSet}`."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:58
 msgid "`{argSet}` on the `DkimFailureTable` connection cannot be less than zero."
 msgstr "`{argSet}` on the `DkimFailureTable` connection cannot be less than zero."
@@ -928,6 +965,8 @@ msgstr "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
 msgid "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
 msgstr "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
 
+=======
+>>>>>>> fix translation issues
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:54
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:54
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
@@ -941,10 +980,13 @@ msgstr "`{argSet}` on the `dkimResults` connection cannot be less than zero."
 msgid "`{argSet}` on the `dkim` connection cannot be less than zero."
 msgstr "`{argSet}` on the `dkim` connection cannot be less than zero."
 
+<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:83
 msgid "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
 msgstr "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
 
+=======
+>>>>>>> fix translation issues
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:62
 msgid "`{argSet}` on the `dmarc` connection cannot be less than zero."
 msgstr "`{argSet}` on the `dmarc` connection cannot be less than zero."
@@ -989,13 +1031,23 @@ msgstr "`{argSet}` on the `verifiedDomain` connection cannot be less than zero."
 msgid "`{argSet}` on the `verifiedOrganization` connection cannot be less than zero."
 msgstr "`{argSet}` on the `verifiedOrganization` connection cannot be less than zero."
 
+<<<<<<< HEAD
 #: src/organization/objects/organization-summary.js:8
+=======
+#: src/organization/objects/organization-summary.js:31
+#: src/organization/objects/organization-summary.js:64
+>>>>>>> fix translation issues
 #: src/summaries/queries/mail-summary.js:22
 #: src/summaries/queries/web-summary.js:23
 msgid "fail"
 msgstr "fail"
 
+<<<<<<< HEAD
 #: src/organization/objects/organization-summary.js:7
+=======
+#: src/organization/objects/organization-summary.js:26
+#: src/organization/objects/organization-summary.js:59
+>>>>>>> fix translation issues
 #: src/summaries/queries/mail-summary.js:17
 #: src/summaries/queries/web-summary.js:18
 msgid "pass"
