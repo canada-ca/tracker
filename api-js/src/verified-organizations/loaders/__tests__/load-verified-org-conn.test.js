@@ -10,7 +10,7 @@ import { cleanseInput } from '../../../validators'
 import {
   verifiedOrgLoaderConnections,
   verifiedOrgLoaderByKey,
-} from '../../../loaders'
+} from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

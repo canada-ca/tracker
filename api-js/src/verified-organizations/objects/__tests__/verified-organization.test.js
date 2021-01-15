@@ -10,12 +10,10 @@ import { toGlobalId } from 'graphql-relay'
 
 import { makeMigrations } from '../../../../migrations'
 import { cleanseInput } from '../../../validators'
-import { verifiedDomainLoaderConnectionsByOrgId } from '../../../loaders'
-import {
-  verifiedOrganizationType,
-  verifiedDomainConnection,
-} from '../../../types/index'
-import { organizationSummaryType } from '../organization-summary'
+import { verifiedDomainLoaderConnectionsByOrgId } from '../../../verified-domains/loaders'
+import { verifiedDomainConnection } from '../../../verified-domains/objects'
+import { verifiedOrganizationType } from '../index'
+import { organizationSummaryType } from '../../../organization/objects'
 import { Acronym, Slug } from '../../../scalars'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env

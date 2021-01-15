@@ -4,7 +4,7 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { makeMigrations } from '../../../../migrations'
-import { verifiedOrgLoaderBySlug } from '../../../loaders'
+import { verifiedOrgLoaderBySlug } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

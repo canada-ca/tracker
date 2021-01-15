@@ -1,5 +1,5 @@
 import { GraphQLInt } from 'graphql'
-import { verifiedOrganizationConnection } from '../../../types/index'
+import { verifiedOrganizationConnection } from '../index'
 
 describe('given the verified organization connection object', () => {
   describe('testing its field definitions', () => {
