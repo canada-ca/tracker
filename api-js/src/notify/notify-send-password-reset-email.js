@@ -1,6 +1,6 @@
-const { t } = require('@lingui/macro')
+import { t } from '@lingui/macro'
 
-const sendPasswordResetEmail = (notifyClient, i18n) => async ({
+export const sendPasswordResetEmail = (notifyClient, i18n) => async ({
   templateId,
   user,
   resetUrl,
@@ -21,8 +21,4 @@ const sendPasswordResetEmail = (notifyClient, i18n) => async ({
       i18n._(t`Unable to send password reset email. Please try again.`),
     )
   }
-}
-
-module.exports = {
-  sendPasswordResetEmail,
 }

@@ -1,11 +1,11 @@
-const bcrypt = require('bcrypt')
-const moment = require('moment')
-const fetch = require('isomorphic-fetch')
-const { v4: uuidv4 } = require('uuid')
+import bcrypt from 'bcrypt'
+import moment from 'moment'
+import fetch from 'isomorphic-fetch'
+import { v4 as uuidv4 } from 'uuid'
 
-const { createI18n } = require('./create-i18n')
-const { cleanseInput, slugify } = require('./validators')
-const {
+import { createI18n } from './create-i18n'
+import { cleanseInput, slugify } from './validators'
+import {
   checkDomainOwnership,
   checkDomainPermission,
   checkPermission,
@@ -13,8 +13,8 @@ const {
   tokenize,
   userRequired,
   verifyToken,
-} = require('./auth')
-const {
+} from './auth'
+import {
   notifyClient,
   sendAuthEmail,
   sendAuthTextMsg,
@@ -23,17 +23,25 @@ const {
   sendPasswordResetEmail,
   sendTfaTextMsg,
   sendVerificationEmail,
-} = require('./notify')
+} from './notify'
 
-const {
-  chartSummaryLoaderByKey,
+import {
+  affiliationLoaderByKey,
+  affiliationLoaderByUserId,
+  affiliationLoaderByOrgId,
+} from './affiliation/loaders'
+import {
   generateDetailTableFields,
   generateGqlQuery,
   dmarcReportLoader,
+} from './dmarc-report/loaders'
+import {
   domainLoaderByKey,
   domainLoaderByDomain,
   domainLoaderConnectionsByOrgId,
   domainLoaderConnectionsByUserId,
+} from './domain/loaders'
+import {
   dkimLoaderByKey,
   dkimResultLoaderByKey,
   dmarcLoaderByKey,
@@ -42,6 +50,8 @@ const {
   dkimResultsLoaderConnectionByDkimId,
   dmarcLoaderConnectionsByDomainId,
   spfLoaderConnectionsByDomainId,
+} from './email-scan/loaders'
+import {
   dkimGuidanceTagLoader,
   dkimGuidanceTagConnectionsLoader,
   dmarcGuidanceTagLoader,
@@ -52,30 +62,35 @@ const {
   spfGuidanceTagConnectionsLoader,
   sslGuidanceTagLoader,
   sslGuidanceTagConnectionsLoader,
+} from './guidance-tag/loaders'
+import {
   orgLoaderByKey,
   orgLoaderBySlug,
   orgLoaderConnectionArgsByDomainId,
   orgLoaderConnectionsByUserId,
-  userLoaderByUserName,
-  userLoaderByKey,
+} from './organization/loaders'
+import { userLoaderByUserName, userLoaderByKey } from './user/loaders'
+import {
   httpsLoaderByKey,
   httpsLoaderConnectionsByDomainId,
   sslLoaderByKey,
   sslLoaderConnectionsByDomainId,
-  affiliationLoaderByKey,
-  affiliationLoaderByUserId,
-  affiliationLoaderByOrgId,
+} from './web-scan/loaders'
+import {
   verifiedDomainLoaderByDomain,
   verifiedDomainLoaderByKey,
   verifiedDomainLoaderConnections,
   verifiedDomainLoaderConnectionsByOrgId,
+} from './verified-domains/loaders'
+import {
   verifiedOrgLoaderByKey,
   verifiedOrgLoaderBySlug,
   verifiedOrgLoaderConnectionsByDomainId,
   verifiedOrgLoaderConnections,
-} = require('./loaders')
+} from './verified-organizations/loaders'
+import { chartSummaryLoaderByKey } from './summaries/loaders'
 
-module.exports.createContext = ({ context, req: request, res: response }) => {
+export const createContext = ({ context, req: request, res: response }) => {
   const { query } = context
 
   const i18n = createI18n(request.language)

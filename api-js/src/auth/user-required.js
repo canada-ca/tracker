@@ -1,6 +1,10 @@
-const { t } = require('@lingui/macro')
+import { t } from '@lingui/macro'
 
-const userRequired = ({ i18n, userKey, userLoaderByKey }) => async () => {
+export const userRequired = ({
+  i18n,
+  userKey,
+  userLoaderByKey,
+}) => async () => {
   if (typeof userKey === 'undefined') {
     console.warn(
       `User attempted to access controlled content, but userKey was undefined.`,
@@ -27,8 +31,4 @@ const userRequired = ({ i18n, userKey, userLoaderByKey }) => async () => {
   }
 
   return user
-}
-
-module.exports = {
-  userRequired,
 }

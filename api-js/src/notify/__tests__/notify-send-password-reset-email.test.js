@@ -1,8 +1,8 @@
-const { setupI18n } = require('@lingui/core')
+import { setupI18n } from '@lingui/core'
 
-const englishMessages = require('../../locale/en/messages')
-const frenchMessages = require('../../locale/fr/messages')
-const { sendPasswordResetEmail } = require('..')
+import englishMessages from '../../locale/en/messages'
+import frenchMessages from '../../locale/fr/messages'
+import { sendPasswordResetEmail } from '../index'
 
 describe('given the sendPasswordResetEmail function', () => {
   let i18n

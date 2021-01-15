@@ -1,6 +1,6 @@
-const { GraphQLEnumType } = require('graphql')
+import { GraphQLEnumType } from 'graphql'
 
-module.exports.RoleEnums = new GraphQLEnumType({
+export const RoleEnums = new GraphQLEnumType({
   name: 'RoleEnums',
   values: {
     USER: {

@@ -1,6 +1,6 @@
-const { GraphQLEnumType } = require('graphql')
+import { GraphQLEnumType } from 'graphql'
 
-module.exports.ScanTypeEnums = new GraphQLEnumType({
+export const ScanTypeEnums = new GraphQLEnumType({
   name: 'ScanTypeEnums',
   values: {
     MAIL: {

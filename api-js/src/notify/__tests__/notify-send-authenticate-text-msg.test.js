@@ -1,11 +1,11 @@
+import crypto from 'crypto'
+import { setupI18n } from '@lingui/core'
+
+import englishMessages from '../../locale/en/messages'
+import frenchMessages from '../../locale/fr/messages'
+import { sendAuthTextMsg } from '../index'
+
 const { CIPHER_KEY } = process.env
-
-const crypto = require('crypto')
-const { setupI18n } = require('@lingui/core')
-
-const englishMessages = require('../../locale/en/messages')
-const frenchMessages = require('../../locale/fr/messages')
-const { sendAuthTextMsg } = require('..')
 
 describe('given the sendAuthTextMsg function', () => {
   let i18n

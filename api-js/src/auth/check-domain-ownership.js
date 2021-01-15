@@ -1,6 +1,6 @@
-const { t } = require('@lingui/macro')
+import { t } from '@lingui/macro'
 
-const checkDomainOwnership = ({ i18n, query, userKey }) => async ({
+export const checkDomainOwnership = ({ i18n, query, userKey }) => async ({
   domainId,
 }) => {
   let userAffiliatedOwnership, ownership
@@ -38,8 +38,4 @@ const checkDomainOwnership = ({ i18n, query, userKey }) => async ({
   }
 
   return ownership[0] !== undefined
-}
-
-module.exports = {
-  checkDomainOwnership,
 }

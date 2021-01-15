@@ -1,4 +1,4 @@
-const { Kind, GraphQLError, GraphQLScalarType } = require('graphql')
+import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
 
 const validate = (value) => {
   const ACRONYM_REGEX = /^[A-Z0-9_-]{1,50}$/
@@ -13,7 +13,7 @@ const validate = (value) => {
   return value
 }
 
-module.exports.Acronym = new GraphQLScalarType({
+export const Acronym = new GraphQLScalarType({
   name: 'Acronym',
   description:
     'A field whose value is an upper case letter or an under score that has a length between 1 and 50.',

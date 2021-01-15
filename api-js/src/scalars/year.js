@@ -1,4 +1,4 @@
-const { GraphQLScalarType, Kind, GraphQLError } = require('graphql')
+import { GraphQLScalarType, Kind, GraphQLError } from 'graphql'
 
 const validate = (value) => {
   const YEAR_REGEX = /^\d{4}$/
@@ -13,7 +13,7 @@ const validate = (value) => {
   return value
 }
 
-module.exports.Year = new GraphQLScalarType({
+export const Year = new GraphQLScalarType({
   name: 'Year',
   description: 'A field that conforms to a 4 digit integer.',
   serialize: validate,

@@ -1,6 +1,6 @@
-const validator = require('validator')
+import validator from 'validator'
 
-const cleanseInput = (input) => {
+export const cleanseInput = (input) => {
   if (typeof input !== 'string' && typeof input !== 'number') {
     return ''
   }
@@ -8,8 +8,4 @@ const cleanseInput = (input) => {
   input = validator.stripLow(input)
   input = validator.escape(input)
   return input
-}
-
-module.exports = {
-  cleanseInput,
 }

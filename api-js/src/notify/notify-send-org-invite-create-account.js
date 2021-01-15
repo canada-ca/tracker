@@ -1,6 +1,6 @@
-const { t } = require('@lingui/macro')
+import { t } from '@lingui/macro'
 
-const sendOrgInviteCreateAccount = (notifyClient, i18n) => async ({
+export const sendOrgInviteCreateAccount = (notifyClient, i18n) => async ({
   templateId,
   user,
   orgName,
@@ -22,8 +22,4 @@ const sendOrgInviteCreateAccount = (notifyClient, i18n) => async ({
       i18n._(t`Unable to send org invite email. Please try again.`),
     )
   }
-}
-
-module.exports = {
-  sendOrgInviteCreateAccount,
 }

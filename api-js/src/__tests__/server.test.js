@@ -1,3 +1,6 @@
+import request from 'supertest'
+import { Server } from '../server'
+
 const {
   PORT = 4000,
   DEPTH_LIMIT: maxDepth,
@@ -6,9 +9,6 @@ const {
   OBJECT_COST: objectCost,
   LIST_FACTOR: listFactor,
 } = process.env
-
-const request = require('supertest')
-const { Server } = require('../server')
 
 describe('parse server', () => {
   const consoleOutput = []

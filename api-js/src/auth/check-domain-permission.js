@@ -1,6 +1,6 @@
-const { t } = require('@lingui/macro')
+import { t } from '@lingui/macro'
 
-const checkDomainPermission = ({ i18n, query, userKey }) => async ({
+export const checkDomainPermission = ({ i18n, query, userKey }) => async ({
   domainId,
 }) => {
   let userAffiliatedClaims, claim
@@ -55,8 +55,4 @@ const checkDomainPermission = ({ i18n, query, userKey }) => async ({
     )
   }
   return claim[0] !== undefined
-}
-
-module.exports = {
-  checkDomainPermission,
 }
