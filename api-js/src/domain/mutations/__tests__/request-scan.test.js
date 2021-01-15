@@ -1,19 +1,21 @@
+import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
+
+import englishMessages from '../../../locale/en/messages'
+import frenchMessages from '../../../locale/fr/messages'
+import { makeMigrations } from '../../../../migrations'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { checkDomainPermission, userRequired } from '../../../auth'
+import { domainLoaderByDomain } from '../../loaders'
+import { userLoaderByKey } from '../../../user/loaders'
+import { cleanseInput } from '../../../validators'
+
 require('jest-fetch-mock').enableFetchMocks()
+
 const { DB_PASS: rootPass, DB_URL: url } = process.env
-
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
-const { setupI18n } = require('@lingui/core')
-const { v4: uuidv4 } = require('uuid')
-
-const englishMessages = require('../../../locale/en/messages')
-const frenchMessages = require('../../../locale/fr/messages')
-const { makeMigrations } = require('../../../../migrations')
-const { createQuerySchema } = require('../../../queries')
-const { createMutationSchema } = require('../../../mutations')
-const { checkDomainPermission, userRequired } = require('../../../auth')
-const { domainLoaderByDomain, userLoaderByKey } = require('../../../loaders')
-const { cleanseInput } = require('../../../validators')
 
 describe('requesting a one time scan', () => {
   const consoleOutput = []

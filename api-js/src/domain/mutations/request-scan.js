@@ -1,16 +1,16 @@
+import { t } from '@lingui/macro'
+import { GraphQLString } from 'graphql'
+import { mutationWithClientMutationId } from 'graphql-relay'
+
+import { Domain } from '../../scalars'
+
 const {
   DNS_SCANNER_ENDPOINT,
   HTTPS_SCANNER_ENDPOINT,
   SSL_SCANNER_ENDPOINT,
 } = process.env
 
-const { t } = require('@lingui/macro')
-const { GraphQLString } = require('graphql')
-const { mutationWithClientMutationId } = require('graphql-relay')
-
-const { Domain } = require('../../scalars')
-
-const requestScan = new mutationWithClientMutationId({
+export const requestScan = new mutationWithClientMutationId({
   name: 'RequestScan',
   description:
     'This mutation is used to run a manual scan on a requested domain.',
@@ -133,7 +133,3 @@ const requestScan = new mutationWithClientMutationId({
     }
   },
 })
-
-module.exports = {
-  requestScan,
-}
