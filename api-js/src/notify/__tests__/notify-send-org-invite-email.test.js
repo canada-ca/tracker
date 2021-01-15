@@ -1,8 +1,8 @@
-const { setupI18n } = require('@lingui/core')
+import { setupI18n } from '@lingui/core'
 
-const englishMessages = require('../../locale/en/messages')
-const frenchMessages = require('../../locale/fr/messages')
-const { sendOrgInviteEmail } = require('..')
+import englishMessages from '../../locale/en/messages'
+import frenchMessages from '../../locale/fr/messages'
+import { sendOrgInviteEmail } from '../index'
 
 describe('given the sendOrgInviteEmail function', () => {
   let i18n

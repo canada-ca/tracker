@@ -1,6 +1,6 @@
-const { t } = require('@lingui/macro')
+import { t } from '@lingui/macro'
 
-const sendAuthEmail = (notifyClient, i18n) => async ({ user }) => {
+export const sendAuthEmail = (notifyClient, i18n) => async ({ user }) => {
   const templateId = 'a517d99f-ddb2-4494-87e1-d5ae6ca53090'
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
@@ -15,8 +15,4 @@ const sendAuthEmail = (notifyClient, i18n) => async ({ user }) => {
     )
     throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
   }
-}
-
-module.exports = {
-  sendAuthEmail,
 }

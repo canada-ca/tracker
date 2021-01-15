@@ -1,6 +1,6 @@
-const { t } = require('@lingui/macro')
+import { t } from '@lingui/macro'
 
-const sendTfaTextMsg = (notifyClient, i18n) => async ({
+export const sendTfaTextMsg = (notifyClient, i18n) => async ({
   templateId,
   phoneNumber,
   user,
@@ -22,8 +22,4 @@ const sendTfaTextMsg = (notifyClient, i18n) => async ({
       ),
     )
   }
-}
-
-module.exports = {
-  sendTfaTextMsg,
 }
