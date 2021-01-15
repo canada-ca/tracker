@@ -1,12 +1,12 @@
+import { ArangoTools, dbNameFromFile } from 'arango-tools'
+
+import { makeMigrations } from '../../migrations'
+import { customOnConnect } from '../on-connect'
+import { verifyToken, tokenize, userRequired } from '../auth'
+import { createI18n } from '../create-i18n'
+import { userLoaderByKey } from '../user/loaders'
+
 const { DB_PASS: rootPass, DB_URL: url } = process.env
-
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-
-const { makeMigrations } = require('../../migrations')
-const { customOnConnect } = require('../on-connect')
-const { verifyToken, tokenize, userRequired } = require('../auth')
-const { createI18n } = require('../create-i18n')
-const { userLoaderByKey } = require('../loaders')
 
 describe('given the customOnConnect function', () => {
   let mockedUserRequired
@@ -154,9 +154,13 @@ describe('given the customOnConnect function', () => {
             userLoaderByKey,
           )(connectionParams, webSocket)
         } catch (err) {
-          expect(err).toEqual(new Error('Authentication error. Please sign in.'))
+          expect(err).toEqual(
+            new Error('Authentication error. Please sign in.'),
+          )
         }
-        expect(consoleOutput).toEqual(['User attempted to access controlled content, but userKey was undefined.'])
+        expect(consoleOutput).toEqual([
+          'User attempted to access controlled content, but userKey was undefined.',
+        ])
       })
     })
   })

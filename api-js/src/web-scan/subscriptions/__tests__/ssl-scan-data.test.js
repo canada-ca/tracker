@@ -141,19 +141,21 @@ describe('given the spfScanData subscription', () => {
   })
 
   it('returns the subscription data', async () => {
-    const triggerSubscription = graphql(
-      schema,
-      `
-        mutation {
-          testMutation(subscriptionId: "uuid-1234")
-        }
-      `,
-      null,
-      {
-        Redis,
-        options,
-      },
-    )
+    const triggerSubscription = setTimeout(() => {
+      graphql(
+        schema,
+        `
+          mutation {
+            testMutation(subscriptionId: "uuid-1234")
+          }
+        `,
+        null,
+        {
+          Redis,
+          options,
+        },
+      )
+    }, 100)
 
     const data = await subscribe(
       schema,
