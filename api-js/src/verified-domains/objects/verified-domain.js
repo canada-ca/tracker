@@ -6,9 +6,9 @@ import {
 } from 'graphql-relay'
 import { GraphQLDateTime } from 'graphql-scalars'
 
-import { domainStatus } from '../../domain'
+import { domainStatus } from '../../domain/objects'
 import { Domain } from '../../scalars'
-import { verifiedOrganizationConnection } from '../../verified-organizations'
+import { verifiedOrganizationConnection } from '../../verified-organizations/objects'
 import { nodeInterface } from '../../node'
 
 export const verifiedDomainType = new GraphQLObjectType({

@@ -1,16 +1,14 @@
-import { stringify } from 'jest-matcher-utils'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
+import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { stringify } from 'jest-matcher-utils'
+import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { makeMigrations } from '../../../../migrations'
 import { cleanseInput } from '../../../validators'
-import {
-  verifiedDomainLoaderConnectionsByOrgId,
-  domainLoaderByKey,
-} from '../../../loaders'
-import { toGlobalId } from 'graphql-relay'
+import { domainLoaderByKey } from '../../../domain/loaders'
+import { verifiedDomainLoaderConnectionsByOrgId } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

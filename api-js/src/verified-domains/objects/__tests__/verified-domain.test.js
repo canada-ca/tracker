@@ -5,12 +5,10 @@ import { GraphQLDateTime } from 'graphql-scalars'
 
 import { makeMigrations } from '../../../../migrations'
 import { cleanseInput } from '../../../validators'
-import { verifiedOrgLoaderConnectionsByDomainId } from '../../../loaders'
-import {
-  verifiedDomainType,
-  verifiedOrganizationConnection,
-} from '../../../types/index'
-import { domainStatus } from '../domain-status'
+import { verifiedOrgLoaderConnectionsByDomainId } from '../../../verified-organizations/loaders'
+import { verifiedOrganizationConnection } from '../../../verified-organizations/objects'
+import { verifiedDomainType } from '../index'
+import { domainStatus } from '../../../domain/objects'
 import { Domain } from '../../../scalars'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
