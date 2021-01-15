@@ -1,4 +1,4 @@
-const customOnConnect = (
+export const customOnConnect = (
   context,
   createI18n,
   verifyToken,
@@ -44,8 +44,4 @@ const customOnConnect = (
     language,
     authorization,
   }
-}
-
-module.exports = {
-  customOnConnect,
 }
