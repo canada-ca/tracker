@@ -76,7 +76,7 @@ describe('user send password reset email', () => {
         })
       })
       it('returns status text', async () => {
-        let cursor = await query`
+        const cursor = await query`
           FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN MERGE({ id: user._key }, user)
@@ -378,7 +378,7 @@ describe('user send password reset email', () => {
         })
       })
       it('returns status text', async () => {
-        let cursor = await query`
+        const cursor = await query`
           FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN MERGE({ id: user._key }, user)
