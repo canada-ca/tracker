@@ -41,16 +41,24 @@ export default function UserPage() {
     return <ErrorFallbackMessage error={queryUserError} />
   }
 
+  const {
+    displayName,
+    userName,
+    preferredLang,
+    phoneNumber,
+    tfaSendMethod,
+    emailValidated,
+    phoneValidated,
+  } = queryUserData?.userPage
+
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Stack p={25} spacing={4}>
-        <EditableUserDisplayName
-          detailValue={queryUserData.userPage.displayName}
-        />
+        <EditableUserDisplayName detailValue={displayName} />
 
         <Divider />
 
-        <EditableUserEmail detailValue={currentUser.userName} />
+        <EditableUserEmail detailValue={userName} />
 
         <Divider />
 
@@ -58,22 +66,18 @@ export default function UserPage() {
 
         <Divider />
 
-        <EditableUserLanguage
-          currentLang={queryUserData.userPage.preferredLang}
-        />
+        <EditableUserLanguage currentLang={preferredLang} />
       </Stack>
 
-      <Stack p={25} spacing="4">
-        <EditableUserPhoneNumber
-          detailValue={queryUserData.userPage.phoneNumber}
-        />
+      <Stack p={25} spacing={4}>
+        <EditableUserPhoneNumber detailValue={phoneNumber} />
 
         <Divider />
 
         <EditableUserTFAMethod
-          currentTFAMethod={queryUserData.userPage.tfaSendMethod}
-          emailValidated={queryUserData.userPage.emailValidated}
-          phoneValidated={queryUserData.userPage.phoneValidated}
+          currentTFAMethod={tfaSendMethod}
+          emailValidated={emailValidated}
+          phoneValidated={phoneValidated}
         />
       </Stack>
     </SimpleGrid>

@@ -79,7 +79,11 @@ function EditableUserPhoneNumber({ detailValue }) {
 
       <Stack isInline align="center">
         <Icon name="phone" color="gray.300" />
-        <Text>{detailValue}</Text>
+        {detailValue ? (
+          <Text>{detailValue}</Text>
+        ) : (
+          <Trans>No current phone number</Trans>
+        )}
         <TrackerButton
           ml="auto"
           onClick={onOpen}
@@ -125,11 +129,15 @@ function EditableUserPhoneNumber({ detailValue }) {
                     <ModalCloseButton />
                     <ModalBody>
                       <Stack spacing="4" p="6">
-                        <Heading as="h3" size="sm">
-                          <Trans>Current Phone Number:</Trans>
-                        </Heading>
+                        {detailValue && (
+                          <Stack>
+                            <Heading as="h3" size="sm">
+                              <Trans>Current Phone Number:</Trans>
+                            </Heading>
 
-                        <Text>{detailValue}</Text>
+                            <Text>{detailValue}</Text>
+                          </Stack>
+                        )}
 
                         <PhoneNumberField
                           name="phoneNumber"

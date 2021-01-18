@@ -2404,6 +2404,10 @@ msgstr "Numéro de téléphone actuel:"
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
+#: src/EditableUserPhoneNumber.js:85
+msgid "No current phone number"
+msgstr "Pas de numéro de téléphone actuel"
+
 #: src/EditableUserTFAMethod.js:38
 msgid "An error occurred while updating your TFA send method."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre méthode d'envoi de TFA."
