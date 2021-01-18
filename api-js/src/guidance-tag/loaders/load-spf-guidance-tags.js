@@ -8,7 +8,7 @@ export const spfGuidanceTagLoader = (query, userKey, i18n) =>
       cursor = await query`
         FOR tag IN spfGuidanceTags
           FILTER tag._key IN ${tags}
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
+          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
       `
     } catch (err) {
       console.error(

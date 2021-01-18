@@ -94,7 +94,7 @@ export const dmarcGuidanceTagConnectionsLoader = (
           ${afterTemplate}
           ${beforeTemplate}
           ${limitTemplate}
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
+          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
       )
 
       LET hasNextPage = (LENGTH(
