@@ -27,7 +27,7 @@ const i18n = setupI18n({
 const fillIn = (element, { with: value }) =>
   fireEvent.change(element, { target: { value } })
 const clickOn = (element) => fireEvent.click(element)
-const values = { domain: 'cse-cst.gc.ca', scanType: 'WEB' }
+const values = { domain: 'cse-cst.gc.ca' }
 
 describe('<ScanDomain />', () => {
   const mocks = [
@@ -35,8 +35,7 @@ describe('<ScanDomain />', () => {
       request: {
         query: REQUEST_SCAN,
         variables: {
-          domainURL: values.domain,
-          scanType: values.scanType,
+          domainUrl: values.domain,
         },
       },
       result: {
@@ -67,13 +66,7 @@ describe('<ScanDomain />', () => {
         </UserStateProvider>,
       )
 
-      const scanType = getByRole('combobox')
       const submit = getByRole('button')
-
-      fillIn(scanType, {
-        with: values.scanType,
-      })
-
       clickOn(submit)
 
       await waitFor(() => {
@@ -103,15 +96,10 @@ describe('<ScanDomain />', () => {
       )
 
       const domain = container.querySelector('#domain')
-      const scanType = getByRole('combobox')
       const submit = getByRole('button')
 
       fillIn(domain, {
         with: values.domain,
-      })
-
-      fillIn(scanType, {
-        with: values.scanType,
       })
 
       clickOn(submit)

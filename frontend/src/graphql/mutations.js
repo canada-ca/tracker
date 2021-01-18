@@ -215,8 +215,8 @@ export const INVITE_USER_TO_ORG = gql`
 `
 
 export const REQUEST_SCAN = gql`
-  mutation RequestScan($urlSlug: Slug, $scanType: ScanTypeEnums) {
-    requestScan(input: { urlSlug: $urlSlug, scanType: $scanType }) {
+  mutation RequestScan($domainUrl: DomainScalar) {
+    requestScan(input: { domain: $domainUrl }) {
       status
     }
   }
