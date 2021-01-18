@@ -48,7 +48,7 @@ describe('given the spfLoaderByKey function', () => {
       const expectedCursor = await query`
       FOR spfScan IN spf
         SORT spfScan._key ASC LIMIT 1
-        RETURN MERGE({ id: spfScan._key }, spfScan)
+        RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
     `
       const expectedSpf = await expectedCursor.next()
 
@@ -64,7 +64,7 @@ describe('given the spfLoaderByKey function', () => {
       const expectedSpfScans = []
       const expectedCursor = await query`
         FOR spfScan IN spf
-          RETURN MERGE({ id: spfScan._key }, spfScan)
+          RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
       `
 
       while (expectedCursor.hasNext()) {

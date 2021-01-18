@@ -49,7 +49,7 @@ describe('given the dkimLoaderByKey function', () => {
       const expectedCursor = await query`
         FOR dkimScan IN dkim
           SORT dkimScan._key ASC LIMIT 1
-          RETURN MERGE({ id: dkimScan._key}, dkimScan)
+          RETURN MERGE({ id: dkimScan._key, _type: "dkim" }, dkimScan)
       `
       const expectedDkim = await expectedCursor.next()
 
@@ -65,7 +65,7 @@ describe('given the dkimLoaderByKey function', () => {
       const expectedDkimScans = []
       const expectedCursor = await query`
         FOR dkimScan IN dkim
-          RETURN MERGE({ id: dkimScan._key}, dkimScan)
+          RETURN MERGE({ id: dkimScan._key, _type: "dkim" }, dkimScan)
       `
 
       while (expectedCursor.hasNext()) {
