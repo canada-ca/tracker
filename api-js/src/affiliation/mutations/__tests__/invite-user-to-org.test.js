@@ -160,7 +160,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                   FOR user IN users
                     FILTER user.userName == "test@email.gc.ca"
-                    RETURN MERGE({ id: user._key }, user)
+                    RETURN MERGE({ id: user._key, _type: 'user' }, user)
                 `
               secondaryUser = await userCursor.next()
             })
@@ -245,7 +245,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key }, user)
+                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -330,7 +330,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key }, user)
+                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -675,7 +675,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key }, user)
+                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -760,7 +760,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key }, user)
+                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -1597,7 +1597,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key }, user)
+                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -1681,7 +1681,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key }, user)
+                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -1765,7 +1765,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key }, user)
+                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -2108,7 +2108,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key }, user)
+                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
               `
               secondaryUser = await userCursor.next()
             })
@@ -2192,7 +2192,7 @@ describe('invite user to org', () => {
               const userCursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key }, user)
+                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
               `
               secondaryUser = await userCursor.next()
             })

@@ -192,6 +192,7 @@ describe('given the verified domains object', () => {
                 _id: org._id,
                 _key: org._key,
                 _rev: org._rev,
+                _type: 'verifiedOrganization',
                 id: org._key,
                 verified: true,
                 summaries: {

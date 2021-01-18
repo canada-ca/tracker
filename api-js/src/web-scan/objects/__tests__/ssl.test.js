@@ -116,6 +116,7 @@ describe('given the ssl gql object', () => {
           _id: domain._id,
           _key: domain._key,
           _rev: domain._rev,
+          _type: 'domain',
           id: domain._key,
           domain: 'test.domain.gc.ca',
           slug: 'test-domain-gc-ca',
@@ -171,6 +172,7 @@ describe('given the ssl gql object', () => {
                 _id: sslGT._id,
                 _key: sslGT._key,
                 _rev: sslGT._rev,
+                _type: 'guidanceTag',
                 id: sslGT._key,
                 guidance: 'Some Interesting Guidance',
                 refLinksGuide: [

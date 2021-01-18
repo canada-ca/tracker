@@ -157,6 +157,7 @@ describe('given the dmarcType object', () => {
           _id: domain._id,
           _key: domain._key,
           _rev: domain._rev,
+          _type: 'domain',
           id: domain._key,
           domain: 'test.domain.gc.ca',
           slug: 'test-domain-gc-ca',
@@ -244,6 +245,7 @@ describe('given the dmarcType object', () => {
                 _id: dmarcGT._id,
                 _key: dmarcGT._key,
                 _rev: dmarcGT._rev,
+                _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
                 id: dmarcGT._key,
                 refLinksGuide: [

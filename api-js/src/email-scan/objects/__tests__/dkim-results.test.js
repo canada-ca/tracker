@@ -132,6 +132,7 @@ describe('given the dkim result object', () => {
           _id: dkim._id,
           _key: dkim._key,
           _rev: dkim._rev,
+          _type: 'dkim',
           id: dkim._key,
           timestamp: '2020-10-02T12:43:39Z',
         })
@@ -195,6 +196,7 @@ describe('given the dkim result object', () => {
                 _id: dkimGT._id,
                 _key: dkimGT._key,
                 _rev: dkimGT._rev,
+                _type: 'guidanceTag',
                 guidance: 'Some Interesting Guidance',
                 id: 'dkim1',
                 refLinksGuide: [

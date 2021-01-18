@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize } from '../../../auth'
-import { userLoaderByKey } from '../../loaders'
+import { userLoaderByKey, userLoaderByUserName } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
@@ -123,12 +123,7 @@ describe('user send password reset email', () => {
           },
         }
 
-        cursor = await query`
-          FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-        `
-        user = await cursor.next()
+        user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({
@@ -428,12 +423,7 @@ describe('user send password reset email', () => {
           },
         }
 
-        cursor = await query`
-          FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-        `
-        user = await cursor.next()
+        user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({

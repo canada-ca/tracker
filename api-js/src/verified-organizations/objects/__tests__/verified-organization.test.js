@@ -305,6 +305,7 @@ describe('given the verified organization object', () => {
                 _id: domain._id,
                 _key: domain._key,
                 _rev: domain._rev,
+                _type: 'verifiedDomain',
                 id: domain._key,
                 domain: 'test.gc.ca',
               },
