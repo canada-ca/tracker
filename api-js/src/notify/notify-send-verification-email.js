@@ -1,6 +1,6 @@
-const { t } = require('@lingui/macro')
+import { t } from '@lingui/macro'
 
-const sendVerificationEmail = (notifyClient, i18n) => async ({
+export const sendVerificationEmail = (notifyClient, i18n) => async ({
   templateId,
   user,
   verifyUrl,
@@ -21,8 +21,4 @@ const sendVerificationEmail = (notifyClient, i18n) => async ({
       i18n._(t`Unable to send verification email. Please try again.`),
     )
   }
-}
-
-module.exports = {
-  sendVerificationEmail,
 }

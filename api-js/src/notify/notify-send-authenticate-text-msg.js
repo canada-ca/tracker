@@ -1,8 +1,9 @@
-const { CIPHER_KEY } = process.env
-const crypto = require('crypto')
-const { t } = require('@lingui/macro')
+import crypto from 'crypto'
+import { t } from '@lingui/macro'
 
-const sendAuthTextMsg = (notifyClient, i18n) => async ({ user }) => {
+const { CIPHER_KEY } = process.env
+
+export const sendAuthTextMsg = (notifyClient, i18n) => async ({ user }) => {
   const templateId = 'bccda53c-278f-4d8c-a8d1-7b58cade2bd8'
 
   const { iv, tag, phoneNumber: encryptedData } = user.phoneDetails
@@ -29,8 +30,4 @@ const sendAuthTextMsg = (notifyClient, i18n) => async ({ user }) => {
     )
     throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
   }
-}
-
-module.exports = {
-  sendAuthTextMsg,
 }

@@ -1,5 +1,5 @@
-const { Kind, GraphQLError, GraphQLScalarType } = require('graphql')
-const psl = require('psl')
+import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
+import psl from 'psl'
 
 const validate = (value) => {
   if (typeof value !== typeof 'string') {
@@ -12,7 +12,7 @@ const validate = (value) => {
   return value
 }
 
-module.exports.Domain = new GraphQLScalarType({
+export const Domain = new GraphQLScalarType({
   name: 'DomainScalar',
   description: 'String that conforms to a domain structure.',
   serialize: validate,
@@ -27,3 +27,7 @@ module.exports.Domain = new GraphQLScalarType({
     return validate(ast.value)
   },
 })
+
+module.exports = {
+  Domain,
+}

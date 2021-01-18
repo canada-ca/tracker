@@ -1,7 +1,7 @@
-const { AUTHENTICATED_KEY } = process.env
+import jwt from 'jsonwebtoken'
+import { tokenize } from '../index'
 
-const jwt = require('jsonwebtoken')
-const { tokenize } = require('..')
+const { AUTHENTICATED_KEY } = process.env
 
 describe('given a token generator', () => {
   describe('given a set of parameters token can be encoded', () => {

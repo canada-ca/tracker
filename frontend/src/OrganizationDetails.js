@@ -101,7 +101,7 @@ export default function OrganizationDetails() {
         <Heading as="h1" textAlign={['center', 'left']}>
           <Trans>{orgName}</Trans>
         </Heading>
-        {data.organization.verified && (
+        {data?.organization?.verified && (
           <Icon name="check-circle" color="blue.500" size="icons.lg" />
         )}
       </Stack>

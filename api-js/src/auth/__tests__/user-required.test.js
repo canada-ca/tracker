@@ -1,13 +1,13 @@
+import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { setupI18n } from '@lingui/core'
+
+import { makeMigrations } from '../../../migrations'
+import { userLoaderByKey, userLoaderByUserName } from '../../user/loaders'
+import { userRequired } from '../index'
+import englishMessages from '../../locale/en/messages'
+import frenchMessages from '../../locale/fr/messages'
+
 const { DB_PASS: rootPass, DB_URL: url } = process.env
-
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { setupI18n } = require('@lingui/core')
-
-const { makeMigrations } = require('../../../migrations')
-const { userLoaderByKey } = require('../../loaders')
-const { userRequired } = require('..')
-const englishMessages = require('../../locale/en/messages')
-const frenchMessages = require('../../locale/fr/messages')
 
 describe('given a userLoaderByKey dataloader', () => {
   let query, drop, truncate, migrate, collections, i18n
@@ -43,12 +43,7 @@ describe('given a userLoaderByKey dataloader', () => {
   describe('provided a user id', () => {
     it('returns the user', async () => {
       // Get User From db
-      const expectedCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN MERGE({ id: user._key }, user)
-      `
-      const expectedUser = await expectedCursor.next()
+      const expectedUser = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
 
       const testUserRequired = userRequired({
         userKey: expectedUser._key,

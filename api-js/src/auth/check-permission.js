@@ -1,6 +1,8 @@
-const { t } = require('@lingui/macro')
+import { t } from '@lingui/macro'
 
-const checkPermission = ({ i18n, userKey, query }) => async ({ orgId }) => {
+export const checkPermission = ({ i18n, userKey, query }) => async ({
+  orgId,
+}) => {
   let cursor
   const userKeyString = `users/${userKey}`
   // Check for super admin
@@ -54,8 +56,4 @@ const checkPermission = ({ i18n, userKey, query }) => async ({ orgId }) => {
     }
     return permission
   }
-}
-
-module.exports = {
-  checkPermission,
 }

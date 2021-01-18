@@ -1,9 +1,9 @@
-const { setupI18n } = require('@lingui/core')
+import { setupI18n } from '@lingui/core'
 
-const englishMessages = require('./locale/en/messages')
-const frenchMessages = require('./locale/fr/messages')
+import englishMessages from './locale/en/messages'
+import frenchMessages from './locale/fr/messages'
 
-module.exports.createI18n = (language) =>
+export const createI18n = (language) =>
   setupI18n({
     language: language,
     locales: ['en', 'fr'],

@@ -35,8 +35,8 @@ export default function SignInPage() {
       .email(fieldRequirements.email.email.message),
   })
 
-  const [signIn, { loading, error }] = useMutation(SIGN_IN, {
-    onError() {
+  const [signIn, { loading }] = useMutation(SIGN_IN, {
+    onError(error) {
       toast({
         title: error.message,
         description: t`Unable to sign in to your account, please try again.`,

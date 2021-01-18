@@ -1,6 +1,6 @@
-const { t } = require('@lingui/macro')
+import { t } from '@lingui/macro'
 
-const checkUserIsAdminForUser = ({ i18n, userKey, query }) => async ({
+export const checkUserIsAdminForUser = ({ i18n, userKey, query }) => async ({
   userName,
 }) => {
   const requestingUserId = `users/${userKey}`
@@ -72,8 +72,4 @@ const checkUserIsAdminForUser = ({ i18n, userKey, query }) => async ({
 
     return isAdmin
   }
-}
-
-module.exports = {
-  checkUserIsAdminForUser,
 }

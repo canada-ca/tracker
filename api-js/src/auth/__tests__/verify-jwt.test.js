@@ -1,11 +1,11 @@
+import jwt from 'jsonwebtoken'
+import { setupI18n } from '@lingui/core'
+
+import { verifyToken } from '../index'
+import englishMessages from '../../locale/en/messages'
+import frenchMessages from '../../locale/fr/messages'
+
 const { AUTHENTICATED_KEY } = process.env
-
-const jwt = require('jsonwebtoken')
-const { setupI18n } = require('@lingui/core')
-
-const { verifyToken } = require('..')
-const englishMessages = require('../../locale/en/messages')
-const frenchMessages = require('../../locale/fr/messages')
 
 describe('given a encoded token', () => {
   let consoleOutput = []

@@ -30,6 +30,7 @@ const Table = styled.table`
 width: calc(100% - 2px);
 border-collapse: collapse;
 border: 1px solid #ccc;
+overflow: hidden;
 
 caption {
   width: 100%;
@@ -44,6 +45,11 @@ td, th {
   padding: 6px;
   border: 1px solid #ccc;
   text-align: left;
+  font-size: 0.9em;
+}
+
+td {
+  word-break: break-all;
 }
 
 .pagination {
@@ -347,69 +353,67 @@ function DmarcReportTable({ ...props }) {
           mt="4px"
           mb="4px"
         />
-        <Box width="100%" overflowX="auto">
-          <Table {...getTableProps()} flatHeaders={flatHeaders}>
-            <thead>
-              {headerGroups.map((headerGroup, index) => {
-                return (
-                  <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column) => {
-                      // Using column.Header since column.id _sometimes_ has appended numbers
-                      const key =
-                        column.depth === 0
-                          ? `${title}:${column.Header}`
-                          : `${column.parent.Header}:${column.Header}`
-                      return (
-                        <th
-                          key={key}
-                          className={column.hidden ? 'visually-hidden' : ''}
-                          {...column.getHeaderProps(
-                            column.getSortByToggleProps(),
-                          )}
-                          style={{ textAlign: 'center' }}
-                        >
-                          {column.render('Header')}
-                          <span>
-                            {column.isSorted ? (
-                              column.isSortedDesc ? (
-                                <Icon name="chevron-down" />
-                              ) : (
-                                <Icon name="chevron-up" />
-                              )
+        <Table {...getTableProps()} flatHeaders={flatHeaders}>
+          <thead>
+            {headerGroups.map((headerGroup, index) => {
+              return (
+                <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => {
+                    // Using column.Header since column.id _sometimes_ has appended numbers
+                    const key =
+                      column.depth === 0
+                        ? `${title}:${column.Header}`
+                        : `${column.parent.Header}:${column.Header}`
+                    return (
+                      <th
+                        key={key}
+                        className={column.hidden ? 'visually-hidden' : ''}
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps(),
+                        )}
+                        style={{ textAlign: 'center' }}
+                      >
+                        {column.render('Header')}
+                        <span>
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <Icon name="chevron-down" />
                             ) : (
-                              ''
-                            )}
-                          </span>
-                        </th>
-                      )
-                    })}
-                  </tr>
-                )
-              })}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {page.map((row, rowIndex) => {
-                prepareRow(row)
-                return (
-                  <tr key={`${title}:${rowIndex}`} {...row.getRowProps()}>
-                    {row.cells.map((cell, cellIndex) => {
-                      return (
-                        <td
-                          key={`${title}:${rowIndex}:${cellIndex}`}
-                          {...cell.getCellProps()}
-                          style={cell.column.style}
-                        >
-                          {renderLinkableCell(cell)}
-                        </td>
-                      )
-                    })}
-                  </tr>
-                )
-              })}
-            </tbody>
-          </Table>
-          {paginationControls}
-        </Box>
+                              <Icon name="chevron-up" />
+                            )
+                          ) : (
+                            ''
+                          )}
+                        </span>
+                      </th>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row, rowIndex) => {
+              prepareRow(row)
+              return (
+                <tr key={`${title}:${rowIndex}`} {...row.getRowProps()}>
+                  {row.cells.map((cell, cellIndex) => {
+                    return (
+                      <td
+                        key={`${title}:${rowIndex}:${cellIndex}`}
+                        {...cell.getCellProps()}
+                        style={cell.column.style}
+                      >
+                        {renderLinkableCell(cell)}
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+          </tbody>
+        </Table>
+        {paginationControls}
       </Collapse>
     </Box>
   )

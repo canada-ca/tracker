@@ -53,12 +53,13 @@ const PasswordField = WithPseudoBox(function PasswordField({
             h="buttons.lg"
             onClick={handleClick}
             icon={show ? 'view-off' : 'view'}
+            tabIndex="-1"
           />
         </InputRightElement>
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
-  );
+  )
 })
 
 PasswordField.propTypes = {

@@ -1,6 +1,6 @@
-const { Kind } = require('graphql')
-const { stringify } = require('jest-matcher-utils')
-const { Year } = require('..')
+import { Kind } from 'graphql'
+import { stringify } from 'jest-matcher-utils'
+import { Year } from '../index'
 
 describe('given a year scalar', () => {
   describe('serializing inputs', () => {

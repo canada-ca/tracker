@@ -252,10 +252,12 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const sourceIpAddress = {
     Header: i18n._(t`Source IP Address`),
     accessor: 'sourceIpAddress',
+    style: { whiteSpace: 'nowrap' },
   }
   const envelopeFrom = {
     Header: i18n._(t`Envelope From`),
     accessor: 'envelopeFrom',
+    style: { whiteSpace: 'nowrap' },
   }
   const dkimDomains = {
     Header: i18n._(t`DKIM Domains`),
@@ -277,6 +279,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const headerFrom = {
     Header: i18n._(t`Header From`),
     accessor: 'headerFrom',
+    style: { whiteSpace: 'nowrap' },
   }
   const guidance = { Header: i18n._(t`Guidance`), accessor: 'guidance' }
   const spfAligned = {
@@ -324,6 +327,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`DKIM Failures by IP Address`,
         hidden: true,
         columns: [
+          guidance,
+          totalMessages,
           sourceIpAddress,
           dnsHost,
           envelopeFrom,
@@ -332,11 +337,10 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           dkimSelectors,
           dkimResults,
           dkimAligned,
-          guidance,
-          totalMessages,
         ],
       },
     ]
+
     // Convert boolean values to string and properly format
     const dkimFailureNodes = dkimData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dkimFailure.edges.map(
       (edge) => {
@@ -393,14 +397,14 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`Fully Aligned by IP Address`,
         hidden: true,
         columns: [
+          totalMessages,
           sourceIpAddress,
-          envelopeFrom,
-          dkimDomains,
-          dkimSelectors,
           dnsHost,
+          envelopeFrom,
           headerFrom,
           spfDomains,
-          totalMessages,
+          dkimDomains,
+          dkimSelectors,
         ],
       },
     ]
@@ -458,15 +462,15 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`SPF Failures by IP Address`,
         hidden: true,
         columns: [
+          guidance,
+          totalMessages,
+          sourceIpAddress,
           dnsHost,
           envelopeFrom,
-          guidance,
           headerFrom,
-          sourceIpAddress,
-          spfAligned,
           spfDomains,
           spfResults,
-          totalMessages,
+          spfAligned,
         ],
       },
     ]
@@ -526,15 +530,15 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`DMARC Failures by IP Address`,
         hidden: true,
         columns: [
-          dkimDomains,
-          dkimSelectors,
-          disposition,
+          totalMessages,
+          sourceIpAddress,
           dnsHost,
           envelopeFrom,
           headerFrom,
-          sourceIpAddress,
           spfDomains,
-          totalMessages,
+          dkimDomains,
+          dkimSelectors,
+          disposition,
         ],
       },
     ]

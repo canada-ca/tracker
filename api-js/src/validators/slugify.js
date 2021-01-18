@@ -1,6 +1,6 @@
-const urlSlug = require('url-slug')
+import urlSlug from 'url-slug'
 
-const slugify = (input) => {
+export const slugify = (input) => {
   if (typeof input !== 'string') {
     return undefined
   }
@@ -9,8 +9,4 @@ const slugify = (input) => {
     separator: '-',
     transformer: urlSlug.LOWERCASE_TRANSFORMER,
   })
-}
-
-module.exports = {
-  slugify,
 }

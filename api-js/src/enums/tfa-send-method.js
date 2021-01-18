@@ -1,6 +1,6 @@
-const { GraphQLEnumType } = require('graphql')
+import { GraphQLEnumType } from 'graphql'
 
-module.exports.TfaSendMethodEnum = new GraphQLEnumType({
+export const TfaSendMethodEnum = new GraphQLEnumType({
   name: 'TFASendMethodEnum',
   values: {
     EMAIL: {

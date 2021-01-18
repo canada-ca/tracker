@@ -1,4 +1,4 @@
-/* eslint-disable */ module.exports = {
+/* eslint-disable */ export default {
   languageData: {
     plurals: function (n, ord) {
       var s = String(n).split('.'),

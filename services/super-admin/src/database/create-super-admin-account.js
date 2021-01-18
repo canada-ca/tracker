@@ -27,9 +27,10 @@ const createSuperAdminAccount = async ({
         userName: SA_USER_USERNAME,
         password: bcrypt.hashSync(SA_USER_PASSWORD, 10),
         preferredLang: SA_USER_LANG,
-        tfaValidated: false,
+        phoneValidated: false,
         emailValidated: false,
         failedLoginAttempts: 0,
+        tfaSendMethod: 'none',
       })
     })
   } catch (err) {

@@ -265,7 +265,7 @@ export const ORG_DETAILS_PAGE = gql`
           }
         }
       }
-      domains {
+      domains(first: 10) {
         pageInfo {
           hasNextPage
           hasPreviousPage
@@ -285,7 +285,7 @@ export const ORG_DETAILS_PAGE = gql`
           }
         }
       }
-      affiliations {
+      affiliations(first: 10) {
         pageInfo {
           hasNextPage
           hasPreviousPage
