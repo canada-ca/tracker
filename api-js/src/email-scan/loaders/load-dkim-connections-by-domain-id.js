@@ -117,7 +117,7 @@ export const dkimLoaderConnectionsByDomainId = (
         ${startDateTemplate}
         ${endDateTemplate}
         ${limitTemplate}
-        RETURN MERGE({ id: dkimScan._key }, dkimScan)
+        RETURN MERGE({ id: dkimScan._key, _type: "dkim" }, dkimScan)
     )
 
     LET hasNextPage = (LENGTH(

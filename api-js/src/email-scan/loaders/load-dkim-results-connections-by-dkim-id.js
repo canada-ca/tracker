@@ -96,7 +96,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
         ${afterTemplate}
         ${beforeTemplate}
         ${limitTemplate}
-        RETURN MERGE({ id: dkimResult._key }, dkimResult)
+        RETURN MERGE({ id: dkimResult._key, _type: "dkimResult" }, dkimResult)
     )
 
     LET hasNextPage = (LENGTH(

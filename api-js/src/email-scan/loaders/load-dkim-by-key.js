@@ -9,7 +9,7 @@ export const dkimLoaderByKey = (query, userKey, i18n) =>
       cursor = await query`
         FOR dkimScan IN dkim
           FILTER dkimScan._key IN ${keys} 
-          RETURN MERGE({ id: dkimScan._key}, dkimScan)
+          RETURN MERGE({ id: dkimScan._key, _type: "dkim" }, dkimScan)
       `
     } catch (err) {
       console.error(

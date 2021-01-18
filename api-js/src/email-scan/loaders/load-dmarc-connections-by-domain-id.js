@@ -109,7 +109,7 @@ export const dmarcLoaderConnectionsByDomainId = (
       ${startDateTemplate}
       ${endDateTemplate}
       ${limitTemplate}
-      RETURN MERGE({ id: dmarcScan._key }, dmarcScan)
+      RETURN MERGE({ id: dmarcScan._key, _type: "dmarc" }, dmarcScan)
     )
 
     LET hasNextPage = (LENGTH(
