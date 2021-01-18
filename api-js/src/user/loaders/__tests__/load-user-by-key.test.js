@@ -59,7 +59,7 @@ describe('given a userLoaderByKey dataloader', () => {
       const expectedCursor = await query`
         FOR user IN users
           FILTER user.userName == "random@email.ca"
-          RETURN MERGE({ id: user._key }, user)
+          RETURN MERGE({ id: user._key, _type: "user" }, user)
       `
       const expectedUser = await expectedCursor.next()
 
@@ -75,7 +75,7 @@ describe('given a userLoaderByKey dataloader', () => {
       const expectedUsers = []
       const expectedCursor = await query`
         FOR user IN users
-          RETURN MERGE({ id: user._key }, user)
+          RETURN MERGE({ id: user._key, _type: "user" }, user)
       `
 
       while (expectedCursor.hasNext()) {
@@ -106,7 +106,7 @@ describe('given a userLoaderByKey dataloader', () => {
         const expectedCursor = await query`
         FOR user IN users
           FILTER user.userName == "random@email.ca"
-          RETURN MERGE({ id: user._key }, user)
+          RETURN MERGE({ id: user._key, _type: "user" }, user)
       `
         const expectedUser = await expectedCursor.next()
 
@@ -133,7 +133,7 @@ describe('given a userLoaderByKey dataloader', () => {
         const expectedCursor = await query`
         FOR user IN users
           FILTER user.userName == "random@email.ca"
-          RETURN MERGE({ id: user._key }, user)
+          RETURN MERGE({ id: user._key, _type: "user" }, user)
       `
         const expectedUser = await expectedCursor.next()
 
@@ -176,7 +176,7 @@ describe('given a userLoaderByKey dataloader', () => {
         const expectedCursor = await query`
         FOR user IN users
           FILTER user.userName == "random@email.ca"
-          RETURN MERGE({ id: user._key }, user)
+          RETURN MERGE({ id: user._key, _type: "user" }, user)
       `
         const expectedUser = await expectedCursor.next()
 
@@ -201,7 +201,7 @@ describe('given a userLoaderByKey dataloader', () => {
         const expectedCursor = await query`
         FOR user IN users
           FILTER user.userName == "random@email.ca"
-          RETURN MERGE({ id: user._key }, user)
+          RETURN MERGE({ id: user._key, _type: "user" }, user)
       `
         const expectedUser = await expectedCursor.next()
 

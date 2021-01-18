@@ -62,7 +62,7 @@ describe('given a userLoaderByUserName dataloader', () => {
       const cursor = await query`
         FOR user IN users
           FILTER user.userName == ${userName}
-          RETURN MERGE({ id: user._key }, user)
+          RETURN MERGE({ id: user._key, _type: "user" }, user)
       `
       const expectedUser = await cursor.next()
 
@@ -84,7 +84,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         const cursor = await query`
           FOR user IN users
             FILTER user.userName == ${userNames[i]}
-            RETURN MERGE({ id: user._key }, user)
+            RETURN MERGE({ id: user._key, _type: "user" }, user)
         `
         expectedUsers.push(await cursor.next())
       }
