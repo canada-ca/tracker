@@ -65,7 +65,10 @@ export default function DmarcByDomainPage() {
     const formattedData = []
     nodes.forEach((node) => {
       const domain = node.domain
-      const percentages = node.dmarcSummaryByPeriod.categoryPercentages
+      const percentages = { ...node.dmarcSummaryByPeriod.categoryPercentages }
+      Object.entries(percentages).forEach(([key, value]) => {
+        if (typeof value === 'number') percentages[key] = Math.round(value)
+      })
       formattedData.push({ domain, ...percentages })
     })
 
