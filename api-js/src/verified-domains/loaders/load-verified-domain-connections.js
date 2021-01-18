@@ -106,7 +106,7 @@ export const verifiedDomainLoaderConnections = (
         ${afterTemplate}
         ${beforeTemplate}
         ${limitTemplate}
-        RETURN MERGE(domain, { id: domain._key })
+        RETURN MERGE(domain, { id: domain._key, _type: "verifiedDomain" })
     )
     
     LET hasNextPage = (LENGTH(

@@ -13,7 +13,7 @@ export const verifiedDomainLoaderByDomain = (query, i18n) =>
           FOR v, e IN INBOUND domain._id claims FILTER v.verified == true RETURN v._key
         ) > 0 ? true : false)
         FILTER verifiedDomain == true
-        RETURN MERGE(domain, { id: domain._key })
+        RETURN MERGE(domain, { id: domain._key, _type: "verifiedDomain" })
     `
     } catch (err) {
       console.error(
