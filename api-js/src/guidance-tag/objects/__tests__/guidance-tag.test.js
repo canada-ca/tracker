@@ -1,9 +1,4 @@
-import {
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLString,
-  GraphQLList,
-} from 'graphql'
+import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { guidanceTagType, refLinksType } from '../index'

@@ -157,12 +157,16 @@ describe('removing a user from an organization', () => {
   describe('given a users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
-        language: 'en',
+        locale: 'en',
+        localeData: {
+          en: { plurals: {} },
+          fr: { plurals: {} },
+        },
         locales: ['en', 'fr'],
         missing: 'Traduction manquante',
-        catalogs: {
-          en: englishMessages,
-          fr: frenchMessages,
+        messages: {
+          en: englishMessages.messages,
+          fr: frenchMessages.messages,
         },
       })
     })
@@ -1149,12 +1153,16 @@ describe('removing a user from an organization', () => {
   describe('users language is set to french', () => {
     beforeAll(() => {
       i18n = setupI18n({
-        language: 'fr',
+        locale: 'fr',
+        localeData: {
+          en: { plurals: {} },
+          fr: { plurals: {} },
+        },
         locales: ['en', 'fr'],
         missing: 'Traduction manquante',
-        catalogs: {
-          en: englishMessages,
-          fr: frenchMessages,
+        messages: {
+          en: englishMessages.messages,
+          fr: frenchMessages.messages,
         },
       })
     })
