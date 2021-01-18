@@ -35,41 +35,36 @@ export const Doughnut = ({
     `url(#zigzag)`,
   ])
 
-  let chartContent;
-  if (data[0].total) { // check if there are scans (why does if(data.total) not work?)
-    chartContent = 
-    <svg height={height} width={width}>
-      <title>{title}</title>
-      <defs>
-        <ZigZag width={0.4} background="#F16D22" color="#fff" />
-        <Dots size={1} background="#B93B26" color="#fff" />
-        <Stripes angle={45} background="#F8991F" color="#fff" />
-        <CrossHatch width={0.8} background="#F16D22" color="#fff" />
-      </defs>
-      <g transform={`translate(${width / 2},${height / 2})`}>
-        {arcs.map((arc, index) => {
-          return children(
-            { d: arc.d, fill: patterns(index / data.length - 1) },
-            index,
-          )
-        })}
-      </g>
-    </svg>;
+  let chartContent
+  if (data[0].total) {
+    chartContent = (
+      <svg height={height} width={width}>
+        <title>{title}</title>
+        <defs>
+          <ZigZag width={0.4} background="#F16D22" color="#fff" />
+          <Dots size={1} background="#B93B26" color="#fff" />
+          <Stripes angle={45} background="#F8991F" color="#fff" />
+          <CrossHatch width={0.8} background="#F16D22" color="#fff" />
+        </defs>
+        <g transform={`translate(${width / 2},${height / 2})`}>
+          {arcs.map((arc, index) => {
+            return children(
+              { d: arc.d, fill: patterns(index / data.length - 1) },
+              index,
+            )
+          })}
+        </g>
+      </svg>
+    )
   } else {
-    chartContent = 
-    <Box>
-      <Image
-          src={trackerLogo}
-          alt={'Tracker Logo'}
-        />
-      <Text
-          fontSize="l"
-          textAlign="center"
-          color="black"
-        >
+    chartContent = (
+      <Box>
+        <Image src={trackerLogo} alt={'Tracker Logo'} />
+        <Text fontSize="l" textAlign="center" color="black">
           No scan data for this organization.
         </Text>
-      </Box>;
+      </Box>
+    )
   }
 
   return (
@@ -95,11 +90,11 @@ export const Doughnut = ({
               width={30}
               style={{ display: 'inline', marginRight: '1em' }}
             >
-            <defs>
-              <ZigZag width={0.4} background="#F16D22" color="#fff" />
-              <Dots size={1} background="#B93B26" color="#fff" />
-              <Stripes angle={45} background="#F8991F" color="#fff" />
-              <CrossHatch width={0.8} background="#F16D22" color="#fff" />
+              <defs>
+                <ZigZag width={0.4} background="#F16D22" color="#fff" />
+                <Dots size={1} background="#B93B26" color="#fff" />
+                <Stripes angle={45} background="#F8991F" color="#fff" />
+                <CrossHatch width={0.8} background="#F16D22" color="#fff" />
               </defs>
               <g>
                 <rect
