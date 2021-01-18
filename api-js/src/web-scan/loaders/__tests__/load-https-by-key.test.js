@@ -47,7 +47,7 @@ describe('given the httpsLoaderByKey function', () => {
       const expectedCursor = await query`
       FOR httpsScan IN https
         SORT httpsScan._key ASC LIMIT 1
-        RETURN MERGE({ id: httpsScan._key }, httpsScan)
+        RETURN MERGE({ id: httpsScan._key, _type: "https" }, httpsScan)
       `
       const expectedHttps = await expectedCursor.next()
 
@@ -64,7 +64,7 @@ describe('given the httpsLoaderByKey function', () => {
 
       const expectedCursor = await query`
       FOR httpsScan IN https
-        RETURN MERGE({ id: httpsScan._key }, httpsScan)
+        RETURN MERGE({ id: httpsScan._key, _type: "https" }, httpsScan)
       `
 
       while (expectedCursor.hasNext()) {

@@ -108,7 +108,7 @@ export const spfLoaderConnectionsByDomainId = (
         ${startDateTemplate}
         ${endDateTemplate}
         ${limitTemplate}
-        RETURN MERGE({ id: spfScan._key }, spfScan)
+        RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
     )
 
     LET hasNextPage = (LENGTH(

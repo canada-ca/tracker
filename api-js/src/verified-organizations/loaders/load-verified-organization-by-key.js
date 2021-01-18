@@ -11,7 +11,7 @@ export const verifiedOrgLoaderByKey = (query, language, i18n) =>
           FILTER org._key IN ${keys}
           FILTER org.verified == true
           LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-          RETURN MERGE({ _id: org._id, _key: org._key, id: org._key, _rev: org._rev, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE(${language}, org.orgDetails))
+          RETURN MERGE({ _id: org._id, _key: org._key, id: org._key, _rev: org._rev, _type: "verifiedOrganization", verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
       console.error(

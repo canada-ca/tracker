@@ -249,6 +249,7 @@ describe('given the user object', () => {
                 _key: affiliation._key,
                 _rev: affiliation._rev,
                 _to: user._id,
+                _type: 'affiliation',
                 id: affiliation._key,
                 orgKey: org._key,
                 permission: 'user',

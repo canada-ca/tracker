@@ -44,7 +44,7 @@ describe('given a domainLoaderByKey dataloader', () => {
       const expectedCursor = await query`
         FOR domain IN domains
           FILTER domain.domain == "test.canada.ca"
-          RETURN MERGE({ id: domain._key}, domain)
+          RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
       `
       const expectedDomain = await expectedCursor.next()
 
@@ -60,7 +60,7 @@ describe('given a domainLoaderByKey dataloader', () => {
       const expectedDomains = []
       const expectedCursor = await query`
         FOR domain IN domains
-          RETURN MERGE({ id: domain._key}, domain)
+          RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
       `
 
       while (expectedCursor.hasNext()) {
@@ -91,7 +91,7 @@ describe('given a domainLoaderByKey dataloader', () => {
         const expectedCursor = await query`
           FOR domain IN domains
             FILTER domain.domain == "test.canada.ca"
-            RETURN MERGE({ id: domain._key}, domain)
+            RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
         `
         const expectedDomain = await expectedCursor.next()
 
@@ -118,7 +118,7 @@ describe('given a domainLoaderByKey dataloader', () => {
         const expectedCursor = await query`
           FOR domain IN domains
             FILTER domain.domain == "test.canada.ca"
-            RETURN MERGE({ id: domain._key}, domain)
+            RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
         `
         const expectedDomain = await expectedCursor.next()
 
@@ -161,7 +161,7 @@ describe('given a domainLoaderByKey dataloader', () => {
         const expectedCursor = await query`
           FOR domain IN domains
             FILTER domain.domain == "test.canada.ca"
-            RETURN MERGE({ id: domain._key}, domain)
+            RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
         `
         const expectedDomain = await expectedCursor.next()
 
@@ -186,7 +186,7 @@ describe('given a domainLoaderByKey dataloader', () => {
         const expectedCursor = await query`
           FOR domain IN domains
             FILTER domain.domain == "test.canada.ca"
-            RETURN MERGE({ id: domain._key}, domain)
+            RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
         `
         const expectedDomain = await expectedCursor.next()
 

@@ -137,6 +137,7 @@ describe('given the spfType object', () => {
           _id: domain._id,
           _key: domain._key,
           _rev: domain._rev,
+          _type: 'domain',
           id: domain._key,
           domain: 'test.domain.gc.ca',
           slug: 'test-domain-gc-ca',
@@ -217,6 +218,7 @@ describe('given the spfType object', () => {
                 _id: spfGT._id,
                 _key: spfGT._key,
                 _rev: spfGT._rev,
+                _type: 'guidanceTag',
                 id: spfGT._key,
                 guidance: 'Some Interesting Guidance',
                 refLinksGuide: [

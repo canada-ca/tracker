@@ -7,8 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { makeMigrations } from '../../../../migrations'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderByKey } from '../../../domain/loaders'
-import { verifiedDomainLoaderConnectionsByOrgId } from '../../loaders'
+import { verifiedDomainLoaderConnectionsByOrgId, verifiedDomainLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -111,7 +110,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           ...connectionArgs,
         })
 
-        const domainLoader = domainLoaderByKey(query)
+        const domainLoader = verifiedDomainLoaderByKey(query)
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -154,7 +153,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           cleanseInput,
         )
 
-        const domainLoader = domainLoaderByKey(query)
+        const domainLoader = verifiedDomainLoaderByKey(query)
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -200,7 +199,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           cleanseInput,
         )
 
-        const domainLoader = domainLoaderByKey(query)
+        const domainLoader = verifiedDomainLoaderByKey(query)
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -246,7 +245,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           cleanseInput,
         )
 
-        const domainLoader = domainLoaderByKey(query)
+        const domainLoader = verifiedDomainLoaderByKey(query)
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -291,7 +290,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           cleanseInput,
         )
 
-        const domainLoader = domainLoaderByKey(query)
+        const domainLoader = verifiedDomainLoaderByKey(query)
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,

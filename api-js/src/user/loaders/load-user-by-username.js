@@ -9,7 +9,7 @@ export const userLoaderByUserName = (query, userKey, i18n) =>
       cursor = await query`
         FOR user IN users
           FILTER user.userName IN ${userNames}
-          RETURN MERGE({ id: user._key }, user)
+          RETURN MERGE({ id: user._key, _type: "user" }, user)
       `
     } catch (err) {
       console.error(

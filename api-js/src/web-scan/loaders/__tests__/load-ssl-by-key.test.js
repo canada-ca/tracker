@@ -47,7 +47,7 @@ describe('given the sslLoaderByKey function', () => {
       const expectedCursor = await query`
       FOR sslScan IN ssl
         SORT sslScan._key ASC LIMIT 1
-        RETURN MERGE({ id: sslScan._key }, sslScan)
+        RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
       `
       const expectedSsl = await expectedCursor.next()
 
@@ -64,7 +64,7 @@ describe('given the sslLoaderByKey function', () => {
 
       const expectedCursor = await query`
         FOR sslScan IN ssl
-          RETURN MERGE({ id: sslScan._key }, sslScan)
+          RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
       `
 
       while (expectedCursor.hasNext()) {

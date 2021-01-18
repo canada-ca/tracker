@@ -116,12 +116,7 @@ describe('user send password reset email', () => {
           },
         }
 
-        const cursor = await query`
-            FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN MERGE({ id: user._key }, user)
-          `
-        const user = await cursor.next()
+        const user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
 
         const token = tokenize({
           parameters: { userKey: user._key },
@@ -256,12 +251,7 @@ describe('user send password reset email', () => {
           },
         }
 
-        const cursor = await query`
-            FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN MERGE({ id: user._key }, user)
-          `
-        const user = await cursor.next()
+        const user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
 
         const token = tokenize({
           parameters: { userKey: user._key },

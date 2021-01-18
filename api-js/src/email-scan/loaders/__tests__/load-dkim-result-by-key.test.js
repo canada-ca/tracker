@@ -49,7 +49,7 @@ describe('given the dkimResultLoaderByKey function', () => {
       const expectedCursor = await query`
         FOR dkimResult IN dkimResults
           SORT dkimResult._key ASC LIMIT 1
-          RETURN MERGE({ id: dkimResult._key }, dkimResult)
+          RETURN MERGE({ id: dkimResult._key, _type: "dkimResult"  }, dkimResult)
       `
       const expectedDkimResult = await expectedCursor.next()
 
@@ -65,7 +65,7 @@ describe('given the dkimResultLoaderByKey function', () => {
       const expectedDkimResults = []
       const expectedCursor = await query`
         FOR dkimResult IN dkimResults
-          RETURN MERGE({ id: dkimResult._key }, dkimResult)
+          RETURN MERGE({ id: dkimResult._key, _type: "dkimResult"  }, dkimResult)
       `
 
       while (expectedCursor.hasNext()) {

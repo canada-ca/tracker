@@ -75,7 +75,7 @@ describe('given a verifiedDomainLoaderByDomain dataloader', () => {
       const expectedCursor = await query`
         FOR domain IN domains
           FILTER domain.domain == "test.canada.ca"
-          RETURN MERGE(domain, { id: domain._key })
+          RETURN MERGE(domain, { id: domain._key, _type: "verifiedDomain" })
       `
       const expectedDomain = await expectedCursor.next()
 
@@ -91,7 +91,7 @@ describe('given a verifiedDomainLoaderByDomain dataloader', () => {
       const expectedDomains = []
       const expectedCursor = await query`
         FOR domain IN domains
-          RETURN MERGE(domain, { id: domain._key })
+          RETURN MERGE(domain, { id: domain._key, _type: "verifiedDomain" })
       `
 
       while (expectedCursor.hasNext()) {

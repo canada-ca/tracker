@@ -101,7 +101,7 @@ export const affiliationLoaderByUserId = (
           ${limitTemplate}
           LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
           LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey })
+          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
     )
 
     LET hasNextPage = (LENGTH(
