@@ -116,7 +116,7 @@ export const domainLoaderConnectionsByOrgId = (
         ${afterTemplate}
         ${beforeTemplate}
         ${limitTemplate}
-        RETURN MERGE({ id: domain._key}, domain)
+        RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
     )
     
     LET hasNextPage = (LENGTH(
