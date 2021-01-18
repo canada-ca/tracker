@@ -106,7 +106,7 @@ export const orgLoaderConnectionArgsByDomainId = (
         ${beforeTemplate} 
         ${limitTemplate}
         LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, id: org._key, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE(${language}, org.orgDetails))
+        RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE(${language}, org.orgDetails))
     )
 
     LET hasNextPage = (LENGTH(
