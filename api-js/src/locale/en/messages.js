@@ -1,22 +1,4 @@
-/* eslint-disable */ export default {
-  languageData: {
-    plurals: function (n, ord) {
-      var s = String(n).split('.'),
-        v0 = !s[1],
-        t0 = Number(s[0]) == n,
-        n10 = t0 && s[0].slice(-1),
-        n100 = t0 && s[0].slice(-2)
-      if (ord)
-        return n10 == 1 && n100 != 11
-          ? 'one'
-          : n10 == 2 && n100 != 12
-          ? 'two'
-          : n10 == 3 && n100 != 13
-          ? 'few'
-          : 'other'
-      return n == 1 && v0 ? 'one' : 'other'
-    },
-  },
+/*eslint-disable*/ module.exports = {
   messages: {
     'Authentication error, please sign in again.':
       'Authentication error, please sign in again.',
@@ -83,157 +65,117 @@
     'Permission error, not an admin for this user.':
       'Permission error, not an admin for this user.',
     'Profile successfully updated.': 'Profile successfully updated.',
-    'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting `',
-        a('amount'),
-        '` records on the `affiliations` exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting `',
-        a('amount'),
-        '` records on the `domain` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting `{amount}` records on the `guidanceTag` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting `',
-        a('amount'),
-        '` records on the `guidanceTag` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting `',
-        a('amount'),
-        '` records on the `organization` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting `{amount}` records on the `verifiedDomain` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting `',
-        a('amount'),
-        '` records on the `verifiedDomain` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting `',
-        a('amount'),
-        '` records on the `verifiedOrganization` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting ',
-        a('amount'),
-        ' records on the `dkimResults` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting ',
-        a('amount'),
-        ' records on the `dkim` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting ',
-        a('amount'),
-        ' records on the `dmarc` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting ',
-        a('amount'),
-        ' records on the `https` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting ',
-        a('amount'),
-        ' records on the `spf` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting ',
-        a('amount'),
-        ' records on the `ssl` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
+    'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `affiliations` exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `domain` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `guidanceTag` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `guidanceTag` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `organization` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `verifiedDomain` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `verifiedDomain` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `verifiedOrganization` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `dkimResults` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `dkim` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `dmarc` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `https` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `spf` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `ssl` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
     'Successfully dispatched one time scan.':
       'Successfully dispatched one time scan.',
     'Successfully email verified account, and set TFA send method to email.':
       'Successfully email verified account, and set TFA send method to email.',
     'Successfully invited user to organization, and sent notification email.':
       'Successfully invited user to organization, and sent notification email.',
-    'Successfully removed domain: {0} from {1}.': function (a) {
-      return ['Successfully removed domain: ', a('0'), ' from ', a('1'), '.']
-    },
-    'Successfully removed organization: {0}.': function (a) {
-      return ['Successfully removed organization: ', a('0'), '.']
-    },
+    'Successfully removed domain: {0} from {1}.': [
+      'Successfully removed domain: ',
+      ['0'],
+      ' from ',
+      ['1'],
+      '.',
+    ],
+    'Successfully removed organization: {0}.': [
+      'Successfully removed organization: ',
+      ['0'],
+      '.',
+    ],
     'Successfully removed user from organization.':
       'Successfully removed user from organization.',
     'Successfully sent invitation to service, and organization email.':
       'Successfully sent invitation to service, and organization email.',
-    'Successfully verified organization: {0}.': function (a) {
-      return ['Successfully verified organization: ', a('0'), '.']
-    },
+    'Successfully verified organization: {0}.': [
+      'Successfully verified organization: ',
+      ['0'],
+      '.',
+    ],
     'Successfully verified phone number, and set TFA send method to text.':
       'Successfully verified phone number, and set TFA send method to text.',
     'Too many failed login attempts, please reset your password, and try again.':
@@ -342,9 +284,13 @@
       'Unable to request a on time scan on this domain.',
     'Unable to reset password. Please try again.':
       'Unable to reset password. Please try again.',
-    'Unable to retrieve {0} for domain: {domain}.': function (a) {
-      return ['Unable to retrieve ', a('0'), ' for domain: ', a('domain'), '.']
-    },
+    'Unable to retrieve {0} for domain: {domain}.': [
+      'Unable to retrieve ',
+      ['0'],
+      ' for domain: ',
+      ['domain'],
+      '.',
+    ],
     'Unable to send TFA code, please try again.':
       'Unable to send TFA code, please try again.',
     'Unable to send org invite email. Please try again.':
@@ -417,121 +363,73 @@
       'You must provide a `first` or `last` value to properly paginate the `verifiedDomain` connection.',
     'You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection.':
       'You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection.',
-    '`{argSet}` must be of type `number` not `{typeSet}`.': function (a) {
-      return [
-        '`',
-        a('argSet'),
-        '` must be of type `number` not `',
-        a('typeSet'),
-        '`.',
-      ]
-    },
-    '`{argSet}` on the `affiliations` cannot be less than zero.': function (a) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `affiliations` cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `dkimResults` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `dkimResults` connection cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `dkim` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `dkim` connection cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `dmarc` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `dmarc` connection cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `domain` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `domain` connection cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `guidanceTag` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `guidanceTag` connection cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `https` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `https` connection cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `organization` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `organization` connection cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `spf` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `spf` connection cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `ssl` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `ssl` connection cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `verifiedDomain` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `verifiedDomain` connection cannot be less than zero.',
-      ]
-    },
-    '`{argSet}` on the `verifiedOrganization` connection cannot be less than zero.': function (
-      a,
-    ) {
-      return [
-        '`',
-        a('argSet'),
-        '` on the `verifiedOrganization` connection cannot be less than zero.',
-      ]
-    },
+    '`{argSet}` must be of type `number` not `{typeSet}`.': [
+      '`',
+      ['argSet'],
+      '` must be of type `number` not `',
+      ['typeSet'],
+      '`.',
+    ],
+    '`{argSet}` on the `affiliations` cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `affiliations` cannot be less than zero.',
+    ],
+    '`{argSet}` on the `dkimResults` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `dkimResults` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `dkim` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `dkim` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `dmarc` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `dmarc` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `domain` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `domain` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `guidanceTag` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `guidanceTag` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `https` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `https` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `organization` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `organization` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `spf` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `spf` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `ssl` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `ssl` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `verifiedDomain` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `verifiedDomain` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `verifiedOrganization` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `verifiedOrganization` connection cannot be less than zero.',
+    ],
     fail: 'fail',
     pass: 'pass',
   },

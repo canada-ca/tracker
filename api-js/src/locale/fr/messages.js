@@ -1,10 +1,4 @@
-/* eslint-disable */ export default {
-  languageData: {
-    plurals: function (n, ord) {
-      if (ord) return n == 1 ? 'one' : 'other'
-      return n >= 0 && n < 2 ? 'one' : 'other'
-    },
-  },
+/*eslint-disable*/ module.exports = {
   messages: {
     'Authentication error, please sign in again.': 'todo',
     'Authentication error. Please sign in again.': 'todo',
