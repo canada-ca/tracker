@@ -1,10 +1,18 @@
 module.exports = {
-  compileNamespace: 'es',
+  catalogs: [{
+    'path': '<rootDir>/locale/{locale}/messages',
+    'include': ['<rootDir>'],
+    'exclude': ['**/node_modules/**'],
+  }],
   extractBabelOptions: {},
-  fallbackLocale: 'en',
-  sourceLocale: 'en',
-  localeDir: 'src/locale',
-  srcPathDirs: ['src'],
-  srcPathIgnorePatterns: ['/node_modules/'],
+  fallbackLocales: {
+    default: 'en',
+  },
   format: 'po',
+  locales: [
+    'en',
+    'fr',
+  ],
+  rootDir: './src',
+  sourceLocale: 'en',
 }
