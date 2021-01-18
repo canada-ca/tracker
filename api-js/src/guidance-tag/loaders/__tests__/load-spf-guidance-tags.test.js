@@ -49,7 +49,7 @@ describe('given the spfGuidanceTagLoader function', () => {
       const expectedCursor = await query`
         FOR tag IN spfGuidanceTags
           SORT tag._key ASC LIMIT 1
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
+          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
       `
       const expectedSpfTag = await expectedCursor.next()
 
@@ -65,7 +65,7 @@ describe('given the spfGuidanceTagLoader function', () => {
       const expectedSpfTags = []
       const expectedCursor = await query`
         FOR tag IN spfGuidanceTags
-          RETURN MERGE(tag, { tagId: tag._key, id: tag._key })
+          RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
       `
 
       while (expectedCursor.hasNext()) {
