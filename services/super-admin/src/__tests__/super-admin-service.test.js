@@ -120,9 +120,10 @@ describe('given the superAdminService function', () => {
           userName: SA_USER_USERNAME,
           password: expectedAdmin.password,
           preferredLang: SA_USER_LANG,
-          tfaValidated: false,
+          phoneValidated: false,
           emailValidated: false,
           failedLoginAttempts: 0,
+          tfaSendMethod: 'none',
         }
         expect(superAdmin).toEqual(expectedAdmin)
 
@@ -209,9 +210,10 @@ describe('given the superAdminService function', () => {
           userName: SA_USER_USERNAME,
           password: expectedAdmin.password,
           preferredLang: SA_USER_LANG,
-          tfaValidated: false,
+          phoneValidated: false,
           emailValidated: false,
           failedLoginAttempts: 0,
+          tfaSendMethod: 'none',
         }
         expect(superAdmin).toEqual(expectedAdmin)
 
@@ -300,9 +302,10 @@ describe('given the superAdminService function', () => {
           userName: SA_USER_USERNAME,
           password: expectedAdmin.password,
           preferredLang: SA_USER_LANG,
-          tfaValidated: false,
+          phoneValidated: false,
           emailValidated: false,
           failedLoginAttempts: 0,
+          tfaSendMethod: 'none',
         }
         expect(superAdmin).toEqual(expectedAdmin)
 
@@ -392,9 +395,10 @@ describe('given the superAdminService function', () => {
           userName: SA_USER_USERNAME,
           password: expectedAdmin.password,
           preferredLang: SA_USER_LANG,
-          tfaValidated: false,
+          phoneValidated: false,
           emailValidated: false,
           failedLoginAttempts: 0,
+          tfaSendMethod: 'none',
         }
         expect(superAdmin).toEqual(expectedAdmin)
 
@@ -493,9 +497,10 @@ describe('given the superAdminService function', () => {
           userName: SA_USER_USERNAME,
           password: expectedAdmin.password,
           preferredLang: SA_USER_LANG,
-          tfaValidated: false,
+          phoneValidated: false,
           emailValidated: false,
           failedLoginAttempts: 0,
+          tfaSendMethod: 'none',
         }
         expect(superAdmin).toEqual(expectedAdmin)
 
