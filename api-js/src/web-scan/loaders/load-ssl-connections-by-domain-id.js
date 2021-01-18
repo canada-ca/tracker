@@ -108,7 +108,7 @@ export const sslLoaderConnectionsByDomainId = (
         ${startDateTemplate}
         ${endDateTemplate}
         ${limitTemplate}
-        RETURN MERGE({ id: sslScan._key }, sslScan)
+        RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
     )
 
     LET hasNextPage = (LENGTH(
