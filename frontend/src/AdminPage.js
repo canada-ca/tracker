@@ -20,9 +20,6 @@ export default function AdminPage() {
         authorization: currentUser.jwt,
       },
     },
-    variables: {
-      first: 20,
-    },
     onError: (error) => {
       const [_, message] = error.message.split(': ')
       toast({
