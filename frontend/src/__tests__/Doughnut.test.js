@@ -16,9 +16,9 @@ const i18n = setupI18n({
 
 describe('<Doughnut/>', () => {
   const data = [
-    { count: 1, title: 'good', percentage: 1 },
-    { count: 1, title: 'bad', percentage: 1 },
-    { count: 1, title: 'ugly', percentage: 1 },
+    { count: 1, title: 'good', percentage: 1, total: 3 },
+    { count: 1, title: 'bad', percentage: 1, total: 3 },
+    { count: 1, title: 'ugly', percentage: 1, total: 3 },
   ]
   it('renders segments for the data provided', () => {
     const { queryAllByTestId } = render(
