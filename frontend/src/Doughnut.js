@@ -2,6 +2,7 @@ import React from 'react'
 import { object, arrayOf, number, string, func } from 'prop-types'
 import { Box, Image, Text } from '@chakra-ui/core'
 import { scaleOrdinal } from 'd3'
+import { Trans } from "@lingui/macro"
 import { useArcs } from './useArcs'
 import { ZigZag, CrossHatch, Dots, Stripes } from './patterns'
 import trackerLogo from './images/tracker_v-03.png'
@@ -59,7 +60,7 @@ export const Doughnut = ({
     <Box>
       <Image src={trackerLogo} alt={'Tracker Logo'} />
       <Text fontSize="l" textAlign="center" color="black">
-          No scan data for this organization.
+        <Trans>No scan data for this organization.</Trans>
       </Text>
     </Box>
   )
