@@ -174,12 +174,12 @@ describe('given the user object', () => {
       describe('testing undefined phoneDetails', () => {
         it('returns null', () => {
           const demoType = userPersonalType.getFields()
-          
+
           const phoneDetails = undefined
         
         expect(
           demoType.phoneNumber.resolve({
-            phoneDetails
+            phoneDetails,
           }),
         ).toEqual(undefined)
         })
