@@ -21,7 +21,7 @@ export default function AdminPage() {
       },
     },
     variables: {
-      first: 20,
+      first: 100,
     },
     onError: (error) => {
       const [_, message] = error.message.split(': ')
