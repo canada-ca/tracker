@@ -171,34 +171,49 @@ describe('given the user object', () => {
       })
     })
     describe('testing the phoneNumber field', () => {
-      it('returns the resolved value', () => {
-        const demoType = userPersonalType.getFields()
+      describe('testing undefined phoneDetails', () => {
+        it('returns null', () => {
+          const demoType = userPersonalType.getFields()
 
-        const phoneDetails = {
-          iv: crypto.randomBytes(12).toString('hex'),
-          phoneNumber: '12345678912',
-        }
-
-        const cipher = crypto.createCipheriv(
-          'aes-256-ccm',
-          String(CIPHER_KEY),
-          Buffer.from(phoneDetails.iv, 'hex'),
-          {
-            authTagLength: 16,
-          },
-        )
-        let encrypted = cipher.update(phoneDetails.phoneNumber, 'utf8', 'hex')
-        encrypted += cipher.final('hex')
-
+          const phoneDetails = undefined
+        
         expect(
           demoType.phoneNumber.resolve({
-            phoneDetails: {
-              phoneNumber: encrypted,
-              iv: phoneDetails.iv,
-              tag: cipher.getAuthTag().toString('hex'),
-            },
+            phoneDetails,
           }),
-        ).toEqual(phoneDetails.phoneNumber)
+        ).toEqual(null)
+        })
+      })
+      describe('testing defined phoneDetails', () => {
+        it('returns the resolved value', () => {
+          const demoType = userPersonalType.getFields()
+
+          const phoneDetails = {
+            iv: crypto.randomBytes(12).toString('hex'),
+            phoneNumber: '12345678912',
+          }
+
+          const cipher = crypto.createCipheriv(
+            'aes-256-ccm',
+            String(CIPHER_KEY),
+            Buffer.from(phoneDetails.iv, 'hex'),
+            {
+              authTagLength: 16,
+            },
+          )
+          let encrypted = cipher.update(phoneDetails.phoneNumber, 'utf8', 'hex')
+          encrypted += cipher.final('hex')
+
+          expect(
+            demoType.phoneNumber.resolve({
+              phoneDetails: {
+                phoneNumber: encrypted,
+                iv: phoneDetails.iv,
+                tag: cipher.getAuthTag().toString('hex'),
+              },
+            }),
+          ).toEqual(phoneDetails.phoneNumber)
+        })
       })
     })
     describe('testing the preferredLang field', () => {
