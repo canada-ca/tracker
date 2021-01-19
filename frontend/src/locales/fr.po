@@ -1248,6 +1248,10 @@ msgstr ""
 #~ msgid "No domains yet."
 #~ msgstr "Aucun domaine pour l'instant."
 
+#: src/Doughnut.js:63
+#~ msgid "No scan data for this organization."
+#~ msgstr "Aucune donnée d'analyse pour cette organisation."
+
 #: src/UserList.js:238
 #~ msgid "No users in this organization"
 #~ msgstr "Aucun utilisateur dans cette organisation"
@@ -2366,7 +2370,3 @@ msgstr ""
 #: src/OrganizationDetails.js:102
 #~ msgid "{orgName}"
 #~ msgstr ""
-
-#: src/Doughnut.js:63
-#~ msgid "No scan data for this organization."
-#~ msgstr "Aucune donnée d'analyse pour cette organisation."
