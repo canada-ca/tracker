@@ -173,6 +173,8 @@ describe('given the user object', () => {
     describe('testing the phoneNumber field', () => {
       describe('testing undefined phoneDetails', () => {
         it('returns null', () => {
+          const demoType = userPersonalType.getFields()
+          
           const phoneDetails = undefined
         
         expect(
