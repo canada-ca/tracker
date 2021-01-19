@@ -2,7 +2,7 @@ import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { TrackerButton } from './TrackerButton'
 import { Formik } from 'formik'
-import { Stack, Box, Text, Select, useToast } from '@chakra-ui/core'
+import { Box, Text, useToast } from '@chakra-ui/core'
 import { REQUEST_SCAN } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { LoadingMessage } from './LoadingMessage'
@@ -44,17 +44,16 @@ export function ScanDomain() {
     <Box px="8" mx="auto" overflow="hidden">
       <Formik
         validationSchema={validationSchema}
-        initialValues={{ domain: '', scanType: null }}
+        initialValues={{ domain: '' }}
         onSubmit={async (values) => {
           requestScan({
             variables: {
-              urlSlug: values.domain,
-              scanType: values.scanType,
+              domainUrl: values.domain,
             },
           })
         }}
       >
-        {({ handleSubmit, values, isSubmitting }) => {
+        {({ handleSubmit, isSubmitting }) => {
           return (
             <form
               onSubmit={handleSubmit}
@@ -67,19 +66,6 @@ export function ScanDomain() {
                   <Trans>Request a domain to be scanned:</Trans>
                 </Text>
                 <DomainField name="domain" mb="4" />
-                <Stack mb="4">
-                  <Text fontWeight="bold">
-                    <Trans>Scan Type:</Trans>
-                  </Text>
-                  <Select
-                    aria-label={t`Select scan type`}
-                    width={['100%', '25%']}
-                    onChange={(e) => (values.scanType = e.target.value)}
-                  >
-                    <option value="WEB">{t`WEB`}</option>
-                    <option value="MAIL">{t`MAIL`}</option>
-                  </Select>
-                </Stack>
 
                 <TrackerButton
                   w={['100%', '25%']}
