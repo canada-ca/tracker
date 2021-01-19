@@ -181,7 +181,7 @@ describe('given the user object', () => {
           demoType.phoneNumber.resolve({
             phoneDetails,
           }),
-        ).toEqual(undefined)
+        ).toEqual(null)
         })
       })
       describe('testing defined phoneDetails', () => {
