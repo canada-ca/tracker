@@ -2,7 +2,7 @@ import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { number, object } from 'yup'
-import { Box, Button, Heading, useToast, Stack } from '@chakra-ui/core'
+import { Box, Heading, useToast, Stack } from '@chakra-ui/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
@@ -10,6 +10,7 @@ import { useUserState } from './UserState'
 import { AUTHENTICATE } from './graphql/mutations'
 import AuthenticateField from './AuthenticateField'
 import { fieldRequirements } from './fieldRequirements'
+import { TrackerButton } from './TrackerButton'
 
 export default function TwoFactorAuthenticatePage() {
   const { login } = useUserState()
@@ -98,13 +99,13 @@ export default function TwoFactorAuthenticatePage() {
             />
 
             <Stack align="center">
-              <Button
+              <TrackerButton
+                variant="primary"
                 isLoading={isSubmitting}
                 type="submit"
-                variantColor="teal"
               >
                 <Trans>Submit</Trans>
-              </Button>
+              </TrackerButton>
             </Stack>
           </form>
         )}

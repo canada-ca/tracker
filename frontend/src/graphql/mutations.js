@@ -117,12 +117,16 @@ export const UPDATE_USER_PROFILE = gql`
     $displayName: String
     $userName: EmailAddress
     $preferredLang: LanguageEnums
+    $phoneNumber: PhoneNumber
+    $tfaSendMethod: TFASendMethodEnum
   ) {
     updateUserProfile(
       input: {
         displayName: $displayName
         userName: $userName
         preferredLang: $preferredLang
+        phoneNumber: $phoneNumber
+        tfaSendMethod: $tfaSendMethod
       }
     ) {
       status

@@ -34,6 +34,7 @@ describe('<UserPage />', () => {
             userName: userName,
             displayName: 'Test User',
             preferredLang: 'ENGLISH',
+            phoneNumber: '19025551234',
             tfaSendMethod: 'PHONE',
             phoneValidated: true,
             emailValidated: true,

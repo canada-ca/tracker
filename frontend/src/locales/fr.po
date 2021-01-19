@@ -2370,3 +2370,80 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 #: src/OrganizationDetails.js:102
 msgid "{orgName}"
 msgstr ""
+
+#: src/PhoneNumberField.js:26
+#: src/EditableUserPhoneNumber:77
+msgid "Phone Number:"
+msgstr "Numéro de téléphone:"
+
+#: src/PhoneNumberField.js:43
+msgid "Phone Number"
+msgstr "Numéro de téléphone"
+
+#: src/fieldRequirements.js:33
+msgid "Phone number must only contains numbers"
+msgstr "Le numéro de téléphone ne doit contenir que des chiffres"
+
+#: src/fieldRequirements.js:34
+msgid "Phone number field must not be empty"
+msgstr "Le champ du numéro de téléphone ne doit pas être vide"
+
+#: src/EditableUserPhoneNumber.js:46
+msgid "An error occurred while updating your phone number."
+msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone."
+
+#: src/EditableUserPhoneNumber.js:56
+msgid "Changed User Phone Number"
+msgstr "Changement du numéro de téléphone de l'utilisateur"
+
+#: src/EditableUserPhoneNumber.js:57
+msgid "You have successfully updated your phone number."
+msgstr "Vous avez réussi à mettre à jour votre numéro de téléphone."
+
+#: src/EditableUserPhoneNumber.js:129
+msgid "Current Phone Number:"
+msgstr "Numéro de téléphone actuel:"
+
+#: src/EditableUserPhoneNumber.js:136
+msgid "New Phone Number:"
+msgstr "Nouveau numéro de téléphone:"
+
+#: src/EditableUserPhoneNumber.js:85
+msgid "No current phone number"
+msgstr "Pas de numéro de téléphone actuel"
+
+#: src/EditableUserTFAMethod.js:38
+msgid "An error occurred while updating your TFA send method."
+msgstr "Une erreur s'est produite lors de la mise à jour de votre méthode d'envoi de TFA."
+
+#: src/EditableUserTFAMethod.js:48
+msgid "Changed TFA Send Method"
+msgstr "Changement de la méthode d'envoi des TFA"
+
+#: src/EditableUserTFAMethod.js:49
+msgid "You have successfully updated your TFA send method."
+msgstr "Vous avez mis à jour avec succès votre méthode d'envoi de TFA."
+
+#: src/EditableUserTFAMethod.js:62
+msgid "TFA Method:"
+msgstr "Méthode TFA:"
+
+#: src/EditableUserTFAMethod.js:73
+msgid "Phone Validated"
+msgstr "Téléphone validé"
+
+#: src/EditableUserTFAMethod.js:73
+msgid "None"
+msgstr "Aucune"
+
+#: src/EditableUserTFAMethod.js:73
+msgid "Email"
+msgstr "Courriel"
+
+#: src/EditableUserTFAMethod.js:73
+msgid "Phone"
+msgstr "Téléphone"
+
+#: src/EditableUserTFAMethod.js:73
+msgid "Save TFA Method"
+msgstr "Méthode Save TFA"

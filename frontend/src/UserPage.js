@@ -1,15 +1,6 @@
 import React from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
 import { string } from 'prop-types'
-import {
-  Stack,
-  SimpleGrid,
-  Divider,
-  Heading,
-  Icon,
-  Badge,
-  Box,
-} from '@chakra-ui/core'
+import { Stack, SimpleGrid, Divider } from '@chakra-ui/core'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { QUERY_CURRENT_USER } from './graphql/queries'
@@ -18,13 +9,12 @@ import EditableUserLanguage from './EditableUserLanguage'
 import EditableUserDisplayName from './EditableUserDisplayName'
 import EditableUserEmail from './EditableUserEmail'
 import EditableUserPassword from './EditableUserPassword'
-import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import EditableUserTFAMethod from './EditableUserTFAMethod'
+import EditableUserPhoneNumber from './EditableUserPhoneNumber'
 
 export default function UserPage() {
-  const location = useLocation()
-  const history = useHistory()
   const { currentUser } = useUserState()
 
   const {
@@ -51,16 +41,24 @@ export default function UserPage() {
     return <ErrorFallbackMessage error={queryUserError} />
   }
 
+  const {
+    displayName,
+    userName,
+    preferredLang,
+    phoneNumber,
+    tfaSendMethod,
+    emailValidated,
+    phoneValidated,
+  } = queryUserData?.userPage
+
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Stack p={25} spacing={4}>
-        <EditableUserDisplayName
-          detailValue={queryUserData.userPage.displayName}
-        />
+        <EditableUserDisplayName detailValue={displayName} />
 
         <Divider />
 
-        <EditableUserEmail detailValue={currentUser.userName} />
+        <EditableUserEmail detailValue={userName} />
 
         <Divider />
 
@@ -68,68 +66,19 @@ export default function UserPage() {
 
         <Divider />
 
-        <EditableUserLanguage
-          currentLang={queryUserData.userPage.preferredLang}
-        />
+        <EditableUserLanguage currentLang={preferredLang} />
       </Stack>
 
-      <Stack p={25} spacing="4">
-        <Heading as="h1" size="lg" textAlign="left">
-          <Trans>Account Details</Trans>
-        </Heading>
-        <Box>
-          <Icon
-            size="icons.lg"
-            name={queryUserData.userPage.tfaValidated ? 'check' : 'close'}
-            color={
-              queryUserData.userPage.tfaValidated ? 'green.500' : 'red.500'
-            }
-            pr={2}
-          />
-          <Badge variant="outline" color="gray.900">
-            <Trans>2FA Validated</Trans>
-          </Badge>
-        </Box>
-        <Box>
-          <Icon
-            size="icons.lg"
-            name={queryUserData.userPage.emailValidated ? 'check' : 'close'}
-            color={
-              queryUserData.userPage.emailValidated ? 'green.500' : 'red.500'
-            }
-            pr={2}
-          />
-          <Badge variant="outline" color="gray.900">
-            <Trans>Email Validated</Trans>
-          </Badge>
-        </Box>
-
-        <TrackerButton
-          w={['100%', '50%']}
-          variant="primary"
-          onClick={() => {
-            history.push('/two-factor-code')
-          }}
-          isDisabled={!!location.state}
-        >
-          <Icon name="lock" />
-          <Trans>Enable 2FA</Trans>
-        </TrackerButton>
-
-        {/* removing until this functionality has been implemented  
-        <TrackerButton
-          w={['100%', '50%']}
-          variant="primary"
-          onClick={() => {
-            window.alert('coming soon')
-          }}
-        >
-          <Icon name="edit" />
-          <Trans>Manage API keys</Trans>
-        </TrackerButton>
-        */}
+      <Stack p={25} spacing={4}>
+        <EditableUserPhoneNumber detailValue={phoneNumber} />
 
         <Divider />
+
+        <EditableUserTFAMethod
+          currentTFAMethod={tfaSendMethod}
+          emailValidated={emailValidated}
+          phoneValidated={phoneValidated}
+        />
       </Stack>
     </SimpleGrid>
   )

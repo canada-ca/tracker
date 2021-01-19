@@ -29,4 +29,8 @@ export const fieldRequirements = {
   domainUrl: {
     required: { message: t`Domain url field must not be empty` },
   },
+  phoneNumber: {
+    typeError: { message: t`Phone number must only contains numbers` },
+    required: { message: t`Phone number field must not be empty` },
+  },
 }

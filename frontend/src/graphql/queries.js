@@ -413,33 +413,6 @@ export const QUERY_USERLIST = gql`
   }
 `
 
-export const QUERY_USER = gql`
-  query UserPage($userName: EmailAddress!) {
-    userPage: findUserByUsername(userName: $userName) {
-      id
-      userName
-      displayName
-      preferredLang
-      tfaSendMethod
-      emailValidated
-      phoneValidated
-      affiliations {
-        edges {
-          node {
-            permission
-            organization {
-              id
-              name
-              slug
-              verified
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const QUERY_CURRENT_USER = gql`
   query UserPage {
     userPage: findMe {
@@ -447,6 +420,7 @@ export const QUERY_CURRENT_USER = gql`
       userName
       displayName
       preferredLang
+      phoneNumber
       tfaSendMethod
       phoneValidated
       emailValidated
