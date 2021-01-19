@@ -538,16 +538,16 @@ msgstr ""
 #~ msgstr "Disposition"
 
 #: src/SummaryGroup.js:44
-#~ msgid "Dmarc fail"
-#~ msgstr "Dmarc échoue"
+#~ msgid "DMARC fail"
+#~ msgstr "DMARC échoue"
 
 #: src/SummaryGroup.js:77
-#~ msgid "Dmarc partial"
-#~ msgstr "Dmarc partiel"
+#~ msgid "DMARC partial"
+#~ msgstr "DMARC partiel"
 
 #: src/SummaryGroup.js:40
-#~ msgid "Dmarc pass"
-#~ msgstr "Passe Dmarc"
+#~ msgid "DMARC pass"
+#~ msgstr "Passe DMARC"
 
 #: src/DmarcByDomainPage.js:84
 #~ msgid "Domain"
