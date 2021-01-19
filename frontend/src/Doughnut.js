@@ -35,36 +35,40 @@ export const Doughnut = ({
     `url(#zigzag)`,
   ])
 
+  const doughnutChart = (
+    <svg height={height} width={width}>
+      <title>{title}</title>
+      <defs>
+        <ZigZag width={0.4} background="#F16D22" color="#fff" />
+        <Dots size={1} background="#B93B26" color="#fff" />
+        <Stripes angle={45} background="#F8991F" color="#fff" />
+        <CrossHatch width={0.8} background="#F16D22" color="#fff" />
+      </defs>
+      <g transform={`translate(${width / 2},${height / 2})`}>
+        {arcs.map((arc, index) => {
+          return children(
+            { d: arc.d, fill: patterns(index / data.length - 1) },
+            index,
+          )
+        })}
+      </g>
+    </svg>
+  )
+
+  const noScanMessage = (
+    <Box>
+      <Image src={trackerLogo} alt={'Tracker Logo'} />
+      <Text fontSize="l" textAlign="center" color="black">
+          No scan data for this organization.
+      </Text>
+    </Box>
+  )
+
   let chartContent
   if (data[0].total) {
-    chartContent = (
-      <svg height={height} width={width}>
-        <title>{title}</title>
-        <defs>
-          <ZigZag width={0.4} background="#F16D22" color="#fff" />
-          <Dots size={1} background="#B93B26" color="#fff" />
-          <Stripes angle={45} background="#F8991F" color="#fff" />
-          <CrossHatch width={0.8} background="#F16D22" color="#fff" />
-        </defs>
-        <g transform={`translate(${width / 2},${height / 2})`}>
-          {arcs.map((arc, index) => {
-            return children(
-              { d: arc.d, fill: patterns(index / data.length - 1) },
-              index,
-            )
-          })}
-        </g>
-      </svg>
-    )
+    chartContent = doughnutChart
   } else {
-    chartContent = (
-      <Box>
-        <Image src={trackerLogo} alt={'Tracker Logo'} />
-        <Text fontSize="l" textAlign="center" color="black">
-          No scan data for this organization.
-        </Text>
-      </Box>
-    )
+    chartContent = noScanMessage
   }
 
   return (
