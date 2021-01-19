@@ -27,6 +27,7 @@ export const userPersonalType = new GraphQLObjectType({
       type: GraphQLPhoneNumber,
       description: 'The phone number the user has setup with tfa.',
       resolve: ({ phoneDetails }) => {
+        if (typeof phoneDetails === 'undefined') { return null }
         const { iv, tag, phoneNumber: encrypted } = phoneDetails
         const decipher = crypto.createDecipheriv(
           'aes-256-ccm',
