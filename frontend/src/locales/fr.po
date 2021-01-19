@@ -154,7 +154,7 @@ msgstr "Ajouter un domaine"
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
-#: src/App.js:87
+#: src/App.js:89
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
 
@@ -303,9 +303,9 @@ msgstr "Fermer"
 msgid "Code field must not be empty"
 msgstr "Le champ de code ne doit pas être vide"
 
-#: src/SummaryGroup.js:48
-#~ msgid "Compliant TLS"
-#~ msgstr "TLS conformant"
+#: src/SummaryGroup.js:29
+msgid "Compliant TLS"
+msgstr "TLS conformant"
 
 #: src/DmarcReportGuidance.js:312
 #~ msgid "Configure the server to sign outbound messages with DKIM."
@@ -348,7 +348,7 @@ msgstr "Confirmer le nouveau mot de passe :"
 msgid "Confirm Password:"
 msgstr "Confirmez le mot de passe :"
 
-#: src/PasswordConfirmation.js:146
+#: src/PasswordConfirmation.js:147
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
@@ -393,7 +393,7 @@ msgstr "Mot de passe actuel :"
 #~ msgid "Current password"
 #~ msgstr "Mot de passe actuel"
 
-#: src/DmarcReportPage.js:291
+#: src/DmarcReportPage.js:294
 msgid "DKIM Aligned"
 msgstr "DKIM Aligné"
 
@@ -411,16 +411,16 @@ msgstr "Les CNAME DKIM n'existent pas, mais MX pointe vers *.onmicrosoft.com et 
 #~ msgid "DKIM Domain Alignment Failed"
 #~ msgstr "Échec de l'alignement du domaine DKIM"
 
-#: src/DmarcReportPage.js:261
+#: src/DmarcReportPage.js:263
 msgid "DKIM Domains"
 msgstr "Domaines DKIM"
 
-#: src/DmarcReportPage.js:313
+#: src/DmarcReportPage.js:316
 msgid "DKIM Failure Table"
 msgstr "Tableau des échecs DKIM"
 
-#: src/DmarcReportPage.js:324
-#: src/DmarcReportPage.js:355
+#: src/DmarcReportPage.js:327
+#: src/DmarcReportPage.js:359
 msgid "DKIM Failures by IP Address"
 msgstr "Défaillances DKIM par adresse IP"
 
@@ -433,11 +433,11 @@ msgstr "DKIM Flag t"
 #~ msgid "DKIM Misalignment by IP Address"
 #~ msgstr "Désalignement DKIM par adresse IP"
 
-#: src/DmarcReportPage.js:295
+#: src/DmarcReportPage.js:298
 msgid "DKIM Results"
 msgstr "Résultats DKIM"
 
-#: src/DmarcReportPage.js:265
+#: src/DmarcReportPage.js:267
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
 
@@ -477,17 +477,17 @@ msgstr "DKIM-missing-mx-O365"
 msgid "DKIM-value-invalid"
 msgstr "DKIM-value-invalid"
 
-#: src/DmarcReportPage.js:515
+#: src/DmarcReportPage.js:519
 msgid "DMARC Failure Table"
 msgstr "Tableau des échecs de la DMARC"
 
-#: src/DmarcReportPage.js:526
-#: src/DmarcReportPage.js:555
+#: src/DmarcReportPage.js:530
+#: src/DmarcReportPage.js:559
 msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
-#: src/DmarcByDomainPage.js:121
-#: src/DmarcByDomainPage.js:225
+#: src/DmarcByDomainPage.js:124
+#: src/DmarcByDomainPage.js:228
 msgid "DMARC Messages"
 msgstr "Messages de la DMARC"
 
@@ -496,9 +496,21 @@ msgstr "Messages de la DMARC"
 #~ msgid "DMARC Policy Applied"
 #~ msgstr "Politique de la DMARC appliquée"
 
-#: src/App.js:75
+#: src/App.js:77
 msgid "DMARC Report"
 msgstr "Rapport de la DMARC"
+
+#: src/SummaryGroup.js:44
+msgid "DMARC fail"
+msgstr "DMARC échoue"
+
+#: src/SummaryGroup.js:77
+#~ msgid "DMARC partial"
+#~ msgstr "DMARC partiel"
+
+#: src/SummaryGroup.js:40
+msgid "DMARC pass"
+msgstr "Passe DMARC"
 
 #: src/guidanceTagConstants.js:94
 msgid "DMARC-GC"
@@ -508,7 +520,7 @@ msgstr "DMARC-GC"
 msgid "DMARC-missing"
 msgstr "DMARC-missing"
 
-#: src/DmarcReportPage.js:272
+#: src/DmarcReportPage.js:274
 msgid "DNS Host"
 msgstr "Hôte DNS"
 
@@ -533,23 +545,11 @@ msgstr "Nom d'affichage :"
 msgid "Display name cannot be empty"
 msgstr "Le nom d'affichage ne peut pas être vide"
 
-#: src/DmarcReportPage.js:299
+#: src/DmarcReportPage.js:302
 msgid "Disposition"
 msgstr "Disposition"
 
-#: src/SummaryGroup.js:44
-msgid "Dmarc fail"
-msgstr "Dmarc échoue"
-
-#: src/SummaryGroup.js:77
-#~ msgid "Dmarc partial"
-#~ msgstr "Dmarc partiel"
-
-#: src/SummaryGroup.js:40
-msgid "Dmarc pass"
-msgstr "Passe Dmarc"
-
-#: src/DmarcByDomainPage.js:84
+#: src/DmarcByDomainPage.js:87
 msgid "Domain"
 msgstr "Domaine"
 
@@ -622,11 +622,11 @@ msgstr "Le domaine utilise un service DMARC potentiellement externalisé"
 #~ msgstr "Le domaine a été ajouté à {orgName}"
 
 #: src/Domain.js:22
-#: src/DomainCard.js:45
+#: src/DomainCard.js:43
 msgid "Domain:"
 msgstr "Domaine:"
 
-#: src/App.js:69
+#: src/App.js:71
 #: src/DomainsPage.js:58
 #: src/DomainsPage.js:65
 #: src/FloatingMenu.js:131
@@ -736,7 +736,7 @@ msgstr "Entrez le code à deux facteurs"
 msgid "Enter your user account's verified email address and we will send you a password reset link."
 msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur et nous vous enverrons un lien pour réinitialiser votre mot de passe."
 
-#: src/DmarcReportPage.js:257
+#: src/DmarcReportPage.js:258
 msgid "Envelope From"
 msgstr "Enveloppe De"
 
@@ -761,11 +761,11 @@ msgstr "Enveloppe De"
 msgid "Fail"
 msgstr "Échec"
 
-#: src/DmarcByDomainPage.js:100
+#: src/DmarcByDomainPage.js:103
 msgid "Fail DKIM %"
 msgstr "Échec DKIM %"
 
-#: src/DmarcByDomainPage.js:106
+#: src/DmarcByDomainPage.js:109
 msgid "Fail SPF %"
 msgstr "Échec du SPF %"
 
@@ -809,24 +809,24 @@ msgstr "Oublié votre mot de passe?"
 #~ msgid "Forwarding by an intermediate server."
 #~ msgstr "Redirection par un serveur intermédiaire."
 
-#: src/DmarcByDomainPage.js:112
+#: src/DmarcByDomainPage.js:115
 msgid "Full Fail %"
 msgstr "Échec total %"
 
-#: src/DmarcByDomainPage.js:94
+#: src/DmarcByDomainPage.js:97
 msgid "Full Pass %"
 msgstr "Passage complet %"
 
-#: src/DmarcReportPage.js:382
+#: src/DmarcReportPage.js:386
 msgid "Fully Aligned Table"
 msgstr "Tableau entièrement aligné"
 
-#: src/DmarcReportPage.js:393
-#: src/DmarcReportPage.js:420
+#: src/DmarcReportPage.js:397
+#: src/DmarcReportPage.js:424
 msgid "Fully Aligned by IP Address"
 msgstr "Entièrement aligné par adresse IP"
 
-#: src/DmarcReportTable.js:281
+#: src/DmarcReportTable.js:287
 #: src/SummaryTable.js:178
 msgid "Go to page:"
 msgstr "Aller à la page"
@@ -839,7 +839,7 @@ msgstr "Aller à la page"
 msgid "Government of Canada domains subject to TBS guidelines"
 msgstr "Les domaines du gouvernement du Canada sont soumis aux directives du SCT"
 
-#: src/DmarcReportPage.js:281
+#: src/DmarcReportPage.js:284
 msgid "Guidance"
 msgstr "Conseils"
 
@@ -939,7 +939,7 @@ msgstr ""
 #~ msgid "Head From"
 #~ msgstr "Tête de"
 
-#: src/DmarcReportPage.js:278
+#: src/DmarcReportPage.js:280
 msgid "Header From"
 msgstr "En-tête De"
 
@@ -1026,13 +1026,13 @@ msgstr ""
 msgid "Language:"
 msgstr "La langue:"
 
-#: src/DmarcByDomainPage.js:186
+#: src/DmarcByDomainPage.js:189
 #: src/DmarcReportPage.js:129
 msgid "Last 30 Days"
 msgstr "Les 30 derniers jours"
 
 #: src/Domain.js:39
-#: src/DomainCard.js:54
+#: src/DomainCard.js:52
 msgid "Last scanned:"
 msgstr "Dernier scan:"
 
@@ -1115,8 +1115,8 @@ msgid "Maintain deployment"
 msgstr "Maintenir le déploiement"
 
 #: src/UserPage.js:127
-msgid "Manage API keys"
-msgstr "Gérer les clés API"
+#~ msgid "Manage API keys"
+#~ msgstr "Gérer les clés API"
 
 #: src/months.js:6
 msgid "March"
@@ -1204,7 +1204,7 @@ msgstr "Pas de RUF définis"
 msgid "No Users"
 msgstr "Pas d'utilisateurs"
 
-#: src/DmarcReportPage.js:370
+#: src/DmarcReportPage.js:374
 msgid "No data for the DKIM Failures by IP Address table"
 msgstr "Aucune donnée pour le tableau des défaillances DKIM par adresse IP"
 
@@ -1212,11 +1212,11 @@ msgstr "Aucune donnée pour le tableau des défaillances DKIM par adresse IP"
 #~ msgid "No data for the DKIM Misalignment by IP Address table"
 #~ msgstr "Pas de données pour le tableau DKIM Misalignment by IP Address"
 
-#: src/DmarcReportPage.js:570
+#: src/DmarcReportPage.js:574
 msgid "No data for the DMARC Failures by IP Address table"
 msgstr "Pas de données pour le tableau des défaillances DMARC par adresse IP"
 
-#: src/DmarcByDomainPage.js:169
+#: src/DmarcByDomainPage.js:172
 msgid "No data for the DMARC summary table"
 msgstr "Pas de données pour le tableau récapitulatif de la DMARC"
 
@@ -1224,11 +1224,11 @@ msgstr "Pas de données pour le tableau récapitulatif de la DMARC"
 msgid "No data for the DMARC yearly report graph"
 msgstr "Pas de données pour le graphique du rapport annuel de la DMARC"
 
-#: src/DmarcReportPage.js:435
+#: src/DmarcReportPage.js:439
 msgid "No data for the Fully Aligned by IP Address table"
 msgstr "Pas de données pour le tableau Entièrement aligné par adresse IP"
 
-#: src/DmarcReportPage.js:503
+#: src/DmarcReportPage.js:507
 msgid "No data for the SPF Failures by IP Address table"
 msgstr "Aucune donnée pour le tableau des défaillances du SPF par adresse IP"
 
@@ -1248,6 +1248,10 @@ msgstr "Aucun domaine n'a encore été scanné."
 #~ msgid "No domains yet."
 #~ msgstr "Aucun domaine pour l'instant."
 
+#: src/Doughnut.js:63
+msgid "No scan data for this organization."
+msgstr "Aucune donnée d'analyse pour cette organisation."
+
 #: src/UserList.js:238
 msgid "No users in this organization"
 msgstr "Aucun utilisateur dans cette organisation"
@@ -1257,7 +1261,7 @@ msgid "Non-compliant TLS"
 msgstr "TLS non conforme"
 
 #: src/Domain.js:50
-#: src/DomainCard.js:60
+#: src/DomainCard.js:58
 msgid "Not scanned yet."
 msgstr "Pas encore scanné."
 
@@ -1285,7 +1289,7 @@ msgstr "Informations sur l'organisation"
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/App.js:64
+#: src/App.js:65
 #: src/Organizations.js:51
 #: src/Organizations.js:58
 msgid "Organizations"
@@ -1384,7 +1388,7 @@ msgstr "Page"
 msgid "Page Size:"
 msgstr "Taille de la page :"
 
-#: src/DmarcReportTable.js:294
+#: src/DmarcReportTable.js:300
 msgid "Page {0} of {1}"
 msgstr "Page {0} de {1}"
 
@@ -1424,7 +1428,7 @@ msgstr "Passez seulement SPF"
 #~ msgid "Pass SPF Only"
 #~ msgstr "Passez le SPF uniquement"
 
-#: src/DmarcByDomainPage.js:147
+#: src/DmarcByDomainPage.js:150
 msgid "Pass/Fail Ratios by Domain"
 msgstr "Ratios succès/échec par domaine"
 
@@ -1504,8 +1508,8 @@ msgid "Policy applies to percentage of mailflow"
 msgstr "La politique s'applique au pourcentage du flux de courrier"
 
 #: src/SummaryGroup.js:29
-msgid "Policy compliant TLS"
-msgstr "TLS conforme aux politiques"
+#~ msgid "Policy compliant TLS"
+#~ msgstr "TLS conforme aux politiques"
 
 #: src/DmarcReportGuidance.js:117
 #: src/DmarcReportGuidance.js:209
@@ -1539,7 +1543,7 @@ msgstr "préalpha"
 msgid "Previous"
 msgstr "Précédent"
 
-#: src/App.js:239
+#: src/App.js:241
 #: src/FloatingMenu.js:175
 msgid "Privacy"
 msgstr "Confidentialité"
@@ -1683,7 +1687,7 @@ msgstr ""
 msgid "SP-reject"
 msgstr ""
 
-#: src/DmarcReportPage.js:283
+#: src/DmarcReportPage.js:286
 msgid "SPF Aligned"
 msgstr "Alignement du SPF"
 
@@ -1697,16 +1701,16 @@ msgstr "Alignement du SPF"
 #~ msgid "SPF Domain Alignment Failed"
 #~ msgstr "Échec de l'alignement des domaines du SPF"
 
-#: src/DmarcReportPage.js:274
+#: src/DmarcReportPage.js:276
 msgid "SPF Domains"
 msgstr "Domaine SPF"
 
-#: src/DmarcReportPage.js:447
+#: src/DmarcReportPage.js:451
 msgid "SPF Failure Table"
 msgstr "Tableau des échecs du SPF"
 
-#: src/DmarcReportPage.js:458
-#: src/DmarcReportPage.js:488
+#: src/DmarcReportPage.js:462
+#: src/DmarcReportPage.js:492
 msgid "SPF Failures by IP Address"
 msgstr "Défaillances du SPF par adresse IP"
 
@@ -1715,7 +1719,7 @@ msgstr "Défaillances du SPF par adresse IP"
 #~ msgid "SPF Misalignment by IP Address"
 #~ msgstr "Désalignement du SPF par adresse IP"
 
-#: src/DmarcReportPage.js:287
+#: src/DmarcReportPage.js:290
 msgid "SPF Results"
 msgstr "Résultats du SPF"
 
@@ -1859,16 +1863,16 @@ msgstr "Services: {domainCount}"
 #~ msgid "Show Guidance"
 #~ msgstr "Afficher les conseils"
 
-#: src/DmarcReportTable.js:310
+#: src/DmarcReportTable.js:316
 msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
-#: src/DmarcByDomainPage.js:230
-#: src/DmarcReportPage.js:604
+#: src/DmarcByDomainPage.js:233
+#: src/DmarcReportPage.js:608
 msgid "Showing data for period:"
 msgstr "Affichage des données pour la période :"
 
-#: src/App.js:111
+#: src/App.js:113
 #: src/FloatingMenu.js:158
 #: src/SignInPage.js:133
 msgid "Sign In"
@@ -1879,12 +1883,12 @@ msgstr "Se connecter"
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/App.js:107
+#: src/App.js:109
 #: src/FloatingMenu.js:144
 msgid "Sign Out"
 msgstr "Déconnexion"
 
-#: src/App.js:97
+#: src/App.js:99
 #: src/FloatingMenu.js:148
 msgid "Sign Out."
 msgstr "Déconnexion."
@@ -1946,7 +1950,7 @@ msgstr ""
 #~ msgid "Terms & Conditions"
 #~ msgstr ""
 
-#: src/App.js:249
+#: src/App.js:251
 #: src/FloatingMenu.js:185
 msgid "Terms & conditions"
 msgstr "Avis"
@@ -2028,8 +2032,8 @@ msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la 
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
-#: src/DmarcByDomainPage.js:88
-#: src/DmarcReportPage.js:269
+#: src/DmarcByDomainPage.js:91
+#: src/DmarcReportPage.js:271
 msgid "Total Messages"
 msgstr "Total des messages"
 
@@ -2116,7 +2120,7 @@ msgstr "Affiliations des utilisateurs"
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
-#: src/App.js:81
+#: src/App.js:83
 #: src/UserPage.js:45
 msgid "User Profile"
 msgstr "Profil de l'utilisateur"
@@ -2216,7 +2220,7 @@ msgstr "Vous n'avez pas d'autorisations administratives dans une organisation"
 msgid "You have not enabled Two Factor Authentication. To maximize your account's security, <0>please enable 2FA</0>."
 msgstr "Vous n'avez pas activé l'authentification à deux facteurs. Pour maximiser la sécurité de votre compte, <0>veuillez activer l'authentification à deux facteurs</0>."
 
-#: src/App.js:98
+#: src/App.js:100
 #: src/FloatingMenu.js:149
 msgid "You have successfully been signed out."
 msgstr "Vous avez été déconnecté avec succès."
