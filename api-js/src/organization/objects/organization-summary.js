@@ -1,5 +1,4 @@
 import { GraphQLObjectType } from 'graphql'
-import { t } from '@lingui/macro'
 
 import { categorizedSummaryType } from '../../summaries'
 
@@ -11,7 +10,7 @@ export const organizationSummaryType = new GraphQLObjectType({
       type: categorizedSummaryType,
       description:
         'Summary based on mail scan results for a given organization.',
-      resolve: ({ mail }, _, { i18n }) => {
+      resolve: ({ mail }) => {
         let percentPass, percentageFail
         if (mail.total <= 0) {
           percentPass = 0
@@ -23,12 +22,12 @@ export const organizationSummaryType = new GraphQLObjectType({
 
         const categories = [
           {
-            name: i18n._(t`pass`),
+            name: 'pass',
             count: mail.pass,
             percentage: percentPass,
           },
           {
-            name: i18n._(t`fail`),
+            name: 'fail',
             count: mail.fail,
             percentage: percentageFail,
           },
@@ -44,7 +43,7 @@ export const organizationSummaryType = new GraphQLObjectType({
       type: categorizedSummaryType,
       description:
         'Summary based on web scan results for a given organization.',
-      resolve: ({ web }, _, { i18n }) => {
+      resolve: ({ web }) => {
         let percentPass, percentageFail
         if (web.total <= 0) {
           percentPass = 0
@@ -56,12 +55,12 @@ export const organizationSummaryType = new GraphQLObjectType({
 
         const categories = [
           {
-            name: i18n._(t`pass`),
+            name: 'pass',
             count: web.pass,
             percentage: percentPass,
           },
           {
-            name: i18n._(t`fail`),
+            name: 'fail',
             count: web.fail,
             percentage: percentageFail,
           },
