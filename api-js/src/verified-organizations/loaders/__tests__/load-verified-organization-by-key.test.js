@@ -113,7 +113,6 @@ describe('given a verifiedOrgLoaderByKey dataloader', () => {
           fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
@@ -215,7 +214,6 @@ describe('given a verifiedOrgLoaderByKey dataloader', () => {
           fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,

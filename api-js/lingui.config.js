@@ -1,9 +1,8 @@
 module.exports = {
   catalogs: [
     {
-      path: '<rootDir>/locale/{locale}/messages',
-      include: ['<rootDir>'],
-      exclude: ['**/node_modules/**'],
+      path: 'src/locale/{locale}/messages',
+      include: ['src'],
     },
   ],
   extractBabelOptions: {},
@@ -12,6 +11,5 @@ module.exports = {
   },
   format: 'po',
   locales: ['en', 'fr'],
-  rootDir: './src',
   sourceLocale: 'en',
 }

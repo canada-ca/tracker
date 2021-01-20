@@ -34,7 +34,6 @@ describe('when given the load spf connection function', () => {
         fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
-      missing: 'Traduction manquante',
       messages: {
         en: englishMessages.messages,
         fr: frenchMessages.messages,
@@ -563,7 +562,6 @@ describe('when given the load spf connection function', () => {
           fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
@@ -906,7 +904,6 @@ describe('when given the load spf connection function', () => {
           fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,

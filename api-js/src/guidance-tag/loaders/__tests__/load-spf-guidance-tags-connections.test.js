@@ -34,7 +34,6 @@ describe('when given the load spf guidance tag connection function', () => {
         fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
-      missing: 'Traduction manquante',
       messages: {
         en: englishMessages.messages,
         fr: frenchMessages.messages,
@@ -339,7 +338,6 @@ describe('when given the load spf guidance tag connection function', () => {
           fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
@@ -692,7 +690,6 @@ describe('when given the load spf guidance tag connection function', () => {
           fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,

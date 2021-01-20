@@ -217,7 +217,6 @@ describe('user sign up', () => {
             fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
-          missing: 'Traduction manquante',
           messages: {
             en: englishMessages.messages,
             fr: frenchMessages.messages,
@@ -529,7 +528,6 @@ describe('user sign up', () => {
             fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
-          missing: 'Traduction manquante',
           messages: {
             en: englishMessages.messages,
             fr: frenchMessages.messages,

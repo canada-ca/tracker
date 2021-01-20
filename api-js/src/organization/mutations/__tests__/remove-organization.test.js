@@ -161,7 +161,6 @@ describe('removing an organization', () => {
             fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
-          missing: 'Traduction manquante',
           messages: {
             en: englishMessages.messages,
             fr: frenchMessages.messages,
@@ -572,7 +571,6 @@ describe('removing an organization', () => {
             fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
-          missing: 'Traduction manquante',
           messages: {
             en: englishMessages.messages,
             fr: frenchMessages.messages,
@@ -983,7 +981,6 @@ describe('removing an organization', () => {
             fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
-          missing: 'Traduction manquante',
           messages: {
             en: englishMessages.messages,
             fr: frenchMessages.messages,
@@ -1476,7 +1473,6 @@ describe('removing an organization', () => {
             fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
-          missing: 'Traduction manquante',
           messages: {
             en: englishMessages.messages,
             fr: frenchMessages.messages,

@@ -98,7 +98,6 @@ describe('authenticate user account', () => {
           fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
@@ -911,7 +910,6 @@ describe('authenticate user account', () => {
           fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,

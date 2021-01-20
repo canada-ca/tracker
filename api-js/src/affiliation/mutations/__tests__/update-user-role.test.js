@@ -93,7 +93,6 @@ describe('update a users role', () => {
           fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
@@ -1508,7 +1507,6 @@ describe('update a users role', () => {
           fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
         messages: {
           en: englishMessages.messages,
           fr: frenchMessages.messages,
