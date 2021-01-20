@@ -29,7 +29,14 @@ describe('given the organization summary object', () => {
             total: 0,
           }
 
-          expect(demoType.mail.resolve({ mail })).toEqual({
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('pass')
+              .mockReturnValueOnce('fail'),
+          }
+
+          expect(demoType.mail.resolve({ mail }, {}, { i18n })).toEqual({
             categories: [
               {
                 count: 0,
@@ -46,7 +53,8 @@ describe('given the organization summary object', () => {
           })
         })
       })
-      describe('total is greater then zero', () => {
+
+      describe('when total is greater then zero', () => {
         it('returns the resolved value', () => {
           const demoType = organizationSummaryType.getFields()
 
@@ -56,7 +64,14 @@ describe('given the organization summary object', () => {
             total: 1050,
           }
 
-          expect(demoType.mail.resolve({ mail })).toEqual({
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('pass')
+              .mockReturnValueOnce('fail'),
+          }
+
+          expect(demoType.mail.resolve({ mail }, {}, { i18n })).toEqual({
             categories: [
               {
                 count: 50,
@@ -74,7 +89,6 @@ describe('given the organization summary object', () => {
         })
       })
     })
-
     describe('testing web resolver', () => {
       describe('total is zero', () => {
         it('returns the resolved value', () => {
@@ -86,7 +100,14 @@ describe('given the organization summary object', () => {
             total: 0,
           }
 
-          expect(demoType.web.resolve({ web })).toEqual({
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('pass')
+              .mockReturnValueOnce('fail'),
+          }
+
+          expect(demoType.web.resolve({ web }, {}, { i18n })).toEqual({
             categories: [
               {
                 count: 0,
@@ -103,7 +124,6 @@ describe('given the organization summary object', () => {
           })
         })
       })
-
       describe('total is greater then zero', () => {
         it('returns the resolved value', () => {
           const demoType = organizationSummaryType.getFields()
@@ -114,7 +134,14 @@ describe('given the organization summary object', () => {
             total: 1050,
           }
 
-          expect(demoType.web.resolve({ web })).toEqual({
+          const i18n = {
+            _: jest
+              .fn()
+              .mockReturnValueOnce('pass')
+              .mockReturnValueOnce('fail'),
+          }
+
+          expect(demoType.web.resolve({ web }, {}, { i18n })).toEqual({
             categories: [
               {
                 count: 50,

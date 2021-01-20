@@ -10,7 +10,7 @@ export const organizationSummaryType = new GraphQLObjectType({
       type: categorizedSummaryType,
       description:
         'Summary based on mail scan results for a given organization.',
-      resolve: ({ mail }) => {
+      resolve: ({ mail }, _, { i18n }) => {
         let percentPass, percentageFail
         if (mail.total <= 0) {
           percentPass = 0
@@ -22,12 +22,12 @@ export const organizationSummaryType = new GraphQLObjectType({
 
         const categories = [
           {
-            name: 'pass',
+            name: i18n._('pass'),
             count: mail.pass,
             percentage: percentPass,
           },
           {
-            name: 'fail',
+            name: i18n._('fail'),
             count: mail.fail,
             percentage: percentageFail,
           },
@@ -43,7 +43,7 @@ export const organizationSummaryType = new GraphQLObjectType({
       type: categorizedSummaryType,
       description:
         'Summary based on web scan results for a given organization.',
-      resolve: ({ web }) => {
+      resolve: ({ web }, _, { i18n }) => {
         let percentPass, percentageFail
         if (web.total <= 0) {
           percentPass = 0
@@ -55,12 +55,12 @@ export const organizationSummaryType = new GraphQLObjectType({
 
         const categories = [
           {
-            name: 'pass',
+            name: i18n._('pass'),
             count: web.pass,
             percentage: percentPass,
           },
           {
-            name: 'fail',
+            name: i18n._('fail'),
             count: web.fail,
             percentage: percentageFail,
           },
