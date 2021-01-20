@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import moment from 'moment'
 import fetch from 'isomorphic-fetch'
 import { v4 as uuidv4 } from 'uuid'
