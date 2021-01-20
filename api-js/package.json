@@ -16,10 +16,10 @@
     "test-coverage": "jest --coverage",
     "lint": "eslint src",
     "prettier": "prettier --write \"**/*.js\"",
-    "add-locale": "npx lingui add-locale",
-    "extract": "npx lingui extract",
-    "compile": "npx lingui compile",
-    "lin-clean": "npx lingui extract --clean"
+    "add-locale": "lingui add-locale",
+    "extract": "lingui extract",
+    "compile": "lingui compile",
+    "lin-clean": "lingui extract --clean"
   },
   "dependencies": {
     "@lingui/core": "^3.4.0",
