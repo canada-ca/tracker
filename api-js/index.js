@@ -1,8 +1,7 @@
+import './src/env'
 import { ArangoTools } from 'arango-tools'
 import { Server } from './src/server'
 import { makeMigrations } from './migrations'
-
-require('dotenv-safe').config()
 
 const {
   PORT = 4000,
