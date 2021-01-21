@@ -116,7 +116,9 @@ def process_https(results, domain_key, db):
             }
         )
         domain = db.collection("domains").get({"_key": domain_key})
-        db.collection("domainsHTTPS").insert({"_from": domain["_id"], "_to": httpsEntry["_id"]})
+        db.collection("domainsHTTPS").insert(
+            {"_from": domain["_id"], "_to": httpsEntry["_id"]}
+        )
 
         if any(
             i
@@ -173,9 +175,15 @@ def process_ssl(results, guidance, domain_key, db):
                 tags.append("ssl3")
             if "3DES" in cipher:
                 tags.append("ssl4")
-            if cipher in (guidance["ciphers"]["1.2"]["recommended"]+guidance["ciphers"]["1.3"]["recommended"]):
+            if cipher in (
+                guidance["ciphers"]["1.2"]["recommended"]
+                + guidance["ciphers"]["1.3"]["recommended"]
+            ):
                 strong_ciphers.append(cipher)
-            elif cipher in (guidance["ciphers"]["1.2"]["sufficient"]+guidance["ciphers"]["1.3"]["sufficient"]):
+            elif cipher in (
+                guidance["ciphers"]["1.2"]["sufficient"]
+                + guidance["ciphers"]["1.3"]["sufficient"]
+            ):
                 acceptable_ciphers.append(cipher)
             else:
                 weak_ciphers.append(cipher)
@@ -188,7 +196,10 @@ def process_ssl(results, guidance, domain_key, db):
             else:
                 weak_curves.append(curve)
 
-        for algorithm in (guidance["signature_algorithms"]["recommended"] + guidance["signature_algorithms"]["sufficient"]):
+        for algorithm in (
+            guidance["signature_algorithms"]["recommended"]
+            + guidance["signature_algorithms"]["sufficient"]
+        ):
             if results["signature_algorithm"].lower() in algorithm:
                 tags.append("ssl5")
                 break
@@ -220,7 +231,9 @@ def process_ssl(results, guidance, domain_key, db):
             }
         )
         domain = db.collection("domains").get({"_key": domain_key})
-        db.collection("domainsSSL").insert({"_from": domain["_id"], "_to": sslEntry["_id"]})
+        db.collection("domainsSSL").insert(
+            {"_from": domain["_id"], "_to": sslEntry["_id"]}
+        )
 
         if any(i in ["ssl2", "ssl3", "ssl4", "ssl6", "ssl7", "ssl8"] for i in tags):
             ssl_status = "fail"
@@ -497,26 +510,40 @@ def process_dns(results, domain_key, db):
         for selector in results["dkim"].keys():
             keyModulus = results["dkim"][selector]["public_key_modulus"]
 
-            previous_dkim_results = db.collection("dkimResults").find({"keyModulus": keyModulus})
+            previous_dkim_results = db.collection("dkimResults").find(
+                {"keyModulus": keyModulus}
+            )
 
             for previous_dkim_result in previous_dkim_results:
-                edges = db.collection("dkimToDkimResults").find({"_to": previous_dkim_result["_id"]})
+                edges = db.collection("dkimToDkimResults").find(
+                    {"_to": previous_dkim_result["_id"]}
+                )
                 for edge in edges:
                     previous_dkim = db.collection("dkim").get({"_id": edge["_from"]})
 
                     # Check if PK was used for another domain
-                    previous_dkim_domain_query = db.collection("domainsDKIM").find({"_to": previous_dkim["_id"]}, limit=1)
+                    previous_dkim_domain_query = db.collection("domainsDKIM").find(
+                        {"_to": previous_dkim["_id"]}, limit=1
+                    )
                     previous_dkim_domain = previous_dkim_domain_query.next()
-                    if (previous_dkim_domain["_key"] != domain_key) and ("dkim14" not in tags["dkim"][selector]):
+                    if (previous_dkim_domain["_key"] != domain_key) and (
+                        "dkim14" not in tags["dkim"][selector]
+                    ):
                         tags["dkim"][selector].append("dkim14")
 
                     # Check if PK is older than 1 year
-                    current_timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S.%f')
-                    previous_timestamp = datetime.datetime.strptime(previous_dkim["timestamp"], '%Y-%m-%d %H:%M:%S.%f')
+                    current_timestamp = datetime.datetime.strptime(
+                        timestamp, "%Y-%m-%d %H:%M:%S.%f"
+                    )
+                    previous_timestamp = datetime.datetime.strptime(
+                        previous_dkim["timestamp"], "%Y-%m-%d %H:%M:%S.%f"
+                    )
 
                     time_delta = current_timestamp - previous_timestamp
 
-                    if (time_delta.total_seconds() > 31536000) and ("dkim10" not in tags["dkim"][selector]):
+                    if (time_delta.total_seconds() > 31536000) and (
+                        "dkim10" not in tags["dkim"][selector]
+                    ):
                         tags["dkim"][selector].append("dkim10")
 
             dkimResultsEntry = db.collection("dkimResults").insert(
@@ -528,12 +555,20 @@ def process_dns(results, domain_key, db):
                     "guidanceTags": tags["dkim"][selector],
                 }
             )
-            db.collection("dkimToDkimResults").insert({"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]})
+            db.collection("dkimToDkimResults").insert(
+                {"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]}
+            )
 
         domain = db.collection("domains").get({"_key": domain_key})
-        db.collection("domainsDMARC").insert({"_from": domain["_id"], "_to": dmarcEntry["_id"]})
-        db.collection("domainsSPF").insert({"_from": domain["_id"], "_to": spfEntry["_id"]})
-        db.collection("domainsDKIM").insert({"_from": domain["_id"], "_to": dkimEntry["_id"]})
+        db.collection("domainsDMARC").insert(
+            {"_from": domain["_id"], "_to": dmarcEntry["_id"]}
+        )
+        db.collection("domainsSPF").insert(
+            {"_from": domain["_id"], "_to": spfEntry["_id"]}
+        )
+        db.collection("domainsDKIM").insert(
+            {"_from": domain["_id"], "_to": dkimEntry["_id"]}
+        )
 
         if "spf12" in tags["spf"]:
             spf_status = "pass"
@@ -576,8 +611,170 @@ def process_dns(results, domain_key, db):
             "spf": spf_status,
         }.items():
             domain["status"][key] = val
+
+        phase = "not implemented"
+        # ASSESS
+        if (
+            all(i in ["dmarc4", "dmarc20", "dmarc23"] for i in tags["dmarc"])
+            and not any(
+                i
+                in [
+                    "dmarc2",
+                    "dmarc3",
+                    "dmarc5",
+                    "dmarc6",
+                    "dmarc11",
+                    "dmarc12",
+                    "dmarc15",
+                    "dmarc21",
+                ]
+                for i in tags["dmarc"]
+            )
+            and not any(i in ["spf5", "spf9", "spf11"] for i in tags["spf"])
+        ):
+            for selector in tags["dkim"].keys():
+                if not any(
+                    i in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13",]
+                    for i in tags["dkim"][selector]
+                ):
+                    phase = "assess"
+        # DEPLOY
+        elif (
+            all(i in ["dmarc4", "dmarc20", "dmarc23"] for i in tags["dmarc"])
+            and not any(
+                i
+                in [
+                    "dmarc2",
+                    "dmarc3",
+                    "dmarc5",
+                    "dmarc6",
+                    "dmarc11",
+                    "dmarc12",
+                    "dmarc15",
+                    "dmarc21",
+                ]
+                for i in tags["dmarc"]
+            )
+            and "spf12" in tags["spf"]
+            and not any(i in ["spf5", "spf9", "spf11"] for i in tags["spf"])
+        ):
+            for selector in tags["dkim"].keys():
+                if not any(
+                    i in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13",]
+                    for i in tags["dkim"][selector]
+                ):
+                    phase = "deploy"
+        # ENFORCE
+        elif (
+            all(
+                i in ["dmarc23", ("dmarc5" or "dmarc6"), "dmarc8"]
+                for i in tags["dmarc"]
+            )
+            and not any(
+                i
+                in [
+                    "dmarc2",
+                    "dmarc3",
+                    "dmarc5",
+                    "dmarc6",
+                    "dmarc11",
+                    "dmarc12",
+                    "dmarc15",
+                    "dmarc21",
+                    "dmarc9",
+                    "dmarc17",
+                    "dmarc20",
+                ]
+                for i in tags["dmarc"]
+            )
+            and all(i in ["spf12", ("spf7" or "spf8")] for i in tags["spf"])
+            and not any(
+                i in ["spf2", "spf3", "spf4", "spf5", "spf6", "spf9", "spf10", "spf11"]
+                for i in tags["spf"]
+            )
+        ):
+            for selector in tags["dkim"].keys():
+                if not any(
+                    i
+                    in [
+                        "dkim2",
+                        "dkim3",
+                        "dkim4",
+                        "dkim5",
+                        "dkim8",
+                        "dkim9",
+                        "dkim10",
+                        "dkim11",
+                        "dkim12",
+                        "dkim13",
+                        "dkim14",
+                    ]
+                    for i in tags["dkim"][selector]
+                ) and all(i in ["dkim6", "dkim7",] for i in tags["dkim"][selector]):
+                    phase = "enforce"
+        # MAINTAIN
+        elif (
+            all(
+                i in ["dmarc23", ("dmarc5" or "dmarc6"), "dmarc7"]
+                for i in tags["dmarc"]
+            )
+            and not any(
+                i
+                in [
+                    "dmarc2",
+                    "dmarc3",
+                    "dmarc5",
+                    "dmarc6",
+                    "dmarc8",
+                    "dmarc11",
+                    "dmarc12",
+                    "dmarc15",
+                    "dmarc21",
+                    "dmarc9",
+                    "dmarc17",
+                    "dmarc20",
+                ]
+                for i in tags["dmarc"]
+            )
+            and all(i in ["spf12", "spf8"] for i in tags["spf"])
+            and not any(
+                i
+                in [
+                    "spf2",
+                    "spf3",
+                    "spf4",
+                    "spf5",
+                    "spf6",
+                    "spf7",
+                    "spf9",
+                    "spf10",
+                    "spf11",
+                ]
+                for i in tags["spf"]
+            )
+        ):
+            for selector in tags["dkim"].keys():
+                if not any(
+                    i
+                    in [
+                        "dkim2",
+                        "dkim3",
+                        "dkim4",
+                        "dkim5",
+                        "dkim8",
+                        "dkim9",
+                        "dkim10",
+                        "dkim11",
+                        "dkim12",
+                        "dkim13",
+                        "dkim14",
+                    ]
+                    for i in tags["dkim"][selector]
+                ) and all(i in ["dkim6", "dkim7",] for i in tags["dkim"][selector]):
+                    phase = "maintain"
+
         db.collection("domains").update_match(
-            {"_key": domain_key}, {"status": domain["status"]}
+            {"_key": domain_key}, {"status": domain["status"]}, {"phase": phase}
         )
 
     except Exception as e:
@@ -589,7 +786,14 @@ def process_dns(results, domain_key, db):
     logging.info("DNS Scans inserted into database")
 
 
-def Server(db_host=DB_HOST, db_name=DB_NAME, db_user=DB_USER, db_pass=DB_PASS, db_port=DB_PORT, tls_guidance=retrieve_tls_guidance):
+def Server(
+    db_host=DB_HOST,
+    db_name=DB_NAME,
+    db_user=DB_USER,
+    db_pass=DB_PASS,
+    db_port=DB_PORT,
+    tls_guidance=retrieve_tls_guidance,
+):
 
     # Establish DB connection
     connection_string = f"http://{db_host}:{db_port}"
