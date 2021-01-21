@@ -297,3 +297,4 @@ expected_dmarc_tags = [
 ]
 expected_spf_tags = ["spf12", "spf8"]
 expected_dkim_tags = ["dkim6"]
+expected_phase = "not implemented"
