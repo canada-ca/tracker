@@ -1,12 +1,12 @@
 const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
   const summary = {}
   summary.detailTables = {}
-  
+
   // Get category totals
   try {
     const { resources } = await container.items
-    .query({
-      query: `SELECT 
+      .query({
+        query: `SELECT 
           c.category_totals.pass AS pass,
           c.category_totals.fail AS fail,
           c.category_totals['pass-dkim-only'] AS passDkimOnly,
@@ -14,14 +14,24 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
         FROM c 
         WHERE c.domain = @domain 
         AND c.id = @startDate`,
-      parameters: [
-        { name: '@domain', value: domain },
-        { name: '@startDate', value: String(startDate)},
-      ],
-    }).fetchAll()
+        parameters: [
+          { name: '@domain', value: domain },
+          { name: '@startDate', value: String(startDate) },
+        ],
+      })
+      .fetchAll()
 
-    summary.categoryTotals = resources[0]
-
+    if (typeof resources[0] === 'undefined') {
+      summary.categoryTotals = {
+        pass: 0,
+        fail: 0,
+        passDkimOnly: 0,
+        passSpfOnly: 0,
+      }
+    } else {
+      summary.categoryTotals = resources[0]
+    }
+    
   } catch (err) {
     throw Error(err)
   }
@@ -29,8 +39,8 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
   // Get dkim failure
   try {
     const { resources } = await container.items
-    .query({
-      query: `SELECT * FROM (
+      .query({
+        query: `SELECT * FROM (
         SELECT 
             f.source_ip_address AS sourceIpAddress,
             f.envelope_from AS envelopeFrom,
@@ -45,14 +55,14 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
         FROM c JOIN f IN c.detail_tables.dkim_failure
         WHERE c.domain=@domain
         AND c.id=@startDate) AS sub`,
-      parameters: [
-        { name: '@domain', value: domain },
-        { name: '@startDate', value: String(startDate)},
-      ],
-    }).fetchAll()
+        parameters: [
+          { name: '@domain', value: domain },
+          { name: '@startDate', value: String(startDate) },
+        ],
+      })
+      .fetchAll()
 
     summary.detailTables.dkimFailure = resources
-
   } catch (err) {
     throw Error(err)
   }
@@ -60,8 +70,8 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
   // Get dmarc failure
   try {
     const { resources } = await container.items
-    .query({
-      query: `SELECT * FROM (
+      .query({
+        query: `SELECT * FROM (
         SELECT 
           f.source_ip_address AS sourceIpAddress,
           f.envelope_from AS envelopeFrom,
@@ -75,14 +85,14 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
         FROM c JOIN f IN c.detail_tables.dmarc_failure
         WHERE c.domain=@domain
         AND c.id=@startDate) AS sub`,
-      parameters: [
-        { name: '@domain', value: domain },
-        { name: '@startDate', value: String(startDate)},
-      ],
-    }).fetchAll()
+        parameters: [
+          { name: '@domain', value: domain },
+          { name: '@startDate', value: String(startDate) },
+        ],
+      })
+      .fetchAll()
 
     summary.detailTables.dmarcFailure = resources
-
   } catch (err) {
     throw Error(err)
   }
@@ -90,8 +100,8 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
   // Get full pass
   try {
     const { resources } = await container.items
-    .query({
-      query: `SELECT * FROM (
+      .query({
+        query: `SELECT * FROM (
         SELECT
           f.source_ip_address AS sourceIpAddress,
           f.envelope_from AS envelopeFrom,
@@ -104,14 +114,14 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
         FROM c JOIN f IN c.detail_tables.full_pass
         WHERE c.domain=@domain
         AND c.id=@startDate) AS sub`,
-      parameters: [
-        { name: '@domain', value: domain },
-        { name: '@startDate', value: String(startDate)},
-      ],
-    }).fetchAll()
+        parameters: [
+          { name: '@domain', value: domain },
+          { name: '@startDate', value: String(startDate) },
+        ],
+      })
+      .fetchAll()
 
     summary.detailTables.fullPass = resources
-
   } catch (err) {
     throw Error(err)
   }
@@ -119,8 +129,8 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
   // Get spf failure
   try {
     const { resources } = await container.items
-    .query({
-      query: `SELECT * FROM (
+      .query({
+        query: `SELECT * FROM (
         SELECT 
           f.source_ip_address AS sourceIpAddress,
           f.envelope_from AS envelopeFrom,
@@ -135,14 +145,14 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
         FROM c JOIN f IN c.detail_tables.spf_failure
         WHERE c.domain=@domain
         AND c.id=@startDate) AS sub`,
-      parameters: [
-        { name: '@domain', value: domain },
-        { name: '@startDate', value: String(startDate)},
-      ],
-    }).fetchAll()
+        parameters: [
+          { name: '@domain', value: domain },
+          { name: '@startDate', value: String(startDate) },
+        ],
+      })
+      .fetchAll()
 
     summary.detailTables.spfFailure = resources
-
   } catch (err) {
     throw Error(err)
   }
