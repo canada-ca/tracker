@@ -69,6 +69,7 @@ test_db.collection("domains").insert(
             "spf": "pass",
             "ssl": "pass",
         },
+        "phase": "",
     }
 )
 
