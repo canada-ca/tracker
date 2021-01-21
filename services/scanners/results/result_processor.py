@@ -144,9 +144,7 @@ def process_https(results, domain_key, db):
             https_status = "pass"
 
         domain["status"]["https"] = https_status
-        db.collection("domains").update_match(
-            {"_key": domain_key}, {"status": domain["status"]}
-        )
+        db.collection("domains").update(domain)
 
     except Exception as e:
         logging.error(
@@ -241,9 +239,7 @@ def process_ssl(results, guidance, domain_key, db):
             ssl_status = "pass"
 
         domain["status"]["ssl"] = ssl_status
-        db.collection("domains").update_match(
-            {"_key": domain_key}, {"status": domain["status"]}
-        )
+        db.collection("domains").update(domain)
 
     except Exception as e:
         logging.error(
@@ -612,7 +608,7 @@ def process_dns(results, domain_key, db):
         }.items():
             domain["status"][key] = val
 
-        phase = "not implemented"
+        domain["phase"] = "not implemented"
         # ASSESS
         if (
             all(i in ["dmarc4", "dmarc20", "dmarc23"] for i in tags["dmarc"])
@@ -637,7 +633,7 @@ def process_dns(results, domain_key, db):
                     i in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13",]
                     for i in tags["dkim"][selector]
                 ):
-                    phase = "assess"
+                    domain["phase"] = "assess"
         # DEPLOY
         elif (
             all(i in ["dmarc4", "dmarc20", "dmarc23"] for i in tags["dmarc"])
@@ -663,7 +659,7 @@ def process_dns(results, domain_key, db):
                     i in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13",]
                     for i in tags["dkim"][selector]
                 ):
-                    phase = "deploy"
+                    domain["phase"] = "deploy"
         # ENFORCE
         elif (
             all(
@@ -711,7 +707,7 @@ def process_dns(results, domain_key, db):
                     ]
                     for i in tags["dkim"][selector]
                 ) and all(i in ["dkim6", "dkim7",] for i in tags["dkim"][selector]):
-                    phase = "enforce"
+                    domain["phase"] = "enforce"
         # MAINTAIN
         elif (
             all(
@@ -771,11 +767,9 @@ def process_dns(results, domain_key, db):
                     ]
                     for i in tags["dkim"][selector]
                 ) and all(i in ["dkim6", "dkim7",] for i in tags["dkim"][selector]):
-                    phase = "maintain"
+                    domain["phase"] = "maintain"
 
-        db.collection("domains").update_match(
-            {"_key": domain_key}, {"status": domain["status"]}, {"phase": phase}
-        )
+        db.collection("domains").update(domain)
 
     except Exception as e:
         logging.error(
