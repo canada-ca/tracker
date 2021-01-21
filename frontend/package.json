@@ -16,7 +16,7 @@
     "@apollo/client": "^3.2.5",
     "@babel/runtime": "^7.12.1",
     "@chakra-ui/core": "^0.8.0",
-    "@emotion/core": "^10.0.35",
+    "@emotion/core": "^10.1.1",
     "@emotion/styled": "^10.0.27",
     "@lingui/react": "^3.0.3",
     "body-parser": "^1.19.0",
