@@ -1,12 +1,7 @@
-const upsertOwnership = async ({ ownerships, query }) => {
-  console.info('Assigning ownerships ...')
-
-  Object.keys(ownerships).forEach(async (key) => {
-    console.info(`Assigning domain ownership to: ${String(key)}`)
-
-    try {
-      await query`
-      LET givenDomains = ${ownerships[key]}
+const upsertOwnership = async ({ ownership, key, query }) => {
+  try {
+    await query`
+      LET givenDomains = ${ownership}
       LET orgAcronym = ${String(key)}
 
       FOR domain IN givenDomains
@@ -21,14 +16,13 @@ const upsertOwnership = async ({ ownerships, query }) => {
                   IN ownership
               RETURN { doc: NEW, type: OLD ? 'update' : 'insert' }
       `
-    } catch (err) {
-      console.error(
-        `Error occurred while inserting/updating ownerships for ${String(
-          key,
-        )}: ${err}`,
-      )
-    }
-  })
+  } catch (err) {
+    console.error(
+      `Error occurred while inserting/updating ownerships for ${String(
+        key,
+      )}: ${err}`,
+    )
+  }
 }
 
 module.exports = {

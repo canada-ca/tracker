@@ -80,6 +80,11 @@ const makeMigrations = ({ databaseName, rootPass }) => [
     name: 'chartSummaries',
   },
   {
+    type: 'documentcollection',
+    databaseName,
+    name: 'dmarcSummaries',
+  },
+  {
     type: 'edgecollection',
     databaseName,
     name: 'affiliations',
@@ -123,6 +128,11 @@ const makeMigrations = ({ databaseName, rootPass }) => [
     type: 'edgecollection',
     databaseName,
     name: 'ownership',
+  },
+  {
+    type: 'edgecollection',
+    databaseName,
+    name: 'domainsToDmarcSummaries',
   },
 ]
 
