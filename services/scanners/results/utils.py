@@ -18,12 +18,25 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 def retrieve_tls_guidance():
     logging.info("Retrieving TLS guidance...")
 
-    if not all(i is not None for i in [REPO_NAME, REPO_OWNER, GUIDANCE_DIR, GITHUB_TOKEN]):
-        logging.error("Missing one or more secrets required for TLS guidance retrieval. SSL results may not reflect compliance.")
-        return {"ciphers":{"1.2":{"recommended":[],"sufficient":[],"phase_out":[]},"1.3":{"recommended":[],"sufficient":[]}},
-                "curves":{"recommended":[],"sufficient":[],"phase_out":[]},
-                "signature_algorithms":{"recommended":[],"sufficient":[],"phase_out":[]},
-                "extensions":{"1.2":{"recommended":[]},"1.3":{"recommended":[]}}}
+    if not all(
+        i is not None for i in [REPO_NAME, REPO_OWNER, GUIDANCE_DIR, GITHUB_TOKEN]
+    ):
+        logging.error(
+            "Missing one or more secrets required for TLS guidance retrieval. SSL results may not reflect compliance."
+        )
+        return {
+            "ciphers": {
+                "1.2": {"recommended": [], "sufficient": [], "phase_out": []},
+                "1.3": {"recommended": [], "sufficient": []},
+            },
+            "curves": {"recommended": [], "sufficient": [], "phase_out": []},
+            "signature_algorithms": {
+                "recommended": [],
+                "sufficient": [],
+                "phase_out": [],
+            },
+            "extensions": {"1.2": {"recommended": []}, "1.3": {"recommended": []}},
+        }
 
     try:
         gh_client = Client(
@@ -54,11 +67,22 @@ def retrieve_tls_guidance():
         logging.info(f"TLS guidance retrieved.")
         return guidance
     except Exception as e:
-        logging.error("Error occurred while retrieving TLS guidance. SSL results may not reflect compliance.")
-        return {"ciphers":{"1.2":{"recommended":[],"sufficient":[],"phase_out":[]},"1.3":{"recommended":[],"sufficient":[]}},
-                "curves":{"recommended":[],"sufficient":[],"phase_out":[]},
-                "signature_algorithms":{"recommended":[],"sufficient":[],"phase_out":[]},
-                "extensions":{"1.2":{"recommended":[]},"1.3":{"recommended":[]}}}
+        logging.error(
+            "Error occurred while retrieving TLS guidance. SSL results may not reflect compliance."
+        )
+        return {
+            "ciphers": {
+                "1.2": {"recommended": [], "sufficient": [], "phase_out": []},
+                "1.3": {"recommended": [], "sufficient": []},
+            },
+            "curves": {"recommended": [], "sufficient": [], "phase_out": []},
+            "signature_algorithms": {
+                "recommended": [],
+                "sufficient": [],
+                "phase_out": [],
+            },
+            "extensions": {"1.2": {"recommended": []}, "1.3": {"recommended": []}},
+        }
 
 
 def formatted_dictionary(data):

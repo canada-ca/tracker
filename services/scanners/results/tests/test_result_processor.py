@@ -69,6 +69,7 @@ test_db.collection("domains").insert(
             "spf": "pass",
             "ssl": "pass",
         },
+        "phase": "",
     }
 )
 
@@ -107,7 +108,12 @@ def test_ssl():
 
     mock_retrieve_guidance = stub(retrieve=lambda: tls_guidance_data)
     test_app = Server(
-        db_host="testdb", db_name="test", db_user="", db_pass="", db_port=8529, tls_guidance=mock_retrieve_guidance.retrieve
+        db_host="testdb",
+        db_name="test",
+        db_user="",
+        db_pass="",
+        db_port=8529,
+        tls_guidance=mock_retrieve_guidance.retrieve,
     )
     test_client = TestClient(test_app)
 
@@ -170,3 +176,10 @@ def test_dns():
     for field in inserted_dkim_results:
         assert inserted_dkim_results.get(field, None) is not None
     assert inserted_dkim_results["guidanceTags"] == expected_dkim_tags
+
+    updated_domain_query = db.collection("domains").find(
+        {"domain": "cyber.gc.ca"}, limit=1
+    )
+    updated_domain = updated_domain_query.next()
+
+    assert updated_domain["phase"] == expected_phase
