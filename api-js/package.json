@@ -8,9 +8,9 @@
   "author": "nsdeschenes",
   "license": "MIT",
   "scripts": {
-    "build": "npm run clean && babel ./src --out-dir dist/src --ignore 'src/**/*.spec.js','src/**/*.test.js' && cp ./index.js dist/ && cp ./migrations.js dist/",
-    "start": "node ./dist/index.js",
-    "dev": "nodemon --exec babel-node index.js",
+    "build": "npm run clean && babel ./src --out-dir dist/src --ignore 'src/**/*.spec.js','src/**/*.test.js' && babel index.js migrations.js --out-dir dist/",
+    "start": "node -r dotenv-safe/config ./dist/index.js",
+    "dev": "nodemon --exec babel-node -r dotenv-safe/config index.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "test": "jest",
     "test-coverage": "jest --coverage",
@@ -46,7 +46,7 @@
     "moment": "^2.29.1",
     "notifications-node-client": "^5.1.0",
     "psl": "^1.8.0",
-    "url-slug": "^2.3.2",
+    "url-slug": "^3.0.1",
     "uuid": "^8.3.2",
     "validator": "^13.5.2"
   },
