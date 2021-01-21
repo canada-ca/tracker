@@ -6,9 +6,9 @@ require('dotenv-safe').config({
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { makeMigrations } = require('../../migrations')
+const { makeMigrations } = require('../../../migrations')
 
-const { upsertOwnership } = require('../database')
+const { upsertOwnership } = require('..')
 
 describe('given the upsertOwnership function', () => {
   const consoleErrorOutput = []
