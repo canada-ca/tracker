@@ -1,4 +1,4 @@
-const { GITHUB_TOKEN = '', GITHUB_URL = '' } = process.env
+const { GITHUB_TOKEN, GITHUB_URL } = process.env
 
 const { GET_FILE_CONTENTS } = require('../graphql')
 
