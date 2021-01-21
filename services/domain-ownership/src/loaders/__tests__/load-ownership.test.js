@@ -1,5 +1,5 @@
 require('jest-fetch-mock').enableFetchMocks()
-const { loadDomainOwnership } = require('../loaders')
+const { loadDomainOwnership } = require('..')
 
 describe('given the loadDomainOwnership function', () => {
   const fetch = fetchMock
