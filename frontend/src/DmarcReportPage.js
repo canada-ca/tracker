@@ -327,8 +327,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`DKIM Failures by IP Address`,
         hidden: true,
         columns: [
-          guidance,
-          totalMessages,
           sourceIpAddress,
           dnsHost,
           envelopeFrom,
@@ -337,6 +335,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           dkimSelectors,
           dkimResults,
           dkimAligned,
+          totalMessages,
+          guidance,
         ],
       },
     ]
@@ -397,7 +397,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`Fully Aligned by IP Address`,
         hidden: true,
         columns: [
-          totalMessages,
           sourceIpAddress,
           dnsHost,
           envelopeFrom,
@@ -405,6 +404,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           spfDomains,
           dkimDomains,
           dkimSelectors,
+          totalMessages,
         ],
       },
     ]
@@ -462,8 +462,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`SPF Failures by IP Address`,
         hidden: true,
         columns: [
-          guidance,
-          totalMessages,
           sourceIpAddress,
           dnsHost,
           envelopeFrom,
@@ -471,6 +469,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           spfDomains,
           spfResults,
           spfAligned,
+          totalMessages,
+          guidance,
         ],
       },
     ]
@@ -530,7 +530,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         Header: t`DMARC Failures by IP Address`,
         hidden: true,
         columns: [
-          totalMessages,
           sourceIpAddress,
           dnsHost,
           envelopeFrom,
@@ -539,6 +538,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           dkimDomains,
           dkimSelectors,
           disposition,
+          totalMessages,
         ],
       },
     ]
