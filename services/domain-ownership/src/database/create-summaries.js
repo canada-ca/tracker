@@ -1,30 +1,47 @@
 const moment = require('moment')
 
-const createSummaries = async ({
-  domain,
+const createSummaries = (
   query,
-  collections,
+  arrayEquals,
   loadDates,
   loadSummaryByDate,
   createSummaryEdge,
-}) => {
-  const domainCursor = await query`
-    FOR domain IN domains
-      FILTER domain.domain == ${domain}
-      RETURN { _id: domain._id }
-  `
+  createSummary,
+  removeSummaryEdge,
+  removeSummary,
+) => async ({ domain }) => {
+  let domainCursor
+  try {
+    domainCursor = await query`
+      FOR domain IN domains
+        FILTER domain.domain == ${domain}
+        RETURN { _id: domain._id }
+    `
+  } catch (err) {
+    throw new Error(err)
+  }
 
-  const domainDBInfo = await domainCursor.next()
+  let domainDBInfo
+  try {
+    domainDBInfo = await domainCursor.next()
+  } catch (err) {
+    throw new Error(err)
+  }
 
   if (typeof domainDBInfo === 'undefined') {
     console.warn(`Could not find domain in DB: ${domain}`)
     return
   }
 
-  const summaryEdgeCursor = await query`
-    FOR v, e IN 1..1 ANY ${domainDBInfo._id} domainsToDmarcSummaries
-      RETURN e
-  `
+  let summaryEdgeCursor
+  try {
+    summaryEdgeCursor = await query`
+      FOR v, e IN 1..1 ANY ${domainDBInfo._id} domainsToDmarcSummaries
+        RETURN e
+    `
+  } catch (err) {
+    throw new Error(err)
+  }
 
   const startDate = moment()
     .startOf('month')
@@ -35,35 +52,17 @@ const createSummaries = async ({
 
   // Create all new summaries
   if (summaryEdgeCursor.count !== 14) {
-    console.info(
-      `First time initialization of dmarc summaries for: ${domain} ...`,
-    )
+    console.info(`First time initialization of dmarc summaries for: ${domain}`)
 
     // Add thirty_days
     dates.push({ startDate: 'thirty_days' })
 
     dates.forEach(async ({ startDate }) => {
-      let currentSummary
-      try {
-        currentSummary = await loadSummaryByDate({ domain, startDate })
-      } catch (err) {
-        throw new Error(err)
-      }
+      const currentSummary = await loadSummaryByDate({ domain, startDate })
 
-      let summaryCursor
-      try {
-        summaryCursor = await query`
-          INSERT ${currentSummary} INTO dmarcSummaries OPTIONS { waitForSync: true } RETURN NEW
-        `
-      } catch (err) {
-        throw new Error(err)
-      }
+      const summaryDBInfo = await createSummary({ currentSummary })
 
-      const summaryDBInfo = await summaryCursor.next()
-
-      let thirtyDays = false
       if (startDate === 'thirty_days') {
-        thirtyDays = true
         startDate = 'thirtyDays'
       }
 
@@ -71,66 +70,30 @@ const createSummaries = async ({
         domainId: domainDBInfo._id,
         summaryId: summaryDBInfo._id,
         startDate: startDate,
-        thirtyDays: thirtyDays,
       })
     })
   } else {
-    console.info(
-      `Updating thirty days, and current month data for: ${domain} ...`,
-    )
-    // Replace thirty days
-    let thirtyDayCursor
-
-    try {
-      thirtyDayCursor = await query`
-        LET edges = (
-          FOR v, e IN 1..1 ANY ${domainDBInfo._id} domainsToDmarcSummaries
-            FILTER e.thirtyDays == true
-            RETURN e
-        )
-
-        FOR edge IN edges REMOVE edge._key IN domainsToDmarcSummaries OPTIONS { waitForSync: true }
-          RETURN OLD
-      `
-    } catch (err) {
-      throw new Error(err)
-    }
-
-    const thirtyDayEdge = await thirtyDayCursor.next()
+    console.info(`Updating thirty days, and current month data for: ${domain}`)
+    // Remove summary edge
+    const thirtyDayEdge = await removeSummaryEdge({
+      domainId: domainDBInfo._id,
+      monthToRemove: 'thirtyDays',
+    })
 
     // Remove summary
-    try {
-      await query`
-        FOR summary IN dmarcSummaries
-          FILTER summary._id == ${thirtyDayEdge._to}
-          REMOVE summary._key IN dmarcSummaries
-          RETURN OLD
-      `
-    } catch (err) {
-      throw new Error(err)
-    }
+    await removeSummary({ summaryId: thirtyDayEdge._to })
 
     const currentSummary = await loadSummaryByDate({
       domain,
-      startDate: 'thirty_days',
+      startDate: 'thirtyDays',
     })
 
-    let summaryCursor
-    try {
-      summaryCursor = await query`
-        INSERT ${currentSummary} INTO dmarcSummaries OPTIONS { waitForSync: true } RETURN NEW
-      `
-    } catch (err) {
-      throw new Error(err)
-    }
-
-    const summaryDBInfo = await summaryCursor.next()
+    const summaryDBInfo = await createSummary({ currentSummary })
 
     await createSummaryEdge({
       domainId: domainDBInfo._id,
       summaryId: summaryDBInfo._id,
-      startDate: startDate,
-      thirtyDays: true,
+      startDate: 'thirtyDays',
     })
 
     // Get current start dates in db
@@ -139,7 +102,7 @@ const createSummaries = async ({
       dbStartDatesCursor = await query`
         RETURN SORTED(UNIQUE(
             FOR edge IN domainsToDmarcSummaries
-                FILTER edge.thirtyDays == false
+                FILTER edge.startDate != "thirtyDays"
                 RETURN { startDate: edge.startDate }
         ))
       `
@@ -155,89 +118,39 @@ const createSummaries = async ({
       // Update current month
       const { startDate: currentStartDate } = dates[12]
 
-      let currentMonthEdgeCursor
-      try {
-        currentMonthEdgeCursor = await query`
-          LET edges = (
-            FOR v, e IN 1..1 ANY ${domainDBInfo._id} domainsToDmarcSummaries
-              FILTER e.startDate == ${currentStartDate}
-              RETURN e
-          )
-  
-          FOR edge IN edges REMOVE edge._key IN domainsToDmarcSummaries OPTIONS { waitForSync: true }
-            RETURN OLD
-        `
-      } catch (err) {
-        throw new Error(err)
-      }
-
-      const currentMonthEdge = await currentMonthEdgeCursor.next()
+      // Remove summary edge
+      const currentMonthEdge = await removeSummaryEdge({
+        domainId: domainDBInfo._id,
+        monthToRemove: currentStartDate,
+      })
 
       // Remove summary
-      try {
-        await query`
-        FOR summary IN dmarcSummaries
-          FILTER summary._id == ${currentMonthEdge._to}
-          REMOVE summary._key IN dmarcSummaries
-      `
-      } catch (err) {
-        throw new Error(err)
-      }
+      await removeSummary({ summaryId: currentMonthEdge._to })
 
       const currentSummary = await loadSummaryByDate({
         domain,
         startDate: dates[12],
       })
 
-      let summaryCursor
-      try {
-        summaryCursor = await query`
-          INSERT ${currentSummary} INTO dmarcSummaries OPTIONS { waitForSync: true } RETURN NEW
-        `
-      } catch (err) {
-        throw new Error(err)
-      }
-
-      const summaryDBInfo = await summaryCursor.next()
+      const summaryDBInfo = await createSummary({ currentSummary })
 
       await createSummaryEdge({
         domainId: domainDBInfo._id,
         summaryId: summaryDBInfo._id,
         startDate: currentStartDate,
-        thirtyDays: false,
       })
     } else {
       // Remove first month, and create new end month
       const { startDate: monthToRemove } = dbStartDates[0]
 
-      let monthToRemoveEdgeCursor
-      try {
-        monthToRemoveEdgeCursor = await query`
-          LET edges = (
-            FOR v, e IN 1..1 ANY ${domainDBInfo._id} domainsToDmarcSummaries
-              FILTER e.startDate == ${monthToRemove}
-              RETURN e
-          )
-  
-          FOR edge IN edges REMOVE edge._key IN domainsToDmarcSummaries OPTIONS { waitForSync: true }
-            RETURN OLD
-        `
-      } catch (err) {
-        throw new Error(err)
-      }
-
-      const monthToRemoveEdge = await monthToRemoveEdgeCursor.next()
+      // Remove summary edge
+      const monthToRemoveEdge = await removeSummaryEdge({
+        domainId: domainDBInfo._id,
+        monthToRemove,
+      })
 
       // Remove summary
-      try {
-        await query`
-          FOR summary IN dmarcSummaries
-            FILTER summary._id == ${monthToRemoveEdge._to}
-            REMOVE summary._key IN dmarcSummaries
-        `
-      } catch (err) {
-        throw new Error(err)
-      }
+      await removeSummary({ summaryId: monthToRemoveEdge._to })
 
       const { startDate: newMonth } = dates[12]
 
@@ -246,29 +159,15 @@ const createSummaries = async ({
         startDate: newMonth,
       })
 
-      let summaryCursor
-      try {
-        summaryCursor = await query`
-          INSERT ${currentSummary} INTO dmarcSummaries OPTIONS { waitForSync: true } RETURN NEW
-        `
-      } catch (err) {
-        throw new Error(err)
-      }
-
-      const summaryDBInfo = await summaryCursor.next()
+      const summaryDBInfo = await createSummary({ currentSummary })
 
       await createSummaryEdge({
         domainId: domainDBInfo._id,
         summaryId: summaryDBInfo._id,
         startDate: newMonth,
-        thirtyDays: false,
       })
     }
   }
-}
-
-const arrayEquals = (a, b) => {
-  return JSON.stringify(a) === JSON.stringify(b)
 }
 
 module.exports = {

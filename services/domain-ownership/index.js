@@ -7,6 +7,7 @@ const { ArangoTools } = require('arango-tools')
 const { makeMigrations } = require('./migrations')
 const fetch = require('isomorphic-fetch')
 const { CosmosClient } = require('@azure/cosmos')
+const moment = require('moment')
 
 const {
   DB_PASS: rootPass,
@@ -18,13 +19,17 @@ const {
 } = process.env
 
 const {
+  arrayEquals,
   createSummaries,
   createSummaryEdge,
+  createSummary,
   loadDates,
   loadDomainOwnership,
   loadSummaryByDate,
   upsertOwnership,
   removeOwnerships,
+  removeSummary,
+  removeSummaryEdge,
 } = require('./src')
 
 ;(async () => {
@@ -48,29 +53,27 @@ const {
   await removeOwnerships({ query })
 
   // Load ownership assignments from github
-  // const ownerships = await loadDomainOwnership({ fetch })
+  const ownerships = await loadDomainOwnership({ fetch })
 
-  const ownerships = {
-    CSE: [
-      'cyber.gc.ca',
-    ],
-  }
+  const summaryCreateFunc = createSummaries(
+    query,
+    arrayEquals,
+    createSummaryEdge(collections),
+    createSummary(query),
+    loadDates(moment),
+    loadSummaryByDate(summariesContainer),
+    removeSummaryEdge(query),
+    removeSummary(query),
+  )
 
   console.info('Assigning ownerships ...')
   Object.keys(ownerships).forEach((key) => {
-    // console.info(`Assigning domain ownership to: ${String(key)}`)
+    console.info(`Assigning domain ownership to: ${String(key)}`)
     upsertOwnership({ ownership: ownerships[key], key, query })
 
-    ownerships[key].forEach((domain) => {
-      // console.info(`Pulling dmarc report summaries for ${domain}`)
-
-      createSummaries({
+    ownerships[key].forEach(async (domain) => {
+      await summaryCreateFunc({
         domain,
-        query,
-        collections,
-        createSummaryEdge: createSummaryEdge(collections),
-        loadDates,
-        loadSummaryByDate: loadSummaryByDate(summariesContainer),
       })
     })
   })
