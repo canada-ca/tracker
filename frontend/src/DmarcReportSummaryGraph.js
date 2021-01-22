@@ -15,6 +15,7 @@ import theme from './theme/canada'
 import { Box } from '@chakra-ui/core'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import CustomTooltipContent from './CustomTooltipContent'
 
 /*
 scheme for const data:
@@ -92,7 +93,10 @@ function DmarcReportSummaryGraph({ ...props }) {
             domain={[0, 1]}
           />
           <Tooltip
-            formatter={(value, _name, _props) => value.toLocaleString(i18n.locale)}
+            formatter={(value, _name, _props) =>
+              value.toLocaleString(i18n.locale)
+            }
+            content={CustomTooltipContent}
           />
           <Legend
             align="center"
