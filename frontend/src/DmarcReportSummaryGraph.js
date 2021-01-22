@@ -97,6 +97,7 @@ function DmarcReportSummaryGraph({ ...props }) {
               value.toLocaleString(i18n.locale)
             }
             content={CustomTooltipContent}
+            calculatePercentages={true}
           />
           <Legend
             align="center"

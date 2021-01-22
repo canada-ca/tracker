@@ -1,18 +1,50 @@
 import React from 'react'
-import { Box, Text, List, Stack } from '@chakra-ui/core'
-import { string, func, array } from 'prop-types'
+import { Box, Text, Grid } from '@chakra-ui/core'
+import { string, func, array, bool } from 'prop-types'
 
-const CustomTooltipContent = ({ label, payload, formatter }) => {
-  const listItems = payload.map((entry) => {
+const CustomTooltipContent = ({
+  label,
+  payload,
+  formatter,
+  calculatePercentages,
+}) => {
+  const totalValue = payload.reduce((acc, currentValue) => {
+    return currentValue.payload[currentValue.dataKey] + acc
+  }, 0)
+
+  const listItems = []
+  payload.forEach((entry) => {
     if (entry !== undefined) {
-      return (
-        <Stack isInline key={entry.dataKey} color={entry.color}>
-          <Text>{`${entry.name} :`}</Text>
-          <Text ml="auto">{` ${formatter(entry.payload[entry.dataKey])}`}</Text>
-        </Stack>
+      listItems.push(
+        <Text
+          key={`${entry.dataKey}-name`}
+          color={entry.color}
+        >{`${entry.name} :`}</Text>,
       )
+      listItems.push(
+        <Text
+          mx="1rem"
+          textAlign="right"
+          key={`${entry.dataKey}-value`}
+          color={entry.color}
+        >{`${formatter(entry.payload[entry.dataKey])}`}</Text>,
+      )
+      if (calculatePercentages)
+        listItems.push(
+          <Text
+            textAlign="right"
+            key={`${entry.dataKey}-percent`}
+            color={entry.color}
+          >{`${Math.round(
+            formatter((entry.payload[entry.dataKey] / totalValue) * 100),
+          )}%`}</Text>,
+        )
     }
   })
+
+  const columns = calculatePercentages ? 3 : 2
+  const templateColumns = `repeat(${columns}, auto)}`
+
   return (
     <Box
       backgroundColor="white"
@@ -23,9 +55,7 @@ const CustomTooltipContent = ({ label, payload, formatter }) => {
       borderColor="#ccc"
     >
       <Text>{label}</Text>
-      <List as="ul" styleType="none">
-        {listItems}
-      </List>
+      <Grid templateColumns={templateColumns}>{listItems}</Grid>
     </Box>
   )
 }
@@ -34,11 +64,13 @@ CustomTooltipContent.propTypes = {
   formatter: func,
   label: string,
   payload: array,
+  calculatePercentages: bool,
 }
 
 CustomTooltipContent.defaultProps = {
   separator: ' : ',
   formatter: (value) => value,
+  calculatePercentages: false,
 }
 
 export default CustomTooltipContent
