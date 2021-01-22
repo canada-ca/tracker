@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Text, List, Stack } from '@chakra-ui/core'
-import { string, func, object, array } from 'prop-types'
+import { string, func, array } from 'prop-types'
 
 const CustomTooltipContent = ({ label, payload, formatter }) => {
   const listItems = payload.map((entry) => {
