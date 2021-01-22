@@ -1,7 +1,11 @@
 import { GraphQLObjectType } from 'graphql'
-import { t } from '@lingui/macro'
+import { defineMessage  } from "@lingui/macro"
 
 import { categorizedSummaryType } from '../../summaries'
+
+
+const pass = defineMessage({ message: "pass"})
+const fail = defineMessage({ message: "fail"})
 
 export const organizationSummaryType = new GraphQLObjectType({
   name: 'OrganizationSummary',
@@ -23,12 +27,12 @@ export const organizationSummaryType = new GraphQLObjectType({
 
         const categories = [
           {
-            name: i18n._(t`pass`),
+            name: i18n._(pass),
             count: mail.pass,
             percentage: percentPass,
           },
           {
-            name: i18n._(t`fail`),
+            name: i18n._(fail),
             count: mail.fail,
             percentage: percentageFail,
           },
@@ -56,12 +60,12 @@ export const organizationSummaryType = new GraphQLObjectType({
 
         const categories = [
           {
-            name: i18n._(t`pass`),
+            name: i18n._(pass),
             count: web.pass,
             percentage: percentPass,
           },
           {
-            name: i18n._(t`fail`),
+            name: i18n._(fail),
             count: web.fail,
             percentage: percentageFail,
           },

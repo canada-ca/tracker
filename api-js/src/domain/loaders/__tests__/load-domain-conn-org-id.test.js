@@ -1,15 +1,13 @@
 import { stringify } from 'jest-matcher-utils'
 import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
+// import { en, fr } from 'make-plural/plurals'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { makeMigrations } from '../../../../migrations'
 import { cleanseInput } from '../../../validators'
-import {
-  domainLoaderConnectionsByOrgId,
-  domainLoaderByKey,
-} from '../index'
+import { domainLoaderConnectionsByOrgId, domainLoaderByKey } from '../index'
 import { toGlobalId } from 'graphql-relay'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -493,12 +491,15 @@ describe('given the load domain connection using org id function', () => {
   describe('users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
-        language: 'en',
+        locale: 'en',
+        localeData: {
+          en: { plurals: {} },
+          fr: { plurals: {} },
+        },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
-        catalogs: {
-          en: englishMessages,
-          fr: frenchMessages,
+        messages: {
+          en: englishMessages.messages,
+          fr: frenchMessages.messages,
         },
       })
     })
@@ -836,12 +837,15 @@ describe('given the load domain connection using org id function', () => {
   describe('users language is set to french', () => {
     beforeAll(() => {
       i18n = setupI18n({
-        language: 'fr',
+        locale: 'fr',
+        localeData: {
+          en: { plurals: {} },
+          fr: { plurals: {} },
+        },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
-        catalogs: {
-          en: englishMessages,
-          fr: frenchMessages,
+        messages: {
+          en: englishMessages.messages,
+          fr: frenchMessages.messages,
         },
       })
     })

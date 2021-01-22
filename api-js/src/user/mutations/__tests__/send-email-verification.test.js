@@ -1,5 +1,5 @@
 import { ArangoTools, dbNameFromFile } from 'arango-tools'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
@@ -57,12 +57,15 @@ describe('user send password reset email', () => {
     describe('users preferred language is french', () => {
       beforeAll(() => {
         i18n = setupI18n({
-          language: 'fr',
+          locale: 'fr',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
           locales: ['en', 'fr'],
-          missing: 'Traduction manquante',
-          catalogs: {
-            en: englishMessages,
-            fr: frenchMessages,
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
           },
         })
       })
@@ -191,12 +194,15 @@ describe('user send password reset email', () => {
     describe('users preferred language is english', () => {
       beforeAll(() => {
         i18n = setupI18n({
-          language: 'en',
+          locale: 'en',
+          localeData: {
+            en: { plurals: {} },
+            fr: { plurals: {} },
+          },
           locales: ['en', 'fr'],
-          missing: 'Traduction manquante',
-          catalogs: {
-            en: englishMessages,
-            fr: frenchMessages,
+          messages: {
+            en: englishMessages.messages,
+            fr: frenchMessages.messages,
           },
         })
       })

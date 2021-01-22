@@ -11,33 +11,33 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: src/mutations/user/send-phone-code.js:47
-#: src/mutations/user/update-user-password.js:54
-#: src/mutations/user/update-user-profile.js:66
-#: src/mutations/user/verify-phone-number.js:34
+#: src/user/mutations/send-phone-code.js:48
+#: src/user/mutations/update-user-password.js:54
+#: src/user/mutations/update-user-profile.js:67
+#: src/user/mutations/verify-phone-number.js:34
 msgid "Authentication error, please sign in again."
 msgstr "todo"
 
-#: src/auth/check-permission.js:17
-#: src/auth/check-permission.js:44
+#: src/auth/check-permission.js:19
+#: src/auth/check-permission.js:46
 msgid "Authentication error. Please sign in again."
 msgstr "todo"
 
-#: src/auth/user-required.js:8
-#: src/auth/user-required.js:19
-#: src/auth/user-required.js:26
+#: src/auth/user-required.js:12
+#: src/auth/user-required.js:23
+#: src/auth/user-required.js:30
 msgid "Authentication error. Please sign in."
 msgstr "todo"
 
-#: src/types/base.js:916
+#: src/organization/objects/organization.js:126
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "todo"
 
-#: src/queries/domains/find-domain-by-domain.js:46
+#: src/domain/queries/find-domain-by-domain.js:47
 msgid "Could not retrieve specified domain."
 msgstr "todo"
 
-#: src/queries/organizations/find-organization-by-slug.js:48
+#: src/organization/queries/find-organization-by-slug.js:49
 msgid "Could not retrieve specified organization."
 msgstr "todo"
 
@@ -46,11 +46,11 @@ msgstr "todo"
 msgid "Error when retrieving dmarc report information. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/send-password-reset.js:72
+#: src/user/mutations/send-password-reset.js:72
 msgid "If an account with this username is found, a password reset link will be found in your inbox."
 msgstr "todo"
 
-#: src/mutations/user/send-email-verification.js:71
+#: src/user/mutations/send-email-verification.js:71
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "todo"
 
@@ -58,102 +58,102 @@ msgstr "todo"
 msgid "Invalid token, please request a new one."
 msgstr "todo"
 
-#: src/mutations/user/reset-password.js:86
+#: src/user/mutations/reset-password.js:86
 msgid "New passwords do not match. Please try again."
 msgstr "todo"
 
-#: src/queries/domains/find-domain-by-domain.js:37
+#: src/domain/queries/find-domain-by-domain.js:38
 msgid "No domain with the provided domain could be found."
 msgstr "todo"
 
-#: src/queries/organizations/find-organization-by-slug.js:39
-#: src/queries/verified-organizations/find-verified-organization-by-slug.js:34
+#: src/organization/queries/find-organization-by-slug.js:40
+#: src/verified-organizations/queries/find-verified-organization-by-slug.js:34
 msgid "No organization with the provided slug could be found."
 msgstr "todo"
 
-#: src/queries/verified-domains/find-verified-domain-by-domain.js:33
+#: src/verified-domains/queries/find-verified-domain-by-domain.js:33
 msgid "No verified domain with the provided domain could be found."
 msgstr "todo"
 
-#: src/mutations/organizations/verify-organization.js:68
+#: src/organization/mutations/verify-organization.js:68
 msgid "Organization has already been verified."
 msgstr "todo"
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:42
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:42
+#: src/affiliation/loaders/load-affiliations-by-org-id.js:42
+#: src/affiliation/loaders/load-affiliations-by-user-id.js:42
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:39
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:39
 msgid "Passing both `first` and `last` to paginate the `dkimResults` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:49
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:85
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:49
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:85
 msgid "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:49
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:49
 msgid "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:51
-#: src/loaders/domains/load-domain-connections-by-user-id.js:49
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:51
+#: src/domain/loaders/load-domain-connections-by-user-id.js:49
 msgid "Passing both `first` and `last` to paginate the `domain` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-dkim-guidance-tags-connections.js:39
-#: src/loaders/guidance-tags/load-dmarc-guidance-tags-connections.js:39
-#: src/loaders/guidance-tags/load-https-guidance-tags-connections.js:39
-#: src/loaders/guidance-tags/load-spf-guidance-tags-connections.js:39
-#: src/loaders/guidance-tags/load-ssl-guidance-tags-connections.js:39
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:39
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:39
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:39
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:39
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:39
 msgid "Passing both `first` and `last` to paginate the `guidanceTag` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:49
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:49
 msgid "Passing both `first` and `last` to paginate the `https` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:43
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:43
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:43
+#: src/organization/loaders/load-organization-connections-by-user-id.js:43
 msgid "Passing both `first` and `last` to paginate the `organization` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:49
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:49
 msgid "Passing both `first` and `last` to paginate the `spf` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:49
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:49
 msgid "Passing both `first` and `last` to paginate the `ssl` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/verified-domains/load-verified-domain-connections-by-organization-id.js:41
-#: src/loaders/verified-domains/load-verified-domain-connections.js:42
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:41
+#: src/verified-domains/loaders/load-verified-domain-connections.js:41
 msgid "Passing both `first` and `last` to paginate the `verifiedDomain` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/verified-organizations/load-verified-organization-connections-by-domain-id.js:39
-#: src/loaders/verified-organizations/load-verified-organizations-connections.js:40
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:39
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:40
 msgid "Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported."
 msgstr "todo"
 
-#: src/mutations/user/reset-password.js:95
+#: src/user/mutations/reset-password.js:95
 msgid "Password is not strong enough. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/sign-up.js:71
+#: src/user/mutations/sign-up.js:71
 msgid "Password is too short."
 msgstr "todo"
 
-#: src/mutations/user/reset-password.js:117
+#: src/user/mutations/reset-password.js:117
 msgid "Password was successfully reset."
 msgstr "todo"
 
-#: src/mutations/user/update-user-password.js:120
+#: src/user/mutations/update-user-password.js:120
 msgid "Password was successfully updated."
 msgstr "todo"
 
-#: src/mutations/user/sign-up.js:79
+#: src/user/mutations/sign-up.js:79
 msgid "Passwords do not match."
 msgstr "todo"
 
@@ -170,417 +170,417 @@ msgstr "todo"
 msgid "Permission error, not an admin for this user."
 msgstr "todo"
 
-#: src/mutations/user/update-user-profile.js:151
+#: src/user/mutations/update-user-profile.js:152
 msgid "Profile successfully updated."
 msgstr "todo"
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:65
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:65
+#: src/affiliation/loaders/load-affiliations-by-org-id.js:65
+#: src/affiliation/loaders/load-affiliations-by-user-id.js:65
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:74
-#: src/loaders/domains/load-domain-connections-by-user-id.js:72
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:74
+#: src/domain/loaders/load-domain-connections-by-user-id.js:72
 msgid "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-dkim-guidance-tags-connections.js:62
-#: src/loaders/guidance-tags/load-dmarc-guidance-tags-connections.js:62
-#: src/loaders/guidance-tags/load-https-guidance-tags-connections.js:62
-#: src/loaders/guidance-tags/load-spf-guidance-tags-connections.js:62
-#: src/loaders/guidance-tags/load-ssl-guidance-tags-connections.js:62
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:62
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:62
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:62
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:62
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:62
 msgid "Requesting `{amount}` records on the `guidanceTag` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:66
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:66
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:66
+#: src/organization/loaders/load-organization-connections-by-user-id.js:66
 msgid "Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/verified-domains/load-verified-domain-connections-by-organization-id.js:64
-#: src/loaders/verified-domains/load-verified-domain-connections.js:65
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:64
+#: src/verified-domains/loaders/load-verified-domain-connections.js:64
 msgid "Requesting `{amount}` records on the `verifiedDomain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/verified-organizations/load-verified-organization-connections-by-domain-id.js:62
-#: src/loaders/verified-organizations/load-verified-organizations-connections.js:63
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:62
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:63
 msgid "Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:62
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:62
 msgid "Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:72
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:72
 msgid "Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:73
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:73
 msgid "Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:72
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:72
 msgid "Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:72
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:72
 msgid "Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:72
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:72
 msgid "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/mutations/scans/request-scan.js:132
+#: src/domain/mutations/request-scan.js:132
 msgid "Successfully dispatched one time scan."
 msgstr "todo"
 
-#: src/mutations/user/verify-account.js:102
+#: src/user/mutations/verify-account.js:102
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:186
+#: src/affiliation/mutations/invite-user-to-org.js:186
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "todo"
 
-#: src/mutations/domain/remove-domain.js:228
+#: src/domain/mutations/remove-domain.js:228
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "todo"
 
-#: src/mutations/organizations/remove-organization.js:198
+#: src/organization/mutations/remove-organization.js:198
 msgid "Successfully removed organization: {0}."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/remove-user-from-org.js:163
+#: src/affiliation/mutations/remove-user-from-org.js:163
 msgid "Successfully removed user from organization."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:127
+#: src/affiliation/mutations/invite-user-to-org.js:127
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "todo"
 
-#: src/mutations/organizations/verify-organization.js:118
+#: src/organization/mutations/verify-organization.js:118
 msgid "Successfully verified organization: {0}."
 msgstr "todo"
 
-#: src/mutations/user/verify-phone-number.js:90
+#: src/user/mutations/verify-phone-number.js:91
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "todo"
 
-#: src/mutations/user/sign-in.js:63
+#: src/user/mutations/sign-in.js:63
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "todo"
 
-#: src/mutations/user/send-phone-code.js:124
+#: src/user/mutations/send-phone-code.js:125
 msgid "Two factor code has been successfully sent, you will receive a text message shortly."
 msgstr "todo"
 
-#: src/mutations/user/authenticate.js:56
-#: src/mutations/user/authenticate.js:66
-#: src/mutations/user/authenticate.js:83
-#: src/mutations/user/authenticate.js:101
 #: src/notify/notify-send-authenticate-email.js:16
-#: src/notify/notify-send-authenticate-text-msg.js:30
+#: src/notify/notify-send-authenticate-text-msg.js:31
+#: src/user/mutations/authenticate.js:56
+#: src/user/mutations/authenticate.js:66
+#: src/user/mutations/authenticate.js:83
+#: src/user/mutations/authenticate.js:101
 msgid "Unable to authenticate. Please try again."
 msgstr "todo"
 
-#: src/auth/check-permission.js:27
-#: src/auth/check-permission.js:53
+#: src/auth/check-permission.js:29
+#: src/auth/check-permission.js:55
 msgid "Unable to check permission. Please try again."
 msgstr "todo"
 
-#: src/mutations/domain/create-domain.js:69
-#: src/mutations/domain/create-domain.js:83
-#: src/mutations/domain/create-domain.js:108
-#: src/mutations/domain/create-domain.js:117
-#: src/mutations/domain/create-domain.js:168
+#: src/domain/mutations/create-domain.js:69
+#: src/domain/mutations/create-domain.js:83
+#: src/domain/mutations/create-domain.js:108
+#: src/domain/mutations/create-domain.js:117
+#: src/domain/mutations/create-domain.js:168
 msgid "Unable to create domain. Please try again."
 msgstr "todo"
 
-#: src/mutations/organizations/create-organization.js:133
-#: src/mutations/organizations/create-organization.js:187
-#: src/mutations/organizations/create-organization.js:208
-#: src/mutations/organizations/create-organization.js:219
+#: src/organization/mutations/create-organization.js:134
+#: src/organization/mutations/create-organization.js:188
+#: src/organization/mutations/create-organization.js:209
+#: src/organization/mutations/create-organization.js:220
 msgid "Unable to create organization. Please try again."
 msgstr "todo"
 
-#: src/mutations/scans/request-scan.js:95
-#: src/mutations/scans/request-scan.js:109
-#: src/mutations/scans/request-scan.js:123
+#: src/domain/mutations/request-scan.js:95
+#: src/domain/mutations/request-scan.js:109
+#: src/domain/mutations/request-scan.js:123
 msgid "Unable to dispatch one time scan. Please try again."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-dkim-guidance-tags.js:18
-#: src/loaders/guidance-tags/load-dkim-guidance-tags.js:32
+#: src/guidance-tag/loaders/load-dkim-guidance-tags.js:18
+#: src/guidance-tag/loaders/load-dkim-guidance-tags.js:32
 msgid "Unable to find dkim guidance tags. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-result-by-key.js:18
-#: src/loaders/email-scan/load-dkim-result-by-key.js:30
+#: src/email-scan/loaders/load-dkim-result-by-key.js:18
+#: src/email-scan/loaders/load-dkim-result-by-key.js:30
 msgid "Unable to find dkim result. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-by-key.js:18
-#: src/loaders/email-scan/load-dkim-by-key.js:30
+#: src/email-scan/loaders/load-dkim-by-key.js:18
+#: src/email-scan/loaders/load-dkim-by-key.js:30
 msgid "Unable to find dkim scan. Please try again."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-dmarc-guidance-tags.js:18
-#: src/loaders/guidance-tags/load-dmarc-guidance-tags.js:32
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags.js:18
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags.js:32
 msgid "Unable to find dmarc guidance tags. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dmarc-by-key.js:18
-#: src/loaders/email-scan/load-dmarc-by-key.js:30
+#: src/email-scan/loaders/load-dmarc-by-key.js:18
+#: src/email-scan/loaders/load-dmarc-by-key.js:30
 msgid "Unable to find dmarc scan. Please try again."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-by-domain.js:18
-#: src/loaders/domains/load-domain-by-domain.js:30
-#: src/loaders/domains/load-domain-by-key.js:18
-#: src/loaders/domains/load-domain-by-key.js:30
+#: src/domain/loaders/load-domain-by-domain.js:18
+#: src/domain/loaders/load-domain-by-domain.js:30
+#: src/domain/loaders/load-domain-by-key.js:18
+#: src/domain/loaders/load-domain-by-key.js:30
 msgid "Unable to find domain. Please try again."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-https-guidance-tags.js:18
-#: src/loaders/guidance-tags/load-https-guidance-tags.js:32
+#: src/guidance-tag/loaders/load-https-guidance-tags.js:18
+#: src/guidance-tag/loaders/load-https-guidance-tags.js:32
 msgid "Unable to find https guidance tags. Please try again."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-https-by-key.js:17
-#: src/loaders/web-scan/load-https-by-key.js:29
+#: src/web-scan/loaders/load-https-by-key.js:17
+#: src/web-scan/loaders/load-https-by-key.js:29
 msgid "Unable to find https scan. Please try again."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-by-key.js:19
-#: src/loaders/organizations/load-organization-by-key.js:31
-#: src/loaders/organizations/load-organization-by-slug.js:19
-#: src/loaders/organizations/load-organization-by-slug.js:31
+#: src/organization/loaders/load-organization-by-key.js:19
+#: src/organization/loaders/load-organization-by-key.js:31
+#: src/organization/loaders/load-organization-by-slug.js:19
+#: src/organization/loaders/load-organization-by-slug.js:31
 msgid "Unable to find organization. Please try again."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-spf-guidance-tags.js:18
-#: src/loaders/guidance-tags/load-spf-guidance-tags.js:32
+#: src/guidance-tag/loaders/load-spf-guidance-tags.js:18
+#: src/guidance-tag/loaders/load-spf-guidance-tags.js:32
 msgid "Unable to find spf guidance tags. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-spf-by-key.js:18
-#: src/loaders/email-scan/load-spf-by-key.js:30
+#: src/email-scan/loaders/load-spf-by-key.js:18
+#: src/email-scan/loaders/load-spf-by-key.js:30
 msgid "Unable to find spf scan. Please try again."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-ssl-guidance-tags.js:18
-#: src/loaders/guidance-tags/load-ssl-guidance-tags.js:32
+#: src/guidance-tag/loaders/load-ssl-guidance-tags.js:18
+#: src/guidance-tag/loaders/load-ssl-guidance-tags.js:32
 msgid "Unable to find ssl guidance tags. Please try again."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-ssl-by-key.js:17
-#: src/loaders/web-scan/load-ssl-by-key.js:29
+#: src/web-scan/loaders/load-ssl-by-key.js:17
+#: src/web-scan/loaders/load-ssl-by-key.js:29
 msgid "Unable to find ssl scan. Please try again."
 msgstr "todo"
 
-#: src/loaders/chart-summaries/load-chart-summary-by-key.js:18
-#: src/loaders/chart-summaries/load-chart-summary-by-key.js:30
+#: src/summaries/loaders/load-chart-summary-by-key.js:18
+#: src/summaries/loaders/load-chart-summary-by-key.js:30
 msgid "Unable to find summary. Please try again."
 msgstr "todo"
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-key.js:21
-#: src/loaders/user-affiliations/load-user-affiliations-by-key.js:35
+#: src/affiliation/loaders/load-affiliations-by-key.js:21
+#: src/affiliation/loaders/load-affiliations-by-key.js:35
 msgid "Unable to find user affiliation(s). Please try again."
 msgstr "todo"
 
-#: src/loaders/user/load-user-by-key.js:18
-#: src/loaders/user/load-user-by-key.js:30
-#: src/loaders/user/load-user-by-username.js:18
-#: src/loaders/user/load-user-by-username.js:30
+#: src/user/loaders/load-user-by-key.js:18
+#: src/user/loaders/load-user-by-key.js:30
+#: src/user/loaders/load-user-by-username.js:18
+#: src/user/loaders/load-user-by-username.js:30
 msgid "Unable to find user. Please try again."
 msgstr "todo"
 
-#: src/loaders/verified-domains/load-verified-domain-by-domain.js:23
-#: src/loaders/verified-domains/load-verified-domain-by-domain.js:37
-#: src/loaders/verified-domains/load-verified-domain-by-key.js:23
-#: src/loaders/verified-domains/load-verified-domain-by-key.js:37
+#: src/verified-domains/loaders/load-verified-domain-by-domain.js:23
+#: src/verified-domains/loaders/load-verified-domain-by-domain.js:37
+#: src/verified-domains/loaders/load-verified-domain-by-key.js:23
+#: src/verified-domains/loaders/load-verified-domain-by-key.js:37
 msgid "Unable to find verified domain. Please try again."
 msgstr "todo"
 
-#: src/loaders/verified-organizations/load-verified-organization-by-key.js:21
-#: src/loaders/verified-organizations/load-verified-organization-by-key.js:35
-#: src/loaders/verified-organizations/load-verified-organization-by-slug.js:21
-#: src/loaders/verified-organizations/load-verified-organization-by-slug.js:33
+#: src/verified-organizations/loaders/load-verified-organization-by-key.js:21
+#: src/verified-organizations/loaders/load-verified-organization-by-key.js:35
+#: src/verified-organizations/loaders/load-verified-organization-by-slug.js:21
+#: src/verified-organizations/loaders/load-verified-organization-by-slug.js:33
 msgid "Unable to find verified organization. Please try again."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:79
-#: src/mutations/user-affiliations/invite-user-to-org.js:92
-#: src/mutations/user-affiliations/invite-user-to-org.js:155
-#: src/mutations/user-affiliations/invite-user-to-org.js:177
+#: src/affiliation/mutations/invite-user-to-org.js:79
+#: src/affiliation/mutations/invite-user-to-org.js:92
+#: src/affiliation/mutations/invite-user-to-org.js:155
+#: src/affiliation/mutations/invite-user-to-org.js:177
 msgid "Unable to invite user. Please try again."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:68
+#: src/affiliation/mutations/invite-user-to-org.js:68
 msgid "Unable to invite yourself to an org. Please try again."
 msgstr "todo"
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:146
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:146
+#: src/affiliation/loaders/load-affiliations-by-org-id.js:146
+#: src/affiliation/loaders/load-affiliations-by-user-id.js:146
 msgid "Unable to load affiliations. Please try again."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-dkim-guidance-tags-connections.js:130
-#: src/loaders/guidance-tags/load-dkim-guidance-tags-connections.js:142
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:130
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:142
 msgid "Unable to load dkim guidance tags. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:131
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:141
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:131
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:141
 msgid "Unable to load dkim results. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:152
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:162
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:152
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:162
 msgid "Unable to load dkim scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-dmarc-guidance-tags-connections.js:130
-#: src/loaders/guidance-tags/load-dmarc-guidance-tags-connections.js:142
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:130
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:142
 msgid "Unable to load dmarc guidance tags. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:145
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:155
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:145
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:155
 msgid "Unable to load dmarc scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:151
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:161
-#: src/loaders/domains/load-domain-connections-by-user-id.js:157
-#: src/loaders/verified-domains/load-verified-domain-connections.js:142
-#: src/loaders/verified-domains/load-verified-domain-connections.js:152
-#: src/queries/domains/find-my-domains.js:38
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:151
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:161
+#: src/domain/loaders/load-domain-connections-by-user-id.js:157
+#: src/domain/queries/find-my-domains.js:38
+#: src/verified-domains/loaders/load-verified-domain-connections.js:141
+#: src/verified-domains/loaders/load-verified-domain-connections.js:151
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-https-guidance-tags-connections.js:130
-#: src/loaders/guidance-tags/load-https-guidance-tags-connections.js:142
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:130
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:142
 msgid "Unable to load https guidance tags. Please try again."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:143
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:153
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:143
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:153
 msgid "Unable to load https scans. Please try again."
 msgstr "todo"
 
-#: src/queries/summaries/mail-summary.js:12
+#: src/summaries/queries/mail-summary.js:12
 msgid "Unable to load mail summary. Please try again."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:141
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:151
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:146
-#: src/queries/organizations/find-my-organizations.js:32
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:141
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:151
+#: src/organization/loaders/load-organization-connections-by-user-id.js:146
+#: src/organization/queries/find-my-organizations.js:32
 msgid "Unable to load organizations. Please try again."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-spf-guidance-tags-connections.js:130
-#: src/loaders/guidance-tags/load-spf-guidance-tags-connections.js:142
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:130
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:142
 msgid "Unable to load spf guidance tags. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:143
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:153
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:143
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:153
 msgid "Unable to load spf scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-ssl-guidance-tags-connections.js:130
-#: src/loaders/guidance-tags/load-ssl-guidance-tags-connections.js:142
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:130
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:142
 msgid "Unable to load ssl guidance tags. Please try again."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:143
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:153
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:143
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:153
 msgid "Unable to load ssl scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/verified-domains/load-verified-domain-connections-by-organization-id.js:136
-#: src/loaders/verified-domains/load-verified-domain-connections-by-organization-id.js:148
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:136
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:148
 msgid "Unable to load verified domains. Please try again."
 msgstr "todo"
 
-#: src/loaders/verified-organizations/load-verified-organization-connections-by-domain-id.js:136
-#: src/loaders/verified-organizations/load-verified-organization-connections-by-domain-id.js:148
-#: src/loaders/verified-organizations/load-verified-organizations-connections.js:138
-#: src/loaders/verified-organizations/load-verified-organizations-connections.js:150
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:136
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:148
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:138
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:150
 msgid "Unable to load verified organizations. Please try again."
 msgstr "todo"
 
-#: src/queries/summaries/web-summary.js:12
+#: src/summaries/queries/web-summary.js:13
 msgid "Unable to load web summary. Please try again."
 msgstr "todo"
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:136
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:136
+#: src/affiliation/loaders/load-affiliations-by-org-id.js:136
+#: src/affiliation/loaders/load-affiliations-by-user-id.js:136
 msgid "Unable to query affiliations. Please try again."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-user-id.js:147
+#: src/domain/loaders/load-domain-connections-by-user-id.js:147
 msgid "Unable to query domains. Please try again."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:136
+#: src/organization/loaders/load-organization-connections-by-user-id.js:136
 msgid "Unable to query organizations. Please try again."
 msgstr "todo"
 
-#: src/mutations/domain/remove-domain.js:58
-#: src/mutations/domain/remove-domain.js:69
-#: src/mutations/domain/remove-domain.js:80
-#: src/mutations/domain/remove-domain.js:87
-#: src/mutations/domain/remove-domain.js:100
-#: src/mutations/domain/remove-domain.js:171
-#: src/mutations/domain/remove-domain.js:188
-#: src/mutations/domain/remove-domain.js:209
-#: src/mutations/domain/remove-domain.js:220
+#: src/domain/mutations/remove-domain.js:58
+#: src/domain/mutations/remove-domain.js:69
+#: src/domain/mutations/remove-domain.js:80
+#: src/domain/mutations/remove-domain.js:87
+#: src/domain/mutations/remove-domain.js:100
+#: src/domain/mutations/remove-domain.js:171
+#: src/domain/mutations/remove-domain.js:188
+#: src/domain/mutations/remove-domain.js:209
+#: src/domain/mutations/remove-domain.js:220
 msgid "Unable to remove domain. Please try again."
 msgstr "todo"
 
-#: src/mutations/organizations/remove-organization.js:52
-#: src/mutations/organizations/remove-organization.js:65
-#: src/mutations/organizations/remove-organization.js:74
-#: src/mutations/organizations/remove-organization.js:145
-#: src/mutations/organizations/remove-organization.js:177
-#: src/mutations/organizations/remove-organization.js:188
+#: src/organization/mutations/remove-organization.js:52
+#: src/organization/mutations/remove-organization.js:65
+#: src/organization/mutations/remove-organization.js:74
+#: src/organization/mutations/remove-organization.js:145
+#: src/organization/mutations/remove-organization.js:177
+#: src/organization/mutations/remove-organization.js:188
 msgid "Unable to remove organization. Please try again."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/remove-user-from-org.js:52
-#: src/mutations/user-affiliations/remove-user-from-org.js:63
-#: src/mutations/user-affiliations/remove-user-from-org.js:74
-#: src/mutations/user-affiliations/remove-user-from-org.js:91
-#: src/mutations/user-affiliations/remove-user-from-org.js:100
-#: src/mutations/user-affiliations/remove-user-from-org.js:143
-#: src/mutations/user-affiliations/remove-user-from-org.js:154
-#: src/mutations/user-affiliations/remove-user-from-org.js:170
+#: src/affiliation/mutations/remove-user-from-org.js:52
+#: src/affiliation/mutations/remove-user-from-org.js:63
+#: src/affiliation/mutations/remove-user-from-org.js:74
+#: src/affiliation/mutations/remove-user-from-org.js:91
+#: src/affiliation/mutations/remove-user-from-org.js:100
+#: src/affiliation/mutations/remove-user-from-org.js:143
+#: src/affiliation/mutations/remove-user-from-org.js:154
+#: src/affiliation/mutations/remove-user-from-org.js:170
 msgid "Unable to remove user from organization. Please try again."
 msgstr "todo"
 
-#: src/mutations/scans/request-scan.js:61
-#: src/mutations/scans/request-scan.js:73
+#: src/domain/mutations/request-scan.js:61
+#: src/domain/mutations/request-scan.js:73
 msgid "Unable to request a on time scan on this domain."
 msgstr "todo"
 
-#: src/mutations/user/reset-password.js:60
-#: src/mutations/user/reset-password.js:70
-#: src/mutations/user/reset-password.js:78
-#: src/mutations/user/reset-password.js:111
+#: src/user/mutations/reset-password.js:60
+#: src/user/mutations/reset-password.js:70
+#: src/user/mutations/reset-password.js:78
+#: src/user/mutations/reset-password.js:111
 msgid "Unable to reset password. Please try again."
 msgstr "todo"
 
-#: src/loaders/dmarc-report/load-dmarc-report.js:39
+#: src/dmarc-report/loaders/load-dmarc-report.js:39
 msgid "Unable to retrieve {0} for domain: {domain}."
 msgstr "todo"
 
-#: src/mutations/user/send-phone-code.js:57
-#: src/mutations/user/send-phone-code.js:75
-#: src/mutations/user/send-phone-code.js:105
+#: src/user/mutations/send-phone-code.js:58
+#: src/user/mutations/send-phone-code.js:76
+#: src/user/mutations/send-phone-code.js:106
 msgid "Unable to send TFA code, please try again."
 msgstr "todo"
 
@@ -601,268 +601,266 @@ msgstr "todo"
 msgid "Unable to send verification email. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/sign-in.js:53
-#: src/mutations/user/sign-in.js:84
-#: src/mutations/user/sign-in.js:103
-#: src/mutations/user/sign-in.js:152
-#: src/mutations/user/sign-in.js:157
+#: src/user/mutations/sign-in.js:53
+#: src/user/mutations/sign-in.js:84
+#: src/user/mutations/sign-in.js:103
+#: src/user/mutations/sign-in.js:152
+#: src/user/mutations/sign-in.js:157
 msgid "Unable to sign in, please try again."
 msgstr "todo"
 
-#: src/mutations/user/sign-up.js:116
-#: src/mutations/user/sign-up.js:125
+#: src/user/mutations/sign-up.js:116
+#: src/user/mutations/sign-up.js:125
 msgid "Unable to sign up. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/verify-phone-number.js:45
-#: src/mutations/user/verify-phone-number.js:54
-#: src/mutations/user/verify-phone-number.js:64
-#: src/mutations/user/verify-phone-number.js:81
+#: src/user/mutations/verify-phone-number.js:45
+#: src/user/mutations/verify-phone-number.js:54
+#: src/user/mutations/verify-phone-number.js:64
+#: src/user/mutations/verify-phone-number.js:81
 msgid "Unable to two factor authenticate. Please try again."
 msgstr "todo"
 
-#: src/mutations/domain/update-domain.js:74
-#: src/mutations/domain/update-domain.js:84
-#: src/mutations/domain/update-domain.js:98
-#: src/mutations/domain/update-domain.js:113
-#: src/mutations/domain/update-domain.js:120
-#: src/mutations/domain/update-domain.js:153
-#: src/mutations/domain/update-domain.js:163
+#: src/domain/mutations/update-domain.js:74
+#: src/domain/mutations/update-domain.js:84
+#: src/domain/mutations/update-domain.js:98
+#: src/domain/mutations/update-domain.js:113
+#: src/domain/mutations/update-domain.js:120
+#: src/domain/mutations/update-domain.js:153
+#: src/domain/mutations/update-domain.js:163
 msgid "Unable to update domain. Please try again."
 msgstr "todo"
 
-#: src/mutations/organizations/update-organization.js:137
-#: src/mutations/organizations/update-organization.js:149
-#: src/mutations/organizations/update-organization.js:166
-#: src/mutations/organizations/update-organization.js:222
-#: src/mutations/organizations/update-organization.js:233
+#: src/organization/mutations/update-organization.js:138
+#: src/organization/mutations/update-organization.js:150
+#: src/organization/mutations/update-organization.js:167
+#: src/organization/mutations/update-organization.js:223
+#: src/organization/mutations/update-organization.js:234
 msgid "Unable to update organization. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/update-user-password.js:74
+#: src/user/mutations/update-user-password.js:74
 msgid "Unable to update password, current password does not match. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/update-user-password.js:86
+#: src/user/mutations/update-user-password.js:86
 msgid "Unable to update password, new passwords do not match. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/update-user-password.js:98
+#: src/user/mutations/update-user-password.js:98
 msgid "Unable to update password, passwords are required to be 12 characters or longer. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/update-user-password.js:64
-#: src/mutations/user/update-user-password.js:115
+#: src/user/mutations/update-user-password.js:64
+#: src/user/mutations/update-user-password.js:115
 msgid "Unable to update password. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/update-user-profile.js:76
-#: src/mutations/user/update-user-profile.js:146
+#: src/user/mutations/update-user-profile.js:77
+#: src/user/mutations/update-user-profile.js:147
 msgid "Unable to update profile. Please try again."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/update-user-role.js:119
+#: src/affiliation/mutations/update-user-role.js:119
 msgid "Unable to update users role. Please invite user to the organization."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/update-user-role.js:75
-#: src/mutations/user-affiliations/update-user-role.js:85
-#: src/mutations/user-affiliations/update-user-role.js:95
-#: src/mutations/user-affiliations/update-user-role.js:110
-#: src/mutations/user-affiliations/update-user-role.js:153
-#: src/mutations/user-affiliations/update-user-role.js:172
-#: src/mutations/user-affiliations/update-user-role.js:185
-#: src/mutations/user-affiliations/update-user-role.js:201
-#: src/mutations/user-affiliations/update-user-role.js:210
+#: src/affiliation/mutations/update-user-role.js:75
+#: src/affiliation/mutations/update-user-role.js:85
+#: src/affiliation/mutations/update-user-role.js:95
+#: src/affiliation/mutations/update-user-role.js:110
+#: src/affiliation/mutations/update-user-role.js:153
+#: src/affiliation/mutations/update-user-role.js:172
+#: src/affiliation/mutations/update-user-role.js:185
+#: src/affiliation/mutations/update-user-role.js:201
+#: src/affiliation/mutations/update-user-role.js:210
 msgid "Unable to update users role. Please try again."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/update-user-role.js:64
+#: src/affiliation/mutations/update-user-role.js:64
 msgid "Unable to update your own role. Please try again."
 msgstr "todo"
 
-#: src/mutations/user/verify-account.js:67
-#: src/mutations/user/verify-account.js:77
+#: src/user/mutations/verify-account.js:67
+#: src/user/mutations/verify-account.js:77
 msgid "Unable to verify account. Please request a new email."
 msgstr "todo"
 
-#: src/mutations/user/verify-account.js:42
-#: src/mutations/user/verify-account.js:52
-#: src/mutations/user/verify-account.js:93
+#: src/user/mutations/verify-account.js:42
+#: src/user/mutations/verify-account.js:52
+#: src/user/mutations/verify-account.js:93
 msgid "Unable to verify account. Please try again."
 msgstr "todo"
 
-#: src/queries/user/is-user-admin.js:23
+#: src/user/queries/is-user-admin.js:23
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "todo"
 
-#: src/mutations/organizations/verify-organization.js:47
-#: src/mutations/organizations/verify-organization.js:59
-#: src/mutations/organizations/verify-organization.js:99
-#: src/mutations/organizations/verify-organization.js:110
+#: src/organization/mutations/verify-organization.js:47
+#: src/organization/mutations/verify-organization.js:59
+#: src/organization/mutations/verify-organization.js:99
+#: src/organization/mutations/verify-organization.js:110
 msgid "Unable to verify organization. Please try again."
 msgstr "todo"
 
-#: src/queries/user/find-user-by-username.js:40
+#: src/user/queries/find-user-by-username.js:41
 msgid "User could not be queried."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/update-user-role.js:218
+#: src/affiliation/mutations/update-user-role.js:218
 msgid "User role was updated successfully."
 msgstr "todo"
 
-#: src/mutations/user/sign-up.js:89
+#: src/user/mutations/sign-up.js:89
 msgid "Username already in use."
 msgstr "todo"
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:33
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:33
+#: src/affiliation/loaders/load-affiliations-by-org-id.js:33
+#: src/affiliation/loaders/load-affiliations-by-user-id.js:33
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:30
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:30
 msgid "You must provide a `first` or `last` value to properly paginate the `dkimResults` connection."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:40
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:40
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:42
-#: src/loaders/domains/load-domain-connections-by-user-id.js:40
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:42
+#: src/domain/loaders/load-domain-connections-by-user-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `domain` connection."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-dkim-guidance-tags-connections.js:30
-#: src/loaders/guidance-tags/load-dmarc-guidance-tags-connections.js:30
-#: src/loaders/guidance-tags/load-https-guidance-tags-connections.js:30
-#: src/loaders/guidance-tags/load-spf-guidance-tags-connections.js:30
-#: src/loaders/guidance-tags/load-ssl-guidance-tags-connections.js:30
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:30
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:30
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:30
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:30
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:30
 msgid "You must provide a `first` or `last` value to properly paginate the `guidanceTag` connection."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:40
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `https` connection."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:34
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:34
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:34
+#: src/organization/loaders/load-organization-connections-by-user-id.js:34
 msgid "You must provide a `first` or `last` value to properly paginate the `organization` connection."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:40
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `spf` connection."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:40
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `ssl` connection."
 msgstr "todo"
 
-#: src/loaders/verified-domains/load-verified-domain-connections-by-organization-id.js:32
-#: src/loaders/verified-domains/load-verified-domain-connections.js:33
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:32
+#: src/verified-domains/loaders/load-verified-domain-connections.js:32
 msgid "You must provide a `first` or `last` value to properly paginate the `verifiedDomain` connection."
 msgstr "todo"
 
-#: src/loaders/verified-organizations/load-verified-organization-connections-by-domain-id.js:30
-#: src/loaders/verified-organizations/load-verified-organizations-connections.js:31
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:30
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:31
 msgid "You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:89
-#: src/loaders/domains/load-domain-connections-by-user-id.js:87
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:96
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:77
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:88
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:87
-#: src/loaders/guidance-tags/load-dkim-guidance-tags-connections.js:77
-#: src/loaders/guidance-tags/load-dmarc-guidance-tags-connections.js:77
-#: src/loaders/guidance-tags/load-https-guidance-tags-connections.js:77
-#: src/loaders/guidance-tags/load-spf-guidance-tags-connections.js:77
-#: src/loaders/guidance-tags/load-ssl-guidance-tags-connections.js:77
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:81
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:81
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:80
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:80
-#: src/loaders/verified-domains/load-verified-domain-connections-by-organization-id.js:79
-#: src/loaders/verified-domains/load-verified-domain-connections.js:80
-#: src/loaders/verified-organizations/load-verified-organization-connections-by-domain-id.js:77
-#: src/loaders/verified-organizations/load-verified-organizations-connections.js:78
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:87
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:87
+#: src/affiliation/loaders/load-affiliations-by-org-id.js:80
+#: src/affiliation/loaders/load-affiliations-by-user-id.js:80
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:89
+#: src/domain/loaders/load-domain-connections-by-user-id.js:87
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:96
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:77
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:88
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:87
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:77
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:77
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:77
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:77
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:77
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:81
+#: src/organization/loaders/load-organization-connections-by-user-id.js:81
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:79
+#: src/verified-domains/loaders/load-verified-domain-connections.js:79
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:77
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:78
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:87
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:87
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
 msgstr "todo"
 
-#: src/loaders/user-affiliations/load-user-affiliations-by-org-id.js:54
-#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:54
+#: src/affiliation/loaders/load-affiliations-by-org-id.js:54
+#: src/affiliation/loaders/load-affiliations-by-user-id.js:54
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:51
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:51
 msgid "`{argSet}` on the `dkimResults` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:61
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:61
 msgid "`{argSet}` on the `dkim` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:62
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:62
 msgid "`{argSet}` on the `dmarc` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:63
-#: src/loaders/domains/load-domain-connections-by-user-id.js:61
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:63
+#: src/domain/loaders/load-domain-connections-by-user-id.js:61
 msgid "`{argSet}` on the `domain` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/guidance-tags/load-dkim-guidance-tags-connections.js:51
-#: src/loaders/guidance-tags/load-dmarc-guidance-tags-connections.js:51
-#: src/loaders/guidance-tags/load-https-guidance-tags-connections.js:51
-#: src/loaders/guidance-tags/load-spf-guidance-tags-connections.js:51
-#: src/loaders/guidance-tags/load-ssl-guidance-tags-connections.js:51
+#: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:51
+#: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:51
+#: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:51
+#: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:51
+#: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:51
 msgid "`{argSet}` on the `guidanceTag` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:61
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:61
 msgid "`{argSet}` on the `https` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:55
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:55
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:55
+#: src/organization/loaders/load-organization-connections-by-user-id.js:55
 msgid "`{argSet}` on the `organization` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:61
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:61
 msgid "`{argSet}` on the `spf` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:61
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:61
 msgid "`{argSet}` on the `ssl` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/verified-domains/load-verified-domain-connections-by-organization-id.js:53
-#: src/loaders/verified-domains/load-verified-domain-connections.js:54
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:53
+#: src/verified-domains/loaders/load-verified-domain-connections.js:53
 msgid "`{argSet}` on the `verifiedDomain` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/loaders/verified-organizations/load-verified-organization-connections-by-domain-id.js:51
-#: src/loaders/verified-organizations/load-verified-organizations-connections.js:52
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:51
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:52
 msgid "`{argSet}` on the `verifiedOrganization` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/queries/summaries/mail-summary.js:22
-#: src/queries/summaries/web-summary.js:22
-#: src/types/organization-summary.js:22
-#: src/types/organization-summary.js:46
+#: src/organization/objects/organization-summary.js:8
+#: src/summaries/queries/mail-summary.js:22
+#: src/summaries/queries/web-summary.js:23
 msgid "fail"
 msgstr "todo"
 
-#: src/queries/summaries/mail-summary.js:17
-#: src/queries/summaries/web-summary.js:17
-#: src/types/organization-summary.js:17
-#: src/types/organization-summary.js:41
+#: src/organization/objects/organization-summary.js:7
+#: src/summaries/queries/mail-summary.js:17
+#: src/summaries/queries/web-summary.js:18
 msgid "pass"
 msgstr "todo"

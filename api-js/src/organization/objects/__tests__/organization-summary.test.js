@@ -16,8 +16,9 @@ describe('given the organization summary object', () => {
       expect(demoType.web.type).toMatchObject(categorizedSummaryType)
     })
   })
-  describe('testing field resolvers', () => {
-    describe('testing mail resolver', () => {
+
+  describe('field resolvers', () => {
+    describe('mail resolver', () => {
       describe('total is zero', () => {
         it('returns the resolved value', () => {
           const demoType = organizationSummaryType.getFields()
@@ -52,7 +53,8 @@ describe('given the organization summary object', () => {
           })
         })
       })
-      describe('total is greater then zero', () => {
+
+      describe('when total is greater then zero', () => {
         it('returns the resolved value', () => {
           const demoType = organizationSummaryType.getFields()
 

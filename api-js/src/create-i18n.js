@@ -5,11 +5,14 @@ import frenchMessages from './locale/fr/messages'
 
 export const createI18n = (language) =>
   setupI18n({
-    language: language,
+    locale: language,
+    localeData: {
+      en: { plurals: {} },
+      fr: { plurals: {} },
+    },
     locales: ['en', 'fr'],
-    missing: 'Traduction manquante',
-    catalogs: {
-      en: englishMessages,
-      fr: frenchMessages,
+    messages: {
+      en: englishMessages.messages,
+      fr: frenchMessages.messages,
     },
   })

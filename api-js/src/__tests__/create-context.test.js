@@ -6,7 +6,7 @@ describe('given the create context function', () => {
     it('returns object with userKey as undefined', async () => {
       const context = createContext({
         context: {},
-        req: { headers: { authorization: '' } },
+        req: { headers: { authorization: '' }, language: 'en' },
         res: {},
       })
 
@@ -18,7 +18,7 @@ describe('given the create context function', () => {
       const token = tokenize({ parameters: { userKey: '1234' } })
       const context = createContext({
         context: {},
-        req: { headers: { authorization: token } },
+        req: { headers: { authorization: token }, language: 'en' },
         res: {},
       })
 

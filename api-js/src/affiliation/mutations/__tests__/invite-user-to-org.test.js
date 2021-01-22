@@ -1,6 +1,6 @@
 import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
@@ -97,12 +97,15 @@ describe('invite user to org', () => {
   describe('users language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
-        language: 'en',
+        locale: 'en',
+        localeData: {
+          en: { plurals: {} },
+          fr: { plurals: {} },
+        },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
-        catalogs: {
-          en: englishMessages,
-          fr: frenchMessages,
+        messages: {
+          en: englishMessages.messages,
+          fr: frenchMessages.messages,
         },
       })
     })
@@ -1534,12 +1537,15 @@ describe('invite user to org', () => {
   describe('users language is set to french', () => {
     beforeAll(() => {
       i18n = setupI18n({
-        language: 'fr',
+        locale: 'fr',
+        localeData: {
+          en: { plurals: {} },
+          fr: { plurals: {} },
+        },
         locales: ['en', 'fr'],
-        missing: 'Traduction manquante',
-        catalogs: {
-          en: englishMessages,
-          fr: frenchMessages,
+        messages: {
+          en: englishMessages.messages,
+          fr: frenchMessages.messages,
         },
       })
     })
