@@ -23,9 +23,11 @@ const {
   createSummaries,
   createSummaryEdge,
   createSummary,
+  loadCurrentDates,
   loadDates,
   loadDomainOwnership,
   loadSummaryByDate,
+  loadSummaryCountByDomain,
   upsertOwnership,
   removeOwnerships,
   removeSummary,
@@ -56,10 +58,11 @@ const {
   const ownerships = await loadDomainOwnership({ fetch })
 
   const summaryCreateFunc = createSummaries(
-    query,
     arrayEquals,
+    loadCurrentDates(query),
     loadDates(moment),
     loadSummaryByDate(summariesContainer),
+    loadSummaryCountByDomain(query),
     createSummaryEdge(collections),
     createSummary(query),
     removeSummaryEdge(query),
@@ -71,8 +74,8 @@ const {
     console.info(`Assigning domain ownership to: ${String(key)}`)
     upsertOwnership({ ownership: ownerships[key], key, query })
 
-    ownerships[key].forEach(async (domain) => {
-      await summaryCreateFunc({
+    ownerships[key].forEach((domain) => {
+      summaryCreateFunc({
         domain,
       })
     })
