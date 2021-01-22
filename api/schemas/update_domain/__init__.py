@@ -1,1 +1,0 @@
-from schemas.update_domain.update_domain import UpdateDomain

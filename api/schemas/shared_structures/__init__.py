@@ -1,2 +1,0 @@
-from schemas.shared_structures.auth_result import AuthResult
-from schemas.shared_structures.category_totals import CategoryTotals

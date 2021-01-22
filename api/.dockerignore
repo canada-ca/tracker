@@ -1,6 +1,0 @@
-**/*.env
-**/*.csv
-**/README.md
-docker-compose.yaml
-Dockerfile
-cloudbuild.yaml
