@@ -98,6 +98,7 @@ function DmarcReportSummaryGraph({ ...props }) {
             }
             content={CustomTooltipContent}
             calculatePercentages={true}
+            isAnimationActive={false}
           />
           <Legend
             align="center"
