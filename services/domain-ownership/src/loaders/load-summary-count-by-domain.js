@@ -20,7 +20,7 @@ const loadSummaryCountByDomain = (query) => async ({ domain }) => {
   const edge = await domainCursor.next()
 
   if (typeof edge === 'undefined') {
-    console.log(`Domain not found in db: ${domain}`)
+    console.info(`Domain not found in db: ${domain}`)
     return { summaryCount: undefined, domainId: undefined }
   }
 
