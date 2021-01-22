@@ -16,10 +16,9 @@
     "test-coverage": "jest --coverage",
     "lint": "eslint src",
     "prettier": "prettier --write \"**/*.js\"",
-    "add-locale": "lingui add-locale",
-    "extract": "lingui extract",
-    "compile": "lingui compile",
-    "lin-clean": "lingui extract --clean"
+    "extract": "npx lingui extract",
+    "compile": "npx lingui compile",
+    "lin-clean": "npx lingui extract --clean"
   },
   "dependencies": {
     "@lingui/core": "^3.4.0",
@@ -70,7 +69,7 @@
     "jest": "^26.6.3",
     "jest-fetch-mock": "^3.0.3",
     "jest-matcher-utils": "^26.6.2",
-    "nodemon": "^2.0.6",
+    "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "supertest": "^6.0.1"
   }
