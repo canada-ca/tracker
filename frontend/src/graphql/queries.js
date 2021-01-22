@@ -125,7 +125,7 @@ export const ORGANIZATION_BY_SLUG = gql`
   }
 `
 
-export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
+export const GET_GUIDANCE_TAGS_OF_DOMAIN_OLD = gql`
   query FindDomainBySlug($urlSlug: Slug!) {
     findDomainBySlug(urlSlug: $urlSlug) {
       url
@@ -165,6 +165,162 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
               selectors {
                 selector
                 dkimGuidanceTags
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
+  query FindDomainByDomain($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      domain
+      lastRan
+      web {
+        https {
+          edges {
+            cursor
+            node {
+              id
+              timestamp
+              guidanceTags {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        ssl {
+          edges {
+            cursor
+            node {
+              id
+              timestamp
+              guidanceTags {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      email {
+        dkim {
+          edges {
+            cursor
+            node {
+              id
+              timestamp
+              results {
+                edges {
+                  cursor
+                  node {
+                    selector
+                    guidanceTags {
+                      edges {
+                        cursor
+                        node {
+                          tagId
+                          tagName
+                          guidance
+                          refLinks {
+                            description
+                            refLink
+                          }
+                          refLinksTech {
+                            description
+                            refLink
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        dmarc {
+          edges {
+            cursor
+            node {
+              id
+              timestamp
+              guidanceTags {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        spf {
+          edges {
+            cursor
+            node {
+              id
+              timestamp
+              guidanceTags {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
               }
             }
           }

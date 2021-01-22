@@ -19,8 +19,7 @@ const i18n = setupI18n({
 })
 
 const categoryName = 'https'
-const categoryData =
-  rawDmarcGuidancePageData.findDomainBySlug.web.edges[0].node.https
+const categoryData = rawDmarcGuidancePageData.findDomainByDomain.web.https
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

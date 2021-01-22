@@ -7,6 +7,7 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { GuidanceTagDetails } from '../GuidanceTagDetails'
+import { guidanceTags } from '../guidanceTagConstants'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -19,9 +20,11 @@ const i18n = setupI18n({
 })
 
 const guidanceTag =
-  rawDmarcGuidancePageData.findDomainBySlug.email.edges[0].node.dkim
-    .selectors[0].dkimGuidanceTags[0]
+  rawDmarcGuidancePageData.findDomainByDomain.email.dkim.edges[1].node.results
+    .edges[1].node.guidanceTags.edges[0].node.tagId
 const categoryName = 'dkim'
+
+console.log(guidanceTags)
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -49,6 +52,10 @@ describe('<GuidanceTagDetails />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/P-update-recommended/i))
+    await waitFor(() =>
+      getAllByText(
+        /Use DKIM to validate outbound email sent from your custom domain/i,
+      ),
+    )
   })
 })

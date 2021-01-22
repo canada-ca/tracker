@@ -5,6 +5,7 @@ import { Box, Icon, Link, Stack, Text } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 
 export function GuidanceTagDetails({ guidanceTag, categoryName }) {
+  categoryName = 'dkim'
   const cccsGuidance =
     guidanceTags[categoryName][guidanceTag].ref_links_guide !== null &&
     guidanceTags[categoryName][guidanceTag].ref_links_guide !== undefined ? (

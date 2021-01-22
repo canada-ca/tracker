@@ -44,7 +44,7 @@ const mocks = [
   {
     request: {
       query: GET_GUIDANCE_TAGS_OF_DOMAIN,
-      variables: { urlSlug: 'cse-cst-gc-ca' },
+      variables: { domain: 'cse-cst-gc-ca' },
     },
     result: {
       data: rawDmarcGuidancePageData,
@@ -55,7 +55,6 @@ const mocks = [
 describe('<DmarcGuidancePage />', () => {
   it('uses the a domainSlug param to fetch data', async () => {
     window.resizeTo(1024, 768)
-
     const { getByText } = render(
       <UserStateProvider
         initialState={{ userName: null, jwt: null, tfaSendMethod: null }}

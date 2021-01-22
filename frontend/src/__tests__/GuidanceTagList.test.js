@@ -19,8 +19,7 @@ const i18n = setupI18n({
 })
 
 const selectorNode =
-  rawDmarcGuidancePageData.findDomainBySlug.email.edges[0].node.dkim
-    .selectors[0]
+  rawDmarcGuidancePageData.findDomainByDomain.email.dkim.edges
 const guidanceTags = selectorNode.dkimGuidanceTags
 const selector = selectorNode.selector
 const categoryName = 'dkim'
@@ -52,6 +51,6 @@ describe('<GuidanceTagList />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/selector/i))
+    await waitFor(() => getAllByText(/Properly configured!/i))
   })
 })

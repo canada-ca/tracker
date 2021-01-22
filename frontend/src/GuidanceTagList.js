@@ -10,13 +10,12 @@ export function GuidanceTagList({ guidanceTags, categoryName, selector }) {
       {selector}
     </Heading>
   )
-
-  const tagList = guidanceTags.length ? (
+  const tagList = guidanceTags?.length ? (
     guidanceTags.map((guidanceTag, index) => {
       return (
         <Box key={guidanceTag + index} bg="#FFE0E0" pb="1">
           <GuidanceTagDetails
-            guidanceTag={guidanceTag}
+            guidanceTag={guidanceTag.node.tagId}
             categoryName={categoryName}
           />
           {
