@@ -58,10 +58,10 @@ const {
   const summaryCreateFunc = createSummaries(
     query,
     arrayEquals,
-    createSummaryEdge(collections),
-    createSummary(query),
     loadDates(moment),
     loadSummaryByDate(summariesContainer),
+    createSummaryEdge(collections),
+    createSummary(query),
     removeSummaryEdge(query),
     removeSummary(query),
   )
