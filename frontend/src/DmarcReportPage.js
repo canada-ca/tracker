@@ -270,6 +270,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const totalMessages = {
     Header: i18n._(t`Total Messages`),
     accessor: 'totalMessages',
+    Cell: ({ value }) => value.toLocaleString(i18n.locale),
+    style: { textAlign: 'right' },
   }
   const dnsHost = { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' }
   const spfDomains = {
