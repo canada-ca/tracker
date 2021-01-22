@@ -18,7 +18,6 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
     ) : (
       <GuidanceTagList
         guidanceTags={categoryData.edges[0]?.node.guidanceTags.edges}
-        categoryName={categoryName}
         key={categoryName}
       />
     )

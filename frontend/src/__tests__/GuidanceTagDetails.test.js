@@ -7,7 +7,6 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { GuidanceTagDetails } from '../GuidanceTagDetails'
-import { guidanceTags } from '../guidanceTagConstants'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -21,10 +20,7 @@ const i18n = setupI18n({
 
 const guidanceTag =
   rawDmarcGuidancePageData.findDomainByDomain.email.dkim.edges[1].node.results
-    .edges[1].node.guidanceTags.edges[0].node.tagId
-const categoryName = 'dkim'
-
-console.log(guidanceTags)
+    .edges[1].node.guidanceTags.edges[0].node
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -43,19 +39,12 @@ describe('<GuidanceTagDetails />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <GuidanceTagDetails
-                guidanceTag={guidanceTag}
-                categoryName={categoryName}
-              />
+              <GuidanceTagDetails guidanceTag={guidanceTag} />
             </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() =>
-      getAllByText(
-        /Use DKIM to validate outbound email sent from your custom domain/i,
-      ),
-    )
+    await waitFor(() => getAllByText(/DKIM-missing-O365-misconfigured/i))
   })
 })
