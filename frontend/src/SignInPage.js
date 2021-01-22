@@ -11,7 +11,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/core'
-import { Link as RouteLink, useHistory } from 'react-router-dom'
+import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import { SIGN_IN } from './graphql/mutations'
@@ -26,7 +26,10 @@ export default function SignInPage() {
   const { login } = useUserState()
   const { i18n } = useLingui()
   const history = useHistory()
+  const location = useLocation()
   const toast = useToast()
+
+  const { from } = location.state || { from: { pathname: '/' } }
 
   const validationSchema = object().shape({
     password: string().required(fieldRequirements.password.required.message),
@@ -55,7 +58,7 @@ export default function SignInPage() {
           userName: signIn.result.authResult.user.userName,
         })
         // // redirect to the home page.
-        history.push('/')
+        history.push(from)
         // // Display a welcome message
         toast({
           title: i18n._(t`Sign In.`),
@@ -72,6 +75,7 @@ export default function SignInPage() {
           `/authenticate/${signIn.result.sendMethod.toLowerCase()}/${
             signIn.result.authenticateToken
           }`,
+          { from },
         )
       } else {
         toast({

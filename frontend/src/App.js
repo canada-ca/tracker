@@ -12,10 +12,10 @@ import { Flex, Link, CSSReset, useToast, Box } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 // import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
-import { RouteIf } from './RouteIf'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { FloatingMenu } from './FloatingMenu'
+import PrivateRoute from './PrivateRoute'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -141,90 +141,50 @@ export default function App() {
                 component={ResetPasswordPage}
               />
 
-              <Route
-                alternate="/sign-in"
-                path="/organizations"
-                render={({ match: { url } }) => (
-                  <>
-                    <Route path={`${url}`} component={Organizations} exact />
-                    <Route path={`${url}/:orgSlug`} exact>
-                      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                        <OrganizationDetails />
-                      </ErrorBoundary>
-                    </Route>
-                  </>
-                )}
-              />
+              <PrivateRoute path="/organizations" exact>
+                <Organizations />
+              </PrivateRoute>
 
-              <RouteIf
-                condition={isLoggedIn()}
-                alternate="/sign-in"
-                path="/admin"
-              >
+              <PrivateRoute path="/organizations/:orgSlug" exact>
+                <OrganizationDetails />
+              </PrivateRoute>
+
+              <PrivateRoute path="/admin">
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <AdminPage />
                 </ErrorBoundary>
-              </RouteIf>
+              </PrivateRoute>
 
-              <RouteIf
-                condition={true}
-                alternate="/sign-in"
-                path="/domains"
-                render={({ match: { url } }) => (
-                  <>
-                    <Route path={`${url}`} component={DomainsPage} exact />
-                    <Route
-                      path={`${url}/:domainSlug`}
-                      component={DmarcGuidancePage}
-                      exact
-                    />
-                    <Route
-                      path={`${url}/:domainSlug/dmarc-report/:period?/:year?`}
-                      component={DmarcReportPage}
-                      exact
-                    />
-                  </>
-                )}
-              />
+              <PrivateRoute path="/domains" exact>
+                <DomainsPage />
+              </PrivateRoute>
 
-              <RouteIf
-                condition={true}
-                alternate="/sign-in"
-                path="/dmarc-summaries"
-                render={({ match: { url } }) => (
-                  <>
-                    <Route
-                      path={`${url}`}
-                      component={DmarcByDomainPage}
-                      exact
-                    />
-                  </>
-                )}
-              />
+              <PrivateRoute path="/domains/:domainSlug" exact>
+                <DmarcGuidancePage />
+              </PrivateRoute>
 
-              <RouteIf
-                condition={isLoggedIn()}
-                alternate="/sign-in"
-                path="/user"
-              >
-                <UserPage userName={currentUser.userName} />
-              </RouteIf>
-
-              <RouteIf
-                condition={isLoggedIn()}
-                alternate="/sign-in"
-                path="/two-factor-code"
-              >
-                <QRcodePage userName={currentUser.userName} />
-              </RouteIf>
-
-              <RouteIf
-                condition={true}
-                alternate="/sign-in"
-                path="/dmarc-report/:period?/:year?"
+              <PrivateRoute
+                path="/domains/:domainSlug/dmarc-report/:period?/:year?"
+                exact
               >
                 <DmarcReportPage />
-              </RouteIf>
+              </PrivateRoute>
+
+              <PrivateRoute path="/dmarc-summaries" exact>
+                <DmarcByDomainPage />
+              </PrivateRoute>
+
+              <PrivateRoute path="/user">
+                <UserPage username={currentUser.userName} />
+              </PrivateRoute>
+
+              <PrivateRoute path="/two-factor-code">
+                <QRcodePage userName={currentUser.userName} />
+              </PrivateRoute>
+
+              <PrivateRoute path="/dmarc-report/:period?/:year?">
+                <DmarcReportPage />
+              </PrivateRoute>
 
               <Route component={PageNotFound} />
             </Switch>

@@ -3,7 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { number, object } from 'yup'
 import { Box, Heading, useToast, Stack } from '@chakra-ui/core'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import { useUserState } from './UserState'
@@ -15,9 +15,11 @@ import { TrackerButton } from './TrackerButton'
 export default function TwoFactorAuthenticatePage() {
   const { login } = useUserState()
   const history = useHistory()
+  const location = useLocation()
   const toast = useToast()
   const { i18n } = useLingui()
   const { sendMethod, authenticateToken } = useParams()
+  const { from } = location.state || { from: { pathname: '/' } }
 
   const validationSchema = object().shape({
     twoFactorCode: number()
@@ -44,7 +46,7 @@ export default function TwoFactorAuthenticatePage() {
         userName: authenticate.authResult.user.userName,
       })
       // // redirect to the home page.
-      history.push('/')
+      history.replace(from)
       // // Display a welcome message
       toast({
         title: i18n._(t`Sign In.`),
