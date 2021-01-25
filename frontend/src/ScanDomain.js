@@ -9,13 +9,20 @@ import { LoadingMessage } from './LoadingMessage'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string } from 'yup'
 import DomainField from './DomainField'
+import { useUserState } from './UserState'
 
 export function ScanDomain() {
   const toast = useToast()
+  const { currentUser } = useUserState()
   const validationSchema = object().shape({
     domain: string().required(fieldRequirements.domainUrl.required.message),
   })
   const [requestScan, { loading }] = useMutation(REQUEST_SCAN, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
     onError(error) {
       toast({
         title: error.message,
