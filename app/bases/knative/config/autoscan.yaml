@@ -39,9 +39,4 @@ spec:
                   secretKeyRef:
                     name: scanners
                     key: DB_NAME
-              - name: SCAN_QUEUE_URL
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: SCAN_QUEUE_URL
           restartPolicy: OnFailure

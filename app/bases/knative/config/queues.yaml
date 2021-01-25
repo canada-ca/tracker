@@ -21,22 +21,6 @@ spec:
       containers:
         - name: scan-queue
           image: gcr.io/track-compliance/services/scan-queue
-          env:
-            - name: HTTPS_URL
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: HTTPS_URL
-            - name: SSL_URL
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: SSL_URL
-            - name: DNS_URL
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DNS_URL
 
 ---
 
@@ -63,9 +47,3 @@ spec:
       containers:
         - name: result-queue
           image: gcr.io/track-compliance/services/result-queue
-          env:
-            - name: PROCESSOR_URL
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: PROCESSOR_URL

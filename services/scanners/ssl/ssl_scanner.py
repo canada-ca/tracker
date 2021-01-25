@@ -303,7 +303,7 @@ def Server(server_client=requests):
             msg = f"The designated domain could not be resolved: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             dispatch_results(
-                {"scan_type": "ssl", "uuid": uuid, "results": {}}, server_client
+                {"scan_type": "ssl", "uuid": uuid, "domain_key": domain_key, "results": {}}, server_client
             )
             return PlainTextResponse(msg)
 
