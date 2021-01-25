@@ -11,7 +11,6 @@ import {
 } from '@chakra-ui/core'
 import { useHistory } from 'react-router-dom'
 import { object, string } from 'prop-types'
-import { slugify } from './slugify'
 
 export function DomainCard({ url, lastRan, status, ...rest }) {
   const history = useHistory()
@@ -32,7 +31,7 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
         display={{ md: 'flex' }}
         alignItems="center"
         onClick={() => {
-          history.push(`/domains/${slugify(url)}`)
+          history.push(`/domains/${url}`)
         }}
         _hover={{ bg: 'gray.100' }}
         p="8"
