@@ -8,6 +8,7 @@ gql = {editable = true, git = "https://github.com/graphql-python/gql.git"}
 aiohttp = "*"
 
 [dev-packages]
+pylint = "*"
 
 [requires]
 python_version = "3.8"
