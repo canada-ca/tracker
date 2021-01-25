@@ -1,13 +1,12 @@
 import React from 'react'
 import { object } from 'prop-types'
-// import { guidanceTags } from './guidanceTagConstants'
 import { Box, Icon, Link, Stack, Text } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 
 export function GuidanceTagDetails({ guidanceTag }) {
   const cccsGuidance =
     guidanceTag.refLinks !== null && guidanceTag.refLinks.length !== 0 ? (
-      <Stack>
+      <Stack isInline>
         <Text fontWeight="bold">
           <Trans>For in-depth CCCS implementation guidance:</Trans>
         </Text>
@@ -32,7 +31,7 @@ export function GuidanceTagDetails({ guidanceTag }) {
   const technicalGuidance =
     guidanceTag.refLinksTech.length !== 0 &&
     guidanceTag.refLinksTech !== null ? (
-      <Stack>
+      <Stack isInline>
         <Text fontWeight="bold">
           <Trans>For technical implementation guidance:</Trans>
         </Text>
