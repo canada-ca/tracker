@@ -73,6 +73,6 @@
     "jest-matcher-utils": "^26.6.2",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
-    "supertest": "^6.1.1"
+    "supertest": "^6.1.2"
   }
 }
