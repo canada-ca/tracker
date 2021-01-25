@@ -22,12 +22,6 @@ spec:
       containers:
         - name: https-scanner
           image: gcr.io/track-compliance/scanners/https # The URL to the image of the app
-          env:
-            - name: RESULT_QUEUE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: RESULT_QUEUE_URL
 
 ---
 
@@ -116,12 +110,6 @@ spec:
       containers:
         - name: ssl-scanner
           image: gcr.io/track-compliance/scanners/ssl # The URL to the image of the app
-          env:
-            - name: RESULT_QUEUE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: RESULT_QUEUE_URL
 
 ---
 
@@ -149,12 +137,6 @@ spec:
       containers:
         - name: dns-scanner
           image: gcr.io/track-compliance/scanners/dns # The URL to the image of the app
-          env:
-            - name: RESULT_QUEUE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: RESULT_QUEUE_URL
 
 ---
 
