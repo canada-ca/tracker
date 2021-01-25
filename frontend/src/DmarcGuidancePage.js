@@ -34,9 +34,9 @@ export default function DmarcGuidancePage() {
         <Trans>Guidance Tags</Trans>
       </LoadingMessage>
     )
-  if (error) return <ErrorFallbackMessage error={error.message} /> // TODO: Handle this error
+  if (error) return <ErrorFallbackMessage error={error} />
 
-  const domain = data.findDomainByDomain.domain
+  const domainName = data.findDomainByDomain.domain
   const webScan = data.findDomainByDomain.web
   const emailScan = data.findDomainByDomain.email
 
@@ -50,9 +50,7 @@ export default function DmarcGuidancePage() {
           fontSize="2xl"
           aria-label="back to domains"
         />
-        <Heading>
-          <Trans>{domain.toUpperCase()}</Trans>
-        </Heading>
+        <Heading>{domainName.toUpperCase()}</Heading>
       </Stack>
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <ScanCard scanType="web" scanData={webScan} />
@@ -64,5 +62,3 @@ export default function DmarcGuidancePage() {
     </Stack>
   )
 }
-
-DmarcGuidancePage.propTypes = {}

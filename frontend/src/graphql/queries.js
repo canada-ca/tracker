@@ -180,13 +180,13 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
       domain
       lastRan
       web {
-        https {
+        https(first: 10) {
           edges {
             cursor
             node {
               id
               timestamp
-              guidanceTags {
+              guidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -207,13 +207,13 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        ssl {
+        ssl(first: 10) {
           edges {
             cursor
             node {
               id
               timestamp
-              guidanceTags {
+              guidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -236,7 +236,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
         }
       }
       email {
-        dkim {
+        dkim(first: 10) {
           edges {
             cursor
             node {
@@ -247,7 +247,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                   cursor
                   node {
                     selector
-                    guidanceTags {
+                    guidanceTags(first: 5) {
                       edges {
                         cursor
                         node {
@@ -271,13 +271,13 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        dmarc {
+        dmarc(first: 10) {
           edges {
             cursor
             node {
               id
               timestamp
-              guidanceTags {
+              guidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -298,13 +298,13 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        spf {
+        spf(first: 10) {
           edges {
             cursor
             node {
               id
               timestamp
-              guidanceTags {
+              guidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
