@@ -11,7 +11,6 @@ import {
   checkUserIsAdminForUser,
   tokenize,
   userRequired,
-  verifyToken,
 } from './auth'
 import {
   notifyClient,
