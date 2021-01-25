@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+gql = {editable = true, git = "https://github.com/graphql-python/gql.git"}
+aiohttp = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
