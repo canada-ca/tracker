@@ -223,7 +223,7 @@ def get_domains_by_name(name, auth_token):
 
 def get_dmarc_summary(domain, month, year, auth_token):
     """Return the DMARC summary for the specified domain and month
-    
+
     Arguments:
     domain -- domain name string
     month -- string containing the full name of a month
@@ -235,23 +235,19 @@ def get_dmarc_summary(domain, month, year, auth_token):
         auth_token=auth_token,
     )
 
-    params = {
-        "domain": domain,
-        "month": month.upper(),
-        "year": str(year)
-    }
+    params = {"domain": domain, "month": month.upper(), "year": str(year)}
 
     result = client.execute(DMARC_SUMMARY, variable_values=params)
 
     result = result["findDomainByDomain"]
     result[result.pop("domain")] = result.pop("dmarcSummaryByPeriod")
 
-    return json.dumps(result,indent=4)
-    
+    return json.dumps(result, indent=4)
+
 
 def get_yearly_dmarc_summaries(domain, auth_token):
     """Return all available DMARC summaries for a domain
-    
+
     Arguments:
     domain -- domain name string
     auth_token -- JWT auth token string
@@ -268,11 +264,11 @@ def get_yearly_dmarc_summaries(domain, auth_token):
     result = result["findDomainByDomain"]
     result[result.pop("domain")] = result.pop("yearlyDmarcSummaries")
 
-    return json.dumps(result,indent=4)
+    return json.dumps(result, indent=4)
 
 
 def main():
-    """ main() currently tries all implemented functions and prints results
+    """main() currently tries all implemented functions and prints results
     for diagnostic purposes
     """
     auth_token = get_auth_token()
@@ -287,13 +283,12 @@ def main():
         "Communications Security Establishment Canada", auth_token
     )
     print(domains)
-    
+
     result = get_dmarc_summary("cse-cst.gc.ca", "november", 2020, auth_token)
     print(result)
-    
+
     result = get_yearly_dmarc_summaries("cse-cst.gc.ca", auth_token)
     print(result)
-
 
 
 if __name__ == "__main__":
