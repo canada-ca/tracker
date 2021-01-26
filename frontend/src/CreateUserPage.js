@@ -14,6 +14,7 @@ import DisplayNameField from './DisplayNameField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
+import { activate } from './i18n.config'
 
 export default function CreateUserPage() {
   const { login } = useUserState()
@@ -62,6 +63,8 @@ export default function CreateUserPage() {
         tfaSendMethod: signUp.authResult.user.tfaSendMethod,
         userName: signUp.authResult.user.userName,
       })
+      if (signUp.authResult.user.preferredLang === 'ENGLISH') activate('en')
+      else if (signUp.authResult.user.preferredLang === 'FRENCH') activate('fr')
       // redirect to the home page.
       history.push('/')
       // Display a welcome message

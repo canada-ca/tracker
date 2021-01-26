@@ -24,6 +24,7 @@ export const SIGN_UP = gql`
         user {
           userName
           tfaSendMethod
+          preferredLang
         }
       }
     }
