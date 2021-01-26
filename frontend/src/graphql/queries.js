@@ -242,7 +242,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
-              results {
+              results(first: 10) {
                 edges {
                   cursor
                   node {
