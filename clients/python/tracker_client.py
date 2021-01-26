@@ -22,7 +22,7 @@ SIGNIN_MUTATION = gql(
 
 ALL_DOMAINS_QUERY = gql(
     """
-    query getAllDomainsByOrganization {
+    query getAllDomains {
         findMyOrganizations(first: 100) {
             edges {
                 node {
@@ -75,8 +75,8 @@ def get_all_domains(auth_token):
         x["domains"] = x["domains"]["edges"]
         x["domains"] = [n["node"] for n in x["domains"]]
         x["domains"] = [n["domain"] for n in x["domains"]]
-
-    return json.dumps(result3)
+    result_dict = {x["acronym"]: {"domains": x["domains"]} for x in result3}
+    return json.dumps(result_dict, indent=4)
 
 
 def main():
