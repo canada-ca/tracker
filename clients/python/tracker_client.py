@@ -121,9 +121,25 @@ def get_all_domains(auth_token):
     return json.dumps(result_dict, indent=4)
 
 
+def get_domains_by_acronym(acronym, auth_token):
+    """Get and return the domains belonging to the org identified by acronym
+
+    Arguments:
+    acronym -- string containing an acronym belonging to an organization
+    auth_token -- JWT auth token string
+    """
+
+    # API doesn't allow query by acronym so we filter the get_all_domains result
+    all_orgs_result = json.loads(get_all_domains(auth_token))
+    result = all_orgs_result[acronym.upper()]
+    return json.dumps(result, indent=4)
+
+
 def main():
     auth_token = get_auth_token()
     domains = get_all_domains(auth_token)
+    print(domains)
+    domains = get_domains_by_acronym("cse", auth_token)
     print(domains)
 
 
