@@ -1,23 +1,19 @@
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 
 const { makeMigrations } = require('../../../migrations')
-const {
-  createSummaryEdge,
-  createSummary,
-  initializeSummaries,
-} = require('../index')
+const { initializeSummaries } = require('../index')
 const { loadSummaryByDate } = require('../../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the initializeSummaries function', () => {
-  let query, drop, truncate, migrate, collections
+  let drop, truncate, migrate, collections
 
   const infoConsole = []
   const mockedInfo = (output) => infoConsole.push(output)
   beforeAll(async () => {
     ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
+    ;({ drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
     console.info = mockedInfo
