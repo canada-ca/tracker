@@ -84,7 +84,7 @@ const {
         createSummaryEdge(collections),
         loadSummaryByDate(summariesContainer),
         removeSummaryEdge(query),
-        removeSummaryEdge(query),
+        removeSummary(query),
       ),
     ),
   )
