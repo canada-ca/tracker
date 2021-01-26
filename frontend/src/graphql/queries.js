@@ -125,7 +125,7 @@ export const ORGANIZATION_BY_SLUG = gql`
   }
 `
 
-export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
+export const GET_GUIDANCE_TAGS_OF_DOMAIN_OLD = gql`
   query FindDomainBySlug($urlSlug: Slug!) {
     findDomainBySlug(urlSlug: $urlSlug) {
       url
@@ -165,6 +165,162 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
               selectors {
                 selector
                 dkimGuidanceTags
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
+  query FindDomainByDomain($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      domain
+      lastRan
+      web {
+        https(first: 10) {
+          edges {
+            cursor
+            node {
+              id
+              timestamp
+              guidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        ssl(first: 10) {
+          edges {
+            cursor
+            node {
+              id
+              timestamp
+              guidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      email {
+        dkim(first: 10) {
+          edges {
+            cursor
+            node {
+              id
+              timestamp
+              results(first: 10) {
+                edges {
+                  cursor
+                  node {
+                    selector
+                    guidanceTags(first: 5) {
+                      edges {
+                        cursor
+                        node {
+                          tagId
+                          tagName
+                          guidance
+                          refLinks {
+                            description
+                            refLink
+                          }
+                          refLinksTech {
+                            description
+                            refLink
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        dmarc(first: 10) {
+          edges {
+            cursor
+            node {
+              id
+              timestamp
+              guidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        spf(first: 10) {
+          edges {
+            cursor
+            node {
+              id
+              timestamp
+              guidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
               }
             }
           }

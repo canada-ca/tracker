@@ -19,7 +19,7 @@ const i18n = setupI18n({
 })
 
 const scanType = 'web'
-const scanData = rawDmarcGuidancePageData.findDomainBySlug.web.edges[0].node
+const scanData = rawDmarcGuidancePageData.findDomainByDomain.web
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

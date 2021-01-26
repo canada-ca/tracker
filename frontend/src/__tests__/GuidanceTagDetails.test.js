@@ -19,9 +19,8 @@ const i18n = setupI18n({
 })
 
 const guidanceTag =
-  rawDmarcGuidancePageData.findDomainBySlug.email.edges[0].node.dkim
-    .selectors[0].dkimGuidanceTags[0]
-const categoryName = 'dkim'
+  rawDmarcGuidancePageData.findDomainByDomain.email.dkim.edges[1].node.results
+    .edges[1].node.guidanceTags.edges[0].node
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -40,15 +39,12 @@ describe('<GuidanceTagDetails />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <GuidanceTagDetails
-                guidanceTag={guidanceTag}
-                categoryName={categoryName}
-              />
+              <GuidanceTagDetails guidanceTag={guidanceTag} />
             </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/P-update-recommended/i))
+    await waitFor(() => getAllByText(/DKIM-missing-O365-misconfigured/i))
   })
 })

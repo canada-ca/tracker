@@ -1,71 +1,53 @@
 import React from 'react'
-import { string } from 'prop-types'
-import { guidanceTags } from './guidanceTagConstants'
+import { object } from 'prop-types'
 import { Box, Icon, Link, Stack, Text } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 
-export function GuidanceTagDetails({ guidanceTag, categoryName }) {
+export function GuidanceTagDetails({ guidanceTag }) {
   const cccsGuidance =
-    guidanceTags[categoryName][guidanceTag].ref_links_guide !== null &&
-    guidanceTags[categoryName][guidanceTag].ref_links_guide !== undefined ? (
+    guidanceTag.refLinks !== null && guidanceTag.refLinks.length !== 0 ? (
       <Stack isInline>
         <Text fontWeight="bold">
           <Trans>For in-depth CCCS implementation guidance:</Trans>
         </Text>
-        <Link
-          color="teal.600"
-          href={guidanceTags[categoryName][guidanceTag].ref_links_guide.link}
-          target="_blank"
-        >
-          <Stack isInline spacing="2px" align="center">
-            <Text>
-              <Trans
-                id={
-                  guidanceTags[categoryName][guidanceTag].ref_links_guide
-                    .heading
-                }
-              />
-            </Text>
-            <Icon name="external-link" />
-          </Stack>
-        </Link>
+        {guidanceTag.refLinks.map((node, index) => (
+          <Link
+            key={index}
+            color="teal.600"
+            href={node.refLink}
+            target="_blank"
+          >
+            <Stack isInline spacing="2px" align="center">
+              <Text>{node.description}</Text>
+              <Icon name="external-link" />
+            </Stack>
+          </Link>
+        ))}
       </Stack>
     ) : (
       ''
     )
 
   const technicalGuidance =
-    guidanceTags[categoryName][guidanceTag].ref_links_technical !== undefined &&
-    guidanceTags[categoryName][guidanceTag].ref_links_technical !== null ? (
+    guidanceTag.refLinksTech.length !== 0 &&
+    guidanceTag.refLinksTech !== null ? (
       <Stack isInline>
         <Text fontWeight="bold">
           <Trans>For technical implementation guidance:</Trans>
         </Text>
-        <Link
-          color="teal.600"
-          href={
-            guidanceTags[categoryName][guidanceTag].ref_links_technical.link
-          }
-          target="_blank"
-        >
-          <Stack isInline spacing="2px" align="center">
-            <Text>
-              <Trans
-                id={
-                  guidanceTags[categoryName][guidanceTag].ref_links_technical
-                    .heading
-                }
-              />
-              {
-                // Display subheading if exists
-                guidanceTags[categoryName][guidanceTag]
-                  .ref_links_technical_subheading &&
-                  `, ${guidanceTags[categoryName][guidanceTag].ref_links_technical_subheading}`
-              }
-            </Text>
-            <Icon name="external-link" />
-          </Stack>
-        </Link>
+        {guidanceTag.refLinksTech.map((node, index) => (
+          <Link
+            key={index}
+            color="teal.600"
+            href={node.refLink}
+            target="_blank"
+          >
+            <Stack isInline spacing="2px" align="center">
+              <Text>{node.description}</Text>
+              <Icon name="external-link" />
+            </Stack>
+          </Link>
+        ))}
       </Stack>
     ) : (
       ''
@@ -84,25 +66,13 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
           <Text fontWeight="bold">
             <Trans>Result:</Trans>
           </Text>
-          <Text>
-            <Trans id={guidanceTags[categoryName][guidanceTag].tag_name} />
-          </Text>
+          <Text>{guidanceTag.tagName}</Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>Guidance:</Trans>
           </Text>
-          <Text>
-            <Trans id={guidanceTags[categoryName][guidanceTag].guidance} />
-          </Text>
-        </Stack>
-        <Stack isInline>
-          <Text fontWeight="bold">
-            <Trans>Summary:</Trans>
-          </Text>
-          <Text>
-            <Trans id={guidanceTags[categoryName][guidanceTag].summary} />
-          </Text>
+          <Text>{guidanceTag.guidance}</Text>
         </Stack>
         {cccsGuidance}
         {technicalGuidance}
@@ -112,6 +82,5 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
 }
 
 GuidanceTagDetails.propTypes = {
-  guidanceTag: string,
-  categoryName: string,
+  guidanceTag: object,
 }
