@@ -31,7 +31,6 @@ describe('given the removeSummaryEdge function', () => {
         startDate: '2021-01-01',
       })
     })
-
     it('removes the given summary edge', async () => {
       const removeSummaryFunc = removeSummaryEdge(query)
 
@@ -48,6 +47,32 @@ describe('given the removeSummaryEdge function', () => {
       const summaryEdgeData = await summaryEdgeCursor.next()
 
       expect(summaryEdgeData).toBeUndefined()
+    })
+  })
+  describe('passed in value is undefined', () => {
+    describe('domainId is undefined', () => {
+      it('returns undefined', async () => {
+        const removeSummaryFunc = removeSummaryEdge(query)
+
+        const data = await removeSummaryFunc({
+          domainId: undefined,
+          monthToRemove: '2021-01-01',
+        })
+
+        expect(data).toBeUndefined()
+      })
+    })
+    describe('monthToRemove is undefined', () => {
+      it('returns undefined', async () => {
+        const removeSummaryFunc = removeSummaryEdge(query)
+
+        const data = await removeSummaryFunc({
+          domainId: 'domains/1',
+          monthToRemove: undefined,
+        })
+
+        expect(data).toBeUndefined()
+      })
     })
   })
   describe('given an error occurs', () => {

@@ -1,8 +1,10 @@
-const removeSummaryEdge = (query) => async ({
-  domainId,
-  monthToRemove,
-}) => {
+const removeSummaryEdge = (query) => async ({ domainId, monthToRemove }) => {
   let monthToRemoveEdgeCursor
+
+  if (typeof domainId === 'undefined' || typeof monthToRemove === 'undefined') {
+    return undefined
+  }
+
   try {
     monthToRemoveEdgeCursor = await query`
     LET edges = (
