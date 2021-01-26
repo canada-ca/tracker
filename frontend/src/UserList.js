@@ -213,7 +213,6 @@ export default function UserList({ permission, userListData, orgId }) {
               >
                 <option value="USER">{t`USER`}</option>
                 <option value="ADMIN">{t`ADMIN`}</option>
-                <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
               </Field>
             </Stack>
 
