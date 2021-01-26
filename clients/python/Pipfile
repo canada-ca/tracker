@@ -7,9 +7,11 @@ name = "pypi"
 gql = {editable = true, git = "https://github.com/graphql-python/gql.git"}
 aiohttp = "*"
 websockets = "*"
+python-slugify = "*"
 
 [dev-packages]
 pylint = "*"
+black = "*"
 
 [requires]
 python_version = "3.8"
