@@ -39,6 +39,9 @@ steps:
     - GITHUB_FILE=$_GITHUB_FILE
     - GITHUB_OWNER=$_GITHUB_OWNER
     - GITHUB_REPO=$_GITHUB_REPO
+    - AZURE_CONN_STRING=$_AZURE_CONN_STRING
+    - DATABASE=$_DATABASE
+    - SUMMARIES_CONTAINER=$_SUMMARIES_CONTAINER
 
 - name: 'gcr.io/cloud-builders/docker'
   id: build-if-master
