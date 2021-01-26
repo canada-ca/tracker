@@ -83,6 +83,27 @@ DMARC_SUMMARY = gql(
     """
 )
 
+DMARC_YEARLY_SUMMARIES = gql(
+    """
+    query domainAllDMARCSummaries($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            domain
+            yearlyDmarcSummaries {
+                month
+                year
+                categoryPercentages {
+                    fullPassPercentage
+                    passSpfOnlyPercentage
+                    passDkimOnlyPercentage
+                    failPercentage
+                    totalMessages
+                }
+            }
+        }
+    }
+    """
+)
+
 
 def create_transport(url, auth_token=None):
     """Create and return a gql transport object
@@ -228,23 +249,49 @@ def get_dmarc_summary(domain, month, year, auth_token):
     return json.dumps(result,indent=4)
     
 
+def get_yearly_dmarc_summaries(domain, auth_token):
+    """Return all available DMARC summaries for a domain
+    
+    Arguments:
+    domain -- domain name string
+    auth_token -- JWT auth token string
+    """
+    client = create_client(
+        url="https://tracker.alpha.canada.ca/graphql",
+        auth_token=auth_token,
+    )
+
+    params = {"domain": domain}
+
+    result = client.execute(DMARC_YEARLY_SUMMARIES, variable_values=params)
+
+    result = result["findDomainByDomain"]
+    result[result.pop("domain")] = result.pop("yearlyDmarcSummaries")
+
+    return json.dumps(result,indent=4)
+
 
 def main():
     """ main() currently tries all implemented functions and prints results
     for diagnostic purposes
     """
     auth_token = get_auth_token()
+
     domains = get_all_domains(auth_token)
     print(domains)
+
     domains = get_domains_by_acronym("cse", auth_token)
     print(domains)
 
     domains = get_domains_by_name(
         "Communications Security Establishment Canada", auth_token
     )
-    
     print(domains)
+    
     result = get_dmarc_summary("cse-cst.gc.ca", "november", 2020, auth_token)
+    print(result)
+    
+    result = get_yearly_dmarc_summaries("cse-cst.gc.ca", auth_token)
     print(result)
 
 
