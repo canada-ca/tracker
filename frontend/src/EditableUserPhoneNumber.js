@@ -114,9 +114,7 @@ function EditableUserPhoneNumber({ detailValue }) {
                   // Submit update detail mutation
                   await updateUserProfile({
                     variables: {
-                      input: {
-                        phoneNumber: values.phoneNumber,
-                      },
+                      phoneNumber: values.phoneNumber,
                     },
                   })
                 }}

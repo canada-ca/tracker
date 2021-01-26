@@ -113,9 +113,7 @@ function EditableUserEmail({ detailValue }) {
                   // Submit update detail mutation
                   await updateUserProfile({
                     variables: {
-                      input: {
-                        userName: values.email,
-                      },
+                      userName: values.email,
                     },
                   })
                 }}

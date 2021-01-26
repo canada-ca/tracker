@@ -113,9 +113,7 @@ function EditableUserDisplayName({ detailValue }) {
                   // Submit update detail mutation
                   await updateUserProfile({
                     variables: {
-                      input: {
-                        displayName: values.displayName,
-                      },
+                      displayName: values.displayName,
                     },
                   })
                 }}
