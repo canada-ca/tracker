@@ -8,6 +8,7 @@ module.exports = {
     'jestGlobalMocks.js',
     '.module.js',
     'locale',
+    'index.js',
   ],
   testTimeout: 10000,
 }
