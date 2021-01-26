@@ -58,6 +58,31 @@ DOMAINS_BY_SLUG = gql(
     """
 )
 
+DMARC_SUMMARY = gql(
+    """
+    query domainDMARCSummary(
+        $domain: DomainScalar!
+        $month: PeriodEnums!
+        $year: Year!
+    ) {
+        findDomainByDomain(domain: $domain) {
+            domain
+            dmarcSummaryByPeriod(month: $month, year: $year) {
+                month
+                year
+                categoryPercentages {
+                    fullPassPercentage
+                    passSpfOnlyPercentage
+                    passDkimOnlyPercentage
+                    failPercentage
+                    totalMessages
+                }
+            }
+        }
+    }
+    """
+)
+
 
 def create_transport(url, auth_token=None):
     """Create and return a gql transport object
@@ -175,16 +200,53 @@ def get_domains_by_name(name, auth_token):
     return json.dumps(result, indent=4)
 
 
+def get_dmarc_summary(domain, month, year, auth_token):
+    """Return the DMARC summary for the specified domain and month
+    
+    Arguments:
+    domain -- domain name string
+    month -- string containing the full name of a month
+    year -- positive integer representing a year
+    auth_token -- JWT auth token string
+    """
+    client = create_client(
+        url="https://tracker.alpha.canada.ca/graphql",
+        auth_token=auth_token,
+    )
+
+    params = {
+        "domain": domain,
+        "month": month.upper(),
+        "year": str(year)
+    }
+
+    result = client.execute(DMARC_SUMMARY, variable_values=params)
+
+    result = result["findDomainByDomain"]
+    result[result.pop("domain")] = result.pop("dmarcSummaryByPeriod")
+
+    return json.dumps(result,indent=4)
+    
+
+
 def main():
+    """ main() currently tries all implemented functions and prints results
+    for diagnostic purposes
+    """
     auth_token = get_auth_token()
     domains = get_all_domains(auth_token)
     print(domains)
     domains = get_domains_by_acronym("cse", auth_token)
     print(domains)
+
     domains = get_domains_by_name(
         "Communications Security Establishment Canada", auth_token
     )
+    
     print(domains)
+    result = get_dmarc_summary("cse-cst.gc.ca", "november", 2020, auth_token)
+    print(result)
+
 
 
 if __name__ == "__main__":
