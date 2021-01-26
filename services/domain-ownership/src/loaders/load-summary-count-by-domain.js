@@ -8,10 +8,13 @@ const loadSummaryCountByDomain = (query) => async ({ domain }) => {
             RETURN domain._id
       )
 
-      FOR id IN domainId
-        FOR v, e IN 1..1 ANY id domainsToDmarcSummaries
-        RETURN e
-        
+      LET edges = (
+        FOR id IN domainId
+          FOR v, e IN 1..1 ANY id domainsToDmarcSummaries
+            RETURN e
+      )
+
+      RETURN { domainId: FIRST(domainId), summaryCount: LENGTH(edges) }
     `
   } catch (err) {
     throw new Error(err)
@@ -19,14 +22,14 @@ const loadSummaryCountByDomain = (query) => async ({ domain }) => {
 
   const edge = await domainCursor.next()
 
-  if (typeof edge === 'undefined') {
-    console.info(`Domain not found in db: ${domain}`)
+  if (edge.domainId === null) {
+    console.info(`\tDomain not found in db: ${domain}`)
     return { summaryCount: undefined, domainId: undefined }
   }
 
   return {
-    summaryCount: domainCursor.count,
-    domainId: edge._from,
+    summaryCount: edge.summaryCount,
+    domainId: edge.domainId,
   }
 }
 

@@ -136,7 +136,7 @@ describe('given the loadSummaryCountByDomain function', () => {
         }
         expect(data).toEqual(expectedData)
 
-        expect(consoleOutput).toEqual([`Domain not found in db: test.gc.ca`])
+        expect(consoleOutput).toEqual([`\tDomain not found in db: test.gc.ca`])
       })
     })
   })
