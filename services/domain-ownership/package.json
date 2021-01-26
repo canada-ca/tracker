@@ -1,7 +1,7 @@
 {
-  "name": "domain-ownership",
+  "name": "dmarc-report",
   "version": "1.0.0",
-  "description": "Collects ownership information from a github repo, then applies that information to arangodb.",
+  "description": "Collects ownership information, and collects dmarc summary info, and inserts into arango.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/canada-ca/tracker.git"
   },
-  "author": "",
+  "author": "nsdeschenes",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/canada-ca/tracker/issues"
