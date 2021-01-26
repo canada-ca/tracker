@@ -28,6 +28,10 @@ const {
   loadDomainOwnership,
   loadSummaryByDate,
   loadSummaryCountByDomain,
+  initializeSummaries,
+  updateCurrentSummaries,
+  updateMonthSummary,
+  updateThirtyDays,
   upsertOwnership,
   removeOwnerships,
   removeSummary,
@@ -58,28 +62,44 @@ const {
   const ownerships = await loadDomainOwnership({ fetch })
 
   const summaryCreateFunc = createSummaries(
-    arrayEquals,
-    loadCurrentDates(query),
     loadDates(moment),
-    loadSummaryByDate(summariesContainer),
     loadSummaryCountByDomain(query),
-    createSummaryEdge(collections),
-    createSummary(query),
-    removeSummaryEdge(query),
-    removeSummary(query),
+    initializeSummaries(
+      createSummaryEdge(collections),
+      createSummary(query),
+      loadSummaryByDate(summariesContainer),
+    ),
+    updateCurrentSummaries(
+      arrayEquals,
+      loadCurrentDates(query),
+      updateThirtyDays(
+        createSummary(query),
+        createSummaryEdge(collections),
+        loadSummaryByDate(summariesContainer),
+        removeSummaryEdge(query),
+        removeSummary(query),
+      ),
+      updateMonthSummary(
+        createSummary(query),
+        createSummaryEdge(collections),
+        loadSummaryByDate(summariesContainer),
+        removeSummaryEdge(query),
+        removeSummaryEdge(query),
+      ),
+    ),
   )
 
   console.info('Assigning ownerships ...')
-  Object.keys(ownerships).forEach((key) => {
-    console.info(`Assigning domain ownership to: ${String(key)}`)
-    upsertOwnership({ ownership: ownerships[key], key, query })
+  const keys = Object.keys(ownerships)
 
-    ownerships[key].forEach((domain) => {
-      summaryCreateFunc({
-        domain,
-      })
-    })
-  })
+  for (const key of keys) {
+    console.info(`Assigning domain ownership to: ${String(key)}`)
+    await upsertOwnership({ ownership: ownerships[key], key, query })
+
+    for (const domain of ownerships[key]) {
+      await summaryCreateFunc({ domain })
+    }
+  }
 
   console.info('Completed assigning ownerships.')
 })()

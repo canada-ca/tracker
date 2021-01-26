@@ -1,9 +1,4 @@
-const {
-  GITHUB_BRANCH,
-  GITHUB_FILE,
-  GITHUB_OWNER,
-  GITHUB_REPO,
-} = process.env
+const { GITHUB_BRANCH, GITHUB_FILE, GITHUB_OWNER, GITHUB_REPO } = process.env
 
 const GET_FILE_CONTENTS = `
 {

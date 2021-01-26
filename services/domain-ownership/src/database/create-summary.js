@@ -7,7 +7,7 @@ const createSummary = (query) => async ({ currentSummary }) => {
   } catch (err) {
     throw new Error(err)
   }
-  
+
   const summaryDBInfo = await summaryCursor.next()
 
   return summaryDBInfo

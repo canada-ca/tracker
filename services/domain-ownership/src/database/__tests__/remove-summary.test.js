@@ -63,15 +63,13 @@ describe('given the removeSummary function', () => {
         .fn()
         .mockRejectedValue('Database error occurred.')
 
-        const removeSummaryFunc = removeSummary(mockedQuery)
+      const removeSummaryFunc = removeSummary(mockedQuery)
 
-        try {
-          await removeSummaryFunc({ summaryId: 'id'})
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Database error occurred.'),
-          )
-        }
+      try {
+        await removeSummaryFunc({ summaryId: 'id' })
+      } catch (err) {
+        expect(err).toEqual(new Error('Database error occurred.'))
+      }
     })
   })
 })

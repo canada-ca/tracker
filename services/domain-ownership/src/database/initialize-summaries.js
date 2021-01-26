@@ -9,7 +9,6 @@ const initializeSummaries = (
   dates.push({ startDate: 'thirty_days' })
 
   for (const date of dates) {
-
     let startDate
     if (date.startDate === 'thirty_days') {
       startDate = 'thirtyDays'

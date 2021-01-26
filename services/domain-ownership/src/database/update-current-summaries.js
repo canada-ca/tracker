@@ -11,7 +11,7 @@ const updateCurrentSummaries = (
 
   // Get current start dates in db
   const dbStartDates = await loadCurrentDates()
-  
+
   const dateArrEqual = arrayEquals(dates, dbStartDates)
 
   if (dateArrEqual) {

@@ -13,7 +13,7 @@ const loadCurrentDates = (query) => async () => {
   }
 
   const dbStartDates = await dbStartDatesCursor.next()
-  
+
   return dbStartDates
 }
 

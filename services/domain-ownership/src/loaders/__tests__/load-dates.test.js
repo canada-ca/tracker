@@ -81,9 +81,7 @@ describe('given the date range function', () => {
     describe('startDate does not match format of YYYY-MM-DD', () => {
       it('throws an error', () => {
         const dateLoader = loadDates(moment)
-        expect(() =>
-          dateLoader({ startDate: 'string'}),
-        ).toThrow(
+        expect(() => dateLoader({ startDate: 'string' })).toThrow(
           new Error(
             'Start date is not a valid format, please conform to YYYY-MM-DD. Please try again.',
           ),

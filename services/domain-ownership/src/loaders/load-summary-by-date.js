@@ -31,7 +31,6 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
     } else {
       summary.categoryTotals = resources[0]
     }
-    
   } catch (err) {
     throw Error(err)
   }
