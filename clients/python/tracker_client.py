@@ -213,13 +213,12 @@ def get_auth_token():
     return auth_token
 
 
-def get_all_domains(auth_token):
-    """Takes in an auth token, returns JSON result listing all domains you have membership in"""
-    client = create_client(
-        url="https://tracker.alpha.canada.ca/graphql",
-        auth_token=auth_token,
-    )
-
+def get_all_domains(client):
+    """Returns lists of all domains you have ownership of, with org as key
+    
+    Arguments:
+    client -- a GQL Client object
+    """
     result = client.execute(ALL_DOMAINS_QUERY)
 
     # Extract the list of nodes from the resulting dict
@@ -239,31 +238,26 @@ def get_all_domains(auth_token):
     return json.dumps(result_dict, indent=4)
 
 
-def get_domains_by_acronym(acronym, auth_token):
+def get_domains_by_acronym(acronym, client):
     """Return the domains belonging to the organization identified by acronym
 
     Arguments:
     acronym -- string containing an acronym belonging to an organization
-    auth_token -- JWT auth token string
+    client -- a GQL Client object
     """
     # API doesn't allow query by acronym so we filter the get_all_domains result
-    all_orgs_result = json.loads(get_all_domains(auth_token))
+    all_orgs_result = json.loads(get_all_domains(client))
     result = all_orgs_result[acronym.upper()]
     return json.dumps(result, indent=4)
 
 
-def get_domains_by_name(name, auth_token):
+def get_domains_by_name(name, client):
     """Return the domains belonging to the organization identified by full name
 
     Arguments:
     name -- string containing the name of an organization
-    auth_token -- JWT auth token string
+    client -- a GQL Client object
     """
-    client = create_client(
-        url="https://tracker.alpha.canada.ca/graphql",
-        auth_token=auth_token,
-    )
-
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"org": slugified_name}
 
@@ -278,20 +272,15 @@ def get_domains_by_name(name, auth_token):
     return json.dumps(result, indent=4)
 
 
-def get_dmarc_summary(domain, month, year, auth_token):
+def get_dmarc_summary(domain, month, year, client):
     """Return the DMARC summary for the specified domain and month
 
     Arguments:
     domain -- domain name string
     month -- string containing the full name of a month
     year -- positive integer representing a year
-    auth_token -- JWT auth token string
+    client -- a GQL Client object
     """
-    client = create_client(
-        url="https://tracker.alpha.canada.ca/graphql",
-        auth_token=auth_token,
-    )
-
     params = {"domain": domain, "month": month.upper(), "year": str(year)}
 
     result = client.execute(DMARC_SUMMARY, variable_values=params)
@@ -302,18 +291,13 @@ def get_dmarc_summary(domain, month, year, auth_token):
     return json.dumps(result, indent=4)
 
 
-def get_yearly_dmarc_summaries(domain, auth_token):
+def get_yearly_dmarc_summaries(domain, client):
     """Return yearly DMARC summaries for a domain
 
     Arguments:
     domain -- domain name string
-    auth_token -- JWT auth token string
+    client -- a GQL Client object
     """
-    client = create_client(
-        url="https://tracker.alpha.canada.ca/graphql",
-        auth_token=auth_token,
-    )
-
     params = {"domain": domain}
 
     result = client.execute(DMARC_YEARLY_SUMMARIES, variable_values=params)
@@ -324,17 +308,12 @@ def get_yearly_dmarc_summaries(domain, auth_token):
     return json.dumps(result, indent=4)
 
 
-def get_all_summaries(auth_token):
+def get_all_summaries(client):
     """Returns summary metrics for all organizations you are a member of.
 
     Arguments:
-    auth_token -- JWT auth token string
+    client -- a GQL Client object
     """
-    client = create_client(
-        url="https://tracker.alpha.canada.ca/graphql",
-        auth_token=auth_token,
-    )
-
     result = client.execute(ALL_ORG_SUMMARIES)
 
     result = result["findMyOrganizations"]["edges"]
@@ -343,32 +322,27 @@ def get_all_summaries(auth_token):
     return json.dumps(result_dict, indent=4)
 
 
-def get_summary_by_acronym(acronym, auth_token):
+def get_summary_by_acronym(acronym, client):
     """Returns summary metrics for the organization identified by acronym
 
     Arguments:
     acronym -- string containing an acronym belonging to an organization
-    auth_token -- JWT auth token string
+    client -- a GQL Client object
     """
     # API doesn't allow query by acronym so we filter the get_all_summaries result
-    all_orgs_result = json.loads(get_all_summaries(auth_token))
+    all_orgs_result = json.loads(get_all_summaries(client))
     # dict in assignment is to keep the org identified in the return value
     result = {acronym.upper(): all_orgs_result[acronym.upper()]}
     return json.dumps(result, indent=4)
 
 
-def get_summary_by_name(name, auth_token):
+def get_summary_by_name(name, client):
     """Return summary metrics for the organization identified by name
 
     Arguments:
     name -- string containing the name of an organization
-    auth_token -- JWT auth token string
+    client -- a GQL Client object
     """
-    client = create_client(
-        url="https://tracker.alpha.canada.ca/graphql",
-        auth_token=auth_token,
-    )
-
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"orgSlug": slugified_name}
 
@@ -388,41 +362,41 @@ def main():
     for diagnostic purposes and to demo available features.
     """
     print("Tracker account: " + os.environ.get("TRACKER_UNAME"))
-    auth_token = get_auth_token()
+    client = create_client("https://tracker.alpha.canada.ca/graphql", get_auth_token())
 
     print("Getting all your domains...")
-    domains = get_all_domains(auth_token)
+    domains = get_all_domains(client)
     print(domains)
 
     acronym = "cse"
     print("Getting domains by acronym " + acronym + "...")
-    domains = get_domains_by_acronym("cse", auth_token)
+    domains = get_domains_by_acronym("cse", client)
     print(domains)
 
     name = "Communications Security Establishment Canada"
     print("Getting domains by name " + name + "...")
-    domains = get_domains_by_name(name, auth_token)
+    domains = get_domains_by_name(name, client)
     print(domains)
 
     domain = "cse-cst.gc.ca"
     print("Getting a dmarc summary for " + domain + "...")
-    result = get_dmarc_summary(domain, "november", 2020, auth_token)
+    result = get_dmarc_summary(domain, "november", 2020, client)
     print(result)
 
     print("Getting yearly dmarc summary for " + domain + "...")
-    result = get_yearly_dmarc_summaries("cse-cst.gc.ca", auth_token)
+    result = get_yearly_dmarc_summaries("cse-cst.gc.ca", client)
     print(result)
 
     print("Getting summaries for all your organizations...")
-    summaries = get_all_summaries(auth_token)
+    summaries = get_all_summaries(client)
     print(summaries)
 
     print("Getting summary by acronym " + acronym + "...")
-    summaries = get_summary_by_acronym("cse", auth_token)
+    summaries = get_summary_by_acronym("cse", client)
     print(summaries)
 
     print("Getting summary by name " + name + "...")
-    summaries = get_summary_by_name(name, auth_token)
+    summaries = get_summary_by_name(name, client)
     print(summaries)
 
 
