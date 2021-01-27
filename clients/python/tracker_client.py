@@ -104,6 +104,40 @@ DMARC_YEARLY_SUMMARIES = gql(
     """
 )
 
+ALL_ORG_SUMMARIES = gql(
+    """
+    query getAllSummaries {
+        findMyOrganizations(first: 100) {
+            edges {
+                node {
+                    acronym
+                    domainCount
+                    summaries{
+                        web{
+                            total
+                            categories{
+                                name
+                                count
+                                percentage
+                            }
+                        }
+                         mail{
+                            total
+                            categories{
+                                name
+                                count
+                                percentage
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    """
+)
+
 
 def create_transport(url, auth_token=None):
     """Create and return a gql transport object
@@ -261,6 +295,25 @@ def get_yearly_dmarc_summaries(domain, auth_token):
     return json.dumps(result, indent=4)
 
 
+def get_all_summaries(auth_token):
+    """Returns summary metrics for all organizations you are a member of.
+
+    Arguments:
+    auth_token -- JWT auth token string
+    """
+    client = create_client(
+        url="https://tracker.alpha.canada.ca/graphql",
+        auth_token=auth_token,
+    )
+
+    result = client.execute(ALL_ORG_SUMMARIES)
+
+    result = result["findMyOrganizations"]["edges"]
+    result_dict = {x["node"].pop("acronym"): x["node"] for x in result}
+
+    return json.dumps(result_dict, indent=4)
+
+
 def main():
     """main() currently tries all implemented functions and prints results
     for diagnostic purposes and to demo available features.
@@ -290,6 +343,10 @@ def main():
     print("Getting yearly dmarc summary for " + domain + "...")
     result = get_yearly_dmarc_summaries("cse-cst.gc.ca", auth_token)
     print(result)
+
+    print("Getting summaries for all your organizations...")
+    summaries = get_all_summaries(auth_token)
+    print(summaries)
 
 
 if __name__ == "__main__":
