@@ -21,6 +21,7 @@ import { TrackerButton } from './TrackerButton'
 import { LoadingMessage } from './LoadingMessage'
 import { useUserState } from './UserState'
 import { useLingui } from '@lingui/react'
+import { activate } from './i18n.config'
 
 export default function SignInPage() {
   const { login } = useUserState()
@@ -57,6 +58,10 @@ export default function SignInPage() {
           tfaSendMethod: signIn.result.authResult.user.tfaSendMethod,
           userName: signIn.result.authResult.user.userName,
         })
+        if (signIn.result.authResult.user.preferredLang === 'ENGLISH')
+          activate('en')
+        else if (signIn.result.authResult.user.preferredLang === 'FRENCH')
+          activate('fr')
         // // redirect to the home page.
         history.push(from)
         // // Display a welcome message
