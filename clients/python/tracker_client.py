@@ -314,6 +314,20 @@ def get_all_summaries(auth_token):
     return json.dumps(result_dict, indent=4)
 
 
+def get_summary_by_acronym(acronym, auth_token):
+    """Returns summary metrics for the organization identified by acronym
+
+    Arguments:
+    acronym -- string containing an acronym belonging to an organization
+    auth_token -- JWT auth token string
+    """
+    # API doesn't allow query by acronym so we filter the get_all_summaries result
+    all_orgs_result = json.loads(get_all_summaries(auth_token))
+    # dict in assignment is to keep the org identified in the return value
+    result = {acronym.upper(): all_orgs_result[acronym.upper()]}
+    return json.dumps(result, indent=4)
+
+
 def main():
     """main() currently tries all implemented functions and prints results
     for diagnostic purposes and to demo available features.
@@ -346,6 +360,10 @@ def main():
 
     print("Getting summaries for all your organizations...")
     summaries = get_all_summaries(auth_token)
+    print(summaries)
+
+    print("Getting summary by acronym " + acronym + "...")
+    summaries = get_summary_by_acronym("cse", auth_token)
     print(summaries)
 
 
