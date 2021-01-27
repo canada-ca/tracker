@@ -6,4 +6,6 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 
 
-console.log('woo!')
+console.warn('warning!!!')
+console.log('logging!')
+console.error('so bad!')
