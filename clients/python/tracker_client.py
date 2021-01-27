@@ -1,6 +1,7 @@
 import os
 import json
 
+from slugify import slugify
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 
@@ -34,6 +35,22 @@ ALL_DOMAINS_QUERY = gql(
                             }
                         }
                     }     
+                }
+            }
+        }
+    }
+    """
+)
+
+DOMAINS_BY_SLUG = gql(
+    """
+    query orgBySlug($org: Slug!){
+        findOrganizationBySlug(orgSlug: $org){
+            domains(first: 100){
+                edges{
+                    node{
+                        domain
+                    }
                 }
             }
         }
@@ -94,7 +111,7 @@ def get_auth_token():
 
 
 def get_all_domains(auth_token):
-    """Takes in an auth token, returns raw JSON result listing all domains you have membership in"""
+    """Takes in an auth token, returns JSON result listing all domains you have membership in"""
     client = create_client(
         url="https://tracker.alpha.canada.ca/graphql",
         auth_token=auth_token,
@@ -105,9 +122,7 @@ def get_all_domains(auth_token):
     # Extract the list of nodes from the resulting dict
     result_list = result["findMyOrganizations"]["edges"]
     # Move the dict value of "node" up a level
-    result_list = [
-        n["node"] for n in result_list
-    ]  # Move the dict value of "node" up a level
+    result_list = [n["node"] for n in result_list]
 
     # For each dict element of the list, change the value of "domains"
     # to the list of domains contained in the nodes of its edges
@@ -121,9 +136,54 @@ def get_all_domains(auth_token):
     return json.dumps(result_dict, indent=4)
 
 
+def get_domains_by_acronym(acronym, auth_token):
+    """Return the domains belonging to the organization identified by acronym
+
+    Arguments:
+    acronym -- string containing an acronym belonging to an organization
+    auth_token -- JWT auth token string
+    """
+    # API doesn't allow query by acronym so we filter the get_all_domains result
+    all_orgs_result = json.loads(get_all_domains(auth_token))
+    result = all_orgs_result[acronym.upper()]
+    return json.dumps(result, indent=4)
+
+
+def get_domains_by_name(name, auth_token):
+    """Return the domains belonging to the organization identified by full name
+
+    Arguments:
+    name -- string containing the name of an organization
+    auth_token -- JWT auth token string
+    """
+    client = create_client(
+        url="https://tracker.alpha.canada.ca/graphql",
+        auth_token=auth_token,
+    )
+
+    slugified_name = slugify(name)  # API expects a slugified string for name
+    params = {"org": slugified_name}
+
+    result = client.execute(DOMAINS_BY_SLUG, variable_values=params)
+
+    # Extract the list of domains from the nested dict response
+    result = result["findOrganizationBySlug"]
+    result["domains"] = result["domains"]["edges"]
+    result["domains"] = [n["node"] for n in result["domains"]]
+    result["domains"] = [n["domain"] for n in result["domains"]]
+
+    return json.dumps(result, indent=4)
+
+
 def main():
     auth_token = get_auth_token()
     domains = get_all_domains(auth_token)
+    print(domains)
+    domains = get_domains_by_acronym("cse", auth_token)
+    print(domains)
+    domains = get_domains_by_name(
+        "Communications Security Establishment Canada", auth_token
+    )
     print(domains)
 
 
