@@ -129,16 +129,10 @@ def create_client(url, auth_token=None):
     url -- the Tracker GraphQL endpoint url
     auth_token -- JWT auth token string, omit when initially obtaining the token
     """
-    if auth_token is None:
-        client = Client(
-            transport=create_transport(url=url),
-            fetch_schema_from_transport=True,
-        )
-    else:
-        client = Client(
-            transport=create_transport(url=url, auth_token=auth_token),
-            fetch_schema_from_transport=True,
-        )
+    client = Client(
+        transport=create_transport(url=url, auth_token=auth_token),
+        fetch_schema_from_transport=True,
+    )
     return client
 
 
@@ -246,7 +240,7 @@ def get_dmarc_summary(domain, month, year, auth_token):
 
 
 def get_yearly_dmarc_summaries(domain, auth_token):
-    """Return all available DMARC summaries for a domain
+    """Return yearly DMARC summaries for a domain
 
     Arguments:
     domain -- domain name string
@@ -269,24 +263,31 @@ def get_yearly_dmarc_summaries(domain, auth_token):
 
 def main():
     """main() currently tries all implemented functions and prints results
-    for diagnostic purposes
+    for diagnostic purposes and to demo available features.
     """
+    print("Tracker account: " + os.environ.get("TRACKER_UNAME"))
     auth_token = get_auth_token()
 
+    print("Getting all your domains...")
     domains = get_all_domains(auth_token)
     print(domains)
 
+    acronym = "cse"
+    print("Getting domains by acronym " + acronym + "...")
     domains = get_domains_by_acronym("cse", auth_token)
     print(domains)
 
-    domains = get_domains_by_name(
-        "Communications Security Establishment Canada", auth_token
-    )
+    name = "Communications Security Establishment Canada"
+    print("Getting domains by name " + name + "...")
+    domains = get_domains_by_name(name, auth_token)
     print(domains)
 
-    result = get_dmarc_summary("cse-cst.gc.ca", "november", 2020, auth_token)
+    domain = "cse-cst.gc.ca"
+    print("Getting a dmarc summary for " + domain + "...")
+    result = get_dmarc_summary(domain, "november", 2020, auth_token)
     print(result)
 
+    print("Getting yearly dmarc summary for " + domain + "...")
     result = get_yearly_dmarc_summaries("cse-cst.gc.ca", auth_token)
     print(result)
 
