@@ -138,6 +138,35 @@ ALL_ORG_SUMMARIES = gql(
     """
 )
 
+SUMMARY_BY_SLUG = gql(
+    """
+    query getSummaryBySlug($orgSlug: Slug!) {
+        findOrganizationBySlug(orgSlug: $orgSlug) {
+            acronym
+            domainCount
+            summaries {
+                web {
+                    total
+                    categories {
+                        name
+                        count
+                        percentage
+                    }
+                }
+                mail {
+                    total
+                    categories {
+                        name
+                        count
+                        percentage
+                    }
+                }
+            }
+        }
+    }
+    """
+)
+
 
 def create_transport(url, auth_token=None):
     """Create and return a gql transport object
@@ -328,6 +357,32 @@ def get_summary_by_acronym(acronym, auth_token):
     return json.dumps(result, indent=4)
 
 
+def get_summary_by_name(name, auth_token):
+    """Return summary metrics for the organization identified by name
+
+    Arguments:
+    name -- string containing the name of an organization
+    auth_token -- JWT auth token string
+    """
+    client = create_client(
+        url="https://tracker.alpha.canada.ca/graphql",
+        auth_token=auth_token,
+    )
+
+    slugified_name = slugify(name)  # API expects a slugified string for name
+    params = {"orgSlug": slugified_name}
+
+    result = client.execute(SUMMARY_BY_SLUG, variable_values=params)
+
+    result = {
+        result["findOrganizationBySlug"].pop("acronym"): result[
+            "findOrganizationBySlug"
+        ]
+    }
+
+    return json.dumps(result, indent=4)
+
+
 def main():
     """main() currently tries all implemented functions and prints results
     for diagnostic purposes and to demo available features.
@@ -364,6 +419,10 @@ def main():
 
     print("Getting summary by acronym " + acronym + "...")
     summaries = get_summary_by_acronym("cse", auth_token)
+    print(summaries)
+
+    print("Getting summary by name " + name + "...")
+    summaries = get_summary_by_name(name, auth_token)
     print(summaries)
 
 
