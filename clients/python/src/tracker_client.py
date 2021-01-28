@@ -215,27 +215,32 @@ def get_auth_token():
 
 def get_all_domains(client):
     """Returns lists of all domains you have ownership of, with org as key
-    
+
     Arguments:
     client -- a GQL Client object
     """
     result = client.execute(ALL_DOMAINS_QUERY)
+    formatted_result = format_all_domains(result)
+    return json.dumps(formatted_result, indent=4)
 
+
+def format_all_domains(result):
+    """ Formats the dict obtained by ALL_DOMAINS_QUERY """
     # Extract the list of nodes from the resulting dict
-    result_list = result["findMyOrganizations"]["edges"]
+    result = result["findMyOrganizations"]["edges"]
     # Move the dict value of "node" up a level
-    result_list = [n["node"] for n in result_list]
+    result = [n["node"] for n in result]
 
     # For each dict element of the list, change the value of "domains"
     # to the list of domains contained in the nodes of its edges
-    for x in result_list:
+    for x in result:
         x["domains"] = x["domains"]["edges"]
         x["domains"] = [n["node"] for n in x["domains"]]
         x["domains"] = [n["domain"] for n in x["domains"]]
 
     # Create a new dict in the desired format to return
-    result_dict = {x["acronym"]: {"domains": x["domains"]} for x in result_list}
-    return json.dumps(result_dict, indent=4)
+    result = {x["acronym"]: {"domains": x["domains"]} for x in result}
+    return result
 
 
 def get_domains_by_acronym(acronym, client):
@@ -246,9 +251,16 @@ def get_domains_by_acronym(acronym, client):
     client -- a GQL Client object
     """
     # API doesn't allow query by acronym so we filter the get_all_domains result
-    all_orgs_result = json.loads(get_all_domains(client))
-    result = all_orgs_result[acronym.upper()]
-    return json.dumps(result, indent=4)
+    result = client.execute(ALL_DOMAINS_QUERY)
+    formatted_result = format_acronym_domains(acronym, result)
+    return json.dumps(formatted_result, indent=4)
+
+
+def format_acronym_domains(acronym, result):
+    """ Formats the dict obtained by ALL_DOMAINS_QUERY to show only one org"""
+    result = format_all_domains(result)
+    result = result[acronym.upper()]
+    return result
 
 
 def get_domains_by_name(name, client):
@@ -262,14 +274,17 @@ def get_domains_by_name(name, client):
     params = {"org": slugified_name}
 
     result = client.execute(DOMAINS_BY_SLUG, variable_values=params)
+    formatted_result = format_name_domains(result)
+    return json.dumps(formatted_result, indent=4)
 
-    # Extract the list of domains from the nested dict response
+
+def format_name_domains(result):
+    """Formats the dict obtained by DOMAINS_BY_SLUG"""
     result = result["findOrganizationBySlug"]
     result["domains"] = result["domains"]["edges"]
     result["domains"] = [n["node"] for n in result["domains"]]
     result["domains"] = [n["domain"] for n in result["domains"]]
-
-    return json.dumps(result, indent=4)
+    return result
 
 
 def get_dmarc_summary(domain, month, year, client):
@@ -284,11 +299,15 @@ def get_dmarc_summary(domain, month, year, client):
     params = {"domain": domain, "month": month.upper(), "year": str(year)}
 
     result = client.execute(DMARC_SUMMARY, variable_values=params)
+    formatted_result = format_dmarc_monthly(result)
+    return json.dumps(formatted_result, indent=4)
 
+
+def format_dmarc_monthly(result):
+    """Formats the dict obtained by DMARC_SUMMARY"""
     result = result["findDomainByDomain"]
     result[result.pop("domain")] = result.pop("dmarcSummaryByPeriod")
-
-    return json.dumps(result, indent=4)
+    return result
 
 
 def get_yearly_dmarc_summaries(domain, client):
@@ -301,11 +320,15 @@ def get_yearly_dmarc_summaries(domain, client):
     params = {"domain": domain}
 
     result = client.execute(DMARC_YEARLY_SUMMARIES, variable_values=params)
+    formatted_result = format_dmarc_yearly(result)
+    return json.dumps(formatted_result, indent=4)
 
+
+def format_dmarc_yearly(result):
+    """Formats the dict obtained by DMARC_YEARLY_SUMMARIES"""
     result = result["findDomainByDomain"]
     result[result.pop("domain")] = result.pop("yearlyDmarcSummaries")
-
-    return json.dumps(result, indent=4)
+    return result
 
 
 def get_all_summaries(client):
@@ -315,11 +338,15 @@ def get_all_summaries(client):
     client -- a GQL Client object
     """
     result = client.execute(ALL_ORG_SUMMARIES)
+    formatted_result = format_all_summaries(result)
+    return json.dumps(formatted_result, indent=4)
 
+
+def format_all_summaries(result):
+    """Formats the dict obtained by ALL_ORG_SUMMARIES"""
     result = result["findMyOrganizations"]["edges"]
-    result_dict = {x["node"].pop("acronym"): x["node"] for x in result}
-
-    return json.dumps(result_dict, indent=4)
+    result = {x["node"].pop("acronym"): x["node"] for x in result}
+    return result
 
 
 def get_summary_by_acronym(acronym, client):
@@ -330,10 +357,17 @@ def get_summary_by_acronym(acronym, client):
     client -- a GQL Client object
     """
     # API doesn't allow query by acronym so we filter the get_all_summaries result
-    all_orgs_result = json.loads(get_all_summaries(client))
+    result = client.execute(ALL_ORG_SUMMARIES)
+    formatted_result = format_acronym_summary(result, acronym)
+    return json.dumps(formatted_result, indent=4)
+
+
+def format_acronym_summary(result, acronym):
+    """Formats the dict obtained by ALL_ORG_SUMMARIES to show only one org"""
+    result = format_all_summaries(result)
     # dict in assignment is to keep the org identified in the return value
-    result = {acronym.upper(): all_orgs_result[acronym.upper()]}
-    return json.dumps(result, indent=4)
+    result = {acronym.upper(): result[acronym.upper()]}
+    return result
 
 
 def get_summary_by_name(name, client):
@@ -347,14 +381,18 @@ def get_summary_by_name(name, client):
     params = {"orgSlug": slugified_name}
 
     result = client.execute(SUMMARY_BY_SLUG, variable_values=params)
+    formatted_result = format_name_summary(result)
+    return json.dumps(formatted_result, indent=4)
 
+
+def format_name_summary(result):
+    """Formats the dict obtained by SUMMARY_BY_SLUG"""
     result = {
         result["findOrganizationBySlug"].pop("acronym"): result[
             "findOrganizationBySlug"
         ]
     }
-
-    return json.dumps(result, indent=4)
+    return result
 
 
 def main():
