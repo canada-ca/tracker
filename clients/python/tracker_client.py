@@ -104,6 +104,69 @@ DMARC_YEARLY_SUMMARIES = gql(
     """
 )
 
+ALL_ORG_SUMMARIES = gql(
+    """
+    query getAllSummaries {
+        findMyOrganizations(first: 100) {
+            edges {
+                node {
+                    acronym
+                    domainCount
+                    summaries{
+                        web{
+                            total
+                            categories{
+                                name
+                                count
+                                percentage
+                            }
+                        }
+                         mail{
+                            total
+                            categories{
+                                name
+                                count
+                                percentage
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    """
+)
+
+SUMMARY_BY_SLUG = gql(
+    """
+    query getSummaryBySlug($orgSlug: Slug!) {
+        findOrganizationBySlug(orgSlug: $orgSlug) {
+            acronym
+            domainCount
+            summaries {
+                web {
+                    total
+                    categories {
+                        name
+                        count
+                        percentage
+                    }
+                }
+                mail {
+                    total
+                    categories {
+                        name
+                        count
+                        percentage
+                    }
+                }
+            }
+        }
+    }
+    """
+)
+
 
 def create_transport(url, auth_token=None):
     """Create and return a gql transport object
@@ -261,6 +324,65 @@ def get_yearly_dmarc_summaries(domain, auth_token):
     return json.dumps(result, indent=4)
 
 
+def get_all_summaries(auth_token):
+    """Returns summary metrics for all organizations you are a member of.
+
+    Arguments:
+    auth_token -- JWT auth token string
+    """
+    client = create_client(
+        url="https://tracker.alpha.canada.ca/graphql",
+        auth_token=auth_token,
+    )
+
+    result = client.execute(ALL_ORG_SUMMARIES)
+
+    result = result["findMyOrganizations"]["edges"]
+    result_dict = {x["node"].pop("acronym"): x["node"] for x in result}
+
+    return json.dumps(result_dict, indent=4)
+
+
+def get_summary_by_acronym(acronym, auth_token):
+    """Returns summary metrics for the organization identified by acronym
+
+    Arguments:
+    acronym -- string containing an acronym belonging to an organization
+    auth_token -- JWT auth token string
+    """
+    # API doesn't allow query by acronym so we filter the get_all_summaries result
+    all_orgs_result = json.loads(get_all_summaries(auth_token))
+    # dict in assignment is to keep the org identified in the return value
+    result = {acronym.upper(): all_orgs_result[acronym.upper()]}
+    return json.dumps(result, indent=4)
+
+
+def get_summary_by_name(name, auth_token):
+    """Return summary metrics for the organization identified by name
+
+    Arguments:
+    name -- string containing the name of an organization
+    auth_token -- JWT auth token string
+    """
+    client = create_client(
+        url="https://tracker.alpha.canada.ca/graphql",
+        auth_token=auth_token,
+    )
+
+    slugified_name = slugify(name)  # API expects a slugified string for name
+    params = {"orgSlug": slugified_name}
+
+    result = client.execute(SUMMARY_BY_SLUG, variable_values=params)
+
+    result = {
+        result["findOrganizationBySlug"].pop("acronym"): result[
+            "findOrganizationBySlug"
+        ]
+    }
+
+    return json.dumps(result, indent=4)
+
+
 def main():
     """main() currently tries all implemented functions and prints results
     for diagnostic purposes and to demo available features.
@@ -290,6 +412,18 @@ def main():
     print("Getting yearly dmarc summary for " + domain + "...")
     result = get_yearly_dmarc_summaries("cse-cst.gc.ca", auth_token)
     print(result)
+
+    print("Getting summaries for all your organizations...")
+    summaries = get_all_summaries(auth_token)
+    print(summaries)
+
+    print("Getting summary by acronym " + acronym + "...")
+    summaries = get_summary_by_acronym("cse", auth_token)
+    print(summaries)
+
+    print("Getting summary by name " + name + "...")
+    summaries = get_summary_by_name(name, auth_token)
+    print(summaries)
 
 
 if __name__ == "__main__":
