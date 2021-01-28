@@ -2,6 +2,7 @@ import React from 'react'
 import { object, string } from 'prop-types'
 import { Box, Heading } from '@chakra-ui/core'
 import { GuidanceTagList } from './GuidanceTagList'
+import { PolicyComplianceDetails } from './PolicyComplianceDetails'
 import WithPseudoBox from './withPseudoBox'
 
 function ScanCategoryDetails({ categoryName, categoryData }) {
@@ -11,7 +12,6 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
         <GuidanceTagList
           guidanceTags={node.guidanceTags.edges}
           selector={node.selector}
-          categoryName={categoryName}
           key={categoryName + idx}
         />
       ))
@@ -21,12 +21,26 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
         key={categoryName}
       />
     )
+
+  const policyDetails =
+    categoryName === 'https' ||
+    categoryName === 'dmarc' ||
+    categoryName === 'spf' ? (
+      <Box bg="#d2e7fc" pb="1">
+        <PolicyComplianceDetails
+          categoryName={categoryName}
+          policies={categoryData.edges[0]?.node}
+        />
+      </Box>
+    ) : null
+
   return (
     <Box>
       <Heading as="h2" size="md">
         {categoryName.toUpperCase()}
       </Heading>
       {tagDetails}
+      {policyDetails}
     </Box>
   )
 }

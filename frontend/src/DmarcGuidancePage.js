@@ -59,6 +59,7 @@ export default function DmarcGuidancePage() {
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <ScanCard scanType="email" scanData={emailScan} />
       </ErrorBoundary>
+      <Divider />
     </Stack>
   )
 }

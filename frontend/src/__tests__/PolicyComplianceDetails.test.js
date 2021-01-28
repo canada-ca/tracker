@@ -2,11 +2,11 @@ import React from 'react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
+import { PolicyComplianceDetails } from '../PolicyComplianceDetails'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
-import { GuidanceTagDetails } from '../GuidanceTagDetails'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -18,9 +18,9 @@ const i18n = setupI18n({
   },
 })
 
-const guidanceTag =
-  rawDmarcGuidancePageData.findDomainByDomain.email.dkim.edges[0].node.results
-    .edges[0].node.guidanceTags.edges[0].node
+const categoryName = 'https'
+const policies =
+  rawDmarcGuidancePageData.findDomainByDomain.web.https.edges[0].node
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -30,7 +30,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
-describe('<GuidanceTagDetails />', () => {
+describe('<ScanCategoryDetails />', () => {
   it('renders', async () => {
     const { getAllByText } = render(
       <UserStateProvider
@@ -39,14 +39,15 @@ describe('<GuidanceTagDetails />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <GuidanceTagDetails guidanceTag={guidanceTag} />
+              <PolicyComplianceDetails
+                categoryName={categoryName}
+                policies={policies}
+              />
             </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() =>
-      getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),
-    )
+    await waitFor(() => getAllByText(/Bad Hostname/i))
   })
 })
