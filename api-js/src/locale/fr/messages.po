@@ -93,6 +93,10 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
 msgstr "todo"
 
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:71
+msgid "Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported."
+msgstr "todo"
+
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:49
 msgid "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
 msgstr "todo"
@@ -177,6 +181,10 @@ msgstr "todo"
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:65
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:65
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:94
+msgid "Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:74
@@ -335,6 +343,11 @@ msgstr "todo"
 msgid "Unable to find dmarc scan. Please try again."
 msgstr "todo"
 
+#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:19
+#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:33
+msgid "Unable to find dmarc summary. Please try again."
+msgstr "todo"
+
 #: src/domain/loaders/load-domain-by-domain.js:18
 #: src/domain/loaders/load-domain-by-domain.js:30
 #: src/domain/loaders/load-domain-by-key.js:18
@@ -449,6 +462,11 @@ msgstr "todo"
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:145
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:155
 msgid "Unable to load dmarc scans. Please try again."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:177
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:189
+msgid "Unable to load dmarc summaries. Please try again."
 msgstr "todo"
 
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:151
@@ -578,6 +596,11 @@ msgstr "todo"
 msgid "Unable to retrieve {0} for domain: {domain}."
 msgstr "todo"
 
+#: src/dmarc-summaries/loaders/load-start-date-from-period.js:34
+#: src/dmarc-summaries/loaders/load-start-date-from-period.js:49
+msgid "Unable to select dmarc reports for this period and year."
+msgstr "todo"
+
 #: src/user/mutations/send-phone-code.js:58
 #: src/user/mutations/send-phone-code.js:76
 #: src/user/mutations/send-phone-code.js:106
@@ -602,10 +625,10 @@ msgid "Unable to send verification email. Please try again."
 msgstr "todo"
 
 #: src/user/mutations/sign-in.js:53
-#: src/user/mutations/sign-in.js:84
-#: src/user/mutations/sign-in.js:103
-#: src/user/mutations/sign-in.js:152
+#: src/user/mutations/sign-in.js:79
+#: src/user/mutations/sign-in.js:98
 #: src/user/mutations/sign-in.js:157
+#: src/user/mutations/sign-in.js:162
 msgid "Unable to sign in, please try again."
 msgstr "todo"
 
@@ -728,6 +751,10 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 msgstr "todo"
 
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:62
+msgid "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
+msgstr "todo"
+
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
 msgstr "todo"
@@ -772,8 +799,17 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection."
 msgstr "todo"
 
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:20
+msgid "You must provide a `period` value to access the `dmarcSummaries` connection."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:32
+msgid "You must provide a `year` value to access the `dmarcSummaries` connection."
+msgstr "todo"
+
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:80
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:80
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:109
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:89
 #: src/domain/loaders/load-domain-connections-by-user-id.js:87
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:96
@@ -807,6 +843,10 @@ msgstr "todo"
 
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:61
 msgid "`{argSet}` on the `dkim` connection cannot be less than zero."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:83
+msgid "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
 msgstr "todo"
 
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:62

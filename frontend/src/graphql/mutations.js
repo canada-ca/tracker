@@ -24,6 +24,7 @@ export const SIGN_UP = gql`
         user {
           userName
           tfaSendMethod
+          preferredLang
         }
       }
     }
@@ -44,6 +45,7 @@ export const SIGN_IN = gql`
             user {
               userName
               tfaSendMethod
+              preferredLang
             }
           }
         }
@@ -68,6 +70,7 @@ export const AUTHENTICATE = gql`
         user {
           userName
           tfaSendMethod
+          preferredLang
         }
       }
     }

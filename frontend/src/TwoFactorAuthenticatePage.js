@@ -11,6 +11,7 @@ import { AUTHENTICATE } from './graphql/mutations'
 import AuthenticateField from './AuthenticateField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
+import { activate } from './i18n.config'
 
 export default function TwoFactorAuthenticatePage() {
   const { login } = useUserState()
@@ -45,6 +46,10 @@ export default function TwoFactorAuthenticatePage() {
         tfaSendMethod: authenticate.authResult.user.tfaSendMethod,
         userName: authenticate.authResult.user.userName,
       })
+      if (authenticate.authResult.user.preferredLang === 'ENGLISH')
+        activate('en')
+      else if (authenticate.authResult.user.preferredLang === 'FRENCH')
+        activate('fr')
       // // redirect to the home page.
       history.replace(from)
       // // Display a welcome message
