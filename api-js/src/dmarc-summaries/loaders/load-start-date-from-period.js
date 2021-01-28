@@ -22,7 +22,7 @@ export const loadStartDateFromPeriod = (moment, userKey, i18n) => ({
   if (period === 'thirtyDays') {
     const startDate = moment().subtract(30, 'days')
     const currentDate = moment()
-    
+
     if (
       year !== String(startDate.year()) &&
       year !== String(currentDate.year())
