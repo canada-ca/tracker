@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { Authorization } from './fragments'
 
 export const SIGN_UP = gql`
   mutation signUp(
@@ -20,15 +21,11 @@ export const SIGN_UP = gql`
       }
     ) {
       authResult {
-        authToken
-        user {
-          userName
-          tfaSendMethod
-          preferredLang
-        }
+        ...RequiredAuthResultFields
       }
     }
   }
+  ${Authorization.fragments.requiredFields}
 `
 
 export const SIGN_IN = gql`
@@ -41,17 +38,13 @@ export const SIGN_IN = gql`
         }
         ... on RegularSignInResult {
           authResult {
-            authToken
-            user {
-              userName
-              tfaSendMethod
-              preferredLang
-            }
+            ...RequiredAuthResultFields
           }
         }
       }
     }
   }
+  ${Authorization.fragments.requiredFields}
 `
 
 export const AUTHENTICATE = gql`
@@ -66,15 +59,11 @@ export const AUTHENTICATE = gql`
       }
     ) {
       authResult {
-        authToken
-        user {
-          userName
-          tfaSendMethod
-          preferredLang
-        }
+        ...RequiredAuthResultFields
       }
     }
   }
+  ${Authorization.fragments.requiredFields}
 `
 
 export const RESET_PASSWORD = gql`
