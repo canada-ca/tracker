@@ -66,9 +66,7 @@ function EditableUserLanguage({ currentLang }) {
           // Submit update detail mutation
           await updateUserProfile({
             variables: {
-              input: {
-                preferredLang: values.lang,
-              },
+              preferredLang: values.lang,
             },
           })
         }}

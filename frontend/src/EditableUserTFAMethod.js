@@ -92,9 +92,7 @@ function EditableUserTFAMethod({
           // Submit update detail mutation
           await updateUserProfile({
             variables: {
-              input: {
-                tfaSendMethod: values.tfaMethod,
-              },
+              tfaSendMethod: values.tfaMethod,
             },
           })
         }}
