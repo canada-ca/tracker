@@ -40,7 +40,7 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
     const { resources } = await container.items
       .query({
         query: `SELECT * FROM (
-        SELECT 
+        SELECT
             f.source_ip_address AS sourceIpAddress,
             f.envelope_from AS envelopeFrom,
             f.header_from AS headerFrom,
@@ -50,6 +50,7 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
             f.dkim_aligned AS dkimAligned,
             f.total_messages AS totalMessages,
             f.dns_host AS dnsHost,
+            f.cursor AS id,
             f.guidance
         FROM c JOIN f IN c.detail_tables.dkim_failure
         WHERE c.domain=@domain
@@ -80,7 +81,8 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
           f.dkim_selectors AS dkimSelectors,
           f.disposition,
           f.total_messages AS totalMessages,
-          f.dns_host AS dnsHost
+          f.dns_host AS dnsHost,
+          f.cursor AS id
         FROM c JOIN f IN c.detail_tables.dmarc_failure
         WHERE c.domain=@domain
         AND c.id=@startDate) AS sub`,
@@ -109,7 +111,8 @@ const loadSummaryByDate = (container) => async ({ domain, startDate }) => {
           f.dkim_domains AS dkimDomains,
           f.dkim_selectors AS dkimSelectors,
           f.total_messages AS totalMessages,
-          f.dns_host AS dnsHost
+          f.dns_host AS dnsHost,
+          f.cursor AS id
         FROM c JOIN f IN c.detail_tables.full_pass
         WHERE c.domain=@domain
         AND c.id=@startDate) AS sub`,
