@@ -179,7 +179,7 @@ def create_transport(url, auth_token=None):
         transport = AIOHTTPTransport(url=url)
     else:
         transport = AIOHTTPTransport(
-            url="https://tracker.alpha.canada.ca/graphql",
+            url=url,
             headers={"authorization": auth_token},
         )
     return transport
