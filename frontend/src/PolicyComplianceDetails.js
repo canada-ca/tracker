@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Icon, Stack, Text } from '@chakra-ui/core'
 import { object, string } from 'prop-types'
+import { Trans } from '@lingui/macro'
 
 export function PolicyComplianceDetails({ categoryName, policies }) {
   const smallDevice = window.matchMedia('(max-width: 500px)').matches
@@ -12,23 +13,33 @@ export function PolicyComplianceDetails({ categoryName, policies }) {
       <Box>
         <Stack isInline align="center">
           {smallDevice && infoIcon}
-          <Text fontWeight="bold">Implementation Status:</Text>
+          <Text fontWeight="bold">
+            <Trans>Implementation Status:</Trans>
+          </Text>
           <Text>{policies?.implementation}</Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold">Level of Enforcment:</Text>
+          <Text fontWeight="bold">
+            <Trans>Level of Enforcment:</Trans>
+          </Text>
           <Text>{policies?.enforced}</Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold">HSTS Status:</Text>
+          <Text fontWeight="bold">
+            <Trans>HSTS Status:</Trans>
+          </Text>
           <Text>{policies?.hsts}</Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold">HSTS Age:</Text>
+          <Text fontWeight="bold">
+            <Trans>HSTS Age:</Trans>
+          </Text>
           <Text>{policies?.hstsAge}</Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold">Preloaded Status:</Text>
+          <Text fontWeight="bold">
+            <Trans>Preloaded Status:</Trans>
+          </Text>
           <Text>{policies?.preloaded}</Text>
         </Stack>
       </Box>
@@ -42,7 +53,9 @@ export function PolicyComplianceDetails({ categoryName, policies }) {
         {policies?.dmarcPhase && (
           <Stack isInline align="center">
             {smallDevice && infoIcon}
-            <Text fontWeight="bold">Phase:</Text>
+            <Text fontWeight="bold">
+              <Trans>Phase:</Trans>
+            </Text>
             <Text>{policies?.dmarcPhase}</Text>
           </Stack>
         )}

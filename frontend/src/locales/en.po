@@ -1973,3 +1973,27 @@ msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 #: src/OrganizationDetails.js:102
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/PolicyComplianceDetails.js:17
+msgid "Implementation Status:"
+msgstr "Implementation Status:"
+
+#: src/PolicyComplianceDetails.js:23
+msgid "Level of Enforcment:"
+msgstr "Level of Enforcment:"
+
+#: src/PolicyComplianceDetails.js:29
+msgid "HSTS Status:"
+msgstr "HSTS Status:"
+
+#: src/PolicyComplianceDetails.js:35
+msgid "HSTS Age:"
+msgstr "HSTS Age:"
+
+#: src/PolicyComplianceDetails.js:41
+msgid "Preloaded Status:"
+msgstr "Preloaded Status:"
+
+#: src/PolicyComplianceDetails.js:57
+msgid "Phase:"
+msgstr "Phase:"
