@@ -1,3 +1,7 @@
+export * from './load-dkim-failure-connections-by-sum-id'
+export * from './load-dmarc-failure-connections-by-sum-id'
 export * from './load-dmarc-sum-connections-by-user-id'
 export * from './load-dmarc-summary-by-key'
+export * from './load-full-pass-connections-by-sum-id'
+export * from './load-spf-failure-connections-by-sum-id'
 export * from './load-start-date-from-period'
