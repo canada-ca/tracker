@@ -18,6 +18,14 @@
     'No organization with the provided slug could be found.': 'todo',
     'No verified domain with the provided domain could be found.': 'todo',
     'Organization has already been verified.': 'todo',
+    'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.':
+      'todo',
     'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.':
@@ -52,6 +60,14 @@
     'Permission check error. Unable to request domain information.': 'todo',
     'Permission error, not an admin for this user.': 'todo',
     'Profile successfully updated.': 'todo',
+    'Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records.':
@@ -121,17 +137,21 @@
     'Unable to invite user. Please try again.': 'todo',
     'Unable to invite yourself to an org. Please try again.': 'todo',
     'Unable to load affiliations. Please try again.': 'todo',
+    'Unable to load dkim failures. Please try again.': 'todo',
     'Unable to load dkim guidance tags. Please try again.': 'todo',
     'Unable to load dkim results. Please try again.': 'todo',
     'Unable to load dkim scans. Please try again.': 'todo',
+    'Unable to load dmarc failures. Please try again.': 'todo',
     'Unable to load dmarc guidance tags. Please try again.': 'todo',
     'Unable to load dmarc scans. Please try again.': 'todo',
     'Unable to load dmarc summaries. Please try again.': 'todo',
     'Unable to load domains. Please try again.': 'todo',
+    'Unable to load full passes. Please try again.': 'todo',
     'Unable to load https guidance tags. Please try again.': 'todo',
     'Unable to load https scans. Please try again.': 'todo',
     'Unable to load mail summary. Please try again.': 'todo',
     'Unable to load organizations. Please try again.': 'todo',
+    'Unable to load spf failures. Please try again.': 'todo',
     'Unable to load spf guidance tags. Please try again.': 'todo',
     'Unable to load spf scans. Please try again.': 'todo',
     'Unable to load ssl guidance tags. Please try again.': 'todo',
@@ -179,6 +199,14 @@
     'User could not be queried.': 'todo',
     'User role was updated successfully.': 'todo',
     'Username already in use.': 'todo',
+    'You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.':
@@ -210,6 +238,14 @@
     'You must provide a `year` value to access the `dmarcSummaries` connection.':
       'todo',
     '`{argSet}` must be of type `number` not `{typeSet}`.': 'todo',
+    '`{argSet}` on the `DkimFailureTable` connection cannot be less than zero.':
+      'todo',
+    '`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero.':
+      'todo',
+    '`{argSet}` on the `FullPassTable` connection cannot be less than zero.':
+      'todo',
+    '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.':
+      'todo',
     '`{argSet}` on the `affiliations` cannot be less than zero.': 'todo',
     '`{argSet}` on the `dkimResults` connection cannot be less than zero.':
       'todo',
