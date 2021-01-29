@@ -1,5 +1,14 @@
 import pytest
-from src.tracker_client import *
+from src.tracker_client import (
+    format_all_domains,
+    format_acronym_domains,
+    format_name_domains,
+    format_dmarc_monthly,
+    format_dmarc_yearly,
+    format_all_summaries,
+    format_acronym_summary,
+    format_name_summary,
+)
 
 
 @pytest.fixture
@@ -236,6 +245,86 @@ def yearly_dmarc_input():
     }
 
 
+@pytest.fixture
+def all_summaries_input():
+    return {
+        "findMyOrganizations": {
+            "edges": [
+                {
+                    "node": {
+                        "acronym": "ABC",
+                        "domainCount": 6,
+                        "summaries": {
+                            "web": {
+                                "total": 6,
+                                "categories": [
+                                    {"name": "pass", "count": 0, "percentage": 0},
+                                    {"name": "fail", "count": 6, "percentage": 100},
+                                ],
+                            },
+                            "mail": {
+                                "total": 6,
+                                "categories": [
+                                    {"name": "pass", "count": 4, "percentage": 66.7},
+                                    {"name": "fail", "count": 2, "percentage": 33.3},
+                                ],
+                            },
+                        },
+                    }
+                },
+                {
+                    "node": {
+                        "acronym": "DEF",
+                        "domainCount": 12,
+                        "summaries": {
+                            "web": {
+                                "total": 12,
+                                "categories": [
+                                    {"name": "pass", "count": 1, "percentage": 8.3},
+                                    {"name": "fail", "count": 11, "percentage": 91.7},
+                                ],
+                            },
+                            "mail": {
+                                "total": 12,
+                                "categories": [
+                                    {"name": "pass", "count": 7, "percentage": 58.3},
+                                    {"name": "fail", "count": 5, "percentage": 41.7},
+                                ],
+                            },
+                        },
+                    }
+                },
+            ]
+        }
+    }
+
+
+@pytest.fixture
+def name_summary_input():
+    return {
+        "findOrganizationBySlug": {
+            "acronym": "DEF",
+            "domainCount": 12,
+            "summaries": {
+                "web": {
+                    "total": 12,
+                    "categories": [
+                        {"name": "pass", "count": 1, "percentage": 8.3},
+                        {"name": "fail", "count": 11, "percentage": 91.7},
+                    ],
+                },
+                "mail": {
+                    "total": 12,
+                    "categories": [
+                        {"name": "pass", "count": 7, "percentage": 58.3},
+                        {"name": "fail", "count": 5, "percentage": 41.7},
+                    ],
+                },
+            },
+        }
+    }
+
+
 def test_format_acronym_domains(domain_input_dict):
     expected_output = {
         "domains": ["qwe-rty.com", "foo.bar.baz", "fizz-buzz.bang", "xyz-abc-mn.net"]
@@ -284,6 +373,7 @@ def test_format_dmarc_monthly(monthly_dmarc_input):
 
 
 def test_format_dmarc_yearly(yearly_dmarc_input):
+    # Should probably find a way to not have this inline...
     expected_output = {
         "abc-def.ghi": [
             {
@@ -432,3 +522,97 @@ def test_format_dmarc_yearly(yearly_dmarc_input):
         ]
     }
     assert format_dmarc_yearly(yearly_dmarc_input) == expected_output
+
+
+def test_format_all_summaries(all_summaries_input):
+    expected_output = {
+        "ABC": {
+            "domainCount": 6,
+            "summaries": {
+                "web": {
+                    "total": 6,
+                    "categories": [
+                        {"name": "pass", "count": 0, "percentage": 0},
+                        {"name": "fail", "count": 6, "percentage": 100},
+                    ],
+                },
+                "mail": {
+                    "total": 6,
+                    "categories": [
+                        {"name": "pass", "count": 4, "percentage": 66.7},
+                        {"name": "fail", "count": 2, "percentage": 33.3},
+                    ],
+                },
+            },
+        },
+        "DEF": {
+            "domainCount": 12,
+            "summaries": {
+                "web": {
+                    "total": 12,
+                    "categories": [
+                        {"name": "pass", "count": 1, "percentage": 8.3},
+                        {"name": "fail", "count": 11, "percentage": 91.7},
+                    ],
+                },
+                "mail": {
+                    "total": 12,
+                    "categories": [
+                        {"name": "pass", "count": 7, "percentage": 58.3},
+                        {"name": "fail", "count": 5, "percentage": 41.7},
+                    ],
+                },
+            },
+        },
+    }
+    assert format_all_summaries(all_summaries_input) == expected_output
+
+
+def test_format_acronym_summary(all_summaries_input):
+    expected_output = {
+        "DEF": {
+            "domainCount": 12,
+            "summaries": {
+                "web": {
+                    "total": 12,
+                    "categories": [
+                        {"name": "pass", "count": 1, "percentage": 8.3},
+                        {"name": "fail", "count": 11, "percentage": 91.7},
+                    ],
+                },
+                "mail": {
+                    "total": 12,
+                    "categories": [
+                        {"name": "pass", "count": 7, "percentage": 58.3},
+                        {"name": "fail", "count": 5, "percentage": 41.7},
+                    ],
+                },
+            },
+        }
+    }
+    assert format_acronym_summary(all_summaries_input, "def") == expected_output
+
+
+def test_format_name_summary(name_summary_input):
+    expected_output = {
+        "DEF": {
+            "domainCount": 12,
+            "summaries": {
+                "web": {
+                    "total": 12,
+                    "categories": [
+                        {"name": "pass", "count": 1, "percentage": 8.3},
+                        {"name": "fail", "count": 11, "percentage": 91.7},
+                    ],
+                },
+                "mail": {
+                    "total": 12,
+                    "categories": [
+                        {"name": "pass", "count": 7, "percentage": 58.3},
+                        {"name": "fail", "count": 5, "percentage": 41.7},
+                    ],
+                },
+            },
+        }
+    }
+    assert format_name_summary(name_summary_input) == expected_output
