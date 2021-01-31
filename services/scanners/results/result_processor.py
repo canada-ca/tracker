@@ -454,6 +454,85 @@ def process_dns(results, domain_key, db):
                     if not "spf13" in tags:
                         tags["spf"].append("spf13")
 
+    phase = "not implemented"
+
+    # CHECK IF DOMAIN IS IN "MAINTAIN" PHASE
+    if  ("dmarc5" in tags["dmarc"] or "dmarc6" in tags["dmarc"]):
+        if "dmarc7" in tags["dmarc"]:
+            phase = "maintain"
+        elif "dmarc8" in tags["dmarc"]:
+            phase = "enforce"
+    elif "dmarc4" in tags["dmarc"] and ("dmarc20" in tags["dmarc"] or "dmarc7" in tags["dmarc"]):
+        phase = "deploy"
+
+    # DETERMINE TAG CONTEXT BASED ON PHASE (POSTIVE/NEUTRAL/NEGATIVE)
+    guidance_tags = {"dmarc": {"neutralTags": [], "negativeTags": [], "positiveTags": []},
+                    "spf": {"neutralTags": [], "negativeTags": [], "positiveTags": []},
+                    "dkim": {}}
+
+    for tag in ["dmarc2", "dmarc3", "dmarc11", "dmarc12", "dmarc15", "dmarc21"]:
+        if tag in tags["dmarc"]:
+            guidanceTags["dmarc"]["negativeTags"].append(tag)
+    for tag in ["dmarc10", "dmarc13", "dmarc14", "dmarc16", "dmarc18", "dmarc19", "dmarc22"]:
+        if tag in tags["dmarc"]:
+            guidanceTags["dmarc"]["neutralTags"].append(tag)
+    if "dmarc23" in tags["dmarc"]:
+        guidanceTags["dmarc"]["positiveTags"].append("dmarc23")
+
+    if phase == "maintain":
+        if "dmarc17" in tags["dmarc"]:
+            guidanceTags["dmarc"]["negativeTags"].append("dmarc17")
+        for tag in ["spf2", "spf3", "spf4", "spf5", "spf6", "spf7", "spf9", "spf10", "spf11"]:
+            if tag in tags["spf"]:
+                guidanceTags["spf"]["negativeTags"].append(tag)
+        for tag in ["spf8", "spf12"]:
+            if tag in tags["spf"]:
+                guidanceTags["spf"]["positiveTags"].append(tag)
+        for selector in tags["dkim"].keys():
+            guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
+            for tag in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim11", "dkim12", "dkim13"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["negativeTags"].append(tag)
+            for tag in ["dkim6", "dkim7"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["positiveTags"].append(tag)
+    elif phase == "enforce":
+        if "dmarc17" in tags["dmarc"]:
+            guidanceTags["dmarc"]["negativeTags"].append("dmarc17")
+        for tag in ["spf2", "spf3", "spf4", "spf5", "spf6", "spf7", "spf9", "spf10", "spf11"]:
+            if tag in tags["spf"]:
+                guidanceTags["spf"]["negativeTags"].append(tag)
+        for tag in ["spf7", "spf8", "spf12"]:
+            if tag in tags["spf"]:
+                guidanceTags["spf"]["positiveTags"].append(tag)
+        for selector in tags["dkim"].keys():
+            guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
+            for tag in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim11", "dkim12", "dkim13"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["negativeTags"].append(tag)
+            for tag in ["dkim6", "dkim7"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["positiveTags"].append(tag)
+    else:
+        if "dmarc17" in tags["dmarc"]:
+            guidanceTags["dmarc"]["neutralTags"].append("dmarc17")
+        for tag in ["spf5", "spf9", "spf11"]:
+            if tag in tags["spf"]:
+                guidanceTags["spf"]["negativeTags"].append(tag)
+        for tag in ["spf2", "spf3", "spf4", "spf6", "spf7", "spf8", "spf10"]:
+            if tag in tags["spf"]:
+                guidanceTags["spf"]["neutralTags"].append(tag)
+        if "spf12" in tags["spf"]:
+            guidanceTags["spf"]["positiveTags"].append("spf12")
+        for selector in tags["dkim"].keys():
+            guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
+            for tag in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["negativeTags"].append(tag)
+            for tag in ["dkim2", "dkim3", "dkim4", "dkim6", "dkim7", "dkim10"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["neutralTags"].append(tag)
+
     try:
         dmarcEntry = db.collection("dmarc").insert(
             {
@@ -472,9 +551,9 @@ def process_dns(results, domain_key, db):
                 .get("pct", {})
                 .get("value", None),
                 "rawJson": results["dmarc"],
-                "neutralTags": [],
-                "positiveTags": [],
-                "negativeTags": [],
+                "neutralTags": guidance_tags["dmarc"]["neutralTags"],
+                "positiveTags": guidance_tags["dmarc"]["positiveTags"],
+                "negativeTags": guidance_tags["dmarc"]["negativeTags"],
             }
         )
         spfRecord = results["spf"].get("record", None)
@@ -489,9 +568,9 @@ def process_dns(results, domain_key, db):
                 "lookups": results["spf"].get("dns_lookups", None),
                 "spfDefault": spfDefault,
                 "rawJson": results["spf"],
-                "neutralTags": [],
-                "positiveTags": [],
-                "negativeTags": [],
+                "neutralTags": guidance_tags["spf"]["neutralTags"],
+                "positiveTags": guidance_tags["spf"]["positiveTags"],
+                "negativeTags": guidance_tags["spf"]["negativeTags"],
             }
         )
 
@@ -517,9 +596,9 @@ def process_dns(results, domain_key, db):
                         )
                         previous_dkim_domain = previous_dkim_domain_query.next()
                         if (previous_dkim_domain["_key"] != domain_key) and (
-                            "dkim14" not in tags["dkim"][selector]
+                            "dkim14" not in guidance_tags["dkim"][selector]["negativeTags"]
                         ):
-                            tags["dkim"][selector].append("dkim14")
+                            guidance_tags["dkim"][selector]["negativeTags"].append("dkim14")
 
                         # Check if PK is older than 1 year
                         current_timestamp = datetime.datetime.strptime(
@@ -532,9 +611,9 @@ def process_dns(results, domain_key, db):
                         time_delta = current_timestamp - previous_timestamp
 
                         if (time_delta.total_seconds() > 31536000) and (
-                            "dkim10" not in tags["dkim"][selector]
+                            "dkim10" not in guidance_tags["dkim"][selector]["negativeTags"]
                         ):
-                            tags["dkim"][selector].append("dkim10")
+                            guidance_tags["dkim"][selector]["negativeTags"].append("dkim10")
 
                 dkimResultsEntry = db.collection("dkimResults").insert(
                     {
@@ -542,9 +621,9 @@ def process_dns(results, domain_key, db):
                         "keyLength": results["dkim"][selector].get("key_size", None),
                         "keyModulus": keyModulus,
                         "rawJson": results["dkim"][selector],
-                        "neutralTags": [],
-                        "positiveTags": [],
-                        "negativeTags": [],
+                        "neutralTags": guidance_tags["dkim"][selector]["neutralTags"],
+                        "positiveTags": guidance_tags["dkim"][selector]["positiveTags"],
+                        "negativeTags": guidance_tags["dkim"][selector]["negativeTags"],
                     }
                 )
                 db.collection("dkimToDkimResults").insert(
@@ -604,110 +683,8 @@ def process_dns(results, domain_key, db):
         }.items():
             domain["status"][key] = val
 
-        phase = "not implemented"
-
-        # CHECK IF DOMAIN IS IN "MAINTAIN" PHASE
-        if  ("dmarc5" in tags["dmarc"] or "dmarc6" in tags["dmarc"]):
-            if "dmarc7" in tags["dmarc"]:
-                phase = "maintain"
-            elif "dmarc8" in tags["dmarc"]:
-                phase = "enforce"
-        elif "dmarc4" in tags["dmarc"] and ("dmarc20" in tags["dmarc"] or "dmarc7" in tags["dmarc"]):
-            phase = "deploy"
-
-        # DETERMINE TAG CONTEXT BASED ON PHASE (POSTIVE/NEUTRAL/NEGATIVE)
-        guidance_tags = {"dmarc": {"neutralTags": [], "negativeTags": [], "positiveTags": []},
-                        "spf": {"neutralTags": [], "negativeTags": [], "positiveTags": []},
-                        "dkim": {}}
-
-        for tag in ["dmarc2", "dmarc3", "dmarc11", "dmarc12", "dmarc15", "dmarc21"]:
-            if tag in tags["dmarc"]:
-                guidanceTags["dmarc"]["negativeTags"].append(tag)
-        for tag in ["dmarc10", "dmarc13", "dmarc14", "dmarc16", "dmarc18", "dmarc19", "dmarc22"]:
-            if tag in tags["dmarc"]:
-                guidanceTags["dmarc"]["neutralTags"].append(tag)
-        if "dmarc23" in tags["dmarc"]:
-            guidanceTags["dmarc"]["positiveTags"].append("dmarc23")
-
-        if phase == "maintain":
-            if "dmarc17" in tags["dmarc"]:
-                guidanceTags["dmarc"]["negativeTags"].append("dmarc17")
-            for tag in ["spf2", "spf3", "spf4", "spf5", "spf6", "spf7", "spf9", "spf10", "spf11"]:
-                if tag in tags["spf"]:
-                    guidanceTags["spf"]["negativeTags"].append(tag)
-            for tag in ["spf8", "spf12"]:
-                if tag in tags["spf"]:
-                    guidanceTags["spf"]["positiveTags"].append(tag)
-            for selector in tags["dkim"].keys():
-                guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
-                for tag in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim11", "dkim12", "dkim13", "dkim14"]:
-                    if tag in tags["dkim"][selector]:
-                        guidance_tags["dkim"][selector]["negativeTags"].append(tag)
-                for tag in ["dkim6", "dkim7"]:
-                    if tag in tags["dkim"][selector]:
-                        guidance_tags["dkim"][selector]["positiveTags"].append(tag)
-        elif phase == "enforce":
-            if "dmarc17" in tags["dmarc"]:
-                guidanceTags["dmarc"]["negativeTags"].append("dmarc17")
-            for tag in ["spf2", "spf3", "spf4", "spf5", "spf6", "spf7", "spf9", "spf10", "spf11"]:
-                if tag in tags["spf"]:
-                    guidanceTags["spf"]["negativeTags"].append(tag)
-            for tag in ["spf7", "spf8", "spf12"]:
-                if tag in tags["spf"]:
-                    guidanceTags["spf"]["positiveTags"].append(tag)
-            for selector in tags["dkim"].keys():
-                guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
-                for tag in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim11", "dkim12", "dkim13", "dkim14"]:
-                    if tag in tags["dkim"][selector]:
-                        guidance_tags["dkim"][selector]["negativeTags"].append(tag)
-                for tag in ["dkim6", "dkim7"]:
-                    if tag in tags["dkim"][selector]:
-                        guidance_tags["dkim"][selector]["positiveTags"].append(tag)
-        else:
-            if "dmarc17" in tags["dmarc"]:
-                guidanceTags["dmarc"]["neutralTags"].append("dmarc17")
-            for tag in ["spf5", "spf9", "spf11"]:
-                if tag in tags["spf"]:
-                    guidanceTags["spf"]["negativeTags"].append(tag)
-            for tag in ["spf2", "spf3", "spf4", "spf6", "spf7", "spf8", "spf10"]:
-                if tag in tags["spf"]:
-                    guidanceTags["spf"]["neutralTags"].append(tag)
-            if "spf12" in tags["spf"]:
-                guidanceTags["spf"]["positiveTags"].append("spf12")
-            for selector in tags["dkim"].keys():
-                guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
-                for tag in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13"]:
-                    if tag in tags["dkim"][selector]:
-                        guidance_tags["dkim"][selector]["negativeTags"].append(tag)
-                for tag in ["dkim2", "dkim3", "dkim4", "dkim6", "dkim7", "dkim10", "dkim14"]:
-                    if tag in tags["dkim"][selector]:
-                        guidance_tags["dkim"][selector]["neutralTags"].append(tag)
-
-
         domain.update({"phase": phase})
         db.collection("domains").update(domain)
-
-        dmarc_entry.update({"positiveTags": guidance_tags["dmarc"]["positiveTags"],
-        "neutralTags": guidance_tags["dmarc"]["neutralTags"],
-        "negativeTags": guidance_tags["dmarc"]["negativeTags"]})
-        db.collection("dmarc").update(domain)
-
-        spf_entry.update({"positiveTags": guidance_tags["spf"]["positiveTags"],
-        "neutralTags": guidance_tags["spf"]["neutralTags"],
-        "negativeTags": guidance_tags["spf"]["negativeTags"]})
-        db.collection("spf").update(domain)
-
-        if results["dkim"].get("missing", None) is None:
-            for selector in results["dkim"].keys():
-                keyModulus = results["dkim"][selector]["public_key_modulus"]
-
-                dkim_results = db.collection("dkimResults").find(
-                    {"keyModulus": keyModulus}
-                )
-                dkim_results.update({"positiveTags": guidance_tags["dkim"][selector]["positiveTags"],
-                "neutralTags": guidance_tags["dkim"][selector]["neutralTags"],
-                "negativeTags": guidance_tags["dkim"][selector]["negativeTags"]})
-                db.collection("dkimResults").update(dkim_results)
 
     except Exception as e:
         logging.error(
