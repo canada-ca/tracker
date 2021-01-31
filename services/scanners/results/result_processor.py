@@ -472,22 +472,22 @@ def process_dns(results, domain_key, db):
 
     for tag in ["dmarc2", "dmarc3", "dmarc11", "dmarc12", "dmarc15", "dmarc21"]:
         if tag in tags["dmarc"]:
-            guidanceTags["dmarc"]["negativeTags"].append(tag)
+            guidance_tags["dmarc"]["negativeTags"].append(tag)
     for tag in ["dmarc10", "dmarc13", "dmarc14", "dmarc16", "dmarc18", "dmarc19", "dmarc22"]:
         if tag in tags["dmarc"]:
-            guidanceTags["dmarc"]["neutralTags"].append(tag)
+            guidance_tags["dmarc"]["neutralTags"].append(tag)
     if "dmarc23" in tags["dmarc"]:
-        guidanceTags["dmarc"]["positiveTags"].append("dmarc23")
+        guidance_tags["dmarc"]["positiveTags"].append("dmarc23")
 
     if phase == "maintain":
         if "dmarc17" in tags["dmarc"]:
-            guidanceTags["dmarc"]["negativeTags"].append("dmarc17")
+            guidance_tags["dmarc"]["negativeTags"].append("dmarc17")
         for tag in ["spf2", "spf3", "spf4", "spf5", "spf6", "spf7", "spf9", "spf10", "spf11"]:
             if tag in tags["spf"]:
-                guidanceTags["spf"]["negativeTags"].append(tag)
+                guidance_tags["spf"]["negativeTags"].append(tag)
         for tag in ["spf8", "spf12"]:
             if tag in tags["spf"]:
-                guidanceTags["spf"]["positiveTags"].append(tag)
+                guidance_tags["spf"]["positiveTags"].append(tag)
         for selector in tags["dkim"].keys():
             guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
             for tag in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim11", "dkim12", "dkim13"]:
@@ -498,13 +498,13 @@ def process_dns(results, domain_key, db):
                     guidance_tags["dkim"][selector]["positiveTags"].append(tag)
     elif phase == "enforce":
         if "dmarc17" in tags["dmarc"]:
-            guidanceTags["dmarc"]["negativeTags"].append("dmarc17")
+            guidance_tags["dmarc"]["negativeTags"].append("dmarc17")
         for tag in ["spf2", "spf3", "spf4", "spf5", "spf6", "spf7", "spf9", "spf10", "spf11"]:
             if tag in tags["spf"]:
-                guidanceTags["spf"]["negativeTags"].append(tag)
+                guidance_tags["spf"]["negativeTags"].append(tag)
         for tag in ["spf7", "spf8", "spf12"]:
             if tag in tags["spf"]:
-                guidanceTags["spf"]["positiveTags"].append(tag)
+                guidance_tags["spf"]["positiveTags"].append(tag)
         for selector in tags["dkim"].keys():
             guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
             for tag in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim11", "dkim12", "dkim13"]:
@@ -515,15 +515,15 @@ def process_dns(results, domain_key, db):
                     guidance_tags["dkim"][selector]["positiveTags"].append(tag)
     else:
         if "dmarc17" in tags["dmarc"]:
-            guidanceTags["dmarc"]["neutralTags"].append("dmarc17")
+            guidance_tags["dmarc"]["neutralTags"].append("dmarc17")
         for tag in ["spf5", "spf9", "spf11"]:
             if tag in tags["spf"]:
-                guidanceTags["spf"]["negativeTags"].append(tag)
+                guidance_tags["spf"]["negativeTags"].append(tag)
         for tag in ["spf2", "spf3", "spf4", "spf6", "spf7", "spf8", "spf10"]:
             if tag in tags["spf"]:
-                guidanceTags["spf"]["neutralTags"].append(tag)
+                guidance_tags["spf"]["neutralTags"].append(tag)
         if "spf12" in tags["spf"]:
-            guidanceTags["spf"]["positiveTags"].append("spf12")
+            guidance_tags["spf"]["positiveTags"].append("spf12")
         for selector in tags["dkim"].keys():
             guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
             for tag in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13"]:
