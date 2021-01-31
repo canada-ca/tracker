@@ -16,7 +16,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
-DB_HOST = os.getenv("DB_HOST")
+DB_HOST = "10.108.14.82"
 REPO_NAME = os.getenv("REPO_NAME")
 REPO_OWNER = os.getenv("REPO_OWNER")
 GUIDANCE_DIR = os.getenv("GUIDANCE_DIR")
@@ -366,16 +366,18 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER, password=DB_P
             else:
                 mail_fail = mail_fail + 1
 
-        org["summaries"]["web"] = {
+        summaries = {}
+        summaries["web"] = {
             "pass": web_pass,
             "fail": web_fail,
             "total": domain_total,
         }
-        org["summaries"]["mail"] = {
+        summaries["mail"] = {
             "pass": mail_pass,
             "fail": mail_fail,
             "total": domain_total,
         }
+        org.update(summaries)
         db.collection("organizations").update(org)
 
     logging.info(f"Organization summary value update completed.")
