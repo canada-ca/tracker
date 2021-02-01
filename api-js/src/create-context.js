@@ -39,10 +39,12 @@ import {
   dkimFailureLoaderConnectionsBySumId,
   dmarcFailureLoaderConnectionsBySumId,
   dmarcSumLoaderConnectionsByUserId,
+  dmarcSummaryEdgeLoaderByDomainIdPeriod,
   dmarcSumLoaderByKey,
   fullPassLoaderConnectionsBySumId,
   spfFailureLoaderConnectionsBySumId,
   loadStartDateFromPeriod,
+  dmarcYearlySumEdgeLoader,
 } from './dmarc-summaries/loaders'
 import {
   domainLoaderByKey,
@@ -182,6 +184,11 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       ),
+      dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
+        query,
+        userKey,
+        i18n,
+      ),
       dmarcSumLoaderByKey: dmarcSumLoaderByKey(query, userKey, i18n),
       fullPassLoaderConnectionsBySumId: fullPassLoaderConnectionsBySumId(
         query,
@@ -196,6 +203,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         i18n,
       ),
       loadStartDateFromPeriod: loadStartDateFromPeriod(moment, userKey, i18n),
+      dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(query, userKey, i18n),
       domainLoaderByDomain: domainLoaderByDomain(query, userKey, i18n),
       domainLoaderByKey: domainLoaderByKey(query, userKey, i18n),
       domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
