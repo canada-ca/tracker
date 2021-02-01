@@ -94,13 +94,21 @@ export function PolicyComplianceDetails({ categoryName, policies }) {
     </Stack>
   )
 
-  if (categoryName === 'https') {
-    return httpsPolicy
-  } else if (categoryName === 'dmarc') {
-    return dmarcPolicy
-  } else {
-    return spfPolicy
+  const getPolicies = () => {
+    if (categoryName === 'https') {
+      return httpsPolicy
+    } else if (categoryName === 'dmarc') {
+      return dmarcPolicy
+    } else {
+      return spfPolicy
+    }
   }
+
+  return (
+    <Box bg="#d2e7fc" pb="1">
+      {getPolicies()}
+    </Box>
+  )
 }
 
 PolicyComplianceDetails.propTypes = {

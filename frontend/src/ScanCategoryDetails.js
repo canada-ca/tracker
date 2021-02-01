@@ -26,12 +26,10 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
     categoryName === 'https' ||
     categoryName === 'dmarc' ||
     categoryName === 'spf' ? (
-      <Box bg="#d2e7fc" pb="1">
-        <PolicyComplianceDetails
-          categoryName={categoryName}
-          policies={categoryData.edges[0]?.node}
-        />
-      </Box>
+      <PolicyComplianceDetails
+        categoryName={categoryName}
+        policies={categoryData.edges[0]?.node}
+      />
     ) : null
 
   return (
