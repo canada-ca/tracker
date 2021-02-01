@@ -98,7 +98,9 @@ def test_https():
 
     for field in inserted_results:
         assert inserted_results.get(field, None) is not None
-    assert inserted_results["guidanceTags"] == expected_https_tags
+    assert inserted_results["negativeTags"] == expected_negative_https_tags
+    assert inserted_results["neutralTags"] == expected_neutral_https_tags
+    assert inserted_results["positiveTags"] == expected_positive_https_tags
 
 
 def test_ssl():
@@ -132,7 +134,9 @@ def test_ssl():
 
     for field in inserted_results:
         assert inserted_results.get(field, None) is not None
-    assert inserted_results["guidanceTags"] == expected_ssl_tags
+    assert inserted_results["negativeTags"] == expected_negative_ssl_tags
+    assert inserted_results["neutralTags"] == expected_neutral_ssl_tags
+    assert inserted_results["positiveTags"] == expected_positive_ssl_tags
 
 
 def test_dns():
@@ -159,7 +163,9 @@ def test_dns():
 
     for field in inserted_dmarc_results:
         assert inserted_dmarc_results.get(field, None) is not None
-    assert inserted_dmarc_results["guidanceTags"] == expected_dmarc_tags
+    assert inserted_dmarc_results["negativeTags"] == expected_negative_dmarc_tags
+    assert inserted_dmarc_results["neutralTags"] == expected_neutral_dmarc_tags
+    assert inserted_dmarc_results["positiveTags"] == expected_positive_dmarc_tags
 
     inserted_spf_results_query = db.collection("spf").all()
 
@@ -167,7 +173,9 @@ def test_dns():
 
     for field in inserted_spf_results:
         assert inserted_spf_results.get(field, None) is not None
-    assert inserted_spf_results["guidanceTags"] == expected_spf_tags
+    assert inserted_spf_results["negativeTags"] == expected_negative_spf_tags
+    assert inserted_spf_results["neutralTags"] == expected_neutral_spf_tags
+    assert inserted_spf_results["positiveTags"] == expected_positive_spf_tags
 
     inserted_dkim_results_query = db.collection("dkimResults").all()
 
@@ -175,7 +183,9 @@ def test_dns():
 
     for field in inserted_dkim_results:
         assert inserted_dkim_results.get(field, None) is not None
-    assert inserted_dkim_results["guidanceTags"] == expected_dkim_tags
+    assert inserted_dkim_results["negativeTags"] == expected_negative_dkim_tags
+    assert inserted_dkim_results["neutralTags"] == expected_neutral_dkim_tags
+    assert inserted_dkim_results["positiveTags"] == expected_positive_dkim_tags
 
     updated_domain_query = db.collection("domains").find(
         {"domain": "cyber.gc.ca"}, limit=1

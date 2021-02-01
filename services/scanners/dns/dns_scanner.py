@@ -307,7 +307,7 @@ def Server(server_client=requests):
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "dns", "uuid": uuid, "domain_key": domain_key, "results": {}}, server_client
+                {"scan_type": "dns", "uuid": uuid, "domain_key": domain_key, "results": {"dmarc": {"missing": True}, "dkim": {"missing": True}, "spf": {"missing": True}}}, server_client
             )
             return PlainTextResponse(msg)
 

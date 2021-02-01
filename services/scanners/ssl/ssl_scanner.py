@@ -212,7 +212,7 @@ def scan_ssl(domain):
             except TypeError:
                 res["signature_algorithm"] = None
 
-        elif name == "elliptic_curves":
+        else:
             logging.info("Parsing Elliptic Curve Scan results...")
             res["supports_ecdh_key_exchange"] = result.supports_ecdh_key_exchange
             res["supported_curves"] = []
@@ -250,6 +250,8 @@ def process_results(results):
         report["preferred_cipher"] = results["TLS"]["preferred_cipher"]
         report["heartbleed"] = results.get("is_vulnerable_to_heartbleed", False)
         report["openssl_ccs_injection"] = results.get("is_vulnerable_to_ccs_injection", False)
+        report["supports_ecdh_key_exchange"] = results.get("supports_ecdh_key_exchange", False)
+        report["supported_curves"] = results["supported_curves"]
 
     logging.info(f"Processed SSL scan results: {str(report)}")
     return report
@@ -303,7 +305,7 @@ def Server(server_client=requests):
             msg = f"The designated domain could not be resolved: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             dispatch_results(
-                {"scan_type": "ssl", "uuid": uuid, "domain_key": domain_key, "results": {}}, server_client
+                {"scan_type": "ssl", "uuid": uuid, "domain_key": domain_key, "results": {"missing": True}}, server_client
             )
             return PlainTextResponse(msg)
 
@@ -313,7 +315,7 @@ def Server(server_client=requests):
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "ssl", "uuid": uuid, "domain_key": domain_key, "results": {}}, server_client
+                {"scan_type": "ssl", "uuid": uuid, "domain_key": domain_key, "results": {"missing": True}}, server_client
             )
             return PlainTextResponse(msg)
 
