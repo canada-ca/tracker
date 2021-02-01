@@ -28,7 +28,10 @@ export const dmarcSummaryType = new GraphQLObjectType({
     month: {
       type: PeriodEnums,
       description: 'Start date of data collection.',
-      resolve: ({ selectedMonth }) => selectedMonth,
+      resolve: ({ startDate }, _, { moment }) => {
+        const month = moment(startDate).month()
+        return String(moment().month(month).format('MMMM')).toLowerCase()
+      },
     },
     year: {
       type: Year,
@@ -39,17 +42,25 @@ export const dmarcSummaryType = new GraphQLObjectType({
     categoryPercentages: {
       type: categoryPercentagesType,
       description: 'Category percentages based on the category totals.',
-      resolve: ({ categoryTotals }) => categoryTotals,
+      resolve: async ({ _to }, _, { loaders: { dmarcSumLoaderByKey } }) => {
+        const dmarcSummaryKey = _to.split('/')[1]
+        const dmarcSummary = await dmarcSumLoaderByKey.load(dmarcSummaryKey)
+        return dmarcSummary.categoryTotals
+      },
     },
     categoryTotals: {
       type: categoryTotalsType,
       description: 'Category totals for quick viewing.',
-      resolve: ({ categoryTotals }) => categoryTotals,
+      resolve: async ({ _to }, _, { loaders: { dmarcSumLoaderByKey } }) => {
+        const dmarcSummaryKey = _to.split('/')[1]
+        const dmarcSummary = await dmarcSumLoaderByKey.load(dmarcSummaryKey)
+        return dmarcSummary.categoryTotals
+      },
     },
     detailTables: {
       type: detailTablesType,
       description: 'Various senders for each category.',
-      resolve: ({ detailTables }) => detailTables,
+      resolve: ({ _to }) => ({ _to }),
     },
   }),
   interfaces: [nodeInterface],

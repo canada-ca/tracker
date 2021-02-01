@@ -43,7 +43,7 @@ describe('given the category percentages gql object', () => {
 
           const data = {
             fail: 5,
-            fullPass: 5,
+            pass: 5,
             passDkimOnly: 5,
             passSpfOnly: 5,
           }
@@ -57,7 +57,7 @@ describe('given the category percentages gql object', () => {
 
           const data = {
             fail: 0,
-            fullPass: 5,
+            pass: 5,
             passDkimOnly: 5,
             passSpfOnly: 5,
           }
@@ -73,7 +73,7 @@ describe('given the category percentages gql object', () => {
 
           const data = {
             fail: 5,
-            fullPass: 5,
+            pass: 5,
             passDkimOnly: 5,
             passSpfOnly: 5,
           }
@@ -87,7 +87,7 @@ describe('given the category percentages gql object', () => {
 
           const data = {
             fail: 0,
-            fullPass: 0,
+            pass: 0,
             passDkimOnly: 5,
             passSpfOnly: 5,
           }
@@ -103,7 +103,7 @@ describe('given the category percentages gql object', () => {
 
           const data = {
             fail: 5,
-            fullPass: 5,
+            pass: 5,
             passDkimOnly: 5,
             passSpfOnly: 5,
           }
@@ -117,7 +117,7 @@ describe('given the category percentages gql object', () => {
 
           const data = {
             fail: 0,
-            fullPass: 5,
+            pass: 5,
             passDkimOnly: 0,
             passSpfOnly: 5,
           }
@@ -133,7 +133,7 @@ describe('given the category percentages gql object', () => {
 
           const data = {
             fail: 5,
-            fullPass: 5,
+            pass: 5,
             passDkimOnly: 5,
             passSpfOnly: 5,
           }
@@ -147,7 +147,7 @@ describe('given the category percentages gql object', () => {
 
           const data = {
             fail: 5,
-            fullPass: 5,
+            pass: 5,
             passDkimOnly: 5,
             passSpfOnly: 0,
           }
@@ -162,7 +162,7 @@ describe('given the category percentages gql object', () => {
 
         const data = {
           fail: 5,
-          fullPass: 5,
+          pass: 5,
           passDkimOnly: 5,
           passSpfOnly: 5,
         }

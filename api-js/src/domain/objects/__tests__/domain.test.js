@@ -10,11 +10,17 @@ import { orgLoaderConnectionArgsByDomainId } from '../../../organization/loaders
 import { organizationConnection } from '../../../organization/objects'
 import { userLoaderByKey } from '../../../user'
 import { domainStatus } from '../domain-status'
-import { periodType } from '../../../dmarc-report/objects'
+import { dmarcSummaryType } from '../../../dmarc-summaries/objects'
+import {
+  dmarcSummaryEdgeLoaderByDomainIdPeriod,
+  dmarcYearlySumEdgeLoader,
+  loadStartDateFromPeriod,
+} from '../../../dmarc-summaries/loaders'
 import { emailScanType } from '../../../email-scan/objects'
 import { webScanType } from '../../../web-scan/objects'
 import { domainType } from '../../index'
 import { Domain, Selectors } from '../../../scalars'
+import { i18n } from '@lingui/core'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -74,14 +80,14 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('dmarcSummaryByPeriod')
-      expect(demoType.dmarcSummaryByPeriod.type).toMatchObject(periodType)
+      expect(demoType.dmarcSummaryByPeriod.type).toMatchObject(dmarcSummaryType)
     })
     it('has a yearlyDmarcSummaries field', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('yearlyDmarcSummaries')
       expect(demoType.yearlyDmarcSummaries.type).toMatchObject(
-        GraphQLList(periodType),
+        GraphQLList(dmarcSummaryType),
       )
     })
   })
@@ -94,7 +100,9 @@ describe('given the domain object', () => {
       org,
       user,
       domainOne,
-      domainTwo
+      domainTwo,
+      dmarcSummary1,
+      dmarcSummary2
 
     const consoleOutput = []
     const mockedWarn = (output) => consoleOutput.push(output)
@@ -184,6 +192,44 @@ describe('given the domain object', () => {
       await collections.claims.save({
         _to: domainTwo._id,
         _from: org._id,
+      })
+      dmarcSummary1 = await collections.dmarcSummaries.save({
+        detailTables: {
+          dkimFailure: [],
+          dmarcFailure: [],
+          fullPass: [],
+          spfFailure: [],
+        },
+        categoryTotals: {
+          pass: 0,
+          fail: 0,
+          passDkimOnly: 0,
+          passSpfOnly: 0,
+        },
+      })
+      dmarcSummary2 = await collections.dmarcSummaries.save({
+        detailTables: {
+          dkimFailure: [],
+          dmarcFailure: [],
+          fullPass: [],
+          spfFailure: [],
+        },
+        categoryTotals: {
+          pass: 0,
+          fail: 0,
+          passDkimOnly: 0,
+          passSpfOnly: 0,
+        },
+      })
+      await collections.domainsToDmarcSummaries.save({
+        _from: domainOne._id,
+        _to: dmarcSummary1._id,
+        startDate: '2021-01-01',
+      })
+      await collections.domainsToDmarcSummaries.save({
+        _from: domainOne._id,
+        _to: dmarcSummary2._id,
+        startDate: '2020-12-01',
       })
     })
 
@@ -343,17 +389,8 @@ describe('given the domain object', () => {
     })
     describe('testing the dmarcSummaryByPeriod resolver', () => {
       describe('user has domain ownership permission', () => {
-        let mockDmarcReportLoader, mockCheckDomainOwnership, mockUserRequired
+        let mockCheckDomainOwnership, mockUserRequired
         beforeEach(() => {
-          mockDmarcReportLoader = jest.fn().mockReturnValue({
-            data: {
-              dmarcSummaryByPeriod: {
-                startDate: '2020-01-01',
-                endDate: '2020-01-01',
-              },
-            },
-          })
-
           mockCheckDomainOwnership = jest.fn().mockReturnValue(true)
 
           mockUserRequired = userRequired({
@@ -362,8 +399,14 @@ describe('given the domain object', () => {
             userLoaderByKey: userLoaderByKey(query),
           })
         })
-
         it('returns the resolved value', async () => {
+          const expectedEdgeCursor = await query`
+            FOR edge IN domainsToDmarcSummaries
+              FILTER edge.startDate == "2021-01-01"
+              RETURN edge 
+          `
+          const expectedEdge = await expectedEdgeCursor.next()
+
           const demoType = domainType.getFields()
 
           const data = {
@@ -375,10 +418,24 @@ describe('given the domain object', () => {
           await expect(
             demoType.dmarcSummaryByPeriod.resolve(
               data,
-              {},
+              {
+                month: 'january',
+                year: '2021',
+              },
               {
                 userKey: user._key,
-                loaders: { dmarcReportLoader: mockDmarcReportLoader },
+                loaders: {
+                  dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                  loadStartDateFromPeriod: loadStartDateFromPeriod(
+                    moment,
+                    user._key,
+                    i18n,
+                  ),
+                },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,
                   userRequired: mockUserRequired,
@@ -386,25 +443,12 @@ describe('given the domain object', () => {
                 },
               },
             ),
-          ).resolves.toEqual({
-            endDate: '2020-01-01',
-            startDate: '2020-01-01',
-            domainKey: domainOne._key,
-          })
+          ).resolves.toEqual(expectedEdge)
         })
       })
       describe('user does not have domain ownership permission', () => {
-        let mockDmarcReportLoader, mockCheckDomainOwnership, mockUserRequired
+        let mockCheckDomainOwnership, mockUserRequired
         beforeEach(() => {
-          mockDmarcReportLoader = jest.fn().mockReturnValue({
-            data: {
-              dmarcSummaryByPeriod: {
-                startDate: '2020-01-01',
-                endDate: '2020-01-01',
-              },
-            },
-          })
-
           mockCheckDomainOwnership = jest.fn().mockReturnValue(false)
 
           mockUserRequired = userRequired({
@@ -413,7 +457,6 @@ describe('given the domain object', () => {
             userLoaderByKey: userLoaderByKey(query),
           })
         })
-
         it('returns the resolved value', async () => {
           const demoType = domainType.getFields()
 
@@ -429,11 +472,21 @@ describe('given the domain object', () => {
               {},
               {
                 userKey: user._key,
-                loaders: { dmarcReportLoader: mockDmarcReportLoader },
+                loaders: {
+                  dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                  loadStartDateFromPeriod: loadStartDateFromPeriod(
+                    moment,
+                    user._key,
+                    i18n,
+                  ),
+                },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,
                   userRequired: mockUserRequired,
-                  tokenize,
                 },
               },
             ),
@@ -451,178 +504,45 @@ describe('given the domain object', () => {
     })
     describe('testing the yearlyDmarcSummaries resolver', () => {
       describe('user has domain ownership permission', () => {
-        let mockDmarcReportLoader, mockCheckDomainOwnership, mockUserRequired
+        let mockCheckDomainOwnership, mockUserRequired
         beforeEach(() => {
-          mockDmarcReportLoader = jest.fn().mockReturnValue({
-            data: {
-              yearlyDmarcSummaries: [
-                {
-                  startDate: '2019-01-01',
-                  endDate: '2019-01-31',
-                },
-                {
-                  startDate: '2019-02-01',
-                  endDate: '2019-02-28',
-                },
-                {
-                  startDate: '2019-03-01',
-                  endDate: '2019-03-31',
-                },
-                {
-                  startDate: '2019-04-01',
-                  endDate: '2019-04-30',
-                },
-                {
-                  startDate: '2019-05-01',
-                  endDate: '2019-01-31',
-                },
-                {
-                  startDate: '2019-06-01',
-                  endDate: '2019-06-30',
-                },
-                {
-                  startDate: '2019-07-01',
-                  endDate: '2019-07-31',
-                },
-                {
-                  startDate: '2019-08-01',
-                  endDate: '2019-08-31',
-                },
-                {
-                  startDate: '2019-09-01',
-                  endDate: '2019-09-30',
-                },
-                {
-                  startDate: '2019-10-01',
-                  endDate: '2019-10-31',
-                },
-                {
-                  startDate: '2019-11-01',
-                  endDate: '2019-11-30',
-                },
-                {
-                  startDate: '2019-12-01',
-                  endDate: '2019-12-31',
-                },
-                {
-                  startDate: '2020-01-01',
-                  endDate: '2020-01-31',
-                },
-              ],
-            },
-          })
-
           mockCheckDomainOwnership = jest.fn().mockReturnValue(true)
-
           mockUserRequired = userRequired({
             i18n: {},
             userKey: user._key,
             userLoaderByKey: userLoaderByKey(query),
           })
         })
-
         it('returns the resolved value', async () => {
-          const demoType = domainType.getFields()
+          const expectedEdgesCursor = await query`
+            FOR edge IN domainsToDmarcSummaries
+              RETURN edge
+          `
+          const expectedResult = await expectedEdgesCursor.all()
 
+          const demoType = domainType.getFields()
           const data = {
             _id: domainOne._id,
             _key: domainOne._key,
             domain: 'test1.gc.ca',
           }
 
-          const expectedResult = [
-            {
-              endDate: '2019-01-31',
-              startDate: '2019-01-01',
-              selectedMonth: 'january',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-02-28',
-              startDate: '2019-02-01',
-              selectedMonth: 'february',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-03-31',
-              startDate: '2019-03-01',
-              selectedMonth: 'march',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-04-30',
-              startDate: '2019-04-01',
-              selectedMonth: 'april',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-01-31',
-              startDate: '2019-05-01',
-              selectedMonth: 'may',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-06-30',
-              startDate: '2019-06-01',
-              selectedMonth: 'june',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-07-31',
-              startDate: '2019-07-01',
-              selectedMonth: 'july',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-08-31',
-              startDate: '2019-08-01',
-              selectedMonth: 'august',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-09-30',
-              startDate: '2019-09-01',
-              selectedMonth: 'september',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-10-31',
-              startDate: '2019-10-01',
-              selectedMonth: 'october',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-11-30',
-              startDate: '2019-11-01',
-              selectedMonth: 'november',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2019-12-31',
-              startDate: '2019-12-01',
-              selectedMonth: 'december',
-              domainKey: domainOne._key,
-            },
-            {
-              endDate: '2020-01-31',
-              startDate: '2020-01-01',
-              selectedMonth: 'january',
-              domainKey: domainOne._key,
-            },
-          ]
-
           await expect(
             demoType.yearlyDmarcSummaries.resolve(
               data,
               {},
               {
-                moment,
                 userKey: user._key,
-                loaders: { dmarcReportLoader: mockDmarcReportLoader },
+                loaders: {
+                  dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,
                   userRequired: mockUserRequired,
-                  tokenize,
                 },
               },
             ),
@@ -630,14 +550,8 @@ describe('given the domain object', () => {
         })
       })
       describe('user does not have domain ownership permission', () => {
-        let mockDmarcReportLoader, mockCheckDomainOwnership, mockUserRequired
+        let mockCheckDomainOwnership, mockUserRequired
         beforeEach(() => {
-          mockDmarcReportLoader = jest.fn().mockReturnValue({
-            data: {
-              yearlyDmarcSummaries: [],
-            },
-          })
-
           mockCheckDomainOwnership = jest.fn().mockReturnValue(false)
 
           mockUserRequired = userRequired({
@@ -646,7 +560,6 @@ describe('given the domain object', () => {
             userLoaderByKey: userLoaderByKey(query),
           })
         })
-
         it('returns the resolved value', async () => {
           const demoType = domainType.getFields()
 
@@ -662,11 +575,16 @@ describe('given the domain object', () => {
               {},
               {
                 userKey: user._key,
-                loaders: { dmarcReportLoader: mockDmarcReportLoader },
+                loaders: {
+                  dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(
+                    query,
+                    user._key,
+                    i18n,
+                  ),
+                },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,
                   userRequired: mockUserRequired,
-                  tokenize,
                 },
               },
             ),

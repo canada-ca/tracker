@@ -18,7 +18,7 @@ export const categoryTotalsType = new GraphQLObjectType({
     fullPass: {
       type: GraphQLInt,
       description: 'Amount of messages that are passing SPF and DKIM.',
-      resolve: ({ fullPass }) => fullPass,
+      resolve: ({ pass }) => pass,
     },
     fail: {
       type: GraphQLInt,

@@ -375,8 +375,8 @@ msgstr "Unable to find dmarc guidance tags. Please try again."
 msgid "Unable to find dmarc scan. Please try again."
 msgstr "Unable to find dmarc scan. Please try again."
 
-#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:19
-#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:33
+#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:26
+#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:40
 msgid "Unable to find dmarc summary. Please try again."
 msgstr "Unable to find dmarc summary. Please try again."
 
@@ -510,6 +510,10 @@ msgstr "Unable to load dmarc scans. Please try again."
 
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:177
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:189
+#: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:21
+#: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:33
+#: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:19
+#: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:31
 msgid "Unable to load dmarc summaries. Please try again."
 msgstr "Unable to load dmarc summaries. Please try again."
 
