@@ -53,4 +53,11 @@ export const fullPassTableType = new GraphQLObjectType({
 export const fullPassConnection = connectionDefinitions({
   name: 'FullPassTable',
   nodeType: fullPassTableType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of full passes the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
