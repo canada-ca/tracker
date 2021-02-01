@@ -79,6 +79,22 @@ msgstr "No verified domain with the provided domain could be found."
 msgid "Organization has already been verified."
 msgstr "Organization has already been verified."
 
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:46
+msgid "Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported."
+
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:46
+msgid "Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported."
+
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:46
+msgid "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
+
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:46
+msgid "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
+
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:42
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:42
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
@@ -177,6 +193,22 @@ msgstr "Permission error, not an admin for this user."
 #: src/user/mutations/update-user-profile.js:152
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
+
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:69
+msgid "Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records."
+
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:69
+msgid "Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records."
+
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:69
+msgid "Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records."
+
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:69
+msgid "Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:65
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:65
@@ -439,6 +471,12 @@ msgstr "Unable to invite yourself to an org. Please try again."
 msgid "Unable to load affiliations. Please try again."
 msgstr "Unable to load affiliations. Please try again."
 
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:15
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:139
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:149
+msgid "Unable to load dkim failures. Please try again."
+msgstr "Unable to load dkim failures. Please try again."
+
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:142
 msgid "Unable to load dkim guidance tags. Please try again."
@@ -453,6 +491,12 @@ msgstr "Unable to load dkim results. Please try again."
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:162
 msgid "Unable to load dkim scans. Please try again."
 msgstr "Unable to load dkim scans. Please try again."
+
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:15
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:139
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:149
+msgid "Unable to load dmarc failures. Please try again."
+msgstr "Unable to load dmarc failures. Please try again."
 
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:142
@@ -478,6 +522,12 @@ msgstr "Unable to load dmarc summaries. Please try again."
 msgid "Unable to load domains. Please try again."
 msgstr "Unable to load domains. Please try again."
 
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:15
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:139
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:149
+msgid "Unable to load full passes. Please try again."
+msgstr "Unable to load full passes. Please try again."
+
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:142
 msgid "Unable to load https guidance tags. Please try again."
@@ -498,6 +548,12 @@ msgstr "Unable to load mail summary. Please try again."
 #: src/organization/queries/find-my-organizations.js:32
 msgid "Unable to load organizations. Please try again."
 msgstr "Unable to load organizations. Please try again."
+
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:15
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:139
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:149
+msgid "Unable to load spf failures. Please try again."
+msgstr "Unable to load spf failures. Please try again."
 
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:142
@@ -738,6 +794,22 @@ msgstr "User role was updated successfully."
 msgid "Username already in use."
 msgstr "Username already in use."
 
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:37
+msgid "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
+
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:37
+msgid "You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection."
+
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:37
+msgid "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
+
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:37
+msgid "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
+
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:33
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:33
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
@@ -809,7 +881,11 @@ msgstr "You must provide a `year` value to access the `dmarcSummaries` connectio
 
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:80
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:80
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:84
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:84
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:109
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:84
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:84
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:89
 #: src/domain/loaders/load-domain-connections-by-user-id.js:87
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:96
@@ -831,6 +907,22 @@ msgstr "You must provide a `year` value to access the `dmarcSummaries` connectio
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:87
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
 msgstr "`{argSet}` must be of type `number` not `{typeSet}`."
+
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:58
+msgid "`{argSet}` on the `DkimFailureTable` connection cannot be less than zero."
+msgstr "`{argSet}` on the `DkimFailureTable` connection cannot be less than zero."
+
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:58
+msgid "`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero."
+msgstr "`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero."
+
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:58
+msgid "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
+msgstr "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
+
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:58
+msgid "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
+msgstr "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
 
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:54
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:54
