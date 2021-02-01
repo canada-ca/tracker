@@ -30,12 +30,14 @@ export function PolicyComplianceDetails({ categoryName, policies }) {
           </Text>
           <Text>{policies?.hsts}</Text>
         </Stack>
-        <Stack isInline>
-          <Text fontWeight="bold">
-            <Trans>HSTS Age:</Trans>
-          </Text>
-          <Text>{policies?.hstsAge}</Text>
-        </Stack>
+        {policies?.hstsAge && (
+          <Stack isInline>
+            <Text fontWeight="bold">
+              <Trans>HSTS Age:</Trans>
+            </Text>
+            <Text>{policies?.hstsAge}</Text>
+          </Stack>
+        )}
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>Preloaded Status:</Trans>
