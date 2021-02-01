@@ -61,7 +61,7 @@ export function GuidanceTagDetails({ guidanceTag }) {
     <Stack isInline align="center" px="2" pt={['2', '0']}>
       {!smallDevice && warningIcon}
       <Box>
-        <Stack isInline>
+        <Stack isInline align="center">
           {smallDevice && warningIcon}
           <Text fontWeight="bold">
             <Trans>Result:</Trans>
