@@ -403,7 +403,7 @@ describe('given the domain object', () => {
           const expectedEdgeCursor = await query`
             FOR edge IN domainsToDmarcSummaries
               FILTER edge.startDate == "2021-01-01"
-              RETURN edge 
+              RETURN MERGE({ domainKey: ${domainOne._id} }, edge) 
           `
           const expectedEdge = await expectedEdgeCursor.next()
 
@@ -516,7 +516,7 @@ describe('given the domain object', () => {
         it('returns the resolved value', async () => {
           const expectedEdgesCursor = await query`
             FOR edge IN domainsToDmarcSummaries
-              RETURN edge
+              RETURN MERGE({ domainKey: ${domainOne._id} }, edge)
           `
           const expectedResult = await expectedEdgesCursor.all()
 
