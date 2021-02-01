@@ -3,6 +3,7 @@ import sys
 import ast
 import json
 import logging
+import traceback
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 
@@ -42,7 +43,7 @@ def retrieve_tls_guidance():
         gh_client = Client(
             transport=RequestsHTTPTransport(
                 url="https://api.github.com/graphql",
-                headers={"Authorization": "bearer " + token},
+                headers={"Authorization": "bearer " + GITHUB_TOKEN},
             ),
             fetch_schema_from_transport=True,
         )
@@ -52,7 +53,7 @@ def retrieve_tls_guidance():
         {{
           repository(name: "{REPO_NAME}", owner: "{REPO_OWNER}") {{
             id
-            object(expression: "master:{GUIDANCE_DIR}/{GUIDANCE_FILE}") {{
+            object(expression: "main:{GUIDANCE_DIR}/{GUIDANCE_FILE}") {{
               ... on Blob {{
                 text
               }}
@@ -68,7 +69,7 @@ def retrieve_tls_guidance():
         return guidance
     except Exception as e:
         logging.error(
-            "Error occurred while retrieving TLS guidance. SSL results may not reflect compliance."
+            f"Error occurred while retrieving TLS guidance. SSL results may not reflect compliance. {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
         return {
             "ciphers": {

@@ -8,7 +8,9 @@ https_result_data = {
     "self_signed_cert": False,
 }
 
-expected_https_tags = ["https11"]
+expected_negative_https_tags = ["https11"]
+expected_neutral_https_tags = []
+expected_positive_https_tags = []
 
 ssl_result_data = {
     "SSL_2_0": False,
@@ -33,7 +35,9 @@ ssl_result_data = {
     "openssl_ccs_injection": False,
 }
 
-expected_ssl_tags = ["ssl5"]
+expected_negative_ssl_tags = []
+expected_neutral_ssl_tags = []
+expected_positive_ssl_tags = ["ssl5"]
 
 dns_result_data = {
     "mx": {
@@ -286,15 +290,16 @@ tls_guidance_data = {
     },
 }
 
-expected_dmarc_tags = [
-    "dmarc23",
-    "dmarc4",
-    "dmarc7",
-    "dmarc10",
-    "dmarc11",
-    "dmarc14",
-    "dmarc17",
-]
-expected_spf_tags = ["spf12", "spf8"]
-expected_dkim_tags = ["dkim6"]
-expected_phase = "not implemented"
+expected_negative_dmarc_tags = ["dmarc11"]
+expected_neutral_dmarc_tags = ["dmarc10", "dmarc14", "dmarc17"]
+expected_positive_dmarc_tags = ["dmarc23"]
+
+expected_negative_spf_tags = []
+expected_neutral_spf_tags = ["spf8"]
+expected_positive_spf_tags = ["spf12"]
+
+expected_negative_dkim_tags = []
+expected_neutral_dkim_tags = ["dkim6"]
+expected_positive_dkim_tags = []
+
+expected_phase = "deploy"
