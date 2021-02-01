@@ -4,7 +4,7 @@ uvicorn
 emoji
 pytest
 requests>=2.18.4
-sslyze==3.1.0
+sslyze==4.0.2
 pyopenssl>=17.5.0
 pretend
 uvloop
