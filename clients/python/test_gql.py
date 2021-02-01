@@ -9,6 +9,7 @@ def test_get_auth_token():
     """Check to see if get_auth_token returns a proper token.
     Will fail if credentials are not present in environmental variables.
     """
+    # Check the returned token against Regex for valid JWT
     assert re.match(
         r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$", get_auth_token()
     )
