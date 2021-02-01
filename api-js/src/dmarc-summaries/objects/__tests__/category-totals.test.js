@@ -48,7 +48,7 @@ describe('testing the category totals gql object', () => {
       it('returns the resolved value', () => {
         const demoType = categoryTotalsType.getFields()
 
-        expect(demoType.fullPass.resolve({ fullPass: 5 })).toEqual(5)
+        expect(demoType.fullPass.resolve({ pass: 5 })).toEqual(5)
       })
     })
     describe('testing the fail field', () => {
