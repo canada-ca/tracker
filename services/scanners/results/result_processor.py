@@ -247,7 +247,7 @@ def process_dns(results, domain_key, db):
 
     if results["dkim"].get("missing", None) is None:
         for selector in results["dkim"].keys():
-            tags["dkim"][selector] = ["dkim2"]
+            tags["dkim"][selector] = []
             key_size = results["dkim"][selector].get("key_size", None)
             key_type = results["dkim"][selector].get("key_type", None)
 
@@ -284,6 +284,8 @@ def process_dns(results, domain_key, db):
             p_tag = results["dkim"][selector].get("txt_record", {}).get("p", None)
 
             if v_tag is None and k_tag is None and p_tag is None:
+                tags["dkim"][selector].append("dkim2")
+            elif v_tag is None or k_tag is None or p_tag is None:
                 tags["dkim"][selector].append("dkim12")
 
             # Testing Enabled
