@@ -121,21 +121,71 @@ describe('testing the period gql object', () => {
       })
     })
     describe('testing the month resolver', () => {
-      it('returns the resolved value', () => {
-        const demoType = dmarcSummaryType.getFields()
+      describe('startDate is set to thirty days', () => {
+        let mockedMoment
+        beforeEach(() => {
+          mockedMoment = jest.fn().mockReturnValue({
+            month() {
+              return {
+                format() {
+                  return 'january'
+                },
+              }
+            },
+          })
+        })
+        it('returns the resolved value', () => {
+          const demoType = dmarcSummaryType.getFields()
 
-        expect(demoType.month.resolve({ startDate: '2021-01-01' }, {}, { moment })).toEqual(
-          'january',
-        )
+          expect(
+            demoType.month.resolve(
+              { startDate: 'thirtyDays' },
+              {},
+              { moment: mockedMoment },
+            ),
+          ).toEqual('january')
+        })
+      })
+      describe('startDate is not set to thirty days', () => {
+        it('returns the resolved value', () => {
+          const demoType = dmarcSummaryType.getFields()
+
+          expect(
+            demoType.month.resolve({ startDate: '2021-01-01' }, {}, { moment }),
+          ).toEqual('january')
+        })
       })
     })
     describe('testing the year resolver', () => {
-      it('returns the resolved value', () => {
-        const demoType = dmarcSummaryType.getFields()
+      describe('start date is set to thirty days', () => {
+        let mockedMoment
+        beforeEach(() => {
+          mockedMoment = jest.fn().mockReturnValue({
+            year() {
+              return '2020'
+            },
+          })
+        })
+        it('returns the resolved value', () => {
+          const demoType = dmarcSummaryType.getFields()
 
-        expect(
-          demoType.year.resolve({ startDate: '2020-01-01' }, {}, { moment }),
-        ).toEqual('2020')
+          expect(
+            demoType.year.resolve(
+              { startDate: '2020-01-01' },
+              {},
+              { moment: mockedMoment },
+            ),
+          ).toEqual('2020')
+        })
+      })
+      describe('start date is not set to thirty days', () => {
+        it('returns the resolved value', () => {
+          const demoType = dmarcSummaryType.getFields()
+
+          expect(
+            demoType.year.resolve({ startDate: '2020-01-01' }, {}, { moment }),
+          ).toEqual('2020')
+        })
       })
     })
     describe('testing the categoryPercentages resolver', () => {
@@ -186,7 +236,9 @@ describe('testing the period gql object', () => {
           _to: 'domains/1',
         }
 
-        expect(demoType.detailTables.resolve(data)).toEqual({ _to: 'domains/1' })
+        expect(demoType.detailTables.resolve(data)).toEqual({
+          _to: 'domains/1',
+        })
       })
     })
   })
