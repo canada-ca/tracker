@@ -1,5 +1,5 @@
-import { GraphQLObjectType } from 'graphql'
-import { globalIdField } from 'graphql-relay'
+import { GraphQLInt, GraphQLObjectType } from 'graphql'
+import { connectionDefinitions, globalIdField } from 'graphql-relay'
 
 import { categoryPercentagesType } from './category-percentages'
 import { categoryTotalsType } from './category-totals'
@@ -76,4 +76,16 @@ export const dmarcSummaryType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
+})
+
+export const dmarcSummaryConnection = connectionDefinitions({
+  name: 'DmarcSummary',
+  nodeType: dmarcSummaryType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dmarc summaries the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
