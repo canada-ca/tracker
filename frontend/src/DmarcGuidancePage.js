@@ -3,7 +3,7 @@ import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
 import { Heading, Stack, Divider, Icon, Link } from '@chakra-ui/core'
-import { useParams, useHistory, Link as RouteLink } from 'react-router-dom'
+import { useParams, Link as RouteLink } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -51,7 +51,7 @@ export default function DmarcGuidancePage() {
           to={`/domains/${domainSlug}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
           as={RouteLink}
         >
-          DMARC Report
+          <Trans>DMARC Report</Trans>
           <Icon name="link" ml="4px" />
         </Link>
       </Stack>

@@ -611,7 +611,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           to={`/domains/${domainSlug}`}
           as={RouteLink}
         >
-          Guidance
+          <Trans>Guidance</Trans>
           <Icon name="link" ml="4px" />
         </Link>
       </SimpleGrid>

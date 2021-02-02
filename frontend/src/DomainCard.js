@@ -162,7 +162,7 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
           color="teal.400"
         >
           <Text whiteSpace="noWrap">
-            DMARC Report <Icon name="link" ml="4px" />
+            <Trans>DMARC Report</Trans> <Icon name="link" ml="4px" />
           </Text>
         </PseudoBox>
       </Stack>
