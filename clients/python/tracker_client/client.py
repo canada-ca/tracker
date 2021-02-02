@@ -13,6 +13,7 @@ from queries import (
     SIGNIN_MUTATION,
     ALL_ORG_SUMMARIES,
     SUMMARY_BY_SLUG,
+    DOMAIN_RESULTS
 )
 
 
@@ -243,6 +244,20 @@ def format_name_summary(result):
     return result
 
 
+def get_domain_results(domain, client):
+    """Return scan results for a domain
+
+    Arguments:
+    domain -- domain name string
+    client -- a GQL Client object
+    """
+    params = {"domain": domain}
+
+    result = client.execute(DOMAIN_RESULTS, variable_values= params)
+    formatted_result = result
+    return json.dumps(formatted_result, indent=4)
+
+
 def main():
     """main() currently tries all implemented functions and prints results
     for diagnostic purposes and to demo available features.
@@ -250,7 +265,7 @@ def main():
     print("Tracker account: " + os.environ.get("TRACKER_UNAME"))
     client = create_client("https://tracker.alpha.canada.ca/graphql", get_auth_token())
 
-    print("Getting all your domains...")
+    """print("Getting all your domains...")
     domains = get_all_domains(client)
     print(domains)
 
@@ -283,7 +298,12 @@ def main():
 
     print("Getting summary by name " + name + "...")
     summaries = get_summary_by_name(name, client)
-    print(summaries)
+    print(summaries)"""
+
+    domain = "cse-cst.gc.ca"
+    print("Getting scan results for " + domain + "...")
+    results = get_domain_results(domain, client)
+    print(results)
 
 
 if __name__ == "__main__":
