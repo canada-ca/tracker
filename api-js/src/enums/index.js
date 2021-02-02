@@ -1,4 +1,6 @@
+export * from './dmarc-summary-order-field'
 export * from './languages'
+export * from './order-direction'
 export * from './period'
 export * from './roles'
 export * from './scan-types'
