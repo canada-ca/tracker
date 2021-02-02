@@ -36,7 +36,7 @@ function ScanCard({ scanType, scanData }) {
     })
 
   return (
-    <Box bg="white" rounded="lg" overflow="hidden" boxShadow="medium">
+    <Box bg="white" rounded="lg" overflow="hidden" boxShadow="medium" pb="1">
       <Box bg="primary" color="gray.50">
         <Stack px="3" py="1">
           <Heading as="h1" size="lg">

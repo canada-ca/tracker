@@ -195,7 +195,7 @@ def Server(server_client=requests):
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "https", "uuid": uuid, "domain_key": domain_key, "results": {}}, server_client
+                {"scan_type": "https", "uuid": uuid, "domain_key": domain_key, "results": {"missing": True}}, server_client
             )
             return PlainTextResponse(msg)
 

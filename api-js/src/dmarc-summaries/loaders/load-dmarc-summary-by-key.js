@@ -9,7 +9,14 @@ export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
       cursor = await query`
         FOR summary IN dmarcSummaries
           FILTER summary._key IN ${keys}
-          RETURN MERGE({ id: summary._key, _type: "dmarcSummary"}, summary)
+          RETURN {
+            _id: summary._id,
+            _key: summary._key,
+            _rev: summary._rev,
+            _type: "dmarcSummary",
+            id: summary._key,
+            categoryTotals: summary.categoryTotals
+          }
       `
     } catch (err) {
       console.error(

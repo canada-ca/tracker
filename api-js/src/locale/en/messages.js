@@ -30,6 +30,14 @@
       'No verified domain with the provided domain could be found.',
     'Organization has already been verified.':
       'Organization has already been verified.',
+    'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
       'Passing both `first` and `last` to paginate the `affiliation` is not supported.',
     'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.':
@@ -67,6 +75,34 @@
     'Permission error, not an admin for this user.':
       'Permission error, not an admin for this user.',
     'Profile successfully updated.': 'Profile successfully updated.',
+    'Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `DkimFailureTable` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `DmarcFailureTable` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `FullPassTable` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `SpfFailureTable` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
     'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.': [
       'Requesting `',
       ['amount'],
@@ -245,12 +281,16 @@
       'Unable to invite yourself to an org. Please try again.',
     'Unable to load affiliations. Please try again.':
       'Unable to load affiliations. Please try again.',
+    'Unable to load dkim failures. Please try again.':
+      'Unable to load dkim failures. Please try again.',
     'Unable to load dkim guidance tags. Please try again.':
       'Unable to load dkim guidance tags. Please try again.',
     'Unable to load dkim results. Please try again.':
       'Unable to load dkim results. Please try again.',
     'Unable to load dkim scans. Please try again.':
       'Unable to load dkim scans. Please try again.',
+    'Unable to load dmarc failures. Please try again.':
+      'Unable to load dmarc failures. Please try again.',
     'Unable to load dmarc guidance tags. Please try again.':
       'Unable to load dmarc guidance tags. Please try again.',
     'Unable to load dmarc scans. Please try again.':
@@ -259,6 +299,8 @@
       'Unable to load dmarc summaries. Please try again.',
     'Unable to load domains. Please try again.':
       'Unable to load domains. Please try again.',
+    'Unable to load full passes. Please try again.':
+      'Unable to load full passes. Please try again.',
     'Unable to load https guidance tags. Please try again.':
       'Unable to load https guidance tags. Please try again.',
     'Unable to load https scans. Please try again.':
@@ -267,6 +309,8 @@
       'Unable to load mail summary. Please try again.',
     'Unable to load organizations. Please try again.':
       'Unable to load organizations. Please try again.',
+    'Unable to load spf failures. Please try again.':
+      'Unable to load spf failures. Please try again.',
     'Unable to load spf guidance tags. Please try again.':
       'Unable to load spf guidance tags. Please try again.',
     'Unable to load spf scans. Please try again.':
@@ -354,6 +398,14 @@
     'User role was updated successfully.':
       'User role was updated successfully.',
     'Username already in use.': 'Username already in use.',
+    'You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
       'You must provide a `first` or `last` value to properly paginate the `affiliation`.',
     'You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.':
@@ -390,6 +442,26 @@
       '` must be of type `number` not `',
       ['typeSet'],
       '`.',
+    ],
+    '`{argSet}` on the `DkimFailureTable` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `DkimFailureTable` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `DmarcFailureTable` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `FullPassTable` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `FullPassTable` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `SpfFailureTable` connection cannot be less than zero.',
     ],
     '`{argSet}` on the `affiliations` cannot be less than zero.': [
       '`',

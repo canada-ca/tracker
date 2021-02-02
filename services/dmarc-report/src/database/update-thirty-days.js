@@ -16,7 +16,7 @@ const updateThirtyDays = (
 
   const currentSummary = await loadSummaryByDate({
     domain,
-    startDate: 'thirtyDays',
+    startDate: 'thirty_days',
   })
 
   const summaryDBInfo = await createSummary({ currentSummary })

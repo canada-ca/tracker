@@ -79,6 +79,22 @@ msgstr "todo"
 msgid "Organization has already been verified."
 msgstr "todo"
 
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:46
+msgid "Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:46
+msgid "Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:46
+msgid "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:46
+msgid "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
+msgstr "todo"
+
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:42
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:42
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
@@ -176,6 +192,22 @@ msgstr "todo"
 
 #: src/user/mutations/update-user-profile.js:152
 msgid "Profile successfully updated."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:69
+msgid "Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:69
+msgid "Requesting `{amount}` records on the `DmarcFailureTable` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:69
+msgid "Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:69
+msgid "Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:65
@@ -343,8 +375,8 @@ msgstr "todo"
 msgid "Unable to find dmarc scan. Please try again."
 msgstr "todo"
 
-#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:19
-#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:33
+#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:26
+#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:40
 msgid "Unable to find dmarc summary. Please try again."
 msgstr "todo"
 
@@ -439,6 +471,12 @@ msgstr "todo"
 msgid "Unable to load affiliations. Please try again."
 msgstr "todo"
 
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:15
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:139
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:149
+msgid "Unable to load dkim failures. Please try again."
+msgstr "todo"
+
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:142
 msgid "Unable to load dkim guidance tags. Please try again."
@@ -454,6 +492,12 @@ msgstr "todo"
 msgid "Unable to load dkim scans. Please try again."
 msgstr "todo"
 
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:15
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:139
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:149
+msgid "Unable to load dmarc failures. Please try again."
+msgstr "todo"
+
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:142
 msgid "Unable to load dmarc guidance tags. Please try again."
@@ -466,6 +510,10 @@ msgstr "todo"
 
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:177
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:189
+#: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:21
+#: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:33
+#: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:19
+#: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:31
 msgid "Unable to load dmarc summaries. Please try again."
 msgstr "todo"
 
@@ -476,6 +524,12 @@ msgstr "todo"
 #: src/verified-domains/loaders/load-verified-domain-connections.js:141
 #: src/verified-domains/loaders/load-verified-domain-connections.js:151
 msgid "Unable to load domains. Please try again."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:15
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:139
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:149
+msgid "Unable to load full passes. Please try again."
 msgstr "todo"
 
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:130
@@ -497,6 +551,12 @@ msgstr "todo"
 #: src/organization/loaders/load-organization-connections-by-user-id.js:146
 #: src/organization/queries/find-my-organizations.js:32
 msgid "Unable to load organizations. Please try again."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:15
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:139
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:149
+msgid "Unable to load spf failures. Please try again."
 msgstr "todo"
 
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:130
@@ -738,6 +798,22 @@ msgstr "todo"
 msgid "Username already in use."
 msgstr "todo"
 
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:37
+msgid "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:37
+msgid "You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:37
+msgid "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:37
+msgid "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
+msgstr "todo"
+
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:33
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:33
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
@@ -809,7 +885,11 @@ msgstr "todo"
 
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:80
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:80
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:84
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:84
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:109
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:84
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:84
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:89
 #: src/domain/loaders/load-domain-connections-by-user-id.js:87
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:96
@@ -830,6 +910,22 @@ msgstr "todo"
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:87
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:87
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:58
+msgid "`{argSet}` on the `DkimFailureTable` connection cannot be less than zero."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:58
+msgid "`{argSet}` on the `DmarcFailureTable` connection cannot be less than zero."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:58
+msgid "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
+msgstr "todo"
+
+#: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:58
+msgid "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
 msgstr "todo"
 
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:54

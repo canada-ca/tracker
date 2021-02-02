@@ -26,10 +26,12 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 def process_https(results, domain_key, db):
     timestamp = str(datetime.datetime.utcnow())
-    tags = []
+    neutral_tags = []
+    positive_tags = []
+    negative_tags = []
 
     if results.get("missing", None) is not None:
-        tags.append("https2")
+        negative_tags.append("https2")
     else:
         # Implementation
         implementation = results.get("implementation", None)
@@ -39,11 +41,11 @@ def process_https(results, domain_key, db):
                 implementation = implementation.lower()
 
             if implementation == "downgrades https":
-                tags.append("https3")
+                negative_tags.append("https3")
             elif implementation == "bad chain":
-                tags.append("https4")
+                negative_tags.append("https4")
             elif implementation == "bad hostname":
-                tags.append("https5")
+                negative_tags.append("https5")
 
         # Enforced
         enforced = results.get("enforced", None)
@@ -53,11 +55,11 @@ def process_https(results, domain_key, db):
                 enforced = enforced.lower()
 
             if enforced == "moderate":
-                tags.append("https8")
+                negative_tags.append("https8")
             elif enforced == "weak":
-                tags.append("https7")
+                negative_tags.append("https7")
             elif enforced == "not enforced":
-                tags.append("https6")
+                negative_tags.append("https6")
 
         # HSTS
         hsts = results.get("hsts", None)
@@ -67,16 +69,16 @@ def process_https(results, domain_key, db):
                 hsts = hsts.lower()
 
             if hsts == "hsts max age too short":
-                tags.append("https10")
+                negative_tags.append("https10")
             elif hsts == "no hsts":
-                tags.append("https9")
+                negative_tags.append("https9")
 
             # HSTS Age
             hsts_age = results.get("hsts_age", None)
 
             if hsts_age is not None:
                 if hsts_age < 31536000 and "https" not in tags:
-                    tags.append("https10")
+                    negative_tags.append("https10")
 
         # Preload Status
         preload_status = results.get("preload_status", None)
@@ -86,21 +88,21 @@ def process_https(results, domain_key, db):
                 preload_status = preload_status.lower()
 
             if preload_status == "hsts preload ready":
-                tags.append("https11")
+                negative_tags.append("https11")
             elif preload_status == "hsts not preloaded":
-                tags.append("https12")
+                negative_tags.append("https12")
 
         # Expired Cert
         expired_cert = results.get("expired_cert", False)
 
         if expired_cert is True:
-            tags.append("https13")
+            negative_tags.append("https13")
 
         # Self Signed Cert
         self_signed_cert = results.get("https", {}).get("self_signed_cert", False)
 
         if self_signed_cert is True:
-            tags.append("https14")
+            negative_tags.append("https14")
 
     try:
         httpsEntry = db.collection("https").insert(
@@ -112,7 +114,9 @@ def process_https(results, domain_key, db):
                 "hstsAge": results.get("hsts_age", None),
                 "preloaded": results.get("preload_status", None),
                 "rawJson": results,
-                "guidanceTags": tags,
+                "neutralTags": neutral_tags,
+                "positiveTags": positive_tags,
+                "negativeTags": negative_tags,
             }
         )
         domain = db.collection("domains").get({"_key": domain_key})
@@ -120,25 +124,7 @@ def process_https(results, domain_key, db):
             {"_from": domain["_id"], "_to": httpsEntry["_id"]}
         )
 
-        if any(
-            i
-            in [
-                "https2",
-                "https3",
-                "https4",
-                "https5",
-                "https6",
-                "https7",
-                "https8",
-                "https9",
-                "https10",
-                "https11",
-                "https12",
-                "https13",
-                "https14",
-            ]
-            for i in tags
-        ):
+        if len(negative_tags) > 0:
             https_status = "fail"
         else:
             https_status = "pass"
@@ -157,7 +143,9 @@ def process_https(results, domain_key, db):
 
 def process_ssl(results, guidance, domain_key, db):
     timestamp = str(datetime.datetime.utcnow())
-    tags = []
+    neutral_tags = []
+    positive_tags = []
+    negative_tags = []
     strong_ciphers = []
     acceptable_ciphers = []
     weak_ciphers = []
@@ -166,13 +154,13 @@ def process_ssl(results, guidance, domain_key, db):
     weak_curves = []
 
     if results.get("missing", None) is not None:
-        tags.append("ssl2")
+        negative_tags.append("ssl2")
     else:
         for cipher in results["cipher_list"]:
             if "RC4" in cipher:
-                tags.append("ssl3")
+                negative_tags.append("ssl3")
             if "3DES" in cipher:
-                tags.append("ssl4")
+                negative_tags.append("ssl4")
             if cipher in (
                 guidance["ciphers"]["1.2"]["recommended"]
                 + guidance["ciphers"]["1.3"]["recommended"]
@@ -194,22 +182,23 @@ def process_ssl(results, guidance, domain_key, db):
             else:
                 weak_curves.append(curve)
 
-        for algorithm in (
-            guidance["signature_algorithms"]["recommended"]
-            + guidance["signature_algorithms"]["sufficient"]
-        ):
-            if results["signature_algorithm"].lower() in algorithm:
-                tags.append("ssl5")
-                break
+        if results.get("signature_algorithm", None) is not None:
+            for algorithm in (
+                guidance["signature_algorithms"]["recommended"]
+                + guidance["signature_algorithms"]["sufficient"]
+            ):
+                if results["signature_algorithm"].lower() in algorithm:
+                    positive_tags.append("ssl5")
+                    break
 
         if len(weak_ciphers) > 0:
-            tags.append("ssl6")
+            negative_tags.append("ssl6")
 
         if results["heartbleed"]:
-            tags.append("ssl7")
+            negative_tags.append("ssl7")
 
         if results["openssl_ccs_injection"]:
-            tags.append("ssl8")
+            negative_tags.append("ssl8")
 
     try:
         sslEntry = db.collection("ssl").insert(
@@ -221,11 +210,13 @@ def process_ssl(results, guidance, domain_key, db):
                 "strong_curves": strong_curves,
                 "acceptable_curves": acceptable_curves,
                 "weak_curves": weak_curves,
-                "supports_ecdh_key_exchange": results["supports_ecdh_key_exchange"],
-                "heartbleed_vulnerable": results["heartbleed"],
-                "ccs_injection_vulnerable": results["openssl_ccs_injection"],
+                "supports_ecdh_key_exchange": results.get("supports_ecdh_key_exchange", "unknown"),
+                "heartbleed_vulnerable": results.get("heartbleed", "unknown"),
+                "ccs_injection_vulnerable": results.get("openssl_ccs_injection", "unknown"),
                 "rawJson": results,
-                "guidanceTags": tags,
+                "neutralTags": neutral_tags,
+                "positiveTags": positive_tags,
+                "negativeTags": negative_tags,
             }
         )
         domain = db.collection("domains").get({"_key": domain_key})
@@ -233,7 +224,7 @@ def process_ssl(results, guidance, domain_key, db):
             {"_from": domain["_id"], "_to": sslEntry["_id"]}
         )
 
-        if any(i in ["ssl2", "ssl3", "ssl4", "ssl6", "ssl7", "ssl8"] for i in tags):
+        if len(negative_tags) > 0:
             ssl_status = "fail"
         elif "ssl5" in tags:
             ssl_status = "pass"
@@ -254,11 +245,9 @@ def process_dns(results, domain_key, db):
     timestamp = str(datetime.datetime.utcnow())
     tags = {"dmarc": [], "dkim": {}, "spf": []}
 
-    for selector in results.get("dkim", {}).keys():
-        tags["dkim"][selector] = []
-        if results["dkim"][selector].get("missing", None) is not None:
-            tags["dkim"][selector].append("dkim2")
-        else:
+    if results["dkim"].get("missing", None) is None:
+        for selector in results["dkim"].keys():
+            tags["dkim"][selector] = []
             key_size = results["dkim"][selector].get("key_size", None)
             key_type = results["dkim"][selector].get("key_type", None)
 
@@ -295,6 +284,8 @@ def process_dns(results, domain_key, db):
             p_tag = results["dkim"][selector].get("txt_record", {}).get("p", None)
 
             if v_tag is None and k_tag is None and p_tag is None:
+                tags["dkim"][selector].append("dkim2")
+            elif v_tag is None or k_tag is None or p_tag is None:
                 tags["dkim"][selector].append("dkim12")
 
             # Testing Enabled
@@ -465,6 +456,85 @@ def process_dns(results, domain_key, db):
                     if not "spf13" in tags:
                         tags["spf"].append("spf13")
 
+    phase = "not implemented"
+
+    # CHECK IF DOMAIN IS IN "MAINTAIN" PHASE
+    if  ("dmarc5" in tags["dmarc"] or "dmarc6" in tags["dmarc"]):
+        if "dmarc7" in tags["dmarc"]:
+            phase = "maintain"
+        elif "dmarc8" in tags["dmarc"]:
+            phase = "enforce"
+    elif "dmarc4" in tags["dmarc"] and ("dmarc20" in tags["dmarc"] or "dmarc7" in tags["dmarc"]):
+        phase = "deploy"
+
+    # DETERMINE TAG CONTEXT BASED ON PHASE (POSTIVE/NEUTRAL/NEGATIVE)
+    guidance_tags = {"dmarc": {"neutralTags": [], "negativeTags": [], "positiveTags": []},
+                    "spf": {"neutralTags": [], "negativeTags": [], "positiveTags": []},
+                    "dkim": {}}
+
+    for tag in ["dmarc2", "dmarc3", "dmarc11", "dmarc12", "dmarc15", "dmarc21"]:
+        if tag in tags["dmarc"]:
+            guidance_tags["dmarc"]["negativeTags"].append(tag)
+    for tag in ["dmarc10", "dmarc13", "dmarc14", "dmarc16", "dmarc18", "dmarc19", "dmarc22"]:
+        if tag in tags["dmarc"]:
+            guidance_tags["dmarc"]["neutralTags"].append(tag)
+    if "dmarc23" in tags["dmarc"]:
+        guidance_tags["dmarc"]["positiveTags"].append("dmarc23")
+
+    if phase == "maintain":
+        if "dmarc17" in tags["dmarc"]:
+            guidance_tags["dmarc"]["negativeTags"].append("dmarc17")
+        for tag in ["spf2", "spf3", "spf4", "spf5", "spf6", "spf7", "spf9", "spf10", "spf11"]:
+            if tag in tags["spf"]:
+                guidance_tags["spf"]["negativeTags"].append(tag)
+        for tag in ["spf8", "spf12"]:
+            if tag in tags["spf"]:
+                guidance_tags["spf"]["positiveTags"].append(tag)
+        for selector in tags["dkim"].keys():
+            guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
+            for tag in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim11", "dkim12", "dkim13"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["negativeTags"].append(tag)
+            for tag in ["dkim6", "dkim7"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["positiveTags"].append(tag)
+    elif phase == "enforce":
+        if "dmarc17" in tags["dmarc"]:
+            guidance_tags["dmarc"]["negativeTags"].append("dmarc17")
+        for tag in ["spf2", "spf3", "spf4", "spf5", "spf6", "spf7", "spf9", "spf10", "spf11"]:
+            if tag in tags["spf"]:
+                guidance_tags["spf"]["negativeTags"].append(tag)
+        for tag in ["spf7", "spf8", "spf12"]:
+            if tag in tags["spf"]:
+                guidance_tags["spf"]["positiveTags"].append(tag)
+        for selector in tags["dkim"].keys():
+            guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
+            for tag in ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim11", "dkim12", "dkim13"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["negativeTags"].append(tag)
+            for tag in ["dkim6", "dkim7"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["positiveTags"].append(tag)
+    else:
+        if "dmarc17" in tags["dmarc"]:
+            guidance_tags["dmarc"]["neutralTags"].append("dmarc17")
+        for tag in ["spf5", "spf9", "spf11"]:
+            if tag in tags["spf"]:
+                guidance_tags["spf"]["negativeTags"].append(tag)
+        for tag in ["spf2", "spf3", "spf4", "spf6", "spf7", "spf8", "spf10"]:
+            if tag in tags["spf"]:
+                guidance_tags["spf"]["neutralTags"].append(tag)
+        if "spf12" in tags["spf"]:
+            guidance_tags["spf"]["positiveTags"].append("spf12")
+        for selector in tags["dkim"].keys():
+            guidance_tags["dkim"][selector] = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
+            for tag in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["negativeTags"].append(tag)
+            for tag in ["dkim2", "dkim3", "dkim4", "dkim6", "dkim7", "dkim10"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["neutralTags"].append(tag)
+
     try:
         dmarcEntry = db.collection("dmarc").insert(
             {
@@ -483,7 +553,9 @@ def process_dns(results, domain_key, db):
                 .get("pct", {})
                 .get("value", None),
                 "rawJson": results["dmarc"],
-                "guidanceTags": tags["dmarc"],
+                "neutralTags": guidance_tags["dmarc"]["neutralTags"],
+                "positiveTags": guidance_tags["dmarc"]["positiveTags"],
+                "negativeTags": guidance_tags["dmarc"]["negativeTags"],
             }
         )
         spfRecord = results["spf"].get("record", None)
@@ -498,62 +570,67 @@ def process_dns(results, domain_key, db):
                 "lookups": results["spf"].get("dns_lookups", None),
                 "spfDefault": spfDefault,
                 "rawJson": results["spf"],
-                "guidanceTags": tags["spf"],
+                "neutralTags": guidance_tags["spf"]["neutralTags"],
+                "positiveTags": guidance_tags["spf"]["positiveTags"],
+                "negativeTags": guidance_tags["spf"]["negativeTags"],
             }
         )
 
         dkimEntry = db.collection("dkim").insert({"timestamp": timestamp})
-        for selector in results["dkim"].keys():
-            keyModulus = results["dkim"][selector]["public_key_modulus"]
+        if results["dkim"].get("missing", None) is None:
+            for selector in results["dkim"].keys():
+                keyModulus = results["dkim"][selector]["public_key_modulus"]
 
-            previous_dkim_results = db.collection("dkimResults").find(
-                {"keyModulus": keyModulus}
-            )
-
-            for previous_dkim_result in previous_dkim_results:
-                edges = db.collection("dkimToDkimResults").find(
-                    {"_to": previous_dkim_result["_id"]}
+                previous_dkim_results = db.collection("dkimResults").find(
+                    {"keyModulus": keyModulus}
                 )
-                for edge in edges:
-                    previous_dkim = db.collection("dkim").get({"_id": edge["_from"]})
 
-                    # Check if PK was used for another domain
-                    previous_dkim_domain_query = db.collection("domainsDKIM").find(
-                        {"_to": previous_dkim["_id"]}, limit=1
+                for previous_dkim_result in previous_dkim_results:
+                    edges = db.collection("dkimToDkimResults").find(
+                        {"_to": previous_dkim_result["_id"]}
                     )
-                    previous_dkim_domain = previous_dkim_domain_query.next()
-                    if (previous_dkim_domain["_key"] != domain_key) and (
-                        "dkim14" not in tags["dkim"][selector]
-                    ):
-                        tags["dkim"][selector].append("dkim14")
+                    for edge in edges:
+                        previous_dkim = db.collection("dkim").get({"_id": edge["_from"]})
 
-                    # Check if PK is older than 1 year
-                    current_timestamp = datetime.datetime.strptime(
-                        timestamp, "%Y-%m-%d %H:%M:%S.%f"
-                    )
-                    previous_timestamp = datetime.datetime.strptime(
-                        previous_dkim["timestamp"], "%Y-%m-%d %H:%M:%S.%f"
-                    )
+                        # Check if PK was used for another domain
+                        previous_dkim_domain_query = db.collection("domainsDKIM").find(
+                            {"_to": previous_dkim["_id"]}, limit=1
+                        )
+                        previous_dkim_domain = previous_dkim_domain_query.next()
+                        if (previous_dkim_domain["_key"] != domain_key) and (
+                            "dkim14" not in guidance_tags["dkim"][selector]["negativeTags"]
+                        ):
+                            guidance_tags["dkim"][selector]["negativeTags"].append("dkim14")
 
-                    time_delta = current_timestamp - previous_timestamp
+                        # Check if PK is older than 1 year
+                        current_timestamp = datetime.datetime.strptime(
+                            timestamp, "%Y-%m-%d %H:%M:%S.%f"
+                        )
+                        previous_timestamp = datetime.datetime.strptime(
+                            previous_dkim["timestamp"], "%Y-%m-%d %H:%M:%S.%f"
+                        )
 
-                    if (time_delta.total_seconds() > 31536000) and (
-                        "dkim10" not in tags["dkim"][selector]
-                    ):
-                        tags["dkim"][selector].append("dkim10")
+                        time_delta = current_timestamp - previous_timestamp
 
-            dkimResultsEntry = db.collection("dkimResults").insert(
-                {
-                    "record": results["dkim"][selector].get("txt_record", None),
-                    "keyLength": results["dkim"][selector].get("key_size", None),
-                    "keyModulus": keyModulus,
-                    "rawJson": results["dkim"][selector],
-                    "guidanceTags": tags["dkim"][selector],
-                }
-            )
-            db.collection("dkimToDkimResults").insert(
-                {"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]}
-            )
+                        if (time_delta.total_seconds() > 31536000) and (
+                            "dkim10" not in guidance_tags["dkim"][selector]["negativeTags"]
+                        ):
+                            guidance_tags["dkim"][selector]["negativeTags"].append("dkim10")
+
+                dkimResultsEntry = db.collection("dkimResults").insert(
+                    {
+                        "record": results["dkim"][selector].get("txt_record", None),
+                        "keyLength": results["dkim"][selector].get("key_size", None),
+                        "keyModulus": keyModulus,
+                        "rawJson": results["dkim"][selector],
+                        "neutralTags": guidance_tags["dkim"][selector]["neutralTags"],
+                        "positiveTags": guidance_tags["dkim"][selector]["positiveTags"],
+                        "negativeTags": guidance_tags["dkim"][selector]["negativeTags"],
+                    }
+                )
+                db.collection("dkimToDkimResults").insert(
+                    {"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]}
+                )
 
         domain = db.collection("domains").get({"_key": domain_key})
         db.collection("domainsDMARC").insert(
@@ -608,167 +685,7 @@ def process_dns(results, domain_key, db):
         }.items():
             domain["status"][key] = val
 
-        domain["phase"] = "not implemented"
-        # ASSESS
-        if (
-            all(i in ["dmarc4", "dmarc20", "dmarc23"] for i in tags["dmarc"])
-            and not any(
-                i
-                in [
-                    "dmarc2",
-                    "dmarc3",
-                    "dmarc5",
-                    "dmarc6",
-                    "dmarc11",
-                    "dmarc12",
-                    "dmarc15",
-                    "dmarc21",
-                ]
-                for i in tags["dmarc"]
-            )
-            and not any(i in ["spf5", "spf9", "spf11"] for i in tags["spf"])
-        ):
-            for selector in tags["dkim"].keys():
-                if not any(
-                    i in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13",]
-                    for i in tags["dkim"][selector]
-                ):
-                    domain["phase"] = "assess"
-        # DEPLOY
-        elif (
-            all(i in ["dmarc4", "dmarc20", "dmarc23"] for i in tags["dmarc"])
-            and not any(
-                i
-                in [
-                    "dmarc2",
-                    "dmarc3",
-                    "dmarc5",
-                    "dmarc6",
-                    "dmarc11",
-                    "dmarc12",
-                    "dmarc15",
-                    "dmarc21",
-                ]
-                for i in tags["dmarc"]
-            )
-            and "spf12" in tags["spf"]
-            and not any(i in ["spf5", "spf9", "spf11"] for i in tags["spf"])
-        ):
-            for selector in tags["dkim"].keys():
-                if not any(
-                    i in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13",]
-                    for i in tags["dkim"][selector]
-                ):
-                    domain["phase"] = "deploy"
-        # ENFORCE
-        elif (
-            all(
-                i in ["dmarc23", ("dmarc5" or "dmarc6"), "dmarc8"]
-                for i in tags["dmarc"]
-            )
-            and not any(
-                i
-                in [
-                    "dmarc2",
-                    "dmarc3",
-                    "dmarc5",
-                    "dmarc6",
-                    "dmarc11",
-                    "dmarc12",
-                    "dmarc15",
-                    "dmarc21",
-                    "dmarc9",
-                    "dmarc17",
-                    "dmarc20",
-                ]
-                for i in tags["dmarc"]
-            )
-            and all(i in ["spf12", ("spf7" or "spf8")] for i in tags["spf"])
-            and not any(
-                i in ["spf2", "spf3", "spf4", "spf5", "spf6", "spf9", "spf10", "spf11"]
-                for i in tags["spf"]
-            )
-        ):
-            for selector in tags["dkim"].keys():
-                if not any(
-                    i
-                    in [
-                        "dkim2",
-                        "dkim3",
-                        "dkim4",
-                        "dkim5",
-                        "dkim8",
-                        "dkim9",
-                        "dkim10",
-                        "dkim11",
-                        "dkim12",
-                        "dkim13",
-                        "dkim14",
-                    ]
-                    for i in tags["dkim"][selector]
-                ) and all(i in ["dkim6", "dkim7",] for i in tags["dkim"][selector]):
-                    domain["phase"] = "enforce"
-        # MAINTAIN
-        elif (
-            all(
-                i in ["dmarc23", ("dmarc5" or "dmarc6"), "dmarc7"]
-                for i in tags["dmarc"]
-            )
-            and not any(
-                i
-                in [
-                    "dmarc2",
-                    "dmarc3",
-                    "dmarc5",
-                    "dmarc6",
-                    "dmarc8",
-                    "dmarc11",
-                    "dmarc12",
-                    "dmarc15",
-                    "dmarc21",
-                    "dmarc9",
-                    "dmarc17",
-                    "dmarc20",
-                ]
-                for i in tags["dmarc"]
-            )
-            and all(i in ["spf12", "spf8"] for i in tags["spf"])
-            and not any(
-                i
-                in [
-                    "spf2",
-                    "spf3",
-                    "spf4",
-                    "spf5",
-                    "spf6",
-                    "spf7",
-                    "spf9",
-                    "spf10",
-                    "spf11",
-                ]
-                for i in tags["spf"]
-            )
-        ):
-            for selector in tags["dkim"].keys():
-                if not any(
-                    i
-                    in [
-                        "dkim2",
-                        "dkim3",
-                        "dkim4",
-                        "dkim5",
-                        "dkim8",
-                        "dkim9",
-                        "dkim10",
-                        "dkim11",
-                        "dkim12",
-                        "dkim13",
-                        "dkim14",
-                    ]
-                    for i in tags["dkim"][selector]
-                ) and all(i in ["dkim6", "dkim7",] for i in tags["dkim"][selector]):
-                    domain["phase"] = "maintain"
-
+        domain.update({"phase": phase})
         db.collection("domains").update(domain)
 
     except Exception as e:
@@ -825,7 +742,7 @@ def Server(
             )
 
         except Exception as e:
-            msg = f"An error occurred while attempting to process results: ({type(e).__name__}: {str(e)})"
+            msg = f"An error occurred while attempting to process results: ({type(e).__name__}: {str(e)}) \n\nFull traceback: {traceback.format_exc()}"
             logging.error(msg)
             return PlainTextResponse(msg)
 
