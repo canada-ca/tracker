@@ -13,7 +13,7 @@ from queries import (
     SIGNIN_MUTATION,
     ALL_ORG_SUMMARIES,
     SUMMARY_BY_SLUG,
-    DOMAIN_RESULTS
+    DOMAIN_RESULTS,
 )
 
 
@@ -253,9 +253,56 @@ def get_domain_results(domain, client):
     """
     params = {"domain": domain}
 
-    result = client.execute(DOMAIN_RESULTS, variable_values= params)
-    formatted_result = result
+    result = client.execute(DOMAIN_RESULTS, variable_values=params)
+    formatted_result = format_domain_results(result)
     return json.dumps(formatted_result, indent=4)
+
+
+def format_domain_results(result):
+    """Format the dict obtained by DOMAIN_RESULTS"""
+
+    # Extract the contents of the list of nodes holding web results
+    result["findDomainByDomain"]["web"] = {
+        k: v["edges"][0]["node"]
+        for (k, v) in result["findDomainByDomain"]["web"].items()
+    }
+
+    # Extract the contents of the list of nodes holding email results
+    result["findDomainByDomain"]["email"] = {
+        k: v["edges"][0]["node"]
+        for (k, v) in result["findDomainByDomain"]["email"].items()
+    }
+
+    # Extract the contents of the list of edges for guidance tags
+    for x in result["findDomainByDomain"]["web"].keys():
+
+        # Remove edges by making the value of guidanceTags the list of nodes
+        result["findDomainByDomain"]["web"][x]["guidanceTags"] = result[
+            "findDomainByDomain"
+        ]["web"][x]["guidanceTags"]["edges"]
+
+        # Replace the list of nodes with a dict with tagIds as the keys
+        result["findDomainByDomain"]["web"][x]["guidanceTags"] = {
+            x["node"].pop("tagId"): x["node"]
+            for x in result["findDomainByDomain"]["web"][x]["guidanceTags"]
+        }
+
+    # Do the same with email guidance tags
+    for x in result["findDomainByDomain"]["email"].keys():
+
+        # dkim results have different structure so exclude them
+        if x != "dkim":
+            result["findDomainByDomain"]["email"][x]["guidanceTags"] = result[
+                "findDomainByDomain"
+            ]["email"][x]["guidanceTags"]["edges"]
+
+            result["findDomainByDomain"]["email"][x]["guidanceTags"] = {
+                x["node"].pop("tagId"): x["node"]
+                for x in result["findDomainByDomain"]["email"][x]["guidanceTags"]
+            }
+
+    result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
+    return result
 
 
 def main():
@@ -265,7 +312,7 @@ def main():
     print("Tracker account: " + os.environ.get("TRACKER_UNAME"))
     client = create_client("https://tracker.alpha.canada.ca/graphql", get_auth_token())
 
-    """print("Getting all your domains...")
+    print("Getting all your domains...")
     domains = get_all_domains(client)
     print(domains)
 
@@ -298,7 +345,7 @@ def main():
 
     print("Getting summary by name " + name + "...")
     summaries = get_summary_by_name(name, client)
-    print(summaries)"""
+    print(summaries)
 
     domain = "cse-cst.gc.ca"
     print("Getting scan results for " + domain + "...")
