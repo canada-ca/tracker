@@ -4,7 +4,7 @@ images:
 - name: gcr.io/track-compliance/api
   newTag: master-4003aac
 - name: gcr.io/track-compliance/api-js
-  newTag: master-7d49433
+  newTag: master-9b233ea
 - name: gcr.io/track-compliance/autoscan
   newTag: master-0000000
 - name: gcr.io/track-compliance/db-migration
