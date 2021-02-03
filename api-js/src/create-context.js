@@ -3,6 +3,7 @@ import moment from 'moment'
 import fetch from 'isomorphic-fetch'
 import { v4 as uuidv4 } from 'uuid'
 
+import { createI18n } from './create-i18n'
 import { cleanseInput, slugify } from './validators'
 import {
   checkDomainOwnership,
@@ -11,6 +12,7 @@ import {
   checkUserIsAdminForUser,
   tokenize,
   userRequired,
+  verifyToken,
 } from './auth'
 import {
   notifyClient,
@@ -99,16 +101,19 @@ import {
 } from './verified-organizations/loaders'
 import { chartSummaryLoaderByKey } from './summaries/loaders'
 
-export const createContext = ({
-  context,
-  req: request,
-  res: response,
-  i18n,
-}) => {
+export const createContext = ({ context, req: request, res: response }) => {
   const { query } = context
 
-  // request.user is populated using the token by the express-jwt middleware in src/server.js
-  const userKey = request.user?.userKey
+  const i18n = createI18n(request.language)
+
+  const verify = verifyToken({ i18n })
+
+  // Get user id from token
+  let userKey
+  const token = request.headers.authorization || ''
+  if (token !== '') {
+    userKey = verify({ token }).userKey
+  }
 
   return {
     ...context,
@@ -135,7 +140,7 @@ export const createContext = ({
         userKey,
         userLoaderByKey: userLoaderByKey(query),
       }),
-      verifyToken: () => request.user,
+      verifyToken: verifyToken({ i18n }),
     },
     validators: {
       cleanseInput,
