@@ -5,7 +5,7 @@ from slugify import slugify
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 
-from .queries import (
+from queries import (
     ALL_DOMAINS_QUERY,
     DOMAINS_BY_SLUG,
     DMARC_SUMMARY,
