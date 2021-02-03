@@ -14,6 +14,7 @@ from queries import (
     ALL_ORG_SUMMARIES,
     SUMMARY_BY_SLUG,
     DOMAIN_RESULTS,
+    DOMAIN_STATUS,
 )
 
 
@@ -304,6 +305,25 @@ def format_domain_results(result):
     result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
     return result
 
+def get_domain_status(domain, client):
+    """Return pass/fail status information for a domain
+
+    Arguments:
+    domain -- domain name string
+    client -- a GQL Client object
+    """
+    params = {"domain": domain}
+
+    result = client.execute(DOMAIN_STATUS, variable_values=params)
+    formatted_result = format_domain_status(result)
+    return json.dumps(formatted_result, indent=4)
+
+
+def format_domain_status(result):
+    """Formats the dict obtained by DOMAIN_STATUS"""
+    result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
+    return result
+
 
 def main():
     """main() currently tries all implemented functions and prints results
@@ -347,9 +367,11 @@ def main():
     summaries = get_summary_by_name(name, client)
     print(summaries)
 
-    domain = "cse-cst.gc.ca"
     print("Getting scan results for " + domain + "...")
     results = get_domain_results(domain, client)
+    print(results)
+
+    results = get_domain_status(domain, client)
     print(results)
 
 
