@@ -1,4 +1,4 @@
-from src.tracker_client import (
+from tracker_client.client import (
     format_all_domains,
     format_acronym_domains,
     format_name_domains,
@@ -9,7 +9,7 @@ from src.tracker_client import (
     format_name_summary,
 )
 
-from fixtures import (
+from .fixtures import (
     all_domains_input,
     all_domains_output,
     name_domain_input,
