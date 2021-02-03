@@ -1,4 +1,5 @@
 const updateMonthSummary = (
+  calculatePercentages,
   createSummary,
   createSummaryEdge,
   loadSummaryByDate,
@@ -22,6 +23,11 @@ const updateMonthSummary = (
     domain,
     startDate: dateToAdd,
   })
+
+  const categoryPercentages = calculatePercentages(
+    currentSummary.categoryTotals,
+  )
+  currentSummary.categoryPercentages = categoryPercentages
 
   const summaryDBInfo = await createSummary({ currentSummary })
 
