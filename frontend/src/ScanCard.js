@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Heading, Stack, Text } from '@chakra-ui/core'
+import { Box, Heading, Icon, Stack, Text } from '@chakra-ui/core'
 import { object, string } from 'prop-types'
 import ScanCategoryDetails from './ScanCategoryDetails'
 import WithPseudoBox from './withPseudoBox'
@@ -22,24 +22,39 @@ function ScanCard({ scanType, scanData, status }) {
   const topInfo = () => {
     if (scanType === 'web') {
       return (
-        <Text fontWeight="bold" fontSize="xl">
-          {status.https === 'PASS' && status.ssl === 'PASS'
-            ? `ITPIN Compliant`
-            : `Changes Required for ITPIN Compliance`}
-        </Text>
+        <Box bg="#d2e7fc" pb="1">
+          <Stack isInline align="center" px="2">
+            <Icon name="info" color="#3f8cd9" />
+            <Text fontWeight="bold" fontSize="xl">
+              {status.https === 'PASS' && status.ssl === 'PASS'
+                ? `ITPIN Compliant`
+                : `Changes Required for ITPIN Compliance`}
+            </Text>
+          </Stack>
+        </Box>
       )
     } else if (scanType === 'email') {
       if (status) {
         return (
-          <Text fontWeight="bold" fontSize="xl">
-            <Trans>DMARC Implementation Phase: {status}</Trans>
-          </Text>
+          <Box bg="#d2e7fc" pb="1">
+            <Stack isInline align="center" px="2">
+              <Icon name="info" color="#3f8cd9" />
+              <Text fontWeight="bold" fontSize="xl">
+                <Trans>DMARC Implementation Phase: {status}</Trans>
+              </Text>
+            </Stack>
+          </Box>
         )
       } else {
         return (
-          <Text fontWeight="bold" fontSize="xl">
-            <Trans>DMARC Phase Unavailable</Trans>
-          </Text>
+          <Box bg="#d2e7fc" pb="1">
+            <Stack isInline align="center" px="2">
+              <Icon name="info" color="#3f8cd9" />
+              <Text fontWeight="bold" fontSize="xl">
+                <Trans>DMARC Phase Unavailable</Trans>
+              </Text>
+            </Stack>
+          </Box>
         )
       }
     } else {
