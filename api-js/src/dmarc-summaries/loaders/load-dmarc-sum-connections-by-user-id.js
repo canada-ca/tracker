@@ -8,7 +8,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
   cleanseInput,
   i18n,
   loadStartDateFromPeriod,
-) => async ({ after, before, first, last, period, year }) => {
+) => async ({ after, before, first, last, period, year, orderBy }) => {
   const userDBId = `users/${userKey}`
 
   if (typeof period === 'undefined') {
@@ -43,13 +43,45 @@ export const dmarcSumLoaderConnectionsByUserId = (
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(summary._key) > TO_NUMBER(${afterId})`
+    if (typeof orderBy.field === 'undefined') {
+      afterTemplate = aql`FILTER TO_NUMBER(summary._key) > TO_NUMBER(${afterId})`
+    } else {
+      if (orderBy.field === 'fail-count') {
+        afterTemplate = aql`FILTER summary.categoryTotals.fail < DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.fail
+          OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.fail AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))`
+      } else if (orderBy.field === 'pass-count') {
+        afterTemplate = aql`FILTER summary.categoryTotals.pass < DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.pass 
+          OR (summary.categoryTotals.pass == DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.pass AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))`
+      } else if (orderBy.field === 'pass-dkim-count') {
+        afterTemplate = aql`FILTER summary.categoryTotals.passDkimOnly < DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.passDkimOnly
+          OR (summary.categoryTotals.passDkimOnly == DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.passDkimOnly AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))`
+      } else if (orderBy.field === 'pass-spf-count') {
+        afterTemplate = aql`FILTER summary.categoryTotals.passSpfOnly < DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.passSpfOnly
+          OR (summary.categoryTotals.passSpfOnly == DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))`
+      }
+    }
   }
 
   let beforeTemplate = aql``
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    beforeTemplate = aql`FILTER TO_NUMBER(summary._key) < TO_NUMBER(${beforeId})`
+    if (typeof orderBy.field === 'undefined') {
+      beforeTemplate = aql`FILTER TO_NUMBER(summary._key) < TO_NUMBER(${beforeId})`
+    } else {
+      if (orderBy.field === 'fail-count') {
+        beforeTemplate = aql`FILTER summary.categoryTotals.fail > DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.fail
+          OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.fail AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))`
+      } else if (orderBy.field === 'pass-count') {
+        beforeTemplate = aql`FILTER summary.categoryTotals.pass > DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.pass 
+          OR (summary.categoryTotals.pass == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.pass AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))`
+      } else if (orderBy.field === 'pass-dkim-count') {
+        beforeTemplate = aql`FILTER summary.categoryTotals.passDkimOnly > DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passDkimOnly
+          OR (summary.categoryTotals.passDkimOnly == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passDkimOnly AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))`
+      } else if (orderBy.field === 'pass-spf-count') {
+        beforeTemplate = aql`FILTER summary.categoryTotals.passSpfOnly > DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passSpfOnly
+          OR (summary.categoryTotals.passSpfOnly == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))`
+      }
+    }
   }
 
   let limitTemplate = aql``
@@ -95,9 +127,9 @@ export const dmarcSumLoaderConnectionsByUserId = (
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-      limitTemplate = aql`SORT summary._key ASC LIMIT TO_NUMBER(${first})`
+      limitTemplate = aql`summary._key ASC LIMIT TO_NUMBER(${first})`
     } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-      limitTemplate = aql`SORT summary._key DESC LIMIT TO_NUMBER(${last})`
+      limitTemplate = aql`summary._key DESC LIMIT TO_NUMBER(${last})`
     }
   } else {
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -108,6 +140,19 @@ export const dmarcSumLoaderConnectionsByUserId = (
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
     )
+  }
+
+  let sortByField = aql``
+  if (typeof orderBy !== 'undefined') {
+    if (orderBy.field === 'fail-count') {
+      sortByField = aql`summary.categoryTotals.fail ${orderBy.direction},`
+    } else if (orderBy.field === 'pass-count') {
+      sortByField = aql`summary.categoryTotals.pass ${orderBy.direction},`
+    } else if (orderBy.field === 'pass-dkim-count') {
+      sortByField = aql`summary.categoryTotals.passDkimOnly ${orderBy.direction},`
+    } else if (orderBy.field === 'pass-spf-count') {
+      sortByField = aql`summary.categoryTotals.passSpfOnly ${orderBy.direction},`
+    }
   }
 
   let sortString
@@ -136,19 +181,29 @@ export const dmarcSumLoaderConnectionsByUserId = (
     )
 
     LET retrievedSummaries = (
-      FOR summary IN dmarcSummaries
-        FILTER summary._id IN summaryIds
-        ${afterTemplate}
-        ${beforeTemplate}
-        ${limitTemplate}
-        RETURN {            
-          _id: summary._id,
-          _key: summary._key,
-          _rev: summary._rev,
-          _type: "dmarcSummary",
-          id: summary._key,
-          categoryTotals: summary.categoryTotals
-        }
+      FOR summaryId IN summaryIds
+        FOR summary IN dmarcSummaries
+          FILTER summary._id == summaryId
+          LET domain = FIRST(
+            FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+              RETURN v
+          )
+          ${afterTemplate}
+          ${beforeTemplate}
+          
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+
+          RETURN {
+            _id: summary._id,
+            _key: summary._key,
+            _rev: summary._rev,
+            _type: "dmarcSummary",
+            id: summary._key,
+            domainKey: domain._key,
+            categoryTotals: summary.categoryTotals
+          }
     )
 
     LET hasNextPage = (LENGTH(
@@ -210,10 +265,13 @@ export const dmarcSumLoaderConnectionsByUserId = (
     }
   }
 
-  const edges = summariesInfo.summaries.map((summary) => ({
-    cursor: toGlobalId('dmarcSummaries', summary.id),
-    node: summary,
-  }))
+  const edges = summariesInfo.summaries.map((summary) => {
+    summary.startDate = startDate
+    return {
+      cursor: toGlobalId('dmarcSummaries', summary.id),
+      node: summary,
+    }
+  })
 
   return {
     edges,

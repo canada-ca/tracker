@@ -54,8 +54,8 @@ export const dmarcSummaryType = new GraphQLObjectType({
     categoryPercentages: {
       type: categoryPercentagesType,
       description: 'Category percentages based on the category totals.',
-      resolve: async ({ _to }, _, { loaders: { dmarcSumLoaderByKey } }) => {
-        const dmarcSummaryKey = _to.split('/')[1]
+      resolve: async ({ _id }, _, { loaders: { dmarcSumLoaderByKey } }) => {
+        const dmarcSummaryKey = _id.split('/')[1]
         const dmarcSummary = await dmarcSumLoaderByKey.load(dmarcSummaryKey)
         return dmarcSummary.categoryTotals
       },
@@ -63,8 +63,8 @@ export const dmarcSummaryType = new GraphQLObjectType({
     categoryTotals: {
       type: categoryTotalsType,
       description: 'Category totals for quick viewing.',
-      resolve: async ({ _to }, _, { loaders: { dmarcSumLoaderByKey } }) => {
-        const dmarcSummaryKey = _to.split('/')[1]
+      resolve: async ({ _id }, _, { loaders: { dmarcSumLoaderByKey } }) => {
+        const dmarcSummaryKey = _id.split('/')[1]
         const dmarcSummary = await dmarcSumLoaderByKey.load(dmarcSummaryKey)
         return dmarcSummary.categoryTotals
       },
@@ -72,7 +72,7 @@ export const dmarcSummaryType = new GraphQLObjectType({
     detailTables: {
       type: detailTablesType,
       description: 'Various senders for each category.',
-      resolve: ({ _to }) => ({ _to }),
+      resolve: ({ _id }) => ({ _id }),
     },
   }),
   interfaces: [nodeInterface],
@@ -84,7 +84,8 @@ export const dmarcSummaryConnection = connectionDefinitions({
   connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
-      description: 'The total amount of dmarc summaries the user has access to.',
+      description:
+        'The total amount of dmarc summaries the user has access to.',
       resolve: ({ totalCount }) => totalCount,
     },
   }),

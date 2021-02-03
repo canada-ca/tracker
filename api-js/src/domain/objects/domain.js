@@ -122,7 +122,11 @@ export const domainType = new GraphQLObjectType({
           startDate,
         })
 
-        return { domainKey: _key, ...dmarcSummaryEdge }
+        return {
+          domainKey: _key,
+          _id: dmarcSummaryEdge._to,
+          startDate: startDate,
+        }
       },
     },
     yearlyDmarcSummaries: {
@@ -157,7 +161,8 @@ export const domainType = new GraphQLObjectType({
 
         const edges = dmarcSummaryEdges.map((edge) => ({
           domainKey: _key,
-          ...edge,
+          _id: edge._to,
+          startDate: edge.startDate,
         }))
 
         return edges

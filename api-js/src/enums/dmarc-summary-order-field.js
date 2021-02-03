@@ -3,10 +3,6 @@ import { GraphQLEnumType } from 'graphql'
 export const DmarcSummaryOrderField = new GraphQLEnumType({
   name: 'DmarcSummaryOrderField',
   values: {
-    DOMAIN: {
-      value: 'domain',
-      description: 'Order dmarc summaries by domain.',
-    },
     FAIL_COUNT: {
       value: 'fail-count',
       description: 'Order dmarc summaries by fail count.',
