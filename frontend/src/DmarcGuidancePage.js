@@ -2,8 +2,8 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
-import { IconButton, Heading, Stack, Divider } from '@chakra-ui/core'
-import { useParams, useHistory } from 'react-router-dom'
+import { Heading, Stack, Divider, Icon, Link } from '@chakra-ui/core'
+import { useParams, Link as RouteLink } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -13,7 +13,6 @@ import { LoadingMessage } from './LoadingMessage'
 export default function DmarcGuidancePage() {
   const { currentUser } = useUserState()
   const { domainSlug } = useParams()
-  const history = useHistory()
 
   const { loading, error, data } = useQuery(GET_GUIDANCE_TAGS_OF_DOMAIN, {
     context: {
@@ -42,15 +41,19 @@ export default function DmarcGuidancePage() {
 
   return (
     <Stack spacing="25px" mb="6" px="4" mx="auto" overflow="hidden">
-      <Stack isInline align="center">
-        <IconButton
-          icon="arrow-left"
-          onClick={history.goBack}
-          color="gray.900"
-          fontSize="2xl"
-          aria-label="back to domains"
-        />
+      <Stack isInline>
         <Heading>{domainName.toUpperCase()}</Heading>
+        <Link
+          ml="auto"
+          color="teal.500"
+          whiteSpace="noWrap"
+          my="auto"
+          to={`/domains/${domainSlug}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+          as={RouteLink}
+        >
+          <Trans>DMARC Report</Trans>
+          <Icon name="link" ml="4px" />
+        </Link>
       </Stack>
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <ScanCard scanType="web" scanData={webScan} />
