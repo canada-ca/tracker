@@ -179,6 +179,10 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
     findDomainByDomain(domain: $domain) {
       domain
       lastRan
+      status {
+        https
+        ssl
+      }
       web {
         https(first: 10) {
           edges {

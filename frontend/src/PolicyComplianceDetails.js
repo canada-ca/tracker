@@ -52,15 +52,6 @@ export function PolicyComplianceDetails({ categoryName, policies }) {
     <Stack isInline align="center" px="2" pt={['2', '0']}>
       {!smallDevice && infoIcon}
       <Box>
-        {policies?.dmarcPhase && (
-          <Stack isInline align="center">
-            {smallDevice && infoIcon}
-            <Text fontWeight="bold">
-              <Trans>Phase:</Trans>
-            </Text>
-            <Text>{policies?.dmarcPhase}</Text>
-          </Stack>
-        )}
         <Stack isInline>
           <Text fontWeight="bold">pPolicy:</Text>
           <Text>{policies?.pPolicy}</Text>

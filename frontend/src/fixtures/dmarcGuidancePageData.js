@@ -2,6 +2,10 @@ export const rawDmarcGuidancePageData = {
   findDomainByDomain: {
     domain: 'cra-arc.gc.ca',
     lastRan: '1612170063153',
+    status: {
+      https: 'INFO',
+      ssl: 'PASS',
+    },
     web: {
       https: {
         edges: [
