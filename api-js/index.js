@@ -2,6 +2,7 @@ import './src/env'
 import { ArangoTools } from 'arango-tools'
 import { Server } from './src/server'
 import { makeMigrations } from './migrations'
+const logger = require('pino')()
 
 const {
   PORT = 4000,
@@ -25,13 +26,10 @@ const {
     query,
     collections,
     transaction,
+    logger,
   }).listen(PORT, (err) => {
     if (err) throw err
-    console.log(
-      `🚀 Server ready at http://localhost:${PORT}/graphql`,
-    )
-    console.log(
-      `🚀 Subscriptions ready at ws://localhost:${PORT}/graphql`,
-    )
+    console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`)
+    console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}/graphql`)
   })
 })()

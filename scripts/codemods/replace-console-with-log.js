@@ -11,7 +11,10 @@ function replaceConsoleDotLogWithLog(root, j) {
     })
     .replaceWith((nodePath) => {
       const { node } = nodePath
-      var ast = j.callExpression(j.identifier('log'), node.arguments)
+      const ast = j.memberExpression(
+        j.identifier('logger'),
+        j.callExpression(j.identifier('info'), [...node.arguments]),
+      )
       return ast
     })
 }
@@ -27,7 +30,29 @@ function replaceConsoleDotErrorWithError(root, j) {
     })
     .replaceWith((nodePath) => {
       const { node } = nodePath
-      var ast = j.callExpression(j.identifier('error'), node.arguments)
+      const ast = j.memberExpression(
+        j.identifier('logger'),
+        j.callExpression(j.identifier('error'), [...node.arguments]),
+      )
+      return ast
+    })
+}
+
+function replaceConsoleDotInfoWithInfo(root, j) {
+  root
+    .find(j.CallExpression, {
+      callee: {
+        type: 'MemberExpression',
+        object: { name: 'console' },
+        property: { name: 'info' },
+      },
+    })
+    .replaceWith((nodePath) => {
+      const { node } = nodePath
+      var ast = j.memberExpression(
+        j.identifier('logger'),
+        j.callExpression(j.identifier('info'), [...node.arguments]),
+      )
       return ast
     })
 }
@@ -43,7 +68,10 @@ function replaceConsoleDotWarnWithWarn(root, j) {
     })
     .replaceWith((nodePath) => {
       const { node } = nodePath
-      var ast = j.callExpression(j.identifier('warn'), node.arguments)
+      var ast = j.memberExpression(
+        j.identifier('logger'),
+        j.callExpression(j.identifier('warn'), [...node.arguments]),
+      )
       return ast
     })
 }
@@ -55,6 +83,7 @@ module.exports = function (fileInfo, api, _options) {
   replaceConsoleDotLogWithLog(root, j)
   replaceConsoleDotErrorWithError(root, j)
   replaceConsoleDotWarnWithWarn(root, j)
+  replaceConsoleDotInfoWithInfo(root, j)
   // match a function call
   return root.toSource()
 }

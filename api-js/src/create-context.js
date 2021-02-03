@@ -295,20 +295,21 @@ export const createContext = ({ context, req: request, res: response }) => {
       ),
       orgLoaderByKey: orgLoaderByKey(query, request.language, userKey, i18n),
       orgLoaderBySlug: orgLoaderBySlug(query, request.language, userKey, i18n),
-      orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+      orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId({
         query,
-        request.language,
+        language: request.language,
         userKey,
         cleanseInput,
         i18n,
-      ),
-      orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
+        logger: context.logger,
+      }),
+      orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId({
         query,
         userKey,
         cleanseInput,
-        request.language,
+        language: request.language,
         i18n,
-      ),
+      }),
       userLoaderByUserName: userLoaderByUserName(query, userKey, i18n),
       userLoaderByKey: userLoaderByKey(query, userKey, i18n),
       affiliationLoaderByKey: affiliationLoaderByKey(query, userKey, i18n),

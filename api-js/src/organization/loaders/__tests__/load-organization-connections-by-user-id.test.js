@@ -14,12 +14,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 describe('given the load organization connections by user id function', () => {
   let query, drop, truncate, migrate, collections, user, orgOne, orgTwo, i18n
 
-  const consoleOutput = []
-  const mockedError = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
   beforeAll(async () => {
-    console.error = mockedError
-    console.warn = mockedWarn
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
@@ -119,8 +114,6 @@ describe('given the load organization connections by user id function', () => {
       _to: user._id,
       permission: 'user',
     })
-
-    consoleOutput.length = 0
   })
 
   afterAll(async () => {
@@ -146,18 +139,16 @@ describe('given the load organization connections by user id function', () => {
       describe('given there are organization connections to be returned', () => {
         describe('using no cursor', () => {
           it('returns organizations', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+              logger: { warn: jest.fn() },
+            })
 
-            const connectionArgs = {
-              first: 5,
-            }
-            const orgs = await connectionLoader({ ...connectionArgs })
+            const orgs = await connectionLoader({ first: 5 })
 
             const orgLoader = orgLoaderByKey(query, 'en')
             const expectedOrgs = await orgLoader.loadMany([
@@ -197,13 +188,14 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using after cursor', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+              logger: { warn: jest.fn() },
+            })
 
             const orgLoader = orgLoaderByKey(query, 'en')
             const expectedOrgs = await orgLoader.loadMany([
@@ -241,15 +233,17 @@ describe('given the load organization connections by user id function', () => {
             expect(orgs).toEqual(expectedStructure)
           })
         })
+
         describe('using before cursor', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+              logger: { warn: jest.fn() },
+            })
 
             const orgLoader = orgLoaderByKey(query, 'en')
             const expectedOrgs = await orgLoader.loadMany([
@@ -260,11 +254,10 @@ describe('given the load organization connections by user id function', () => {
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
 
-            const connectionArgs = {
+            const orgs = await connectionLoader({
               first: 5,
               before: toGlobalId('organizations', expectedOrgs[1].id),
-            }
-            const orgs = await connectionLoader({ ...connectionArgs })
+            })
 
             const expectedStructure = {
               edges: [
@@ -287,15 +280,17 @@ describe('given the load organization connections by user id function', () => {
             expect(orgs).toEqual(expectedStructure)
           })
         })
+
         describe('using first limit', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+              logger: { warn: jest.fn() },
+            })
 
             const orgLoader = orgLoaderByKey(query, 'en')
             const expectedOrgs = await orgLoader.loadMany([
@@ -334,13 +329,14 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using last limit', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+              logger: { warn: jest.fn() },
+            })
 
             const orgLoader = orgLoaderByKey(query, 'en')
             const expectedOrgs = await orgLoader.loadMany([
@@ -351,10 +347,7 @@ describe('given the load organization connections by user id function', () => {
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
 
-            const connectionArgs = {
-              last: 1,
-            }
-            const orgs = await connectionLoader({ ...connectionArgs })
+            const orgs = await connectionLoader({ last: 1 })
 
             const expectedStructure = {
               edges: [
@@ -381,19 +374,16 @@ describe('given the load organization connections by user id function', () => {
       describe('given there are no domain connections to be returned', () => {
         it('returns no organization connections', async () => {
           await truncate()
-
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = orgLoaderConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'en',
+            language: 'en',
             i18n,
-          )
+            logger: { warn: jest.fn() },
+          })
 
-          const connectionArgs = {
-            first: 5,
-          }
-          const orgs = await connectionLoader({ ...connectionArgs })
+          const orgs = await connectionLoader({ first: 5 })
 
           const expectedStructure = {
             edges: [],
@@ -413,19 +403,18 @@ describe('given the load organization connections by user id function', () => {
     describe('given an unsuccessful load', () => {
       describe('limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const mock = jest.fn().mockImplementation((msg) => msg)
+          const connectionLoader = orgLoaderConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'en',
+            language: 'en',
             i18n,
-          )
+            logger: { error: mock, warn: mock },
+          })
 
-          const connectionArgs = {}
           try {
-            await connectionLoader({
-              ...connectionArgs,
-            })
+            await connectionLoader({})
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -434,20 +423,22 @@ describe('given the load organization connections by user id function', () => {
             )
           }
 
-          expect(consoleOutput).toEqual([
+          expect(mock).toHaveBeenCalledWith(
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
-          ])
+          )
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const mock = jest.fn().mockImplementation((msg) => msg)
+          const connectionLoader = orgLoaderConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'en',
+            language: 'en',
             i18n,
-          )
+            logger: { warn: mock, error: mock },
+          })
 
           const connectionArgs = {
             first: 1,
@@ -465,21 +456,23 @@ describe('given the load organization connections by user id function', () => {
             )
           }
 
-          expect(consoleOutput).toEqual([
+          expect(mock).toHaveBeenCalledWith(
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
-          ])
+          )
         })
       })
       describe('limits are below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const mock = jest.fn().mockImplementation((msg) => msg)
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+              logger: { error: mock, warn: mock },
+            })
 
             const connectionArgs = {
               first: -1,
@@ -496,20 +489,22 @@ describe('given the load organization connections by user id function', () => {
               )
             }
 
-            expect(consoleOutput).toEqual([
+            expect(mock).toHaveBeenCalledWith(
               `User: ${user._key} attempted to have \`first\` set below zero for: orgLoaderConnectionsByUserId.`,
-            ])
+            )
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const mock = jest.fn().mockImplementation((msg) => msg)
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+              logger: { warn: mock, error: mock },
+            })
 
             const connectionArgs = {
               last: -1,
@@ -526,22 +521,24 @@ describe('given the load organization connections by user id function', () => {
               )
             }
 
-            expect(consoleOutput).toEqual([
+            expect(mock).toHaveBeenCalledWith(
               `User: ${user._key} attempted to have \`last\` set below zero for: orgLoaderConnectionsByUserId.`,
-            ])
+            )
           })
         })
       })
       describe('limits are above maximum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const mock = jest.fn().mockImplementation((msg) => msg)
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+              logger: { error: mock, warn: mock },
+            })
 
             const connectionArgs = {
               first: 101,
@@ -558,20 +555,22 @@ describe('given the load organization connections by user id function', () => {
               )
             }
 
-            expect(consoleOutput).toEqual([
+            expect(mock).toHaveBeenCalledWith(
               `User: ${user._key} attempted to have \`first\` to 101 for: orgLoaderConnectionsByUserId.`,
-            ])
+            )
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const mock = jest.fn().mockImplementation((msg) => msg)
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+              logger: { error: mock, warn: mock },
+            })
 
             const connectionArgs = {
               last: 101,
@@ -588,9 +587,9 @@ describe('given the load organization connections by user id function', () => {
               )
             }
 
-            expect(consoleOutput).toEqual([
+            expect(mock).toHaveBeenCalledWith(
               `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionsByUserId.`,
-            ])
+            )
           })
         })
       })
@@ -600,13 +599,15 @@ describe('given the load organization connections by user id function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const mock = jest.fn().mockImplementation((msg) => msg)
+              const connectionLoader = orgLoaderConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'en',
+                language: 'en',
                 i18n,
-              )
+                logger: { warn: mock, error: mock },
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -623,11 +624,11 @@ describe('given the load organization connections by user id function', () => {
                   ),
                 )
               }
-              expect(consoleOutput).toEqual([
+              expect(mock).toHaveBeenCalledWith(
                 `User: ${
                   user._key
                 } attempted to have \`first\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
-              ])
+              )
             })
           })
         })
@@ -636,13 +637,16 @@ describe('given the load organization connections by user id function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const mock = jest.fn().mockImplementation((msg) => msg)
+
+              const connectionLoader = orgLoaderConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'en',
+                language: 'en',
                 i18n,
-              )
+                logger: { error: mock, warn: mock },
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -659,11 +663,11 @@ describe('given the load organization connections by user id function', () => {
                   ),
                 )
               }
-              expect(consoleOutput).toEqual([
+              expect(mock).toHaveBeenCalledWith(
                 `User: ${
                   user._key
                 } attempted to have \`last\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
-              ])
+              )
             })
           })
         })
@@ -672,19 +676,21 @@ describe('given the load organization connections by user id function', () => {
     describe('given a database error', () => {
       describe('while querying domains', () => {
         it('returns an error message', async () => {
+          const mock = jest.fn().mockImplementation((msg) => msg)
           const query = jest
             .fn()
             .mockRejectedValue(
               new Error('Unable to query organizations. Please try again.'),
             )
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = orgLoaderConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'en',
+            language: 'en',
             i18n,
-          )
+            logger: { error: mock },
+          })
 
           const connectionArgs = {
             first: 5,
@@ -699,9 +705,9 @@ describe('given the load organization connections by user id function', () => {
             )
           }
 
-          expect(consoleOutput).toEqual([
+          expect(mock).toHaveBeenCalledWith(
             `Database error occurred while user: ${user._key} was trying to query organizations in orgLoaderConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
-          ])
+          )
         })
       })
     })
@@ -713,15 +719,17 @@ describe('given the load organization connections by user id function', () => {
               throw new Error('Unable to load organizations. Please try again.')
             },
           }
+          const mock = jest.fn().mockImplementation((msg) => msg)
           const query = jest.fn().mockReturnValueOnce(cursor)
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = orgLoaderConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'en',
+            language: 'en',
             i18n,
-          )
+            logger: { error: mock },
+          })
 
           const connectionArgs = {
             first: 5,
@@ -736,9 +744,9 @@ describe('given the load organization connections by user id function', () => {
             )
           }
 
-          expect(consoleOutput).toEqual([
+          expect(mock).toHaveBeenCalledWith(
             `Cursor error occurred while user: ${user._key} was trying to gather organizations in orgLoaderConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
-          ])
+          )
         })
       })
     })
@@ -762,13 +770,14 @@ describe('given the load organization connections by user id function', () => {
       describe('given there are organization connections to be returned', () => {
         describe('using no cursor', () => {
           it('returns organizations', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+              logger: { warn: jest.fn() },
+            })
 
             const connectionArgs = {
               first: 5,
@@ -813,13 +822,14 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using after cursor', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+              logger: { warn: jest.fn() },
+            })
 
             const orgLoader = orgLoaderByKey(query, 'fr')
             const expectedOrgs = await orgLoader.loadMany([
@@ -859,13 +869,14 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using before cursor', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+              logger: { warn: jest.fn() },
+            })
 
             const orgLoader = orgLoaderByKey(query, 'fr')
             const expectedOrgs = await orgLoader.loadMany([
@@ -905,13 +916,14 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using first limit', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+              logger: jest.fn(),
+            })
 
             const orgLoader = orgLoaderByKey(query, 'fr')
             const expectedOrgs = await orgLoader.loadMany([
@@ -950,13 +962,14 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using last limit', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+              logger: jest.fn(),
+            })
 
             const orgLoader = orgLoaderByKey(query, 'fr')
             const expectedOrgs = await orgLoader.loadMany([
@@ -998,13 +1011,14 @@ describe('given the load organization connections by user id function', () => {
         it('returns no organization connections', async () => {
           await truncate()
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = orgLoaderConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'fr',
+            language: 'fr',
             i18n,
-          )
+            logger: jest.fn(),
+          })
 
           const connectionArgs = {
             first: 5,
@@ -1029,13 +1043,15 @@ describe('given the load organization connections by user id function', () => {
     describe('given an unsuccessful load', () => {
       describe('limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const mock = jest.fn().mockImplementation((msg) => msg)
+          const connectionLoader = orgLoaderConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'fr',
+            language: 'fr',
             i18n,
-          )
+            logger: { warn: mock },
+          })
 
           const connectionArgs = {}
           try {
@@ -1046,20 +1062,23 @@ describe('given the load organization connections by user id function', () => {
             expect(err).toEqual(new Error('todo'))
           }
 
-          expect(consoleOutput).toEqual([
+          expect(mock).toHaveBeenCalledWith(
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
-          ])
+          )
         })
       })
+
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const mock = jest.fn().mockImplementation((msg) => msg)
+          const connectionLoader = orgLoaderConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'fr',
+            language: 'fr',
             i18n,
-          )
+            logger: { warn: mock },
+          })
 
           const connectionArgs = {
             first: 1,
@@ -1073,21 +1092,23 @@ describe('given the load organization connections by user id function', () => {
             expect(err).toEqual(new Error('todo'))
           }
 
-          expect(consoleOutput).toEqual([
+          expect(mock).toHaveBeenCalledWith(
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
-          ])
+          )
         })
       })
       describe('limits are below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const mock = jest.fn().mockImplementation((msg) => msg)
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+              logger: { warn: mock },
+            })
 
             const connectionArgs = {
               first: -1,
@@ -1100,20 +1121,22 @@ describe('given the load organization connections by user id function', () => {
               expect(err).toEqual(new Error('todo'))
             }
 
-            expect(consoleOutput).toEqual([
+            expect(mock).toHaveBeenCalledWith(
               `User: ${user._key} attempted to have \`first\` set below zero for: orgLoaderConnectionsByUserId.`,
-            ])
+            )
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const mock = jest.fn().mockImplementation((msg) => msg)
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+              logger: { warn: mock },
+            })
 
             const connectionArgs = {
               last: -1,
@@ -1126,22 +1149,24 @@ describe('given the load organization connections by user id function', () => {
               expect(err).toEqual(new Error('todo'))
             }
 
-            expect(consoleOutput).toEqual([
+            expect(mock).toHaveBeenCalledWith(
               `User: ${user._key} attempted to have \`last\` set below zero for: orgLoaderConnectionsByUserId.`,
-            ])
+            )
           })
         })
       })
       describe('limits are above maximum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const mock = jest.fn().mockImplementation((msg) => msg)
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+              logger: { warn: mock },
+            })
 
             const connectionArgs = {
               first: 101,
@@ -1154,20 +1179,23 @@ describe('given the load organization connections by user id function', () => {
               expect(err).toEqual(new Error('todo'))
             }
 
-            expect(consoleOutput).toEqual([
+            expect(mock).toHaveBeenCalledWith(
               `User: ${user._key} attempted to have \`first\` to 101 for: orgLoaderConnectionsByUserId.`,
-            ])
+            )
           })
         })
+
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const mock = jest.fn().mockImplementation((msg) => msg)
+            const connectionLoader = orgLoaderConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+              logger: { warn: mock },
+            })
 
             const connectionArgs = {
               last: 101,
@@ -1180,25 +1208,28 @@ describe('given the load organization connections by user id function', () => {
               expect(err).toEqual(new Error('todo'))
             }
 
-            expect(consoleOutput).toEqual([
+            expect(mock).toHaveBeenCalledWith(
               `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionsByUserId.`,
-            ])
+            )
           })
         })
       })
+
       describe('limits are not set to numbers', () => {
         describe('first limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const mock = jest.fn().mockImplementation((msg) => msg)
+              const connectionLoader = orgLoaderConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'fr',
+                language: 'fr',
                 i18n,
-              )
+                logger: { warn: mock, error: mock },
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -1211,26 +1242,29 @@ describe('given the load organization connections by user id function', () => {
               } catch (err) {
                 expect(err).toEqual(new Error(`todo`))
               }
-              expect(consoleOutput).toEqual([
+              expect(mock).toHaveBeenCalledWith(
                 `User: ${
                   user._key
                 } attempted to have \`first\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
-              ])
+              )
             })
           })
         })
+
         describe('last limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const mock = jest.fn().mockImplementation((msg) => msg)
+              const connectionLoader = orgLoaderConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'fr',
+                language: 'fr',
                 i18n,
-              )
+                logger: { warn: mock, error: mock },
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -1243,11 +1277,12 @@ describe('given the load organization connections by user id function', () => {
               } catch (err) {
                 expect(err).toEqual(new Error(`todo`))
               }
-              expect(consoleOutput).toEqual([
+
+              expect(mock).toHaveBeenCalledWith(
                 `User: ${
                   user._key
                 } attempted to have \`last\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
-              ])
+              )
             })
           })
         })
@@ -1256,19 +1291,21 @@ describe('given the load organization connections by user id function', () => {
     describe('given a database error', () => {
       describe('while querying domains', () => {
         it('returns an error message', async () => {
+          const mock = jest.fn().mockImplementation((msg) => msg)
           const query = jest
             .fn()
             .mockRejectedValue(
               new Error('Unable to query organizations. Please try again.'),
             )
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = orgLoaderConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'fr',
+            language: 'fr',
             i18n,
-          )
+            logger: { error: mock, warn: mock },
+          })
 
           const connectionArgs = {
             first: 5,
@@ -1281,9 +1318,9 @@ describe('given the load organization connections by user id function', () => {
             expect(err).toEqual(new Error('todo'))
           }
 
-          expect(consoleOutput).toEqual([
+          expect(mock).toHaveBeenCalledWith(
             `Database error occurred while user: ${user._key} was trying to query organizations in orgLoaderConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
-          ])
+          )
         })
       })
     })
@@ -1295,15 +1332,17 @@ describe('given the load organization connections by user id function', () => {
               throw new Error('Unable to load organizations. Please try again.')
             },
           }
+          const mock = jest.fn().mockImplementation((msg) => msg)
           const query = jest.fn().mockReturnValueOnce(cursor)
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = orgLoaderConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'fr',
+            language: 'fr',
             i18n,
-          )
+            logger: { error: mock, warn: mock },
+          })
 
           const connectionArgs = {
             first: 5,
@@ -1316,9 +1355,9 @@ describe('given the load organization connections by user id function', () => {
             expect(err).toEqual(new Error('todo'))
           }
 
-          expect(consoleOutput).toEqual([
+          expect(mock).toHaveBeenCalledWith(
             `Cursor error occurred while user: ${user._key} was trying to gather organizations in orgLoaderConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
-          ])
+          )
         })
       })
     })

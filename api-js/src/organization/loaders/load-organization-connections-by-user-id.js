@@ -2,13 +2,14 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const orgLoaderConnectionsByUserId = (
+export const orgLoaderConnectionsByUserId = ({
   query,
   userKey,
   cleanseInput,
   language,
   i18n,
-) => async ({ after, before, first, last }) => {
+  logger,
+}) => async ({ after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -26,7 +27,7 @@ export const orgLoaderConnectionsByUserId = (
 
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
-    console.warn(
+    logger.warn(
       `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
     )
     throw new Error(
@@ -35,7 +36,7 @@ export const orgLoaderConnectionsByUserId = (
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
-    console.warn(
+    logger.warn(
       `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
     )
     throw new Error(
@@ -47,7 +48,7 @@ export const orgLoaderConnectionsByUserId = (
     /* istanbul ignore else */
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-      console.warn(
+      logger.warn(
         `User: ${userKey} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionsByUserId.`,
       )
       throw new Error(
@@ -58,7 +59,7 @@ export const orgLoaderConnectionsByUserId = (
     } else if (first > 100 || last > 100) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
-      console.warn(
+      logger.warn(
         `User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: orgLoaderConnectionsByUserId.`,
       )
       throw new Error(
@@ -74,7 +75,7 @@ export const orgLoaderConnectionsByUserId = (
   } else {
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
-    console.warn(
+    logger.warn(
       `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: orgLoaderConnectionsByUserId.`,
     )
     throw new Error(
@@ -111,7 +112,7 @@ export const orgLoaderConnectionsByUserId = (
         SORT org._key ${sortString} LIMIT 1
         RETURN org
     ) > 0 ? true : false)
-    
+
     LET hasPreviousPage = (LENGTH(
       FOR org IN organizations
         FILTER org._key IN orgKeys
@@ -119,18 +120,18 @@ export const orgLoaderConnectionsByUserId = (
         SORT org._key ${sortString} LIMIT 1
         RETURN org
     ) > 0 ? true : false)
-    
-    RETURN { 
+
+    RETURN {
       "organizations": retrievedOrgs,
       "totalCount": LENGTH(orgKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedOrgs)._key, 
-      "endKey": LAST(retrievedOrgs)._key 
+      "hasNextPage": hasNextPage,
+      "hasPreviousPage": hasPreviousPage,
+      "startKey": FIRST(retrievedOrgs)._key,
+      "endKey": LAST(retrievedOrgs)._key
     }
     `
   } catch (err) {
-    console.error(
+    logger.error(
       `Database error occurred while user: ${userKey} was trying to query organizations in orgLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to query organizations. Please try again.`))
@@ -140,7 +141,7 @@ export const orgLoaderConnectionsByUserId = (
   try {
     organizationInfo = await organizationInfoCursor.next()
   } catch (err) {
-    console.error(
+    logger.error(
       `Cursor error occurred while user: ${userKey} was trying to gather organizations in orgLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load organizations. Please try again.`))

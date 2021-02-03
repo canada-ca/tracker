@@ -16,6 +16,7 @@ export const findMyOrganizations = {
       userKey,
       auth: { userRequired },
       loaders: { orgLoaderConnectionsByUserId },
+      logger,
     },
   ) => {
     let orgConnections
@@ -25,7 +26,7 @@ export const findMyOrganizations = {
     try {
       orgConnections = await orgLoaderConnectionsByUserId(args)
     } catch (err) {
-      console.error(
+      logger.error(
         `Database error occurred while user: ${userKey} was trying to gather organization connections in findMyOrganizations.`,
       )
       throw new Error(
@@ -33,7 +34,7 @@ export const findMyOrganizations = {
       )
     }
 
-    console.info(`User ${userKey} successfully retrieved their organizations.`)
+    logger.info(`User ${userKey} successfully retrieved their organizations.`)
 
     return orgConnections
   },

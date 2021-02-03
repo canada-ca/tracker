@@ -40,17 +40,7 @@ describe('given findMyOrganizationsQuery', () => {
     ))
   })
 
-  const consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-
   beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    consoleOutput.length = 0
-
     user = await collections.users.save({
       displayName: 'Test Account',
       userName: 'test.account@istio.actually.exists',
@@ -146,6 +136,7 @@ describe('given findMyOrganizationsQuery', () => {
       describe('user queries for their organizations', () => {
         describe('in english', () => {
           it('returns organizations', async () => {
+            const mock = jest.fn().mockImplementation((msg) => msg)
             const response = await graphql(
               schema,
               `
@@ -187,13 +178,15 @@ describe('given findMyOrganizationsQuery', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
+                  orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId({
                     query,
-                    user._key,
+                    userKey: user._key,
                     cleanseInput,
-                    'en',
-                  ),
+                    language: 'en',
+                    logger: { warn: jest.fn(), info: jest.fn() },
+                  }),
                 },
+                logger: { info: mock, error: jest.fn() },
               },
             )
 
@@ -241,15 +234,16 @@ describe('given findMyOrganizationsQuery', () => {
               },
             }
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
+            expect(mock).toHaveBeenCalledWith(
               `User ${user._key} successfully retrieved their organizations.`,
-            ])
+            )
           })
         })
       })
     })
     describe('database error occurs', () => {
       it('returns an error message', async () => {
+        const mock = jest.fn().mockImplementation((msg) => msg)
         const mockedOrgLoaderConnectionsByUserId = jest
           .fn()
           .mockRejectedValueOnce(new Error('Database error occurred.'))
@@ -292,6 +286,7 @@ describe('given findMyOrganizationsQuery', () => {
             loaders: {
               orgLoaderConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
             },
+            logger: { error: mock },
           },
         )
 
@@ -300,9 +295,9 @@ describe('given findMyOrganizationsQuery', () => {
         ]
 
         expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
+        expect(mock).toHaveBeenCalledWith(
           `Database error occurred while user: ${user._key} was trying to gather organization connections in findMyOrganizations.`,
-        ])
+        )
       })
     })
   })
@@ -337,6 +332,7 @@ describe('given findMyOrganizationsQuery', () => {
       describe('user queries for their organizations', () => {
         describe('in french', () => {
           it('returns organizations', async () => {
+            const mock = jest.fn().mockImplementation((msg) => msg)
             const response = await graphql(
               schema,
               `
@@ -378,13 +374,15 @@ describe('given findMyOrganizationsQuery', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
+                  orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId({
                     query,
-                    user._key,
+                    userKey: user._key,
                     cleanseInput,
-                    'fr',
-                  ),
+                    language: 'fr',
+                    logger: { error: jest.fn(), info: jest.fn() },
+                  }),
                 },
+                logger: { error: jest.fn(), info: mock },
               },
             )
 
@@ -432,15 +430,17 @@ describe('given findMyOrganizationsQuery', () => {
               },
             }
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
+            expect(mock).toHaveBeenCalledWith(
               `User ${user._key} successfully retrieved their organizations.`,
-            ])
+            )
           })
         })
       })
     })
+
     describe('database error occurs', () => {
       it('returns an error message', async () => {
+        const mock = jest.fn().mockImplementation((msg) => msg)
         const mockedOrgLoaderConnectionsByUserId = jest
           .fn()
           .mockRejectedValueOnce(new Error('Database error occurred.'))
@@ -483,15 +483,16 @@ describe('given findMyOrganizationsQuery', () => {
             loaders: {
               orgLoaderConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
             },
+            logger: { error: mock },
           },
         )
 
         const error = [new GraphQLError('todo')]
 
         expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
+        expect(mock).toHaveBeenCalledWith(
           `Database error occurred while user: ${user._key} was trying to gather organization connections in findMyOrganizations.`,
-        ])
+        )
       })
     })
   })
