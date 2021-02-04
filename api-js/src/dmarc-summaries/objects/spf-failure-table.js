@@ -64,4 +64,11 @@ export const spfFailureTableType = new GraphQLObjectType({
 export const spfFailureConnection = connectionDefinitions({
   name: 'SpfFailureTable',
   nodeType: spfFailureTableType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of spf failures the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })

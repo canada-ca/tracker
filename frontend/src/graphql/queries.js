@@ -186,6 +186,11 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
+              implementation
+              enforced
+              hsts
+              hstsAge
+              preloaded
               guidanceTags(first: 5) {
                 edges {
                   cursor
@@ -277,6 +282,11 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
+              dmarcPhase
+              record
+              pPolicy
+              spPolicy
+              pct
               guidanceTags(first: 5) {
                 edges {
                   cursor
@@ -304,6 +314,9 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
+              lookups
+              record
+              spfDefault
               guidanceTags(first: 5) {
                 edges {
                   cursor

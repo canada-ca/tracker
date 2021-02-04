@@ -1,4 +1,5 @@
 const initializeSummaries = (
+  calculatePercentages,
   createSummaryEdge,
   createSummary,
   loadSummaryByDate,
@@ -17,6 +18,12 @@ const initializeSummaries = (
     }
 
     const currentSummary = await loadSummaryByDate({ domain, startDate })
+    const { totalMessages, percentages } = calculatePercentages(
+      currentSummary.categoryTotals,
+    )
+    
+    currentSummary.totalMessages = totalMessages
+    currentSummary.categoryPercentages = percentages
 
     const summaryDBInfo = await createSummary({ currentSummary })
 

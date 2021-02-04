@@ -69,4 +69,11 @@ export const dkimFailureTableType = new GraphQLObjectType({
 export const dkimFailureConnection = connectionDefinitions({
   name: 'DkimFailureTable',
   nodeType: dkimFailureTableType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dkim failure the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })

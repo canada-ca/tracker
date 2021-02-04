@@ -1,4 +1,5 @@
 const updateThirtyDays = (
+  calculatePercentages,
   createSummary,
   createSummaryEdge,
   loadSummaryByDate,
@@ -16,8 +17,15 @@ const updateThirtyDays = (
 
   const currentSummary = await loadSummaryByDate({
     domain,
-    startDate: 'thirtyDays',
+    startDate: 'thirty_days',
   })
+
+  const { totalMessages, percentages } = calculatePercentages(
+    currentSummary.categoryTotals,
+  )
+  
+  currentSummary.totalMessages = totalMessages
+  currentSummary.categoryPercentages = percentages
 
   const summaryDBInfo = await createSummary({ currentSummary })
 

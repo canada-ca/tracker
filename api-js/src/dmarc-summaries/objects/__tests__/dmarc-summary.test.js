@@ -11,6 +11,7 @@ import { dmarcSummaryType } from '../dmarc-summary'
 import { PeriodEnums } from '../../../enums'
 import { Year, Domain } from '../../../scalars'
 import { domainLoaderByKey } from '../../../domain/loaders'
+import { dmarcSumLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -61,8 +62,42 @@ describe('testing the period gql object', () => {
       expect(demoType.detailTables.type).toMatchObject(detailTablesType)
     })
   })
-
   describe('testing the field resolvers', () => {
+    let query, drop, truncate, migrate, collections, domain, dmarcSummary
+
+    beforeAll(async () => {
+      ;({ migrate } = await ArangoTools({ rootPass, url }))
+      ;({ query, drop, truncate, collections } = await migrate(
+        makeMigrations({
+          databaseName: dbNameFromFile(__filename),
+          rootPass,
+        }),
+      ))
+    })
+
+    beforeEach(async () => {
+      domain = await collections.domains.save({
+        domain: 'test.domain.gc.ca',
+      })
+
+      dmarcSummary = await collections.dmarcSummaries.save({
+        categoryTotals: {
+          pass: 0,
+          fail: 63,
+          passDkimOnly: 0,
+          passSpfOnly: 1834,
+        },
+      })
+    })
+
+    afterEach(async () => {
+      await truncate()
+    })
+
+    afterAll(async () => {
+      await drop()
+    })
+
     describe('testing the id resolver', () => {
       const demoType = dmarcSummaryType.getFields()
 
@@ -71,27 +106,6 @@ describe('testing the period gql object', () => {
       )
     })
     describe('testing the domain resolver', () => {
-      let query, drop, truncate, migrate, collections, domain
-
-      beforeAll(async () => {
-        ;({ migrate } = await ArangoTools({ rootPass, url }))
-        ;({ query, drop, truncate, collections } = await migrate(
-          makeMigrations({
-            databaseName: dbNameFromFile(__filename),
-            rootPass,
-          }),
-        ))
-
-        domain = await collections.domains.save({
-          domain: 'test.domain.gc.ca',
-        })
-      })
-
-      afterAll(async () => {
-        await truncate()
-        await drop()
-      })
-
       it('returns the resolved field', async () => {
         const demoType = dmarcSummaryType.getFields()
 
@@ -107,90 +121,124 @@ describe('testing the period gql object', () => {
       })
     })
     describe('testing the month resolver', () => {
-      it('returns the resolved value', () => {
-        const demoType = dmarcSummaryType.getFields()
+      describe('startDate is set to thirty days', () => {
+        let mockedMoment
+        beforeEach(() => {
+          mockedMoment = jest.fn().mockReturnValue({
+            month() {
+              return {
+                format() {
+                  return 'january'
+                },
+              }
+            },
+          })
+        })
+        it('returns the resolved value', () => {
+          const demoType = dmarcSummaryType.getFields()
 
-        expect(demoType.month.resolve({ selectedMonth: 'january' })).toEqual(
-          'january',
-        )
+          expect(
+            demoType.month.resolve(
+              { startDate: 'thirtyDays' },
+              {},
+              { moment: mockedMoment },
+            ),
+          ).toEqual('january')
+        })
+      })
+      describe('startDate is not set to thirty days', () => {
+        it('returns the resolved value', () => {
+          const demoType = dmarcSummaryType.getFields()
+
+          expect(
+            demoType.month.resolve({ startDate: '2021-01-01' }, {}, { moment }),
+          ).toEqual('january')
+        })
       })
     })
     describe('testing the year resolver', () => {
-      it('returns the resolved value', () => {
-        const demoType = dmarcSummaryType.getFields()
+      describe('start date is set to thirty days', () => {
+        let mockedMoment
+        beforeEach(() => {
+          mockedMoment = jest.fn().mockReturnValue({
+            year() {
+              return '2020'
+            },
+          })
+        })
+        it('returns the resolved value', () => {
+          const demoType = dmarcSummaryType.getFields()
 
-        expect(
-          demoType.year.resolve({ startDate: '2020-01-01' }, {}, { moment }),
-        ).toEqual('2020')
+          expect(
+            demoType.year.resolve(
+              { startDate: '2020-01-01' },
+              {},
+              { moment: mockedMoment },
+            ),
+          ).toEqual('2020')
+        })
+      })
+      describe('start date is not set to thirty days', () => {
+        it('returns the resolved value', () => {
+          const demoType = dmarcSummaryType.getFields()
+
+          expect(
+            demoType.year.resolve({ startDate: '2020-01-01' }, {}, { moment }),
+          ).toEqual('2020')
+        })
       })
     })
     describe('testing the categoryPercentages resolver', () => {
-      it('returns the resolved value', () => {
+      it('returns the resolved value', async () => {
         const demoType = dmarcSummaryType.getFields()
-
-        const categoryTotals = {
-          pass: 0,
-          'pass-spf-only': 1834,
-          'pass-dkim-only': 0,
-          fail: 63,
-        }
 
         const expectedResult = {
           pass: 0,
-          'pass-spf-only': 1834,
-          'pass-dkim-only': 0,
           fail: 63,
+          passDkimOnly: 0,
+          passSpfOnly: 1834,
         }
 
-        expect(
-          demoType.categoryPercentages.resolve({ categoryTotals }),
-        ).toEqual(expectedResult)
+        await expect(
+          demoType.categoryPercentages.resolve(
+            { _to: dmarcSummary._id },
+            {},
+            { loaders: { dmarcSumLoaderByKey: dmarcSumLoaderByKey(query) } },
+          ),
+        ).resolves.toEqual(expectedResult)
       })
     })
     describe('testing the categoryTotals resolver', () => {
-      it('returns the resolved value', () => {
+      it('returns the resolved value', async () => {
         const demoType = dmarcSummaryType.getFields()
-
-        const categoryTotals = {
-          pass: 0,
-          'pass-spf-only': 1834,
-          'pass-dkim-only': 0,
-          fail: 63,
-        }
 
         const expectedResult = {
           pass: 0,
-          'pass-spf-only': 1834,
-          'pass-dkim-only': 0,
           fail: 63,
+          passDkimOnly: 0,
+          passSpfOnly: 1834,
         }
 
-        expect(demoType.categoryTotals.resolve({ categoryTotals })).toEqual(
-          expectedResult,
-        )
+        await expect(
+          demoType.categoryTotals.resolve(
+            { _to: dmarcSummary._id },
+            {},
+            { loaders: { dmarcSumLoaderByKey: dmarcSumLoaderByKey(query) } },
+          ),
+        ).resolves.toEqual(expectedResult)
       })
     })
     describe('testing the detailTables resolver', () => {
       it('returns the resolved value', () => {
         const demoType = dmarcSummaryType.getFields()
 
-        const detailTables = {
-          dkimFailure: {},
-          dmarcFailure: {},
-          fullPass: {},
-          spfFailure: {},
+        const data = {
+          _to: 'domains/1',
         }
 
-        const expectedResult = {
-          dkimFailure: {},
-          dmarcFailure: {},
-          fullPass: {},
-          spfFailure: {},
-        }
-
-        expect(demoType.detailTables.resolve({ detailTables })).toEqual(
-          expectedResult,
-        )
+        expect(demoType.detailTables.resolve(data)).toEqual({
+          _to: 'domains/1',
+        })
       })
     })
   })

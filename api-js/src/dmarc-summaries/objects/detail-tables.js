@@ -15,25 +15,69 @@ export const detailTablesType = new GraphQLObjectType({
       description: 'List of senders that are failing DKIM checks.',
       args: connectionArgs,
       type: dkimFailureConnection.connectionType,
-      resolve: ({ dkimFailure }) => dkimFailure,
+      resolve: async (
+        { _to },
+        args,
+        { loaders: { dkimFailureLoaderConnectionsBySumId } },
+      ) => {
+        const dkimFailures = await dkimFailureLoaderConnectionsBySumId({
+          summaryId: _to,
+          ...args,
+        })
+
+        return dkimFailures
+      },
     },
     dmarcFailure: {
       description: 'List of senders that are failing DMARC checks.',
       args: connectionArgs,
       type: dmarcFailureConnection.connectionType,
-      resolve: ({ dmarcFailure }) => dmarcFailure,
+      resolve: async (
+        { _to },
+        args,
+        { loaders: { dmarcFailureLoaderConnectionsBySumId } },
+      ) => {
+        const dmarcFailures = await dmarcFailureLoaderConnectionsBySumId({
+          summaryId: _to,
+          ...args,
+        })
+
+        return dmarcFailures
+      },
     },
     fullPass: {
       description: 'List of senders that are passing all checks.',
       args: connectionArgs,
       type: fullPassConnection.connectionType,
-      resolve: ({ fullPass }) => fullPass,
+      resolve: async (
+        { _to },
+        args,
+        { loaders: { fullPassLoaderConnectionsBySumId } },
+      ) => {
+        const fullPasses = await fullPassLoaderConnectionsBySumId({
+          summaryId: _to,
+          ...args,
+        })
+
+        return fullPasses
+      },
     },
     spfFailure: {
       description: 'List of senders that are failing SPF checks.',
       args: connectionArgs,
       type: spfFailureConnection.connectionType,
-      resolve: ({ spfFailure }) => spfFailure,
+      resolve: async (
+        { _to },
+        args,
+        { loaders: { spfFailureLoaderConnectionsBySumId } },
+      ) => {
+        const spfFailures = await spfFailureLoaderConnectionsBySumId({
+          summaryId: _to,
+          ...args,
+        })
+
+        return spfFailures
+      },
     },
   }),
 })

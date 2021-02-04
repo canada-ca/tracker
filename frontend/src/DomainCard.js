@@ -26,124 +26,146 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
 
   return (
     <ListItem {...rest}>
-      <PseudoBox
-        width="100%"
-        display={{ md: 'flex' }}
-        alignItems="center"
-        onClick={() => {
-          history.push(`/domains/${url}`)
-        }}
-        _hover={{ bg: 'gray.100' }}
-        p="8"
-        as="button"
-      >
-        <Box flexShrink="0" w={['100%', '40%']} textAlign="left">
-          <Text fontWeight="semibold">
-            <Trans>Domain:</Trans>
-          </Text>
-          <Text isTruncated>{url}</Text>
-        </Box>
-        <Divider orientation={['horizontal', 'vertical']} />
-        <Box flexShrink="0" w={['100%', '15%']} textAlign="left">
-          {lastRan ? (
-            <Box>
-              <Text fontWeight="bold">
-                <Trans>Last scanned:</Trans>
-              </Text>
-              {lastRan.substring(0, 16)}
-            </Box>
-          ) : (
-            <Text fontWeight="bold" fontSize="sm">
-              <Trans>Not scanned yet.</Trans>
+      <Stack isInline>
+        <PseudoBox
+          width="100%"
+          display={{ md: 'flex' }}
+          alignItems="center"
+          onClick={() => {
+            history.push(`/domains/${url}`)
+          }}
+          _hover={{ bg: 'gray.100' }}
+          p="8"
+          as="button"
+          role="link"
+        >
+          <Box flexShrink="0" w={['100%', '40%']} textAlign="left">
+            <Text fontWeight="semibold">
+              <Trans>Domain:</Trans>
             </Text>
-          )}
-        </Box>
-        <Divider orientation={['horizontal', 'vertical']} />
-        {lastRan && (
-          <Box justifyContent="space-between" display={{ md: 'flex' }}>
-            <Box
-              flexShrink="0"
-              ml={{ md: 2 }}
-              mr={{ md: 2 }}
-              w={['100%', '7%']}
-            >
-              <Stack
-                align={['right', 'center']}
-                flexDirection={['row', 'column']}
-              >
-                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-                  HTTPS:
-                </Text>
-                {generateStatusIcon(status.https)}
-              </Stack>
-            </Box>
-            <Box
-              flexShrink="0"
-              ml={{ md: 2 }}
-              mr={{ md: 2 }}
-              w={['100%', '7%']}
-            >
-              <Stack
-                align={['right', 'center']}
-                flexDirection={['row', 'column']}
-              >
-                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-                  SSL:
-                </Text>
-                {generateStatusIcon(status.ssl)}
-              </Stack>
-            </Box>
-            <Box
-              flexShrink="0"
-              ml={{ md: 2 }}
-              mr={{ md: 2 }}
-              w={['100%', '7%']}
-            >
-              <Stack
-                align={['right', 'center']}
-                flexDirection={['row', 'column']}
-              >
-                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-                  SPF:
-                </Text>
-                {generateStatusIcon(status.spf)}
-              </Stack>
-            </Box>
-            <Box
-              flexShrink="0"
-              ml={{ md: 2 }}
-              mr={{ md: 2 }}
-              w={['100%', '7%']}
-            >
-              <Stack
-                align={['right', 'center']}
-                flexDirection={['row', 'column']}
-              >
-                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-                  DKIM:
-                </Text>
-                {generateStatusIcon(status.dkim)}
-              </Stack>
-            </Box>
-            <Box
-              flexShrink="0"
-              ml={{ md: 2 }}
-              mr={{ md: 2 }}
-              w={['100%', '7%']}
-            >
-              <Stack
-                align={['right', 'center']}
-                flexDirection={['row', 'column']}
-              >
-                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
-                  DMARC:
-                </Text>
-                {generateStatusIcon(status.dmarc)}
-              </Stack>
-            </Box>
+            <Text isTruncated>{url}</Text>
           </Box>
-        )}
-      </PseudoBox>
+          <Divider orientation={['horizontal', 'vertical']} />
+          <Box flexShrink="0" w={['100%', '15%']} textAlign="left">
+            {lastRan ? (
+              <Box>
+                <Text fontWeight="bold">
+                  <Trans>Last scanned:</Trans>
+                </Text>
+                {lastRan.substring(0, 16)}
+              </Box>
+            ) : (
+              <Text fontWeight="bold" fontSize="sm">
+                <Trans>Not scanned yet.</Trans>
+              </Text>
+            )}
+          </Box>
+          <Divider orientation={['horizontal', 'vertical']} />
+          {lastRan && (
+            <Box justifyContent="space-between" display={{ md: 'flex' }}>
+              <Box
+                flexShrink="0"
+                ml={{ md: 2 }}
+                mr={{ md: 2 }}
+                w={['100%', '7%']}
+              >
+                <Stack
+                  align={['right', 'center']}
+                  flexDirection={['row', 'column']}
+                >
+                  <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                    HTTPS:
+                  </Text>
+                  {generateStatusIcon(status.https)}
+                </Stack>
+              </Box>
+              <Box
+                flexShrink="0"
+                ml={{ md: 2 }}
+                mr={{ md: 2 }}
+                w={['100%', '7%']}
+              >
+                <Stack
+                  align={['right', 'center']}
+                  flexDirection={['row', 'column']}
+                >
+                  <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                    SSL:
+                  </Text>
+                  {generateStatusIcon(status.ssl)}
+                </Stack>
+              </Box>
+              <Box
+                flexShrink="0"
+                ml={{ md: 2 }}
+                mr={{ md: 2 }}
+                w={['100%', '7%']}
+              >
+                <Stack
+                  align={['right', 'center']}
+                  flexDirection={['row', 'column']}
+                >
+                  <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                    SPF:
+                  </Text>
+                  {generateStatusIcon(status.spf)}
+                </Stack>
+              </Box>
+              <Box
+                flexShrink="0"
+                ml={{ md: 2 }}
+                mr={{ md: 2 }}
+                w={['100%', '7%']}
+              >
+                <Stack
+                  align={['right', 'center']}
+                  flexDirection={['row', 'column']}
+                >
+                  <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                    DKIM:
+                  </Text>
+                  {generateStatusIcon(status.dkim)}
+                </Stack>
+              </Box>
+              <Box
+                flexShrink="0"
+                ml={{ md: 2 }}
+                mr={{ md: 2 }}
+                w={['100%', '7%']}
+              >
+                <Stack
+                  align={['right', 'center']}
+                  flexDirection={['row', 'column']}
+                >
+                  <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                    DMARC:
+                  </Text>
+                  {generateStatusIcon(status.dmarc)}
+                </Stack>
+              </Box>
+            </Box>
+          )}
+        </PseudoBox>
+        <PseudoBox
+          width="fit-content"
+          display={{ md: 'flex' }}
+          alignItems="center"
+          onClick={() => {
+            history.push(
+              `/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`,
+            )
+          }}
+          _hover={{ bg: 'gray.100', p: { textDecoration: 'underline' } }}
+          p="8"
+          as="button"
+          role="link"
+          color="teal.400"
+        >
+          <Text whiteSpace="noWrap">
+            <Trans>DMARC Report</Trans> <Icon name="link" ml="4px" />
+          </Text>
+        </PseudoBox>
+      </Stack>
     </ListItem>
   )
 }

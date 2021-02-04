@@ -1,10 +1,103 @@
+import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { toGlobalId } from 'graphql-relay'
+
+import { makeMigrations } from '../../../../migrations'
+import {
+  dkimFailureLoaderConnectionsBySumId,
+  dmarcFailureLoaderConnectionsBySumId,
+  fullPassLoaderConnectionsBySumId,
+  spfFailureLoaderConnectionsBySumId,
+} from '../../loaders'
 import { detailTablesType } from '../detail-tables'
 import { dkimFailureConnection } from '../dkim-failure-table'
 import { dmarcFailureConnection } from '../dmarc-failure-table'
 import { fullPassConnection } from '../full-pass-table'
 import { spfFailureConnection } from '../spf-failure-table'
 
+const { DB_PASS: rootPass, DB_URL: url } = process.env
+
 describe('testing the detailTables gql object', () => {
+  let query, drop, truncate, migrate, collections, dmarcSummary
+
+  beforeAll(async () => {
+    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ query, drop, truncate, collections } = await migrate(
+      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+    ))
+  })
+
+  beforeEach(async () => {
+    dmarcSummary = await collections.dmarcSummaries.save({
+      categoryTotals: {},
+      detailTables: {
+        dkimFailure: [
+          {
+            id: '1',
+            dkimAligned: false,
+            dkimDomains: 'dkimDomains',
+            dkimResults: 'dkimResults',
+            dkimSelectors: 'dkimSelectors',
+            dnsHost: 'dnsHost',
+            envelopeFrom: 'envelopeFrom',
+            guidance: 'guidance',
+            headerFrom: 'headerFrom',
+            sourceIpAddress: 'sourceIpAddress',
+            totalMessages: 1000,
+          },
+        ],
+        dmarcFailure: [
+          {
+            id: '1',
+            dkimDomains: 'dkimDomains',
+            dkimSelectors: 'dkimSelectors',
+            disposition: 'disposition',
+            dnsHost: 'dnsHost',
+            envelopeFrom: 'envelopeFrom',
+            headerFrom: 'headerFrom',
+            sourceIpAddress: 'sourceIpAddress',
+            spfDomains: 'spfDomains',
+            totalMessages: 1000,
+          },
+        ],
+        fullPass: [
+          {
+            id: '1',
+            dkimDomains: 'dkimDomains',
+            dkimSelectors: 'dkimSelectors',
+            dnsHost: 'dnsHost',
+            envelopeFrom: 'envelopeFrom',
+            headerFrom: 'headerFrom',
+            sourceIpAddress: 'sourceIpAddress',
+            spfDomains: 'spfDomains',
+            totalMessages: 1000,
+          },
+        ],
+        spfFailure: [
+          {
+            id: '1',
+            dnsHost: 'dnsHost',
+            envelopeFrom: 'envelopeFrom',
+            guidance: 'guidance',
+            headerFrom: 'headerFrom',
+            sourceIpAddress: 'sourceIpAddress',
+            spfAligned: true,
+            spfDomains: 'spfDomains',
+            spfResults: 'spfResults',
+            totalMessages: 1000,
+          },
+        ],
+      },
+    })
+  })
+
+  afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
+    await drop()
+  })
+
   describe('testing the field definitions', () => {
     it('has a dkimFailure field', () => {
       const demoType = detailTablesType.getFields()
@@ -39,143 +132,193 @@ describe('testing the detailTables gql object', () => {
       )
     })
   })
-  describe('testing teh field resolvers', () => {
+  describe('testing the field resolvers', () => {
     describe('testing the dkimFailure resolver', () => {
-      it('returns the resolved value', () => {
+      it('returns the resolved value', async () => {
         const demoType = detailTablesType.getFields()
 
-        const dkimFailure = {
-          id: '1',
-          dkimAligned: false,
-          dkimDomains: 'dkimDomains',
-          dkimResults: 'dkimResults',
-          dkimSelectors: 'dkimSelectors',
-          dnsHost: 'dnsHost',
-          envelopeFrom: 'envelopeFrom',
-          guidance: 'guidance',
-          headerFrom: 'headerFrom',
-          sourceIpAddress: 'sourceIpAddress',
-          totalMessages: 1000,
-        }
-
         const expectedResult = {
-          id: '1',
-          dkimAligned: false,
-          dkimDomains: 'dkimDomains',
-          dkimResults: 'dkimResults',
-          dkimSelectors: 'dkimSelectors',
-          dnsHost: 'dnsHost',
-          envelopeFrom: 'envelopeFrom',
-          guidance: 'guidance',
-          headerFrom: 'headerFrom',
-          sourceIpAddress: 'sourceIpAddress',
-          totalMessages: 1000,
+          edges: [
+            {
+              cursor: toGlobalId('dkimFail', 1),
+              node: {
+                id: '1',
+                dkimAligned: false,
+                dkimDomains: 'dkimDomains',
+                dkimResults: 'dkimResults',
+                dkimSelectors: 'dkimSelectors',
+                dnsHost: 'dnsHost',
+                envelopeFrom: 'envelopeFrom',
+                guidance: 'guidance',
+                headerFrom: 'headerFrom',
+                sourceIpAddress: 'sourceIpAddress',
+                totalMessages: 1000,
+                type: 'dkimFail',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('dkimFail', 1),
+            endCursor: toGlobalId('dkimFail', 1),
+          },
         }
 
-        expect(demoType.dkimFailure.resolve({ dkimFailure })).toEqual(
-          expectedResult,
-        )
+        await expect(
+          demoType.dkimFailure.resolve(
+            { _to: dmarcSummary._id },
+            { first: 1 },
+            {
+              loaders: {
+                dkimFailureLoaderConnectionsBySumId: dkimFailureLoaderConnectionsBySumId(
+                  query,
+                ),
+              },
+            },
+          ),
+        ).resolves.toEqual(expectedResult)
       })
     })
     describe('testing the dmarcFailure resolver', () => {
-      it('returns the resolved value', () => {
+      it('returns the resolved value', async () => {
         const demoType = detailTablesType.getFields()
 
-        const dmarcFailure = {
-          id: '1',
-          dkimDomains: 'dkimDomains',
-          dkimSelectors: 'dkimSelectors',
-          disposition: 'disposition',
-          dnsHost: 'dnsHost',
-          envelopeFrom: 'envelopeFrom',
-          headerFrom: 'headerFrom',
-          sourceIpAddress: 'sourceIpAddress',
-          spfDomains: 'spfDomains',
-          totalMessages: 1000,
-        }
-
         const expectedResult = {
-          id: '1',
-          dkimDomains: 'dkimDomains',
-          dkimSelectors: 'dkimSelectors',
-          disposition: 'disposition',
-          dnsHost: 'dnsHost',
-          envelopeFrom: 'envelopeFrom',
-          headerFrom: 'headerFrom',
-          sourceIpAddress: 'sourceIpAddress',
-          spfDomains: 'spfDomains',
-          totalMessages: 1000,
+          edges: [
+            {
+              cursor: toGlobalId('dmarcFail', 1),
+              node: {
+                id: '1',
+                dkimDomains: 'dkimDomains',
+                dkimSelectors: 'dkimSelectors',
+                disposition: 'disposition',
+                dnsHost: 'dnsHost',
+                envelopeFrom: 'envelopeFrom',
+                headerFrom: 'headerFrom',
+                sourceIpAddress: 'sourceIpAddress',
+                spfDomains: 'spfDomains',
+                totalMessages: 1000,
+                type: 'dmarcFail',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('dmarcFail', 1),
+            endCursor: toGlobalId('dmarcFail', 1),
+          },
         }
 
-        expect(demoType.dmarcFailure.resolve({ dmarcFailure })).toEqual(
-          expectedResult,
-        )
+        await expect(
+          demoType.dmarcFailure.resolve(
+            { _to: dmarcSummary._id },
+            { first: 1 },
+            {
+              loaders: {
+                dmarcFailureLoaderConnectionsBySumId: dmarcFailureLoaderConnectionsBySumId(
+                  query,
+                ),
+              },
+            },
+          ),
+        ).resolves.toEqual(expectedResult)
       })
     })
     describe('testing the fullPass resolver', () => {
-      it('returns the resolved value', () => {
+      it('returns the resolved value', async () => {
         const demoType = detailTablesType.getFields()
 
-        const fullPass = {
-          id: '1',
-          dkimDomains: 'dkimDomains',
-          dkimSelectors: 'dkimSelectors',
-          dnsHost: 'dnsHost',
-          envelopeFrom: 'envelopeFrom',
-          headerFrom: 'headerFrom',
-          sourceIpAddress: 'sourceIpAddress',
-          spfDomains: 'spfDomains',
-          totalMessages: 1000,
-        }
-
         const expectedResult = {
-          id: '1',
-          dkimDomains: 'dkimDomains',
-          dkimSelectors: 'dkimSelectors',
-          dnsHost: 'dnsHost',
-          envelopeFrom: 'envelopeFrom',
-          headerFrom: 'headerFrom',
-          sourceIpAddress: 'sourceIpAddress',
-          spfDomains: 'spfDomains',
-          totalMessages: 1000,
+          edges: [
+            {
+              cursor: toGlobalId('fullPass', 1),
+              node: {
+                id: '1',
+                dkimDomains: 'dkimDomains',
+                dkimSelectors: 'dkimSelectors',
+                dnsHost: 'dnsHost',
+                envelopeFrom: 'envelopeFrom',
+                headerFrom: 'headerFrom',
+                sourceIpAddress: 'sourceIpAddress',
+                spfDomains: 'spfDomains',
+                totalMessages: 1000,
+                type: 'fullPass',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('fullPass', 1),
+            endCursor: toGlobalId('fullPass', 1),
+          },
         }
 
-        expect(demoType.fullPass.resolve({ fullPass })).toEqual(expectedResult)
+        await expect(
+          demoType.fullPass.resolve(
+            { _to: dmarcSummary._id },
+            { first: 1 },
+            {
+              loaders: {
+                fullPassLoaderConnectionsBySumId: fullPassLoaderConnectionsBySumId(
+                  query,
+                ),
+              },
+            },
+          ),
+        ).resolves.toEqual(expectedResult)
       })
     })
     describe('testing the spfFailure field', () => {
-      it('returns the resolved value', () => {
+      it('returns the resolved value', async () => {
         const demoType = detailTablesType.getFields()
 
-        const spfFailure = {
-          id: '1',
-          dnsHost: 'dnsHost',
-          envelopeFrom: 'envelopeFrom',
-          guidance: 'guidance',
-          headerFrom: 'headerFrom',
-          sourceIpAddress: 'sourceIpAddress',
-          spfAligned: true,
-          spfDomains: 'spfDomains',
-          spfResults: 'spfResults',
-          totalMessages: 1000,
-        }
-
         const expectedResult = {
-          id: '1',
-          dnsHost: 'dnsHost',
-          envelopeFrom: 'envelopeFrom',
-          guidance: 'guidance',
-          headerFrom: 'headerFrom',
-          sourceIpAddress: 'sourceIpAddress',
-          spfAligned: true,
-          spfDomains: 'spfDomains',
-          spfResults: 'spfResults',
-          totalMessages: 1000,
+          edges: [
+            {
+              cursor: toGlobalId('spfFail', 1),
+              node: {
+                id: '1',
+                dnsHost: 'dnsHost',
+                envelopeFrom: 'envelopeFrom',
+                guidance: 'guidance',
+                headerFrom: 'headerFrom',
+                sourceIpAddress: 'sourceIpAddress',
+                spfAligned: true,
+                spfDomains: 'spfDomains',
+                spfResults: 'spfResults',
+                totalMessages: 1000,
+                type: 'spfFail',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('spfFail', 1),
+            endCursor: toGlobalId('spfFail', 1),
+          },
         }
 
-        expect(demoType.spfFailure.resolve({ spfFailure })).toEqual(
-          expectedResult,
-        )
+        await expect(
+          demoType.spfFailure.resolve(
+            { _to: dmarcSummary._id },
+            { first: 1 },
+            {
+              loaders: {
+                spfFailureLoaderConnectionsBySumId: spfFailureLoaderConnectionsBySumId(
+                  query,
+                ),
+              },
+            },
+          ),
+        ).resolves.toEqual(expectedResult)
       })
     })
   })

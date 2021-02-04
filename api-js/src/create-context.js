@@ -36,6 +36,17 @@ import {
   dmarcReportLoader,
 } from './dmarc-report/loaders'
 import {
+  dkimFailureLoaderConnectionsBySumId,
+  dmarcFailureLoaderConnectionsBySumId,
+  dmarcSumLoaderConnectionsByUserId,
+  dmarcSummaryEdgeLoaderByDomainIdPeriod,
+  dmarcSumLoaderByKey,
+  fullPassLoaderConnectionsBySumId,
+  spfFailureLoaderConnectionsBySumId,
+  loadStartDateFromPeriod,
+  dmarcYearlySumEdgeLoader,
+} from './dmarc-summaries/loaders'
+import {
   domainLoaderByKey,
   domainLoaderByDomain,
   domainLoaderConnectionsByOrgId,
@@ -155,6 +166,44 @@ export const createContext = ({ context, req: request, res: response }) => {
         fetch,
         i18n,
       }),
+      dkimFailureLoaderConnectionsBySumId: dkimFailureLoaderConnectionsBySumId(
+        query,
+        userKey,
+        cleanseInput,
+        i18n,
+      ),
+      dmarcFailureLoaderConnectionsBySumId: dmarcFailureLoaderConnectionsBySumId(
+        query,
+        userKey,
+        cleanseInput,
+        i18n,
+      ),
+      dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
+        query,
+        userKey,
+        cleanseInput,
+        i18n,
+      ),
+      dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
+        query,
+        userKey,
+        i18n,
+      ),
+      dmarcSumLoaderByKey: dmarcSumLoaderByKey(query, userKey, i18n),
+      fullPassLoaderConnectionsBySumId: fullPassLoaderConnectionsBySumId(
+        query,
+        userKey,
+        cleanseInput,
+        i18n,
+      ),
+      spfFailureLoaderConnectionsBySumId: spfFailureLoaderConnectionsBySumId(
+        query,
+        userKey,
+        cleanseInput,
+        i18n,
+      ),
+      loadStartDateFromPeriod: loadStartDateFromPeriod(moment, userKey, i18n),
+      dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(query, userKey, i18n),
       domainLoaderByDomain: domainLoaderByDomain(query, userKey, i18n),
       domainLoaderByKey: domainLoaderByKey(query, userKey, i18n),
       domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(

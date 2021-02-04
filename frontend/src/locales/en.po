@@ -66,7 +66,7 @@ msgid "A.5.3 Rotate DKIM Keys"
 msgstr "A.5.3 Rotate DKIM Keys"
 
 #: src/UserList.js:215
-#: src/UserList.js:274
+#: src/UserList.js:273
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -102,7 +102,7 @@ msgstr "Accepted cipher list contains 3DES symmetric-key block cipher, as prohib
 msgid "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
 msgstr "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
 
-#: src/CreateUserPage.js:69
+#: src/CreateUserPage.js:72
 msgid "Account created."
 msgstr "Account created."
 
@@ -154,13 +154,13 @@ msgstr "An error occurred while updating your phone number."
 #: src/AdminDomains.js:132
 #: src/AdminDomains.js:163
 #: src/AdminDomains.js:213
-#: src/TwoFactorAuthenticatePage.js:31
+#: src/TwoFactorAuthenticatePage.js:34
 #: src/UserList.js:85
 #: src/UserList.js:157
 msgid "An error occurred."
 msgstr "An error occurred."
 
-#: src/UserList.js:287
+#: src/UserList.js:286
 msgid "Apply"
 msgstr "Apply"
 
@@ -196,7 +196,7 @@ msgstr "B.2.2 Cryptographic Considerations"
 msgid "B.3.1 DMARC Records"
 msgstr "B.3.1 DMARC Records"
 
-#: src/CreateUserPage.js:150
+#: src/CreateUserPage.js:153
 #: src/ForgotPasswordPage.js:96
 #: src/QRcodePage.js:66
 msgid "Back"
@@ -273,10 +273,10 @@ msgstr "Compliant TLS"
 
 #: src/AdminDomains.js:371
 #: src/AdminDomains.js:414
-#: src/EditableUserDisplayName.js:152
-#: src/EditableUserEmail.js:152
+#: src/EditableUserDisplayName.js:150
+#: src/EditableUserEmail.js:150
 #: src/EditableUserPassword.js:171
-#: src/EditableUserPhoneNumber.js:157
+#: src/EditableUserPhoneNumber.js:155
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -300,16 +300,16 @@ msgstr "Confirm removal of domain:"
 msgid "Contact 3rd party"
 msgstr "Contact 3rd party"
 
-#: src/CreateUserPage.js:139
-#: src/SignInPage.js:144
+#: src/CreateUserPage.js:142
+#: src/SignInPage.js:153
 msgid "Create Account"
 msgstr "Create Account"
 
-#: src/CreateUserPage.js:117
+#: src/CreateUserPage.js:120
 msgid "Create an account by entering an email and password."
 msgstr "Create an account by entering an email and password."
 
-#: src/EditableUserDisplayName.js:132
+#: src/EditableUserDisplayName.js:130
 msgid "Current Display Name:"
 msgstr "Current Display Name:"
 
@@ -317,7 +317,7 @@ msgstr "Current Display Name:"
 msgid "Current Domain URL:"
 msgstr "Current Domain URL:"
 
-#: src/EditableUserEmail.js:132
+#: src/EditableUserEmail.js:130
 msgid "Current Email:"
 msgstr "Current Email:"
 
@@ -325,11 +325,11 @@ msgstr "Current Email:"
 msgid "Current Password:"
 msgstr "Current Password:"
 
-#: src/EditableUserPhoneNumber.js:135
+#: src/EditableUserPhoneNumber.js:133
 msgid "Current Phone Number:"
 msgstr "Current Phone Number:"
 
-#: src/DmarcReportPage.js:294
+#: src/DmarcReportPage.js:305
 msgid "DKIM Aligned"
 msgstr "DKIM Aligned"
 
@@ -337,16 +337,16 @@ msgstr "DKIM Aligned"
 msgid "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365."
 msgstr "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365."
 
-#: src/DmarcReportPage.js:263
+#: src/DmarcReportPage.js:272
 msgid "DKIM Domains"
 msgstr "DKIM Domains"
 
-#: src/DmarcReportPage.js:316
+#: src/DmarcReportPage.js:327
 msgid "DKIM Failure Table"
 msgstr "DKIM Failure Table"
 
-#: src/DmarcReportPage.js:327
-#: src/DmarcReportPage.js:359
+#: src/DmarcReportPage.js:338
+#: src/DmarcReportPage.js:370
 msgid "DKIM Failures by IP Address"
 msgstr "DKIM Failures by IP Address"
 
@@ -354,11 +354,11 @@ msgstr "DKIM Failures by IP Address"
 msgid "DKIM Flag t"
 msgstr "DKIM Flag t"
 
-#: src/DmarcReportPage.js:298
+#: src/DmarcReportPage.js:309
 msgid "DKIM Results"
 msgstr "DKIM Results"
 
-#: src/DmarcReportPage.js:267
+#: src/DmarcReportPage.js:276
 msgid "DKIM Selectors"
 msgstr "DKIM Selectors"
 
@@ -398,12 +398,12 @@ msgstr "DKIM-missing-mx-O365"
 msgid "DKIM-value-invalid"
 msgstr "DKIM-value-invalid"
 
-#: src/DmarcReportPage.js:519
+#: src/DmarcReportPage.js:530
 msgid "DMARC Failure Table"
 msgstr "DMARC Failure Table"
 
-#: src/DmarcReportPage.js:530
-#: src/DmarcReportPage.js:559
+#: src/DmarcReportPage.js:541
+#: src/DmarcReportPage.js:570
 msgid "DMARC Failures by IP Address"
 msgstr "DMARC Failures by IP Address"
 
@@ -413,8 +413,14 @@ msgid "DMARC Messages"
 msgstr "DMARC Messages"
 
 #: src/App.js:77
+#: src/DmarcGuidancePage.js:54
+#: src/DomainCard.js:165
 msgid "DMARC Report"
 msgstr "DMARC Report"
+
+#: src/DomainCard.js:165
+#~ msgid "DMARC Report <0/>"
+#~ msgstr "DMARC Report <0/>"
 
 #: src/SummaryGroup.js:44
 msgid "DMARC fail"
@@ -432,7 +438,7 @@ msgstr "DMARC-GC"
 msgid "DMARC-missing"
 msgstr "DMARC-missing"
 
-#: src/DmarcReportPage.js:274
+#: src/DmarcReportPage.js:285
 msgid "DNS Host"
 msgstr "DNS Host"
 
@@ -453,7 +459,7 @@ msgstr "Display Name:"
 msgid "Display name cannot be empty"
 msgstr "Display name cannot be empty"
 
-#: src/DmarcReportPage.js:302
+#: src/DmarcReportPage.js:313
 msgid "Disposition"
 msgstr "Disposition"
 
@@ -518,7 +524,7 @@ msgid "Domain uses potentially-outsourced DMARC service"
 msgstr "Domain uses potentially-outsourced DMARC service"
 
 #: src/Domain.js:22
-#: src/DomainCard.js:43
+#: src/DomainCard.js:44
 msgid "Domain:"
 msgstr "Domain:"
 
@@ -538,11 +544,11 @@ msgstr "Domains Table"
 #: src/EditableUserEmail.js:90
 #: src/EditableUserPassword.js:102
 #: src/EditableUserPhoneNumber.js:94
-#: src/EditableUserPhoneNumber.js:127
+#: src/EditableUserPhoneNumber.js:125
 msgid "Edit"
 msgstr "Edit"
 
-#: src/EditableUserDisplayName.js:126
+#: src/EditableUserDisplayName.js:124
 msgid "Edit Display Name"
 msgstr "Edit Display Name"
 
@@ -550,11 +556,11 @@ msgstr "Edit Display Name"
 msgid "Edit Domain Details"
 msgstr "Edit Domain Details"
 
-#: src/EditableUserEmail.js:126
+#: src/EditableUserEmail.js:124
 msgid "Edit Email"
 msgstr "Edit Email"
 
-#: src/EditableUserTFAMethod.js:112
+#: src/EditableUserTFAMethod.js:110
 #: src/EmailField.js:43
 msgid "Email"
 msgstr "Email"
@@ -610,11 +616,11 @@ msgstr "Enter two factor code"
 msgid "Enter your user account's verified email address and we will send you a password reset link."
 msgstr "Enter your user account's verified email address and we will send you a password reset link."
 
-#: src/DmarcReportPage.js:258
+#: src/DmarcReportPage.js:267
 msgid "Envelope From"
 msgstr "Envelope From"
 
-#: src/DmarcReportPage.js:215
+#: src/DmarcReportPage.js:224
 #: src/fixtures/summaryListData.js:171
 msgid "Fail"
 msgstr "Fail"
@@ -649,15 +655,15 @@ msgstr "February"
 msgid "Follow implementation guide"
 msgstr "Follow implementation guide"
 
-#: src/GuidanceTagDetails.js:13
+#: src/GuidanceTagDetails.js:11
 msgid "For in-depth CCCS implementation guidance:"
 msgstr "For in-depth CCCS implementation guidance:"
 
-#: src/GuidanceTagDetails.js:42
+#: src/GuidanceTagDetails.js:36
 msgid "For technical implementation guidance:"
 msgstr "For technical implementation guidance:"
 
-#: src/SignInPage.js:122
+#: src/SignInPage.js:131
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
@@ -669,12 +675,12 @@ msgstr "Full Fail %"
 msgid "Full Pass %"
 msgstr "Full Pass %"
 
-#: src/DmarcReportPage.js:386
+#: src/DmarcReportPage.js:397
 msgid "Fully Aligned Table"
 msgstr "Fully Aligned Table"
 
-#: src/DmarcReportPage.js:397
-#: src/DmarcReportPage.js:424
+#: src/DmarcReportPage.js:408
+#: src/DmarcReportPage.js:435
 msgid "Fully Aligned by IP Address"
 msgstr "Fully Aligned by IP Address"
 
@@ -691,17 +697,22 @@ msgstr "Go to page:"
 msgid "Government of Canada domains subject to TBS guidelines"
 msgstr "Government of Canada domains subject to TBS guidelines"
 
-#: src/DmarcReportPage.js:284
+#: src/DmarcReportPage.js:295
+#: src/DmarcReportPage.js:614
 msgid "Guidance"
 msgstr "Guidance"
 
-#: src/DmarcGuidancePage.js:34
+#: src/DmarcGuidancePage.js:33
 msgid "Guidance Tags"
 msgstr "Guidance Tags"
 
-#: src/GuidanceTagDetails.js:93
+#: src/GuidanceTagDetails.js:73
 msgid "Guidance:"
 msgstr "Guidance:"
+
+#: src/DmarcReportPage.js:614
+#~ msgid "Guidance<0/>"
+#~ msgstr "Guidance<0/>"
 
 #: src/guidanceTagConstants.js:528
 msgid "HSTS-missing"
@@ -783,7 +794,7 @@ msgstr "HTTPS-not-enforced"
 msgid "HTTPS-weakly-enforced"
 msgstr "HTTPS-weakly-enforced"
 
-#: src/DmarcReportPage.js:280
+#: src/DmarcReportPage.js:291
 msgid "Header From"
 msgstr "Header From"
 
@@ -807,11 +818,11 @@ msgstr "IT PIN"
 msgid "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
 msgstr "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
 
-#: src/SignInPage.js:78
+#: src/SignInPage.js:87
 msgid "Incorrect send method received."
 msgstr "Incorrect send method received."
 
-#: src/SignInPage.js:79
+#: src/SignInPage.js:88
 msgid "Incorrect signIn.result typename."
 msgstr "Incorrect signIn.result typename."
 
@@ -836,7 +847,7 @@ msgstr "Invalid percent"
 msgid "Invalid public key"
 msgstr "Invalid public key"
 
-#: src/UserList.js:230
+#: src/UserList.js:229
 msgid "Invite User"
 msgstr "Invite User"
 
@@ -852,7 +863,7 @@ msgstr "July"
 msgid "June"
 msgstr "June"
 
-#: src/DmarcReportSummaryGraph.js:66
+#: src/DmarcReportSummaryGraph.js:67
 msgid "L-30-D"
 msgstr "L-30-D"
 
@@ -862,12 +873,12 @@ msgid "Language:"
 msgstr "Language:"
 
 #: src/DmarcByDomainPage.js:189
-#: src/DmarcReportPage.js:129
+#: src/DmarcReportPage.js:138
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
 
 #: src/Domain.js:39
-#: src/DomainCard.js:52
+#: src/DomainCard.js:53
 msgid "Last scanned:"
 msgstr "Last scanned:"
 
@@ -875,7 +886,7 @@ msgstr "Last scanned:"
 msgid "Loading {children}..."
 msgstr "Loading {children}..."
 
-#: src/TwoFactorAuthenticatePage.js:62
+#: src/TwoFactorAuthenticatePage.js:69
 msgid "Loading..."
 msgstr "Loading..."
 
@@ -966,7 +977,7 @@ msgstr "Missing from guide- need v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "More than 10 lookups - Follow implementation guide"
 
-#: src/EditableUserDisplayName.js:139
+#: src/EditableUserDisplayName.js:137
 msgid "New Display Name:"
 msgstr "New Display Name:"
 
@@ -978,7 +989,7 @@ msgstr "New Domain Url"
 msgid "New Domain Url:"
 msgstr "New Domain Url:"
 
-#: src/EditableUserEmail.js:139
+#: src/EditableUserEmail.js:137
 msgid "New Email Address:"
 msgstr "New Email Address:"
 
@@ -986,7 +997,7 @@ msgstr "New Email Address:"
 msgid "New Password:"
 msgstr "New Password:"
 
-#: src/EditableUserPhoneNumber.js:144
+#: src/EditableUserPhoneNumber.js:142
 msgid "New Phone Number:"
 msgstr "New Phone Number:"
 
@@ -1026,11 +1037,11 @@ msgstr "No Users"
 msgid "No current phone number"
 msgstr "No current phone number"
 
-#: src/DmarcReportPage.js:374
+#: src/DmarcReportPage.js:385
 msgid "No data for the DKIM Failures by IP Address table"
 msgstr "No data for the DKIM Failures by IP Address table"
 
-#: src/DmarcReportPage.js:574
+#: src/DmarcReportPage.js:585
 msgid "No data for the DMARC Failures by IP Address table"
 msgstr "No data for the DMARC Failures by IP Address table"
 
@@ -1038,15 +1049,15 @@ msgstr "No data for the DMARC Failures by IP Address table"
 msgid "No data for the DMARC summary table"
 msgstr "No data for the DMARC summary table"
 
-#: src/DmarcReportPage.js:247
+#: src/DmarcReportPage.js:256
 msgid "No data for the DMARC yearly report graph"
 msgstr "No data for the DMARC yearly report graph"
 
-#: src/DmarcReportPage.js:439
+#: src/DmarcReportPage.js:450
 msgid "No data for the Fully Aligned by IP Address table"
 msgstr "No data for the Fully Aligned by IP Address table"
 
-#: src/DmarcReportPage.js:507
+#: src/DmarcReportPage.js:518
 msgid "No data for the SPF Failures by IP Address table"
 msgstr "No data for the SPF Failures by IP Address table"
 
@@ -1058,7 +1069,7 @@ msgstr "No domains scanned yet."
 msgid "No scan data for this organization."
 msgstr "No scan data for this organization."
 
-#: src/UserList.js:238
+#: src/UserList.js:237
 msgid "No users in this organization"
 msgstr "No users in this organization"
 
@@ -1066,12 +1077,12 @@ msgstr "No users in this organization"
 msgid "Non-compliant TLS"
 msgstr "Non-compliant TLS"
 
-#: src/EditableUserTFAMethod.js:111
+#: src/EditableUserTFAMethod.js:109
 msgid "None"
 msgstr "None"
 
 #: src/Domain.js:50
-#: src/DomainCard.js:58
+#: src/DomainCard.js:59
 msgid "Not scanned yet."
 msgstr "Not scanned yet."
 
@@ -1202,17 +1213,17 @@ msgstr "Page Size:"
 msgid "Page {0} of {1}"
 msgstr "Page {0} of {1}"
 
-#: src/DmarcReportPage.js:197
+#: src/DmarcReportPage.js:206
 #: src/fixtures/summaryListData.js:155
 msgid "Pass"
 msgstr "Pass"
 
-#: src/DmarcReportPage.js:209
+#: src/DmarcReportPage.js:218
 #: src/fixtures/summaryListData.js:165
 msgid "Pass Only DKIM"
 msgstr "Pass Only DKIM"
 
-#: src/DmarcReportPage.js:203
+#: src/DmarcReportPage.js:212
 #: src/fixtures/summaryListData.js:161
 msgid "Pass Only SPF"
 msgstr "Pass Only SPF"
@@ -1256,7 +1267,7 @@ msgstr "Password:"
 msgid "Passwords must match"
 msgstr "Passwords must match"
 
-#: src/EditableUserTFAMethod.js:113
+#: src/EditableUserTFAMethod.js:111
 msgid "Phone"
 msgstr "Phone"
 
@@ -1315,12 +1326,12 @@ msgstr "Pre-Alpha"
 msgid "Previous"
 msgstr "Previous"
 
-#: src/App.js:241
+#: src/App.js:201
 #: src/FloatingMenu.js:175
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/GuidanceTagList.js:33
+#: src/GuidanceTagList.js:29
 msgid "Properly configured!"
 msgstr "Properly configured!"
 
@@ -1392,11 +1403,11 @@ msgstr "RUF-none"
 msgid "Remove Domain"
 msgstr "Remove Domain"
 
-#: src/ScanDomain.js:66
+#: src/ScanDomain.js:73
 msgid "Request a domain to be scanned:"
 msgstr "Request a domain to be scanned:"
 
-#: src/GuidanceTagDetails.js:85
+#: src/GuidanceTagDetails.js:67
 msgid "Result:"
 msgstr "Result:"
 
@@ -1412,7 +1423,7 @@ msgstr "Results for scans of web technologies (SSL, HTTPS)."
 msgid "Role updated"
 msgstr "Role updated"
 
-#: src/UserList.js:258
+#: src/UserList.js:257
 msgid "Role:"
 msgstr "Role:"
 
@@ -1438,24 +1449,24 @@ msgstr "SP-quarantine"
 msgid "SP-reject"
 msgstr "SP-reject"
 
-#: src/DmarcReportPage.js:286
+#: src/DmarcReportPage.js:297
 msgid "SPF Aligned"
 msgstr "SPF Aligned"
 
-#: src/DmarcReportPage.js:276
+#: src/DmarcReportPage.js:287
 msgid "SPF Domains"
 msgstr "SPF Domains"
 
-#: src/DmarcReportPage.js:451
+#: src/DmarcReportPage.js:462
 msgid "SPF Failure Table"
 msgstr "SPF Failure Table"
 
-#: src/DmarcReportPage.js:462
-#: src/DmarcReportPage.js:492
+#: src/DmarcReportPage.js:473
+#: src/DmarcReportPage.js:503
 msgid "SPF Failures by IP Address"
 msgstr "SPF Failures by IP Address"
 
-#: src/DmarcReportPage.js:290
+#: src/DmarcReportPage.js:301
 msgid "SPF Results"
 msgstr "SPF Results"
 
@@ -1499,16 +1510,15 @@ msgstr "SSL-missing"
 msgid "SSL-rc4"
 msgstr "SSL-rc4"
 
-#: src/UserList.js:216
-#: src/UserList.js:278
+#: src/UserList.js:277
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
-#: src/EditableUserLanguage.js:93
+#: src/EditableUserLanguage.js:91
 msgid "Save Language"
 msgstr "Save Language"
 
-#: src/EditableUserTFAMethod.js:120
+#: src/EditableUserTFAMethod.js:118
 msgid "Save TFA Method"
 msgstr "Save TFA Method"
 
@@ -1516,15 +1526,15 @@ msgstr "Save TFA Method"
 msgid "Scan"
 msgstr "Scan"
 
-#: src/ScanDomain.js:78
+#: src/ScanDomain.js:85
 msgid "Scan Domain"
 msgstr "Scan Domain"
 
-#: src/ScanDomain.js:31
+#: src/ScanDomain.js:38
 msgid "Scan Request"
 msgstr "Scan Request"
 
-#: src/ScanDomain.js:32
+#: src/ScanDomain.js:39
 msgid "Scan of domain successfully requested"
 msgstr "Scan of domain successfully requested"
 
@@ -1582,18 +1592,18 @@ msgid "Show {pageSize}"
 msgstr "Show {pageSize}"
 
 #: src/DmarcByDomainPage.js:233
-#: src/DmarcReportPage.js:608
+#: src/DmarcReportPage.js:623
 msgid "Showing data for period:"
 msgstr "Showing data for period:"
 
 #: src/App.js:113
 #: src/FloatingMenu.js:158
-#: src/SignInPage.js:133
+#: src/SignInPage.js:142
 msgid "Sign In"
 msgstr "Sign In"
 
-#: src/SignInPage.js:61
-#: src/TwoFactorAuthenticatePage.js:50
+#: src/SignInPage.js:69
+#: src/TwoFactorAuthenticatePage.js:57
 msgid "Sign In."
 msgstr "Sign In."
 
@@ -1607,7 +1617,7 @@ msgstr "Sign Out"
 msgid "Sign Out."
 msgstr "Sign Out."
 
-#: src/SignInPage.js:112
+#: src/SignInPage.js:121
 msgid "Sign in with your username and password."
 msgstr "Sign in with your username and password."
 
@@ -1615,12 +1625,12 @@ msgstr "Sign in with your username and password."
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
-#: src/DmarcReportPage.js:253
+#: src/DmarcReportPage.js:262
 msgid "Source IP Address"
 msgstr "Source IP Address"
 
 #: src/ForgotPasswordPage.js:85
-#: src/TwoFactorAuthenticatePage.js:107
+#: src/TwoFactorAuthenticatePage.js:114
 msgid "Submit"
 msgstr "Submit"
 
@@ -1633,8 +1643,8 @@ msgid "Summary Cards"
 msgstr "Summary Cards"
 
 #: src/GuidanceTagDetails.js:101
-msgid "Summary:"
-msgstr "Summary:"
+#~ msgid "Summary:"
+#~ msgstr "Summary:"
 
 #: src/guidanceTagConstants.js:419
 msgid "T-enabled"
@@ -1656,7 +1666,7 @@ msgstr "TXT-DMARC-enabled"
 msgid "TXT-DMARC-missing"
 msgstr "TXT-DMARC-missing"
 
-#: src/App.js:251
+#: src/App.js:211
 #: src/FloatingMenu.js:185
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
@@ -1682,7 +1692,7 @@ msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
 
 #: src/DmarcByDomainPage.js:91
-#: src/DmarcReportPage.js:271
+#: src/DmarcReportPage.js:280
 msgid "Total Messages"
 msgstr "Total Messages"
 
@@ -1698,12 +1708,12 @@ msgstr "Track Web Security Compliance"
 msgid "Tracker Logo"
 msgstr "Tracker Logo"
 
-#: src/TwoFactorAuthenticatePage.js:92
+#: src/TwoFactorAuthenticatePage.js:99
 msgid "Two Factor Authentication"
 msgstr "Two Factor Authentication"
 
 #: src/UserList.js:214
-#: src/UserList.js:271
+#: src/UserList.js:270
 msgid "USER"
 msgstr "USER"
 
@@ -1711,11 +1721,11 @@ msgstr "USER"
 msgid "Unable to change user role, please try again."
 msgstr "Unable to change user role, please try again."
 
-#: src/CreateUserPage.js:52
+#: src/CreateUserPage.js:53
 msgid "Unable to create your account, please try again."
 msgstr "Unable to create your account, please try again."
 
-#: src/ScanDomain.js:22
+#: src/ScanDomain.js:29
 msgid "Unable to request scan, please try again."
 msgstr "Unable to request scan, please try again."
 
@@ -1723,8 +1733,8 @@ msgstr "Unable to request scan, please try again."
 msgid "Unable to send password reset link to email."
 msgstr "Unable to send password reset link to email."
 
-#: src/SignInPage.js:42
-#: src/TwoFactorAuthenticatePage.js:33
+#: src/SignInPage.js:46
+#: src/TwoFactorAuthenticatePage.js:36
 msgid "Unable to sign in to your account, please try again."
 msgstr "Unable to sign in to your account, please try again."
 
@@ -1815,16 +1825,16 @@ msgstr "Web encryption settings summary"
 msgid "Welcome, Admin"
 msgstr "Welcome, Admin"
 
-#: src/CreateUserPage.js:70
+#: src/CreateUserPage.js:73
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Welcome, you are successfully signed in to your new account!"
 
-#: src/SignInPage.js:62
-#: src/TwoFactorAuthenticatePage.js:51
+#: src/SignInPage.js:70
+#: src/TwoFactorAuthenticatePage.js:58
 msgid "Welcome, you are successfully signed in!"
 msgstr "Welcome, you are successfully signed in!"
 
-#: src/DmarcReportPage.js:183
+#: src/DmarcReportPage.js:192
 msgid "Yearly DMARC Graph"
 msgstr "Yearly DMARC Graph"
 
@@ -1969,7 +1979,30 @@ msgstr "{count} records..."
 msgid "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 
-#: src/DmarcGuidancePage.js:54
 #: src/OrganizationDetails.js:102
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/PolicyComplianceDetails.js:17
+msgid "Implementation Status:"
+msgstr "Implementation Status:"
+
+#: src/PolicyComplianceDetails.js:23
+msgid "Level of Enforcment:"
+msgstr "Level of Enforcment:"
+
+#: src/PolicyComplianceDetails.js:29
+msgid "HSTS Status:"
+msgstr "HSTS Status:"
+
+#: src/PolicyComplianceDetails.js:35
+msgid "HSTS Age:"
+msgstr "HSTS Age:"
+
+#: src/PolicyComplianceDetails.js:41
+msgid "Preloaded Status:"
+msgstr "Preloaded Status:"
+
+#: src/PolicyComplianceDetails.js:57
+msgid "Phase:"
+msgstr "Phase:"

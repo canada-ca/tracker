@@ -52,7 +52,7 @@ export const PeriodEnums = new GraphQLEnumType({
       description: 'The month of December.',
     },
     LAST30DAYS: {
-      value: 'last30days',
+      value: 'thirtyDays',
       description: 'The last 30 days.',
     },
   },

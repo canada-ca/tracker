@@ -12,7 +12,7 @@ import {
   globalIdField,
 } from 'graphql-relay'
 
-import { periodType } from '../../dmarc-report/objects'
+import { dmarcSummaryType } from '../../dmarc-summaries/objects'
 import { emailScanType } from '../../email-scan/objects'
 import { webScanType } from '../../web-scan/objects'
 import { Domain, Selectors, Year } from '../../scalars'
@@ -88,16 +88,18 @@ export const domainType = new GraphQLObjectType({
           description: 'The year in which the returned data is relevant to.',
         },
       },
-      type: periodType,
+      type: dmarcSummaryType,
       resolve: async (
         { _id, _key, domain },
-        { month },
+        { month, year },
         {
           userKey,
-          loaders: { dmarcReportLoader },
-          auth: { checkDomainOwnership, userRequired, tokenize },
+          loaders: {
+            dmarcSummaryEdgeLoaderByDomainIdPeriod,
+            loadStartDateFromPeriod,
+          },
+          auth: { checkDomainOwnership, userRequired },
         },
-        info,
       ) => {
         await userRequired()
         const permitted = await checkDomainOwnership({
@@ -113,27 +115,27 @@ export const domainType = new GraphQLObjectType({
           )
         }
 
-        const {
-          data: { dmarcSummaryByPeriod },
-        } = await dmarcReportLoader({ info, domain, userKey, tokenize })
-        dmarcSummaryByPeriod.domainKey = _key
-        dmarcSummaryByPeriod.selectedMonth = month
-        return dmarcSummaryByPeriod
+        const startDate = loadStartDateFromPeriod({ period: month, year })
+
+        const dmarcSummaryEdge = await dmarcSummaryEdgeLoaderByDomainIdPeriod({
+          domainId: _id,
+          startDate,
+        })
+
+        return { domainKey: _key, ...dmarcSummaryEdge }
       },
     },
     yearlyDmarcSummaries: {
       description: 'Yearly summarized DMARC aggregate reports.',
-      type: new GraphQLList(periodType),
+      type: new GraphQLList(dmarcSummaryType),
       resolve: async (
         { _id, _key, domain },
         __,
         {
-          moment,
           userKey,
-          loaders: { dmarcReportLoader },
-          auth: { checkDomainOwnership, userRequired, tokenize },
+          loaders: { dmarcYearlySumEdgeLoader },
+          auth: { checkDomainOwnership, userRequired },
         },
-        info,
       ) => {
         await userRequired()
         const permitted = await checkDomainOwnership({
@@ -149,16 +151,16 @@ export const domainType = new GraphQLObjectType({
           )
         }
 
-        const {
-          data: { yearlyDmarcSummaries },
-        } = await dmarcReportLoader({ info, domain, userKey, tokenize })
-        return yearlyDmarcSummaries.map((report) => {
-          report.domainKey = _key
-          report.selectedMonth = String(
-            moment(report.startDate).format('MMMM'),
-          ).toLowerCase()
-          return report
+        const dmarcSummaryEdges = await dmarcYearlySumEdgeLoader({
+          domainId: _id,
         })
+
+        const edges = dmarcSummaryEdges.map((edge) => ({
+          domainKey: _key,
+          ...edge,
+        }))
+
+        return edges
       },
     },
   }),

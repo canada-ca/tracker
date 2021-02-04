@@ -20,6 +20,7 @@ const {
 
 const {
   arrayEquals,
+  calculatePercentages,
   createSummaries,
   createSummaryEdge,
   createSummary,
@@ -65,6 +66,7 @@ const {
     loadDates(moment),
     loadSummaryCountByDomain(query),
     initializeSummaries(
+      calculatePercentages,
       createSummaryEdge(collections),
       createSummary(query),
       loadSummaryByDate(summariesContainer),
@@ -73,6 +75,7 @@ const {
       arrayEquals,
       loadCurrentDates(query),
       updateThirtyDays(
+        calculatePercentages,
         createSummary(query),
         createSummaryEdge(collections),
         loadSummaryByDate(summariesContainer),
@@ -80,6 +83,7 @@ const {
         removeSummary(query),
       ),
       updateMonthSummary(
+        calculatePercentages,
         createSummary(query),
         createSummaryEdge(collections),
         loadSummaryByDate(summariesContainer),

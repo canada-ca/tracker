@@ -59,4 +59,11 @@ export const dmarcFailureTableType = new GraphQLObjectType({
 export const dmarcFailureConnection = connectionDefinitions({
   name: 'DmarcFailureTable',
   nodeType: dmarcFailureTableType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'The total amount of dmarc failures the user has access to.',
+      resolve: ({ totalCount }) => totalCount,
+    },
+  }),
 })
