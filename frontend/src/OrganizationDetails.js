@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -26,7 +26,6 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { DomainCard } from './DomainCard'
 import { ListOf } from './ListOf'
-import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
 
 export default function OrganizationDetails() {
@@ -68,17 +67,6 @@ export default function OrganizationDetails() {
   if (data?.organization?.affiliations?.edges) {
     users = data.organization.affiliations.edges.map((e) => e.node)
   }
-
-  const [currentPage, setCurrentPage] = useState(1)
-  const [domainsPerPage] = useState(10)
-
-  // Get current domains
-  const indexOfLastDomain = currentPage * domainsPerPage
-  const indexOfFirstDomain = indexOfLastDomain - domainsPerPage
-  const currentDomains = domains.slice(indexOfFirstDomain, indexOfLastDomain)
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   if (loading) {
     return (
@@ -135,7 +123,7 @@ export default function OrganizationDetails() {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <ListOf
-                elements={currentDomains}
+                elements={domains}
                 ifEmpty={() => (
                   <Text fontSize="xl" fontWeight="bold">
                     <Trans>No Domains</Trans>
@@ -159,17 +147,6 @@ export default function OrganizationDetails() {
                   </ErrorBoundary>
                 )}
               </ListOf>
-              {domains.length > 0 && (
-                <PaginationButtons
-                  perPage={domainsPerPage}
-                  total={domains.length}
-                  paginate={paginate}
-                  currentPage={currentPage}
-                />
-              )}
-              <Trans>
-                *All data represented is mocked for demonstration purposes
-              </Trans>
             </ErrorBoundary>
           </TabPanel>
           {isLoggedIn() && (
