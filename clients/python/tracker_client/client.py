@@ -89,7 +89,7 @@ def format_all_domains(result):
         x["domains"] = [n["domain"] for n in x["domains"]]
 
     # Create a new dict in the desired format to return
-    result = {x["acronym"]: {"domains": x["domains"]} for x in result}
+    result = {x["acronym"]: x["domains"] for x in result}
     return result
 
 
@@ -109,7 +109,7 @@ def get_domains_by_acronym(acronym, client):
 def format_acronym_domains(acronym, result):
     """ Formats the dict obtained by ALL_DOMAINS_QUERY to show only one org"""
     result = format_all_domains(result)
-    result = result[acronym.upper()]
+    result = {acronym.upper(): result[acronym.upper()]}
     return result
 
 
@@ -134,6 +134,7 @@ def format_name_domains(result):
     result["domains"] = result["domains"]["edges"]
     result["domains"] = [n["node"] for n in result["domains"]]
     result["domains"] = [n["domain"] for n in result["domains"]]
+    result = {result["acronym"]: result["domains"]}
     return result
 
 
@@ -347,7 +348,7 @@ def main():
     domains = get_domains_by_name(name, client)
     print(domains)
 
-    domain = "cse-cst.gc.ca"
+    """domain = "cse-cst.gc.ca"
     print("Getting a dmarc summary for " + domain + "...")
     result = get_dmarc_summary(domain, "november", 2020, client)
     print(result)
@@ -374,7 +375,7 @@ def main():
 
     print("Getting domain status for " + domain + "...")
     results = get_domain_status(domain, client)
-    print(results)
+    print(results)"""
 
 
 if __name__ == "__main__":

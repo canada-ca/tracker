@@ -42,6 +42,7 @@ DOMAINS_BY_SLUG = gql(
     """
     query orgBySlug($org: Slug!){
         findOrganizationBySlug(orgSlug: $org){
+            acronym
             domains(first: 100){
                 edges{
                     node{

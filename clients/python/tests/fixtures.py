@@ -48,16 +48,14 @@ def all_domains_input():
 @pytest.fixture
 def all_domains_output():
     return {
-        "ABC": {"domains": ["abc.def.ca", "test-test.cd.ca"]},
-        "DEF": {
-            "domains": [
-                "qwe-rty.com",
-                "foo.bar.baz",
-                "fizz-buzz.bang",
-                "xyz-abc-mn.net",
-            ]
-        },
-        "GHI": {"domains": ["abcdef.xyz"]},
+        "ABC": ["abc.def.ca", "test-test.cd.ca"],
+        "DEF": [
+            "qwe-rty.com",
+            "foo.bar.baz",
+            "fizz-buzz.bang",
+            "xyz-abc-mn.net",
+        ],
+        "GHI": ["abcdef.xyz"],
     }
 
 
@@ -65,6 +63,7 @@ def all_domains_output():
 def name_domain_input():
     return {
         "findOrganizationBySlug": {
+            "acronym": "DEF",
             "domains": {
                 "edges": [
                     {"node": {"domain": "qwe-rty.com"}},
@@ -72,16 +71,14 @@ def name_domain_input():
                     {"node": {"domain": "fizz-buzz.bang"}},
                     {"node": {"domain": "xyz-abc-mn.net"}},
                 ]
-            }
+            },
         }
     }
 
 
 @pytest.fixture
 def org_domains_output():
-    return {
-        "domains": ["qwe-rty.com", "foo.bar.baz", "fizz-buzz.bang", "xyz-abc-mn.net"]
-    }
+    return {"DEF": ["qwe-rty.com", "foo.bar.baz", "fizz-buzz.bang", "xyz-abc-mn.net"]}
 
 
 @pytest.fixture
