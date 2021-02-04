@@ -27,8 +27,8 @@ function ScanCard({ scanType, scanData, status }) {
             <Icon name="info" color="#3f8cd9" />
             <Text fontWeight="bold" fontSize="xl">
               {status.https === 'PASS' && status.ssl === 'PASS'
-                ? `ITPIN Compliant`
-                : `Changes Required for ITPIN Compliance`}
+                ? t`ITPIN Compliant`
+                : t`Changes Required for ITPIN Compliance`}
             </Text>
           </Stack>
         </Box>
