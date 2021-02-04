@@ -102,6 +102,7 @@ describe('given the initializeSummaries function', () => {
             fullPass: [],
             spfFailure: [],
           },
+          totalMessages: 0,
         },
       })
       expect(mockedCreateSummary).toHaveBeenNthCalledWith(2, {
@@ -124,6 +125,7 @@ describe('given the initializeSummaries function', () => {
             fullPass: [],
             spfFailure: [],
           },
+          totalMessages: 0,
         },
       })
     })

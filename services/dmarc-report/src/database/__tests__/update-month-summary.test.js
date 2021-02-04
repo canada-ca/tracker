@@ -166,6 +166,7 @@ describe('given the updateMonthSummary function', () => {
             fullPass: [],
             spfFailure: [],
           },
+          totalMessages: 0,
         },
       })
     })

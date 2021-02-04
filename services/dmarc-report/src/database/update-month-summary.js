@@ -24,10 +24,12 @@ const updateMonthSummary = (
     startDate: dateToAdd,
   })
 
-  const categoryPercentages = calculatePercentages(
+  const { totalMessages, percentages } = calculatePercentages(
     currentSummary.categoryTotals,
   )
-  currentSummary.categoryPercentages = categoryPercentages
+  
+  currentSummary.totalMessages = totalMessages
+  currentSummary.categoryPercentages = percentages
 
   const summaryDBInfo = await createSummary({ currentSummary })
 
