@@ -675,10 +675,10 @@ def process_dns(results, domain_key, db):
     }
 
     spfRecord = results["spf"].get("record", None)
-        if spfRecord is None:
-            spfDefault = None
-        else:
-            spfDefault = spfRecord[-4:].lower()
+    if spfRecord is None:
+        spfDefault = None
+    else:
+        spfDefault = spfRecord[-4:].lower()
 
     spfResults = {
         "timestamp": timestamp,
