@@ -85,7 +85,7 @@ def test_https():
 
     test_payload = {
         "results": https_result_data,
-        "uuid": 1,
+        "uuid": None,
         "scan_type": "https",
         "domain_key": domain["_key"],
     }
@@ -121,7 +121,7 @@ def test_ssl():
 
     test_payload = {
         "results": ssl_result_data,
-        "uuid": 1,
+        "uuid": None,
         "scan_type": "ssl",
         "domain_key": domain["_key"],
     }
@@ -150,7 +150,7 @@ def test_dns():
 
     test_payload = {
         "results": dns_result_data,
-        "uuid": 1,
+        "uuid": None,
         "scan_type": "dns",
         "domain_key": domain["_key"],
     }

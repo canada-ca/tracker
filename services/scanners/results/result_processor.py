@@ -27,7 +27,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def publish_results(results, scan_type, uuid):
-    requests.post(f"{REDIS_URL}/scan/{scan_type}/{uuid}", json=results)
+    requests.post(f"http://{REDIS_URL}/scan/{scan_type}/{uuid}", json=results)
 
 def process_https(results, domain_key, uuid, db):
     timestamp = str(datetime.datetime.utcnow())
@@ -673,6 +673,12 @@ def process_dns(results, domain_key, db):
         "positiveTags": guidance_tags["dmarc"]["positiveTags"],
         "negativeTags": guidance_tags["dmarc"]["negativeTags"],
     }
+
+    spfRecord = results["spf"].get("record", None)
+        if spfRecord is None:
+            spfDefault = None
+        else:
+            spfDefault = spfRecord[-4:].lower()
 
     spfResults = {
         "timestamp": timestamp,
