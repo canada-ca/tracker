@@ -769,15 +769,18 @@ def process_dns(results, domain_key, db):
                     {"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]}
                 )
 
-            dkimResults.update(selector:
+            dkimResults.update(
                 {
-                    "record": results["dkim"][selector].get("txt_record", None),
-                    "keyLength": results["dkim"][selector].get("key_size", None),
-                    "keyModulus": keyModulus,
-                    "rawJson": results["dkim"][selector],
-                    "neutralTags": guidance_tags["dkim"][selector]["neutralTags"],
-                    "positiveTags": guidance_tags["dkim"][selector]["positiveTags"],
-                    "negativeTags": guidance_tags["dkim"][selector]["negativeTags"],
+                    selector:
+                        {
+                            "record": results["dkim"][selector].get("txt_record", None),
+                            "keyLength": results["dkim"][selector].get("key_size", None),
+                            "keyModulus": keyModulus,
+                            "rawJson": results["dkim"][selector],
+                            "neutralTags": guidance_tags["dkim"][selector]["neutralTags"],
+                            "positiveTags": guidance_tags["dkim"][selector]["positiveTags"],
+                            "negativeTags": guidance_tags["dkim"][selector]["negativeTags"],
+                        }
                 }
             )
 
