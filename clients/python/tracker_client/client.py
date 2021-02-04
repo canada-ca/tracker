@@ -305,6 +305,7 @@ def format_domain_results(result):
     result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
     return result
 
+
 def get_domain_status(domain, client):
     """Return pass/fail status information for a domain
 
@@ -371,6 +372,7 @@ def main():
     results = get_domain_results(domain, client)
     print(results)
 
+    print("Getting domain status for " + domain + "...")
     results = get_domain_status(domain, client)
     print(results)
 
