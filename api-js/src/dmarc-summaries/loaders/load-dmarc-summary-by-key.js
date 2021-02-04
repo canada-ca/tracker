@@ -9,12 +9,20 @@ export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
       cursor = await query`
         FOR summary IN dmarcSummaries
           FILTER summary._key IN ${keys}
+
+          LET edge = (
+            FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+              RETURN e
+          )
+
           RETURN {
             _id: summary._id,
             _key: summary._key,
             _rev: summary._rev,
             _type: "dmarcSummary",
             id: summary._key,
+            startDate: FIRST(edge).startDate,
+            domainKey: PARSE_IDENTIFIER(FIRST(edge)._from).key,
             categoryTotals: summary.categoryTotals,
             categoryPercentages: summary.categoryPercentages,
             totalMessages: summary.totalMessages

@@ -9,7 +9,15 @@ import { dmarcSumLoaderByKey } from '../index'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the dmarcSumLoaderByKey dataloader', () => {
-  let query, drop, truncate, migrate, collections, i18n
+  let query,
+    drop,
+    truncate,
+    migrate,
+    collections,
+    i18n,
+    domain,
+    dmarcSummary1,
+    dmarcSummary2
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -22,7 +30,10 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
   })
 
   beforeEach(async () => {
-    await collections.dmarcSummaries.save({
+    domain = await collections.domains.save({
+      domain: 'domain.ca',
+    })
+    dmarcSummary1 = await collections.dmarcSummaries.save({
       detailTables: {
         dkimFailure: [],
         dmarcFailure: [],
@@ -43,7 +54,7 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
       },
       totalMessages: 0,
     })
-    await collections.dmarcSummaries.save({
+    dmarcSummary2 = await collections.dmarcSummaries.save({
       detailTables: {
         dkimFailure: [],
         dmarcFailure: [],
@@ -63,6 +74,16 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
         passSpfOnly: 0,
       },
       totalMessages: 0,
+    })
+    await collections.domainsToDmarcSummaries.save({
+      _to: dmarcSummary1._id,
+      _from: domain._id,
+      startDate: '2021-01-01',
+    })
+    await collections.domainsToDmarcSummaries.save({
+      _to: dmarcSummary2._id,
+      _from: domain._id,
+      startDate: 'thirtyDays',
     })
     consoleOutput.length = 0
   })
@@ -81,18 +102,26 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
         FOR summary IN dmarcSummaries
           SORT summary._key ASC 
           LIMIT 1
+          LET edge = (
+            FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+              RETURN e
+          )
+
           RETURN {
             _id: summary._id,
             _key: summary._key,
             _rev: summary._rev,
             _type: "dmarcSummary",
             id: summary._key,
+            startDate: FIRST(edge).startDate,
+            domainKey: PARSE_IDENTIFIER(FIRST(edge)._from).key,
             categoryTotals: summary.categoryTotals,
             categoryPercentages: summary.categoryPercentages,
             totalMessages: summary.totalMessages
           }
       `
       const expectedSummary = await expectedCursor.next()
+      expectedSummary.domainKey = domain._key
 
       const loader = dmarcSumLoaderByKey(query)
       const summary = await loader.load(expectedSummary._key)
@@ -106,12 +135,19 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
       const expectedSummaries = []
       const expectedCursor = await query`
         FOR summary IN dmarcSummaries
+          LET edge = (
+            FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+              RETURN e
+          )
+
           RETURN {
             _id: summary._id,
             _key: summary._key,
             _rev: summary._rev,
             _type: "dmarcSummary",
             id: summary._key,
+            startDate: FIRST(edge).startDate,
+            domainKey: PARSE_IDENTIFIER(FIRST(edge)._from).key,
             categoryTotals: summary.categoryTotals,
             categoryPercentages: summary.categoryPercentages,
             totalMessages: summary.totalMessages
