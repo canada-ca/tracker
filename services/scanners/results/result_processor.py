@@ -796,6 +796,35 @@ def process_dns(results, domain_key, db):
 
             spfEntry = db.collection("spf").insert(spfResults)
 
+            dkimEntry = db.collection("dkim").insert({"timestamp": timestamp})
+
+            for selector in dkimResults.keys():
+                dkimResultsEntry = db.collection("dkimResults").insert(dkimResults[selector])
+                db.collection("dkimToDkimResults").insert(
+                    {"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]}
+                )
+
+            domain = db.collection("domains").get({"_key": domain_key})
+            db.collection("domainsDMARC").insert(
+                {"_from": domain["_id"], "_to": dmarcEntry["_id"]}
+            )
+            db.collection("domainsSPF").insert(
+                {"_from": domain["_id"], "_to": spfEntry["_id"]}
+            )
+            db.collection("domainsDKIM").insert(
+                {"_from": domain["_id"], "_to": dkimEntry["_id"]}
+            )
+
+            if "spf12" in tags["spf"]:
+                spf_status = "pass"
+            else:
+                spf_status = "fail"
+
+            if "dmarc23" in tags["dmarc"]:
+                dmarc_status = "pass"
+            else:
+                dmarc_status = "fail"
+
             dkim_statuses = []
             for selector in tags["dkim"].keys():
                 if any(
