@@ -2,8 +2,9 @@ import { t } from '@lingui/macro'
 import { GraphQLNonNull } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
+import { dmarcSummaryOrder } from '../inputs'
+import { dmarcSummaryConnection } from '../objects'
 import { PeriodEnums } from '../../enums'
-import { dmarcSummaryConnection, dmarcSummaryOrder } from '../objects'
 import { Year } from '../../scalars'
 
 export const findMyDmarcSummaries = {
@@ -38,12 +39,17 @@ export const findMyDmarcSummaries = {
 
     let dmarcSummaries
     try {
-      dmarcSummaries = await dmarcSumLoaderConnectionsByUserId({ period: args.month, ...args })
+      dmarcSummaries = await dmarcSumLoaderConnectionsByUserId({
+        period: args.month,
+        ...args,
+      })
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userKey} was trying to gather dmarc summary connections in findMyDmarcSummaries: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to load dmarc summaries. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to load dmarc summaries. Please try again.`),
+      )
     }
 
     console.info(`User ${userKey} successfully retrieved their dmarc summaries`)

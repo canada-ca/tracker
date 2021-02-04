@@ -1,6 +1,6 @@
 import { GraphQLNonNull, GraphQLInputObjectType } from 'graphql'
 
-import { DmarcSummaryOrderField, OrderDirection } from '../../enums'
+import { OrderDirection, DmarcSummaryOrderField } from '../../enums'
 
 export const dmarcSummaryOrder = new GraphQLInputObjectType({
   name: 'DmarcSummaryOrder',

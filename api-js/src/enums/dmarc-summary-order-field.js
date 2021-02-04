@@ -35,6 +35,10 @@ export const DmarcSummaryOrderField = new GraphQLEnumType({
       value: 'pass-spf-percentage',
       description: 'Order dmarc summaries by spf only percentage.',
     },
+    TOTAL_MESSAGES: {
+      value: 'total-messages',
+      description: 'Order dmarc summaries by total messages',
+    },
   },
   description: 'Properties by which dmarc summary connections can be ordered.',
 })

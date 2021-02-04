@@ -16,6 +16,7 @@ export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
             _type: "dmarcSummary",
             id: summary._key,
             categoryTotals: summary.categoryTotals
+            categoryPercentages: summary.categoryPercentages
           }
       `
     } catch (err) {
