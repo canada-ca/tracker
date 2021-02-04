@@ -160,6 +160,7 @@ describe('given the updateThirtyDays function', () => {
             fullPass: [],
             spfFailure: [],
           },
+          totalMessages: 0,
         },
       })
     })
