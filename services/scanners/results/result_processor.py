@@ -886,12 +886,12 @@ def Server(
                 return PlainTextResponse(msg)
 
             if scan_type == "https":
-                process_https(results, domain_key, db)
+                process_https(results, domain_key, uuid, db)
             elif scan_type == "ssl":
                 guidance = tls_guidance()
-                process_ssl(results, guidance, domain_key, db)
+                process_ssl(results, guidance, domain_key, uuid, db)
             else:
-                process_dns(results, domain_key, db)
+                process_dns(results, domain_key, uuid, db)
 
             return PlainTextResponse(
                 f"{scan_type} results processed and inserted successfully (TIME={datetime.datetime.utcnow()})."
