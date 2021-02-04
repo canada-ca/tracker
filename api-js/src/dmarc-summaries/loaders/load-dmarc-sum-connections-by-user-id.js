@@ -43,55 +43,72 @@ export const dmarcSumLoaderConnectionsByUserId = (
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    if (typeof orderBy.field === 'undefined') {
+    if (typeof orderBy === 'undefined') {
       afterTemplate = aql`FILTER TO_NUMBER(summary._key) > TO_NUMBER(${afterId})`
     } else {
+      let afterTemplateDirection = aql``
+      /* istanbul ignore else */
+      if (typeof orderBy !== 'undefined') {
+        if (orderBy.direction === 'ASC') {
+          afterTemplateDirection = aql`>`
+        } else {
+          afterTemplateDirection = aql`<`
+        }
+      }
+
+      /* istanbul ignore else */
       if (orderBy.field === 'fail-count') {
         afterTemplate = aql`
-          FILTER summary.categoryTotals.fail < DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.fail
+          FILTER summary.categoryTotals.fail ${afterTemplateDirection} DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.fail
           OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.fail 
           AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
         `
       } else if (orderBy.field === 'pass-count') {
         afterTemplate = aql`
-          FILTER summary.categoryTotals.pass < DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.pass 
+          FILTER summary.categoryTotals.pass ${afterTemplateDirection} DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.pass 
           OR (summary.categoryTotals.pass == DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.pass 
           AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
         `
       } else if (orderBy.field === 'pass-dkim-count') {
         afterTemplate = aql`
-          FILTER summary.categoryTotals.passDkimOnly < DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.passDkimOnly
+          FILTER summary.categoryTotals.passDkimOnly ${afterTemplateDirection} DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.passDkimOnly
           OR (summary.categoryTotals.passDkimOnly == DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.passDkimOnly 
           AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
         `
       } else if (orderBy.field === 'pass-spf-count') {
         afterTemplate = aql`
-          FILTER summary.categoryTotals.passSpfOnly < DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.passSpfOnly
+          FILTER summary.categoryTotals.passSpfOnly ${afterTemplateDirection} DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.passSpfOnly
           OR (summary.categoryTotals.passSpfOnly == DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals 
           AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
         `
       } else if (orderBy.field === 'fail-percentage') {
         afterTemplate = aql`
-          FILTER summary.categoryPercentages.fail < DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.fail
+          FILTER summary.categoryPercentages.fail ${afterTemplateDirection} DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.fail
           OR (summary.categoryPercentages.fail == DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages 
           AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
         `
       } else if (orderBy.field === 'pass-percentage') {
         afterTemplate = aql`
-          FILTER summary.categoryPercentages.pass < DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.pass
+          FILTER summary.categoryPercentages.pass ${afterTemplateDirection} DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.pass
           OR (summary.categoryPercentages.pass == DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages 
           AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
         `
       } else if (orderBy.field === 'pass-dkim-percentage') {
         afterTemplate = aql`
-          FILTER summary.categoryPercentages.passDkimOnly < DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.passDkimOnly
+          FILTER summary.categoryPercentages.passDkimOnly ${afterTemplateDirection} DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.passDkimOnly
           OR (summary.categoryPercentages.passDkimOnly == DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages 
           AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
         `
       } else if (orderBy.field === 'pass-spf-percentage') {
         afterTemplate = aql`
-          FILTER summary.categoryPercentages.passSpfOnly < DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.passSpfOnly
+          FILTER summary.categoryPercentages.passSpfOnly ${afterTemplateDirection} DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.passSpfOnly
           OR (summary.categoryPercentages.passSpfOnly == DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages 
+          AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
+        `
+      } else if (orderBy.field === 'total-messages') {
+        afterTemplate = aql`
+          FILTER summary.totalMessages ${afterTemplateDirection} DOCUMENT(dmarcSummaries, ${afterId}).totalMessages
+          OR (summary.totalMessages == DOCUMENT(dmarcSummaries, ${afterId}).totalMessages
           AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
         `
       }
@@ -101,55 +118,72 @@ export const dmarcSumLoaderConnectionsByUserId = (
   let beforeTemplate = aql``
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    if (typeof orderBy.field === 'undefined') {
+    if (typeof orderBy === 'undefined') {
       beforeTemplate = aql`FILTER TO_NUMBER(summary._key) < TO_NUMBER(${beforeId})`
     } else {
+      let beforeTemplateDirection = aql``
+      /* istanbul ignore else */
+      if (typeof orderBy !== 'undefined') {
+        if (orderBy.direction === 'ASC') {
+          beforeTemplateDirection = aql`<`
+        } else {
+          beforeTemplateDirection = aql`>`
+        }
+      }
+
+      /* istanbul ignore else */
       if (orderBy.field === 'fail-count') {
         beforeTemplate = aql`
-          FILTER summary.categoryTotals.fail > DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.fail
-          OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.fail 
+          FILTER summary.categoryTotals.fail ${beforeTemplateDirection} DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.fail
+          OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.fail
           AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))
         `
       } else if (orderBy.field === 'pass-count') {
         beforeTemplate = aql`
-          FILTER summary.categoryTotals.pass > DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.pass 
-          OR (summary.categoryTotals.pass == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.pass 
+          FILTER summary.categoryTotals.pass ${beforeTemplateDirection} DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.pass 
+          OR (summary.categoryTotals.pass == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.pass
           AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))
         `
       } else if (orderBy.field === 'pass-dkim-count') {
         beforeTemplate = aql`
-          FILTER summary.categoryTotals.passDkimOnly > DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passDkimOnly
-          OR (summary.categoryTotals.passDkimOnly == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passDkimOnly 
+          FILTER summary.categoryTotals.passDkimOnly ${beforeTemplateDirection} DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passDkimOnly
+          OR (summary.categoryTotals.passDkimOnly == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passDkimOnly
           AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))
         `
       } else if (orderBy.field === 'pass-spf-count') {
         beforeTemplate = aql`
-          FILTER summary.categoryTotals.passSpfOnly > DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passSpfOnly
-          OR (summary.categoryTotals.passSpfOnly == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals 
+          FILTER summary.categoryTotals.passSpfOnly ${beforeTemplateDirection} DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passSpfOnly
+          OR (summary.categoryTotals.passSpfOnly == DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passSpfOnly
           AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))
         `
       } else if (orderBy.field === 'fail-percentage') {
         afterTemplate = aql`
-          FILTER summary.categoryPercentages.fail > DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.fail
-          OR (summary.categoryPercentages.fail == DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages 
+          FILTER summary.categoryPercentages.fail ${beforeTemplateDirection} DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.fail
+          OR (summary.categoryPercentages.fail == DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.fail
           AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))
         `
       } else if (orderBy.field === 'pass-percentage') {
         afterTemplate = aql`
-          FILTER summary.categoryPercentages.pass > DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.pass
-          OR (summary.categoryPercentages.pass == DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages 
+          FILTER summary.categoryPercentages.pass ${beforeTemplateDirection} DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.pass
+          OR (summary.categoryPercentages.pass == DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.pass
           AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))
         `
       } else if (orderBy.field === 'pass-dkim-percentage') {
         afterTemplate = aql`
-          FILTER summary.categoryPercentages.passDkimOnly > DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.passDkimOnly
-          OR (summary.categoryPercentages.passDkimOnly == DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages 
+          FILTER summary.categoryPercentages.passDkimOnly ${beforeTemplateDirection} DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.passDkimOnly
+          OR (summary.categoryPercentages.passDkimOnly == DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.passDkimOnly
           AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))
         `
       } else if (orderBy.field === 'pass-spf-percentage') {
         afterTemplate = aql`
-          FILTER summary.categoryPercentages.passSpfOnly > DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.passSpfOnly
-          OR (summary.categoryPercentages.passSpfOnly == DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages 
+          FILTER summary.categoryPercentages.passSpfOnly ${beforeTemplateDirection} DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.passSpfOnly
+          OR (summary.categoryPercentages.passSpfOnly == DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.passSpfOnly
+          AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))
+        `
+      } else if (orderBy.field === 'total-messages') {
+        afterTemplate = aql`
+          FILTER summary.totalMessages ${beforeTemplateDirection} DOCUMENT(dmarcSummaries, ${beforeId}).totalMessages
+          OR (summary.totalMessages == DOCUMENT(dmarcSummaries, ${beforeId}).totalMessages
           AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))
         `
       }
@@ -214,8 +248,147 @@ export const dmarcSumLoaderConnectionsByUserId = (
     )
   }
 
+  let hasNextPageDirection = aql``
+  if (typeof orderBy !== 'undefined') {
+    if (orderBy.direction === 'ASC') {
+      hasNextPageDirection = aql`>`
+    } else {
+      hasNextPageDirection = aql`<`
+    }
+  }
+
+  let hasNextPageFilter = aql`FILTER TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key)`
+  if (typeof orderBy !== 'undefined') {
+    /* istanbul ignore else */
+    if (orderBy.field === 'fail-count') {
+      hasNextPageFilter = aql`
+        FILTER summary.categoryTotals.fail ${hasNextPageDirection} DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail
+        OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail 
+        AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-count') {
+      hasNextPageFilter = aql`
+        FILTER summary.categoryTotals.fail ${hasNextPageDirection} DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail
+        OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail 
+        AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-dkim-count') {
+      hasNextPageFilter = aql`
+        FILTER summary.categoryTotals.fail ${hasNextPageDirection} DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail
+        OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail 
+        AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-spf-count') {
+      hasNextPageFilter = aql`
+        FILTER summary.categoryTotals.fail ${hasNextPageDirection} DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail
+        OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail 
+        AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'fail-percentage') {
+      hasNextPageFilter = aql`
+        FILTER summary.categoryTotals.fail ${hasNextPageDirection} DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail
+        OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail 
+        AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-percentage') {
+      hasNextPageFilter = aql`
+        FILTER summary.categoryTotals.fail ${hasNextPageDirection} DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail
+        OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail 
+        AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-dkim-percentage') {
+      hasNextPageFilter = aql`
+        FILTER summary.categoryTotals.fail ${hasNextPageDirection} DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail
+        OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail 
+        AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-spf-percentage') {
+      hasNextPageFilter = aql`
+        FILTER summary.categoryTotals.fail ${hasNextPageDirection} DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail
+        OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail 
+        AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'total-messages') {
+      hasNextPageFilter = aql`
+        FILTER summary.categoryTotals.fail ${hasNextPageDirection} DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail
+        OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail 
+        AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
+      `
+    }
+  }
+
+  let hasPreviousPageDirection = aql``
+  if (typeof orderBy !== 'undefined') {
+    if (orderBy.direction === 'ASC') {
+      hasPreviousPageDirection = aql`<`
+    } else {
+      hasPreviousPageDirection = aql`>`
+    }
+  }
+
+  let hasPreviousPageFilter = aql`FILTER TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key)`
+  if (typeof orderBy !== 'undefined') {
+    /* istanbul ignore else */
+    if (orderBy.field === 'fail-count') {
+      hasPreviousPageFilter = aql`
+        FILTER summary.categoryTotals.fail ${hasPreviousPageDirection} DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.fail
+        OR (summary.categoryTotals.fail == DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.fail
+        AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-count') {
+      hasPreviousPageFilter = aql`
+        FILTER summary.categoryTotals.pass ${hasPreviousPageDirection} DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.pass
+        OR (summary.categoryTotals.pass == DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.pass
+        AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-dkim-count') {
+      hasPreviousPageFilter = aql`
+        FILTER summary.categoryTotals.passDkimOnly ${hasPreviousPageDirection} DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.passDkimOnly
+        OR (summary.categoryTotals.passDkimOnly == DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.passDkimOnly
+        AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-spf-count') {
+      hasPreviousPageFilter = aql`
+        FILTER summary.categoryTotals.passSpfOnly ${hasPreviousPageDirection} DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.passSpfOnly
+        OR (summary.categoryTotals.passSpfOnly == DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.passSpfOnly
+        AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'fail-percentage') {
+      hasPreviousPageFilter = aql`
+        FILTER summary.categoryPercentages.fail ${hasPreviousPageDirection} DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.fail
+        OR (summary.categoryPercentages.fail == DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.fail
+        AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-percentage') {
+      hasPreviousPageFilter = aql`
+        FILTER summary.categoryPercentages.pass ${hasPreviousPageDirection} DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.pass
+        OR (summary.categoryPercentages.pass == DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.pass
+        AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-dkim-percentage') {
+      hasPreviousPageFilter = aql`
+        FILTER summary.categoryPercentages.passDkimOnly ${hasPreviousPageDirection} DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.passDkimOnly
+        OR (summary.categoryPercentages.passDkimOnly == DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.passDkimOnly
+        AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'pass-spf-percentage') {
+      hasPreviousPageFilter = aql`
+        FILTER summary.categoryPercentages.passSpfOnly ${hasPreviousPageDirection} DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.passSpfOnly
+        OR (summary.categoryPercentages.fail == DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.passSpfOnly
+        AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
+      `
+    } else if (orderBy.field === 'total-messages') {
+      hasPreviousPageFilter = aql`
+        FILTER summary.totalMessages ${hasPreviousPageDirection} DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).totalMessages
+        OR (summary.totalMessages == DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).totalMessages
+        AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
+      `
+    }
+  }
+
   let sortByField = aql``
   if (typeof orderBy !== 'undefined') {
+    /* istanbul ignore else */
     if (orderBy.field === 'fail-count') {
       sortByField = aql`summary.categoryTotals.fail ${orderBy.direction},`
     } else if (orderBy.field === 'pass-count') {
@@ -225,13 +398,15 @@ export const dmarcSumLoaderConnectionsByUserId = (
     } else if (orderBy.field === 'pass-spf-count') {
       sortByField = aql`summary.categoryTotals.passSpfOnly ${orderBy.direction},`
     } else if (orderBy.field === 'fail-percentage') {
-      sortByField = aql`summary.categoryPercentages.fail ${orderBy.direction}`
+      sortByField = aql`summary.categoryPercentages.fail ${orderBy.direction},`
     } else if (orderBy.field === 'pass-percentage') {
-      sortByField = aql`summary.categoryPercentages.pass ${orderBy.direction}`
+      sortByField = aql`summary.categoryPercentages.pass ${orderBy.direction},`
     } else if (orderBy.field === 'pass-dkim-percentage') {
-      sortByField = aql`summary.categoryPercentages.passDkimOnly ${orderBy.direction}`
+      sortByField = aql`summary.categoryPercentages.passDkimOnly ${orderBy.direction},`
     } else if (orderBy.field === 'pass-spf-percentage') {
-      sortByField = aql`summary.categoryPercentages.passSpfOnly ${orderBy.direction}`
+      sortByField = aql`summary.categoryPercentages.passSpfOnly ${orderBy.direction},`
+    } else if (orderBy.field === 'total-messages') {
+      sortByField = aql`summary.totalMessages ${orderBy.direction},`
     }
   }
 
@@ -283,23 +458,24 @@ export const dmarcSumLoaderConnectionsByUserId = (
             id: summary._key,
             domainKey: domain._key,
             categoryTotals: summary.categoryTotals,
-            categoryPercentages: summary.categoryPercentages
+            categoryPercentages: summary.categoryPercentages,
+            totalMessages: summary.totalMessages
           }
     )
 
     LET hasNextPage = (LENGTH(
       FOR summary IN dmarcSummaries
         FILTER summary._id IN summaryIds
-        FILTER TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key)
-        SORT summary._key ${sortString} LIMIT 1
+        ${hasNextPageFilter}
+        SORT ${sortByField} summary._key ${sortString} LIMIT 1
         RETURN summary
     ) > 0 ? true : false)
 
     LET hasPreviousPage = (LENGTH(
       FOR summary IN dmarcSummaries
         FILTER summary._id IN summaryIds
-        FILTER TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key)
-        SORT summary._key ${sortString} LIMIT 1
+        ${hasPreviousPageFilter}
+        SORT ${sortByField} summary._key ${sortString} LIMIT 1
         RETURN summary
     ) > 0 ? true : false)
 
