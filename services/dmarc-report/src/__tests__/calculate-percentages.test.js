@@ -12,28 +12,28 @@ describe('given the calculatePercentages', () => {
       it('returns percentage', () => {
         const percentages = calculatePercentages(categoryTotals)
 
-        expect(percentages.pass).toEqual(14.3)
+        expect(percentages.pass).toEqual(14)
       })
     })
     describe('fail is greater then zero', () => {
       it('returns percentage', () => {
         const percentages = calculatePercentages(categoryTotals)
 
-        expect(percentages.fail).toEqual(21.4)
+        expect(percentages.fail).toEqual(21)
       })
     })
     describe('passDkimOnly is greater then zero', () => {
       it('returns percentage', () => {
         const percentages = calculatePercentages(categoryTotals)
 
-        expect(percentages.passDkimOnly).toEqual(28.6)
+        expect(percentages.passDkimOnly).toEqual(29)
       })
     })
     describe('passSpfOnly is greater then zero', () => {
       it('returns percentage', () => {
         const percentages = calculatePercentages(categoryTotals)
 
-        expect(percentages.passSpfOnly).toEqual(35.7)
+        expect(percentages.passSpfOnly).toEqual(36)
       })
     })
   })
