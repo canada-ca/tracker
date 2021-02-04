@@ -348,7 +348,7 @@ def main():
     domains = get_domains_by_name(name, client)
     print(domains)
 
-    """domain = "cse-cst.gc.ca"
+    domain = "cse-cst.gc.ca"
     print("Getting a dmarc summary for " + domain + "...")
     result = get_dmarc_summary(domain, "november", 2020, client)
     print(result)
@@ -375,7 +375,7 @@ def main():
 
     print("Getting domain status for " + domain + "...")
     results = get_domain_status(domain, client)
-    print(results)"""
+    print(results)
 
 
 if __name__ == "__main__":
