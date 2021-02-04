@@ -35,6 +35,13 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
         passDkimOnly: 0,
         passSpfOnly: 0,
       },
+      categoryPercentages: {
+        pass: 0,
+        fail: 0,
+        passDkimOnly: 0,
+        passSpfOnly: 0,
+      },
+      totalMessages: 0,
     })
     await collections.dmarcSummaries.save({
       detailTables: {
@@ -49,6 +56,13 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
         passDkimOnly: 0,
         passSpfOnly: 0,
       },
+      categoryPercentages: {
+        pass: 0,
+        fail: 0,
+        passDkimOnly: 0,
+        passSpfOnly: 0,
+      },
+      totalMessages: 0,
     })
     consoleOutput.length = 0
   })
@@ -73,7 +87,9 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
             _rev: summary._rev,
             _type: "dmarcSummary",
             id: summary._key,
-            categoryTotals: summary.categoryTotals
+            categoryTotals: summary.categoryTotals,
+            categoryPercentages: summary.categoryPercentages,
+            totalMessages: summary.totalMessages
           }
       `
       const expectedSummary = await expectedCursor.next()
@@ -96,7 +112,9 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
             _rev: summary._rev,
             _type: "dmarcSummary",
             id: summary._key,
-            categoryTotals: summary.categoryTotals
+            categoryTotals: summary.categoryTotals,
+            categoryPercentages: summary.categoryPercentages,
+            totalMessages: summary.totalMessages
           }
       `
 
