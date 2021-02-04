@@ -9,6 +9,7 @@ import emoji
 import random
 import asyncio
 import datetime
+import requests
 from arango import ArangoClient
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
@@ -20,18 +21,20 @@ DB_PASS = os.getenv("DB_PASS")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
+REDIS_URL = os.getend("REDIS_URL")
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def process_https(results, domain_key, db):
+def publish_results(results, scan_type, uuid):
+    requests.post(f"{REDIS_URL}/scan/{scan_type}/{uuid}", json=results)
+
+def process_https(results, domain_key, uuid, db):
     timestamp = str(datetime.datetime.utcnow())
-    neutral_tags = []
-    positive_tags = []
-    negative_tags = []
+    tags = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
 
     if results.get("missing", None) is not None:
-        negative_tags.append("https2")
+        tags["negativeTags"].append("https2")
     else:
         # Implementation
         implementation = results.get("implementation", None)
@@ -41,11 +44,11 @@ def process_https(results, domain_key, db):
                 implementation = implementation.lower()
 
             if implementation == "downgrades https":
-                negative_tags.append("https3")
+                tags["negativeTags"].append("https3")
             elif implementation == "bad chain":
-                negative_tags.append("https4")
+                tags["negativeTags"].append("https4")
             elif implementation == "bad hostname":
-                negative_tags.append("https5")
+                tags["negativeTags"].append("https5")
 
         # Enforced
         enforced = results.get("enforced", None)
@@ -55,11 +58,11 @@ def process_https(results, domain_key, db):
                 enforced = enforced.lower()
 
             if enforced == "moderate":
-                negative_tags.append("https8")
+                tags["negativeTags"].append("https8")
             elif enforced == "weak":
-                negative_tags.append("https7")
+                tags["negativeTags"].append("https7")
             elif enforced == "not enforced":
-                negative_tags.append("https6")
+                tags["negativeTags"].append("https6")
 
         # HSTS
         hsts = results.get("hsts", None)
@@ -102,7 +105,7 @@ def process_https(results, domain_key, db):
         expired_cert = results.get("expired_cert", False)
 
         if expired_cert is True:
-            negative_tags.append("https13")
+            tags["negativeTags"].append("https13")
 
         # Self Signed Cert
         self_signed_cert = results.get("https", {}).get("self_signed_cert", False)
@@ -110,53 +113,58 @@ def process_https(results, domain_key, db):
         if self_signed_cert is True:
             negative_tags.append("https14")
 
-    try:
-        httpsEntry = db.collection("https").insert(
-            {
-                "timestamp": timestamp,
-                "implementation": results.get("implementation", None),
-                "enforced": results.get("enforced", None),
-                "hsts": results.get("hsts", None),
-                "hstsAge": results.get("hsts_age", None),
-                "preloaded": results.get("preload_status", None),
-                "rawJson": results,
-                "neutralTags": neutral_tags,
-                "positiveTags": positive_tags,
-                "negativeTags": negative_tags,
-            }
-        )
-        domain = db.collection("domains").get({"_key": domain_key})
-        db.collection("domainsHTTPS").insert(
-            {"_from": domain["_id"], "_to": httpsEntry["_id"]}
-        )
+    httpsResults = {
+        "timestamp": timestamp,
+        "implementation": results.get("implementation", None),
+        "enforced": results.get("enforced", None),
+        "hsts": results.get("hsts", None),
+        "hstsAge": results.get("hsts_age", None),
+        "preloaded": results.get("preload_status", None),
+        "rawJson": results,
+        "neutralTags": neutral_tags,
+        "positiveTags": positive_tags,
+        "negativeTags": negative_tags,
+        }
 
-        if len(negative_tags) > 0:
-            https_status = "fail"
-        else:
-            https_status = "pass"
-
-        if domain.get("status", None) == None:
-            domain.update(
-                {
-                    "status": {
-                        "https": "unknown",
-                        "ssl": "unknown",
-                        "dmarc": "unknown",
-                        "dkim": "unknown",
-                        "spf": "unknown",
-                    }
-                }
+    if uuid is None:
+        try:
+            httpsEntry = db.collection("https").insert(httpsResults)
+            domain = db.collection("domains").get({"_key": domain_key})
+            db.collection("domainsHTTPS").insert(
+                {"_from": domain["_id"], "_to": httpsEntry["_id"]}
             )
-        domain["status"]["https"] = https_status
-        db.collection("domains").update(domain)
 
-    except Exception as e:
-        logging.error(
-            f"(HTTPS SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-        )
-        return
+            if len(negative_tags) > 0:
+                https_status = "fail"
+            else:
+                https_status = "pass"
 
-    logging.info("HTTPS Scan inserted into database")
+            if domain.get("status", None) == None:
+                domain.update(
+                    {
+                        "status": {
+                            "https": "unknown",
+                            "ssl": "unknown",
+                            "dmarc": "unknown",
+                            "dkim": "unknown",
+                            "spf": "unknown",
+                        }
+                    }
+                )
+            domain["status"]["https"] = https_status
+            db.collection("domains").update(domain)
+
+        except Exception as e:
+            logging.error(
+                f"(HTTPS SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+            )
+            return
+
+        logging.info("HTTPS Scan inserted into database")
+
+    else:
+        publish_results(httpsResults, "https", uuid)
+        logging.info("HTTPS Scan published to redis")
 
 
 def process_ssl(results, guidance, domain_key, db):
@@ -218,59 +226,65 @@ def process_ssl(results, guidance, domain_key, db):
         if results["openssl_ccs_injection"]:
             negative_tags.append("ssl8")
 
-    try:
-        sslEntry = db.collection("ssl").insert(
-            {
-                "timestamp": timestamp,
-                "strong_ciphers": strong_ciphers,
-                "acceptable_ciphers": acceptable_ciphers,
-                "weak_ciphers": weak_ciphers,
-                "strong_curves": strong_curves,
-                "acceptable_curves": acceptable_curves,
-                "weak_curves": weak_curves,
-                "supports_ecdh_key_exchange": results.get(
-                    "supports_ecdh_key_exchange", False
-                ),
-                "heartbleed_vulnerable": results.get("heartbleed", False),
-                "ccs_injection_vulnerable": results.get("openssl_ccs_injection", False),
-                "rawJson": results,
-                "neutralTags": neutral_tags,
-                "positiveTags": positive_tags,
-                "negativeTags": negative_tags,
-            }
-        )
-        domain = db.collection("domains").get({"_key": domain_key})
-        db.collection("domainsSSL").insert(
-            {"_from": domain["_id"], "_to": sslEntry["_id"]}
-        )
-
-        if len(negative_tags) > 0 or "ssl5" not in positive_tags:
-            ssl_status = "fail"
-        else:
-            ssl_status = "pass"
-
-        if domain.get("status", None) == None:
-            domain.update(
-                {
-                    "status": {
-                        "https": "unknown",
-                        "ssl": "unknown",
-                        "dmarc": "unknown",
-                        "dkim": "unknown",
-                        "spf": "unknown",
-                    }
-                }
+    
+    sslResults = {
+        "timestamp": timestamp,
+        "strong_ciphers": strong_ciphers,
+        "acceptable_ciphers": acceptable_ciphers,
+        "weak_ciphers": weak_ciphers,
+        "strong_curves": strong_curves,
+        "acceptable_curves": acceptable_curves,
+        "weak_curves": weak_curves,
+        "supports_ecdh_key_exchange": results.get(
+            "supports_ecdh_key_exchange", False
+        ),
+        "heartbleed_vulnerable": results.get("heartbleed", False),
+        "ccs_injection_vulnerable": results.get("openssl_ccs_injection", False),
+        "rawJson": results,
+        "neutralTags": neutral_tags,
+        "positiveTags": positive_tags,
+        "negativeTags": negative_tags,
+    }
+    
+    if uuid is None:
+        try:
+            sslEntry = db.collection("ssl").insert(sslResults)
+            domain = db.collection("domains").get({"_key": domain_key})
+            db.collection("domainsSSL").insert(
+                {"_from": domain["_id"], "_to": sslEntry["_id"]}
             )
-        domain["status"]["ssl"] = ssl_status
-        db.collection("domains").update(domain)
 
-    except Exception as e:
-        logging.error(
-            f"(SSL SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-        )
-        return
+            if len(negative_tags) > 0 or "ssl5" not in positive_tags:
+                ssl_status = "fail"
+            else:
+                ssl_status = "pass"
 
-    logging.info("SSL Scan inserted into database")
+            if domain.get("status", None) == None:
+                domain.update(
+                    {
+                        "status": {
+                            "https": "unknown",
+                            "ssl": "unknown",
+                            "dmarc": "unknown",
+                            "dkim": "unknown",
+                            "spf": "unknown",
+                        }
+                    }
+                )
+            domain["status"]["ssl"] = ssl_status
+            db.collection("domains").update(domain)
+
+        except Exception as e:
+            logging.error(
+                f"(SSL SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+            )
+            return
+
+        logging.info("SSL Scan inserted into database")
+
+    else:
+        publish_results(sslResults, "ssl", uuid)
+        logging.info("SSL Scan published to redis")
 
 
 def process_dns(results, domain_key, db):
@@ -639,59 +653,70 @@ def process_dns(results, domain_key, db):
                 if tag in tags["dkim"][selector]:
                     guidance_tags["dkim"][selector]["neutralTags"].append(tag)
 
-    try:
-        dmarcEntry = db.collection("dmarc").insert(
-            {
-                "timestamp": timestamp,
-                "record": results["dmarc"].get("record", None),
-                "pPolicy": results["dmarc"]
-                .get("tags", {})
-                .get("p", {})
-                .get("value", None),
-                "spPolicy": results["dmarc"]
-                .get("tags", {})
-                .get("sp", {})
-                .get("value", None),
-                "pct": results["dmarc"]
-                .get("tags", {})
-                .get("pct", {})
-                .get("value", None),
-                "rawJson": results["dmarc"],
-                "neutralTags": guidance_tags["dmarc"]["neutralTags"],
-                "positiveTags": guidance_tags["dmarc"]["positiveTags"],
-                "negativeTags": guidance_tags["dmarc"]["negativeTags"],
-            }
-        )
-        spfRecord = results["spf"].get("record", None)
-        if spfRecord is None:
-            spfDefault = None
-        else:
-            spfDefault = spfRecord[-4:].lower()
-        spfEntry = db.collection("spf").insert(
-            {
-                "timestamp": timestamp,
-                "record": spfRecord,
-                "lookups": results["spf"].get("dns_lookups", None),
-                "spfDefault": spfDefault,
-                "rawJson": results["spf"],
-                "neutralTags": guidance_tags["spf"]["neutralTags"],
-                "positiveTags": guidance_tags["spf"]["positiveTags"],
-                "negativeTags": guidance_tags["spf"]["negativeTags"],
-            }
-        )
+    dmarcResults = {
+        "timestamp": timestamp,
+        "record": results["dmarc"].get("record", None),
+        "pPolicy": results["dmarc"]
+        .get("tags", {})
+        .get("p", {})
+        .get("value", None),
+        "spPolicy": results["dmarc"]
+        .get("tags", {})
+        .get("sp", {})
+        .get("value", None),
+        "pct": results["dmarc"]
+        .get("tags", {})
+        .get("pct", {})
+        .get("value", None),
+        "rawJson": results["dmarc"],
+        "neutralTags": guidance_tags["dmarc"]["neutralTags"],
+        "positiveTags": guidance_tags["dmarc"]["positiveTags"],
+        "negativeTags": guidance_tags["dmarc"]["negativeTags"],
+    }
 
-        dkimEntry = db.collection("dkim").insert({"timestamp": timestamp})
-        if results["dkim"].get("missing", None) is None:
-            for selector in results["dkim"].keys():
-                keyModulus = results["dkim"][selector]["public_key_modulus"]
+    spfResults = {
+        "timestamp": timestamp,
+        "record": spfRecord,
+        "lookups": results["spf"].get("dns_lookups", None),
+        "spfDefault": spfDefault,
+        "rawJson": results["spf"],
+        "neutralTags": guidance_tags["spf"]["neutralTags"],
+        "positiveTags": guidance_tags["spf"]["positiveTags"],
+        "negativeTags": guidance_tags["spf"]["negativeTags"],
+    }
 
-                previous_dkim_results = db.collection("dkimResults").find(
-                    {"keyModulus": keyModulus}
+    dkimResults = {}
+    if results["dkim"].get("missing", None) is None:
+        for selector in results["dkim"].keys():
+            keyModulus = results["dkim"][selector]["public_key_modulus"]
+
+            previous_dkim_results = db.collection("dkimResults").find(
+                {"keyModulus": keyModulus}
+            )
+
+            for previous_dkim_result in previous_dkim_results:
+                edges = db.collection("dkimToDkimResults").find(
+                    {"_to": previous_dkim_result["_id"]}
                 )
+                for edge in edges:
+                    previous_dkim = db.collection("dkim").get({"_id": edge["_from"]})
 
-                for previous_dkim_result in previous_dkim_results:
-                    edges = db.collection("dkimToDkimResults").find(
-                        {"_to": previous_dkim_result["_id"]}
+                    # Check if PK was used for another domain
+                    previous_dkim_domain_query = db.collection("domainsDKIM").find(
+                        {"_to": previous_dkim["_id"]}, limit=1
+                    )
+                    previous_dkim_domain = previous_dkim_domain_query.next()
+                    if (previous_dkim_domain["_key"] != domain_key) and (
+                        "dkim14" not in guidance_tags["dkim"][selector]["negativeTags"]
+                    ):
+                        guidance_tags["dkim"][selector]["negativeTags"].append("dkim14")
+
+                    # Check if PK is older than 1 year
+                    current_timestamp = datetime.datetime.strptime(
+                        timestamp, "%Y-%m-%d %H:%M:%S.%f"
+                    )
+                    previous_timestamp = datetime.datetime.strptime(
+                        previous_dkim["timestamp"], "%Y-%m-%d %H:%M:%S.%f"
                     )
                     for edge in edges:
                         previous_dkim = db.collection("dkim").get(
@@ -744,82 +769,85 @@ def process_dns(results, domain_key, db):
                     {"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]}
                 )
 
-        domain = db.collection("domains").get({"_key": domain_key})
-        db.collection("domainsDMARC").insert(
-            {"_from": domain["_id"], "_to": dmarcEntry["_id"]}
-        )
-        db.collection("domainsSPF").insert(
-            {"_from": domain["_id"], "_to": spfEntry["_id"]}
-        )
-        db.collection("domainsDKIM").insert(
-            {"_from": domain["_id"], "_to": dkimEntry["_id"]}
-        )
-
-        if "spf12" in tags["spf"]:
-            spf_status = "pass"
-        else:
-            spf_status = "fail"
-
-        if "dmarc23" in tags["dmarc"]:
-            dmarc_status = "pass"
-        else:
-            dmarc_status = "fail"
-
-        dkim_statuses = []
-        for selector in tags["dkim"].keys():
-            if any(
-                i
-                in [
-                    "dkim2",
-                    "dkim3",
-                    "dkim4",
-                    "dkim5",
-                    "dkim6",
-                    "dkim9",
-                    "dkim11",
-                    "dkim12",
-                ]
-                for i in tags["dkim"][selector]
-            ):
-                dkim_statuses.append("fail")
-            elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"][selector]):
-                dkim_statuses.append("pass")
-
-        if any(i == "fail" for i in dkim_statuses):
-            dkim_status = "fail"
-        else:
-            dkim_status = "pass"
-
-        if domain.get("status", None) == None:
-            domain.update(
+            dkimResults.update(selector:
                 {
-                    "status": {
-                        "https": "unknown",
-                        "ssl": "unknown",
-                        "dmarc": "unknown",
-                        "dkim": "unknown",
-                        "spf": "unknown",
-                    }
+                    "record": results["dkim"][selector].get("txt_record", None),
+                    "keyLength": results["dkim"][selector].get("key_size", None),
+                    "keyModulus": keyModulus,
+                    "rawJson": results["dkim"][selector],
+                    "neutralTags": guidance_tags["dkim"][selector]["neutralTags"],
+                    "positiveTags": guidance_tags["dkim"][selector]["positiveTags"],
+                    "negativeTags": guidance_tags["dkim"][selector]["negativeTags"],
                 }
             )
 
-        for key, val in {
-            "dkim": dkim_status,
-            "dmarc": dmarc_status,
-            "spf": spf_status,
-        }.items():
-            domain["status"][key] = val
+    if uuid is None:
+        try:
+            dmarcEntry = db.collection("dmarc").insert(dmarcResults)
 
-        domain.update({"phase": phase})
-        db.collection("domains").update(domain)
+            spfEntry = db.collection("spf").insert(spfResults)
 
-    except Exception as e:
-        logging.error(
-            f"(DNS SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-        )
-        return
+            dkim_statuses = []
+            for selector in tags["dkim"].keys():
+                if any(
+                    i
+                    in [
+                        "dkim2",
+                        "dkim3",
+                        "dkim4",
+                        "dkim5",
+                        "dkim6",
+                        "dkim9",
+                        "dkim11",
+                        "dkim12",
+                    ]
+                    for i in tags["dkim"][selector]
+                ):
+                    dkim_statuses.append("fail")
+                elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"][selector]):
+                    dkim_statuses.append("pass")
 
-    logging.info("DNS Scans inserted into database")
+            if any(i == "fail" for i in dkim_statuses):
+                dkim_status = "fail"
+            else:
+                dkim_status = "pass"
+
+            if domain.get("status", None) == None:
+                domain.update(
+                    {
+                        "status": {
+                            "https": "unknown",
+                            "ssl": "unknown",
+                            "dmarc": "unknown",
+                            "dkim": "unknown",
+                            "spf": "unknown",
+                        }
+                    }
+                )
+
+            for key, val in {
+                "dkim": dkim_status,
+                "dmarc": dmarc_status,
+                "spf": spf_status,
+            }.items():
+                domain["status"][key] = val
+
+            domain.update({"phase": phase})
+            db.collection("domains").update(domain)
+
+        except Exception as e:
+            logging.error(
+                f"(DNS SCAN, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+            )
+            return
+
+        logging.info("DNS Scans inserted into database")
+        
+    else:
+        publish_results(dmarcResults, "dmarc", uuid)
+        publish_results(spfResults, "spf", uuid)
+        publish_results(dkimResults, "dkim", uuid)
+        logging.info("DNS Scans published to redis")
 
 
 def Server(
