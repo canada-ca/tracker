@@ -1997,3 +1997,19 @@ msgstr "Statut préchargé:"
 #: src/PolicyComplianceDetails.js:57
 msgid "Phase:"
 msgstr "Phase:"
+
+#: src/ScanCard.js:30
+msgid "ITPIN Compliant"
+msgstr "Conforme à l'ITPIN"
+
+#: src/ScanCard.js:31
+msgid "Changes Required for ITPIN Compliance"
+msgstr "Changements requis pour la mise en conformité ITPIN"
+
+#: src/ScanCard.js:43
+msgid "DMARC Implementation Phase: {status}"
+msgstr "Phase de mise en œuvre de la DMARC: {status}"
+
+#: src/ScanCard.js:54
+msgid "DMARC Phase Unavailable"
+msgstr "La phase DMARC n'est pas disponible"
