@@ -9,8 +9,9 @@ import { categoryPercentagesType } from '../category-percentages'
 import { detailTablesType } from '../detail-tables'
 import { dmarcSummaryType } from '../dmarc-summary'
 import { PeriodEnums } from '../../../enums'
-import { Year, Domain } from '../../../scalars'
+import { Year } from '../../../scalars'
 import { domainLoaderByKey } from '../../../domain/loaders'
+import { domainType } from '../../../domain/objects'
 import { dmarcSumLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -27,7 +28,7 @@ describe('testing the period gql object', () => {
       const demoType = dmarcSummaryType.getFields()
 
       expect(demoType).toHaveProperty('domain')
-      expect(demoType.domain.type).toMatchObject(Domain)
+      expect(demoType.domain.type).toMatchObject(domainType)
     })
     it('has a month field', () => {
       const demoType = dmarcSummaryType.getFields()
@@ -63,7 +64,7 @@ describe('testing the period gql object', () => {
     })
   })
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, migrate, collections, domain, dmarcSummary
+    let query, drop, truncate, migrate, collections, dmarcSummary
 
     beforeAll(async () => {
       ;({ migrate } = await ArangoTools({ rootPass, url }))
@@ -76,7 +77,7 @@ describe('testing the period gql object', () => {
     })
 
     beforeEach(async () => {
-      domain = await collections.domains.save({
+      await collections.domains.save({
         domain: 'test.domain.gc.ca',
       })
 
@@ -107,6 +108,12 @@ describe('testing the period gql object', () => {
     })
     describe('testing the domain resolver', () => {
       it('returns the resolved field', async () => {
+        const domainCursor = await query`
+          FOR domain IN domains
+            RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
+        `
+        const domain = await domainCursor.next()
+
         const demoType = dmarcSummaryType.getFields()
 
         const loader = domainLoaderByKey(query, '1', {})
@@ -117,7 +124,7 @@ describe('testing the period gql object', () => {
             {},
             { loaders: { domainLoaderByKey: loader } },
           ),
-        ).resolves.toEqual('test.domain.gc.ca')
+        ).resolves.toEqual(domain)
       })
     })
     describe('testing the month resolver', () => {
@@ -201,7 +208,7 @@ describe('testing the period gql object', () => {
 
         await expect(
           demoType.categoryPercentages.resolve(
-            { _to: dmarcSummary._id },
+            { _id: dmarcSummary._id },
             {},
             { loaders: { dmarcSumLoaderByKey: dmarcSumLoaderByKey(query) } },
           ),
@@ -221,7 +228,7 @@ describe('testing the period gql object', () => {
 
         await expect(
           demoType.categoryTotals.resolve(
-            { _to: dmarcSummary._id },
+            { _id: dmarcSummary._id },
             {},
             { loaders: { dmarcSumLoaderByKey: dmarcSumLoaderByKey(query) } },
           ),
@@ -233,11 +240,11 @@ describe('testing the period gql object', () => {
         const demoType = dmarcSummaryType.getFields()
 
         const data = {
-          _to: 'domains/1',
+          _id: 'domains/1',
         }
 
         expect(demoType.detailTables.resolve(data)).toEqual({
-          _to: 'domains/1',
+          _id: 'domains/1',
         })
       })
     })
