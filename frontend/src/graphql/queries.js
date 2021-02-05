@@ -434,12 +434,39 @@ export const ORG_DETAILS_PAGE = gql`
           }
         }
       }
-      domains(first: 10) {
+
+      affiliations(first: 10) {
         pageInfo {
           hasNextPage
           hasPreviousPage
         }
+        totalCount
         edges {
+          node {
+            permission
+            user {
+              id
+              userName
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const PAGINATED_ORG_DOMAINS = gql`
+  query OrgDomainsNext($slug: Slug!, $first: Int, $after: String) {
+    findOrganizationBySlug(orgSlug: $slug) {
+      domains(first: $first, after: $after) {
+        pageInfo {
+          hasNextPage
+          endCursor
+          hasPreviousPage
+          startCursor
+        }
+        edges {
+          cursor
           node {
             id
             domain
@@ -454,18 +481,32 @@ export const ORG_DETAILS_PAGE = gql`
           }
         }
       }
-      affiliations(first: 10) {
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_ORG_DOMAINS = gql`
+  query OrgDomainsPrev($slug: Slug!, $last: Int, $before: String) {
+    pagination: findOrganizationBySlug(orgSlug: $slug) {
+      domains(last: $last, before: $before) {
         pageInfo {
           hasNextPage
+          endCursor
           hasPreviousPage
+          startCursor
         }
-        totalCount
         edges {
+          cursor
           node {
-            permission
-            user {
-              id
-              userName
+            id
+            domain
+            lastRan
+            status {
+              dkim
+              dmarc
+              https
+              spf
+              ssl
             }
           }
         }

@@ -39,7 +39,6 @@ export function OrganizationSummary({
         </Stack>
       </Box>
       <SummaryGroup web={summaries.web} mail={summaries.mail} />
-      <Trans>*All data represented is mocked for demonstration purposes</Trans>
     </Layout>
   )
 }

@@ -24,9 +24,9 @@ import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
-import { DomainCard } from './DomainCard'
 import { ListOf } from './ListOf'
 import { UserCard } from './UserCard'
+import { OrganizationDomains } from './OrganizationDomains'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
@@ -58,10 +58,10 @@ export default function OrganizationDetails() {
     orgName = data.organization.name
   }
 
-  let domains = []
-  if (data?.organization?.domains?.edges) {
-    domains = data.organization.domains.edges.map((e) => e.node)
-  }
+  // let domains = []
+  // if (data?.organization?.domains?.edges) {
+  //   domains = data.organization.domains.edges.map((e) => e.node)
+  // }
 
   let users = []
   if (data?.organization?.affiliations?.edges) {
@@ -122,31 +122,7 @@ export default function OrganizationDetails() {
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <ListOf
-                elements={domains}
-                ifEmpty={() => (
-                  <Text fontSize="xl" fontWeight="bold">
-                    <Trans>No Domains</Trans>
-                  </Text>
-                )}
-                mb="4"
-              >
-                {({ id, domain, lastRan, status }, index) => (
-                  <ErrorBoundary
-                    key={`${id}:${index}`}
-                    FallbackComponent={ErrorFallbackMessage}
-                  >
-                    <Box>
-                      <DomainCard
-                        url={domain}
-                        lastRan={lastRan}
-                        status={status}
-                      />
-                      <Divider borderColor="gray.900" />
-                    </Box>
-                  </ErrorBoundary>
-                )}
-              </ListOf>
+              <OrganizationDomains orgSlug={orgSlug} />
             </ErrorBoundary>
           </TabPanel>
           {isLoggedIn() && (
