@@ -5,7 +5,7 @@ export const rawSpfFailureData = {
       __typename: 'Domain',
       dmarcSummaryByPeriod: {
         __typename: 'DmarcSummary',
-        domain: { domain: 'test.domain.ca' },
+        domain: { domain: 'test.domain.ca', __typename: 'Domain' },
         month: 'LAST30DAYS',
         year: '2020',
         detailTables: {
