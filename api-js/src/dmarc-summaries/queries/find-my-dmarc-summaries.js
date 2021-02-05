@@ -37,20 +37,10 @@ export const findMyDmarcSummaries = {
   ) => {
     await userRequired()
 
-    let dmarcSummaries
-    try {
-      dmarcSummaries = await dmarcSumLoaderConnectionsByUserId({
-        period: args.month,
-        ...args,
-      })
-    } catch (err) {
-      console.error(
-        `Database error occurred while user: ${userKey} was trying to gather dmarc summary connections in findMyDmarcSummaries: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to load dmarc summaries. Please try again.`),
-      )
-    }
+    const dmarcSummaries = await dmarcSumLoaderConnectionsByUserId({
+      period: args.month,
+      ...args,
+    })
 
     console.info(`User ${userKey} successfully retrieved their dmarc summaries`)
 
