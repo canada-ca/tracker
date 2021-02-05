@@ -71,7 +71,7 @@ describe('given the dmarcGuidanceTagLoader function', () => {
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
       `
 
-      while (expectedCursor.hasNext) {
+      while (expectedCursor.hasNext()) {
         const tempDkim = await expectedCursor.next()
         dmarcTagKeys.push(tempDkim._key)
         expectedDmarcTags.push(tempDkim)

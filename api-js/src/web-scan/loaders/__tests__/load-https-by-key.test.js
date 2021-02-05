@@ -70,7 +70,7 @@ describe('given the httpsLoaderByKey function', () => {
         RETURN MERGE({ id: httpsScan._key, _type: "https" }, httpsScan)
       `
 
-      while (expectedCursor.hasNext) {
+      while (expectedCursor.hasNext()) {
         const tempHttps = await expectedCursor.next()
         httpsKeys.push(tempHttps._key)
         expectedHttpsScans.push(tempHttps)

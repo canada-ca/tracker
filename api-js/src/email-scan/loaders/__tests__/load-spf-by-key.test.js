@@ -70,7 +70,7 @@ describe('given the spfLoaderByKey function', () => {
           RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
       `
 
-      while (expectedCursor.hasNext) {
+      while (expectedCursor.hasNext()) {
         const tempSpf = await expectedCursor.next()
         spfKeys.push(tempSpf._key)
         expectedSpfScans.push(tempSpf)

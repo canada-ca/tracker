@@ -71,7 +71,7 @@ describe('given the sslGuidanceTagLoader function', () => {
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
       `
 
-      while (expectedCursor.hasNext) {
+      while (expectedCursor.hasNext()) {
         const tempSsl = await expectedCursor.next()
         sslTagKeys.push(tempSsl._key)
         expectedSslTags.push(tempSsl)

@@ -71,7 +71,7 @@ describe('given the dkimLoaderByKey function', () => {
           RETURN MERGE({ id: dkimScan._key, _type: "dkim" }, dkimScan)
       `
 
-      while (expectedCursor.hasNext) {
+      while (expectedCursor.hasNext()) {
         const tempDkim = await expectedCursor.next()
         dkimKeys.push(tempDkim._key)
         expectedDkimScans.push(tempDkim)
