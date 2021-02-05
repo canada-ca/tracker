@@ -434,23 +434,6 @@ export const ORG_DETAILS_PAGE = gql`
           }
         }
       }
-
-      affiliations(first: 10) {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        totalCount
-        edges {
-          node {
-            permission
-            user {
-              id
-              userName
-            }
-          }
-        }
-      }
     }
   }
 `
@@ -507,6 +490,58 @@ export const REVERSE_PAGINATED_ORG_DOMAINS = gql`
               https
               spf
               ssl
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const PAGINATED_ORG_AFFILIATIONS = gql`
+  query OrgUsersNext($slug: Slug!, $first: Int, $after: String) {
+    findOrganizationBySlug(orgSlug: $slug) {
+      affiliations(first: $first, after: $after) {
+        pageInfo {
+          hasNextPage
+          endCursor
+          hasPreviousPage
+          startCursor
+        }
+        totalCount
+        edges {
+          cursor
+          node {
+            permission
+            user {
+              id
+              userName
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_ORG_AFFILIATIONS = gql`
+  query OrgUsersPrev($slug: Slug!, $last: Int, $before: String) {
+    pagination: findOrganizationBySlug(orgSlug: $slug) {
+      affiliations(last: $last, before: $before) {
+        pageInfo {
+          hasNextPage
+          endCursor
+          hasPreviousPage
+          startCursor
+        }
+        totalCount
+        edges {
+          cursor
+          node {
+            permission
+            user {
+              id
+              userName
             }
           }
         }

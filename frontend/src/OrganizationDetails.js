@@ -12,9 +12,6 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Box,
-  Divider,
-  Text,
   Icon,
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
@@ -24,9 +21,8 @@ import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
-import { ListOf } from './ListOf'
-import { UserCard } from './UserCard'
 import { OrganizationDomains } from './OrganizationDomains'
+import { OrganizationAffiliations } from './OrganizationAffiliations'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
@@ -56,16 +52,6 @@ export default function OrganizationDetails() {
   let orgName = ''
   if (data?.organization) {
     orgName = data.organization.name
-  }
-
-  // let domains = []
-  // if (data?.organization?.domains?.edges) {
-  //   domains = data.organization.domains.edges.map((e) => e.node)
-  // }
-
-  let users = []
-  if (data?.organization?.affiliations?.edges) {
-    users = data.organization.affiliations.edges.map((e) => e.node)
   }
 
   if (loading) {
@@ -114,7 +100,7 @@ export default function OrganizationDetails() {
               <OrganizationSummary
                 summaries={data.organization.summaries}
                 domainCount={data.organization.domainCount}
-                userCount={data.organization.affiliations.totalCount}
+                // userCount={data.organization.affiliations.totalCount}
                 city={data.organization.city}
                 province={data.organization.province}
               />
@@ -127,28 +113,9 @@ export default function OrganizationDetails() {
           </TabPanel>
           {isLoggedIn() && (
             <TabPanel>
-              <ListOf
-                elements={users}
-                ifEmpty={() => (
-                  <Text fontSize="xl" fontWeight="bold">
-                    <Trans>No Users</Trans>
-                  </Text>
-                )}
-                mb="4"
-              >
-                {({ permission, user }, index) => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <Box key={`${user.id}:${index}`}>
-                      <UserCard
-                        userName={user.userName}
-                        role={permission}
-                        tfa={user.tfaValidated}
-                      />
-                      <Divider borderColor="gray.900" />
-                    </Box>
-                  </ErrorBoundary>
-                )}
-              </ListOf>
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                <OrganizationAffiliations orgSlug={orgSlug} />
+              </ErrorBoundary>
             </TabPanel>
           )}
         </TabPanels>
