@@ -6,7 +6,7 @@ export const rawDmarcReportGraphData = {
         {
           month: 'DECEMBER',
           year: '2019',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 0,
             passDkimOnly: 0,
@@ -14,12 +14,12 @@ export const rawDmarcReportGraphData = {
             fail: 0,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'JANUARY',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 275,
             passDkimOnly: 1695,
@@ -27,12 +27,12 @@ export const rawDmarcReportGraphData = {
             fail: 461,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'FEBRUARY',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 1,
             passDkimOnly: 522,
@@ -40,12 +40,12 @@ export const rawDmarcReportGraphData = {
             fail: 172,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'MARCH',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 18,
             passDkimOnly: 641,
@@ -53,12 +53,12 @@ export const rawDmarcReportGraphData = {
             fail: 1231,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'APRIL',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 22,
             passDkimOnly: 412,
@@ -66,12 +66,12 @@ export const rawDmarcReportGraphData = {
             fail: 637,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'MAY',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 14,
             passDkimOnly: 348,
@@ -79,12 +79,12 @@ export const rawDmarcReportGraphData = {
             fail: 584,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'JUNE',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 6,
             passDkimOnly: 392,
@@ -92,12 +92,12 @@ export const rawDmarcReportGraphData = {
             fail: 266,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'JULY',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 8,
             passDkimOnly: 623,
@@ -105,12 +105,12 @@ export const rawDmarcReportGraphData = {
             fail: 2336,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'AUGUST',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 4,
             passDkimOnly: 709,
@@ -118,12 +118,12 @@ export const rawDmarcReportGraphData = {
             fail: 511,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'SEPTEMBER',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 4,
             passDkimOnly: 554,
@@ -131,12 +131,12 @@ export const rawDmarcReportGraphData = {
             fail: 232,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'OCTOBER',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 3,
             passDkimOnly: 654,
@@ -144,12 +144,12 @@ export const rawDmarcReportGraphData = {
             fail: 202,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'NOVEMBER',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 3,
             passDkimOnly: 461,
@@ -157,12 +157,12 @@ export const rawDmarcReportGraphData = {
             fail: 231,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
         {
           month: 'DECEMBER',
           year: '2020',
-          domain: 'test.domain.ca',
+          domain: { domain: 'test.domain.ca' },
           categoryTotals: {
             passSpfOnly: 6,
             passDkimOnly: 249,
@@ -170,7 +170,7 @@ export const rawDmarcReportGraphData = {
             fail: 116,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummary',
         },
       ],
       __typename: 'Domain',

@@ -157,7 +157,7 @@ export const rawDmarcReportSummaryData = {
             fail: 2345,
             __typename: 'CategoryTotals',
           },
-          __typename: 'Period',
+          __typename: 'DmarcSummaries',
         },
       ],
       dmarcSummaryByPeriod: {
@@ -287,7 +287,7 @@ export const rawDmarcReportSummaryData = {
           },
           __typename: 'DetailTables',
         },
-        __typename: 'Period',
+        __typename: 'DmarcSummaries',
       },
       __typename: 'Domain',
     },

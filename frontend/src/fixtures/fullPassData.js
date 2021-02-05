@@ -4,8 +4,8 @@ export const rawFullPassData = {
       id: 'testid=',
       __typename: 'Domain',
       dmarcSummaryByPeriod: {
-        __typename: 'Period',
-        domain: 'test.domain.ca',
+        __typename: 'DmarcSummary',
+        domain: { domain: 'test.domain.ca' },
         month: 'LAST30DAYS',
         year: '2020',
         detailTables: {
