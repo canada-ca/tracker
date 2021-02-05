@@ -88,6 +88,13 @@ describe('testing the period gql object', () => {
           passDkimOnly: 0,
           passSpfOnly: 1834,
         },
+        categoryPercentages: {
+          pass: 5,
+          fail: 5,
+          passDkimOnly: 5,
+          passSpfOnly: 5,
+        },
+        totalMessages: 10,
       })
     })
 
@@ -200,10 +207,11 @@ describe('testing the period gql object', () => {
         const demoType = dmarcSummaryType.getFields()
 
         const expectedResult = {
-          pass: 0,
-          fail: 63,
-          passDkimOnly: 0,
-          passSpfOnly: 1834,
+          pass: 5,
+          fail: 5,
+          passDkimOnly: 5,
+          passSpfOnly: 5,
+          totalMessages: 10,
         }
 
         await expect(
