@@ -341,13 +341,6 @@
       'Unable to request a on time scan on this domain.',
     'Unable to reset password. Please try again.':
       'Unable to reset password. Please try again.',
-    'Unable to retrieve {0} for domain: {domain}.': [
-      'Unable to retrieve ',
-      ['0'],
-      ' for domain: ',
-      ['domain'],
-      '.',
-    ],
     'Unable to select dmarc reports for this period and year.':
       'Unable to select dmarc reports for this period and year.',
     'Unable to send TFA code, please try again.':

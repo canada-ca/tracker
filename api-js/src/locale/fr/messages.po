@@ -79,7 +79,6 @@ msgstr "todo"
 msgid "Organization has already been verified."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:46
 msgid "Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported."
 msgstr "todo"
@@ -96,8 +95,6 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:42
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:42
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
@@ -112,13 +109,10 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:71
 msgid "Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:49
 msgid "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
 msgstr "todo"
@@ -200,7 +194,6 @@ msgstr "todo"
 msgid "Profile successfully updated."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:69
 msgid "Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
@@ -217,20 +210,15 @@ msgstr "todo"
 msgid "Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:65
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:65
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:94
 msgid "Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:74
 #: src/domain/loaders/load-domain-connections-by-user-id.js:72
 msgid "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records."
@@ -387,14 +375,11 @@ msgstr "todo"
 msgid "Unable to find dmarc scan. Please try again."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:26
 #: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:40
 msgid "Unable to find dmarc summary. Please try again."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/domain/loaders/load-domain-by-domain.js:18
 #: src/domain/loaders/load-domain-by-domain.js:30
 #: src/domain/loaders/load-domain-by-key.js:18
@@ -486,15 +471,12 @@ msgstr "todo"
 msgid "Unable to load affiliations. Please try again."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:15
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:139
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:149
 msgid "Unable to load dkim failures. Please try again."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:142
 msgid "Unable to load dkim guidance tags. Please try again."
@@ -510,15 +492,12 @@ msgstr "todo"
 msgid "Unable to load dkim scans. Please try again."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:15
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:139
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:149
 msgid "Unable to load dmarc failures. Please try again."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:142
 msgid "Unable to load dmarc guidance tags. Please try again."
@@ -529,9 +508,8 @@ msgstr "todo"
 msgid "Unable to load dmarc scans. Please try again."
 msgstr "todo"
 
-<<<<<<< HEAD
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:177
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:189
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:184
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:196
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:21
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:33
 #: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:19
@@ -539,8 +517,6 @@ msgstr "todo"
 msgid "Unable to load dmarc summaries. Please try again."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:151
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:161
 #: src/domain/loaders/load-domain-connections-by-user-id.js:157
@@ -550,15 +526,12 @@ msgstr "todo"
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:15
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:139
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:149
 msgid "Unable to load full passes. Please try again."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:142
 msgid "Unable to load https guidance tags. Please try again."
@@ -580,15 +553,12 @@ msgstr "todo"
 msgid "Unable to load organizations. Please try again."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:15
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:139
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:149
 msgid "Unable to load spf failures. Please try again."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:130
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:142
 msgid "Unable to load spf guidance tags. Please try again."
@@ -682,18 +652,11 @@ msgstr "todo"
 msgid "Unable to reset password. Please try again."
 msgstr "todo"
 
-#: src/dmarc-report/loaders/load-dmarc-report.js:39
-msgid "Unable to retrieve {0} for domain: {domain}."
-msgstr "todo"
-
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:34
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:49
 msgid "Unable to select dmarc reports for this period and year."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/user/mutations/send-phone-code.js:58
 #: src/user/mutations/send-phone-code.js:76
 #: src/user/mutations/send-phone-code.js:106
@@ -718,17 +681,10 @@ msgid "Unable to send verification email. Please try again."
 msgstr "todo"
 
 #: src/user/mutations/sign-in.js:53
-<<<<<<< HEAD
 #: src/user/mutations/sign-in.js:79
 #: src/user/mutations/sign-in.js:98
 #: src/user/mutations/sign-in.js:157
 #: src/user/mutations/sign-in.js:162
-=======
-#: src/user/mutations/sign-in.js:84
-#: src/user/mutations/sign-in.js:103
-#: src/user/mutations/sign-in.js:152
-#: src/user/mutations/sign-in.js:157
->>>>>>> fix translation issues
 msgid "Unable to sign in, please try again."
 msgstr "todo"
 
@@ -838,7 +794,6 @@ msgstr "todo"
 msgid "Username already in use."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:37
 msgid "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
 msgstr "todo"
@@ -855,8 +810,6 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:33
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:33
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
@@ -870,13 +823,10 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:62
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
 msgstr "todo"
@@ -921,7 +871,6 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:20
 msgid "You must provide a `period` value to access the `dmarcSummaries` connection."
 msgstr "todo"
@@ -937,10 +886,6 @@ msgstr "todo"
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:109
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:84
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:84
-=======
-#: src/affiliation/loaders/load-affiliations-by-org-id.js:80
-#: src/affiliation/loaders/load-affiliations-by-user-id.js:80
->>>>>>> fix translation issues
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:89
 #: src/domain/loaders/load-domain-connections-by-user-id.js:87
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:96
@@ -963,7 +908,6 @@ msgstr "todo"
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:58
 msgid "`{argSet}` on the `DkimFailureTable` connection cannot be less than zero."
 msgstr "todo"
@@ -980,8 +924,6 @@ msgstr "todo"
 msgid "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/affiliation/loaders/load-affiliations-by-org-id.js:54
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:54
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
@@ -995,13 +937,10 @@ msgstr "todo"
 msgid "`{argSet}` on the `dkim` connection cannot be less than zero."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:83
 msgid "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
 msgstr "todo"
 
-=======
->>>>>>> fix translation issues
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:62
 msgid "`{argSet}` on the `dmarc` connection cannot be less than zero."
 msgstr "todo"
@@ -1046,23 +985,13 @@ msgstr "todo"
 msgid "`{argSet}` on the `verifiedOrganization` connection cannot be less than zero."
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/organization/objects/organization-summary.js:8
-=======
-#: src/organization/objects/organization-summary.js:31
-#: src/organization/objects/organization-summary.js:64
->>>>>>> fix translation issues
 #: src/summaries/queries/mail-summary.js:22
 #: src/summaries/queries/web-summary.js:23
 msgid "fail"
 msgstr "todo"
 
-<<<<<<< HEAD
 #: src/organization/objects/organization-summary.js:7
-=======
-#: src/organization/objects/organization-summary.js:26
-#: src/organization/objects/organization-summary.js:59
->>>>>>> fix translation issues
 #: src/summaries/queries/mail-summary.js:17
 #: src/summaries/queries/web-summary.js:18
 msgid "pass"
