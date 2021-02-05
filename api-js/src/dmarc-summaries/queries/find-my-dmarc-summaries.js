@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { GraphQLNonNull } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
@@ -29,7 +28,6 @@ export const findMyDmarcSummaries = {
     _,
     args,
     {
-      i18n,
       userKey,
       auth: { userRequired },
       loaders: { dmarcSumLoaderConnectionsByUserId },
