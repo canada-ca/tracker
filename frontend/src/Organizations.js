@@ -95,13 +95,17 @@ export default function Organisations({ orgsPerPage = 10 }) {
         <Stack isInline align="center" mb="4">
           <Button
             onClick={previous}
-            disable={!!hasPreviousPage}
+            isDisabled={!hasPreviousPage}
             aria-label="Previous page"
           >
             <Trans>Previous</Trans>
           </Button>
 
-          <Button onClick={next} disable={!!hasNextPage} aria-label="Next page">
+          <Button
+            onClick={next}
+            isDisabled={!hasNextPage}
+            aria-label="Next page"
+          >
             <Trans>Next</Trans>
           </Button>
         </Stack>

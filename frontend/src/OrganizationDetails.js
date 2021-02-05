@@ -100,7 +100,7 @@ export default function OrganizationDetails() {
               <OrganizationSummary
                 summaries={data.organization.summaries}
                 domainCount={data.organization.domainCount}
-                // userCount={data.organization.affiliations.totalCount}
+                userCount={data.organization.affiliations.totalCount}
                 city={data.organization.city}
                 province={data.organization.province}
               />
