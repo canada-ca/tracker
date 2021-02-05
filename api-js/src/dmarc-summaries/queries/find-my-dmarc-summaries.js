@@ -8,19 +8,19 @@ import { Year } from '../../scalars'
 
 export const findMyDmarcSummaries = {
   type: dmarcSummaryConnection.connectionType,
-  description: '',
+  description: 'Query for dmarc summaries the user has access to.',
   args: {
     orderBy: {
       type: dmarcSummaryOrder,
-      description: '',
+      description: 'Ordering options for repository connections',
     },
     month: {
       type: GraphQLNonNull(PeriodEnums),
-      description: '',
+      description: 'The month in which the returned data is relevant to.',
     },
     year: {
       type: GraphQLNonNull(Year),
-      description: '',
+      description: 'The year in which the returned data is relevant to.',
     },
     ...connectionArgs,
   },
