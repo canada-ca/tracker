@@ -12,7 +12,7 @@ export const findMyDmarcSummaries = {
   args: {
     orderBy: {
       type: dmarcSummaryOrder,
-      description: 'Ordering options for repository connections',
+      description: 'Ordering options for dmarc summaries connections',
     },
     month: {
       type: GraphQLNonNull(PeriodEnums),
