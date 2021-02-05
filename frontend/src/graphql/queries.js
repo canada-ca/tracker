@@ -658,7 +658,9 @@ export const DMARC_REPORT_GRAPH = gql`
       yearlyDmarcSummaries {
         month
         year
-        domain
+        domain {
+          domain
+        }
         categoryTotals {
           passSpfOnly
           passDkimOnly
@@ -1283,7 +1285,9 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
       edges {
         node {
           id
-          domain
+          domain {
+            domain
+          }
           dmarcSummaryByPeriod(month: $month, year: $year) {
             month
             year
