@@ -80,7 +80,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
           RETURN MERGE({ id: summary._key }, summary)
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasNext) {
         const tempSummary = await expectedCursor.next()
         summaryKeys.push(tempSummary._key)
         expectedSummaries.push(tempSummary)

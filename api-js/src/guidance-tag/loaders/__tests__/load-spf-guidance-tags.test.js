@@ -71,7 +71,7 @@ describe('given the spfGuidanceTagLoader function', () => {
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasNext) {
         const tempSpf = await expectedCursor.next()
         spfTagKeys.push(tempSpf._key)
         expectedSpfTags.push(tempSpf)

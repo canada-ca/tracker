@@ -70,7 +70,7 @@ describe('given the sslLoaderByKey function', () => {
           RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasNext) {
         const tempSsl = await expectedCursor.next()
         sslKeys.push(tempSsl._key)
         expectedSslScans.push(tempSsl)

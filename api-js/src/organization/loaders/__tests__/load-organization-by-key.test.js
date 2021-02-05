@@ -146,7 +146,7 @@ describe('given a orgLoaderByKey dataloader', () => {
             RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("en", org.orgDetails))
         `
 
-        while (expectedCursor.hasNext()) {
+        while (expectedCursor.hasNext) {
           const tempOrg = await expectedCursor.next()
           orgIds.push(tempOrg._key)
           expectedOrgs.push(tempOrg)
@@ -243,7 +243,7 @@ describe('given a orgLoaderByKey dataloader', () => {
               RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _type: "organization", id: org._key, verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("fr", org.orgDetails))
           `
 
-        while (expectedCursor.hasNext()) {
+        while (expectedCursor.hasNext) {
           const tempOrg = await expectedCursor.next()
           orgIds.push(tempOrg._key)
           expectedOrgs.push(tempOrg)

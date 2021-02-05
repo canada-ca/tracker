@@ -69,7 +69,7 @@ describe('given the dmarcLoaderByKey function', () => {
         RETURN MERGE({ id: dmarcScan._key, _type: "dmarc" }, dmarcScan)
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasNext) {
         const tempDmarc = await expectedCursor.next()
         dmarcKeys.push(tempDmarc._key)
         expectedDkimScans.push(tempDmarc)
