@@ -63,7 +63,7 @@ describe('given a domainLoaderByKey dataloader', () => {
           RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
       `
 
-      while (expectedCursor.hasNext) {
+      while (expectedCursor.hasNext()) {
         const tempDomain = await expectedCursor.next()
         domainIds.push(tempDomain._key)
         expectedDomains.push(tempDomain)

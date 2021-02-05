@@ -94,7 +94,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
           RETURN MERGE(domain, { id: domain._key, _type: "verifiedDomain" })
       `
 
-      while (expectedCursor.hasNext) {
+      while (expectedCursor.hasNext()) {
         const tempUser = await expectedCursor.next()
         domainIds.push(tempUser._key)
         expectedDomains.push(tempUser)

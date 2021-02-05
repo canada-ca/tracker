@@ -148,7 +148,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
             RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
         `
 
-        while (expectedCursor.hasNext) {
+        while (expectedCursor.hasNext()) {
           const tempAff = await expectedCursor.next()
           affiliationIds.push(tempAff._key)
           expectedAffiliations.push(tempAff)
@@ -265,7 +265,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
             RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
         `
 
-        while (expectedCursor.hasNext) {
+        while (expectedCursor.hasNext()) {
           const tempAff = await expectedCursor.next()
           affiliationIds.push(tempAff._key)
           expectedAffiliations.push(tempAff)
