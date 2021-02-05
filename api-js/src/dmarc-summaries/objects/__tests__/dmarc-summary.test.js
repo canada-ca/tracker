@@ -185,7 +185,7 @@ describe('testing the period gql object', () => {
 
           expect(
             demoType.year.resolve(
-              { startDate: '2020-01-01' },
+              { startDate: 'thirtyDays' },
               {},
               { moment: mockedMoment },
             ),
