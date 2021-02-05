@@ -1,13 +1,14 @@
 import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
+import e from 'express'
 
 export const domainLoaderConnectionsByUserId = (
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ after, before, first, last, ownership }) => {
+) => async ({ after, before, first, last, ownership, orderBy }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -22,7 +23,42 @@ export const domainLoaderConnectionsByUserId = (
 
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(domain._key) > TO_NUMBER(${afterId})`
+    if (typeof orderBy === 'undefined') {
+      afterTemplate = aql`FILTER TO_NUMBER(domain._key) > TO_NUMBER(${afterId})`
+    } else {
+      let afterTemplateDirection = aql``
+      if (orderBy.direction === 'ASC') {
+        afterTemplateDirection = aql`>`
+      } else {
+        afterTemplateDirection = aql`<`
+      }
+
+      let documentField = aql``
+      let domainField = aql``
+      /* istanbul ignore else */
+      if (orderBy.field === 'domain') {
+        documentField = aql``
+        domainField = aql``
+      } else if (orderBy.field === 'last-ran') {
+        documentField = aql``
+        domainField = aql``
+      } else if (orderBy.field === 'dkim-status') {
+        documentField = aql``
+        domainField = aql``
+      } else if (orderBy.field === 'dmarc-status') {
+        documentField = aql``
+        domainField = aql``
+      } else if (orderBy.field === 'https-status') {
+        documentField = aql``
+        domainField = aql``
+      } else if (orderBy.field === 'spf-status') {
+        documentField = aql``
+        domainField = aql``
+      } else if (orderBy.field === 'ssl-status') {
+        documentField = aql``
+        domainField = aql``
+      }
+    }
   }
 
   if (typeof before !== 'undefined') {
@@ -88,6 +124,26 @@ export const domainLoaderConnectionsByUserId = (
     )
   }
 
+  let sortByField = aql``
+  if (typeof orderBy !== 'undefined') {
+    /* istanbul ignore else */
+    if (orderBy.field === 'domain') {
+      sortByField = aql``
+    } else if (orderBy.field === 'last-ran') {
+      sortByField = aql``
+    } else if (orderBy.field === 'dkim-status') {
+      sortByField = aql``
+    } else if (orderBy.field === 'dmarc-status') {
+      sortByField = aql``
+    } else if (orderBy.field === 'https-status') {
+      sortByField = aql``
+    } else if (orderBy.field === 'spf-status') {
+      sortByField = aql``
+    } else if (orderBy.field === 'ssl-status') {
+      sortByField = aql``
+    }
+  }
+
   let sortString
   if (typeof last !== 'undefined') {
     sortString = aql`DESC`
@@ -111,6 +167,9 @@ export const domainLoaderConnectionsByUserId = (
         FILTER domain._key IN domainKeys
         ${afterTemplate}
         ${beforeTemplate}
+
+        SORT
+        ${sortByField}
         ${limitTemplate}
         RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
     )
