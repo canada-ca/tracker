@@ -1,4 +1,5 @@
 export * from './dmarc-summary-order-field'
+export * from './domain-order-field'
 export * from './languages'
 export * from './order-direction'
 export * from './period'
