@@ -100,7 +100,7 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
           }
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasNext) {
         const temp = await expectedCursor.next()
         summaryKeys.push(temp._key)
         expectedSummaries.push(temp)

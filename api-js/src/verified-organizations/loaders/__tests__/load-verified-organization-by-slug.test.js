@@ -146,7 +146,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
             RETURN MERGE({ _id: org._id, _key: org._key, id: org._key, _rev: org._rev, _type: "verifiedOrganization", verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("en", org.orgDetails))
         `
 
-        while (expectedCursor.hasNext()) {
+        while (expectedCursor.hasNext) {
           const tempOrg = await expectedCursor.next()
           orgSlugs.push(tempOrg.slug)
           expectedOrgs.push(tempOrg)
@@ -247,7 +247,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
             RETURN MERGE({ _id: org._id, _key: org._key, id: org._key, _rev: org._rev, _type: "verifiedOrganization", verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("fr", org.orgDetails))
         `
 
-        while (expectedCursor.hasNext()) {
+        while (expectedCursor.hasNext) {
           const tempOrg = await expectedCursor.next()
           orgSlugs.push(tempOrg.slug)
           expectedOrgs.push(tempOrg)

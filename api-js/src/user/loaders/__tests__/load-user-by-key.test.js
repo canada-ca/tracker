@@ -81,7 +81,7 @@ describe('given a userLoaderByKey dataloader', () => {
           RETURN MERGE({ id: user._key, _type: "user" }, user)
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasNext) {
         const tempUser = await expectedCursor.next()
         userKeys.push(tempUser._key)
         expectedUsers.push(tempUser)
