@@ -683,7 +683,9 @@ export const PAGINATED_DKIM_FAILURE_REPORT = gql`
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain
+        domain {
+          domain
+        }
         month
         year
         detailTables {
@@ -726,7 +728,9 @@ export const REVERSE_PAGINATED_DKIM_FAILURE_REPORT = gql`
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain
+        domain {
+          domain
+        }
         month
         year
         detailTables {
@@ -769,7 +773,9 @@ export const PAGINATED_DMARC_FAILURE_REPORT = gql`
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain
+        domain {
+          domain
+        }
         month
         year
         detailTables {
@@ -811,7 +817,9 @@ export const REVERSE_PAGINATED_DMARC_FAILURE_REPORT = gql`
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain
+        domain {
+          domain
+        }
         month
         year
         detailTables {
@@ -853,7 +861,9 @@ export const PAGINATED_SPF_FAILURE_REPORT = gql`
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain
+        domain {
+          domain
+        }
         month
         year
         detailTables {
@@ -895,7 +905,9 @@ export const REVERSE_PAGINATED_SPF_FAILURE_REPORT = gql`
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain
+        domain {
+          domain
+        }
         month
         year
         detailTables {
@@ -937,7 +949,9 @@ export const PAGINATED_FULL_PASS_REPORT = gql`
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain
+        domain {
+          domain
+        }
         month
         year
         detailTables {
@@ -979,7 +993,9 @@ export const REVERSE_PAGINATED_FULL_PASS_REPORT = gql`
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain
+        domain {
+          domain
+        }
         month
         year
         detailTables {
@@ -1285,13 +1301,13 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
       edges {
         node {
           id
-          domain {
-            domain
-          }
+          domain
           dmarcSummaryByPeriod(month: $month, year: $year) {
             month
             year
-            domain
+            domain {
+              domain
+            }
             categoryPercentages {
               failPercentage
               fullPassPercentage
@@ -1324,7 +1340,9 @@ export const REVERSE_PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
         node {
           domain
           dmarcSummaryByPeriod(month: $month, year: $year) {
-            domain
+            domain {
+              domain
+            }
             categoryPercentages {
               failPercentage
               fullPassPercentage
