@@ -99,7 +99,21 @@ import {
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
 
-export const createContext = ({ context, req: request, res: response }) => {
+export const createContext = (context) => async ({ req, res, connection }) => {
+  if (connection) {
+    req = {
+      headers: {
+        authorization: connection.context.authorization,
+      },
+      language: connection.context.language,
+    }
+    return createContextObject({ context, req, res })
+  } else {
+    return createContextObject({ context, req, res })
+  }
+}
+
+const createContextObject = ({ context, req: request, res: response }) => {
   const { query } = context
 
   const i18n = createI18n(request.language)

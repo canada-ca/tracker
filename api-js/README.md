@@ -46,6 +46,13 @@ CIPHER_KEY=1234averyveryveryveryverylongkey
 DNS_SCANNER_ENDPOINT=dns.scanners
 HTTPS_SCANNER_ENDPOINT=https.scanners
 SSL_SCANNER_ENDPOINT=ssl.scanners
+REDIS_PORT_NUMBER=6379
+REDIS_DOMAIN_NAME=localhost
+DKIM_SCAN_CHANNEL=scan/dkim
+DMARC_SCAN_CHANNEL=scan/dmarc
+HTTPS_SCAN_CHANNEL=scan/https
+SPF_SCAN_CHANNEL=scan/spf
+SSL_SCAN_CHANNEL=scan/ssl
 EOF
 ```
 With that defined you can start the server with these commands.
@@ -82,7 +89,12 @@ echo ARANGO_ROOT_PASSWORD=test > arangodb.env
 docker run -d -p=8529:8529 --env-file arangodb.env --name=arango arangodb
 ```
 
-With the database running, we need create the environment variables the application needs, but with some test appropriate values. We can do that by creating `test.env` in the API root directory with the following command.
+The tests also requires a copy of [Redis](https://redis.io/) to be running locally.
+```bash
+docker run -d -p=6379:6379 --name=redis redis
+```
+
+With the databases running, we need create the environment variables the application needs, but with some test appropriate values. We can do that by creating `test.env` in the API root directory with the following command.
 
 ```bash
 cat <<'EOF' > test.env
@@ -114,6 +126,13 @@ COST_LIMIT=100
 SCALAR_COST=1
 OBJECT_COST=1
 LIST_FACTOR=1
+REDIS_PORT_NUMBER=6379
+REDIS_DOMAIN_NAME=localhost
+DKIM_SCAN_CHANNEL=scan/dkim
+DMARC_SCAN_CHANNEL=scan/dmarc
+HTTPS_SCAN_CHANNEL=scan/https
+SPF_SCAN_CHANNEL=scan/spf
+SSL_SCAN_CHANNEL=scan/ssl
 EOF
 ```
 

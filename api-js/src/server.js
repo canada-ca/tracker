@@ -10,11 +10,17 @@ import { createComplexityLimitRule } from 'graphql-validation-complexity'
 import { createContext } from './create-context'
 import { createQuerySchema } from './query'
 import { createMutationSchema } from './mutation'
+import { createSubscriptionSchema } from './subscription'
+import { createI18n } from './create-i18n'
+import { verifyToken, userRequired } from './auth'
+import { userLoaderByKey } from './user/loaders'
+import { customOnConnect } from './on-connect'
 
 const createSchema = () =>
   new GraphQLSchema({
     query: createQuerySchema(),
     mutation: createMutationSchema(),
+    subscription: createSubscriptionSchema(),
   })
 
 const createValidationRules = (
@@ -67,7 +73,16 @@ export const Server = ({
 
   const server = new ApolloServer({
     schema: createSchema(),
-    context: async ({ req, res }) => createContext({ context, req, res }),
+    context: createContext(context),
+    subscriptions: {
+      onConnect: customOnConnect(
+        context,
+        createI18n,
+        verifyToken,
+        userRequired,
+        userLoaderByKey,
+      ),
+    },
     validationRules: createValidationRules(
       maxDepth,
       complexityCost,

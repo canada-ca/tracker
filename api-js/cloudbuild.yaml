@@ -9,8 +9,22 @@ steps:
     ]
 
 - name: mikewilliamson/wait-for
-  id: wait
+  id: wait_arango
   args: ['arangodb:8529']
+
+- name: 'gcr.io/cloud-builders/docker'
+  id: start_redis
+  entrypoint: /bin/sh
+  args:
+    [
+      '-c',
+      'docker run -d --network=cloudbuild -p=6379:6379 --name=redis redis',
+    ]
+
+- name: mikewilliamson/wait-for
+  id: wait_redis
+  args: ['redis:6379']
+
 - name: node:alpine
   id: install
   dir: api-js
@@ -62,6 +76,13 @@ steps:
   - HTTPS_SCANNER_ENDPOINT=$_HTTPS_SCANNER_ENDPOINT
   - SSL_SCANNER_ENDPOINT=$_SSL_SCANNER_ENDPOINT
   - TRACING_ENABLED=$_TRACING_ENABLED
+  - REDIS_PORT_NUMBER=$_REDIS_PORT_NUMBER
+  - REDIS_DOMAIN_NAME=$_REDIS_DOMAIN_NAME
+  - DKIM_SCAN_CHANNEL=$_DKIM_SCAN_CHANNEL
+  - DMARC_SCAN_CHANNEL=$_DMARC_SCAN_CHANNEL
+  - HTTPS_SCAN_CHANNEL=$_HTTPS_SCAN_CHANNEL
+  - SPF_SCAN_CHANNEL=$_SPF_SCAN_CHANNEL
+  - SSL_SCAN_CHANNEL=$_SSL_SCAN_CHANNEL
 
 - name: node:alpine
   id: lingui-extract
