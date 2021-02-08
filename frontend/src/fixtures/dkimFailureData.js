@@ -3,7 +3,7 @@ export const rawDkimFailureData = {
     findDomainByDomain: {
       id: 'testid=',
       dmarcSummaryByPeriod: {
-        domain: 'test.domain.ca',
+        domain: { domain: 'test.domain.ca' },
         month: 'LAST30DAYS',
         year: '2020',
         detailTables: {
