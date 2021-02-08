@@ -9,22 +9,6 @@ from tracker_client.client import (
     format_name_summary,
 )
 
-from .fixtures import (
-    all_domains_input,
-    all_domains_output,
-    name_domain_input,
-    org_domains_output,
-    monthly_dmarc_input,
-    monthly_dmarc_output,
-    yearly_dmarc_input,
-    yearly_dmarc_output,
-    all_summaries_input,
-    all_summaries_output,
-    name_summary_input,
-    org_summary_output,
-)
-
-
 def test_format_all_domains(all_domains_input, all_domains_output):
     assert format_all_domains(all_domains_input) == all_domains_output
 
