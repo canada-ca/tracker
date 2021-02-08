@@ -118,6 +118,7 @@ describe('given the spfSubType object', () => {
             _id: spfGT._id,
             _key: spfGT._key,
             _rev: spfGT._rev,
+            _type: 'guidanceTag',
             guidance: 'Some Interesting Guidance',
             id: 'spf1',
             refLinksGuide: [

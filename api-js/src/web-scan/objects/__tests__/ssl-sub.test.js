@@ -75,6 +75,7 @@ describe('given the sslSubType object', () => {
             _id: sslGT._id,
             _key: sslGT._key,
             _rev: sslGT._rev,
+            _type: 'guidanceTag',
             guidance: 'Some Interesting Guidance',
             id: 'ssl1',
             refLinksGuide: [

@@ -146,6 +146,7 @@ describe('given the dmarcSubType object', () => {
             _id: dmarcGT._id,
             _key: dmarcGT._key,
             _rev: dmarcGT._rev,
+            _type: 'guidanceTag',
             guidance: 'Some Interesting Guidance',
             id: 'dmarc1',
             refLinksGuide: [

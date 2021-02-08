@@ -148,6 +148,7 @@ describe('given the httpsSubType object', () => {
             _id: httpsGT._id,
             _key: httpsGT._key,
             _rev: httpsGT._rev,
+            _type: 'guidanceTag',
             guidance: 'Some Interesting Guidance',
             id: 'https1',
             refLinksGuide: [

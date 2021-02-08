@@ -120,6 +120,7 @@ describe('Given The dkimResultSubType object', () => {
             _id: dkimGT._id,
             _key: dkimGT._key,
             _rev: dkimGT._rev,
+            _type: 'guidanceTag',
             guidance: 'Some Interesting Guidance',
             id: 'dkim1',
             refLinksGuide: [
