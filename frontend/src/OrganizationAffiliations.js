@@ -14,7 +14,7 @@ import { usePaginatedCollection } from './usePaginatedCollection'
 import { number, string } from 'prop-types'
 import { UserCard } from './UserCard'
 
-export function OrganizationAffiliations({ usersPerPage = 2, orgSlug }) {
+export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
   const { currentUser } = useUserState()
   const {
     loading,

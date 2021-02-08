@@ -14,7 +14,7 @@ import { useUserState } from './UserState'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { number, string } from 'prop-types'
 
-export function OrganizationDomains({ domainsPerPage = 4, orgSlug }) {
+export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
   const { currentUser } = useUserState()
   const {
     loading,
