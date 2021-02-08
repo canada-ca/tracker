@@ -26,7 +26,7 @@ import { OrganizationAffiliations } from './OrganizationAffiliations'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
-  const { currentUser, isLoggedIn } = useUserState()
+  const { currentUser } = useUserState()
   const toast = useToast()
   const history = useHistory()
   const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
@@ -87,11 +87,9 @@ export default function OrganizationDetails() {
           <Tab>
             <Trans>Domains</Trans>
           </Tab>
-          {isLoggedIn() && (
-            <Tab>
-              <Trans>Users</Trans>
-            </Tab>
-          )}
+          <Tab>
+            <Trans>Users</Trans>
+          </Tab>
         </TabList>
 
         <TabPanels>
@@ -108,16 +106,20 @@ export default function OrganizationDetails() {
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationDomains orgSlug={orgSlug} />
+              <OrganizationDomains
+                orgSlug={orgSlug}
+                domainsPerPage={data.organization.domainCount}
+              />
             </ErrorBoundary>
           </TabPanel>
-          {isLoggedIn() && (
-            <TabPanel>
-              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                <OrganizationAffiliations orgSlug={orgSlug} />
-              </ErrorBoundary>
-            </TabPanel>
-          )}
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <OrganizationAffiliations
+                orgSlug={orgSlug}
+                usersPerPage={data.organization.affiliations.totalCount}
+              />
+            </ErrorBoundary>
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </Layout>
