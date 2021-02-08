@@ -5,14 +5,12 @@ import { MemoryRouter, Route } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { UserStateProvider } from '../UserState'
 import {
-  ORG_DETAILS_PAGE,
-  PAGINATED_DOMAINS,
-  REVERSE_PAGINATED_DOMAINS,
-  WEB_AND_EMAIL_SUMMARIES,
+  PAGINATED_ORG_AFFILIATIONS,
+  REVERSE_PAGINATED_ORG_AFFILIATIONS,
 } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import OrganizationDetails from '../OrganizationDetails'
+import { OrganizationAffiliations } from '../OrganizationAffiliations'
 import matchMediaPolyfill from 'mq-polyfill'
 
 const i18n = setupI18n({
@@ -44,64 +42,72 @@ window.resizeTo = function resizeTo(width, height) {
   }).dispatchEvent(new this.Event('resize'))
 }
 
-describe('<OrganizationDetails />', () => {
+describe('<OrganizationAffiliations />', () => {
   describe('given the url /organisations/tbs-sct-gc-ca', () => {
     it('displays details using the tbs-sct-gc-ca slug', async () => {
       window.resizeTo(1024, 768)
 
-      const name = 'Treasury Board Secretariat'
+      const orgSlug = 'tbs-sct-gc-ca'
 
       const mocks = [
         {
           request: {
-            query: ORG_DETAILS_PAGE,
-            variables: { slug: 'tbs-sct-gc-ca' },
+            query: PAGINATED_ORG_AFFILIATIONS,
+            variables: { slug: 'tbs-sct-gc-ca', first: 10 },
           },
           result: {
             data: {
-              organization: {
-                id: 'ODk3MDg5MzI2MA==',
-                name,
-                acronym: 'TBS',
-                domainCount: 1,
-                city: 'Ottawa',
-                province: 'ON',
-                verified: true,
-                summaries: {
-                  mail: {
-                    total: 86954,
-                    categories: [
-                      {
-                        name: 'pass',
-                        count: 7435,
-                        percentage: 50,
-                      },
-                      {
-                        name: 'fail',
-                        count: 7435,
-                        percentage: 43.5,
-                      },
-                    ],
-                  },
-                  web: {
-                    total: 54386,
-                    categories: [
-                      {
-                        name: 'pass',
-                        count: 7435,
-                        percentage: 50,
-                      },
-                      {
-                        name: 'fail',
-                        count: 7435,
-                        percentage: 43.5,
-                      },
-                    ],
-                  },
-                },
-
+              findOrganizationBySlug: {
                 affiliations: {
-                  totalCount: 5,
+                  pageInfo: {
+                    hasNextPage: false,
+                    endCursor: 'string',
+                    hasPreviousPage: false,
+                    startCursor: 'string',
+                  },
+                  totalCount: 15,
+                  edges: [
+                    {
+                      cursor: 'string',
+                      node: {
+                        permission: 'SUPER_ADMIN',
+                        user: {
+                          id: 'MjQyMzg1MTM1OQ==',
+                          userName: 'Jabari_Larson@hotmail.com',
+                        },
+                      },
+                    },
+                    {
+                      cursor: 'string',
+                      node: {
+                        permission: 'SUPER_ADMIN',
+                        user: {
+                          id: 'NjYzODA5ODE1OA==',
+                          userName: 'Joel_Nienow77@yahoo.com',
+                        },
+                      },
+                    },
+                    {
+                      cursor: 'string',
+                      node: {
+                        permission: 'ADMIN',
+                        user: {
+                          id: 'NzQyMzU3NDYzMw==',
+                          userName: 'Cara.Olson81@yahoo.com',
+                        },
+                      },
+                    },
+                    {
+                      cursor: 'string',
+                      node: {
+                        permission: 'USER',
+                        user: {
+                          id: 'Nzc0Mjg2MjM2Ng==',
+                          userName: 'Rahul.Wintheiser10@yahoo.com',
+                        },
+                      },
+                    },
+                  ],
                 },
               },
             },
@@ -125,7 +131,7 @@ describe('<OrganizationDetails />', () => {
                   initialIndex={0}
                 >
                   <Route path="/organization/:orgSlug">
-                    <OrganizationDetails />
+                    <OrganizationAffiliations orgSlug={orgSlug} />
                   </Route>
                 </MemoryRouter>
               </MockedProvider>
@@ -135,7 +141,7 @@ describe('<OrganizationDetails />', () => {
       )
 
       await waitFor(() => {
-        expect(getByText(name)).toBeInTheDocument()
+        expect(getByText('Jabari_Larson@hotmail.com')).toBeInTheDocument()
       })
     })
   })

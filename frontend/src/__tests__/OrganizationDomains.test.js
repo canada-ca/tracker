@@ -5,14 +5,12 @@ import { MemoryRouter, Route } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { UserStateProvider } from '../UserState'
 import {
-  ORG_DETAILS_PAGE,
-  PAGINATED_DOMAINS,
-  REVERSE_PAGINATED_DOMAINS,
-  WEB_AND_EMAIL_SUMMARIES,
+  REVERSE_PAGINATED_ORG_DOMAINS,
+  PAGINATED_ORG_DOMAINS,
 } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import OrganizationDetails from '../OrganizationDetails'
+import { OrganizationDomains } from '../OrganizationDomains'
 import matchMediaPolyfill from 'mq-polyfill'
 
 const i18n = setupI18n({
@@ -44,64 +42,61 @@ window.resizeTo = function resizeTo(width, height) {
   }).dispatchEvent(new this.Event('resize'))
 }
 
-describe('<OrganizationDetails />', () => {
+describe('<OrganizationDomains />', () => {
   describe('given the url /organisations/tbs-sct-gc-ca', () => {
-    it('displays details using the tbs-sct-gc-ca slug', async () => {
+    it('displays domains using the tbs-sct-gc-ca slug', async () => {
       window.resizeTo(1024, 768)
 
-      const name = 'Treasury Board Secretariat'
+      const orgSlug = 'tbs-sct-gc-ca'
 
       const mocks = [
         {
           request: {
-            query: ORG_DETAILS_PAGE,
-            variables: { slug: 'tbs-sct-gc-ca' },
+            query: PAGINATED_ORG_DOMAINS,
+            variables: { slug: 'tbs-sct-gc-ca', first: 10 },
           },
           result: {
             data: {
-              organization: {
-                id: 'ODk3MDg5MzI2MA==',
-                name,
-                acronym: 'TBS',
-                domainCount: 1,
-                city: 'Ottawa',
-                province: 'ON',
-                verified: true,
-                summaries: {
-                  mail: {
-                    total: 86954,
-                    categories: [
-                      {
-                        name: 'pass',
-                        count: 7435,
-                        percentage: 50,
-                      },
-                      {
-                        name: 'fail',
-                        count: 7435,
-                        percentage: 43.5,
-                      },
-                    ],
+              findOrganizationBySlug: {
+                domains: {
+                  pageInfo: {
+                    hasNextPage: false,
+                    endCursor: 'string',
+                    hasPreviousPage: true,
+                    startCursor: 'string',
                   },
-                  web: {
-                    total: 54386,
-                    categories: [
-                      {
-                        name: 'pass',
-                        count: 7435,
-                        percentage: 50,
+                  edges: [
+                    {
+                      cursor: 'string',
+                      node: {
+                        id: 'OTUyNTQ3Mjg0Nw==',
+                        domain: 'dfo-mpo.gc.ca',
+                        lastRan: '1612768306050',
+                        status: {
+                          dkim: 'FAIL',
+                          dmarc: 'FAIL',
+                          https: 'INFO',
+                          spf: 'FAIL',
+                          ssl: 'PASS',
+                        },
                       },
-                      {
-                        name: 'fail',
-                        count: 7435,
-                        percentage: 43.5,
+                    },
+                    {
+                      cursor: 'string',
+                      node: {
+                        id: 'ODEzNzA4ODA3OA==',
+                        domain: 'dfait-maeci.gc.ca',
+                        lastRan: '1612792126546',
+                        status: {
+                          dkim: 'PASS',
+                          dmarc: 'PASS',
+                          https: 'INFO',
+                          spf: 'FAIL',
+                          ssl: 'INFO',
+                        },
                       },
-                    ],
-                  },
-                },
-
-                affiliations: {
-                  totalCount: 5,
+                    },
+                  ],
                 },
               },
             },
@@ -125,7 +120,7 @@ describe('<OrganizationDetails />', () => {
                   initialIndex={0}
                 >
                   <Route path="/organization/:orgSlug">
-                    <OrganizationDetails />
+                    <OrganizationDomains orgSlug={orgSlug} />
                   </Route>
                 </MemoryRouter>
               </MockedProvider>
@@ -135,7 +130,7 @@ describe('<OrganizationDetails />', () => {
       )
 
       await waitFor(() => {
-        expect(getByText(name)).toBeInTheDocument()
+        expect(getByText('dfo-mpo.gc.ca')).toBeInTheDocument()
       })
     })
   })
