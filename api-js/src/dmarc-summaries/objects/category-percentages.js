@@ -1,79 +1,33 @@
-import { GraphQLObjectType, GraphQLInt, GraphQLFloat } from 'graphql'
+import { GraphQLObjectType, GraphQLInt } from 'graphql'
 
 export const categoryPercentagesType = new GraphQLObjectType({
   name: 'CategoryPercentages',
   description: 'This object displays the percentages of the category totals.',
   fields: () => ({
     failPercentage: {
-      type: GraphQLFloat,
+      type: GraphQLInt,
       description: 'Percentage of messages that are failing all checks.',
-      resolve: ({ fail, pass, passDkimOnly, passSpfOnly }) => {
-        const total = [fail, pass, passDkimOnly, passSpfOnly].reduce(
-          (a, b) => a + b,
-          0,
-        )
-
-        if (fail <= 0) return 0
-
-        const percentage = (fail / total) * 100
-        return Number(percentage.toFixed(2))
-      },
+      resolve: ({ fail }) => fail,
     },
     fullPassPercentage: {
-      type: GraphQLFloat,
+      type: GraphQLInt,
       description: 'Percentage of messages that are passing all checks.',
-      resolve: ({ fail, pass, passDkimOnly, passSpfOnly }) => {
-        const total = [fail, pass, passDkimOnly, passSpfOnly].reduce(
-          (a, b) => a + b,
-          0,
-        )
-
-        if (pass <= 0) return 0
-
-        const percentage = (pass / total) * 100
-        return Number(percentage.toFixed(2))
-      },
+      resolve: ({ pass }) => pass,
     },
     passDkimOnlyPercentage: {
-      type: GraphQLFloat,
+      type: GraphQLInt,
       description: 'Percentage of messages that are passing only dkim.',
-      resolve: ({ fail, pass, passDkimOnly, passSpfOnly }) => {
-        const total = [fail, pass, passDkimOnly, passSpfOnly].reduce(
-          (a, b) => a + b,
-          0,
-        )
-
-        if (passDkimOnly <= 0) return 0
-
-        const percentage = (passDkimOnly / total) * 100
-        return Number(percentage.toFixed(2))
-      },
+      resolve: ({ passDkimOnly }) => passDkimOnly,
     },
     passSpfOnlyPercentage: {
-      type: GraphQLFloat,
+      type: GraphQLInt,
       description: 'Percentage of messages that are passing only spf.',
-      resolve: ({ fail, pass, passDkimOnly, passSpfOnly }) => {
-        const total = [fail, pass, passDkimOnly, passSpfOnly].reduce(
-          (a, b) => a + b,
-          0,
-        )
-
-        if (passSpfOnly <= 0) return 0
-
-        const percentage = (passSpfOnly / total) * 100
-        return Number(percentage.toFixed(2))
-      },
+      resolve: ({ passSpfOnly }) => passSpfOnly,
     },
     totalMessages: {
       type: GraphQLInt,
       description: 'The total amount of messages sent by this domain.',
-      resolve: ({ fail, pass, passDkimOnly, passSpfOnly }) => {
-        const total = [fail, pass, passDkimOnly, passSpfOnly].reduce(
-          (a, b) => a + b,
-          0,
-        )
-        return Number(total)
-      },
+      resolve: ({ totalMessages }) => totalMessages,
     },
   }),
 })

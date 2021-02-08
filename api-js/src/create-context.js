@@ -172,6 +172,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
+        loadStartDateFromPeriod(moment, userKey, i18n),
       ),
       dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
         query,

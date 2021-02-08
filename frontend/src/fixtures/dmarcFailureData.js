@@ -5,7 +5,7 @@ export const rawDmarcFailureData = {
       __typename: 'Domain',
       dmarcSummaryByPeriod: {
         __typename: 'Period',
-        domain: 'test.domain.ca',
+        domain: { domain: 'test.domain.ca' },
         month: 'LAST30DAYS',
         year: '2020',
         detailTables: {
