@@ -5,7 +5,11 @@ import re
 from slugify import slugify
 from gql import Client
 from gql.transport.aiohttp import AIOHTTPTransport
-from gql.transport.exceptions import TransportQueryError
+from gql.transport.exceptions import (
+    TransportQueryError,
+    TransportServerError,
+    TransportProtocolError,
+)
 
 from queries import (
     ALL_DOMAINS_QUERY,
@@ -79,22 +83,46 @@ def get_auth_token():
     return auth_token
 
 
+# TODO: Make error messages better
+def execute_query(client, query, params=None):
+    """Executes a query on given client, with given parameters. """
+    try:
+        result = client.execute(query, variable_values=params)
+
+    except TransportQueryError as error:
+        # Not sure this is the best way to deal with this exception
+        print("Error in query:")
+        result = error.errors[0]
+
+    except TransportProtocolError as error:
+        print("Unexpected response from server:", error)
+        raise
+
+    except TransportServerError as error:
+        print("Server error:", error)
+        raise
+
+    except Exception as error:
+        # Need to be more descriptive
+        # Potentially figure out other errors that could be caught here?
+        print("Fatal error:", error)
+        raise
+
+    return result
+
+
 def get_all_domains(client):
     """Returns lists of all domains you have ownership of, with org as key
 
     Arguments:
     client -- a GQL Client object
     """
-    try:
-        result = client.execute(ALL_DOMAINS_QUERY)
-    except TransportQueryError as error:
-        print("Error in query:", error)
-    except Exception as error:
-        print("Fatal error:", error)
-        raise
-    else:
-        formatted_result = format_all_domains(result)
-        return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, ALL_DOMAINS_QUERY)
+    # Only the server's error response contains the key "message"
+    if "message" not in result:
+        result = format_all_domains(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_all_domains(result):
@@ -124,22 +152,20 @@ def get_domains_by_acronym(acronym, client):
     client -- a GQL Client object
     """
     # API doesn't allow query by acronym so we filter the get_all_domains result
-    try:
-        result = client.execute(ALL_DOMAINS_QUERY)
-    except TransportQueryError as error:
-        print("Error in query:", error)
-    except Exception as error:
-        print("Fatal error:", error)
-        raise
-    else:
+    result = execute_query(client, ALL_DOMAINS_QUERY)
+
+    if "message" not in result:
         # Since the server doesn't see the acronym we check if it's in the result
         # and print an error if it's not there
+        # TODO This needs to act like a TransportQueryError
         try:
-            formatted_result = format_acronym_domains(acronym, result)
-            return json.dumps(formatted_result, indent=4)
-        except KeyError as error:
-            # Should we return this instead of returning none?
+            result = format_acronym_domains(acronym, result)
+
+        except KeyError:
             print("No domains found for acronym:", acronym)
+
+    # Right now this will return all domains if the acronym isn't found
+    return json.dumps(result, indent=4)
 
 
 def format_acronym_domains(acronym, result):
@@ -159,16 +185,12 @@ def get_domains_by_name(name, client):
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"org": slugified_name}
 
-    try:
-        result = client.execute(DOMAINS_BY_SLUG, variable_values=params)
-    except TransportQueryError as error:
-        print("Error in query:", error)
-    except Exception as error:
-        print("Fatal error:", error)
-        raise
-    else:
-        formatted_result = format_name_domains(result)
-        return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, DOMAINS_BY_SLUG, params)
+
+    if "message" not in result:
+        result = format_name_domains(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_name_domains(result):
@@ -191,16 +213,12 @@ def get_dmarc_summary(domain, month, year, client):
     """
     params = {"domain": domain, "month": month.upper(), "year": str(year)}
 
-    try:
-        result = client.execute(DMARC_SUMMARY, variable_values=params)
-    except TransportQueryError as error:
-        print("Error in query:", error)
-    except Exception as error:
-        print("Fatal error:", error)
-        raise
-    else:
-        formatted_result = format_dmarc_monthly(result)
-        return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, DMARC_SUMMARY, params)
+
+    if "message" not in result:
+        result = format_dmarc_monthly(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_dmarc_monthly(result):
@@ -219,16 +237,12 @@ def get_yearly_dmarc_summaries(domain, client):
     """
     params = {"domain": domain}
 
-    try:
-        result = client.execute(DMARC_YEARLY_SUMMARIES, variable_values=params)
-    except TransportQueryError as error:
-        print("Error in query:", error)
-    except Exception as error:
-        print("Fatal error:", error)
-        raise
-    else:
-        formatted_result = format_dmarc_yearly(result)
-        return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, DMARC_YEARLY_SUMMARIES, params)
+
+    if "message" not in result:
+        result = format_dmarc_yearly(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_dmarc_yearly(result):
@@ -244,16 +258,12 @@ def get_all_summaries(client):
     Arguments:
     client -- a GQL Client object
     """
-    try:
-        result = client.execute(ALL_ORG_SUMMARIES)
-    except TransportQueryError as error:
-        print("Error in query:", error)
-    except Exception as error:
-        print("Fatal error:", error)
-        raise
-    else:
-        formatted_result = format_all_summaries(result)
-        return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, ALL_ORG_SUMMARIES)
+
+    if "message" not in result:
+        result = format_all_summaries(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_all_summaries(result):
@@ -271,22 +281,17 @@ def get_summary_by_acronym(acronym, client):
     client -- a GQL Client object
     """
     # API doesn't allow query by acronym so we filter the get_all_summaries result
-    try:
-        result = client.execute(ALL_ORG_SUMMARIES)
-    except TransportQueryError as error:
-        print("Error in query:", error)
-    except Exception as error:
-        print("Fatal error:", error)
-        raise
-    else:
-        # Since the server doesn't see the acronym we check if it's in the result
-        # and print an error if it's not there
+    result = execute_query(client, ALL_ORG_SUMMARIES)
+
+    if "message" not in result:
+        # TODO This needs to act like a TransportQueryError
         try:
-            formatted_result = format_acronym_summary(result, acronym)
-            return json.dumps(formatted_result, indent=4)
-        except KeyError as error:
-            # Should we return this instead of returning none?
+            result = format_acronym_summary(result, acronym)
+        except KeyError:
             print("No summary found for acronym:", acronym)
+
+    # Right now this will return all domains if the acronym isn't found
+    return json.dumps(result, indent=4)
 
 
 def format_acronym_summary(result, acronym):
@@ -307,16 +312,12 @@ def get_summary_by_name(name, client):
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"orgSlug": slugified_name}
 
-    try:
-        result = client.execute(SUMMARY_BY_SLUG, variable_values=params)
-    except TransportQueryError as error:
-        print("Error in query:", error)
-    except Exception as error:
-        print("Fatal error:", error)
-        raise
-    else:
-        formatted_result = format_name_summary(result)
-        return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, SUMMARY_BY_SLUG, params)
+
+    if "message" not in result:
+        result = format_name_summary(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_name_summary(result):
