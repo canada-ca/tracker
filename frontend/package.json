@@ -17,7 +17,7 @@
     "@babel/runtime": "^7.12.1",
     "@chakra-ui/core": "^0.8.0",
     "@emotion/core": "^10.0.35",
-    "@emotion/styled": "^10.0.27",
+    "@emotion/styled": "^11.1.5",
     "@lingui/react": "^3.0.3",
     "body-parser": "^1.19.0",
     "d3": "^6.2.0",
