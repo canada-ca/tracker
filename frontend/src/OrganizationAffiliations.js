@@ -38,7 +38,7 @@ export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
   if (loading)
     return (
       <LoadingMessage>
-        <Trans>Affiliations</Trans>
+        <Trans>User Affiliations</Trans>
       </LoadingMessage>
     )
 

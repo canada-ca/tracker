@@ -44,7 +44,7 @@ window.resizeTo = function resizeTo(width, height) {
 
 describe('<OrganizationAffiliations />', () => {
   describe('given the url /organisations/tbs-sct-gc-ca', () => {
-    it('displays details using the tbs-sct-gc-ca slug', async () => {
+    it('displays user affiliations using the tbs-sct-gc-ca slug', async () => {
       window.resizeTo(1024, 768)
 
       const orgSlug = 'tbs-sct-gc-ca'

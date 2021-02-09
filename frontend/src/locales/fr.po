@@ -529,6 +529,7 @@ msgstr "Domaine:"
 #: src/DomainsPage.js:65
 #: src/FloatingMenu.js:131
 #: src/OrganizationDetails.js:114
+#: src/OrganizationDomains.js:41
 msgid "Domains"
 msgstr "Domaines"
 
@@ -1022,6 +1023,7 @@ msgid "No RUFs defined"
 msgstr "Pas de RUF définis"
 
 #: src/OrganizationDetails.js:181
+#: src/OrganizationAffiliations.js:51
 msgid "No Users"
 msgstr "Pas d'utilisateurs"
 
@@ -1739,6 +1741,7 @@ msgid "Use DKIM to validate outbound email sent from your custom domain"
 msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé depuis votre domaine personnalisé"
 
 #: src/AdminPage.js:42
+#: src/OrganizationAffiliations.js:41
 msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 
