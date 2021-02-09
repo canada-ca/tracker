@@ -50,7 +50,7 @@
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@hot-loader/react-dom": "^16.14.0",
-    "@lingui/cli": "^3.0.3",
+    "@lingui/cli": "^3.5.1",
     "@lingui/loader": "^3.0.3",
     "@lingui/macro": "^3.0.3",
     "@testing-library/jest-dom": "^5.11.5",
