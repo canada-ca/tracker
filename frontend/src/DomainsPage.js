@@ -32,7 +32,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 
-export default function DomainsPage({ domainsPerPage = 5 }) {
+export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
   const {
     loading,
