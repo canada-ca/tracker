@@ -17,6 +17,7 @@ import {
   Image,
   useToast,
   Heading,
+  Icon,
 } from '@chakra-ui/core'
 import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
@@ -24,6 +25,7 @@ import wordmark from './images/canada-wordmark.svg'
 import personIcon from './images/person-icon.svg'
 import reportIcon from './images/report-icon.svg'
 import buildingIcon from './images/building-icon.svg'
+import https from './images/https.svg'
 import { useLingui } from '@lingui/react'
 import { useUserState } from './UserState'
 
@@ -52,9 +54,9 @@ export const FloatingMenu = () => {
       display={{ base: 'static', md: 'none' }}
     >
       <Stack isInline width="100%" rounded="md" spacing={0}>
-        <Link as={RouteLink} to="/user" flex="1 1 0">
+        <Link as={RouteLink} to="/domains" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-            <Image src={personIcon} height="16px" />
+            <Icon name="https" height="16px" width="100%" />
           </TrackerButton>
         </Link>
         <Divider
@@ -128,7 +130,7 @@ export const FloatingMenu = () => {
 
                   <FloatingMenuLink to="/admin" text={t`Admin Portal`} />
 
-                  <FloatingMenuLink to="/domains" text={t`Domains`} />
+                  <FloatingMenuLink to="/user" text={t`Account Settings`} />
 
                   <Divider
                     borderWidth="2px"
