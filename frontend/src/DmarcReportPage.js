@@ -14,6 +14,7 @@ import {
   Heading,
   Icon,
   Link,
+  PseudoBox,
   Select,
   SimpleGrid,
   Stack,
@@ -598,23 +599,25 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   return (
     <Box width="100%" px="4" mx="auto" overflow="hidden">
-      <SimpleGrid columns="3">
+      <PseudoBox d={{ md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr 1fr' }}>
         <Box />
         <Heading as="h1" textAlign="center">
           {domainSlug.toUpperCase()}
         </Heading>
         <Link
-          ml="auto"
           color="teal.500"
           whiteSpace="noWrap"
           my="auto"
           to={`/domains/${domainSlug}`}
           as={RouteLink}
+          d="block"
+          width="100%"
+          textAlign={{ base: 'center', md: 'right' }}
         >
           <Trans>Guidance</Trans>
           <Icon name="link" ml="4px" />
         </Link>
-      </SimpleGrid>
+      </PseudoBox>
 
       {graphDisplay}
 
