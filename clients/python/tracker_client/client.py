@@ -1,5 +1,6 @@
-import os
 import json
+import os
+import re
 
 from slugify import slugify
 from gql import Client
@@ -17,6 +18,9 @@ from queries import (
 )
 
 
+JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
+
+
 def create_transport(url, auth_token=None):
     """Create and return a gql transport object
 
@@ -26,11 +30,21 @@ def create_transport(url, auth_token=None):
     """
     if auth_token is None:
         transport = AIOHTTPTransport(url=url)
+
     else:
-        transport = AIOHTTPTransport(
-            url=url,
-            headers={"authorization": auth_token},
-        )
+        # Resulting stack trace is very unhelpful when passing an invalid token
+        # We validate the given auth_token and raise a ValueError if it's invalid
+        # to make debugging easier
+
+        if isinstance(auth_token, str) and re.match(JWT_RE, auth_token):
+            transport = AIOHTTPTransport(
+                url=url,
+                headers={"authorization": auth_token},
+            )
+
+        else:
+            raise ValueError("auth_token is not a valid JWT")
+
     return transport
 
 
@@ -55,6 +69,9 @@ def get_auth_token():
     username = os.environ.get("TRACKER_UNAME")
     password = os.environ.get("TRACKER_PASS")
 
+    if username is None or password is None:
+        raise ValueError("Tracker credentials missing from environment.")
+
     params = {"creds": {"userName": username, "password": password}}
 
     result = client.execute(SIGNIN_MUTATION, variable_values=params)
@@ -68,9 +85,16 @@ def get_all_domains(client):
     Arguments:
     client -- a GQL Client object
     """
-    result = client.execute(ALL_DOMAINS_QUERY)
-    formatted_result = format_all_domains(result)
-    return json.dumps(formatted_result, indent=4)
+    try:
+        result = client.execute(ALL_DOMAINS_QUERY)
+    except TransportQueryError as error:
+        print("Error in query:", error)
+    except Exception as error:
+        print("Fatal error:", error)
+        raise
+    else:
+        formatted_result = format_all_domains(result)
+        return json.dumps(formatted_result, indent=4)
 
 
 def format_all_domains(result):
