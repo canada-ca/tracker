@@ -2,8 +2,9 @@ import os
 import json
 
 from slugify import slugify
-from gql import gql, Client
+from gql import Client
 from gql.transport.aiohttp import AIOHTTPTransport
+from gql.transport.exceptions import TransportQueryError
 
 from queries import (
     ALL_DOMAINS_QUERY,
@@ -99,9 +100,22 @@ def get_domains_by_acronym(acronym, client):
     client -- a GQL Client object
     """
     # API doesn't allow query by acronym so we filter the get_all_domains result
-    result = client.execute(ALL_DOMAINS_QUERY)
-    formatted_result = format_acronym_domains(acronym, result)
-    return json.dumps(formatted_result, indent=4)
+    try:
+        result = client.execute(ALL_DOMAINS_QUERY)
+    except TransportQueryError as error:
+        print("Error in query:", error)
+    except Exception as error:
+        print("Fatal error:", error)
+        raise
+    else:
+        # Since the server doesn't see the acronym we check if it's in the result
+        # and print an error if it's not there
+        try:
+            formatted_result = format_acronym_domains(acronym, result)
+            return json.dumps(formatted_result, indent=4)
+        except KeyError as error:
+            # Should we return this instead of returning none?
+            print("No domains found for acronym:", acronym)
 
 
 def format_acronym_domains(acronym, result):
@@ -121,9 +135,16 @@ def get_domains_by_name(name, client):
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"org": slugified_name}
 
-    result = client.execute(DOMAINS_BY_SLUG, variable_values=params)
-    formatted_result = format_name_domains(result)
-    return json.dumps(formatted_result, indent=4)
+    try:
+        result = client.execute(DOMAINS_BY_SLUG, variable_values=params)
+    except TransportQueryError as error:
+        print("Error in query:", error)
+    except Exception as error:
+        print("Fatal error:", error)
+        raise
+    else:
+        formatted_result = format_name_domains(result)
+        return json.dumps(formatted_result, indent=4)
 
 
 def format_name_domains(result):
@@ -146,9 +167,16 @@ def get_dmarc_summary(domain, month, year, client):
     """
     params = {"domain": domain, "month": month.upper(), "year": str(year)}
 
-    result = client.execute(DMARC_SUMMARY, variable_values=params)
-    formatted_result = format_dmarc_monthly(result)
-    return json.dumps(formatted_result, indent=4)
+    try:
+        result = client.execute(DMARC_SUMMARY, variable_values=params)
+    except TransportQueryError as error:
+        print("Error in query:", error)
+    except Exception as error:
+        print("Fatal error:", error)
+        raise
+    else:
+        formatted_result = format_dmarc_monthly(result)
+        return json.dumps(formatted_result, indent=4)
 
 
 def format_dmarc_monthly(result):
@@ -167,9 +195,16 @@ def get_yearly_dmarc_summaries(domain, client):
     """
     params = {"domain": domain}
 
-    result = client.execute(DMARC_YEARLY_SUMMARIES, variable_values=params)
-    formatted_result = format_dmarc_yearly(result)
-    return json.dumps(formatted_result, indent=4)
+    try:
+        result = client.execute(DMARC_YEARLY_SUMMARIES, variable_values=params)
+    except TransportQueryError as error:
+        print("Error in query:", error)
+    except Exception as error:
+        print("Fatal error:", error)
+        raise
+    else:
+        formatted_result = format_dmarc_yearly(result)
+        return json.dumps(formatted_result, indent=4)
 
 
 def format_dmarc_yearly(result):
@@ -185,9 +220,16 @@ def get_all_summaries(client):
     Arguments:
     client -- a GQL Client object
     """
-    result = client.execute(ALL_ORG_SUMMARIES)
-    formatted_result = format_all_summaries(result)
-    return json.dumps(formatted_result, indent=4)
+    try:
+        result = client.execute(ALL_ORG_SUMMARIES)
+    except TransportQueryError as error:
+        print("Error in query:", error)
+    except Exception as error:
+        print("Fatal error:", error)
+        raise
+    else:
+        formatted_result = format_all_summaries(result)
+        return json.dumps(formatted_result, indent=4)
 
 
 def format_all_summaries(result):
@@ -205,9 +247,22 @@ def get_summary_by_acronym(acronym, client):
     client -- a GQL Client object
     """
     # API doesn't allow query by acronym so we filter the get_all_summaries result
-    result = client.execute(ALL_ORG_SUMMARIES)
-    formatted_result = format_acronym_summary(result, acronym)
-    return json.dumps(formatted_result, indent=4)
+    try:
+        result = client.execute(ALL_ORG_SUMMARIES)
+    except TransportQueryError as error:
+        print("Error in query:", error)
+    except Exception as error:
+        print("Fatal error:", error)
+        raise
+    else:
+        # Since the server doesn't see the acronym we check if it's in the result
+        # and print an error if it's not there
+        try:
+            formatted_result = format_acronym_summary(result, acronym)
+            return json.dumps(formatted_result, indent=4)
+        except KeyError as error:
+            # Should we return this instead of returning none?
+            print("No summary found for acronym:", acronym)
 
 
 def format_acronym_summary(result, acronym):
@@ -228,9 +283,16 @@ def get_summary_by_name(name, client):
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"orgSlug": slugified_name}
 
-    result = client.execute(SUMMARY_BY_SLUG, variable_values=params)
-    formatted_result = format_name_summary(result)
-    return json.dumps(formatted_result, indent=4)
+    try:
+        result = client.execute(SUMMARY_BY_SLUG, variable_values=params)
+    except TransportQueryError as error:
+        print("Error in query:", error)
+    except Exception as error:
+        print("Fatal error:", error)
+        raise
+    else:
+        formatted_result = format_name_summary(result)
+        return json.dumps(formatted_result, indent=4)
 
 
 def format_name_summary(result):
@@ -247,6 +309,10 @@ def main():
     """main() currently tries all implemented functions and prints results
     for diagnostic purposes and to demo available features.
     """
+    acronym = "cse"
+    name = "Communications Security Establishment Canada"
+    domain = "cse-cst.gc.ca"
+
     print("Tracker account: " + os.environ.get("TRACKER_UNAME"))
     client = create_client("https://tracker.alpha.canada.ca/graphql", get_auth_token())
 
@@ -254,23 +320,20 @@ def main():
     domains = get_all_domains(client)
     print(domains)
 
-    acronym = "cse"
     print("Getting domains by acronym " + acronym + "...")
-    domains = get_domains_by_acronym("cse", client)
+    domains = get_domains_by_acronym(acronym, client)
     print(domains)
 
-    name = "Communications Security Establishment Canada"
     print("Getting domains by name " + name + "...")
     domains = get_domains_by_name(name, client)
     print(domains)
 
-    domain = "cse-cst.gc.ca"
     print("Getting a dmarc summary for " + domain + "...")
     result = get_dmarc_summary(domain, "november", 2020, client)
     print(result)
 
     print("Getting yearly dmarc summary for " + domain + "...")
-    result = get_yearly_dmarc_summaries("cse-cst.gc.ca", client)
+    result = get_yearly_dmarc_summaries(domain, client)
     print(result)
 
     print("Getting summaries for all your organizations...")
@@ -278,7 +341,7 @@ def main():
     print(summaries)
 
     print("Getting summary by acronym " + acronym + "...")
-    summaries = get_summary_by_acronym("cse", client)
+    summaries = get_summary_by_acronym(acronym, client)
     print(summaries)
 
     print("Getting summary by name " + name + "...")
