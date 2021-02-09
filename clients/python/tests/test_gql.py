@@ -1,8 +1,8 @@
 import re
 from tracker_client.client import get_auth_token, create_client, create_transport
 
-"""These are not very good tests as they do actually connect to the API.
-Will be replaced as soon as I work out a good solution for mocking the API"""
+# These are not very good tests as they do actually connect to the API.
+# Will be replaced as soon as I work out a good solution for mocking the API
 
 
 def test_get_auth_token():
