@@ -16,7 +16,6 @@ import {
   Link,
   PseudoBox,
   Select,
-  SimpleGrid,
   Stack,
   Text,
 } from '@chakra-ui/core'
