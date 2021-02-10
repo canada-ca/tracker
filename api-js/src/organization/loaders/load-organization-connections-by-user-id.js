@@ -295,8 +295,8 @@ export const orgLoaderConnectionsByUserId = (
       orgField = aql`org.summaries.web.total`
       hasNextPageDocumentField = aql`DOCUMENT(organizations, LAST(retrievedOrgs)._key).summaries.web.total`
       hasPreviousPageDocumentField = aql`DOCUMENT(organizations, FIRST(retrievedOrgs)._key).summaries.web.total`
-    } else if (orderBy.domainCount === 'domain-count') {
-      orgField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)`
+    } else if (orderBy.field === 'domain-count') {
+      orgField = aql`COUNT(domains)`
       hasNextPageDocumentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND DOCUMENT(organizations, LAST(retrievedOrgs)._key)._id claims RETURN e._to)`
       hasPreviousPageDocumentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND DOCUMENT(organizations, FIRST(retrievedOrgs)._key)._id claims RETURN e._to)`
     }
@@ -346,7 +346,7 @@ export const orgLoaderConnectionsByUserId = (
       sortByField = aql`org.summaries.web.fail ${orderBy.direction},`
     } else if (orderBy.field === 'summary-web-total') {
       sortByField = aql`org.summaries.web.total ${orderBy.direction},`
-    } else if (orderBy.domainCount === 'domain-count') {
+    } else if (orderBy.field === 'domain-count') {
       sortByField = aql`COUNT(domains) ${orderBy.direction},`
     }
   }
@@ -390,6 +390,7 @@ export const orgLoaderConnectionsByUserId = (
     LET hasNextPage = (LENGTH(
       FOR org IN organizations
         FILTER org._key IN orgKeys
+        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
         ${hasNextPageFilter}
         SORT ${sortByField} org._key ${sortString} LIMIT 1
         RETURN org
@@ -398,6 +399,7 @@ export const orgLoaderConnectionsByUserId = (
     LET hasPreviousPage = (LENGTH(
       FOR org IN organizations
         FILTER org._key IN orgKeys
+        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
         ${hasPreviousPageFilter}
         SORT ${sortByField} org._key ${sortString} LIMIT 1
         RETURN org
