@@ -347,9 +347,12 @@ def get_domain_results(domain, client):
     """
     params = {"domain": domain}
 
-    result = client.execute(DOMAIN_RESULTS, variable_values=params)
-    formatted_result = format_domain_results(result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, DOMAIN_RESULTS, params)
+
+    if "error" not in result:
+        result = format_domain_results(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_domain_results(result):
@@ -408,9 +411,12 @@ def get_domain_status(domain, client):
     """
     params = {"domain": domain}
 
-    result = client.execute(DOMAIN_STATUS, variable_values=params)
-    formatted_result = format_domain_status(result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, DOMAIN_STATUS, params)
+
+    if "error" not in result:
+        result = format_domain_status(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_domain_status(result):
