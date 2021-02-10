@@ -16,7 +16,7 @@ def test_format_all_domains(all_domains_input, all_domains_output):
 
 
 def test_format_acronym_domains(all_domains_input, org_domains_output):
-    assert format_acronym_domains("def", all_domains_input) == org_domains_output
+    assert format_acronym_domains(all_domains_input, "def") == org_domains_output
 
 
 def test_format_name_domains(name_domain_input, org_domains_output):

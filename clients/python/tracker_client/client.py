@@ -146,7 +146,7 @@ def format_all_domains(result):
     return result
 
 
-def get_domains_by_acronym(acronym, client):
+def get_domains_by_acronym(client, acronym):
     """Return the domains belonging to the organization identified by acronym
 
     Arguments:
@@ -160,7 +160,7 @@ def get_domains_by_acronym(acronym, client):
         # Since the server doesn't see the acronym we check if it's in the result
         # and simulate the server error response if it's not there
         try:
-            result = format_acronym_domains(acronym, result)
+            result = format_acronym_domains(result, acronym)
 
         except KeyError:
             result = {
@@ -172,14 +172,14 @@ def get_domains_by_acronym(acronym, client):
     return json.dumps(result, indent=4)
 
 
-def format_acronym_domains(acronym, result):
+def format_acronym_domains(result, acronym):
     """ Formats the dict obtained by ALL_DOMAINS_QUERY to show only one org"""
     result = format_all_domains(result)
     result = {acronym.upper(): result[acronym.upper()]}
     return result
 
 
-def get_domains_by_name(name, client):
+def get_domains_by_name(client, name):
     """Return the domains belonging to the organization identified by full name
 
     Arguments:
@@ -207,7 +207,7 @@ def format_name_domains(result):
     return result
 
 
-def get_dmarc_summary(domain, month, year, client):
+def get_dmarc_summary(client, domain, month, year):
     """Return the DMARC summary for the specified domain and month
 
     Arguments:
@@ -233,7 +233,7 @@ def format_dmarc_monthly(result):
     return result
 
 
-def get_yearly_dmarc_summaries(domain, client):
+def get_yearly_dmarc_summaries(client, domain):
     """Return yearly DMARC summaries for a domain
 
     Arguments:
@@ -278,7 +278,7 @@ def format_all_summaries(result):
     return result
 
 
-def get_summary_by_acronym(acronym, client):
+def get_summary_by_acronym(client, acronym):
     """Returns summary metrics for the organization identified by acronym
 
     Arguments:
@@ -310,7 +310,7 @@ def format_acronym_summary(result, acronym):
     return result
 
 
-def get_summary_by_name(name, client):
+def get_summary_by_name(client, name):
     """Return summary metrics for the organization identified by name
 
     Arguments:
@@ -338,7 +338,7 @@ def format_name_summary(result):
     return result
 
 
-def get_domain_results(domain, client):
+def get_domain_results(client, domain):
     """Return scan results for a domain
 
     Arguments:
@@ -402,7 +402,7 @@ def format_domain_results(result):
     return result
 
 
-def get_domain_status(domain, client):
+def get_domain_status(client, domain):
     """Return pass/fail status information for a domain
 
     Arguments:
@@ -441,19 +441,19 @@ def main():
     print(domains)
 
     print("Getting domains by acronym " + acronym + "...")
-    domains = get_domains_by_acronym(acronym, client)
+    domains = get_domains_by_acronym(client, acronym)
     print(domains)
 
     print("Getting domains by name " + name + "...")
-    domains = get_domains_by_name(name, client)
+    domains = get_domains_by_name(client, name)
     print(domains)
 
     print("Getting a dmarc summary for " + domain + "...")
-    result = get_dmarc_summary(domain, "november", 2020, client)
+    result = get_dmarc_summary(client, domain, "november", 2020)
     print(result)
 
     print("Getting yearly dmarc summary for " + domain + "...")
-    result = get_yearly_dmarc_summaries(domain, client)
+    result = get_yearly_dmarc_summaries(client, domain)
     print(result)
 
     print("Getting summaries for all your organizations...")
@@ -461,19 +461,19 @@ def main():
     print(summaries)
 
     print("Getting summary by acronym " + acronym + "...")
-    summaries = get_summary_by_acronym(acronym, client)
+    summaries = get_summary_by_acronym(client, acronym)
     print(summaries)
 
     print("Getting summary by name " + name + "...")
-    summaries = get_summary_by_name(name, client)
+    summaries = get_summary_by_name(client, name)
     print(summaries)
 
     print("Getting scan results for " + domain + "...")
-    results = get_domain_results(domain, client)
+    results = get_domain_results(client, domain)
     print(results)
 
     print("Getting domain status for " + domain + "...")
-    results = get_domain_status(domain, client)
+    results = get_domain_status(client, domain)
     print(results)
 
 
