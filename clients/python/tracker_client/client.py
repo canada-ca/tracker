@@ -37,17 +37,18 @@ def create_transport(url, auth_token=None):
 
     else:
         # Resulting stack trace is very unhelpful when passing an invalid token
-        # We validate the given auth_token and raise a ValueError if it's invalid
+        # We validate the given auth_token and raise an exception if it's invalid
         # to make debugging easier
+        if not isinstance(auth_token, str):
+            raise TypeError("auth_token must be a string")
 
-        if isinstance(auth_token, str) and re.match(JWT_RE, auth_token):
-            transport = AIOHTTPTransport(
-                url=url,
-                headers={"authorization": auth_token},
-            )
-
-        else:
+        if not re.match(JWT_RE, auth_token):
             raise ValueError("auth_token is not a valid JWT")
+
+        transport = AIOHTTPTransport(
+            url=url,
+            headers={"authorization": auth_token},
+        )
 
     return transport
 
@@ -91,8 +92,7 @@ def execute_query(client, query, params=None):
 
     except TransportQueryError as error:
         # Not sure this is the best way to deal with this exception
-        print("Error in query:")
-        result = error.errors[0]
+        result = {"error": {"message": error.errors[0]["message"]}}
 
     except TransportProtocolError as error:
         print("Unexpected response from server:", error)
@@ -118,8 +118,8 @@ def get_all_domains(client):
     client -- a GQL Client object
     """
     result = execute_query(client, ALL_DOMAINS_QUERY)
-    # Only the server's error response contains the key "message"
-    if "message" not in result:
+    # If there is an error the result contains the key "error"
+    if "error" not in result:
         result = format_all_domains(result)
 
     return json.dumps(result, indent=4)
@@ -154,17 +154,19 @@ def get_domains_by_acronym(acronym, client):
     # API doesn't allow query by acronym so we filter the get_all_domains result
     result = execute_query(client, ALL_DOMAINS_QUERY)
 
-    if "message" not in result:
+    if "error" not in result:
         # Since the server doesn't see the acronym we check if it's in the result
-        # and print an error if it's not there
-        # TODO This needs to act like a TransportQueryError
+        # and simulate the server error response if it's not there
         try:
             result = format_acronym_domains(acronym, result)
 
         except KeyError:
-            print("No domains found for acronym:", acronym)
+            result = {
+                "error": {
+                    "message": "No organization with the provided acronym could be found."
+                }
+            }
 
-    # Right now this will return all domains if the acronym isn't found
     return json.dumps(result, indent=4)
 
 
@@ -187,7 +189,7 @@ def get_domains_by_name(name, client):
 
     result = execute_query(client, DOMAINS_BY_SLUG, params)
 
-    if "message" not in result:
+    if "error" not in result:
         result = format_name_domains(result)
 
     return json.dumps(result, indent=4)
@@ -215,7 +217,7 @@ def get_dmarc_summary(domain, month, year, client):
 
     result = execute_query(client, DMARC_SUMMARY, params)
 
-    if "message" not in result:
+    if "error" not in result:
         result = format_dmarc_monthly(result)
 
     return json.dumps(result, indent=4)
@@ -239,7 +241,7 @@ def get_yearly_dmarc_summaries(domain, client):
 
     result = execute_query(client, DMARC_YEARLY_SUMMARIES, params)
 
-    if "message" not in result:
+    if "error" not in result:
         result = format_dmarc_yearly(result)
 
     return json.dumps(result, indent=4)
@@ -260,7 +262,7 @@ def get_all_summaries(client):
     """
     result = execute_query(client, ALL_ORG_SUMMARIES)
 
-    if "message" not in result:
+    if "error" not in result:
         result = format_all_summaries(result)
 
     return json.dumps(result, indent=4)
@@ -283,14 +285,17 @@ def get_summary_by_acronym(acronym, client):
     # API doesn't allow query by acronym so we filter the get_all_summaries result
     result = execute_query(client, ALL_ORG_SUMMARIES)
 
-    if "message" not in result:
-        # TODO This needs to act like a TransportQueryError
+    if "error" not in result:
         try:
             result = format_acronym_summary(result, acronym)
-        except KeyError:
-            print("No summary found for acronym:", acronym)
 
-    # Right now this will return all domains if the acronym isn't found
+        except KeyError:
+            result = {
+                "error": {
+                    "message": "No organization with the provided acronym could be found."
+                }
+            }
+
     return json.dumps(result, indent=4)
 
 
@@ -314,7 +319,7 @@ def get_summary_by_name(name, client):
 
     result = execute_query(client, SUMMARY_BY_SLUG, params)
 
-    if "message" not in result:
+    if "error" not in result:
         result = format_name_summary(result)
 
     return json.dumps(result, indent=4)
