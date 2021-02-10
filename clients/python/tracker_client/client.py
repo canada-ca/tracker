@@ -19,6 +19,8 @@ from queries import (
     SIGNIN_MUTATION,
     ALL_ORG_SUMMARIES,
     SUMMARY_BY_SLUG,
+    DOMAIN_RESULTS,
+    DOMAIN_STATUS,
 )
 
 
@@ -140,7 +142,7 @@ def format_all_domains(result):
         x["domains"] = [n["domain"] for n in x["domains"]]
 
     # Create a new dict in the desired format to return
-    result = {x["acronym"]: {"domains": x["domains"]} for x in result}
+    result = {x["acronym"]: x["domains"] for x in result}
     return result
 
 
@@ -173,7 +175,7 @@ def get_domains_by_acronym(acronym, client):
 def format_acronym_domains(acronym, result):
     """ Formats the dict obtained by ALL_DOMAINS_QUERY to show only one org"""
     result = format_all_domains(result)
-    result = result[acronym.upper()]
+    result = {acronym.upper(): result[acronym.upper()]}
     return result
 
 
@@ -201,6 +203,7 @@ def format_name_domains(result):
     result["domains"] = result["domains"]["edges"]
     result["domains"] = [n["node"] for n in result["domains"]]
     result["domains"] = [n["domain"] for n in result["domains"]]
+    result = {result["acronym"]: result["domains"]}
     return result
 
 
@@ -335,6 +338,87 @@ def format_name_summary(result):
     return result
 
 
+def get_domain_results(domain, client):
+    """Return scan results for a domain
+
+    Arguments:
+    domain -- domain name string
+    client -- a GQL Client object
+    """
+    params = {"domain": domain}
+
+    result = client.execute(DOMAIN_RESULTS, variable_values=params)
+    formatted_result = format_domain_results(result)
+    return json.dumps(formatted_result, indent=4)
+
+
+def format_domain_results(result):
+    """Format the dict obtained by DOMAIN_RESULTS"""
+
+    # Extract the contents of the list of nodes holding web results
+    result["findDomainByDomain"]["web"] = {
+        k: v["edges"][0]["node"]
+        for (k, v) in result["findDomainByDomain"]["web"].items()
+    }
+
+    # Extract the contents of the list of nodes holding email results
+    result["findDomainByDomain"]["email"] = {
+        k: v["edges"][0]["node"]
+        for (k, v) in result["findDomainByDomain"]["email"].items()
+    }
+
+    # Extract the contents of the list of edges for guidance tags
+    for x in result["findDomainByDomain"]["web"].keys():
+
+        # Remove edges by making the value of guidanceTags the list of nodes
+        result["findDomainByDomain"]["web"][x]["guidanceTags"] = result[
+            "findDomainByDomain"
+        ]["web"][x]["guidanceTags"]["edges"]
+
+        # Replace the list of nodes with a dict with tagIds as the keys
+        result["findDomainByDomain"]["web"][x]["guidanceTags"] = {
+            x["node"].pop("tagId"): x["node"]
+            for x in result["findDomainByDomain"]["web"][x]["guidanceTags"]
+        }
+
+    # Do the same with email guidance tags
+    for x in result["findDomainByDomain"]["email"].keys():
+
+        # dkim results have different structure so exclude them
+        if x != "dkim":
+            result["findDomainByDomain"]["email"][x]["guidanceTags"] = result[
+                "findDomainByDomain"
+            ]["email"][x]["guidanceTags"]["edges"]
+
+            result["findDomainByDomain"]["email"][x]["guidanceTags"] = {
+                x["node"].pop("tagId"): x["node"]
+                for x in result["findDomainByDomain"]["email"][x]["guidanceTags"]
+            }
+
+    result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
+    return result
+
+
+def get_domain_status(domain, client):
+    """Return pass/fail status information for a domain
+
+    Arguments:
+    domain -- domain name string
+    client -- a GQL Client object
+    """
+    params = {"domain": domain}
+
+    result = client.execute(DOMAIN_STATUS, variable_values=params)
+    formatted_result = format_domain_status(result)
+    return json.dumps(formatted_result, indent=4)
+
+
+def format_domain_status(result):
+    """Formats the dict obtained by DOMAIN_STATUS"""
+    result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
+    return result
+
+
 def main():
     """main() currently tries all implemented functions and prints results
     for diagnostic purposes and to demo available features.
@@ -377,6 +461,14 @@ def main():
     print("Getting summary by name " + name + "...")
     summaries = get_summary_by_name(name, client)
     print(summaries)
+
+    print("Getting scan results for " + domain + "...")
+    results = get_domain_results(domain, client)
+    print(results)
+
+    print("Getting domain status for " + domain + "...")
+    results = get_domain_status(domain, client)
+    print(results)
 
 
 if __name__ == "__main__":

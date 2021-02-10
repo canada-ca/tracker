@@ -7,6 +7,8 @@ from tracker_client.client import (
     format_all_summaries,
     format_acronym_summary,
     format_name_summary,
+    format_domain_results,
+    format_domain_status,
 )
 
 def test_format_all_domains(all_domains_input, all_domains_output):
@@ -39,3 +41,11 @@ def test_format_acronym_summary(all_summaries_input, org_summary_output):
 
 def test_format_name_summary(name_summary_input, org_summary_output):
     assert format_name_summary(name_summary_input) == org_summary_output
+
+
+def test_format_domain_results(scan_results_input, scan_results_output):
+    assert format_domain_results(scan_results_input) == scan_results_output
+
+
+def test_format_domain_status(domain_status_input, domain_status_output):
+    assert format_domain_status(domain_status_input) == domain_status_output
