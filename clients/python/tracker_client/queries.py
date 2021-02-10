@@ -42,6 +42,7 @@ DOMAINS_BY_SLUG = gql(
     """
     query orgBySlug($org: Slug!){
         findOrganizationBySlug(orgSlug: $org){
+            acronym
             domains(first: 100){
                 edges{
                     node{
@@ -161,4 +162,175 @@ SUMMARY_BY_SLUG = gql(
         }
     }
     """
+)
+
+DOMAIN_RESULTS = gql(
+    """
+  query GetScanResults($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      domain
+      lastRan
+      web {
+        https(first: 100) {
+          edges {
+            node {
+              implementation
+              enforced
+              hsts
+              hstsAge
+              preloaded
+              guidanceTags(first: 100) {
+                edges {
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        ssl(first: 100) {
+          edges {
+            node {
+              guidanceTags(first: 100) {
+                edges {
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      email {
+        dkim(first: 100) {
+          edges {
+            node {
+              results(first: 100) {
+                edges {
+                  node {
+                    selector
+                    guidanceTags(first: 100) {
+                      edges {
+                        cursor
+                        node {
+                          tagId
+                          tagName
+                          guidance
+                          refLinks {
+                            description
+                            refLink
+                          }
+                          refLinksTech {
+                            description
+                            refLink
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        dmarc(first: 100) {
+          edges {
+            node {
+              dmarcPhase
+              record
+              pPolicy
+              spPolicy
+              pct
+              guidanceTags(first: 100) {
+                edges {
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        spf(first: 100) {
+          edges {
+            node {
+              lookups
+              record
+              spfDefault
+              guidanceTags(first: 100) {
+                edges {
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+    """
+)
+
+DOMAIN_STATUS = gql(
+    """
+  query GetDomainStatus($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      domain
+      lastRan
+      status {
+        https
+        ssl
+        dmarc
+        dkim
+        spf
+      }
+    }
+  }
+  """
 )
