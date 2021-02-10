@@ -22,41 +22,48 @@ function ScanCard({ scanType, scanData, status }) {
   const topInfo = () => {
     if (scanType === 'web') {
       return (
-        <Box bg="#d2e7fc" pb="1">
-          <Stack isInline align="center" px="2">
-            <Icon name="info" color="#3f8cd9" />
-            <Text fontWeight="bold" fontSize="xl">
-              {status.https === 'PASS' && status.ssl === 'PASS'
-                ? t`ITPIN Compliant`
-                : t`Changes Required for ITPIN Compliance`}
-            </Text>
-          </Stack>
+        <Box pb="1">
+          {status.https === 'PASS' && status.ssl === 'PASS' ? (
+            <Stack isInline align="center" px="2">
+              <Icon name="check-circle" color="strong" size="icons.md" />
+              <Text fontWeight="bold" fontSize="2xl">
+                <Trans>ITPIN Compliant</Trans>
+              </Text>
+            </Stack>
+          ) : (
+            <Stack isInline align="center" px="2">
+              <Icon name="warning-2" color="moderate" size="icons.md" />
+              <Text fontWeight="bold" fontSize="2xl">
+                <Trans>Changes Required for ITPIN Compliance</Trans>
+              </Text>
+            </Stack>
+          )}
         </Box>
       )
     } else if (scanType === 'email') {
-      if (status) {
-        return (
-          <Box bg="#d2e7fc" pb="1">
+      return (
+        <Box pb="1">
+          {status ? (
             <Stack isInline align="center" px="2">
-              <Icon name="info" color="#3f8cd9" />
-              <Text fontWeight="bold" fontSize="xl">
+              <Icon
+                name={status > 2 ? 'warning-2' : 'check-circle'}
+                color={status > 2 ? 'moderate' : 'strong'}
+                size="icons.md"
+              />
+              <Text fontWeight="bold" fontSize="2xl">
                 <Trans>DMARC Implementation Phase: {status}</Trans>
               </Text>
             </Stack>
-          </Box>
-        )
-      } else {
-        return (
-          <Box bg="#d2e7fc" pb="1">
+          ) : (
             <Stack isInline align="center" px="2">
-              <Icon name="info" color="#3f8cd9" />
-              <Text fontWeight="bold" fontSize="xl">
+              <Icon name="warning-2" color="moderate" size="icons.md" />
+              <Text fontWeight="bold" fontSize="2xl">
                 <Trans>DMARC Phase Unavailable</Trans>
               </Text>
             </Stack>
-          </Box>
-        )
-      }
+          )}
+        </Box>
+      )
     } else {
       return ''
     }

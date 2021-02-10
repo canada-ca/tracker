@@ -5,7 +5,8 @@ import { Trans } from '@lingui/macro'
 
 export function GuidanceTagDetails({ guidanceTag }) {
   const cccsGuidance =
-    guidanceTag.refLinks !== null && guidanceTag.refLinks.length !== 0 ? (
+    guidanceTag.refLinks[0]?.description !== null &&
+    guidanceTag.refLinks.length !== 0 ? (
       <Stack isInline>
         <Text fontWeight="bold">
           <Trans>For in-depth CCCS implementation guidance:</Trans>
@@ -30,7 +31,7 @@ export function GuidanceTagDetails({ guidanceTag }) {
 
   const technicalGuidance =
     guidanceTag.refLinksTech.length !== 0 &&
-    guidanceTag.refLinksTech !== null ? (
+    guidanceTag.refLinksTech[0]?.description !== null ? (
       <Stack isInline>
         <Text fontWeight="bold">
           <Trans>For technical implementation guidance:</Trans>

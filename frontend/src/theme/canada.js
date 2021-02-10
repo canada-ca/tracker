@@ -16,7 +16,10 @@ const colors = {
   moderate: '#FF9900',
   moderateAlt: '#e65c00',
   weak: '#D3080C',
-  info: '#269ABC',
+  info: '#3f8cd9',
+  strongMuted: '#E0FFE0',
+  weakMuted: '#FFE0E0',
+  infoMuted: '#d2e7fc',
   unknown: '#B0B0B0',
   green: {
     50: '#F2FFF0',
