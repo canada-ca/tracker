@@ -7,7 +7,9 @@ export function UserCard({ userName, role }) {
     <PseudoBox width="100%" p="8">
       <Stack isInline align="center" mb={['1', '0']}>
         <Box>
-          <Text fontSize="md">{userName}</Text>
+          <Text fontSize="md" wordBreak="break-all">
+            {userName}
+          </Text>
         </Box>
         {role && (
           <Badge

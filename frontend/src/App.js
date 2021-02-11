@@ -80,7 +80,7 @@ export default function App() {
 
           {isLoggedIn() && (
             <Link to="/user">
-              <Trans>User Profile</Trans>
+              <Trans>Account Settings</Trans>
             </Link>
           )}
 

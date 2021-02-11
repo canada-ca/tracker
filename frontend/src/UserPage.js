@@ -32,7 +32,7 @@ export default function UserPage() {
   if (queryUserLoading) {
     return (
       <LoadingMessage>
-        <Trans>User Profile</Trans>
+        <Trans>Account Settings</Trans>
       </LoadingMessage>
     )
   }
