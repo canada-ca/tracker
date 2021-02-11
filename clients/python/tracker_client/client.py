@@ -55,7 +55,7 @@ def create_transport(url, auth_token=None):
     return transport
 
 
-def create_client(url, auth_token=None):
+def create_client(url="https://tracker.alpha.canada.ca/graphql", auth_token=None):
     """Create and return a gql client object
 
     Arguments:
@@ -69,9 +69,9 @@ def create_client(url, auth_token=None):
     return client
 
 
-def get_auth_token():
+def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
     """Takes in environment variables "TRACKER_UNAME" and "TRACKER_PASS", returns an auth token"""
-    client = create_client(url="https://tracker.alpha.canada.ca/graphql")
+    client = create_client(url)
 
     username = os.environ.get("TRACKER_UNAME")
     password = os.environ.get("TRACKER_PASS")
@@ -434,7 +434,7 @@ def main():
     domain = "cse-cst.gc.ca"
 
     print("Tracker account: " + os.environ.get("TRACKER_UNAME"))
-    client = create_client("https://tracker.alpha.canada.ca/graphql", get_auth_token())
+    client = create_client(auth_token=get_auth_token())
 
     print("Getting all your domains...")
     domains = get_all_domains(client)

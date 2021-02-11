@@ -30,7 +30,7 @@ def test_get_auth_token_no_creds(monkeypatch):
 def test_create_client():
     """Check that create_client creates a client.
     Need to figure out a better test for this"""
-    client = create_client("https://tracker.alpha.canada.ca/graphql")
+    client = create_client()
     assert client is not None
     assert client.transport is not None
 
