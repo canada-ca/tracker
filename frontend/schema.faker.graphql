@@ -584,6 +584,32 @@ type DomainEdge {
   cursor: String!
 }
 
+# Ordering options for domain connections.
+input DomainOrder {
+  # The field to order domains by.
+  field: DomainOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which domain connections can be ordered.
+enum DomainOrderField {
+  # Order domains by domain.
+  DOMAIN
+  # Order domains by last ran.
+  LAST_RAN
+  # Order domains by dkim status.
+  DKIM_STATUS
+  # Order domains by dmarc status.
+  DMARC_STATUS
+  # Order domains by https status.
+  HTTPS_STATUS
+  # Order domains by spf status.
+  SPF_STATUS
+  # Order domains by ssl status.
+  SSL_STATUS
+}
+
 # String that conforms to a domain structure.
 scalar DomainScalar
 
@@ -946,7 +972,7 @@ type Organization implements Node {
     first: Int
     before: String
     last: Int
-  ): UserAffiliationsConnection
+  ): AffiliationConnection
 }
 
 # A connection to a list of items.
@@ -968,6 +994,50 @@ type OrganizationEdge {
   node: Organization
   # A cursor for use in pagination
   cursor: String!
+}
+
+# Ordering options for organization connections
+input OrganizationOrder {
+  # The field to order organizations by.
+  field: OrganizationOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which organization connections can be ordered.
+enum OrganizationOrderField {
+  # Order organizations by acronym.
+  ACRONYM
+  # Order organizations by name.
+  NAME
+  # Order organizations by slug.
+  SLUG
+  # Order organizations by zone.
+  ZONE
+  # Order organizations by sector.
+  SECTOR
+  # Order organizations by country.
+  COUNTRY
+  # Order organizations by province.
+  PROVINCE
+  # Order organizations by city.
+  CITY
+  # Order organizations by verified.
+  VERIFIED
+  # Order organizations by summary mail pass count.
+  SUMMARY_MAIL_PASS
+  # Order organizations by summary mail fail count.
+  SUMMARY_MAIL_FAIL
+  # Order organizations by summary mail total count.
+  SUMMARY_MAIL_TOTAL
+  # Order organizations by summary web pass count.
+  SUMMARY_WEB_PASS
+  # Order organizations by summary web fail count.
+  SUMMARY_WEB_FAIL
+  # Order organizations by summary web total count.
+  SUMMARY_WEB_TOTAL
+  # Order organizations by domain count.
+  DOMAIN_COUNT
 }
 
 # Summaries based on domains that the organization has claimed.
@@ -1045,7 +1115,7 @@ type PersonalUser implements Node {
     first: Int
     before: String
     last: Int
-  ): UserAffiliationsConnection
+  ): AffiliationConnection
 }
 
 # A field whose value conforms to the standard E.164 format as specified in:
