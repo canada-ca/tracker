@@ -102,6 +102,12 @@ msgstr "La liste de chiffrement acceptée contient le chiffrement 3DES à blocs 
 msgid "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
 msgstr "La liste de chiffrement acceptée contient le chiffrement de flux RC4, tel qu'interdit par le BOD 18-01"
 
+#: src/App.js:83
+#: src/FloatingMenu.js:129
+#: src/UserPage.js:35
+msgid "Account Settings"
+msgstr "Paramètres du compte"
+
 #: src/CreateUserPage.js:72
 msgid "Account created."
 msgstr "Compte créé"
@@ -110,7 +116,7 @@ msgstr "Compte créé"
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
-#: src/FloatingMenu.js:129
+#: src/FloatingMenu.js:131
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
@@ -413,8 +419,8 @@ msgid "DMARC Messages"
 msgstr "Messages de la DMARC"
 
 #: src/App.js:77
-#: src/DmarcGuidancePage.js:54
-#: src/DomainCard.js:165
+#: src/DmarcGuidancePage.js:58
+#: src/DomainCard.js:166
 msgid "DMARC Report"
 msgstr "Rapport de la DMARC"
 
@@ -527,7 +533,6 @@ msgstr "Domaine:"
 #: src/App.js:71
 #: src/DomainsPage.js:58
 #: src/DomainsPage.js:65
-#: src/FloatingMenu.js:131
 #: src/OrganizationDetails.js:114
 msgid "Domains"
 msgstr "Domaines"
@@ -694,7 +699,7 @@ msgid "Government of Canada domains subject to TBS guidelines"
 msgstr "Les domaines du gouvernement du Canada sont soumis aux directives du SCT"
 
 #: src/DmarcReportPage.js:295
-#: src/DmarcReportPage.js:614
+#: src/DmarcReportPage.js:616
 msgid "Guidance"
 msgstr "Conseils"
 
@@ -705,6 +710,14 @@ msgstr "Étiquettes d'orientation"
 #: src/GuidanceTagDetails.js:73
 msgid "Guidance:"
 msgstr "Orientation :"
+
+#: src/PolicyComplianceDetails.js:36
+msgid "HSTS Age:"
+msgstr "Âge du HSTS:"
+
+#: src/PolicyComplianceDetails.js:29
+msgid "HSTS Status:"
+msgstr "Statut du HSTS:"
 
 #: src/guidanceTagConstants.js:528
 msgid "HSTS-missing"
@@ -810,6 +823,10 @@ msgstr ""
 msgid "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
 msgstr ""
 
+#: src/PolicyComplianceDetails.js:17
+msgid "Implementation Status:"
+msgstr "État d'avancement de la mise en œuvre:"
+
 #: src/SignInPage.js:87
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
@@ -873,6 +890,10 @@ msgstr "Les 30 derniers jours"
 #: src/DomainCard.js:53
 msgid "Last scanned:"
 msgstr "Dernier scan:"
+
+#: src/PolicyComplianceDetails.js:23
+msgid "Level of Enforcment:"
+msgstr "Niveau d'application:"
 
 #: src/LoadingMessage.js:12
 msgid "Loading {children}..."
@@ -1259,6 +1280,10 @@ msgstr "Mot de passe :"
 msgid "Passwords must match"
 msgstr "Les mots de passe doivent correspondre"
 
+#: src/PolicyComplianceDetails.js:59
+msgid "Phase:"
+msgstr "Phase:"
+
 #: src/EditableUserTFAMethod.js:111
 msgid "Phone"
 msgstr "Téléphone"
@@ -1311,6 +1336,10 @@ msgstr "La politique s'applique au pourcentage du flux de courrier"
 #: src/App.js:52
 msgid "Pre-Alpha"
 msgstr "préalpha"
+
+#: src/PolicyComplianceDetails.js:43
+msgid "Preloaded Status:"
+msgstr "Statut préchargé:"
 
 #: src/DomainsPage.js:119
 #: src/Organizations.js:101
@@ -1584,7 +1613,7 @@ msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
 #: src/DmarcByDomainPage.js:233
-#: src/DmarcReportPage.js:623
+#: src/DmarcReportPage.js:625
 msgid "Showing data for period:"
 msgstr "Affichage des données pour la période :"
 
@@ -1749,8 +1778,8 @@ msgstr "Liste des utilisateurs"
 
 #: src/App.js:83
 #: src/UserPage.js:35
-msgid "User Profile"
-msgstr "Profil de l'utilisateur"
+#~ msgid "User Profile"
+#~ msgstr "Profil de l'utilisateur"
 
 #: src/UserList.js:95
 msgid "User invited"
@@ -1974,27 +2003,3 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 #: src/OrganizationDetails.js:102
 msgid "{orgName}"
 msgstr ""
-
-#: src/PolicyComplianceDetails.js:17
-msgid "Implementation Status:"
-msgstr "État d'avancement de la mise en œuvre:"
-
-#: src/PolicyComplianceDetails.js:23
-msgid "Level of Enforcment:"
-msgstr "Niveau d'application:"
-
-#: src/PolicyComplianceDetails.js:29
-msgid "HSTS Status:"
-msgstr "Statut du HSTS:"
-
-#: src/PolicyComplianceDetails.js:35
-msgid "HSTS Age:"
-msgstr "Âge du HSTS:"
-
-#: src/PolicyComplianceDetails.js:41
-msgid "Preloaded Status:"
-msgstr "Statut préchargé:"
-
-#: src/PolicyComplianceDetails.js:57
-msgid "Phase:"
-msgstr "Phase:"
