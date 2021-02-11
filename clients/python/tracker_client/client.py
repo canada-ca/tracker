@@ -434,7 +434,7 @@ def main():
     domain = "cse-cst.gc.ca"
 
     print("Tracker account: " + os.environ.get("TRACKER_UNAME"))
-    client = create_client(auth_token=get_auth_token())
+    client = create_client("http://localhost:9002/graphql", auth_token=get_auth_token())
 
     print("Getting all your domains...")
     domains = get_all_domains(client)
