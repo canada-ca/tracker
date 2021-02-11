@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { GraphQLBoolean } from 'graphql'
+import { GraphQLBoolean, GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
 import { domainOrder } from '../inputs'
@@ -17,6 +17,10 @@ export const findMyDomains = {
       type: GraphQLBoolean,
       description:
         'Limit domains to those that belong to an organization that has ownership.',
+    },
+    search: {
+      type: GraphQLString,
+      description: '',
     },
     ...connectionArgs,
   },
