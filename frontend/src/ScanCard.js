@@ -56,7 +56,7 @@ function ScanCard({ scanType, scanData, status }) {
             </Stack>
           ) : (
             <Stack isInline align="center" px="2">
-              <Icon name="warning-2" color="moderate" size="icons.md" />
+              <Icon name="question" color="gray.500" size="icons.md" />
               <Text fontWeight="bold" fontSize="2xl">
                 <Trans>DMARC Phase Unavailable</Trans>
               </Text>
