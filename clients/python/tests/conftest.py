@@ -1,6 +1,11 @@
 import pytest
 
 
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers", "online: mark test that tries to connect to Tracker"
+    )
+
 @pytest.fixture
 def all_domains_input():
     return {

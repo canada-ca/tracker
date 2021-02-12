@@ -10,14 +10,16 @@ from gql.transport.exceptions import (
 
 from tracker_client.client import get_auth_token, create_client, execute_query
 
-# These are not very good tests as they do actually connect to the API.
-# Will be replaced as soon as I work out a good solution for mocking the API
+# RegEx to check if a JWT is correctly formed
 JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
 
 # Not a valid tracker JWT and never was, but is a real JWT
 REAL_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkZvbyIsImlhdCI6MTUxNjIzOTAyMn0.sTo9dB352rSrMPeks8oTGuSpbuHytmoM7zENg_RfkDQ"
 
+# Tests that may try to connect to Tracker are marked. Will try to make them offline
+# but there will likely be a few tests that are only meaningful with network access
 
+@pytest.mark.online
 def test_get_auth_token():
     """Check to see if get_auth_token returns a proper token.
     Will fail if credentials are not present in environmental variables.
@@ -37,15 +39,17 @@ def test_get_auth_token_no_creds(monkeypatch):
         get_auth_token()
 
 
+@pytest.mark.online
 def test_create_client():
-    """Check that create_client creates a client.
-    Need to figure out a better test for this"""
+    """Check that create_client creates a client when not passed auth_token."""
     client = create_client()
     assert client is not None
     assert client.transport is not None
 
 
+@pytest.mark.online
 def test_create_client_with_auth():
+    """Check that create_client creates a client when passed auth_token."""
     client = create_client(auth_token=REAL_JWT)
     assert client is not None
     assert client.transport is not None
@@ -58,12 +62,15 @@ def test_create_client_invalid_token_not_str():
 
 
 def test_create_client_invalid_token_malformed():
-    """Check that create_client raises a TypeError when given non-string auth-token"""
+    """Check that create_client raises a ValueError when given malformed auth-token"""
     with pytest.raises(ValueError):
         create_client("https://tracker.alpha.canada.ca/graphql", "foo")
 
 
-def test_execute_query_transport_query_error(monkeypatch):
+def test_execute_query_transport_query_error(mocker):
+    """Test that execute_query properly handles an error message from the server"""
+
+    # This is exactly what a real server error reply contains
     server_error_response = {
         "message": "No organization with the provided slug could be found.",
         "locations": [{"line": 2, "column": 3}],
@@ -71,27 +78,25 @@ def test_execute_query_transport_query_error(monkeypatch):
         "extensions": {"code": "INTERNAL_SERVER_ERROR"},
     }
 
-    def mock_exception(self, query, variable_values):
-        raise TransportQueryError(
+    # Imitating the exception gql raises
+    mocker.patch("gql.Client.execute", auto_spec=True, side_effect=TransportQueryError(
             str(server_error_response),
             errors=[server_error_response],
             data={"foo": None},
-        )
+        ))
 
     client = Client()
-    monkeypatch.setattr(Client, "execute", mock_exception)
     result = execute_query(client, None, None)
     assert result == {
         "error": {"message": "No organization with the provided slug could be found."}
     }
 
 
-def test_execute_query_transport_protocol_error(monkeypatch, capsys):
-    def mock_exception(self, query, variable_values):
-        raise TransportProtocolError
-
+def test_execute_query_transport_protocol_error(mocker, capsys):
+    """Test that TransportProtocolError is properly re-raised"""
+    
+    mocker.patch("gql.Client.execute", side_effect=TransportProtocolError)
     client = Client()
-    monkeypatch.setattr(Client, "execute", mock_exception)
 
     with pytest.raises(TransportProtocolError):
         execute_query(client, None, None)
@@ -101,12 +106,11 @@ def test_execute_query_transport_protocol_error(monkeypatch, capsys):
     assert "Unexpected response from server:" in captured.out
 
 
-def test_execute_query_transport_server_error(monkeypatch, capsys):
-    def mock_exception(self, query, variable_values):
-        raise TransportServerError
+def test_execute_query_transport_server_error(mocker, capsys):
+    """Test that TransportServerError is properly re-raised"""
 
+    mocker.patch("gql.Client.execute", side_effect=TransportServerError)
     client = Client()
-    monkeypatch.setattr(Client, "execute", mock_exception)
 
     with pytest.raises(TransportServerError):
         execute_query(client, None, None)
@@ -116,12 +120,11 @@ def test_execute_query_transport_server_error(monkeypatch, capsys):
     assert "Server error:" in captured.out
 
 
-def test_execute_query_other_error(monkeypatch, capsys):
-    def mock_exception(self, query, variable_values):
-        raise ValueError
+def test_execute_query_other_error(mocker, capsys):
+    """Test that other exceptions are properly re-raised"""
 
+    mocker.patch("gql.Client.execute", side_effect=ValueError)
     client = Client()
-    monkeypatch.setattr(Client, "execute", mock_exception)
 
     with pytest.raises(ValueError):
         execute_query(client, None, None)
@@ -131,12 +134,11 @@ def test_execute_query_other_error(monkeypatch, capsys):
     assert "Fatal error:" in captured.out
 
 
-def test_execute_query_success(monkeypatch, all_domains_input):
-    def mock_return(self, query, variable_values):
-        return all_domains_input
+def test_execute_query_success(mocker, all_domains_input):
+    """Test that a successful response is passed on unchanged"""
 
+    mocker.patch("gql.Client.execute", return_value=all_domains_input)
     client = Client()
-    monkeypatch.setattr(Client, "execute", mock_return)
 
     result = execute_query(client, None, None)
     assert result == all_domains_input
