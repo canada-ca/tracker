@@ -1,0 +1,34 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: security-headers
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: "envoy.http_connection_manager"
+            subFilter:
+              name: "envoy.router"
+    patch:
+      operation: INSERT_BEFORE
+      value:
+       name: envoy.lua
+       typed_config:
+         "@type": "type.googleapis.com/envoy.config.filter.http.lua.v2.Lua"
+         inlineCode: |
+            function envoy_on_response(response_handle)
+              if not response_handle:headers():get("X-Frame-Options") then
+                response_handle:headers():add("X-Frame-Options", "deny");
+              end
+              if not response_handle:headers():get("Strict-Transport-Security") then
+                response_handle:headers():add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+              end
+            end
