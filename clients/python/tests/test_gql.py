@@ -19,6 +19,7 @@ REAL_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmF
 # Tests that may try to connect to Tracker are marked. Will try to make them offline
 # but there will likely be a few tests that are only meaningful with network access
 
+
 @pytest.mark.online
 def test_get_auth_token():
     """Check to see if get_auth_token returns a proper token.
@@ -69,7 +70,6 @@ def test_create_client_invalid_token_malformed():
 
 def test_execute_query_transport_query_error(mocker):
     """Test that execute_query properly handles an error message from the server"""
-
     # This is exactly what a real server error reply contains
     server_error_response = {
         "message": "No organization with the provided slug could be found.",
@@ -79,11 +79,15 @@ def test_execute_query_transport_query_error(mocker):
     }
 
     # Imitating the exception gql raises
-    mocker.patch("gql.Client.execute", auto_spec=True, side_effect=TransportQueryError(
+    mocker.patch(
+        "gql.Client.execute",
+        auto_spec=True,
+        side_effect=TransportQueryError(
             str(server_error_response),
             errors=[server_error_response],
             data={"foo": None},
-        ))
+        ),
+    )
 
     client = Client()
     result = execute_query(client, None, None)
@@ -94,7 +98,6 @@ def test_execute_query_transport_query_error(mocker):
 
 def test_execute_query_transport_protocol_error(mocker, capsys):
     """Test that TransportProtocolError is properly re-raised"""
-    
     mocker.patch("gql.Client.execute", side_effect=TransportProtocolError)
     client = Client()
 
@@ -108,7 +111,6 @@ def test_execute_query_transport_protocol_error(mocker, capsys):
 
 def test_execute_query_transport_server_error(mocker, capsys):
     """Test that TransportServerError is properly re-raised"""
-
     mocker.patch("gql.Client.execute", side_effect=TransportServerError)
     client = Client()
 
@@ -122,7 +124,6 @@ def test_execute_query_transport_server_error(mocker, capsys):
 
 def test_execute_query_other_error(mocker, capsys):
     """Test that other exceptions are properly re-raised"""
-
     mocker.patch("gql.Client.execute", side_effect=ValueError)
     client = Client()
 
@@ -136,7 +137,6 @@ def test_execute_query_other_error(mocker, capsys):
 
 def test_execute_query_success(mocker, all_domains_input):
     """Test that a successful response is passed on unchanged"""
-
     mocker.patch("gql.Client.execute", return_value=all_domains_input)
     client = Client()
 
