@@ -14,6 +14,9 @@ from tracker_client.client import get_auth_token, create_client, execute_query
 # Will be replaced as soon as I work out a good solution for mocking the API
 JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
 
+# Not a valid tracker JWT and never was, but is a real JWT
+REAL_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkZvbyIsImlhdCI6MTUxNjIzOTAyMn0.sTo9dB352rSrMPeks8oTGuSpbuHytmoM7zENg_RfkDQ"
+
 
 def test_get_auth_token():
     """Check to see if get_auth_token returns a proper token.
@@ -38,6 +41,14 @@ def test_create_client():
     """Check that create_client creates a client.
     Need to figure out a better test for this"""
     client = create_client()
+    assert client is not None
+    assert client.transport is not None
+
+
+def test_create_client_with_auth():
+    client = create_client(
+        auth_token=REAL_JWT
+    )
     assert client is not None
     assert client.transport is not None
 

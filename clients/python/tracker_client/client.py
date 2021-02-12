@@ -425,7 +425,7 @@ def format_domain_status(result):
     return result
 
 
-def main(): # pragma: no cover
+def main():  # pragma: no cover
     """main() currently tries all implemented functions and prints results
     for diagnostic purposes and to demo available features.
     """
@@ -477,5 +477,5 @@ def main(): # pragma: no cover
     print(results)
 
 
-if __name__ == "__main__": # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     main()
