@@ -13,6 +13,7 @@ python-slugify = "*"
 pylint = "*"
 black = "*"
 pytest = "*"
+bandit = "*"
 
 [requires]
 python_version = "3.8"

@@ -9,35 +9,14 @@ from tracker_client.client import (
     format_name_summary,
     format_domain_results,
     format_domain_status,
-
 )
-
-from .fixtures import (
-    all_domains_input,
-    all_domains_output,
-    name_domain_input,
-    org_domains_output,
-    monthly_dmarc_input,
-    monthly_dmarc_output,
-    yearly_dmarc_input,
-    yearly_dmarc_output,
-    all_summaries_input,
-    all_summaries_output,
-    name_summary_input,
-    org_summary_output,
-    scan_results_input,
-    scan_results_output,
-    domain_status_input,
-    domain_status_output,
-)
-
 
 def test_format_all_domains(all_domains_input, all_domains_output):
     assert format_all_domains(all_domains_input) == all_domains_output
 
 
 def test_format_acronym_domains(all_domains_input, org_domains_output):
-    assert format_acronym_domains("def", all_domains_input) == org_domains_output
+    assert format_acronym_domains(all_domains_input, "def") == org_domains_output
 
 
 def test_format_name_domains(name_domain_input, org_domains_output):

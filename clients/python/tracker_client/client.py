@@ -1,9 +1,15 @@
-import os
 import json
+import os
+import re
 
 from slugify import slugify
-from gql import gql, Client
+from gql import Client
 from gql.transport.aiohttp import AIOHTTPTransport
+from gql.transport.exceptions import (
+    TransportQueryError,
+    TransportServerError,
+    TransportProtocolError,
+)
 
 from queries import (
     ALL_DOMAINS_QUERY,
@@ -18,6 +24,9 @@ from queries import (
 )
 
 
+JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
+
+
 def create_transport(url, auth_token=None):
     """Create and return a gql transport object
 
@@ -27,15 +36,26 @@ def create_transport(url, auth_token=None):
     """
     if auth_token is None:
         transport = AIOHTTPTransport(url=url)
+
     else:
+        # Resulting stack trace is very unhelpful when passing an invalid token
+        # We validate the given auth_token and raise an exception if it's invalid
+        # to make debugging easier
+        if not isinstance(auth_token, str):
+            raise TypeError("auth_token must be a string")
+
+        if not re.match(JWT_RE, auth_token):
+            raise ValueError("auth_token is not a valid JWT")
+
         transport = AIOHTTPTransport(
             url=url,
             headers={"authorization": auth_token},
         )
+
     return transport
 
 
-def create_client(url, auth_token=None):
+def create_client(url="https://tracker.alpha.canada.ca/graphql", auth_token=None):
     """Create and return a gql client object
 
     Arguments:
@@ -49,12 +69,15 @@ def create_client(url, auth_token=None):
     return client
 
 
-def get_auth_token():
+def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
     """Takes in environment variables "TRACKER_UNAME" and "TRACKER_PASS", returns an auth token"""
-    client = create_client(url="https://tracker.alpha.canada.ca/graphql")
+    client = create_client(url)
 
     username = os.environ.get("TRACKER_UNAME")
     password = os.environ.get("TRACKER_PASS")
+
+    if username is None or password is None:
+        raise ValueError("Tracker credentials missing from environment.")
 
     params = {"creds": {"userName": username, "password": password}}
 
@@ -63,15 +86,45 @@ def get_auth_token():
     return auth_token
 
 
+# TODO: Make error messages better
+def execute_query(client, query, params=None):
+    """Executes a query on given client, with given parameters. """
+    try:
+        result = client.execute(query, variable_values=params)
+
+    except TransportQueryError as error:
+        # Not sure this is the best way to deal with this exception
+        result = {"error": {"message": error.errors[0]["message"]}}
+
+    except TransportProtocolError as error:
+        print("Unexpected response from server:", error)
+        raise
+
+    except TransportServerError as error:
+        print("Server error:", error)
+        raise
+
+    except Exception as error:
+        # Need to be more descriptive
+        # Potentially figure out other errors that could be caught here?
+        print("Fatal error:", error)
+        raise
+
+    return result
+
+
 def get_all_domains(client):
     """Returns lists of all domains you have ownership of, with org as key
 
     Arguments:
     client -- a GQL Client object
     """
-    result = client.execute(ALL_DOMAINS_QUERY)
-    formatted_result = format_all_domains(result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, ALL_DOMAINS_QUERY)
+    # If there is an error the result contains the key "error"
+    if "error" not in result:
+        result = format_all_domains(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_all_domains(result):
@@ -93,7 +146,7 @@ def format_all_domains(result):
     return result
 
 
-def get_domains_by_acronym(acronym, client):
+def get_domains_by_acronym(client, acronym):
     """Return the domains belonging to the organization identified by acronym
 
     Arguments:
@@ -101,19 +154,32 @@ def get_domains_by_acronym(acronym, client):
     client -- a GQL Client object
     """
     # API doesn't allow query by acronym so we filter the get_all_domains result
-    result = client.execute(ALL_DOMAINS_QUERY)
-    formatted_result = format_acronym_domains(acronym, result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, ALL_DOMAINS_QUERY)
+
+    if "error" not in result:
+        # Since the server doesn't see the acronym we check if it's in the result
+        # and simulate the server error response if it's not there
+        try:
+            result = format_acronym_domains(result, acronym)
+
+        except KeyError:
+            result = {
+                "error": {
+                    "message": "No organization with the provided acronym could be found."
+                }
+            }
+
+    return json.dumps(result, indent=4)
 
 
-def format_acronym_domains(acronym, result):
+def format_acronym_domains(result, acronym):
     """ Formats the dict obtained by ALL_DOMAINS_QUERY to show only one org"""
     result = format_all_domains(result)
     result = {acronym.upper(): result[acronym.upper()]}
     return result
 
 
-def get_domains_by_name(name, client):
+def get_domains_by_name(client, name):
     """Return the domains belonging to the organization identified by full name
 
     Arguments:
@@ -123,9 +189,12 @@ def get_domains_by_name(name, client):
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"org": slugified_name}
 
-    result = client.execute(DOMAINS_BY_SLUG, variable_values=params)
-    formatted_result = format_name_domains(result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, DOMAINS_BY_SLUG, params)
+
+    if "error" not in result:
+        result = format_name_domains(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_name_domains(result):
@@ -138,7 +207,7 @@ def format_name_domains(result):
     return result
 
 
-def get_dmarc_summary(domain, month, year, client):
+def get_dmarc_summary(client, domain, month, year):
     """Return the DMARC summary for the specified domain and month
 
     Arguments:
@@ -149,9 +218,12 @@ def get_dmarc_summary(domain, month, year, client):
     """
     params = {"domain": domain, "month": month.upper(), "year": str(year)}
 
-    result = client.execute(DMARC_SUMMARY, variable_values=params)
-    formatted_result = format_dmarc_monthly(result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, DMARC_SUMMARY, params)
+
+    if "error" not in result:
+        result = format_dmarc_monthly(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_dmarc_monthly(result):
@@ -161,7 +233,7 @@ def format_dmarc_monthly(result):
     return result
 
 
-def get_yearly_dmarc_summaries(domain, client):
+def get_yearly_dmarc_summaries(client, domain):
     """Return yearly DMARC summaries for a domain
 
     Arguments:
@@ -170,9 +242,12 @@ def get_yearly_dmarc_summaries(domain, client):
     """
     params = {"domain": domain}
 
-    result = client.execute(DMARC_YEARLY_SUMMARIES, variable_values=params)
-    formatted_result = format_dmarc_yearly(result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, DMARC_YEARLY_SUMMARIES, params)
+
+    if "error" not in result:
+        result = format_dmarc_yearly(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_dmarc_yearly(result):
@@ -188,9 +263,12 @@ def get_all_summaries(client):
     Arguments:
     client -- a GQL Client object
     """
-    result = client.execute(ALL_ORG_SUMMARIES)
-    formatted_result = format_all_summaries(result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, ALL_ORG_SUMMARIES)
+
+    if "error" not in result:
+        result = format_all_summaries(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_all_summaries(result):
@@ -200,7 +278,7 @@ def format_all_summaries(result):
     return result
 
 
-def get_summary_by_acronym(acronym, client):
+def get_summary_by_acronym(client, acronym):
     """Returns summary metrics for the organization identified by acronym
 
     Arguments:
@@ -208,9 +286,20 @@ def get_summary_by_acronym(acronym, client):
     client -- a GQL Client object
     """
     # API doesn't allow query by acronym so we filter the get_all_summaries result
-    result = client.execute(ALL_ORG_SUMMARIES)
-    formatted_result = format_acronym_summary(result, acronym)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, ALL_ORG_SUMMARIES)
+
+    if "error" not in result:
+        try:
+            result = format_acronym_summary(result, acronym)
+
+        except KeyError:
+            result = {
+                "error": {
+                    "message": "No organization with the provided acronym could be found."
+                }
+            }
+
+    return json.dumps(result, indent=4)
 
 
 def format_acronym_summary(result, acronym):
@@ -221,7 +310,7 @@ def format_acronym_summary(result, acronym):
     return result
 
 
-def get_summary_by_name(name, client):
+def get_summary_by_name(client, name):
     """Return summary metrics for the organization identified by name
 
     Arguments:
@@ -231,9 +320,12 @@ def get_summary_by_name(name, client):
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"orgSlug": slugified_name}
 
-    result = client.execute(SUMMARY_BY_SLUG, variable_values=params)
-    formatted_result = format_name_summary(result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, SUMMARY_BY_SLUG, params)
+
+    if "error" not in result:
+        result = format_name_summary(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_name_summary(result):
@@ -246,7 +338,7 @@ def format_name_summary(result):
     return result
 
 
-def get_domain_results(domain, client):
+def get_domain_results(client, domain):
     """Return scan results for a domain
 
     Arguments:
@@ -255,9 +347,12 @@ def get_domain_results(domain, client):
     """
     params = {"domain": domain}
 
-    result = client.execute(DOMAIN_RESULTS, variable_values=params)
-    formatted_result = format_domain_results(result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, DOMAIN_RESULTS, params)
+
+    if "error" not in result:
+        result = format_domain_results(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_domain_results(result):
@@ -307,7 +402,7 @@ def format_domain_results(result):
     return result
 
 
-def get_domain_status(domain, client):
+def get_domain_status(client, domain):
     """Return pass/fail status information for a domain
 
     Arguments:
@@ -316,9 +411,12 @@ def get_domain_status(domain, client):
     """
     params = {"domain": domain}
 
-    result = client.execute(DOMAIN_STATUS, variable_values=params)
-    formatted_result = format_domain_status(result)
-    return json.dumps(formatted_result, indent=4)
+    result = execute_query(client, DOMAIN_STATUS, params)
+
+    if "error" not in result:
+        result = format_domain_status(result)
+
+    return json.dumps(result, indent=4)
 
 
 def format_domain_status(result):
@@ -331,30 +429,31 @@ def main():
     """main() currently tries all implemented functions and prints results
     for diagnostic purposes and to demo available features.
     """
+    acronym = "cse"
+    name = "Communications Security Establishment Canada"
+    domain = "cse-cst.gc.ca"
+
     print("Tracker account: " + os.environ.get("TRACKER_UNAME"))
-    client = create_client("https://tracker.alpha.canada.ca/graphql", get_auth_token())
+    client = create_client(auth_token=get_auth_token())
 
     print("Getting all your domains...")
     domains = get_all_domains(client)
     print(domains)
 
-    acronym = "cse"
     print("Getting domains by acronym " + acronym + "...")
-    domains = get_domains_by_acronym("cse", client)
+    domains = get_domains_by_acronym(client, acronym)
     print(domains)
 
-    name = "Communications Security Establishment Canada"
     print("Getting domains by name " + name + "...")
-    domains = get_domains_by_name(name, client)
+    domains = get_domains_by_name(client, name)
     print(domains)
 
-    domain = "cse-cst.gc.ca"
     print("Getting a dmarc summary for " + domain + "...")
-    result = get_dmarc_summary(domain, "november", 2020, client)
+    result = get_dmarc_summary(client, domain, "november", 2020)
     print(result)
 
     print("Getting yearly dmarc summary for " + domain + "...")
-    result = get_yearly_dmarc_summaries("cse-cst.gc.ca", client)
+    result = get_yearly_dmarc_summaries(client, domain)
     print(result)
 
     print("Getting summaries for all your organizations...")
@@ -362,19 +461,19 @@ def main():
     print(summaries)
 
     print("Getting summary by acronym " + acronym + "...")
-    summaries = get_summary_by_acronym("cse", client)
+    summaries = get_summary_by_acronym(client, acronym)
     print(summaries)
 
     print("Getting summary by name " + name + "...")
-    summaries = get_summary_by_name(name, client)
+    summaries = get_summary_by_name(client, name)
     print(summaries)
 
     print("Getting scan results for " + domain + "...")
-    results = get_domain_results(domain, client)
+    results = get_domain_results(client, domain)
     print(results)
 
     print("Getting domain status for " + domain + "...")
-    results = get_domain_status(domain, client)
+    results = get_domain_status(client, domain)
     print(results)
 
 
