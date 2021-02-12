@@ -295,12 +295,11 @@ export const domainLoaderConnectionsByUserId = (
   if (typeof search !== 'undefined') {
     search = cleanseInput(search)
     domainQuery = aql`
-      LET tokens = SPLIT(${search}, [" "])
-
+      LET tokenArr = TOKENS(${search}, "::delimiter_en")
       LET retrievedDomains = (
-        FOR token IN tokens
+        FOR token in tokenArr
           FOR domain IN domainSearch
-            FILTER CONTAINS(domain.domain, token)
+            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "::delimiter_en")
             FILTER domain._key IN domainKeys
             ${afterTemplate}
             ${beforeTemplate}
@@ -308,7 +307,7 @@ export const domainLoaderConnectionsByUserId = (
             ${sortByField}
             ${limitTemplate}
             RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
-        )
+      )
     `
   } else {
     domainQuery = aql`

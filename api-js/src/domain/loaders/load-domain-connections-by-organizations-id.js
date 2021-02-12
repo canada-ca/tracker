@@ -7,7 +7,16 @@ export const domainLoaderConnectionsByOrgId = (
   userKey,
   cleanseInput,
   i18n,
-) => async ({ orgId, after, before, first, last, ownership, orderBy }) => {
+) => async ({
+  orgId,
+  after,
+  before,
+  first,
+  last,
+  ownership,
+  orderBy,
+  search,
+}) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -256,57 +265,88 @@ export const domainLoaderConnectionsByOrgId = (
     sortString = aql`ASC`
   }
 
-  let requestedDomainInfo
-  try {
-    requestedDomainInfo = await query`
-      WITH affiliations, domains, organizations, users 
-
-      LET domainKeys = UNIQUE(FLATTEN(
-        LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
-        LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
-        LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
-        LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
-        ${ownershipOrgsOnly}
-        LET orgKeys = INTERSECTION(keys, claimKeys)
-          RETURN claimKeys
-      ))
-      
+  let domainQuery = aql``
+  if (typeof search !== 'undefined') {
+    search = cleanseInput(search)
+    domainQuery = aql`
+      LET tokenArr = TOKENS(${search}, "::delimiter_en")
+      LET retrievedDomains = (
+        FOR token IN tokenArr
+          FOR domain IN domainSearch
+            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "::delimiter_en")
+            FILTER domain._key IN domainKeys
+            ${afterTemplate}
+            ${beforeTemplate}
+            SORT
+            ${sortByField}
+            ${limitTemplate}
+            RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
+      )
+      LET domainsFound = LENGTH(
+        FOR token IN tokenArr
+          FOR domain IN domainSearch
+              SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "::delimiter_en")
+              FILTER domain._key IN domainKeys
+              RETURN 1
+      )
+    `
+  } else {
+    domainQuery = aql`
       LET retrievedDomains = (
         FOR domain IN domains
           FILTER domain._key IN domainKeys
           ${afterTemplate}
           ${beforeTemplate}
-
           SORT
           ${sortByField}
           ${limitTemplate}
           RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
       )
-      
-      LET hasNextPage = (LENGTH(
-        FOR domain IN domains
-          FILTER domain._key IN domainKeys
-          ${hasNextPageFilter}
-          SORT ${sortByField} domain._key ${sortString} LIMIT 1
-          RETURN domain
-      ) > 0 ? true : false)
-      
-      LET hasPreviousPage = (LENGTH(
-        FOR domain IN domains
-          FILTER domain._key IN domainKeys
-          ${hasPreviousPageFilter}
-          SORT ${sortByField} domain._key ${sortString} LIMIT 1
-          RETURN domain
-      ) > 0 ? true : false)
-      
-      RETURN { 
-        "domains": retrievedDomains,
-        "totalCount": LENGTH(domainKeys),
-        "hasNextPage": hasNextPage, 
-        "hasPreviousPage": hasPreviousPage, 
-        "startKey": FIRST(retrievedDomains)._key, 
-        "endKey": LAST(retrievedDomains)._key 
-      }
+      LET domainsFound = LENGTH(domainKeys)
+    `
+  }
+
+  let requestedDomainInfo
+  try {
+    requestedDomainInfo = await query`
+    WITH affiliations, domains, organizations, users 
+    
+    LET domainKeys = UNIQUE(FLATTEN(
+      LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
+      LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
+      LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
+      LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
+      ${ownershipOrgsOnly}
+      LET orgKeys = INTERSECTION(keys, claimKeys)
+        RETURN claimKeys
+    ))
+    
+    ${domainQuery}
+    
+    LET hasNextPage = (LENGTH(
+      FOR domain IN domains
+        FILTER domain._key IN domainKeys
+        ${hasNextPageFilter}
+        SORT ${sortByField} domain._key ${sortString} LIMIT 1
+        RETURN domain
+    ) > 0 ? true : false)
+    
+    LET hasPreviousPage = (LENGTH(
+      FOR domain IN domains
+        FILTER domain._key IN domainKeys
+        ${hasPreviousPageFilter}
+        SORT ${sortByField} domain._key ${sortString} LIMIT 1
+        RETURN domain
+    ) > 0 ? true : false)
+    
+    RETURN { 
+      "domains": retrievedDomains,
+      "totalCount": domainsFound,
+      "hasNextPage": hasNextPage, 
+      "hasPreviousPage": hasPreviousPage, 
+      "startKey": FIRST(retrievedDomains)._key, 
+      "endKey": LAST(retrievedDomains)._key 
+    }
     `
   } catch (err) {
     console.error(

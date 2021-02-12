@@ -20,7 +20,7 @@ export const findMyDomains = {
     },
     search: {
       type: GraphQLString,
-      description: '',
+      description: 'String used to search for domains.',
     },
     ...connectionArgs,
   },
@@ -52,7 +52,7 @@ export const findMyDomains = {
       throw new Error(i18n._(t`Unable to load domains. Please try again.`))
     }
 
-    console.info(`User ${userKey} successfully retrieved their domains.`)
+    console.info(`User: ${userKey} successfully retrieved their domains.`)
 
     return domainConnections
   },
