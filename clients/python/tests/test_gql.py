@@ -46,9 +46,7 @@ def test_create_client():
 
 
 def test_create_client_with_auth():
-    client = create_client(
-        auth_token=REAL_JWT
-    )
+    client = create_client(auth_token=REAL_JWT)
     assert client is not None
     assert client.transport is not None
 
