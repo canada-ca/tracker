@@ -6,7 +6,17 @@ resources:
 patchesStrategicMerge:
 - publicgateway.yaml
 - knative/config/queues.yaml
-- arangodb.yaml
+replicas:
+- name: tracker-frontend
+  count: 2
+- name: tracker-api
+  count: 2
+- name: arango-deployment-replication-operator
+  count: 1
+- name: arango-deployment-operator
+  count: 1
+- name: arango-storage-operator
+  count: 1
 secretGenerator:
 - envs:
   - arangodb.env
