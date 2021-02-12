@@ -187,7 +187,7 @@ def get_domains_by_name(client, name):
     client -- a GQL Client object
     """
     slugified_name = slugify(name)  # API expects a slugified string for name
-    params = {"org": slugified_name}
+    params = {"orgSlug": slugified_name}
 
     result = execute_query(client, DOMAINS_BY_SLUG, params)
 
@@ -425,7 +425,7 @@ def format_domain_status(result):
     return result
 
 
-def main():
+def main(): # pragma: no cover
     """main() currently tries all implemented functions and prints results
     for diagnostic purposes and to demo available features.
     """
@@ -477,5 +477,5 @@ def main():
     print(results)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     main()
