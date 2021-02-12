@@ -31,11 +31,6 @@ import {
   affiliationLoaderByOrgId,
 } from './affiliation/loaders'
 import {
-  generateDetailTableFields,
-  generateGqlQuery,
-  dmarcReportLoader,
-} from './dmarc-report/loaders'
-import {
   dkimFailureLoaderConnectionsBySumId,
   dmarcFailureLoaderConnectionsBySumId,
   dmarcSumLoaderConnectionsByUserId,
@@ -160,12 +155,6 @@ export const createContext = ({ context, req: request, res: response }) => {
     },
     loaders: {
       chartSummaryLoaderByKey: chartSummaryLoaderByKey(query, userKey, i18n),
-      dmarcReportLoader: dmarcReportLoader({
-        generateGqlQuery,
-        generateDetailTableFields,
-        fetch,
-        i18n,
-      }),
       dkimFailureLoaderConnectionsBySumId: dkimFailureLoaderConnectionsBySumId(
         query,
         userKey,
@@ -183,6 +172,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
+        loadStartDateFromPeriod(moment, userKey, i18n),
       ),
       dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
         query,

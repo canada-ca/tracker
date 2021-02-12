@@ -9,12 +9,21 @@ import {
   PAGINATED_SPF_FAILURE_REPORT as SPF_FAILURE_FORWARD,
 } from './graphql/queries'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
-import { Box, Heading, IconButton, Select, Stack, Text } from '@chakra-ui/core'
+import {
+  Box,
+  Heading,
+  Icon,
+  Link,
+  PseudoBox,
+  Select,
+  Stack,
+  Text,
+} from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { number } from 'prop-types'
-import { useHistory, useParams } from 'react-router-dom'
+import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
 import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -589,19 +598,25 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   return (
     <Box width="100%" px="4" mx="auto" overflow="hidden">
-      <Stack isInline align="center">
-        <IconButton
-          icon="arrow-left"
-          onClick={history.goBack}
-          color="gray.900"
-          fontSize="2xl"
-          aria-label="back to dmarc summaries"
-          align="left"
-        />
+      <PseudoBox d={{ md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr 1fr' }}>
+        <Box />
         <Heading as="h1" textAlign="center">
           {domainSlug.toUpperCase()}
         </Heading>
-      </Stack>
+        <Link
+          color="teal.500"
+          whiteSpace="noWrap"
+          my="auto"
+          to={`/domains/${domainSlug}`}
+          as={RouteLink}
+          d="block"
+          width="100%"
+          textAlign={{ base: 'center', md: 'right' }}
+        >
+          <Trans>Guidance</Trans>
+          <Icon name="link" ml="4px" />
+        </Link>
+      </PseudoBox>
 
       {graphDisplay}
 

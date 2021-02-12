@@ -1,11 +1,17 @@
 import { connectionArgs } from 'graphql-relay'
 import { t } from '@lingui/macro'
+
+import { organizationOrder } from '../inputs'
 import { organizationConnection } from '../objects'
 
 export const findMyOrganizations = {
   type: organizationConnection.connectionType,
   description: 'Select organizations a user has access to.',
   args: {
+    orderBy: {
+      type: organizationOrder,
+      description: 'Ordering options for organization connections',
+    },
     ...connectionArgs,
   },
   resolve: async (

@@ -1,4 +1,4 @@
-import { GraphQLFloat, GraphQLInt } from 'graphql'
+import { GraphQLInt } from 'graphql'
 import { categoryPercentagesType } from '../category-percentages'
 
 describe('given the category percentages gql object', () => {
@@ -7,25 +7,25 @@ describe('given the category percentages gql object', () => {
       const demoType = categoryPercentagesType.getFields()
 
       expect(demoType).toHaveProperty('failPercentage')
-      expect(demoType.failPercentage.type).toMatchObject(GraphQLFloat)
+      expect(demoType.failPercentage.type).toMatchObject(GraphQLInt)
     })
     it('has a fullPassPercentage field', () => {
       const demoType = categoryPercentagesType.getFields()
 
       expect(demoType).toHaveProperty('fullPassPercentage')
-      expect(demoType.fullPassPercentage.type).toMatchObject(GraphQLFloat)
+      expect(demoType.fullPassPercentage.type).toMatchObject(GraphQLInt)
     })
     it('has a passDkimOnlyPercentage field', () => {
       const demoType = categoryPercentagesType.getFields()
 
       expect(demoType).toHaveProperty('passDkimOnlyPercentage')
-      expect(demoType.passDkimOnlyPercentage.type).toMatchObject(GraphQLFloat)
+      expect(demoType.passDkimOnlyPercentage.type).toMatchObject(GraphQLInt)
     })
     it('has a passSpfOnlyPercentage field', () => {
       const demoType = categoryPercentagesType.getFields()
 
       expect(demoType).toHaveProperty('passSpfOnlyPercentage')
-      expect(demoType.passSpfOnlyPercentage.type).toMatchObject(GraphQLFloat)
+      expect(demoType.passSpfOnlyPercentage.type).toMatchObject(GraphQLInt)
     })
     it('has a totalMessages field', () => {
       const demoType = categoryPercentagesType.getFields()
@@ -48,7 +48,7 @@ describe('given the category percentages gql object', () => {
             passSpfOnly: 5,
           }
 
-          expect(demoType.failPercentage.resolve(data)).toEqual(25.0)
+          expect(demoType.failPercentage.resolve(data)).toEqual(5)
         })
       })
       describe('fail is below or equal to zero', () => {
@@ -78,7 +78,7 @@ describe('given the category percentages gql object', () => {
             passSpfOnly: 5,
           }
 
-          expect(demoType.fullPassPercentage.resolve(data)).toEqual(25.0)
+          expect(demoType.fullPassPercentage.resolve(data)).toEqual(5)
         })
       })
       describe('fail is below or equal to zero', () => {
@@ -108,7 +108,7 @@ describe('given the category percentages gql object', () => {
             passSpfOnly: 5,
           }
 
-          expect(demoType.passDkimOnlyPercentage.resolve(data)).toEqual(25.0)
+          expect(demoType.passDkimOnlyPercentage.resolve(data)).toEqual(5)
         })
       })
       describe('fail is below or equal to zero', () => {
@@ -138,7 +138,7 @@ describe('given the category percentages gql object', () => {
             passSpfOnly: 5,
           }
 
-          expect(demoType.passSpfOnlyPercentage.resolve(data)).toEqual(25.0)
+          expect(demoType.passSpfOnlyPercentage.resolve(data)).toEqual(5)
         })
       })
       describe('passSpfOnly is below or equal to zero', () => {
@@ -161,10 +161,7 @@ describe('given the category percentages gql object', () => {
         const demoType = categoryPercentagesType.getFields()
 
         const data = {
-          fail: 5,
-          pass: 5,
-          passDkimOnly: 5,
-          passSpfOnly: 5,
+          totalMessages: 20,
         }
 
         expect(demoType.totalMessages.resolve(data)).toEqual(20)

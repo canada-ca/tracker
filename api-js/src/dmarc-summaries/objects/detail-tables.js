@@ -16,12 +16,12 @@ export const detailTablesType = new GraphQLObjectType({
       args: connectionArgs,
       type: dkimFailureConnection.connectionType,
       resolve: async (
-        { _to },
+        { _id },
         args,
         { loaders: { dkimFailureLoaderConnectionsBySumId } },
       ) => {
         const dkimFailures = await dkimFailureLoaderConnectionsBySumId({
-          summaryId: _to,
+          summaryId: _id,
           ...args,
         })
 
@@ -33,12 +33,12 @@ export const detailTablesType = new GraphQLObjectType({
       args: connectionArgs,
       type: dmarcFailureConnection.connectionType,
       resolve: async (
-        { _to },
+        { _id },
         args,
         { loaders: { dmarcFailureLoaderConnectionsBySumId } },
       ) => {
         const dmarcFailures = await dmarcFailureLoaderConnectionsBySumId({
-          summaryId: _to,
+          summaryId: _id,
           ...args,
         })
 
@@ -50,12 +50,12 @@ export const detailTablesType = new GraphQLObjectType({
       args: connectionArgs,
       type: fullPassConnection.connectionType,
       resolve: async (
-        { _to },
+        { _id },
         args,
         { loaders: { fullPassLoaderConnectionsBySumId } },
       ) => {
         const fullPasses = await fullPassLoaderConnectionsBySumId({
-          summaryId: _to,
+          summaryId: _id,
           ...args,
         })
 
@@ -67,12 +67,12 @@ export const detailTablesType = new GraphQLObjectType({
       args: connectionArgs,
       type: spfFailureConnection.connectionType,
       resolve: async (
-        { _to },
+        { _id },
         args,
         { loaders: { spfFailureLoaderConnectionsBySumId } },
       ) => {
         const spfFailures = await spfFailureLoaderConnectionsBySumId({
-          summaryId: _to,
+          summaryId: _id,
           ...args,
         })
 

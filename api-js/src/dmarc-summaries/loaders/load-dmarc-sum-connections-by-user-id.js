@@ -8,7 +8,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
   cleanseInput,
   i18n,
   loadStartDateFromPeriod,
-) => async ({ after, before, first, last, period, year }) => {
+) => async ({ after, before, first, last, period, year, orderBy }) => {
   const userDBId = `users/${userKey}`
 
   if (typeof period === 'undefined') {
@@ -43,13 +43,107 @@ export const dmarcSumLoaderConnectionsByUserId = (
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(summary._key) > TO_NUMBER(${afterId})`
+    if (typeof orderBy === 'undefined') {
+      afterTemplate = aql`FILTER TO_NUMBER(summary._key) > TO_NUMBER(${afterId})`
+    } else {
+      let afterTemplateDirection = aql``
+      if (orderBy.direction === 'ASC') {
+        afterTemplateDirection = aql`>`
+      } else {
+        afterTemplateDirection = aql`<`
+      }
+
+      let documentField = aql``
+      let summaryField = aql``
+      /* istanbul ignore else */
+      if (orderBy.field === 'fail-count') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.fail`
+        summaryField = aql`summary.categoryTotals.fail`
+      } else if (orderBy.field === 'pass-count') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.pass`
+        summaryField = aql`summary.categoryTotals.pass`
+      } else if (orderBy.field === 'pass-dkim-count') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.passDkimOnly`
+        summaryField = aql`summary.categoryTotals.passDkimOnly`
+      } else if (orderBy.field === 'pass-spf-count') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${afterId}).categoryTotals.passSpfOnly`
+        summaryField = aql`summary.categoryTotals.passSpfOnly`
+      } else if (orderBy.field === 'fail-percentage') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.fail`
+        summaryField = aql`summary.categoryPercentages.fail`
+      } else if (orderBy.field === 'pass-percentage') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.pass`
+        summaryField = aql`summary.categoryPercentages.pass`
+      } else if (orderBy.field === 'pass-dkim-percentage') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.passDkimOnly`
+        summaryField = aql`summary.categoryPercentages.passDkimOnly`
+      } else if (orderBy.field === 'pass-spf-percentage') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${afterId}).categoryPercentages.passSpfOnly`
+        summaryField = aql`summary.categoryPercentages.passSpfOnly`
+      } else if (orderBy.field === 'total-messages') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${afterId}).totalMessages`
+        summaryField = aql`summary.totalMessages`
+      }
+
+      afterTemplate = aql`
+        FILTER ${summaryField} ${afterTemplateDirection} ${documentField}
+        OR (${summaryField} == ${documentField}
+        AND TO_NUMBER(summary._key) > TO_NUMBER(${afterId}))
+      `
+    }
   }
 
   let beforeTemplate = aql``
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    beforeTemplate = aql`FILTER TO_NUMBER(summary._key) < TO_NUMBER(${beforeId})`
+    if (typeof orderBy === 'undefined') {
+      beforeTemplate = aql`FILTER TO_NUMBER(summary._key) < TO_NUMBER(${beforeId})`
+    } else {
+      let beforeTemplateDirection = aql``
+      if (orderBy.direction === 'ASC') {
+        beforeTemplateDirection = aql`<`
+      } else {
+        beforeTemplateDirection = aql`>`
+      }
+
+      let documentField = aql``
+      let summaryField = aql``
+      /* istanbul ignore else */
+      if (orderBy.field === 'fail-count') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.fail`
+        summaryField = aql`summary.categoryTotals.fail`
+      } else if (orderBy.field === 'pass-count') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.pass`
+        summaryField = aql`summary.categoryTotals.pass`
+      } else if (orderBy.field === 'pass-dkim-count') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passDkimOnly`
+        summaryField = aql`summary.categoryTotals.passDkimOnly`
+      } else if (orderBy.field === 'pass-spf-count') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${beforeId}).categoryTotals.passSpfOnly`
+        summaryField = aql`summary.categoryTotals.passSpfOnly`
+      } else if (orderBy.field === 'fail-percentage') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.fail`
+        summaryField = aql`summary.categoryPercentages.fail`
+      } else if (orderBy.field === 'pass-percentage') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.pass`
+        summaryField = aql`summary.categoryPercentages.pass`
+      } else if (orderBy.field === 'pass-dkim-percentage') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.passDkimOnly`
+        summaryField = aql`summary.categoryPercentages.passDkimOnly`
+      } else if (orderBy.field === 'pass-spf-percentage') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${beforeId}).categoryPercentages.passSpfOnly`
+        summaryField = aql`summary.categoryPercentages.passSpfOnly`
+      } else if (orderBy.field === 'total-messages') {
+        documentField = aql`DOCUMENT(dmarcSummaries, ${beforeId}).totalMessages`
+        summaryField = aql`summary.totalMessages`
+      }
+
+      beforeTemplate = aql`
+        FILTER ${summaryField} ${beforeTemplateDirection} ${documentField}
+        OR (${summaryField} == ${documentField}
+        AND TO_NUMBER(summary._key) < TO_NUMBER(${beforeId}))
+      `
+    }
   }
 
   let limitTemplate = aql``
@@ -95,9 +189,9 @@ export const dmarcSumLoaderConnectionsByUserId = (
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-      limitTemplate = aql`SORT summary._key ASC LIMIT TO_NUMBER(${first})`
+      limitTemplate = aql`summary._key ASC LIMIT TO_NUMBER(${first})`
     } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-      limitTemplate = aql`SORT summary._key DESC LIMIT TO_NUMBER(${last})`
+      limitTemplate = aql`summary._key DESC LIMIT TO_NUMBER(${last})`
     }
   } else {
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -108,6 +202,107 @@ export const dmarcSumLoaderConnectionsByUserId = (
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
     )
+  }
+
+  let hasNextPageFilter = aql`FILTER TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key)`
+  let hasPreviousPageFilter = aql`FILTER TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key)`
+  if (typeof orderBy !== 'undefined') {
+    let hasNextPageDirection = aql``
+    let hasPreviousPageDirection = aql``
+    if (orderBy.direction === 'ASC') {
+      hasNextPageDirection = aql`>`
+      hasPreviousPageDirection = aql`<`
+    } else {
+      hasNextPageDirection = aql`<`
+      hasPreviousPageDirection = aql`>`
+    }
+
+    let hasNextPageDocumentField = aql``
+    let hasNextPageSummaryField = aql``
+    let hasPreviousPageDocumentField = aql``
+    let hasPreviousPageSummaryField = aql``
+    /* istanbul ignore else */
+    if (orderBy.field === 'fail-count') {
+      hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail`
+      hasNextPageSummaryField = aql`summary.categoryTotals.fail`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.fail`
+      hasPreviousPageSummaryField = aql`summary.categoryTotals.fail`
+    } else if (orderBy.field === 'pass-count') {
+      hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.pass`
+      hasNextPageSummaryField = aql`summary.categoryTotals.pass`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.pass`
+      hasPreviousPageSummaryField = aql`summary.categoryTotals.pass`
+    } else if (orderBy.field === 'pass-dkim-count') {
+      hasNextPageDocumentField = aql` DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.passDkimOnly`
+      hasNextPageSummaryField = aql`summary.categoryTotals.passDkimOnly`
+      hasPreviousPageDocumentField = aql` DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.passDkimOnly`
+      hasPreviousPageSummaryField = aql`summary.categoryTotals.passDkimOnly`
+    } else if (orderBy.field === 'pass-spf-count') {
+      hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.passSpfOnly`
+      hasNextPageSummaryField = aql`summary.categoryTotals.passSpfOnly`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.passSpfOnly`
+      hasPreviousPageSummaryField = aql`summary.categoryTotals.passSpfOnly`
+    } else if (orderBy.field === 'fail-percentage') {
+      hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryPercentages.fail`
+      hasNextPageSummaryField = aql`summary.categoryPercentages.fail`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.fail`
+      hasPreviousPageSummaryField = aql`summary.categoryPercentages.fail`
+    } else if (orderBy.field === 'pass-percentage') {
+      hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryPercentages.pass`
+      hasNextPageSummaryField = aql`summary.categoryTotals.pass`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.pass`
+      hasPreviousPageSummaryField = aql`summary.categoryTotals.pass`
+    } else if (orderBy.field === 'pass-dkim-percentage') {
+      hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryPercentages.passDkimOnly`
+      hasNextPageSummaryField = aql`summary.categoryPercentages.passDkimOnly`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.passDkimOnly`
+      hasPreviousPageSummaryField = aql`summary.categoryPercentages.passDkimOnly`
+    } else if (orderBy.field === 'pass-spf-percentage') {
+      hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryPercentages.passSpfOnly`
+      hasNextPageSummaryField = aql`summary.categoryPercentages.passSpfOnly`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.passSpfOnly`
+      hasPreviousPageSummaryField = aql`summary.categoryPercentages.passSpfOnly`
+    } else if (orderBy.field === 'total-messages') {
+      hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).totalMessages`
+      hasNextPageSummaryField = aql`summary.totalMessages`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).totalMessages`
+      hasPreviousPageSummaryField = aql`summary.totalMessages`
+    }
+
+    hasNextPageFilter = aql`
+      FILTER ${hasNextPageSummaryField} ${hasNextPageDirection} ${hasNextPageDocumentField}
+      OR (${hasNextPageSummaryField} == ${hasNextPageDocumentField}
+      AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
+    `
+    hasPreviousPageFilter = aql`
+      FILTER ${hasPreviousPageSummaryField} ${hasPreviousPageDirection} ${hasPreviousPageDocumentField}
+      OR (${hasPreviousPageSummaryField} == ${hasPreviousPageDocumentField}
+      AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
+    `
+  }
+
+  let sortByField = aql``
+  if (typeof orderBy !== 'undefined') {
+    /* istanbul ignore else */
+    if (orderBy.field === 'fail-count') {
+      sortByField = aql`summary.categoryTotals.fail ${orderBy.direction},`
+    } else if (orderBy.field === 'pass-count') {
+      sortByField = aql`summary.categoryTotals.pass ${orderBy.direction},`
+    } else if (orderBy.field === 'pass-dkim-count') {
+      sortByField = aql`summary.categoryTotals.passDkimOnly ${orderBy.direction},`
+    } else if (orderBy.field === 'pass-spf-count') {
+      sortByField = aql`summary.categoryTotals.passSpfOnly ${orderBy.direction},`
+    } else if (orderBy.field === 'fail-percentage') {
+      sortByField = aql`summary.categoryPercentages.fail ${orderBy.direction},`
+    } else if (orderBy.field === 'pass-percentage') {
+      sortByField = aql`summary.categoryPercentages.pass ${orderBy.direction},`
+    } else if (orderBy.field === 'pass-dkim-percentage') {
+      sortByField = aql`summary.categoryPercentages.passDkimOnly ${orderBy.direction},`
+    } else if (orderBy.field === 'pass-spf-percentage') {
+      sortByField = aql`summary.categoryPercentages.passSpfOnly ${orderBy.direction},`
+    } else if (orderBy.field === 'total-messages') {
+      sortByField = aql`summary.totalMessages ${orderBy.direction},`
+    }
   }
 
   let sortString
@@ -136,34 +331,46 @@ export const dmarcSumLoaderConnectionsByUserId = (
     )
 
     LET retrievedSummaries = (
-      FOR summary IN dmarcSummaries
-        FILTER summary._id IN summaryIds
-        ${afterTemplate}
-        ${beforeTemplate}
-        ${limitTemplate}
-        RETURN {            
-          _id: summary._id,
-          _key: summary._key,
-          _rev: summary._rev,
-          _type: "dmarcSummary",
-          id: summary._key,
-          categoryTotals: summary.categoryTotals
-        }
+      FOR summaryId IN summaryIds
+        FOR summary IN dmarcSummaries
+          FILTER summary._id == summaryId
+          LET domain = FIRST(
+            FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+              RETURN v
+          )
+          ${afterTemplate}
+          ${beforeTemplate}
+          
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+
+          RETURN {
+            _id: summary._id,
+            _key: summary._key,
+            _rev: summary._rev,
+            _type: "dmarcSummary",
+            id: summary._key,
+            domainKey: domain._key,
+            categoryTotals: summary.categoryTotals,
+            categoryPercentages: summary.categoryPercentages,
+            totalMessages: summary.totalMessages
+          }
     )
 
     LET hasNextPage = (LENGTH(
       FOR summary IN dmarcSummaries
         FILTER summary._id IN summaryIds
-        FILTER TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key)
-        SORT summary._key ${sortString} LIMIT 1
+        ${hasNextPageFilter}
+        SORT ${sortByField} summary._key ${sortString} LIMIT 1
         RETURN summary
     ) > 0 ? true : false)
 
     LET hasPreviousPage = (LENGTH(
       FOR summary IN dmarcSummaries
         FILTER summary._id IN summaryIds
-        FILTER TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key)
-        SORT summary._key ${sortString} LIMIT 1
+        ${hasPreviousPageFilter}
+        SORT ${sortByField} summary._key ${sortString} LIMIT 1
         RETURN summary
     ) > 0 ? true : false)
 
@@ -210,10 +417,13 @@ export const dmarcSumLoaderConnectionsByUserId = (
     }
   }
 
-  const edges = summariesInfo.summaries.map((summary) => ({
-    cursor: toGlobalId('dmarcSummaries', summary.id),
-    node: summary,
-  }))
+  const edges = summariesInfo.summaries.map((summary) => {
+    summary.startDate = startDate
+    return {
+      cursor: toGlobalId('dmarcSummaries', summary.id),
+      node: summary,
+    }
+  })
 
   return {
     edges,

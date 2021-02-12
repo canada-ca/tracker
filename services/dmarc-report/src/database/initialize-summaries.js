@@ -1,4 +1,5 @@
 const initializeSummaries = (
+  calculatePercentages,
   createSummaryEdge,
   createSummary,
   loadSummaryByDate,
@@ -9,16 +10,25 @@ const initializeSummaries = (
   dates.push({ startDate: 'thirty_days' })
 
   for (const date of dates) {
+    const currentSummary = await loadSummaryByDate({
+      domain,
+      startDate: date.startDate,
+    })
+    const { totalMessages, percentages } = calculatePercentages(
+      currentSummary.categoryTotals,
+    )
+
+    currentSummary.totalMessages = totalMessages
+    currentSummary.categoryPercentages = percentages
+
+    const summaryDBInfo = await createSummary({ currentSummary })
+
     let startDate
     if (date.startDate === 'thirty_days') {
       startDate = 'thirtyDays'
     } else {
       startDate = date.startDate
     }
-
-    const currentSummary = await loadSummaryByDate({ domain, startDate })
-
-    const summaryDBInfo = await createSummary({ currentSummary })
 
     await createSummaryEdge({
       domainId,

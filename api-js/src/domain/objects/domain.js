@@ -12,13 +12,14 @@ import {
   globalIdField,
 } from 'graphql-relay'
 
+import { domainStatus } from './domain-status'
+import { PeriodEnums } from '../../enums'
+import { nodeInterface } from '../../node'
+import { Domain, Selectors, Year } from '../../scalars'
 import { dmarcSummaryType } from '../../dmarc-summaries/objects'
 import { emailScanType } from '../../email-scan/objects'
 import { webScanType } from '../../web-scan/objects'
-import { Domain, Selectors, Year } from '../../scalars'
-import { PeriodEnums } from '../../enums'
-import { domainStatus } from './domain-status'
-import { nodeInterface } from '../../node'
+import { organizationOrder } from '../../organization/inputs'
 import { organizationConnection } from '../../organization/objects'
 
 export const domainType = new GraphQLObjectType({
@@ -48,7 +49,13 @@ export const domainType = new GraphQLObjectType({
     },
     organizations: {
       type: organizationConnection.connectionType,
-      args: connectionArgs,
+      args: {
+        orderBy: {
+          type: organizationOrder,
+          description: 'Ordering options for organization connections',
+        },
+        ...connectionArgs,
+      },
       description: 'The organization that this domain belongs to.',
       resolve: async (
         { _id },
@@ -122,7 +129,11 @@ export const domainType = new GraphQLObjectType({
           startDate,
         })
 
-        return { domainKey: _key, ...dmarcSummaryEdge }
+        return {
+          domainKey: _key,
+          _id: dmarcSummaryEdge._to,
+          startDate: startDate,
+        }
       },
     },
     yearlyDmarcSummaries: {
@@ -157,7 +168,8 @@ export const domainType = new GraphQLObjectType({
 
         const edges = dmarcSummaryEdges.map((edge) => ({
           domainKey: _key,
-          ...edge,
+          _id: edge._to,
+          startDate: edge.startDate,
         }))
 
         return edges

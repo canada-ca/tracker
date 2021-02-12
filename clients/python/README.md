@@ -2,7 +2,7 @@
 
 The Tracker Python API Client will provide a Python wrapper for key features of Tracker. 
 
-It makes use of [GQL](https://github.com/graphql-python/gql), a Python GraphQL client, to query the Tracker API.
+It makes use of [gql](https://github.com/graphql-python/gql), a Python GraphQL client, to query the Tracker API.
 
 #### Installing Dependencies
 
@@ -29,3 +29,18 @@ TRACKER_PASS=YOURPASSWORDHERE
 EOF
 ```
 
+#### Testing
+
+Pytest is used for testing. To run tests, run the following in the project root (the folder containing this README.md):
+
+```shell
+pipenv run pytest
+```
+
+Alternatively, if you are already in a pipenv shell, just run `pytest`.
+
+If tests are failing with ModuleNotFoundError, make sure tracker_client/ is on your PYTHONPATH. The .env file used to store your credentials is a good way to set this.
+
+#### Note about IPython/Jupyter 
+
+Because of a limitation in gql, the client is not currently compatible with IPython or Jupyter.

@@ -11,10 +11,11 @@ import {
   globalIdField,
 } from 'graphql-relay'
 
-import { affiliationConnection } from '../../affiliation/objects'
 import { organizationSummaryType } from './organization-summary'
-import { Acronym, Slug } from '../../scalars'
 import { nodeInterface } from '../../node'
+import { Acronym, Slug } from '../../scalars'
+import { affiliationConnection } from '../../affiliation/objects'
+import { domainOrder } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 
 export const organizationType = new GraphQLObjectType({
@@ -81,6 +82,10 @@ export const organizationType = new GraphQLObjectType({
       type: domainConnection.connectionType,
       description: 'The domains which are associated with this organization.',
       args: {
+        orderBy: {
+          type: domainOrder,
+          description: 'Ordering options for domain connections.',
+        },
         ownership: {
           type: GraphQLBoolean,
           description:

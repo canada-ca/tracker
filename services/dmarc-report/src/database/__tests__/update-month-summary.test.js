@@ -3,6 +3,7 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../../migrations')
 const { updateMonthSummary } = require('../index')
 const { loadSummaryByDate } = require('../../loaders')
+const { calculatePercentages } = require('../../calculate-percentages')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -66,6 +67,7 @@ describe('given the updateMonthSummary function', () => {
       const mockedRemoveSummary = jest.fn()
 
       const updateMonthSummaryFunc = updateMonthSummary(
+        calculatePercentages,
         mockedCreateSummary,
         mockedCreateEdge,
         loadSummaryByDate(mockedContainer),
@@ -97,6 +99,7 @@ describe('given the updateMonthSummary function', () => {
       const mockedRemoveSummary = jest.fn()
 
       const updateMonthSummaryFunc = updateMonthSummary(
+        calculatePercentages,
         mockedCreateSummary,
         mockedCreateEdge,
         loadSummaryByDate(mockedContainer),
@@ -127,6 +130,7 @@ describe('given the updateMonthSummary function', () => {
       const mockedRemoveSummary = jest.fn()
 
       const updateMonthSummaryFunc = updateMonthSummary(
+        calculatePercentages,
         mockedCreateSummary,
         mockedCreateEdge,
         loadSummaryByDate(mockedContainer),
@@ -144,6 +148,12 @@ describe('given the updateMonthSummary function', () => {
       expect(mockedCreateSummary).toHaveBeenCalledTimes(1)
       expect(mockedCreateSummary).toHaveBeenNthCalledWith(1, {
         currentSummary: {
+          categoryPercentages: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
           categoryTotals: {
             fail: 0,
             pass: 0,
@@ -156,6 +166,7 @@ describe('given the updateMonthSummary function', () => {
             fullPass: [],
             spfFailure: [],
           },
+          totalMessages: 0,
         },
       })
     })
@@ -170,6 +181,7 @@ describe('given the updateMonthSummary function', () => {
       const mockedRemoveSummary = jest.fn()
 
       const updateMonthSummaryFunc = updateMonthSummary(
+        calculatePercentages,
         mockedCreateSummary,
         mockedCreateEdge,
         loadSummaryByDate(mockedContainer),
@@ -201,6 +213,7 @@ describe('given the updateMonthSummary function', () => {
         const mockedRemoveSummary = jest.fn()
 
         const updateMonthSummaryFunc = updateMonthSummary(
+          calculatePercentages,
           mockedCreateSummary,
           mockedCreateEdge,
           loadSummaryByDate(mockedContainer),
