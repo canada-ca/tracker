@@ -1,7 +1,6 @@
 import re
 import pytest
 
-
 from gql import Client
 from gql.transport.exceptions import (
     TransportQueryError,
@@ -124,11 +123,11 @@ def test_execute_query_other_error(monkeypatch, capsys):
 
 
 def test_execute_query_success(monkeypatch, all_domains_input):
-    def mock_exception(self, query, variable_values):
+    def mock_return(self, query, variable_values):
         return all_domains_input
 
     client = Client()
-    monkeypatch.setattr(Client, "execute", mock_exception)
+    monkeypatch.setattr(Client, "execute", mock_return)
 
     result = execute_query(client, None, None)
     assert result == all_domains_input
