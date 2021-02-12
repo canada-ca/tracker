@@ -6,6 +6,7 @@ from gql import Client
 import tracker_client.client as tc
 import tracker_client.queries as queries
 
+# pylint: disable=no-member
 
 def test_get_all_summaries_error(mocker):
     mocker.patch(

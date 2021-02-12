@@ -10,11 +10,11 @@ websockets = "*"
 python-slugify = "*"
 
 [dev-packages]
-pylint = "*"
 black = "*"
 pytest = "*"
-bandit = "*"
 pytest-mock = "*"
+pylint = "*"
+bandit = "*"
 
 [requires]
 python_version = "3.8"
