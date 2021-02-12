@@ -13,7 +13,7 @@ export function GuidanceTagList({ guidanceTags, selector }) {
   const tagList = guidanceTags?.length ? (
     guidanceTags.map((guidanceTag, index) => {
       return (
-        <Box key={guidanceTag + index} bg="#FFE0E0" pb="1">
+        <Box key={guidanceTag + index} bg="weakMuted" pb="1">
           <GuidanceTagDetails guidanceTag={guidanceTag.node} />
           {
             // Add divider if next entry exists
@@ -23,7 +23,7 @@ export function GuidanceTagList({ guidanceTags, selector }) {
       )
     })
   ) : (
-    <Stack isInline align="center" bg="#E0FFE0" px="2">
+    <Stack isInline align="center" bg="strongMuted" px="2">
       <Icon name="check-circle" color="strong" />
       <Text>
         <Trans>Properly configured!</Trans>

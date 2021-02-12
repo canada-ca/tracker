@@ -37,8 +37,8 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
       <Heading as="h2" size="md">
         {categoryName.toUpperCase()}
       </Heading>
-      {tagDetails}
       {policyDetails}
+      {tagDetails}
     </Box>
   )
 }

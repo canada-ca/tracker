@@ -38,6 +38,9 @@ export default function DmarcGuidancePage() {
   const domainName = data.findDomainByDomain.domain
   const webScan = data.findDomainByDomain.web
   const emailScan = data.findDomainByDomain.email
+  const webStatus = data.findDomainByDomain.status
+  const dmarcPhase =
+    data.findDomainByDomain.email?.dmarc.edges[0]?.node.dmarcPhase
 
   return (
     <Stack spacing="25px" mb="6" px="4" mx="auto" overflow="hidden">
@@ -60,11 +63,11 @@ export default function DmarcGuidancePage() {
         </Link>
       </PseudoBox>
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <ScanCard scanType="web" scanData={webScan} />
+        <ScanCard scanType="web" scanData={webScan} status={webStatus} />
       </ErrorBoundary>
       <Divider />
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <ScanCard scanType="email" scanData={emailScan} />
+        <ScanCard scanType="email" scanData={emailScan} status={dmarcPhase} />
       </ErrorBoundary>
       <Divider />
     </Stack>

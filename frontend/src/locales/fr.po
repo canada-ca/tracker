@@ -2003,3 +2003,43 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 #: src/OrganizationDetails.js:102
 msgid "{orgName}"
 msgstr ""
+
+#: src/PolicyComplianceDetails.js:17
+msgid "Implementation Status:"
+msgstr "État d'avancement de la mise en œuvre:"
+
+#: src/PolicyComplianceDetails.js:23
+msgid "Level of Enforcment:"
+msgstr "Niveau d'application:"
+
+#: src/PolicyComplianceDetails.js:29
+msgid "HSTS Status:"
+msgstr "Statut du HSTS:"
+
+#: src/PolicyComplianceDetails.js:35
+msgid "HSTS Age:"
+msgstr "Âge du HSTS:"
+
+#: src/PolicyComplianceDetails.js:41
+msgid "Preloaded Status:"
+msgstr "Statut préchargé:"
+
+#: src/PolicyComplianceDetails.js:57
+msgid "Phase:"
+msgstr "Phase:"
+
+#: src/ScanCard.js:30
+msgid "ITPIN Compliant"
+msgstr "Conforme à l'ITPIN"
+
+#: src/ScanCard.js:31
+msgid "Changes Required for ITPIN Compliance"
+msgstr "Changements requis pour la mise en conformité ITPIN"
+
+#: src/ScanCard.js:43
+msgid "DMARC Implementation Phase: {status}"
+msgstr "Phase de mise en œuvre de la DMARC: {status}"
+
+#: src/ScanCard.js:54
+msgid "DMARC Phase Unavailable"
+msgstr "La phase DMARC n'est pas disponible"
