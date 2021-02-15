@@ -1,6 +1,20 @@
 import pytest
 
 
+# Register "online" mark
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers", "online: mark test that tries to connect to Tracker"
+    )
+
+
+@pytest.fixture
+def error_message():
+    return {
+        "error": {"message": "No organization with the provided slug could be found."}
+    }
+
+
 @pytest.fixture
 def all_domains_input():
     return {

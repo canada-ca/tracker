@@ -10,9 +10,10 @@ websockets = "*"
 python-slugify = "*"
 
 [dev-packages]
-pylint = "*"
 black = "*"
 pytest = "*"
+pytest-mock = "*"
+pylint = "*"
 bandit = "*"
 
 [requires]
