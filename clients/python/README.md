@@ -156,9 +156,9 @@ Getting domain status for cse-cst.gc.ca...
 
 > **NOTE**: Because of gql limitations, the client is not currently compatible with IPython or Jupyter.
 
-### Development
+## Development
 
-#### Testing
+### Testing
 
 Pytest is used for testing. To run tests, run the following in the project root (the folder containing this README.md):
 
