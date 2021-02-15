@@ -1,3 +1,5 @@
+export * from './dkim-order-field'
+export * from './dkim-result-order-field'
 export * from './dmarc-summary-order-field'
 export * from './domain-order-field'
 export * from './https-order-field'
