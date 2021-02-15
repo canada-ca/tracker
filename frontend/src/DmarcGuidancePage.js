@@ -2,7 +2,7 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
-import { Heading, Stack, Divider, Icon, Link } from '@chakra-ui/core'
+import { Heading, Stack, Divider, Icon, Link, PseudoBox } from '@chakra-ui/core'
 import { useParams, Link as RouteLink } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
@@ -38,29 +38,36 @@ export default function DmarcGuidancePage() {
   const domainName = data.findDomainByDomain.domain
   const webScan = data.findDomainByDomain.web
   const emailScan = data.findDomainByDomain.email
+  const webStatus = data.findDomainByDomain.status
+  const dmarcPhase =
+    data.findDomainByDomain.email?.dmarc.edges[0]?.node.dmarcPhase
 
   return (
     <Stack spacing="25px" mb="6" px="4" mx="auto" overflow="hidden">
-      <Stack isInline>
-        <Heading>{domainName.toUpperCase()}</Heading>
+      <PseudoBox d={{ md: 'flex' }}>
+        <Heading textAlign={{ base: 'center', md: 'left' }}>
+          {domainName.toUpperCase()}
+        </Heading>
         <Link
-          ml="auto"
           color="teal.500"
           whiteSpace="noWrap"
           my="auto"
           to={`/domains/${domainSlug}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
           as={RouteLink}
+          d="block"
+          width="100%"
+          textAlign={{ base: 'center', md: 'right' }}
         >
           <Trans>DMARC Report</Trans>
           <Icon name="link" ml="4px" />
         </Link>
-      </Stack>
+      </PseudoBox>
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <ScanCard scanType="web" scanData={webScan} />
+        <ScanCard scanType="web" scanData={webScan} status={webStatus} />
       </ErrorBoundary>
       <Divider />
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <ScanCard scanType="email" scanData={emailScan} />
+        <ScanCard scanType="email" scanData={emailScan} status={dmarcPhase} />
       </ErrorBoundary>
       <Divider />
     </Stack>

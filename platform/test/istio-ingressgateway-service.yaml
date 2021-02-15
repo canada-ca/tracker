@@ -4,7 +4,6 @@ metadata:
   name: istio-ingressgateway
   namespace: istio-system
 spec:
-  loadBalancerIP: "34.95.5.243"
   ports:
   - name: status-port
     $patch: delete

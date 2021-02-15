@@ -11,7 +11,6 @@ from tracker_client.client import (
     format_domain_status,
 )
 
-
 def test_format_all_domains(all_domains_input, all_domains_output):
     assert format_all_domains(all_domains_input) == all_domains_output
 

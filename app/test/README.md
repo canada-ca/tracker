@@ -1,6 +1,6 @@
 # Test
 
-The purpose of this overlay is to bring up a "non-prod" copy of the full application, for... you guessed it, testing purposes! This configuration will come up using a self signed certificate, but other than that it should be almost identical to production.
+The purpose of this overlay is to bring up a "non-prod" copy of the full application on GKE, for... you guessed it, testing purposes! This configuration will come up using a self signed certificate, but other than that it should be almost identical to production.
 
 
 ## Bringing up a cluster
@@ -24,12 +24,6 @@ gcloud beta container --project "track-compliance" clusters create "testing" \
 --workload-pool "track-compliance.svc.id.goog" \
  --enable-shielded-nodes --shielded-secure-boot --enable-dataplane-v2
 ```
-
-The number of options here testify to our increasingly opinionated take on
-cluster creation, as well as our attention to the [hardening guidelines for
-GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster).
-This will soon be captured in real code in a proper Infrastructure as Code type
-of way.
 
 With the cluster up and running, you will need to provide the env files as
 described in the minikube setup:

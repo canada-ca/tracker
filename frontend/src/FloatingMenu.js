@@ -17,11 +17,11 @@ import {
   Image,
   useToast,
   Heading,
+  Icon,
 } from '@chakra-ui/core'
 import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
 import wordmark from './images/canada-wordmark.svg'
-import personIcon from './images/person-icon.svg'
 import reportIcon from './images/report-icon.svg'
 import buildingIcon from './images/building-icon.svg'
 import { useLingui } from '@lingui/react'
@@ -52,9 +52,20 @@ export const FloatingMenu = () => {
       display={{ base: 'static', md: 'none' }}
     >
       <Stack isInline width="100%" rounded="md" spacing={0}>
-        <Link as={RouteLink} to="/user" flex="1 1 0">
+        <Link as={RouteLink} to="/organizations" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-            <Image src={personIcon} height="16px" />
+            <Image src={buildingIcon} size="16px" />
+          </TrackerButton>
+        </Link>
+        <Divider
+          orientation="vertical"
+          borderColor="accent"
+          borderWidth="2px"
+          ml={0}
+        />
+        <Link as={RouteLink} to="/domains" flex="1 1 0">
+          <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
+            <Icon name="https" height="16px" width="100%" />
           </TrackerButton>
         </Link>
         <Divider
@@ -66,17 +77,6 @@ export const FloatingMenu = () => {
         <Link as={RouteLink} to="/dmarc-summaries" flex="1 1 0">
           <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
             <Image src={reportIcon} size="16px" />
-          </TrackerButton>
-        </Link>
-        <Divider
-          orientation="vertical"
-          borderColor="accent"
-          borderWidth="2px"
-          ml={0}
-        />
-        <Link as={RouteLink} to="/organizations" flex="1 1 0">
-          <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-            <Image src={buildingIcon} size="16px" />
           </TrackerButton>
         </Link>
         <Divider
@@ -126,9 +126,9 @@ export const FloatingMenu = () => {
                 <Stack spacing="16px">
                   <FloatingMenuLink to="/" text={t`Home`} />
 
-                  <FloatingMenuLink to="/admin" text={t`Admin Portal`} />
+                  <FloatingMenuLink to="/user" text={t`Account Settings`} />
 
-                  <FloatingMenuLink to="/domains" text={t`Domains`} />
+                  <FloatingMenuLink to="/admin" text={t`Admin Portal`} />
 
                   <Divider
                     borderWidth="2px"
