@@ -52,12 +52,13 @@ You will generally start by creating a client with `create_client(auth_token=get
 ### Examples
 
 #### Get all domains in my organizations
+
 Supposing I belong to two organizations with the acronyms "FOO" and "BAR":
 
 ```python
->>> from tracker_client import client
->>> client = create_client(auth_token=get_auth_token())
->>> get_all_domains(client)
+>>> import tracker_client.client as tracker_client
+>>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+>>> print(tracker_client.get_all_domains(client))
 {
     "FOO": [
         "foo.bar",
@@ -71,12 +72,12 @@ Supposing I belong to two organizations with the acronyms "FOO" and "BAR":
 }
 ```
 
-The following examples continue the previous one (assume the package has been imported and a `client` object with a valid token exists).
+The following examples continue the previous one (assume the package has been imported as above and a `client` object with a valid token exists).
 
 #### Get a DMARC summary for a domain
 
 ```python
->>> get_dmarc_summary(client, "foo.bar", "september", 2020)
+>>> print(tracker_client.get_dmarc_summary(client, "foo.bar", "september", 2020))
 {
     "foo.bar": {
         "month": "SEPTEMBER",
@@ -95,7 +96,7 @@ The following examples continue the previous one (assume the package has been im
 #### Get summary metrics for an organization
 
 ```python
->>> get_summary_by_acronym(client, "foo")
+>>> print(tracker_client.get_summary_by_acronym(client, "foo"))
 {
     "FOO": {
         "domainCount": 10,
@@ -138,8 +139,7 @@ The following examples continue the previous one (assume the package has been im
 #### Get the status of a domain 
 
 ```python
->>> get_domain_status(client, "foo.bar")
-Getting domain status for cse-cst.gc.ca...
+>>> print(tracker_client.get_domain_status(client, "foo.bar"))
 {
     "foo.bar": {
         "lastRan": "2021-01-23 22:33:26.921529",
