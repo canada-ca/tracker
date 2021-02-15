@@ -148,7 +148,6 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
           )}
         </PseudoBox>
         <PseudoBox
-          width="100%"
           display={{ md: 'flex' }}
           alignItems="center"
           onClick={() => {
