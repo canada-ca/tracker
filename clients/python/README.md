@@ -176,6 +176,3 @@ When additions or significant changes are made, check test coverage with:
 pipenv run pytest --cov=tracker_client
 ```
 
-#### Note about IPython/Jupyter 
-
-Because of a limitation in gql, the client is not currently compatible with IPython or Jupyter.
