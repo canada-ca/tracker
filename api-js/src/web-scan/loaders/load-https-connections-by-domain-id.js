@@ -7,27 +7,130 @@ export const httpsLoaderConnectionsByDomainId = (
   userKey,
   cleanseInput,
   i18n,
-) => async ({ domainId, startDate, endDate, after, before, first, last }) => {
+) => async ({
+  domainId,
+  startDate,
+  endDate,
+  after,
+  before,
+  first,
+  last,
+  orderBy,
+}) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(httpsScan._key) > TO_NUMBER(${afterId})`
+    if (typeof orderBy === 'undefined') {
+      afterTemplate = aql`FILTER TO_NUMBER(httpsScan._key) > TO_NUMBER(${afterId})`
+    } else {
+      let afterTemplateDirection = aql``
+      if (orderBy.direction === 'ASC') {
+        afterTemplateDirection = aql`>`
+      } else {
+        afterTemplateDirection = aql`<`
+      }
+
+      let documentField = aql``
+      let httpsField = aql``
+      /* istanbul ignore else */
+      if (orderBy.field === 'timestamp') {
+        documentField = aql`DOCUMENT(https, ${afterId}).timestamp`
+        httpsField = aql`httpsScan.timestamp`
+      } else if (orderBy.field === 'implementation') {
+        documentField = aql`DOCUMENT(https, ${afterId}).implementation`
+        httpsField = aql`httpsScan.implementation`
+      } else if (orderBy.field === 'enforced') {
+        documentField = aql`DOCUMENT(https, ${afterId}).enforced`
+        httpsField = aql`httpsScan.enforced`
+      } else if (orderBy.field === 'hsts') {
+        documentField = aql`DOCUMENT(https, ${afterId}).hsts`
+        httpsField = aql`httpsScan.hsts`
+      } else if (orderBy.field === 'hsts-age') {
+        documentField = aql`DOCUMENT(https, ${afterId}).hstsAge`
+        httpsField = aql`httpsScan.hstsAge`
+      } else if (orderBy.field === 'preloaded') {
+        documentField = aql`DOCUMENT(https, ${afterId}).preloaded`
+        httpsField = aql`httpsScan.preloaded`
+      }
+
+      afterTemplate = aql`
+        FILTER ${httpsField} ${afterTemplateDirection} ${documentField}
+        OR (${httpsField} == ${documentField}
+        AND TO_NUMBER(httpsScan._key) > TO_NUMBER(${afterId}))
+      `
+    }
   }
 
   let beforeTemplate = aql``
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    beforeTemplate = aql`FILTER TO_NUMBER(httpsScan._key) < TO_NUMBER(${beforeId})`
+    if (typeof orderBy === 'undefined') {
+      beforeTemplate = aql`FILTER TO_NUMBER(httpsScan._key) < TO_NUMBER(${beforeId})`
+    } else {
+      let beforeTemplateDirection = aql``
+      if (orderBy.direction === 'ASC') {
+        beforeTemplateDirection = aql`<`
+      } else {
+        beforeTemplateDirection = aql`>`
+      }
+
+      let documentField = aql``
+      let httpsField = aql``
+      /* istanbul ignore else */
+      if (orderBy.field === 'timestamp') {
+        documentField = aql`DOCUMENT(https, ${beforeId}).timestamp`
+        httpsField = aql`httpsScan.timestamp`
+      } else if (orderBy.field === 'implementation') {
+        documentField = aql`DOCUMENT(https, ${beforeId}).implementation`
+        httpsField = aql`httpsScan.implementation`
+      } else if (orderBy.field === 'enforced') {
+        documentField = aql`DOCUMENT(https, ${beforeId}).enforced`
+        httpsField = aql`httpsScan.enforced`
+      } else if (orderBy.field === 'hsts') {
+        documentField = aql`DOCUMENT(https, ${beforeId}).hsts`
+        httpsField = aql`httpsScan.hsts`
+      } else if (orderBy.field === 'hsts-age') {
+        documentField = aql`DOCUMENT(https, ${beforeId}).hstsAge`
+        httpsField = aql`httpsScan.hstsAge`
+      } else if (orderBy.field === 'preloaded') {
+        documentField = aql`DOCUMENT(https, ${beforeId}).preloaded`
+        httpsField = aql`httpsScan.preloaded`
+      }
+
+      beforeTemplate = aql`
+        FILTER ${httpsField} ${beforeTemplateDirection} ${documentField}
+        OR (${httpsField} == ${documentField}
+        AND TO_NUMBER(httpsScan._key) < TO_NUMBER(${beforeId}))
+      `
+    }
   }
 
   let startDateTemplate = aql``
   if (typeof startDate !== 'undefined') {
-    startDateTemplate = aql`FILTER httpsScan.timestamp >= ${startDate}`
+    startDateTemplate = aql`
+      FILTER DATE_FORMAT(
+        DATE_TIMESTAMP(httpsScan.timestamp),
+        "%y-%m-%d"
+      ) >= 
+      DATE_FORMAT(
+        DATE_TIMESTAMP(${startDate}),
+        "%y-%m-%d"
+      )
+    `
   }
 
   let endDateTemplate = aql``
   if (typeof endDate !== 'undefined') {
-    endDateTemplate = aql`FILTER httpsScan.timestamp <= ${endDate}`
+    endDateTemplate = aql`
+      FILTER DATE_FORMAT(
+        DATE_TIMESTAMP(httpsScan.timestamp),
+        "%y-%m-%d"
+      ) <= 
+      DATE_FORMAT(
+        DATE_TIMESTAMP(${endDate}),
+        "%y-%m-%d"
+      )
+    `
   }
 
   let limitTemplate = aql``
@@ -73,9 +176,9 @@ export const httpsLoaderConnectionsByDomainId = (
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-      limitTemplate = aql`SORT httpsScan._key ASC LIMIT TO_NUMBER(${first})`
+      limitTemplate = aql`httpsScan._key ASC LIMIT TO_NUMBER(${first})`
     } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-      limitTemplate = aql`SORT httpsScan._key DESC LIMIT TO_NUMBER(${last})`
+      limitTemplate = aql`httpsScan._key DESC LIMIT TO_NUMBER(${last})`
     }
   } else {
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -86,6 +189,78 @@ export const httpsLoaderConnectionsByDomainId = (
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
     )
+  }
+
+  let hasNextPageFilter = aql`FILTER TO_NUMBER(httpsScan._key) > TO_NUMBER(LAST(retrievedHttps)._key)`
+  let hasPreviousPageFilter = aql`FILTER TO_NUMBER(httpsScan._key) < TO_NUMBER(FIRST(retrievedHttps)._key)`
+  if (typeof orderBy !== 'undefined') {
+    let hasNextPageDirection = aql``
+    let hasPreviousPageDirection = aql``
+    if (orderBy.direction === 'ASC') {
+      hasNextPageDirection = aql`>`
+      hasPreviousPageDirection = aql`<`
+    } else {
+      hasNextPageDirection = aql`<`
+      hasPreviousPageDirection = aql`>`
+    }
+    let httpsField = aql``
+    let hasNextPageDocumentField = aql``
+    let hasPreviousPageDocumentField = aql``
+    /* istanbul ignore else */
+    if (orderBy.field === 'timestamp') {
+      httpsField = aql`httpsScan.timestamp`
+      hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).timestamp`
+      hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).timestamp`
+    } else if (orderBy.field === 'implementation') {
+      httpsField = aql`httpsScan.implementation`
+      hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).implementation`
+      hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).implementation`
+    } else if (orderBy.field === 'enforced') {
+      httpsField = aql`httpsScan.enforced`
+      hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).enforced`
+      hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).enforced`
+    } else if (orderBy.field === 'hsts') {
+      httpsField = aql`httpsScan.hsts`
+      hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).hsts`
+      hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).hsts`
+    } else if (orderBy.field === 'hsts-age') {
+      httpsField = aql`httpsScan.hstsAge`
+      hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).hstsAge`
+      hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).hstsAge`
+    } else if (orderBy.field === 'preloaded') {
+      httpsField = aql`httpsScan.preloaded`
+      hasNextPageDocumentField = aql`DOCUMENT(https, LAST(retrievedHttps)._key).preloaded`
+      hasPreviousPageDocumentField = aql`DOCUMENT(https, FIRST(retrievedHttps)._key).preloaded`
+    }
+
+    hasNextPageFilter = aql`
+      FILTER ${httpsField} ${hasNextPageDirection} ${hasNextPageDocumentField}
+      OR (${httpsField} == ${hasNextPageDocumentField}
+      AND TO_NUMBER(httpsScan._key) > TO_NUMBER(LAST(retrievedHttps)._key))
+    `
+    hasPreviousPageFilter = aql`
+      FILTER ${httpsField} ${hasPreviousPageDirection} ${hasPreviousPageDocumentField}
+      OR (${httpsField} == ${hasPreviousPageDocumentField}
+      AND TO_NUMBER(httpsScan._key) < TO_NUMBER(FIRST(retrievedHttps)._key))
+    `
+  }
+
+  let sortByField = aql``
+  if (typeof orderBy !== 'undefined') {
+    /* istanbul ignore else */
+    if (orderBy.field === 'timestamp') {
+      sortByField = aql`httpsScan.timestamp ${orderBy.direction},`
+    } else if (orderBy.field === 'implementation') {
+      sortByField = aql`httpsScan.implementation ${orderBy.direction},`
+    } else if (orderBy.field === 'enforced') {
+      sortByField = aql`httpsScan.enforced ${orderBy.direction},`
+    } else if (orderBy.field === 'hsts') {
+      sortByField = aql`httpsScan.hsts ${orderBy.direction},`
+    } else if (orderBy.field === 'hsts-age') {
+      sortByField = aql`httpsScan.hstsAge ${orderBy.direction},`
+    } else if (orderBy.field === 'preloaded') {
+      sortByField = aql`httpsScan.preloaded ${orderBy.direction},`
+    }
   }
 
   let sortString
@@ -107,6 +282,8 @@ export const httpsLoaderConnectionsByDomainId = (
         ${beforeTemplate}
         ${startDateTemplate}
         ${endDateTemplate}
+        SORT
+        ${sortByField}
         ${limitTemplate}
         RETURN MERGE({ id: httpsScan._key, _type: "https" }, httpsScan)
     )
@@ -114,16 +291,16 @@ export const httpsLoaderConnectionsByDomainId = (
     LET hasNextPage = (LENGTH(
       FOR httpsScan IN https
         FILTER httpsScan._key IN httpsKeys
-        FILTER TO_NUMBER(httpsScan._key) > TO_NUMBER(LAST(retrievedHttps)._key)
-        SORT httpsScan._key ${sortString} LIMIT 1
+        ${hasNextPageFilter}
+        SORT ${sortByField} httpsScan._key ${sortString} LIMIT 1
         RETURN httpsScan
     ) > 0 ? true : false)
     
     LET hasPreviousPage = (LENGTH(
       FOR httpsScan IN https
         FILTER httpsScan._key IN httpsKeys
-        FILTER TO_NUMBER(httpsScan._key) < TO_NUMBER(FIRST(retrievedHttps)._key)
-        SORT httpsScan._key ${sortString} LIMIT 1
+        ${hasPreviousPageFilter}
+        SORT ${sortByField} httpsScan._key ${sortString} LIMIT 1
         RETURN httpsScan
     ) > 0 ? true : false)
 
