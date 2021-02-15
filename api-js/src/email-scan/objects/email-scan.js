@@ -1,11 +1,12 @@
 import { GraphQLObjectType } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
-import { GraphQLDateTime } from 'graphql-scalars'
+import { GraphQLDate, GraphQLDateTime } from 'graphql-scalars'
 
-import { domainType } from '../../domain/objects'
+import { dkimOrder } from '../inputs'
 import { dkimConnection } from './dkim'
 import { dmarcConnection } from './dmarc'
 import { spfConnection } from './spf'
+import { domainType } from '../../domain/objects'
 
 export const emailScanType = new GraphQLObjectType({
   name: 'EmailScan',
@@ -23,12 +24,16 @@ export const emailScanType = new GraphQLObjectType({
       type: dkimConnection.connectionType,
       args: {
         starDate: {
-          type: GraphQLDateTime,
+          type: GraphQLDate,
           description: 'Start date for date filter.',
         },
         endDate: {
-          type: GraphQLDateTime,
+          type: GraphQLDate,
           description: 'End date for date filter.',
+        },
+        orderBy: {
+          type: dkimOrder,
+          description: 'Ordering options for dkim connections.',
         },
         ...connectionArgs,
       },
