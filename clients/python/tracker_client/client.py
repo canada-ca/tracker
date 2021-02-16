@@ -336,7 +336,7 @@ def get_yearly_dmarc_summaries(client, domain):
                 }
             },
         ]
-    }  
+    }
     """
     params = {"domain": domain}
 
