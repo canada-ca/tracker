@@ -45,7 +45,6 @@ describe('when given the load dkim results connection function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
 
@@ -59,6 +58,10 @@ describe('when given the load dkim results connection function', () => {
     dkimScan = await collections.dkim.save({
       timestamp: '2020-10-02T12:43:39Z',
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
@@ -342,6 +345,327 @@ describe('when given the load dkim results connection function', () => {
         }
 
         expect(dkimResults).toEqual(expectedStructure)
+      })
+    })
+    describe('using the orderBy argument', () => {
+      let dkimResultOne, dkimResultTwo, dkimResultThree
+      beforeEach(async () => {
+        await truncate()
+        dkimResultOne = await collections.dkimResults.save({
+          selector: 'a.selector.key',
+          record: 'a.record',
+          keyLength: 1,
+        })
+        dkimResultTwo = await collections.dkimResults.save({
+          selector: 'b.selector.key',
+          record: 'b.record',
+          keyLength: 2,
+        })
+        dkimResultThree = await collections.dkimResults.save({
+          selector: 'c.selector.key',
+          record: 'c.record',
+          keyLength: 3,
+        })
+        await collections.dkimToDkimResults.save({
+          _from: dkimScan._id,
+          _to: dkimResultOne._id,
+        })
+        await collections.dkimToDkimResults.save({
+          _from: dkimScan._id,
+          _to: dkimResultTwo._id,
+        })
+        await collections.dkimToDkimResults.save({
+          _from: dkimScan._id,
+          _to: dkimResultThree._id,
+        })
+      })
+      describe('ordering on SELECTOR', () => {
+        describe('direction set to ASC', () => {
+          it('returns the dkim result', async () => {
+            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const expectedDkimResult = await loader.load(dkimResultTwo._key)
+
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dkimId: dkimScan._id,
+              first: 5,
+              after: toGlobalId('dkimResult', dkimResultOne._key),
+              before: toGlobalId('dkimResult', dkimResultThree._key),
+              orderBy: {
+                field: 'selector',
+                direction: 'ASC',
+              },
+            }
+
+            const dkimResults = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                  node: {
+                    dkimId: dkimScan._id,
+                    ...expectedDkimResult,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                endCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+              },
+            }
+
+            expect(dkimResults).toEqual(expectedStructure)
+          })
+        })
+        describe('direction set to DESC', () => {
+          it('returns the dkim result', async () => {
+            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const expectedDkimResult = await loader.load(dkimResultTwo._key)
+
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dkimId: dkimScan._id,
+              first: 5,
+              after: toGlobalId('dkimResult', dkimResultThree._key),
+              before: toGlobalId('dkimResult', dkimResultOne._key),
+              orderBy: {
+                field: 'selector',
+                direction: 'DESC',
+              },
+            }
+
+            const dkimResults = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                  node: {
+                    dkimId: dkimScan._id,
+                    ...expectedDkimResult,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                endCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+              },
+            }
+
+            expect(dkimResults).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on RECORD', () => {
+        describe('direction set to ASC', () => {
+          it('returns the dkim result', async () => {
+            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const expectedDkimResult = await loader.load(dkimResultTwo._key)
+
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dkimId: dkimScan._id,
+              first: 5,
+              after: toGlobalId('dkimResult', dkimResultOne._key),
+              before: toGlobalId('dkimResult', dkimResultThree._key),
+              orderBy: {
+                field: 'record',
+                direction: 'ASC',
+              },
+            }
+
+            const dkimResults = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                  node: {
+                    dkimId: dkimScan._id,
+                    ...expectedDkimResult,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                endCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+              },
+            }
+
+            expect(dkimResults).toEqual(expectedStructure)
+          })
+        })
+        describe('direction set to DESC', () => {
+          it('returns the dkim result', async () => {
+            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const expectedDkimResult = await loader.load(dkimResultTwo._key)
+
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dkimId: dkimScan._id,
+              first: 5,
+              after: toGlobalId('dkimResult', dkimResultThree._key),
+              before: toGlobalId('dkimResult', dkimResultOne._key),
+              orderBy: {
+                field: 'record',
+                direction: 'DESC',
+              },
+            }
+
+            const dkimResults = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                  node: {
+                    dkimId: dkimScan._id,
+                    ...expectedDkimResult,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                endCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+              },
+            }
+
+            expect(dkimResults).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on KEY_LENGTH', () => {
+        describe('direction set to ASC', () => {
+          it('returns the dkim result', async () => {
+            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const expectedDkimResult = await loader.load(dkimResultTwo._key)
+
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dkimId: dkimScan._id,
+              first: 5,
+              after: toGlobalId('dkimResult', dkimResultOne._key),
+              before: toGlobalId('dkimResult', dkimResultThree._key),
+              orderBy: {
+                field: 'key-length',
+                direction: 'ASC',
+              },
+            }
+
+            const dkimResults = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                  node: {
+                    dkimId: dkimScan._id,
+                    ...expectedDkimResult,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                endCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+              },
+            }
+
+            expect(dkimResults).toEqual(expectedStructure)
+          })
+        })
+        describe('direction set to DESC', () => {
+          it('returns the dkim result', async () => {
+            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const expectedDkimResult = await loader.load(dkimResultTwo._key)
+
+            const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dkimId: dkimScan._id,
+              first: 5,
+              after: toGlobalId('dkimResult', dkimResultThree._key),
+              before: toGlobalId('dkimResult', dkimResultOne._key),
+              orderBy: {
+                field: 'key-length',
+                direction: 'DESC',
+              },
+            }
+
+            const dkimResults = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                  node: {
+                    dkimId: dkimScan._id,
+                    ...expectedDkimResult,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+                endCursor: toGlobalId('dkimResult', expectedDkimResult._key),
+              },
+            }
+
+            expect(dkimResults).toEqual(expectedStructure)
+          })
+        })
       })
     })
     describe('no dkim results are found', () => {
