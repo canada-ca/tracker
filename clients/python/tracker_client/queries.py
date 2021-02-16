@@ -3,7 +3,7 @@
 :var DocumentNode SIGN_IN_MUTATION: sign in and get authentication token
 :var DocumentNode ALL_DOMAINS_QUERY: get all organizations and their domains
 :var DocumentNode DOMAINS_BY_SLUG: get all domains for one organization
-:var DocumentNode DMARC_SUMMARY: get a domain's DMARC summary for one month 
+:var DocumentNode DMARC_SUMMARY: get a domain's DMARC summary for one month
 :var DocumentNode YEARLY_DMARC_SUMMARIES: get a domain's yearly DMARC summaries
 :var DocumentNode ALL_ORG_SUMMARIES: get summary metrics for all organizations
 :var DocumentNode SUMMARY_BY_SLUG: get summary metrics for one organization
@@ -47,7 +47,7 @@ ALL_DOMAINS_QUERY = gql(
                                 domain
                             }
                         }
-                    }     
+                    }
                 }
             }
         }

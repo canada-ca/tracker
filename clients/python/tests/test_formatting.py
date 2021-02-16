@@ -2,7 +2,7 @@
 
 The queries named in ALL_CAPS can be found in tracker_client/queries.py
 """
-from tracker_client.client import (
+from tracker_client.formatting import (
     format_all_domains,
     format_acronym_domains,
     format_name_domains,
