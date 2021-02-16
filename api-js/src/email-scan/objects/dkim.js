@@ -1,12 +1,14 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLInt, GraphQLObjectType } from 'graphql'
 import {
   connectionArgs,
   connectionDefinitions,
   globalIdField,
 } from 'graphql-relay'
+import { GraphQLDateTime } from 'graphql-scalars'
 
-import { domainType } from '../../domain/objects'
 import { dkimResultConnection } from './dkim-result'
+import { dkimResultOrder } from '../inputs'
+import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
 
 export const dkimType = new GraphQLObjectType({
@@ -24,13 +26,17 @@ export const dkimType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLString,
+      type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
-      resolve: ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => new Date(timestamp),
     },
     results: {
       type: dkimResultConnection.connectionType,
       args: {
+        orderBy: {
+          type: dkimResultOrder,
+          description: 'Ordering options for dkim result connections.',
+        },
         ...connectionArgs,
       },
       description: 'Individual scans results for each dkim selector.',
