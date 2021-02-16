@@ -11,7 +11,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: tracker-frontend
+      app: tracker-api
   strategy:
     rollingUpdate:
       maxSurge: 50%

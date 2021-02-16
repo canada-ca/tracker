@@ -7,22 +7,17 @@ patchesStrategicMerge:
 - publicgateway.yaml
 - knative/config/queues.yaml
 - arangodb.yaml
-secretGenerator:
-- envs:
-  - arangodb.env
-  name: arangodb
-  namespace: db
-- envs:
-  - api.env
-  name: api
-  namespace: api
-- envs:
-  - kiali.env
-  name: kiali
-  namespace: istio-system
-- envs:
-  - scanners.env
-  name: scanners
-  namespace: scanners
-generatorOptions:
-  disableNameSuffixHash: true
+replicas:
+- name: tracker-frontend
+  count: 2
+- name: tracker-api
+  count: 2
+- name: arango-deployment-replication-operator
+  count: 1
+- name: arango-deployment-operator
+  count: 1
+- name: arango-storage-operator
+  count: 1
+components:
+- ../namespaces
+- ../creds/prod

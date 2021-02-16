@@ -21,3 +21,7 @@ replicas:
   count: 1
 - name: arango-storage-operator
   count: 1
+components:
+- ../namespaces
+# Flux won't have .env files
+# - ../creds/prod

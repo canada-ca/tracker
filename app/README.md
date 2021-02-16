@@ -15,7 +15,7 @@ To generate the config needed to run a copy of the app, we need to define some `
 First, the secret for the result-queue to insert scan results into to the database.
 
 ```
-cat <<'EOF' > app/minikube/scanners.env
+cat <<'EOF' > app/creds/dev/scanners.env
 DB_PASS=test
 DB_HOST=arangodb.db:8529
 DB_USER=root
@@ -23,12 +23,13 @@ DB_NAME=track_dmarc
 SA_USER_NAME=superuser@department.gc.ca
 SA_PASSWORD=superadminpassword
 SA_DISPLAY_NAME=superuser
+GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 EOF
 ```
 Next some default credentials so we can log in to the Kiali observability tool.
 
 ```
-cat <<'EOF' > app/minikube/kiali.env
+cat <<'EOF' > app/creds/dev/kiali.env
 username=admin
 passphrase=admin
 EOF
@@ -36,7 +37,7 @@ EOF
 Then a password for our database.
 
 ```
-cat <<'EOF' > app/minikube/arangodb.env
+cat <<'EOF' > app/creds/dev/arangodb.env
 username=root
 password=test
 EOF
@@ -45,12 +46,13 @@ EOF
 And finally the credentials needed for the API to talk to the database, and collaborative services like Notify.
 
 ```bash
-cat <<'EOF' > app/minikube/api.env
+cat <<'EOF' > app/creds/dev/api.env
 DB_PASS=test
 DB_URL=http://arangodb.db:8529
 DB_NAME=track_dmarc
 AUTHENTICATED_KEY=alonghash
 SIGN_IN_KEY=alonghash
+CIPHER_KEY=1234averyveryveryveryverylongkey
 NOTIFICATION_API_KEY=test_key-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 NOTIFICATION_API_URL=https://api.notification.alpha.canada.ca
 DMARC_REPORT_API_SECRET=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -62,13 +64,16 @@ COST_LIMIT=5000
 SCALAR_COST=1
 OBJECT_COST=1
 LIST_FACTOR=1
+DNS_SCANNER_ENDPOINT=dns.scanners
+HTTPS_SCANNER_ENDPOINT=https.scanners
+SSL_SCANNER_ENDPOINT=ssl.scanners
 EOF
 ```
 
 Next we can start minikube (throwing lots of resources at it).
 
 ```
-minikube start --cpus 4 --memory 20480
+minikube start --cpus 8 --memory 20480
 ```
 
 Last we use Kustomize to generate our config (creating Kubernetes secrets from the .env files we just created) and feed that config to `kubectl apply`.
@@ -93,15 +98,4 @@ The app lets you connect to both ports 80 and 443 (which is using a self signed 
 
 ```bash
 $ minikube service list
-|-----------------|---------------------------|--------------|---------------------------|
-|    NAMESPACE    |           NAME            | TARGET PORT  |            URL            |
-|-----------------|---------------------------|--------------|---------------------------|
-| api             | postgres                  | No node port |
-| api             | tracker-api               | No node port |
-| cert-manager    | cert-manager              | No node port |
-| cert-manager    | cert-manager-webhook      | No node port |
-| default         | kubernetes                | No node port |
-| frontend        | tracker-frontend          | No node port |
-| istio-system    | istio-ingressgateway      | http2/80     | http://192.168.49.2:32722 |
-|                 |                           | https/443    | http://192.168.49.2:32114 |
 ```
