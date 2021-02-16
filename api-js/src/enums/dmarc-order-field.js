@@ -8,10 +8,6 @@ export const DmarcOrderField = new GraphQLEnumType({
       value: 'timestamp',
       description: 'Order dmarc summaries by timestamp.',
     },
-    DMARC_PHASE: {
-      value: 'dmarc-phase',
-      description: 'Order dmarc summaries by dmarc phase.',
-    },
     RECORD: {
       value: 'record',
       description: 'Order dmarc summaries by record.',

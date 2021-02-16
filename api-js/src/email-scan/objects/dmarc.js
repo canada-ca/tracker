@@ -29,11 +29,6 @@ export const dmarcType = new GraphQLObjectType({
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => timestamp,
     },
-    dmarcPhase: {
-      type: GraphQLInt,
-      description: `DMARC phase found during scan.`,
-      resolve: ({ dmarcPhase }) => dmarcPhase,
-    },
     record: {
       type: GraphQLString,
       description: `DMARC record retrieved during scan.`,
