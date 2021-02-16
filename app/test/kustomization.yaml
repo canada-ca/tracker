@@ -17,22 +17,6 @@ replicas:
   count: 1
 - name: arango-storage-operator
   count: 1
-secretGenerator:
-- envs:
-  - arangodb.env
-  name: arangodb
-  namespace: db
-- envs:
-  - api.env
-  name: api
-  namespace: api
-- envs:
-  - kiali.env
-  name: kiali
-  namespace: istio-system
-- envs:
-  - scanners.env
-  name: scanners
-  namespace: scanners
-generatorOptions:
-  disableNameSuffixHash: true
+components:
+- ../namespaces
+- ../creds/dev
