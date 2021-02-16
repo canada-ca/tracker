@@ -46,6 +46,8 @@ JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
 def create_transport(url, auth_token=None):
     """Create and return a gql transport object
 
+    Users should rarely, if ever, need to call this
+
     :param str url: the Tracker GraphQL endpoint url
     :param str auth_token: JWT auth token, omit when initially obtaining the token (default is none)
     :return: A gql transport for given url
@@ -117,6 +119,9 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
 def execute_query(client, query, params=None):
     """Executes a query on given client, with given parameters.
 
+    Intended for internal use, but if for some reason you need an unformatted
+    response from the API you could call this.
+
     :param Client client: a gql client to execute the query on
     :param DocumentNode query: a gql query string that has been parsed with gql()
     :param dict params: variables to pass along with query
@@ -156,6 +161,23 @@ def get_all_domains(client):
     :param Client client: a gql Client object
     :return: formatted JSON data with all organizations and their domains
     :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_all_domains(client))
+    {
+        "FOO": [
+            "foo.bar",
+            "foo.bar.baz"
+        ],
+        "BAR": [
+            "fizz.buzz",
+            "buzz.bang",
+            "ab.cd.ef",
+        ]
+    }
     """
     result = execute_query(client, ALL_DOMAINS_QUERY)
     # If there is an error the result contains the key "error"
@@ -172,6 +194,18 @@ def get_domains_by_acronym(client, acronym):
     :param str acronym: an acronym referring to an organization
     :return: formatted JSON data with an organization's domains
     :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_domains_by_acronym(client, "foo"))
+    {
+        "FOO": [
+            "foo.bar",
+            "foo.bar.baz"
+        ]
+    }
     """
     # API doesn't allow query by acronym so we filter the get_all_domains result
     result = execute_query(client, ALL_DOMAINS_QUERY)
@@ -199,6 +233,18 @@ def get_domains_by_name(client, name):
     :param str name: the full name of an organization
     :return: formatted JSON data with an organization's domains
     :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_domains_by_name(client, "foo bar"))
+    {
+        "FOO": [
+            "foo.bar",
+            "foo.bar.baz"
+        ]
+    }
     """
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"orgSlug": slugified_name}
@@ -220,6 +266,25 @@ def get_dmarc_summary(client, domain, month, year):
     :param int year: positive integer representing a year
     :return: formatted JSON data with a DMARC summary
     :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_dmarc_summary(client, "foo.bar", "september", 2020))
+    {
+        "foo.bar": {
+            "month": "SEPTEMBER",
+            "year": "2020",
+            "categoryPercentages": {
+                "fullPassPercentage": 87,
+                "passSpfOnlyPercentage": 0,
+                "passDkimOnlyPercentage": 6,
+                "failPercentage": 8,
+                "totalMessages": 10534
+            }
+        }
+    }
     """
     params = {"domain": domain, "month": month.upper(), "year": str(year)}
 
@@ -238,6 +303,40 @@ def get_yearly_dmarc_summaries(client, domain):
     :param str domain: domain to get DMARC summaries for
     :return: formatted JSON data with yearly DMARC summaries
     :rtype: str
+
+    :Example:
+
+    Output is truncated, you should expect more than 2 reports in the list
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_yearly_dmarc_summaries(client, "foo.bar"))
+    {
+        "foo.bar": [
+            {
+                "month": "AUGUST",
+                "year": "2020",
+                "categoryPercentages": {
+                    "fullPassPercentage": 90,
+                    "passSpfOnlyPercentage": 0,
+                    "passDkimOnlyPercentage": 5,
+                    "failPercentage": 5,
+                    "totalMessages": 7045
+                }
+            },
+            {
+                "month": "JULY",
+                "year": "2020",
+                "categoryPercentages": {
+                    "fullPassPercentage": 82,
+                    "passSpfOnlyPercentage": 0,
+                    "passDkimOnlyPercentage": 11,
+                    "failPercentage": 8,
+                    "totalMessages": 6647
+                }
+            },
+        ]
+    }  
     """
     params = {"domain": domain}
 
@@ -255,6 +354,84 @@ def get_all_summaries(client):
     :param Client client: a gql Client object
     :return: formatted JSON data with all organizations and their metrics
     :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_all_summaries(client))
+    {
+        "FOO": {
+            "domainCount": 10,
+            "summaries": {
+                "web": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 1,
+                            "percentage": 10
+                        },
+                        {
+                            "name": "fail",
+                            "count": 9,
+                            "percentage": 90
+                        }
+                    ]
+                },
+                "mail": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 5,
+                            "percentage": 50
+                        },
+                        {
+                            "name": "fail",
+                            "count": 5,
+                            "percentage": 50
+                        }
+                    ]
+                }
+            }
+        },
+        "BAR": {
+            "domainCount": 10,
+            "summaries": {
+                "web": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 5,
+                            "percentage": 50
+                        },
+                        {
+                            "name": "fail",
+                            "count": 5,
+                            "percentage": 50
+                        }
+                    ]
+                },
+                "mail": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 1,
+                            "percentage": 10
+                        },
+                        {
+                            "name": "fail",
+                            "count": 9,
+                            "percentage": 90
+                        }
+                    ]
+                }
+            }
+        }
+    }
     """
     result = execute_query(client, ALL_ORG_SUMMARIES)
 
@@ -271,6 +448,49 @@ def get_summary_by_acronym(client, acronym):
     :param str acronym: an acronym referring to an organization
     :return: formatted JSON with summary metrics for an organization
     :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_summary_by_acronym(client, "foo"))
+    {
+        "FOO": {
+            "domainCount": 10,
+            "summaries": {
+                "web": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 1,
+                            "percentage": 10
+                        },
+                        {
+                            "name": "fail",
+                            "count": 9,
+                            "percentage": 90
+                        }
+                    ]
+                },
+                "mail": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 5,
+                            "percentage": 50
+                        },
+                        {
+                            "name": "fail",
+                            "count": 5,
+                            "percentage": 50
+                        }
+                    ]
+                }
+            }
+        }
+    }
     """
     # API doesn't allow query by acronym so we filter the get_all_summaries result
     result = execute_query(client, ALL_ORG_SUMMARIES)
@@ -296,6 +516,49 @@ def get_summary_by_name(client, name):
     :param str name: the full name of an organization
     :return: formatted JSON data with summary metrics for an organization
     :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_summary_by_name(client, "foo bar"))
+    {
+        "FOO": {
+            "domainCount": 10,
+            "summaries": {
+                "web": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 1,
+                            "percentage": 10
+                        },
+                        {
+                            "name": "fail",
+                            "count": 9,
+                            "percentage": 90
+                        }
+                    ]
+                },
+                "mail": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 5,
+                            "percentage": 50
+                        },
+                        {
+                            "name": "fail",
+                            "count": 5,
+                            "percentage": 50
+                        }
+                    ]
+                }
+            }
+        }
+    }
     """
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"orgSlug": slugified_name}
@@ -315,6 +578,10 @@ def get_domain_results(client, domain):
     :param str domain: domain to get results for
     :return: formatted JSON data with scan results for the domain
     :rtype: str
+
+    :Example:
+
+    Coming soon, function likely to change
     """
     params = {"domain": domain}
 
@@ -333,6 +600,24 @@ def get_domain_status(client, domain):
     :param str domain: domain to get the status of
     :return: formatted JSON data with the domain's status
     :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_domain_status(client, "foo.bar"))
+    {
+        "foo.bar": {
+            "lastRan": "2021-01-23 22:33:26.921529",
+            "status": {
+                "https": "FAIL",
+                "ssl": "FAIL",
+                "dmarc": "PASS",
+                "dkim": "PASS",
+                "spf": "PASS"
+            }
+        }
+    }
     """
     params = {"domain": domain}
 
