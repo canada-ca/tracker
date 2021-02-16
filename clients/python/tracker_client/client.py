@@ -1,3 +1,5 @@
+"""Provides functions that get and format JSON data from Tracker (https://github.com/canada-ca/tracker)"""
+
 import json
 import os
 import re
@@ -25,6 +27,7 @@ from queries import (
 
 
 JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
+"""Regex to validate a JWT"""
 
 
 def create_transport(url, auth_token=None):

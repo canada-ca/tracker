@@ -1,6 +1,21 @@
+""" This module contains the gql documents used by client.py to query the Tracker API
+
+:var DocumentNode SIGN_IN_MUTATION: sign in and get authentication token
+:var DocumentNode ALL_DOMAINS_QUERY: get all organizations and their domains
+:var DocumentNode DOMAINS_BY_SLUG: get all domains for one organization
+:var DocumentNode DMARC_SUMMARY: get a domain's DMARC summary for one month 
+:var DocumentNode YEARLY_DMARC_SUMMARIES: get a domain's yearly DMARC summaries
+:var DocumentNode ALL_ORG_SUMMARIES: get summary metrics for all organizations
+:var DocumentNode SUMMARY_BY_SLUG: get summary metrics for one organization
+:var DocumentNode DOMAIN_RESULTS: get scan results for a domain
+:var DocumentNode DOMAIN_STATUS: get pass/fail compliance statuses for a domain
+"""
+
 from gql import gql
 
-
+# Sign in to Tracker and obtain an authentication token
+# :param dict creds: a dict with a username and password
+# Mutation variables should look like {"creds":{"userName": ${username}, "password": ${password}}}
 SIGNIN_MUTATION = gql(
     """
     mutation signIn($creds: SignInInput!) {
@@ -17,6 +32,8 @@ SIGNIN_MUTATION = gql(
     """
 )
 
+# Get all organizations the user belongs to and all domains those organizations own
+# Pagination details (edges and nodes) are stripped during formatting of response
 ALL_DOMAINS_QUERY = gql(
     """
     query getAllDomains {
@@ -38,6 +55,11 @@ ALL_DOMAINS_QUERY = gql(
     """
 )
 
+# Get an organization by its slugified name and all domains that organization owns
+# slugified-looks-like-this (all lowercase, alphanumeric, spaces replaced with hyphens)
+# :param str orgSlug: a slugified organization name
+# Query variables should look like {"orgSlug": ${slugified-str} }
+# Pagination details (edges and nodes) are stripped during formatting of response
 DOMAINS_BY_SLUG = gql(
     """
     query orgBySlug($orgSlug: Slug!){
@@ -55,6 +77,11 @@ DOMAINS_BY_SLUG = gql(
     """
 )
 
+# Get the DMARC summary for one month for one domain
+# :param str domain: url to get DMARC summary for
+# :param str month: full name of a month in ALL CAPS to get summary for
+# :param str year: year to get summary for
+# Query variables should look like: {"domain": ${domain_url}, "month": ${MONTH_IN_ALL_CAPS}, "year": ${numeric_year_as_str}}
 DMARC_SUMMARY = gql(
     """
     query domainDMARCSummary(
@@ -80,6 +107,9 @@ DMARC_SUMMARY = gql(
     """
 )
 
+# Get yearly DMARC summaries for a domain
+# :param str domain: url to get DMARC summary for
+# Query variables should look like {"domain": ${domain_url} }
 DMARC_YEARLY_SUMMARIES = gql(
     """
     query domainAllDMARCSummaries($domain: DomainScalar!) {
@@ -101,6 +131,8 @@ DMARC_YEARLY_SUMMARIES = gql(
     """
 )
 
+# Get summary metrics for all organizations user is a member of
+# Pagination details (edges and nodes) are stripped during formatting of response
 ALL_ORG_SUMMARIES = gql(
     """
     query getAllSummaries {
@@ -135,6 +167,10 @@ ALL_ORG_SUMMARIES = gql(
     """
 )
 
+# Get an organization by its slugified name and get summary metrics
+# slugified-looks-like-this (all lowercase, alphanumeric, spaces replaced with hyphens)
+# :param str orgSlug: a slugified organization name
+#  Query variables should look like {"orgSlug": ${slugified-str} }
 SUMMARY_BY_SLUG = gql(
     """
     query getSummaryBySlug($orgSlug: Slug!) {
@@ -164,6 +200,11 @@ SUMMARY_BY_SLUG = gql(
     """
 )
 
+# Get scan results for a domain
+# :param str domain: url to get scan results
+# Query variables should look like {"domain": ${domain_url} }
+# Returns many fields, guidance tags are likely to be of most interest
+# Pagination details (edges and nodes) are stripped during formatting of response
 DOMAIN_RESULTS = gql(
     """
   query GetScanResults($domain: DomainScalar!) {
@@ -317,6 +358,9 @@ DOMAIN_RESULTS = gql(
     """
 )
 
+# Get pass/fail status indicators for a domain's compliance
+# :param str domain: url to get scan results
+# Query variables should look like {"domain": ${domain_url} }
 DOMAIN_STATUS = gql(
     """
   query GetDomainStatus($domain: DomainScalar!) {
