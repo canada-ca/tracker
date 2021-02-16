@@ -1,3 +1,4 @@
+"""Tests for functions that get scan results for a domain"""
 import json
 
 from gql import Client

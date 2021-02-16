@@ -1,3 +1,4 @@
+"""Tests for functions that get domain lists"""
 import json
 
 from gql import Client

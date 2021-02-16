@@ -1,3 +1,4 @@
+"""Tests for gql related utility functions"""
 import re
 import pytest
 

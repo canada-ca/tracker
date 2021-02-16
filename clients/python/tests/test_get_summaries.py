@@ -1,3 +1,4 @@
+"""Tests for functions that get summary metrics"""
 import json
 
 from gql import Client
