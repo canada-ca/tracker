@@ -7,27 +7,98 @@ export const dkimLoaderConnectionsByDomainId = (
   userKey,
   cleanseInput,
   i18n,
-) => async ({ domainId, startDate, endDate, after, before, first, last }) => {
+) => async ({
+  domainId,
+  startDate,
+  endDate,
+  after,
+  before,
+  first,
+  last,
+  orderBy,
+}) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(dkimScan._key) > TO_NUMBER(${afterId})`
+    if (typeof orderBy === 'undefined') {
+      afterTemplate = aql`FILTER TO_NUMBER(dkimScan._key) > TO_NUMBER(${afterId})`
+    } else {
+      let afterTemplateDirection
+      if (orderBy.direction === 'ASC') {
+        afterTemplateDirection = aql`>`
+      } else {
+        afterTemplateDirection = aql`<`
+      }
+
+      let dkimField, documentField
+      /* istanbul ignore else */
+      if (orderBy.field === 'timestamp') {
+        documentField = aql`DOCUMENT(dkim, ${afterId}).timestamp`
+        dkimField = aql`dkimScan.timestamp`
+      }
+
+      afterTemplate = aql`
+        FILTER ${dkimField} ${afterTemplateDirection} ${documentField}
+        OR (${dkimField} == ${documentField}
+        AND TO_NUMBER(dkimScan._key) > TO_NUMBER(${afterId}))
+      `
+    }
   }
 
   let beforeTemplate = aql``
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    beforeTemplate = aql`FILTER TO_NUMBER(dkimScan._key) < TO_NUMBER(${beforeId})`
+    if (typeof orderBy === 'undefined') {
+      beforeTemplate = aql`FILTER TO_NUMBER(dkimScan._key) < TO_NUMBER(${beforeId})`
+    } else {
+      let beforeTemplateDirection
+      if (orderBy.direction === 'ASC') {
+        beforeTemplateDirection = aql`<`
+      } else {
+        beforeTemplateDirection = aql`>`
+      }
+
+      let dkimField, documentField
+      /* istanbul ignore else */
+      if (orderBy.field === 'timestamp') {
+        documentField = aql`DOCUMENT(dkim, ${beforeId}).timestamp`
+        dkimField = aql`dkimScan.timestamp`
+      }
+
+      beforeTemplate = aql`
+        FILTER ${dkimField} ${beforeTemplateDirection} ${documentField}
+        OR (${dkimField} == ${documentField} 
+        AND TO_NUMBER(dkimScan._key) < TO_NUMBER(${beforeId}))
+      `
+    }
   }
 
   let startDateTemplate = aql``
   if (typeof startDate !== 'undefined') {
-    startDateTemplate = aql`FILTER dkimScan.timestamp >= ${startDate}`
+    startDateTemplate = aql`
+      FILTER DATE_FORMAT(
+        DATE_TIMESTAMP(dkimScan.timestamp),
+        "%y-%m-%d"
+      ) >= 
+      DATE_FORMAT(
+        DATE_TIMESTAMP(${startDate}),
+        "%y-%m-%d"
+      )
+    `
   }
 
   let endDateTemplate = aql``
   if (typeof endDate !== 'undefined') {
-    endDateTemplate = aql`FILTER dkimScan.timestamp <= ${endDate}`
+    endDateTemplate = aql`
+      FILTER DATE_FORMAT(
+        DATE_TIMESTAMP(dkimScan.timestamp),
+        "%y-%m-%d"
+      ) <= 
+      DATE_FORMAT(
+        DATE_TIMESTAMP(${endDate}),
+        "%y-%m-%d"
+      )
+    `
   }
 
   let limitTemplate = aql``
@@ -73,9 +144,9 @@ export const dkimLoaderConnectionsByDomainId = (
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-      limitTemplate = aql`SORT dkimScan._key ASC LIMIT TO_NUMBER(${first})`
+      limitTemplate = aql`dkimScan._key ASC LIMIT TO_NUMBER(${first})`
     } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-      limitTemplate = aql`SORT dkimScan._key DESC LIMIT TO_NUMBER(${last})`
+      limitTemplate = aql`dkimScan._key DESC LIMIT TO_NUMBER(${last})`
     } else {
       console.warn(
         `User: ${userKey} tried to have \`first\` and \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
@@ -97,6 +168,48 @@ export const dkimLoaderConnectionsByDomainId = (
     )
   }
 
+  let hasNextPageFilter = aql`FILTER TO_NUMBER(dkimScan._key) > TO_NUMBER(LAST(retrievedDkim)._key)`
+  let hasPreviousPageFilter = aql`FILTER TO_NUMBER(dkimScan._key) < TO_NUMBER(FIRST(retrievedDkim)._key)`
+  if (typeof orderBy !== 'undefined') {
+    let hasNextPageDirection
+    let hasPreviousPageDirection
+    if (orderBy.direction === 'ASC') {
+      hasNextPageDirection = aql`>`
+      hasPreviousPageDirection = aql`<`
+    } else {
+      hasNextPageDirection = aql`<`
+      hasPreviousPageDirection = aql`>`
+    }
+
+    let dkimField, hasNextPageDocumentField, hasPreviousPageDocumentField
+    /* istanbul ignore else */
+    if (orderBy.field === 'timestamp') {
+      dkimField = aql`dkimScan.timestamp`
+      hasNextPageDocumentField = aql`DOCUMENT(dkim, LAST(retrievedDkim)._key).timestamp`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dkim, FIRST(retrievedDkim)._key).timestamp`
+    }
+
+    hasNextPageFilter = aql`
+      FILTER ${dkimField} ${hasNextPageDirection} ${hasNextPageDocumentField}
+      OR (${dkimField} == ${hasNextPageDocumentField}
+      AND TO_NUMBER(dkimScan._key) > TO_NUMBER(LAST(retrievedDkim)._key))
+    `
+
+    hasPreviousPageFilter = aql`
+      FILTER ${dkimField} ${hasPreviousPageDirection} ${hasPreviousPageDocumentField}
+      OR (${dkimField} == ${hasPreviousPageDocumentField}
+      AND TO_NUMBER(dkimScan._key) < TO_NUMBER(FIRST(retrievedDkim)._key))
+    `
+  }
+
+  let sortByField = aql``
+  if (typeof orderBy !== 'undefined') {
+    /* istanbul ignore else */
+    if (orderBy.field === 'timestamp') {
+      sortByField = aql`dkimScan.timestamp ${orderBy.direction},`
+    }
+  }
+
   let sortString
   if (typeof last !== 'undefined') {
     sortString = aql`DESC`
@@ -116,6 +229,9 @@ export const dkimLoaderConnectionsByDomainId = (
         ${beforeTemplate}
         ${startDateTemplate}
         ${endDateTemplate}
+
+        SORT
+        ${sortByField}
         ${limitTemplate}
         RETURN MERGE({ id: dkimScan._key, _type: "dkim" }, dkimScan)
     )
@@ -123,16 +239,16 @@ export const dkimLoaderConnectionsByDomainId = (
     LET hasNextPage = (LENGTH(
       FOR dkimScan IN dkim
         FILTER dkimScan._key IN dkimKeys
-        FILTER TO_NUMBER(dkimScan._key) > TO_NUMBER(LAST(retrievedDkim)._key)
-        SORT dkimScan._key ${sortString} LIMIT 1
+        ${hasNextPageFilter}
+        SORT ${sortByField} dkimScan._key ${sortString} LIMIT 1
         RETURN dkimScan
     ) > 0 ? true : false)
     
     LET hasPreviousPage = (LENGTH(
       FOR dkimScan IN dkim
         FILTER dkimScan._key IN dkimKeys
-        FILTER TO_NUMBER(dkimScan._key) < TO_NUMBER(FIRST(retrievedDkim)._key)
-        SORT dkimScan._key ${sortString} LIMIT 1
+        ${hasPreviousPageFilter}
+        SORT ${sortByField} dkimScan._key ${sortString} LIMIT 1
         RETURN dkimScan
     ) > 0 ? true : false)
 

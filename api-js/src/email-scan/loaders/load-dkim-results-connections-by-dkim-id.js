@@ -7,17 +7,73 @@ export const dkimResultsLoaderConnectionByDkimId = (
   userKey,
   cleanseInput,
   i18n,
-) => async ({ dkimId, after, before, first, last }) => {
+) => async ({ dkimId, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(dkimResult._key) > TO_NUMBER(${afterId})`
+    if (typeof orderBy === 'undefined') {
+      afterTemplate = aql`FILTER TO_NUMBER(dkimResult._key) > TO_NUMBER(${afterId})`
+    } else {
+      let afterTemplateDirection
+      if (orderBy.direction === 'ASC') {
+        afterTemplateDirection = aql`>`
+      } else {
+        afterTemplateDirection = aql`<`
+      }
+
+      let dkimResultField, documentField
+      /* istanbul ignore else */
+      if (orderBy.field === 'selector') {
+        dkimResultField = aql`dkimResult.selector`
+        documentField = aql`DOCUMENT(dkimResults, ${afterId}).selector`
+      } else if (orderBy.field === 'record') {
+        dkimResultField = aql`dkimResult.record`
+        documentField = aql`DOCUMENT(dkimResults, ${afterId}).record`
+      } else if (orderBy.field === 'key-length') {
+        dkimResultField = aql`dkimResult.keyLength`
+        documentField = aql`DOCUMENT(dkimResults, ${afterId}).keyLength`
+      }
+
+      afterTemplate = aql`
+        FILTER ${dkimResultField} ${afterTemplateDirection} ${documentField}
+        OR (${dkimResultField} == ${documentField}
+        AND TO_NUMBER(dkimResult._key) > TO_NUMBER(${afterId}))
+      `
+    }
   }
 
   let beforeTemplate = aql``
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    beforeTemplate = aql`FILTER TO_NUMBER(dkimResult._key) < TO_NUMBER(${beforeId})`
+    if (typeof orderBy === 'undefined') {
+      beforeTemplate = aql`FILTER TO_NUMBER(dkimResult._key) < TO_NUMBER(${beforeId})`
+    } else {
+      let beforeTemplateDirection
+      if (orderBy.direction === 'ASC') {
+        beforeTemplateDirection = aql`<`
+      } else {
+        beforeTemplateDirection = aql`>`
+      }
+
+      let dkimResultField, documentField
+      /* istanbul ignore else */
+      if (orderBy.field === 'selector') {
+        dkimResultField = aql`dkimResult.selector`
+        documentField = aql`DOCUMENT(dkimResults, ${beforeId}).selector`
+      } else if (orderBy.field === 'record') {
+        dkimResultField = aql`dkimResult.record`
+        documentField = aql`DOCUMENT(dkimResults, ${beforeId}).record`
+      } else if (orderBy.field === 'key-length') {
+        dkimResultField = aql`dkimResult.keyLength`
+        documentField = aql`DOCUMENT(dkimResults, ${beforeId}).keyLength`
+      }
+
+      beforeTemplate = aql`
+        FILTER ${dkimResultField} ${beforeTemplateDirection} ${documentField}
+        OR (${dkimResultField} == ${documentField}
+        AND TO_NUMBER(dkimResult._key) < TO_NUMBER(${beforeId}))
+      `
+    }
   }
 
   let limitTemplate = aql``
@@ -63,9 +119,9 @@ export const dkimResultsLoaderConnectionByDkimId = (
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-      limitTemplate = aql`SORT dkimResult._key ASC LIMIT TO_NUMBER(${first})`
+      limitTemplate = aql`dkimResult._key ASC LIMIT TO_NUMBER(${first})`
     } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-      limitTemplate = aql`SORT dkimResult._key DESC LIMIT TO_NUMBER(${last})`
+      limitTemplate = aql`dkimResult._key DESC LIMIT TO_NUMBER(${last})`
     }
   } else {
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -76,6 +132,60 @@ export const dkimResultsLoaderConnectionByDkimId = (
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
     )
+  }
+
+  let hasNextPageFilter = aql`FILTER TO_NUMBER(dkimResult._key) > TO_NUMBER(LAST(retrievedDkimResults)._key)`
+  let hasPreviousPageFilter = aql`FILTER TO_NUMBER(dkimResult._key) < TO_NUMBER(FIRST(retrievedDkimResults)._key)`
+  if (typeof orderBy !== 'undefined') {
+    let hasNextPageDirection
+    let hasPreviousPageDirection
+    if (orderBy.direction === 'ASC') {
+      hasNextPageDirection = aql`>`
+      hasPreviousPageDirection = aql`<`
+    } else {
+      hasNextPageDirection = aql`<`
+      hasPreviousPageDirection = aql`>`
+    }
+
+    let dkimResultField, hasNextPageDocumentField, hasPreviousPageDocumentField
+    /* istanbul ignore else */
+    if (orderBy.field === 'selector') {
+      dkimResultField = aql`dkimResult.selector`
+      hasNextPageDocumentField = aql`DOCUMENT(dkimResults, LAST(retrievedDkimResults)._key).selector`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dkimResults, FIRST(retrievedDkimResults)._key).selector`
+    } else if (orderBy.field === 'record') {
+      dkimResultField = aql`dkimResult.record`
+      hasNextPageDocumentField = aql`DOCUMENT(dkimResults, LAST(retrievedDkimResults)._key).record`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dkimResults, FIRST(retrievedDkimResults)._key).record`
+    } else if (orderBy.field === 'key-length') {
+      dkimResultField = aql`dkimResult.keyLength`
+      hasNextPageDocumentField = aql`DOCUMENT(dkimResults, LAST(retrievedDkimResults)._key).keyLength`
+      hasPreviousPageDocumentField = aql`DOCUMENT(dkimResults, FIRST(retrievedDkimResults)._key).keyLength`
+    }
+
+    hasNextPageFilter = aql`
+      FILTER ${dkimResultField} ${hasNextPageDirection} ${hasNextPageDocumentField}
+      OR (${dkimResultField} == ${hasNextPageDocumentField}
+      AND TO_NUMBER(dkimResult._key) > TO_NUMBER(LAST(retrievedDkimResults)._key))
+    `
+
+    hasPreviousPageFilter = aql`
+      FILTER ${dkimResultField} ${hasPreviousPageDirection} ${hasPreviousPageDocumentField}
+      OR (${dkimResultField} == ${hasPreviousPageDocumentField}
+      AND TO_NUMBER(dkimResult._key) < TO_NUMBER(FIRST(retrievedDkimResults)._key))
+    `
+  }
+
+  let sortByField = aql``
+  if (typeof orderBy !== 'undefined') {
+    /* istanbul ignore else */
+    if (orderBy.field === 'selector') {
+      sortByField = aql`dkimResult.selector ${orderBy.direction},`
+    } else if (orderBy.field === 'record') {
+      sortByField = aql`dkimResult.record ${orderBy.direction},`
+    } else if (orderBy.field === 'key-length') {
+      sortByField = aql`dkimResult.keyLength ${orderBy.direction},`
+    }
   }
 
   let sortString
@@ -95,6 +205,9 @@ export const dkimResultsLoaderConnectionByDkimId = (
         FILTER dkimResult._key IN dkimResultKeys
         ${afterTemplate}
         ${beforeTemplate}
+
+        SORT
+        ${sortByField}
         ${limitTemplate}
         RETURN MERGE({ id: dkimResult._key, _type: "dkimResult" }, dkimResult)
     )
@@ -102,16 +215,16 @@ export const dkimResultsLoaderConnectionByDkimId = (
     LET hasNextPage = (LENGTH(
       FOR dkimResult IN dkimResults
         FILTER dkimResult._key IN dkimResultKeys
-        FILTER TO_NUMBER(dkimResult._key) > TO_NUMBER(LAST(retrievedDkimResults)._key)
-        SORT dkimResult._key ${sortString} LIMIT 1
+        ${hasNextPageFilter}
+        SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
         RETURN dkimResult
     ) > 0 ? true : false)
     
     LET hasPreviousPage = (LENGTH(
       FOR dkimResult IN dkimResults
         FILTER dkimResult._key IN dkimResultKeys
-        FILTER TO_NUMBER(dkimResult._key) < TO_NUMBER(FIRST(retrievedDkimResults)._key)
-        SORT dkimResult._key ${sortString} LIMIT 1
+        ${hasPreviousPageFilter}
+        SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
         RETURN dkimResult
     ) > 0 ? true : false)
 
