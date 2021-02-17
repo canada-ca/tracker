@@ -6,7 +6,12 @@ from core import create_client, execute_query, get_auth_token
 from domains import get_all_domains, get_domains_by_acronym, get_domains_by_name
 from dmarc import get_dmarc_summary, get_yearly_dmarc_summaries
 from summary import get_all_summaries, get_summary_by_acronym, get_summary_by_name
-from results import get_all_results, get_web_results, get_email_results, get_domain_status
+from results import (
+    get_all_results,
+    get_web_results,
+    get_email_results,
+    get_domain_status,
+)
 
 
 def main():  # pragma: no cover

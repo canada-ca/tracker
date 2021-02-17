@@ -2,7 +2,12 @@ import json
 
 from core import execute_query
 from queries import ALL_RESULTS, WEB_RESULTS, EMAIL_RESULTS, DOMAIN_STATUS
-from formatting import format_all_results, format_web_results, format_email_results, format_domain_status
+from formatting import (
+    format_all_results,
+    format_web_results,
+    format_email_results,
+    format_domain_status,
+)
 
 
 def get_all_results(client, domain):
