@@ -12,6 +12,8 @@ from tracker_client.formatting import (
     format_acronym_summary,
     format_name_summary,
     format_all_results,
+    format_web_results,
+    format_email_results,
     format_domain_status,
 )
 
@@ -56,9 +58,19 @@ def test_format_name_summary(name_summary_input, org_summary_output):
     assert format_name_summary(name_summary_input) == org_summary_output
 
 
-def test_format_all_results(scan_results_input, scan_results_output):
+def test_format_all_results(all_results_input, all_results_output):
     """Test formatting of ALL_RESULTS results"""
-    assert format_all_results(scan_results_input) == scan_results_output
+    assert format_all_results(all_results_input) == all_results_output
+
+
+def test_format_web_results(web_results_input, web_results_output):
+    """Test formatting of WEB_RESULTS results"""
+    assert format_web_results(web_results_input) == web_results_output
+
+
+def test_format_email_results(email_results_input, email_results_output):
+    """Test formatting of EMAIL_RESULTS results"""
+    assert format_email_results(email_results_input) == email_results_output
 
 
 def test_format_domain_status(domain_status_input, domain_status_output):
