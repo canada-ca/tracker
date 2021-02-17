@@ -264,7 +264,7 @@ def Server(server_client=requests):
             try:
                 domain = inbound_payload["domain"]
                 uuid = inbound_payload["uuid"]
-                selectors = inbound_payload["selectors"]
+                selectors = inbound_payload.get("selectors", [])
                 domain_key = inbound_payload["domain_key"]
             except KeyError:
                 msg = f"Invalid scan request format received: {str(inbound_payload)}"

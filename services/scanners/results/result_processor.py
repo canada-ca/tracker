@@ -10,6 +10,7 @@ import random
 import asyncio
 import datetime
 import requests
+import redis
 from arango import ArangoClient
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
@@ -22,12 +23,14 @@ DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
 REDIS_URL = os.getenv("REDIS_URL")
+REDIS_PORT = os.getenv("REDIS_PORT")
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
 
 def publish_results(results, scan_type, uuid):
-    requests.post(f"http://{REDIS_URL}/scan/{scan_type}/{uuid}", json=results)
+    r.publish(f"scan/{scan_type}/{uuid}", str(results))
 
 def process_https(results, domain_key, uuid, db):
     timestamp = str(datetime.datetime.utcnow())

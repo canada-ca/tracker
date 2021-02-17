@@ -23,3 +23,7 @@ spec:
   type: ClusterIP
   selector:
     app: subscription-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
