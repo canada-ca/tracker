@@ -9,7 +9,7 @@
 :var DocumentNode SUMMARY_BY_SLUG: get summary metrics for one organization
 :var DocumentNode ALL_RESULTS: get all scan results for a domain
 :var DocumentNode WEB_RESULTS: get web scan results for a domain
-:var DocumentNode EMAIL_RESULTS: get web scan results for a domain
+:var DocumentNode EMAIL_RESULTS: get email scan results for a domain
 :var DocumentNode DOMAIN_STATUS: get pass/fail compliance statuses for a domain
 """
 

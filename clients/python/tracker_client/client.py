@@ -23,6 +23,8 @@ from queries import (
     ALL_ORG_SUMMARIES,
     SUMMARY_BY_SLUG,
     ALL_RESULTS,
+    WEB_RESULTS,
+    EMAIL_RESULTS,
     DOMAIN_STATUS,
 )
 from formatting import (
@@ -35,6 +37,8 @@ from formatting import (
     format_acronym_summary,
     format_name_summary,
     format_all_results,
+    format_web_results,
+    format_email_results,
     format_domain_status,
 )
 
@@ -572,11 +576,11 @@ def get_summary_by_name(client, name):
 
 
 def get_all_results(client, domain):
-    """Get scan results for a domain
+    """Get all scan results for a domain
 
     :param Client client: a gql Client object
     :param str domain: domain to get results for
-    :return: formatted JSON data with scan results for the domain
+    :return: formatted JSON data with all scan results for the domain
     :rtype: str
 
     :Example:
@@ -589,6 +593,48 @@ def get_all_results(client, domain):
 
     if "error" not in result:
         result = format_all_results(result)
+
+    return json.dumps(result, indent=4)
+
+
+def get_web_results(client, domain):
+    """Get web scan results for a domain
+
+    :param Client client: a gql Client object
+    :param str domain: domain to get results for
+    :return: formatted JSON data with web scan results for the domain
+    :rtype: str
+
+    :Example:
+
+    """
+    params = {"domain": domain}
+
+    result = execute_query(client, WEB_RESULTS, params)
+
+    if "error" not in result:
+        result = format_web_results(result)
+
+    return json.dumps(result, indent=4)
+
+
+def get_email_results(client, domain):
+    """Get email scan results for a domain
+
+    :param Client client: a gql Client object
+    :param str domain: domain to get results for
+    :return: formatted JSON data with email scan results for the domain
+    :rtype: str
+
+    :Example:
+
+    """
+    params = {"domain": domain}
+
+    result = execute_query(client, EMAIL_RESULTS, params)
+
+    if "error" not in result:
+        result = format_email_results(result)
 
     return json.dumps(result, indent=4)
 
@@ -672,8 +718,16 @@ def main():  # pragma: no cover
     summaries = get_summary_by_name(client, name)
     print(summaries)
 
-    print("Getting scan results for " + domain + "...")
+    print("Getting all scan results for " + domain + "...")
     results = get_all_results(client, domain)
+    print(results)
+
+    print("Getting web scan results for " + domain + "...")
+    results = get_web_results(client, domain)
+    print(results)
+
+    print("Getting email scan results for " + domain + "...")
+    results = get_email_results(client, domain)
     print(results)
 
     print("Getting domain status for " + domain + "...")

@@ -122,10 +122,9 @@ def format_name_summary(result):
 def format_all_results(result):
     """Formats the result dict in get_all_results
 
-    :param dict result: unformatted dict with results of ALLL_RESULTS
+    :param dict result: unformatted dict with results of ALL_RESULTS
     :return: formatted results
     :rtype: dict"""
-
     # Extract the contents of the list of nodes holding web results
     result["findDomainByDomain"]["web"] = {
         k: v["edges"][0]["node"]
@@ -161,6 +160,67 @@ def format_all_results(result):
                 "findDomainByDomain"
             ]["email"][x]["guidanceTags"]["edges"]
 
+            result["findDomainByDomain"]["email"][x]["guidanceTags"] = {
+                x["node"].pop("tagId"): x["node"]
+                for x in result["findDomainByDomain"]["email"][x]["guidanceTags"]
+            }
+
+    result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
+    return result
+
+
+def format_web_results(result):
+    """Formats the result dict in get_all_results
+
+    :param dict result: unformatted dict with results of ALL_RESULTS
+    :return: formatted results
+    :rtype: dict"""
+    # Extract the contents of the list of nodes holding web results
+    result["findDomainByDomain"]["web"] = {
+        k: v["edges"][0]["node"]
+        for (k, v) in result["findDomainByDomain"]["web"].items()
+    }
+
+    for x in result["findDomainByDomain"]["web"].keys():
+
+        # Remove edges by making the value of guidanceTags the list of nodes
+        result["findDomainByDomain"]["web"][x]["guidanceTags"] = result[
+            "findDomainByDomain"
+        ]["web"][x]["guidanceTags"]["edges"]
+
+        # Replace the list of nodes with a dict with tagIds as the keys
+        result["findDomainByDomain"]["web"][x]["guidanceTags"] = {
+            x["node"].pop("tagId"): x["node"]
+            for x in result["findDomainByDomain"]["web"][x]["guidanceTags"]
+        }
+
+    result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
+    return result
+
+
+def format_email_results(result):
+    """Formats the result dict in get_email_results
+
+    :param dict result: unformatted dict with results of EMAIL_RESULTS
+    :return: formatted results
+    :rtype: dict"""
+    # Extract the contents of the list of nodes holding email results
+    result["findDomainByDomain"]["email"] = {
+        k: v["edges"][0]["node"]
+        for (k, v) in result["findDomainByDomain"]["email"].items()
+    }
+
+    # Extract the contents of the list of edges for guidance tags
+    for x in result["findDomainByDomain"]["email"].keys():
+
+        # dkim results have different structure so exclude them
+        if x != "dkim":
+            # Remove edges by making the value of guidanceTags the list of nodes
+            result["findDomainByDomain"]["email"][x]["guidanceTags"] = result[
+                "findDomainByDomain"
+            ]["email"][x]["guidanceTags"]["edges"]
+
+            # Replace the list of nodes with a dict with tagIds as the keys
             result["findDomainByDomain"]["email"][x]["guidanceTags"] = {
                 x["node"].pop("tagId"): x["node"]
                 for x in result["findDomainByDomain"]["email"][x]["guidanceTags"]
