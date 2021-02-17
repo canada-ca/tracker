@@ -1,3 +1,4 @@
+"""This module provides functions for getting lists of domains you have ownership of"""
 import json
 
 from slugify import slugify

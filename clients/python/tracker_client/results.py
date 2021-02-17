@@ -1,3 +1,4 @@
+"""This module provides functions for getting scan results for a domain"""
 import json
 
 from core import execute_query

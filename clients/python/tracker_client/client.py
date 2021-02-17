@@ -1,4 +1,4 @@
-"""Provides functions that get JSON data from Tracker (https://github.com/canada-ca/tracker)"""
+"""Contains a main function to quickly demo functionality"""
 import os
 
 # TODO: decide if we should just import whole modules instead

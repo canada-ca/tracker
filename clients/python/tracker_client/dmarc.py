@@ -1,3 +1,4 @@
+"""This module provides functions for getting DMARC summaries for domains"""
 import json
 
 from core import execute_query

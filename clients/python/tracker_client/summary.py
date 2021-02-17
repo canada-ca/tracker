@@ -1,3 +1,4 @@
+"""This module provides functions for getting summary metrics about domains"""
 import json
 
 from slugify import slugify
