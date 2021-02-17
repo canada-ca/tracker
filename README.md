@@ -6,7 +6,7 @@ This project tracks Government of Canada domains for adherence to digital securi
 
 This project is organized in the [monorepo](https://en.wikipedia.org/wiki/Monorepo) style with the various components separated into their own folders.
 
-```sh
+```
 .
 ├── api-js
 ├── app
