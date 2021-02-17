@@ -1,3 +1,5 @@
+"""Provides functions that get JSON data from Tracker (https://github.com/canada-ca/tracker)"""
+
 import json
 import os
 import re
@@ -11,6 +13,7 @@ from gql.transport.exceptions import (
     TransportProtocolError,
 )
 
+# TODO: decide if we should just import whole modules instead
 from queries import (
     ALL_DOMAINS_QUERY,
     DOMAINS_BY_SLUG,
@@ -22,17 +25,35 @@ from queries import (
     DOMAIN_RESULTS,
     DOMAIN_STATUS,
 )
+from formatting import (
+    format_all_domains,
+    format_acronym_domains,
+    format_name_domains,
+    format_dmarc_monthly,
+    format_dmarc_yearly,
+    format_all_summaries,
+    format_acronym_summary,
+    format_name_summary,
+    format_domain_results,
+    format_domain_status,
+)
 
 
 JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
+"""Regex to validate a JWT"""
 
 
 def create_transport(url, auth_token=None):
     """Create and return a gql transport object
 
-    Arguments:
-    url -- the Tracker GraphQL endpoint url
-    auth_token -- JWT auth token string, omit when initially obtaining the token
+    Users should rarely, if ever, need to call this
+
+    :param str url: the Tracker GraphQL endpoint url
+    :param str auth_token: JWT auth token, omit when initially obtaining the token (default is none)
+    :return: A gql transport for given url
+    :rtype: AIOHTTPTransport
+    :raises ValueError: if auth_token is not a valid JWT
+    :raises TypeError: if auth_token is not a string
     """
     if auth_token is None:
         transport = AIOHTTPTransport(url=url)
@@ -58,9 +79,10 @@ def create_transport(url, auth_token=None):
 def create_client(url="https://tracker.alpha.canada.ca/graphql", auth_token=None):
     """Create and return a gql client object
 
-    Arguments:
-    url -- the Tracker GraphQL endpoint url
-    auth_token -- JWT auth token string, omit when initially obtaining the token
+    :param str url: the Tracker GraphQL endpoint url (default is "https://tracker.alpha.canada.ca/graphql")
+    :param str auth_token: JWT auth token, omit when initially obtaining the token (default is None)
+    :return: A gql client with AIOHTTPTransport
+    :rtype: Client
     """
     client = Client(
         transport=create_transport(url=url, auth_token=auth_token),
@@ -70,7 +92,14 @@ def create_client(url="https://tracker.alpha.canada.ca/graphql", auth_token=None
 
 
 def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
-    """Takes in environment variables "TRACKER_UNAME" and "TRACKER_PASS", returns an auth token"""
+    """Get a token to use for authentication.
+
+    Takes in environment variables "TRACKER_UNAME" and "TRACKER_PASS" to get credentials
+
+    :param str url: the Tracker GraphQL endpoint url (default is "https://tracker.alpha.canada.ca/graphql")
+    :return: JWT auth token to allow access to Tracker
+    :rtype: str
+    """
     client = create_client(url)
 
     username = os.environ.get("TRACKER_UNAME")
@@ -88,7 +117,20 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
 
 # TODO: Make error messages better
 def execute_query(client, query, params=None):
-    """Executes a query on given client, with given parameters. """
+    """Executes a query on given client, with given parameters.
+
+    Intended for internal use, but if for some reason you need an unformatted
+    response from the API you could call this.
+
+    :param Client client: a gql client to execute the query on
+    :param DocumentNode query: a gql query string that has been parsed with gql()
+    :param dict params: variables to pass along with query
+    :return: Results of executing query on API
+    :rtype: dict
+    :raises TransportProtocolError: if server response is not GraphQL
+    :raises TransportServerError: if there is a server error
+    :raises Exception: if any unhandled exception is raised within function
+    """
     try:
         result = client.execute(query, variable_values=params)
 
@@ -114,10 +156,28 @@ def execute_query(client, query, params=None):
 
 
 def get_all_domains(client):
-    """Returns lists of all domains you have ownership of, with org as key
+    """Get lists of all domains you have ownership of, with org as key
 
-    Arguments:
-    client -- a GQL Client object
+    :param Client client: a gql Client object
+    :return: formatted JSON data with all organizations and their domains
+    :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_all_domains(client))
+    {
+        "FOO": [
+            "foo.bar",
+            "foo.bar.baz"
+        ],
+        "BAR": [
+            "fizz.buzz",
+            "buzz.bang",
+            "ab.cd.ef",
+        ]
+    }
     """
     result = execute_query(client, ALL_DOMAINS_QUERY)
     # If there is an error the result contains the key "error"
@@ -127,31 +187,25 @@ def get_all_domains(client):
     return json.dumps(result, indent=4)
 
 
-def format_all_domains(result):
-    """ Formats the dict obtained by ALL_DOMAINS_QUERY """
-    # Extract the list of nodes from the resulting dict
-    result = result["findMyOrganizations"]["edges"]
-    # Move the dict value of "node" up a level
-    result = [n["node"] for n in result]
-
-    # For each dict element of the list, change the value of "domains"
-    # to the list of domains contained in the nodes of its edges
-    for x in result:
-        x["domains"] = x["domains"]["edges"]
-        x["domains"] = [n["node"] for n in x["domains"]]
-        x["domains"] = [n["domain"] for n in x["domains"]]
-
-    # Create a new dict in the desired format to return
-    result = {x["acronym"]: x["domains"] for x in result}
-    return result
-
-
 def get_domains_by_acronym(client, acronym):
-    """Return the domains belonging to the organization identified by acronym
+    """Get the domains belonging to the organization identified by acronym
 
-    Arguments:
-    acronym -- string containing an acronym belonging to an organization
-    client -- a GQL Client object
+    :param Client client: a gql Client object
+    :param str acronym: an acronym referring to an organization
+    :return: formatted JSON data with an organization's domains
+    :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_domains_by_acronym(client, "foo"))
+    {
+        "FOO": [
+            "foo.bar",
+            "foo.bar.baz"
+        ]
+    }
     """
     # API doesn't allow query by acronym so we filter the get_all_domains result
     result = execute_query(client, ALL_DOMAINS_QUERY)
@@ -172,19 +226,25 @@ def get_domains_by_acronym(client, acronym):
     return json.dumps(result, indent=4)
 
 
-def format_acronym_domains(result, acronym):
-    """ Formats the dict obtained by ALL_DOMAINS_QUERY to show only one org"""
-    result = format_all_domains(result)
-    result = {acronym.upper(): result[acronym.upper()]}
-    return result
-
-
 def get_domains_by_name(client, name):
-    """Return the domains belonging to the organization identified by full name
+    """Get the domains belonging to the organization identified by name
 
-    Arguments:
-    name -- string containing the name of an organization
-    client -- a GQL Client object
+    :param Client client: a gql Client object
+    :param str name: the full name of an organization
+    :return: formatted JSON data with an organization's domains
+    :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_domains_by_name(client, "foo bar"))
+    {
+        "FOO": [
+            "foo.bar",
+            "foo.bar.baz"
+        ]
+    }
     """
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"orgSlug": slugified_name}
@@ -197,24 +257,34 @@ def get_domains_by_name(client, name):
     return json.dumps(result, indent=4)
 
 
-def format_name_domains(result):
-    """Formats the dict obtained by DOMAINS_BY_SLUG"""
-    result = result["findOrganizationBySlug"]
-    result["domains"] = result["domains"]["edges"]
-    result["domains"] = [n["node"] for n in result["domains"]]
-    result["domains"] = [n["domain"] for n in result["domains"]]
-    result = {result["acronym"]: result["domains"]}
-    return result
-
-
 def get_dmarc_summary(client, domain, month, year):
-    """Return the DMARC summary for the specified domain and month
+    """Get the DMARC summary for the specified domain and month
 
-    Arguments:
-    domain -- domain name string
-    month -- string containing the full name of a month
-    year -- positive integer representing a year
-    client -- a GQL Client object
+    :param Client client: a gql Client object
+    :param str domain: the domain to get a DMARC summary for
+    :param str month: the full name of a month
+    :param int year: positive integer representing a year
+    :return: formatted JSON data with a DMARC summary
+    :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_dmarc_summary(client, "foo.bar", "september", 2020))
+    {
+        "foo.bar": {
+            "month": "SEPTEMBER",
+            "year": "2020",
+            "categoryPercentages": {
+                "fullPassPercentage": 87,
+                "passSpfOnlyPercentage": 0,
+                "passDkimOnlyPercentage": 6,
+                "failPercentage": 8,
+                "totalMessages": 10534
+            }
+        }
+    }
     """
     params = {"domain": domain, "month": month.upper(), "year": str(year)}
 
@@ -226,19 +296,47 @@ def get_dmarc_summary(client, domain, month, year):
     return json.dumps(result, indent=4)
 
 
-def format_dmarc_monthly(result):
-    """Formats the dict obtained by DMARC_SUMMARY"""
-    result = result["findDomainByDomain"]
-    result[result.pop("domain")] = result.pop("dmarcSummaryByPeriod")
-    return result
-
-
 def get_yearly_dmarc_summaries(client, domain):
-    """Return yearly DMARC summaries for a domain
+    """Get yearly DMARC summaries for a domain
 
-    Arguments:
-    domain -- domain name string
-    client -- a GQL Client object
+    :param Client client: a gql Client object
+    :param str domain: domain to get DMARC summaries for
+    :return: formatted JSON data with yearly DMARC summaries
+    :rtype: str
+
+    :Example:
+
+    Output is truncated, you should expect more than 2 reports in the list
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_yearly_dmarc_summaries(client, "foo.bar"))
+    {
+        "foo.bar": [
+            {
+                "month": "AUGUST",
+                "year": "2020",
+                "categoryPercentages": {
+                    "fullPassPercentage": 90,
+                    "passSpfOnlyPercentage": 0,
+                    "passDkimOnlyPercentage": 5,
+                    "failPercentage": 5,
+                    "totalMessages": 7045
+                }
+            },
+            {
+                "month": "JULY",
+                "year": "2020",
+                "categoryPercentages": {
+                    "fullPassPercentage": 82,
+                    "passSpfOnlyPercentage": 0,
+                    "passDkimOnlyPercentage": 11,
+                    "failPercentage": 8,
+                    "totalMessages": 6647
+                }
+            },
+        ]
+    }
     """
     params = {"domain": domain}
 
@@ -250,18 +348,90 @@ def get_yearly_dmarc_summaries(client, domain):
     return json.dumps(result, indent=4)
 
 
-def format_dmarc_yearly(result):
-    """Formats the dict obtained by DMARC_YEARLY_SUMMARIES"""
-    result = result["findDomainByDomain"]
-    result[result.pop("domain")] = result.pop("yearlyDmarcSummaries")
-    return result
-
-
 def get_all_summaries(client):
-    """Returns summary metrics for all organizations you are a member of.
+    """Get summary metrics for all organizations you are a member of.
 
-    Arguments:
-    client -- a GQL Client object
+    :param Client client: a gql Client object
+    :return: formatted JSON data with all organizations and their metrics
+    :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_all_summaries(client))
+    {
+        "FOO": {
+            "domainCount": 10,
+            "summaries": {
+                "web": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 1,
+                            "percentage": 10
+                        },
+                        {
+                            "name": "fail",
+                            "count": 9,
+                            "percentage": 90
+                        }
+                    ]
+                },
+                "mail": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 5,
+                            "percentage": 50
+                        },
+                        {
+                            "name": "fail",
+                            "count": 5,
+                            "percentage": 50
+                        }
+                    ]
+                }
+            }
+        },
+        "BAR": {
+            "domainCount": 10,
+            "summaries": {
+                "web": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 5,
+                            "percentage": 50
+                        },
+                        {
+                            "name": "fail",
+                            "count": 5,
+                            "percentage": 50
+                        }
+                    ]
+                },
+                "mail": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 1,
+                            "percentage": 10
+                        },
+                        {
+                            "name": "fail",
+                            "count": 9,
+                            "percentage": 90
+                        }
+                    ]
+                }
+            }
+        }
+    }
     """
     result = execute_query(client, ALL_ORG_SUMMARIES)
 
@@ -271,19 +441,56 @@ def get_all_summaries(client):
     return json.dumps(result, indent=4)
 
 
-def format_all_summaries(result):
-    """Formats the dict obtained by ALL_ORG_SUMMARIES"""
-    result = result["findMyOrganizations"]["edges"]
-    result = {x["node"].pop("acronym"): x["node"] for x in result}
-    return result
-
-
 def get_summary_by_acronym(client, acronym):
     """Returns summary metrics for the organization identified by acronym
 
-    Arguments:
-    acronym -- string containing an acronym belonging to an organization
-    client -- a GQL Client object
+    :param Client client: a GQL Client object
+    :param str acronym: an acronym referring to an organization
+    :return: formatted JSON with summary metrics for an organization
+    :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_summary_by_acronym(client, "foo"))
+    {
+        "FOO": {
+            "domainCount": 10,
+            "summaries": {
+                "web": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 1,
+                            "percentage": 10
+                        },
+                        {
+                            "name": "fail",
+                            "count": 9,
+                            "percentage": 90
+                        }
+                    ]
+                },
+                "mail": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 5,
+                            "percentage": 50
+                        },
+                        {
+                            "name": "fail",
+                            "count": 5,
+                            "percentage": 50
+                        }
+                    ]
+                }
+            }
+        }
+    }
     """
     # API doesn't allow query by acronym so we filter the get_all_summaries result
     result = execute_query(client, ALL_ORG_SUMMARIES)
@@ -302,20 +509,56 @@ def get_summary_by_acronym(client, acronym):
     return json.dumps(result, indent=4)
 
 
-def format_acronym_summary(result, acronym):
-    """Formats the dict obtained by ALL_ORG_SUMMARIES to show only one org"""
-    result = format_all_summaries(result)
-    # dict in assignment is to keep the org identified in the return value
-    result = {acronym.upper(): result[acronym.upper()]}
-    return result
-
-
 def get_summary_by_name(client, name):
-    """Return summary metrics for the organization identified by name
+    """Get summary metrics for the organization identified by name
 
-    Arguments:
-    name -- string containing the name of an organization
-    client -- a GQL Client object
+    :param Client client: a gql Client object
+    :param str name: the full name of an organization
+    :return: formatted JSON data with summary metrics for an organization
+    :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_summary_by_name(client, "foo bar"))
+    {
+        "FOO": {
+            "domainCount": 10,
+            "summaries": {
+                "web": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 1,
+                            "percentage": 10
+                        },
+                        {
+                            "name": "fail",
+                            "count": 9,
+                            "percentage": 90
+                        }
+                    ]
+                },
+                "mail": {
+                    "total": 10,
+                    "categories": [
+                        {
+                            "name": "pass",
+                            "count": 5,
+                            "percentage": 50
+                        },
+                        {
+                            "name": "fail",
+                            "count": 5,
+                            "percentage": 50
+                        }
+                    ]
+                }
+            }
+        }
+    }
     """
     slugified_name = slugify(name)  # API expects a slugified string for name
     params = {"orgSlug": slugified_name}
@@ -328,22 +571,17 @@ def get_summary_by_name(client, name):
     return json.dumps(result, indent=4)
 
 
-def format_name_summary(result):
-    """Formats the dict obtained by SUMMARY_BY_SLUG"""
-    result = {
-        result["findOrganizationBySlug"].pop("acronym"): result[
-            "findOrganizationBySlug"
-        ]
-    }
-    return result
-
-
 def get_domain_results(client, domain):
-    """Return scan results for a domain
+    """Get scan results for a domain
 
-    Arguments:
-    domain -- domain name string
-    client -- a GQL Client object
+    :param Client client: a gql Client object
+    :param str domain: domain to get results for
+    :return: formatted JSON data with scan results for the domain
+    :rtype: str
+
+    :Example:
+
+    Coming soon, function likely to change
     """
     params = {"domain": domain}
 
@@ -355,59 +593,31 @@ def get_domain_results(client, domain):
     return json.dumps(result, indent=4)
 
 
-def format_domain_results(result):
-    """Format the dict obtained by DOMAIN_RESULTS"""
-
-    # Extract the contents of the list of nodes holding web results
-    result["findDomainByDomain"]["web"] = {
-        k: v["edges"][0]["node"]
-        for (k, v) in result["findDomainByDomain"]["web"].items()
-    }
-
-    # Extract the contents of the list of nodes holding email results
-    result["findDomainByDomain"]["email"] = {
-        k: v["edges"][0]["node"]
-        for (k, v) in result["findDomainByDomain"]["email"].items()
-    }
-
-    # Extract the contents of the list of edges for guidance tags
-    for x in result["findDomainByDomain"]["web"].keys():
-
-        # Remove edges by making the value of guidanceTags the list of nodes
-        result["findDomainByDomain"]["web"][x]["guidanceTags"] = result[
-            "findDomainByDomain"
-        ]["web"][x]["guidanceTags"]["edges"]
-
-        # Replace the list of nodes with a dict with tagIds as the keys
-        result["findDomainByDomain"]["web"][x]["guidanceTags"] = {
-            x["node"].pop("tagId"): x["node"]
-            for x in result["findDomainByDomain"]["web"][x]["guidanceTags"]
-        }
-
-    # Do the same with email guidance tags
-    for x in result["findDomainByDomain"]["email"].keys():
-
-        # dkim results have different structure so exclude them
-        if x != "dkim":
-            result["findDomainByDomain"]["email"][x]["guidanceTags"] = result[
-                "findDomainByDomain"
-            ]["email"][x]["guidanceTags"]["edges"]
-
-            result["findDomainByDomain"]["email"][x]["guidanceTags"] = {
-                x["node"].pop("tagId"): x["node"]
-                for x in result["findDomainByDomain"]["email"][x]["guidanceTags"]
-            }
-
-    result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
-    return result
-
-
 def get_domain_status(client, domain):
     """Return pass/fail status information for a domain
 
-    Arguments:
-    domain -- domain name string
-    client -- a GQL Client object
+    :param Client client: a gql Client object
+    :param str domain: domain to get the status of
+    :return: formatted JSON data with the domain's status
+    :rtype: str
+
+    :Example:
+
+    >>> import tracker_client.client as tracker_client
+    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
+    >>> print(tracker_client.get_domain_status(client, "foo.bar"))
+    {
+        "foo.bar": {
+            "lastRan": "2021-01-23 22:33:26.921529",
+            "status": {
+                "https": "FAIL",
+                "ssl": "FAIL",
+                "dmarc": "PASS",
+                "dkim": "PASS",
+                "spf": "PASS"
+            }
+        }
+    }
     """
     params = {"domain": domain}
 
@@ -419,15 +629,9 @@ def get_domain_status(client, domain):
     return json.dumps(result, indent=4)
 
 
-def format_domain_status(result):
-    """Formats the dict obtained by DOMAIN_STATUS"""
-    result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
-    return result
-
-
 def main():  # pragma: no cover
     """main() currently tries all implemented functions and prints results
-    for diagnostic purposes and to demo available features.
+    for diagnostic purposes and to demo available features. To be removed in future.
     """
     acronym = "cse"
     name = "Communications Security Establishment Canada"
