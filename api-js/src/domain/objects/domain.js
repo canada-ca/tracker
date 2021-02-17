@@ -31,6 +31,11 @@ export const domainType = new GraphQLObjectType({
       description: 'Domain that scans will be ran on.',
       resolve: ({ domain }) => domain,
     },
+    dmarcPhase: {
+      type: GraphQLInt,
+      description: 'The current dmarc phase the domain is compliant to.',
+      resolve: ({ phase }) => phase,
+    },
     lastRan: {
       type: GraphQLString,
       description: 'The last time that a scan was ran on this domain.',
