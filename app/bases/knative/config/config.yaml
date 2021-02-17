@@ -70,7 +70,7 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_NAME
-            - name: REDIS_URL
+            - name: REDIS_HOST
               value: "scanners.svc.redis-service"
             - name: REDIS_PORT
               value: "6379"

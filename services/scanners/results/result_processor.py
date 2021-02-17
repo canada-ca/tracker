@@ -22,7 +22,7 @@ DB_PASS = os.getenv("DB_PASS")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
-REDIS_URL = os.getenv("REDIS_URL")
+REDIS_HOST = os.getenv("REDIS_HOST")
 REDIS_PORT = os.getenv("REDIS_PORT")
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
