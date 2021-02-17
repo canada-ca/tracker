@@ -33,12 +33,6 @@ describe('given the dmarcType object', () => {
       expect(demoType).toHaveProperty('timestamp')
       expect(demoType.timestamp.type).toMatchObject(GraphQLString)
     })
-    it('has a dmarcPhase field', () => {
-      const demoType = dmarcType.getFields()
-
-      expect(demoType).toHaveProperty('dmarcPhase')
-      expect(demoType.dmarcPhase.type).toMatchObject(GraphQLInt)
-    })
     it('has a record field', () => {
       const demoType = dmarcType.getFields()
 
@@ -96,7 +90,6 @@ describe('given the dmarcType object', () => {
       })
       dmarc = await collections.dmarc.save({
         timestamp: '2020-10-02T12:43:39Z',
-        dmarcPhase: 1,
         record: 'txtRecord',
         pPolicy: 'pPolicy',
         spPolicy: 'spPolicy',
@@ -171,13 +164,6 @@ describe('given the dmarcType object', () => {
         expect(
           demoType.timestamp.resolve({ timestamp: '2020-10-02T12:43:39Z' }),
         ).toEqual('2020-10-02T12:43:39Z')
-      })
-    })
-    describe('testing the dmarcPhase resolver', () => {
-      it('returns the resolved value', () => {
-        const demoType = dmarcType.getFields()
-
-        expect(demoType.dmarcPhase.resolve({ dmarcPhase: 1 })).toEqual(1)
       })
     })
     describe('testing the record resolver', () => {
