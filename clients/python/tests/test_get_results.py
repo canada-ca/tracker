@@ -10,8 +10,8 @@ import tracker_client.queries as queries
 # pylint: disable=no-member
 
 
-def test_get_domain_results_error(mocker, error_message):
-    """Test that get_domain_results correctly handles error response"""
+def test_get_all_results_error(mocker, error_message):
+    """Test that get_all_results correctly handles error response"""
     mocker.patch(
         "tracker_client.client.execute_query",
         auto_spec=True,
@@ -19,7 +19,7 @@ def test_get_domain_results_error(mocker, error_message):
     )
 
     client = Client()
-    result = tc.get_domain_results(client, "foo.bar")
+    result = tc.get_all_results(client, "foo.bar")
 
     assert result == json.dumps(
         error_message,
@@ -27,8 +27,8 @@ def test_get_domain_results_error(mocker, error_message):
     )
 
 
-def test_get_domain_results(mocker, scan_results_input, scan_results_output):
-    """Test that get_domain_results produces correct output"""
+def test_get_all_results(mocker, scan_results_input, scan_results_output):
+    """Test that get_all_results produces correct output"""
     mocker.patch(
         "tracker_client.client.execute_query",
         auto_spec=True,
@@ -37,10 +37,10 @@ def test_get_domain_results(mocker, scan_results_input, scan_results_output):
 
     expected_params = {"domain": "foo.bar"}
     client = Client()
-    result = tc.get_domain_results(client, "foo.bar")
+    result = tc.get_all_results(client, "foo.bar")
 
     tc.execute_query.assert_called_once_with(
-        client, queries.DOMAIN_RESULTS, expected_params
+        client, queries.ALL_RESULTS, expected_params
     )
     assert result == json.dumps(scan_results_output, indent=4)
 
@@ -63,7 +63,7 @@ def test_get_domain_status_error(mocker, error_message):
 
 
 def test_get_domain_status(mocker, domain_status_input, domain_status_output):
-    """Test that get_domain_results produces correct output"""
+    """Test that get_domain_status produces correct output"""
     mocker.patch(
         "tracker_client.client.execute_query",
         auto_spec=True,

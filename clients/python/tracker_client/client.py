@@ -22,7 +22,7 @@ from queries import (
     SIGNIN_MUTATION,
     ALL_ORG_SUMMARIES,
     SUMMARY_BY_SLUG,
-    DOMAIN_RESULTS,
+    ALL_RESULTS,
     DOMAIN_STATUS,
 )
 from formatting import (
@@ -34,7 +34,7 @@ from formatting import (
     format_all_summaries,
     format_acronym_summary,
     format_name_summary,
-    format_domain_results,
+    format_all_results,
     format_domain_status,
 )
 
@@ -571,7 +571,7 @@ def get_summary_by_name(client, name):
     return json.dumps(result, indent=4)
 
 
-def get_domain_results(client, domain):
+def get_all_results(client, domain):
     """Get scan results for a domain
 
     :param Client client: a gql Client object
@@ -585,10 +585,10 @@ def get_domain_results(client, domain):
     """
     params = {"domain": domain}
 
-    result = execute_query(client, DOMAIN_RESULTS, params)
+    result = execute_query(client, ALL_RESULTS, params)
 
     if "error" not in result:
-        result = format_domain_results(result)
+        result = format_all_results(result)
 
     return json.dumps(result, indent=4)
 
@@ -673,7 +673,7 @@ def main():  # pragma: no cover
     print(summaries)
 
     print("Getting scan results for " + domain + "...")
-    results = get_domain_results(client, domain)
+    results = get_all_results(client, domain)
     print(results)
 
     print("Getting domain status for " + domain + "...")

@@ -119,10 +119,10 @@ def format_name_summary(result):
     return result
 
 
-def format_domain_results(result):
-    """Formats the result dict in get_domain_results
+def format_all_results(result):
+    """Formats the result dict in get_all_results
 
-    :param dict result: unformatted dict with results of DOMAIN_RESULTS
+    :param dict result: unformatted dict with results of ALLL_RESULTS
     :return: formatted results
     :rtype: dict"""
 
