@@ -71,7 +71,7 @@ spec:
                   name: scanners
                   key: DB_NAME
             - name: REDIS_HOST
-              value: "scanners.svc.redis-service"
+              value: "redis-service.scanners"
             - name: REDIS_PORT
               value: "6379"
             - name: REPO_NAME
