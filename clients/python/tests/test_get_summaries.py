@@ -105,7 +105,7 @@ def test_get_summary_by_name_error(mocker, error_message):
     )
 
     client = Client()
-    result = tc.get_domains_by_name(client, "foo bar")
+    result = tc.get_summary_by_name(client, "foo bar")
 
     assert result == json.dumps(
         error_message,

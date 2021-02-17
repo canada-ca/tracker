@@ -2,24 +2,13 @@
 
 import json
 import os
-import re
 
 from slugify import slugify
-from gql import Client
-from gql.transport.aiohttp import AIOHTTPTransport
-from gql.transport.exceptions import (
-    TransportQueryError,
-    TransportServerError,
-    TransportProtocolError,
-)
 
 # TODO: decide if we should just import whole modules instead
 from queries import (
-    ALL_DOMAINS_QUERY,
-    DOMAINS_BY_SLUG,
     DMARC_SUMMARY,
     DMARC_YEARLY_SUMMARIES,
-    SIGNIN_MUTATION,
     ALL_ORG_SUMMARIES,
     SUMMARY_BY_SLUG,
     ALL_RESULTS,
@@ -28,9 +17,6 @@ from queries import (
     DOMAIN_STATUS,
 )
 from formatting import (
-    format_all_domains,
-    format_acronym_domains,
-    format_name_domains,
     format_dmarc_monthly,
     format_dmarc_yearly,
     format_all_summaries,
@@ -41,224 +27,10 @@ from formatting import (
     format_email_results,
     format_domain_status,
 )
+from core import create_client, execute_query, get_auth_token
+from domains import get_all_domains, get_domains_by_acronym, get_domains_by_name
 
 
-JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
-"""Regex to validate a JWT"""
-
-
-def create_transport(url, auth_token=None):
-    """Create and return a gql transport object
-
-    Users should rarely, if ever, need to call this
-
-    :param str url: the Tracker GraphQL endpoint url
-    :param str auth_token: JWT auth token, omit when initially obtaining the token (default is none)
-    :return: A gql transport for given url
-    :rtype: AIOHTTPTransport
-    :raises ValueError: if auth_token is not a valid JWT
-    :raises TypeError: if auth_token is not a string
-    """
-    if auth_token is None:
-        transport = AIOHTTPTransport(url=url)
-
-    else:
-        # Resulting stack trace is very unhelpful when passing an invalid token
-        # We validate the given auth_token and raise an exception if it's invalid
-        # to make debugging easier
-        if not isinstance(auth_token, str):
-            raise TypeError("auth_token must be a string")
-
-        if not re.match(JWT_RE, auth_token):
-            raise ValueError("auth_token is not a valid JWT")
-
-        transport = AIOHTTPTransport(
-            url=url,
-            headers={"authorization": auth_token},
-        )
-
-    return transport
-
-
-def create_client(url="https://tracker.alpha.canada.ca/graphql", auth_token=None):
-    """Create and return a gql client object
-
-    :param str url: the Tracker GraphQL endpoint url (default is "https://tracker.alpha.canada.ca/graphql")
-    :param str auth_token: JWT auth token, omit when initially obtaining the token (default is None)
-    :return: A gql client with AIOHTTPTransport
-    :rtype: Client
-    """
-    client = Client(
-        transport=create_transport(url=url, auth_token=auth_token),
-        fetch_schema_from_transport=True,
-    )
-    return client
-
-
-def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
-    """Get a token to use for authentication.
-
-    Takes in environment variables "TRACKER_UNAME" and "TRACKER_PASS" to get credentials
-
-    :param str url: the Tracker GraphQL endpoint url (default is "https://tracker.alpha.canada.ca/graphql")
-    :return: JWT auth token to allow access to Tracker
-    :rtype: str
-    """
-    client = create_client(url)
-
-    username = os.environ.get("TRACKER_UNAME")
-    password = os.environ.get("TRACKER_PASS")
-
-    if username is None or password is None:
-        raise ValueError("Tracker credentials missing from environment.")
-
-    params = {"creds": {"userName": username, "password": password}}
-
-    result = client.execute(SIGNIN_MUTATION, variable_values=params)
-    auth_token = result["signIn"]["result"]["authResult"]["authToken"]
-    return auth_token
-
-
-# TODO: Make error messages better
-def execute_query(client, query, params=None):
-    """Executes a query on given client, with given parameters.
-
-    Intended for internal use, but if for some reason you need an unformatted
-    response from the API you could call this.
-
-    :param Client client: a gql client to execute the query on
-    :param DocumentNode query: a gql query string that has been parsed with gql()
-    :param dict params: variables to pass along with query
-    :return: Results of executing query on API
-    :rtype: dict
-    :raises TransportProtocolError: if server response is not GraphQL
-    :raises TransportServerError: if there is a server error
-    :raises Exception: if any unhandled exception is raised within function
-    """
-    try:
-        result = client.execute(query, variable_values=params)
-
-    except TransportQueryError as error:
-        # Not sure this is the best way to deal with this exception
-        result = {"error": {"message": error.errors[0]["message"]}}
-
-    except TransportProtocolError as error:
-        print("Unexpected response from server:", error)
-        raise
-
-    except TransportServerError as error:
-        print("Server error:", error)
-        raise
-
-    except Exception as error:
-        # Need to be more descriptive
-        # Potentially figure out other errors that could be caught here?
-        print("Fatal error:", error)
-        raise
-
-    return result
-
-
-def get_all_domains(client):
-    """Get lists of all domains you have ownership of, with org as key
-
-    :param Client client: a gql Client object
-    :return: formatted JSON data with all organizations and their domains
-    :rtype: str
-
-    :Example:
-
-    >>> import tracker_client.client as tracker_client
-    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
-    >>> print(tracker_client.get_all_domains(client))
-    {
-        "FOO": [
-            "foo.bar",
-            "foo.bar.baz"
-        ],
-        "BAR": [
-            "fizz.buzz",
-            "buzz.bang",
-            "ab.cd.ef",
-        ]
-    }
-    """
-    result = execute_query(client, ALL_DOMAINS_QUERY)
-    # If there is an error the result contains the key "error"
-    if "error" not in result:
-        result = format_all_domains(result)
-
-    return json.dumps(result, indent=4)
-
-
-def get_domains_by_acronym(client, acronym):
-    """Get the domains belonging to the organization identified by acronym
-
-    :param Client client: a gql Client object
-    :param str acronym: an acronym referring to an organization
-    :return: formatted JSON data with an organization's domains
-    :rtype: str
-
-    :Example:
-
-    >>> import tracker_client.client as tracker_client
-    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
-    >>> print(tracker_client.get_domains_by_acronym(client, "foo"))
-    {
-        "FOO": [
-            "foo.bar",
-            "foo.bar.baz"
-        ]
-    }
-    """
-    # API doesn't allow query by acronym so we filter the get_all_domains result
-    result = execute_query(client, ALL_DOMAINS_QUERY)
-
-    if "error" not in result:
-        # Since the server doesn't see the acronym we check if it's in the result
-        # and simulate the server error response if it's not there
-        try:
-            result = format_acronym_domains(result, acronym)
-
-        except KeyError:
-            result = {
-                "error": {
-                    "message": "No organization with the provided acronym could be found."
-                }
-            }
-
-    return json.dumps(result, indent=4)
-
-
-def get_domains_by_name(client, name):
-    """Get the domains belonging to the organization identified by name
-
-    :param Client client: a gql Client object
-    :param str name: the full name of an organization
-    :return: formatted JSON data with an organization's domains
-    :rtype: str
-
-    :Example:
-
-    >>> import tracker_client.client as tracker_client
-    >>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
-    >>> print(tracker_client.get_domains_by_name(client, "foo bar"))
-    {
-        "FOO": [
-            "foo.bar",
-            "foo.bar.baz"
-        ]
-    }
-    """
-    slugified_name = slugify(name)  # API expects a slugified string for name
-    params = {"orgSlug": slugified_name}
-
-    result = execute_query(client, DOMAINS_BY_SLUG, params)
-
-    if "error" not in result:
-        result = format_name_domains(result)
-
-    return json.dumps(result, indent=4)
 
 
 def get_dmarc_summary(client, domain, month, year):

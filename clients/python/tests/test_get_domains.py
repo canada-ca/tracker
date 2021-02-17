@@ -4,7 +4,7 @@ import json
 from gql import Client
 
 # Avoid confusion with gql Client
-import tracker_client.client as tc
+import tracker_client.domains as tc
 import tracker_client.queries as queries
 
 # pylint: disable=no-member
@@ -13,7 +13,7 @@ import tracker_client.queries as queries
 def test_get_all_domains_error(mocker, error_message):
     """Test that get_all_domains correctly handles error response"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.domains.execute_query",
         auto_spec=True,
         return_value=error_message,
     )
@@ -30,7 +30,7 @@ def test_get_all_domains_error(mocker, error_message):
 def test_get_all_domains(mocker, all_domains_input, all_domains_output):
     """Test that get_all_domains produces correct output"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.domains.execute_query",
         auto_spec=True,
         return_value=all_domains_input,
     )
@@ -45,7 +45,7 @@ def test_get_all_domains(mocker, all_domains_input, all_domains_output):
 def test_get_domains_by_acronym_error(mocker, error_message):
     """Test that get_domains_by_acronym correctly handles error response"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.domains.execute_query",
         auto_spec=True,
         return_value=error_message,
     )
@@ -66,7 +66,7 @@ def test_get_domains_by_acronym_error(mocker, error_message):
 def test_get_domains_by_acronym_key_error(mocker, all_domains_input):
     """Test that get_domains_by_acronym correctly handles the given acronym not being in the response"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.domains.execute_query",
         auto_spec=True,
         return_value=all_domains_input,
     )
@@ -88,7 +88,7 @@ def test_get_domains_by_acronym_key_error(mocker, all_domains_input):
 def test_get_domains_by_acronym(mocker, all_domains_input, org_domains_output):
     """Test that get_domains_by_acronym produces correct output"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.domains.execute_query",
         auto_spec=True,
         return_value=all_domains_input,
     )
@@ -103,7 +103,7 @@ def test_get_domains_by_acronym(mocker, all_domains_input, org_domains_output):
 def test_get_domains_by_name_error(mocker, error_message):
     """Test that get_domains_by_name correctly handles error response"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.domains.execute_query",
         auto_spec=True,
         return_value=error_message,
     )
@@ -120,7 +120,7 @@ def test_get_domains_by_name_error(mocker, error_message):
 def test_get_domains_by_name(mocker, name_domain_input, org_domains_output):
     """Test that get_domains_by_name produces correct output"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.domains.execute_query",
         auto_spec=True,
         return_value=name_domain_input,
     )
