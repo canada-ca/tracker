@@ -4,7 +4,7 @@ import json
 from gql import Client
 
 # Avoid confusion with gql Client
-import tracker_client.client as tc
+import tracker_client.summary as tc
 import tracker_client.queries as queries
 
 # pylint: disable=no-member
@@ -13,7 +13,7 @@ import tracker_client.queries as queries
 def test_get_all_summaries_error(mocker, error_message):
     """Test that get_all_summaries correctly handles an error response"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.summary.execute_query",
         auto_spec=True,
         return_value=error_message,
     )
@@ -30,7 +30,7 @@ def test_get_all_summaries_error(mocker, error_message):
 def test_get_all_summaries(mocker, all_summaries_input, all_summaries_output):
     """Test that get_all_summaries produces correct output"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.summary.execute_query",
         auto_spec=True,
         return_value=all_summaries_input,
     )
@@ -45,7 +45,7 @@ def test_get_all_summaries(mocker, all_summaries_input, all_summaries_output):
 def test_get_summary_by_acronym_error(mocker, error_message):
     """Test that get_summary_by_acronym correctly handles an error response"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.summary.execute_query",
         auto_spec=True,
         return_value=error_message,
     )
@@ -62,7 +62,7 @@ def test_get_summary_by_acronym_error(mocker, error_message):
 def test_get_summary_by_acronym_key_error(mocker, all_summaries_input):
     """Test that get_summary_by_acronym correctly handles the given acronym not being in the response"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.summary.execute_query",
         auto_spec=True,
         return_value=all_summaries_input,
     )
@@ -84,7 +84,7 @@ def test_get_summary_by_acronym_key_error(mocker, all_summaries_input):
 def test_get_summary_by_acronym(mocker, all_summaries_input, org_summary_output):
     """Test that get_summary_by_acronym produces correct output"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.summary.execute_query",
         auto_spec=True,
         return_value=all_summaries_input,
     )
@@ -99,7 +99,7 @@ def test_get_summary_by_acronym(mocker, all_summaries_input, org_summary_output)
 def test_get_summary_by_name_error(mocker, error_message):
     """Test that get_summary_by_name correctly handles an error response"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.summary.execute_query",
         auto_spec=True,
         return_value=error_message,
     )
@@ -116,7 +116,7 @@ def test_get_summary_by_name_error(mocker, error_message):
 def test_get_summary_by_name(mocker, name_summary_input, org_summary_output):
     """Test that get_summary_by_acronym produces correct output"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.summary.execute_query",
         auto_spec=True,
         return_value=name_summary_input,
     )
