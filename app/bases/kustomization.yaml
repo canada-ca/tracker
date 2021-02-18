@@ -28,9 +28,6 @@ resources:
 - knative/config/config.yaml
 - knative/config/autoscan.yaml
 - knative/config/core.yaml
-- knative/monitoring/prometheus.yaml
-- knative/monitoring/loki-stack.yaml
-- knative/monitoring/grafana/grafana.yaml
 - tracker-api-deployment.yaml
 - tracker-api-service.yaml
 - tracker-api-virtual-service.yaml
