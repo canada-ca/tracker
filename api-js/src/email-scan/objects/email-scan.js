@@ -2,7 +2,7 @@ import { GraphQLObjectType } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 import { GraphQLDate, GraphQLDateTime } from 'graphql-scalars'
 
-import { dkimOrder } from '../inputs'
+import { dkimOrder, dmarcOrder } from '../inputs'
 import { dkimConnection } from './dkim'
 import { dmarcConnection } from './dmarc'
 import { spfConnection } from './spf'
@@ -60,6 +60,10 @@ export const emailScanType = new GraphQLObjectType({
         endDate: {
           type: GraphQLDateTime,
           description: 'End date for date filter.',
+        },
+        orderBy: {
+          type: dmarcOrder,
+          description: 'Ordering options for dmarc connections.',
         },
         ...connectionArgs,
       },

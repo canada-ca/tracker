@@ -42,7 +42,6 @@ describe('when given the load dmarc connection function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
 
@@ -57,6 +56,10 @@ describe('when given the load dmarc connection function', () => {
       domain: 'test.domain.gc.ca',
       slug: 'test-domain-gc-ca',
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
@@ -518,6 +521,529 @@ describe('when given the load dmarc connection function', () => {
           }
 
           expect(dmarcScans).toEqual(expectedStructure)
+        })
+      })
+    })
+    describe('using orderBy field', () => {
+      let dmarcScanOne, dmarcScanTwo, dmarcScanThree
+      beforeEach(async () => {
+        await truncate()
+        domain = await collections.domains.save({
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        })
+        dmarcScanOne = await collections.dmarc.save({
+          timestamp: '2021-01-26 23:24:34.506578Z',
+          record: 'a',
+          pPolicy: 'a',
+          spPolicy: 'a',
+          pct: 1,
+        })
+        dmarcScanTwo = await collections.dmarc.save({
+          timestamp: '2021-01-27 23:24:34.506578Z',
+          record: 'b',
+          pPolicy: 'b',
+          spPolicy: 'b',
+          pct: 2,
+        })
+        dmarcScanThree = await collections.dmarc.save({
+          timestamp: '2021-01-28 23:24:34.506578Z',
+          record: 'c',
+          pPolicy: 'c',
+          spPolicy: 'c',
+          pct: 3,
+        })
+        await collections.domainsDMARC.save({
+          _to: dmarcScanOne._id,
+          _from: domain._id,
+        })
+        await collections.domainsDMARC.save({
+          _to: dmarcScanTwo._id,
+          _from: domain._id,
+        })
+        await collections.domainsDMARC.save({
+          _to: dmarcScanThree._id,
+          _from: domain._id,
+        })
+      })
+      describe('ordering on TIMESTAMP', () => {
+        describe('direction is set to ASC', () => {
+          it('returns the dmarc scan', async () => {
+            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
+
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dmarcScanOne._key),
+              before: toGlobalId('dkim', dmarcScanThree._key),
+              orderBy: {
+                field: 'timestamp',
+                direction: 'ASC',
+              },
+            }
+
+            const dmarcScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDmarcScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                endCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+              },
+            }
+
+            expect(dmarcScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns the dmarc scan', async () => {
+            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
+
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dmarcScanThree._key),
+              before: toGlobalId('dkim', dmarcScanOne._key),
+              orderBy: {
+                field: 'timestamp',
+                direction: 'DESC',
+              },
+            }
+
+            const dmarcScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDmarcScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                endCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+              },
+            }
+
+            expect(dmarcScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on RECORD', () => {
+        describe('direction is set to ASC', () => {
+          it('returns the dmarc scan', async () => {
+            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
+
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dmarcScanOne._key),
+              before: toGlobalId('dkim', dmarcScanThree._key),
+              orderBy: {
+                field: 'record',
+                direction: 'ASC',
+              },
+            }
+
+            const dmarcScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDmarcScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                endCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+              },
+            }
+
+            expect(dmarcScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns the dmarc scan', async () => {
+            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
+
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dmarcScanThree._key),
+              before: toGlobalId('dkim', dmarcScanOne._key),
+              orderBy: {
+                field: 'record',
+                direction: 'DESC',
+              },
+            }
+
+            const dmarcScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDmarcScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                endCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+              },
+            }
+
+            expect(dmarcScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on P_POLICY', () => {
+        describe('direction is set to ASC', () => {
+          it('returns the dmarc scan', async () => {
+            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
+
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dmarcScanOne._key),
+              before: toGlobalId('dkim', dmarcScanThree._key),
+              orderBy: {
+                field: 'p-policy',
+                direction: 'ASC',
+              },
+            }
+
+            const dmarcScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDmarcScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                endCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+              },
+            }
+
+            expect(dmarcScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns the dmarc scan', async () => {
+            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
+
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dmarcScanThree._key),
+              before: toGlobalId('dkim', dmarcScanOne._key),
+              orderBy: {
+                field: 'p-policy',
+                direction: 'DESC',
+              },
+            }
+
+            const dmarcScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDmarcScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                endCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+              },
+            }
+
+            expect(dmarcScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on SP_POLICY', () => {
+        describe('direction is set to ASC', () => {
+          it('returns the dmarc scan', async () => {
+            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
+
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dmarcScanOne._key),
+              before: toGlobalId('dkim', dmarcScanThree._key),
+              orderBy: {
+                field: 'sp-policy',
+                direction: 'ASC',
+              },
+            }
+
+            const dmarcScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDmarcScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                endCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+              },
+            }
+
+            expect(dmarcScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns the dmarc scan', async () => {
+            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
+
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dmarcScanThree._key),
+              before: toGlobalId('dkim', dmarcScanOne._key),
+              orderBy: {
+                field: 'sp-policy',
+                direction: 'DESC',
+              },
+            }
+
+            const dmarcScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDmarcScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                endCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+              },
+            }
+
+            expect(dmarcScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on PCT', () => {
+        describe('direction is set to ASC', () => {
+          it('returns the dmarc scan', async () => {
+            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
+
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dmarcScanOne._key),
+              before: toGlobalId('dkim', dmarcScanThree._key),
+              orderBy: {
+                field: 'pct',
+                direction: 'ASC',
+              },
+            }
+
+            const dmarcScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDmarcScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                endCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+              },
+            }
+
+            expect(dmarcScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns the dmarc scan', async () => {
+            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
+
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dmarcScanThree._key),
+              before: toGlobalId('dkim', dmarcScanOne._key),
+              orderBy: {
+                field: 'pct',
+                direction: 'DESC',
+              },
+            }
+
+            const dmarcScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDmarcScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+                endCursor: toGlobalId('dmarc', expectedDmarcScan._key),
+              },
+            }
+
+            expect(dmarcScans).toEqual(expectedStructure)
+          })
         })
       })
     })
