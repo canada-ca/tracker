@@ -16,8 +16,8 @@ export const SslOrderField = new GraphQLEnumType({
       value: 'ccs-injection-vulnerable',
       description: 'Order SSL edges by ccs-injection-vulnerable.',
     },
-    HEART_BLEED_VULNERABLE: {
-      value: 'heart-bleed-vulnerable',
+    HEARTBLEED_VULNERABLE: {
+      value: 'heartbleed-vulnerable',
       description: 'Order SSL edges by heart-bleed-vulnerable.',
     },
     STRONG_CIPHERS: {
