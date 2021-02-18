@@ -40,7 +40,7 @@
     "react-router-dom": "^5.2.0",
     "react-swipe": "^6.0.4",
     "react-table": "^7.6.0",
-    "recharts": "^2.0.3",
+    "recharts": "^2.0.7",
     "yup": "^0.29.3"
   },
   "devDependencies": {
