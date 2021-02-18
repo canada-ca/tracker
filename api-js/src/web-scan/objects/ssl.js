@@ -86,7 +86,7 @@ export const sslType = new GraphQLObjectType({
     strongCurves: {
       type: GraphQLList(GraphQLString),
       description: 'List of curves in use by the server deemed to be "strong".',
-      resolve: ({ strong_ciphers: strongCiphers }) => strongCiphers,
+      resolve: ({ strong_curves: strongCurves }) => strongCurves,
     },
     supportsEcdhKeyExchange: {
       type: GraphQLBoolean,
