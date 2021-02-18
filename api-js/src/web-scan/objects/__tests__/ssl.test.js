@@ -347,7 +347,7 @@ describe('given the ssl gql object', () => {
         const curves = ['curve123']
 
         expect(
-          demoType.strongCurves.resolve({ strong_ciphers: curves }),
+          demoType.strongCurves.resolve({ strong_curves: curves }),
         ).toEqual(['curve123'])
       })
     })
