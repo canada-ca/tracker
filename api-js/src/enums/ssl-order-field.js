@@ -32,7 +32,7 @@ export const SslOrderField = new GraphQLEnumType({
       value: 'supports-ecdh-key-exchange',
       description: 'Order SSL edges by supports-ecdh-key-exchange.',
     },
-    TIME_STAMP: {
+    TIMESTAMP: {
       value: 'timestamp',
       description: 'Order SSL edges by timestamp.',
     },
