@@ -2575,6 +2575,61 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         })
       })
     })
+    describe('isSuperAdmin is set to true', () => {
+      it('returns dmarc summaries', async () => {
+        const summaryLoader = dmarcSumLoaderByKey(query)
+        const expectedSummaries = await summaryLoader.loadMany([
+          dmarcSummary1._key,
+          dmarcSummary2._key,
+        ])
+
+        const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+          query,
+          user._key,
+          cleanseInput,
+          {},
+          jest.fn().mockReturnValueOnce('thirtyDays'),
+        )
+
+        const connectionArgs = {
+          first: 10,
+          period: 'thirtyDays',
+          year: '2021',
+          isSuperAdmin: true,
+        }
+
+        const summaries = await connectionLoader({ ...connectionArgs })
+
+        const expectedStructure = {
+          edges: [
+            {
+              cursor: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+              node: {
+                ...expectedSummaries[0],
+              },
+            },
+            {
+              cursor: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+              node: {
+                ...expectedSummaries[1],
+              },
+            },
+          ],
+          totalCount: 2,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId(
+              'dmarcSummaries',
+              expectedSummaries[0]._key,
+            ),
+            endCursor: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+          },
+        }
+
+        expect(summaries).toEqual(expectedStructure)
+      })
+    })
   })
   describe('given there are no dmarc summaries to be returned', () => {
     it('returns no dmarc summary connections', async () => {

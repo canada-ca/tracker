@@ -8,7 +8,16 @@ export const dmarcSumLoaderConnectionsByUserId = (
   cleanseInput,
   i18n,
   loadStartDateFromPeriod,
-) => async ({ after, before, first, last, period, year, orderBy }) => {
+) => async ({
+  after,
+  before,
+  first,
+  last,
+  period,
+  year,
+  orderBy,
+  isSuperAdmin,
+}) => {
   const userDBId = `users/${userKey}`
 
   if (typeof period === 'undefined') {
@@ -312,16 +321,33 @@ export const dmarcSumLoaderConnectionsByUserId = (
     sortString = aql`ASC`
   }
 
+  let domainIdQueries
+  if (isSuperAdmin) {
+    domainIdQueries = aql`
+      LET domainIds = UNIQUE(FLATTEN(
+        LET ids = []
+        LET orgIds = (FOR org IN organizations RETURN org._id)
+        FOR orgId IN orgIds
+          LET claimDomainIds = (FOR v, e IN 1..1 OUTBOUND orgId ownership RETURN v._id)
+          RETURN APPEND(ids, claimDomainIds)
+      ))
+    `
+  } else {
+    domainIdQueries = aql`
+      LET domainIds = UNIQUE(FLATTEN(
+        LET ids = []
+        LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
+        FOR orgId IN orgIds
+          LET claimDomainIds = (FOR v, e IN 1..1 OUTBOUND orgId ownership RETURN v._id)
+          RETURN APPEND(ids, claimDomainIds)
+      ))
+    `
+  }
+
   let requestedSummaryInfo
   try {
     requestedSummaryInfo = await query`
-    LET domainIds = UNIQUE(FLATTEN(
-      LET ids = []
-      LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
-      FOR orgId IN orgIds
-        LET claimDomainIds = (FOR v, e IN 1..1 OUTBOUND orgId ownership RETURN v._id)
-        RETURN APPEND(ids, claimDomainIds)
-    ))
+    ${domainIdQueries}
 
     LET summaryIds = (
       FOR domainId IN domainIds
