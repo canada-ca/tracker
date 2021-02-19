@@ -26,7 +26,7 @@ export const findMyDomains = {
     {
       i18n,
       userKey,
-      auth: { userRequired },
+      auth: { checkSuperAdmin, userRequired },
       loaders: { domainLoaderConnectionsByUserId },
     },
   ) => {
@@ -34,8 +34,13 @@ export const findMyDomains = {
 
     await userRequired()
 
+    const isSuperAdmin = await checkSuperAdmin()
+
     try {
-      domainConnections = await domainLoaderConnectionsByUserId(args)
+      domainConnections = await domainLoaderConnectionsByUserId({
+        isSuperAdmin,
+        ...args,
+      })
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userKey} was trying to gather domain connections in findMyDomains.`,

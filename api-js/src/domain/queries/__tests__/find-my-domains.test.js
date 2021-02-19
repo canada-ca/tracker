@@ -9,7 +9,7 @@ import { makeMigrations } from '../../../../migrations'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { userRequired } from '../../../auth'
+import { checkSuperAdmin, userRequired } from '../../../auth'
 import { domainLoaderConnectionsByUserId } from '../../loaders'
 import { userLoaderByKey } from '../../../user'
 
@@ -154,6 +154,11 @@ describe('given findMyDomainsQuery', () => {
             i18n,
             userKey: user._key,
             auth: {
+              checkSuperAdmin: checkSuperAdmin({
+                i18n,
+                userKey: user._key,
+                query,
+              }),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -261,6 +266,7 @@ describe('given findMyDomainsQuery', () => {
               i18n,
               userKey: 1,
               auth: {
+                checkSuperAdmin: jest.fn(),
                 userRequired: jest.fn(),
               },
               loaders: {
@@ -332,6 +338,7 @@ describe('given findMyDomainsQuery', () => {
               i18n,
               userKey: 1,
               auth: {
+                checkSuperAdmin: jest.fn(),
                 userRequired: jest.fn(),
               },
               loaders: {
