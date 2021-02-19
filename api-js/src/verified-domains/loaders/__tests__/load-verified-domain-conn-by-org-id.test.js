@@ -7,7 +7,10 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { makeMigrations } from '../../../../migrations'
 import { cleanseInput } from '../../../validators'
-import { verifiedDomainLoaderConnectionsByOrgId, verifiedDomainLoaderByKey } from '../../loaders'
+import {
+  verifiedDomainLoaderConnectionsByOrgId,
+  verifiedDomainLoaderByKey,
+} from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -326,6 +329,712 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
         }
 
         expect(domains).toEqual(expectedStructure)
+      })
+    })
+    describe('using the orderBy field', () => {
+      let domainOne, domainTwo, domainThree
+      beforeEach(async () => {
+        await truncate()
+        org = await collections.organizations.save({
+          verified: true,
+          orgDetails: {
+            en: {
+              slug: 'treasury-board-secretariat',
+              acronym: 'TBS',
+              name: 'Treasury Board of Canada Secretariat',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+            fr: {
+              slug: 'secretariat-conseil-tresor',
+              acronym: 'SCT',
+              name: 'Secrétariat du Conseil Trésor du Canada',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+          },
+        })
+        domainOne = await collections.domains.save({
+          domain: 'test.domain.gc.a.ca',
+          status: {
+            dkim: 'fail',
+            dmarc: 'fail',
+            https: 'fail',
+            spf: 'fail',
+            ssl: 'fail',
+          },
+          lastRan: '2021-01-01 12:12:12.000000',
+        })
+        domainTwo = await collections.domains.save({
+          domain: 'test.domain.gc.b.ca',
+          status: {
+            dkim: 'info',
+            dmarc: 'info',
+            https: 'info',
+            spf: 'info',
+            ssl: 'info',
+          },
+          lastRan: '2021-01-02 12:12:12.000000',
+        })
+        domainThree = await collections.domains.save({
+          domain: 'test.domain.gc.c.ca',
+          status: {
+            dkim: 'pass',
+            dmarc: 'pass',
+            https: 'pass',
+            spf: 'pass',
+            ssl: 'pass',
+          },
+          lastRan: '2021-01-03 12:12:12.000000',
+        })
+        await collections.claims.save({
+          _from: org._id,
+          _to: domainOne._id,
+        })
+        await collections.claims.save({
+          _from: org._id,
+          _to: domainTwo._id,
+        })
+        await collections.claims.save({
+          _from: org._id,
+          _to: domainThree._id,
+        })
+      })
+      describe('ordering on DOMAIN', () => {
+        describe('direction is ASC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainOne._key),
+              before: toGlobalId('verifiedDomains', domainThree._key),
+              orderBy: {
+                field: 'domain',
+                direction: 'ASC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is DESC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainThree._key),
+              before: toGlobalId('verifiedDomains', domainOne._key),
+              orderBy: {
+                field: 'domain',
+                direction: 'DESC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on LAST_RAN', () => {
+        describe('direction is ASC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainOne._key),
+              before: toGlobalId('verifiedDomains', domainThree._key),
+              orderBy: {
+                field: 'last-ran',
+                direction: 'ASC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is DESC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainThree._key),
+              before: toGlobalId('verifiedDomains', domainOne._key),
+              orderBy: {
+                field: 'last-ran',
+                direction: 'DESC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on DKIM_STATUS', () => {
+        describe('direction is ASC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainOne._key),
+              before: toGlobalId('verifiedDomains', domainThree._key),
+              orderBy: {
+                field: 'dkim-status',
+                direction: 'ASC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is DESC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainThree._key),
+              before: toGlobalId('verifiedDomains', domainOne._key),
+              orderBy: {
+                field: 'dkim-status',
+                direction: 'DESC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on DMARC_STATUS', () => {
+        describe('direction is ASC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainOne._key),
+              before: toGlobalId('verifiedDomains', domainThree._key),
+              orderBy: {
+                field: 'dmarc-status',
+                direction: 'ASC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is DESC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainThree._key),
+              before: toGlobalId('verifiedDomains', domainOne._key),
+              orderBy: {
+                field: 'dmarc-status',
+                direction: 'DESC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on HTTPS_STATUS', () => {
+        describe('direction is ASC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainOne._key),
+              before: toGlobalId('verifiedDomains', domainThree._key),
+              orderBy: {
+                field: 'https-status',
+                direction: 'ASC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is DESC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainThree._key),
+              before: toGlobalId('verifiedDomains', domainOne._key),
+              orderBy: {
+                field: 'https-status',
+                direction: 'DESC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on SPF_STATUS', () => {
+        describe('direction is ASC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainOne._key),
+              before: toGlobalId('verifiedDomains', domainThree._key),
+              orderBy: {
+                field: 'spf-status',
+                direction: 'ASC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is DESC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainThree._key),
+              before: toGlobalId('verifiedDomains', domainOne._key),
+              orderBy: {
+                field: 'spf-status',
+                direction: 'DESC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on SSL_STATUS', () => {
+        describe('direction is ASC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainOne._key),
+              before: toGlobalId('verifiedDomains', domainThree._key),
+              orderBy: {
+                field: 'ssl-status',
+                direction: 'ASC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is DESC', () => {
+          it('returns domains in order', async () => {
+            const domainLoader = verifiedDomainLoaderByKey(query)
+            const expectedDomain = await domainLoader.load(domainTwo._key)
+
+            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              query,
+              cleanseInput,
+            )
+
+            const connectionArgs = {
+              orgId: org._id,
+              first: 5,
+              after: toGlobalId('verifiedDomains', domainThree._key),
+              before: toGlobalId('verifiedDomains', domainOne._key),
+              orderBy: {
+                field: 'ssl-status',
+                direction: 'DESC',
+              },
+            }
+
+            const domains = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('verifiedDomains', domainTwo._key),
+                  node: {
+                    ...expectedDomain,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('verifiedDomains', domainTwo._key),
+                endCursor: toGlobalId('verifiedDomains', domainTwo._key),
+              },
+            }
+
+            expect(domains).toEqual(expectedStructure)
+          })
+        })
       })
     })
     describe('no organizations are found', () => {
