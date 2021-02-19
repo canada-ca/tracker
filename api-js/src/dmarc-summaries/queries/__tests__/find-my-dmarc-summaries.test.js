@@ -10,7 +10,7 @@ import { makeMigrations } from '../../../../migrations'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { userRequired } from '../../../auth'
+import { checkSuperAdmin, userRequired } from '../../../auth'
 import { dmarcSumLoaderConnectionsByUserId } from '../../loaders'
 import { userLoaderByKey } from '../../../user/loaders'
 
@@ -183,6 +183,11 @@ describe('given the findMyDmarcSummaries query', () => {
           moment,
           userKey: user._key,
           auth: {
+            checkSuperAdmin: checkSuperAdmin({
+              i18n,
+              userKey: user._key,
+              query,
+            }),
             userRequired: userRequired({
               i18n,
               userKey: user._key,
@@ -278,6 +283,7 @@ describe('given the findMyDmarcSummaries query', () => {
               moment,
               userKey: undefined,
               auth: {
+                checkSuperAdmin: jest.fn(),
                 userRequired: userRequired({
                   i18n,
                   userKey: undefined,
@@ -336,6 +342,7 @@ describe('given the findMyDmarcSummaries query', () => {
               moment,
               userKey: user._key,
               auth: {
+                checkSuperAdmin: jest.fn(),
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
@@ -368,7 +375,7 @@ describe('given the findMyDmarcSummaries query', () => {
         })
       })
     })
-    describe('users language is set to english', () => {
+    describe('users language is set to french', () => {
       beforeAll(() => {
         i18n = setupI18n({
           locale: 'fr',
@@ -414,6 +421,7 @@ describe('given the findMyDmarcSummaries query', () => {
               moment,
               userKey: undefined,
               auth: {
+                checkSuperAdmin: jest.fn(),
                 userRequired: userRequired({
                   i18n,
                   userKey: undefined,
@@ -470,6 +478,7 @@ describe('given the findMyDmarcSummaries query', () => {
               moment,
               userKey: user._key,
               auth: {
+                checkSuperAdmin: jest.fn(),
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
