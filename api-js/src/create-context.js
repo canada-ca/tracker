@@ -9,6 +9,7 @@ import {
   checkDomainOwnership,
   checkDomainPermission,
   checkPermission,
+  checkSuperAdmin,
   checkUserIsAdminForUser,
   tokenize,
   userRequired,
@@ -124,6 +125,7 @@ export const createContext = ({ context, req: request, res: response }) => {
       checkDomainOwnership: checkDomainOwnership({ i18n, userKey, query }),
       checkDomainPermission: checkDomainPermission({ i18n, userKey, query }),
       checkPermission: checkPermission({ i18n, userKey, query }),
+      checkSuperAdmin: checkSuperAdmin({ i18n, userKey, query }),
       checkUserIsAdminForUser: checkUserIsAdminForUser({
         i18n,
         userKey,
