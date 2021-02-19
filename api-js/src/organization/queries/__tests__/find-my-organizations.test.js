@@ -9,7 +9,7 @@ import { makeMigrations } from '../../../../migrations'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { userRequired } from '../../../auth'
+import { checkSuperAdmin, userRequired } from '../../../auth'
 import { userLoaderByKey } from '../../../user/loaders'
 import { orgLoaderConnectionsByUserId } from '../../loaders'
 
@@ -180,6 +180,11 @@ describe('given findMyOrganizationsQuery', () => {
                 i18n,
                 userKey: user._key,
                 auth: {
+                  checkSuperAdmin: checkSuperAdmin({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
@@ -287,6 +292,7 @@ describe('given findMyOrganizationsQuery', () => {
             i18n,
             userKey: user._key,
             auth: {
+              checkSuperAdmin: jest.fn(),
               userRequired: jest.fn(),
             },
             loaders: {
@@ -371,6 +377,11 @@ describe('given findMyOrganizationsQuery', () => {
                 i18n,
                 userKey: user._key,
                 auth: {
+                  checkSuperAdmin: checkSuperAdmin({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
@@ -478,6 +489,7 @@ describe('given findMyOrganizationsQuery', () => {
             i18n,
             userKey: user._key,
             auth: {
+              checkSuperAdmin: jest.fn(),
               userRequired: jest.fn(),
             },
             loaders: {
