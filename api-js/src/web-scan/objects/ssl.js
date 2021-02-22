@@ -13,8 +13,9 @@ import {
 import { GraphQLJSON } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
-import { guidanceTagConnection } from '../../guidance-tag'
 import { nodeInterface } from '../../node'
+import { guidanceTagOrder } from '../../guidance-tag/inputs'
+import { guidanceTagConnection } from '../../guidance-tag/objects'
 
 export const sslType = new GraphQLObjectType({
   name: 'SSL',
@@ -51,6 +52,10 @@ export const sslType = new GraphQLObjectType({
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
       args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
         ...connectionArgs,
       },
       description: `Key tags found during scan.`,

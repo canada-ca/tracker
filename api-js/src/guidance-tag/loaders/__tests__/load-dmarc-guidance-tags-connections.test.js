@@ -45,7 +45,6 @@ describe('when given the load dmarc guidance tag connection function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
 
@@ -63,6 +62,10 @@ describe('when given the load dmarc guidance tag connection function', () => {
     await collections.dmarcGuidanceTags.save({
       _key: 'dmarc2',
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
@@ -305,6 +308,302 @@ describe('when given the load dmarc guidance tag connection function', () => {
         }
 
         expect(dmarcTags).toEqual(expectedStructure)
+      })
+    })
+    describe('using orderBy field', () => {
+      beforeEach(async () => {
+        await truncate()
+        await collections.dmarcGuidanceTags.save({
+          _key: 'dmarc1',
+          tagName: 'a',
+          guidance: 'a',
+        })
+        await collections.dmarcGuidanceTags.save({
+          _key: 'dmarc2',
+          tagName: 'b',
+          guidance: 'b',
+        })
+        await collections.dmarcGuidanceTags.save({
+          _key: 'dmarc3',
+          tagName: 'c',
+          guidance: 'c',
+        })
+      })
+      describe('ordering on TAG_ID', () => {
+        describe('order is set to ASC', () => {
+          it('returns guidance tag', async () => {
+            const loader = dmarcGuidanceTagLoader(query)
+            const expectedDmarcTag = await loader.load('dmarc2')
+
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'dmarc1'),
+              before: toGlobalId('guidanceTags', 'dmarc3'),
+              orderBy: {
+                field: 'tag-id',
+                direction: 'ASC',
+              },
+            }
+            const dkimTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  node: {
+                    ...expectedDmarcTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+              },
+            }
+
+            expect(dkimTags).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns guidance tag', async () => {
+            const loader = dmarcGuidanceTagLoader(query)
+            const expectedDmarcTag = await loader.load('dmarc2')
+
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'dmarc3'),
+              before: toGlobalId('guidanceTags', 'dmarc1'),
+              orderBy: {
+                field: 'tag-id',
+                direction: 'DESC',
+              },
+            }
+            const dmarcTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  node: {
+                    ...expectedDmarcTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+              },
+            }
+
+            expect(dmarcTags).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on TAG_NAME', () => {
+        describe('order is set to ASC', () => {
+          it('returns guidance tag', async () => {
+            const loader = dmarcGuidanceTagLoader(query)
+            const expectedDmarcTag = await loader.load('dmarc2')
+
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'dmarc1'),
+              before: toGlobalId('guidanceTags', 'dmarc3'),
+              orderBy: {
+                field: 'tag-name',
+                direction: 'ASC',
+              },
+            }
+            const dkimTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  node: {
+                    ...expectedDmarcTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+              },
+            }
+
+            expect(dkimTags).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns guidance tag', async () => {
+            const loader = dmarcGuidanceTagLoader(query)
+            const expectedDmarcTag = await loader.load('dmarc2')
+
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'dmarc3'),
+              before: toGlobalId('guidanceTags', 'dmarc1'),
+              orderBy: {
+                field: 'tag-name',
+                direction: 'DESC',
+              },
+            }
+            const dmarcTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  node: {
+                    ...expectedDmarcTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+              },
+            }
+
+            expect(dmarcTags).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on GUIDANCE', () => {
+        describe('order is set to ASC', () => {
+          it('returns guidance tag', async () => {
+            const loader = dmarcGuidanceTagLoader(query)
+            const expectedDmarcTag = await loader.load('dmarc2')
+
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'dmarc1'),
+              before: toGlobalId('guidanceTags', 'dmarc3'),
+              orderBy: {
+                field: 'guidance',
+                direction: 'ASC',
+              },
+            }
+            const dkimTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  node: {
+                    ...expectedDmarcTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+              },
+            }
+
+            expect(dkimTags).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns guidance tag', async () => {
+            const loader = dmarcGuidanceTagLoader(query)
+            const expectedDmarcTag = await loader.load('dmarc2')
+
+            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'dmarc3'),
+              before: toGlobalId('guidanceTags', 'dmarc1'),
+              orderBy: {
+                field: 'guidance',
+                direction: 'DESC',
+              },
+            }
+            const dmarcTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                  node: {
+                    ...expectedDmarcTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedDmarcTag._key),
+              },
+            }
+
+            expect(dmarcTags).toEqual(expectedStructure)
+          })
+        })
       })
     })
     describe('no dmarc results are found', () => {
