@@ -8,6 +8,7 @@ import { GraphQLDateTime } from 'graphql-scalars'
 
 import { domainStatus } from '../../domain/objects'
 import { Domain } from '../../scalars'
+import { verifiedOrganizationOrder } from '../../verified-organizations/inputs'
 import { verifiedOrganizationConnection } from '../../verified-organizations/objects'
 import { nodeInterface } from '../../node'
 
@@ -32,7 +33,14 @@ export const verifiedDomainType = new GraphQLObjectType({
     },
     organizations: {
       type: verifiedOrganizationConnection.connectionType,
-      args: connectionArgs,
+      args: {
+        orderBy: {
+          type: verifiedOrganizationOrder,
+          description:
+            'Ordering options for verified organization connections.',
+        },
+        ...connectionArgs,
+      },
       description: 'The organization that this domain belongs to.',
       resolve: async (
         { _id },
