@@ -299,7 +299,6 @@ ALL_RESULTS = gql(
                 dmarc(first: 100) {
                     edges {
                         node {
-                            dmarcPhase
                             record
                             pPolicy
                             spPolicy
@@ -471,7 +470,6 @@ EMAIL_RESULTS = gql(
                 dmarc(first: 100) {
                     edges {
                         node {
-                            dmarcPhase
                             record
                             pPolicy
                             spPolicy
