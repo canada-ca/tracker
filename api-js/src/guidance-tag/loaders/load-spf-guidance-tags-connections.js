@@ -7,17 +7,73 @@ export const spfGuidanceTagConnectionsLoader = (
   userKey,
   cleanseInput,
   i18n,
-) => async ({ spfGuidanceTags, after, before, first, last }) => {
+) => async ({ spfGuidanceTags, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) > TO_NUMBER(REGEX_SPLIT(${afterId}, "[a-z]+")[1])`
+    if (typeof orderBy === 'undefined') {
+      afterTemplate = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) > TO_NUMBER(REGEX_SPLIT(${afterId}, "[a-z]+")[1])`
+    } else {
+      let afterTemplateDirection
+      if (orderBy.direction === 'ASC') {
+        afterTemplateDirection = aql`>`
+      } else {
+        afterTemplateDirection = aql`<`
+      }
+
+      let tagField, documentField
+      /* istanbul ignore else */
+      if (orderBy.field === 'tag-id') {
+        tagField = aql`tag._key`
+        documentField = aql`DOCUMENT(spfGuidanceTags, ${afterId})._key`
+      } else if (orderBy.field === 'tag-name') {
+        tagField = aql`tag.tagName`
+        documentField = aql`DOCUMENT(spfGuidanceTags, ${afterId}).tagName`
+      } else if (orderBy.field === 'guidance') {
+        tagField = aql`tag.guidance`
+        documentField = aql`DOCUMENT(spfGuidanceTags, ${afterId}).guidance`
+      }
+
+      afterTemplate = aql`
+        FILTER ${tagField} ${afterTemplateDirection} ${documentField}
+        OR (${tagField} == ${documentField}
+        AND TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) > TO_NUMBER(REGEX_SPLIT(${afterId}, "[a-z]+")[1]))
+      `
+    }
   }
 
   let beforeTemplate = aql``
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    beforeTemplate = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(${beforeId}, "[a-z]+")[1])`
+    if (typeof orderBy === 'undefined') {
+      beforeTemplate = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(${beforeId}, "[a-z]+")[1])`
+    } else {
+      let beforeTemplateDirection
+      if (orderBy.direction === 'ASC') {
+        beforeTemplateDirection = aql`<`
+      } else {
+        beforeTemplateDirection = aql`>`
+      }
+
+      let tagField, documentField
+      /* istanbul ignore else */
+      if (orderBy.field === 'tag-id') {
+        tagField = aql`tag._key`
+        documentField = aql`DOCUMENT(spfGuidanceTags, ${beforeId})._key`
+      } else if (orderBy.field === 'tag-name') {
+        tagField = aql`tag.tagName`
+        documentField = aql`DOCUMENT(spfGuidanceTags, ${beforeId}).tagName`
+      } else if (orderBy.field === 'guidance') {
+        tagField = aql`tag.guidance`
+        documentField = aql`DOCUMENT(spfGuidanceTags, ${beforeId}).guidance`
+      }
+
+      beforeTemplate = aql`
+        FILTER ${tagField} ${beforeTemplateDirection} ${documentField}
+        OR (${tagField} == ${documentField}
+        AND TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(${beforeId}, "[a-z]+")[1]))
+      `
+    }
   }
 
   let limitTemplate = aql``
@@ -63,9 +119,9 @@ export const spfGuidanceTagConnectionsLoader = (
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-      limitTemplate = aql`SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) ASC LIMIT TO_NUMBER(${first})`
+      limitTemplate = aql`TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) ASC LIMIT TO_NUMBER(${first})`
     } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-      limitTemplate = aql`SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) DESC LIMIT TO_NUMBER(${last})`
+      limitTemplate = aql`TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) DESC LIMIT TO_NUMBER(${last})`
     }
   } else {
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -76,6 +132,60 @@ export const spfGuidanceTagConnectionsLoader = (
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
     )
+  }
+
+  let hasNextPageFilter = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) > TO_NUMBER(REGEX_SPLIT(LAST(retrievedSpfGuidanceTags)._key, "[a-z]+")[1])`
+  let hasPreviousPageFilter = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(FIRST(retrievedSpfGuidanceTags)._key, "[a-z]+")[1])`
+  if (typeof orderBy !== 'undefined') {
+    let hasNextPageDirection
+    let hasPreviousPageDirection
+    if (orderBy.direction === 'ASC') {
+      hasNextPageDirection = aql`>`
+      hasPreviousPageDirection = aql`<`
+    } else {
+      hasNextPageDirection = aql`<`
+      hasPreviousPageDirection = aql`>`
+    }
+
+    let tagField, hasNextPageDocument, hasPreviousPageDocument
+    /* istanbul ignore else */
+    if (orderBy.field === 'tag-id') {
+      tagField = aql`tag._key`
+      hasNextPageDocument = aql`LAST(retrievedSpfGuidanceTags)._key`
+      hasPreviousPageDocument = aql`FIRST(retrievedSpfGuidanceTags)._key`
+    } else if (orderBy.field === 'tag-name') {
+      tagField = aql`tag.tagName`
+      hasNextPageDocument = aql`LAST(retrievedSpfGuidanceTags).tagName`
+      hasPreviousPageDocument = aql`FIRST(retrievedSpfGuidanceTags).tagName`
+    } else if (orderBy.field === 'guidance') {
+      tagField = aql`tag.guidance`
+      hasNextPageDocument = aql`LAST(retrievedSpfGuidanceTags).guidance`
+      hasPreviousPageDocument = aql`FIRST(retrievedSpfGuidanceTags).guidance`
+    }
+
+    hasNextPageFilter = aql`
+      FILTER ${tagField} ${hasNextPageDirection} ${hasNextPageDocument}
+      OR (${tagField} == ${hasNextPageDocument}
+      AND TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) > TO_NUMBER(REGEX_SPLIT(LAST(retrievedSpfGuidanceTags)._key, "[a-z]+")[1]))
+    `
+
+    hasPreviousPageFilter = aql`
+      FILTER ${tagField} ${hasPreviousPageDirection} ${hasPreviousPageDocument}
+      OR (${tagField} == ${hasPreviousPageDocument}
+      AND TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(FIRST(retrievedSpfGuidanceTags)._key, "[a-z]+")[1]))
+    `
+  }
+
+  let sortByField = aql``
+  if (typeof orderBy !== 'undefined') {
+    /* istanbul ignore else */
+    if (orderBy.field === 'tag-id') {
+      sortByField = aql`tag._key ${orderBy.direction},`
+    } else if (orderBy.field === 'tag-name') {
+      sortByField = aql`tag.tagName ${orderBy.direction},`
+    } else if (orderBy.field === 'guidance') {
+      sortByField = aql`tag.guidance ${orderBy.direction},`
+    }
   }
 
   let sortString
@@ -93,6 +203,8 @@ export const spfGuidanceTagConnectionsLoader = (
           FILTER tag._key IN ${spfGuidanceTags}
           ${afterTemplate}
           ${beforeTemplate}
+          SORT
+          ${sortByField}
           ${limitTemplate}
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
       )
@@ -100,16 +212,16 @@ export const spfGuidanceTagConnectionsLoader = (
       LET hasNextPage = (LENGTH(
         FOR tag IN spfGuidanceTags
           FILTER tag._key IN ${spfGuidanceTags}
-          FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) > TO_NUMBER(REGEX_SPLIT(LAST(retrievedSpfGuidanceTags)._key, "[a-z]+")[1])
-          SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) ${sortString} LIMIT 1
+          ${hasNextPageFilter}
+          SORT ${sortByField} TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) ${sortString} LIMIT 1
           RETURN tag
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
         FOR tag IN spfGuidanceTags
           FILTER tag._key IN ${spfGuidanceTags}
-          FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(FIRST(retrievedSpfGuidanceTags)._key, "[a-z]+")[1])
-          SORT TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) ${sortString} LIMIT 1
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) ${sortString} LIMIT 1
           RETURN tag
       ) > 0 ? true : false)
       
