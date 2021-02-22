@@ -42,7 +42,6 @@ describe('when given the load ssl guidance tag connection function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
 
@@ -60,6 +59,10 @@ describe('when given the load ssl guidance tag connection function', () => {
     await collections.sslGuidanceTags.save({
       _key: 'ssl2',
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
@@ -292,6 +295,302 @@ describe('when given the load ssl guidance tag connection function', () => {
         }
 
         expect(sslTags).toEqual(expectedStructure)
+      })
+    })
+    describe('using orderBy field', () => {
+      beforeEach(async () => {
+        await truncate()
+        await collections.sslGuidanceTags.save({
+          _key: 'ssl1',
+          tagName: 'a',
+          guidance: 'a',
+        })
+        await collections.sslGuidanceTags.save({
+          _key: 'ssl2',
+          tagName: 'b',
+          guidance: 'b',
+        })
+        await collections.sslGuidanceTags.save({
+          _key: 'ssl3',
+          tagName: 'c',
+          guidance: 'c',
+        })
+      })
+      describe('ordering on TAG_ID', () => {
+        describe('order is set to ASC', () => {
+          it('returns guidance tag', async () => {
+            const loader = sslGuidanceTagLoader(query)
+            const expectedSslTag = await loader.load('ssl2')
+
+            const connectionLoader = sslGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'ssl1'),
+              before: toGlobalId('guidanceTags', 'ssl3'),
+              orderBy: {
+                field: 'tag-id',
+                direction: 'ASC',
+              },
+            }
+            const sslTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                  node: {
+                    ...expectedSslTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+              },
+            }
+
+            expect(sslTags).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns guidance tag', async () => {
+            const loader = sslGuidanceTagLoader(query)
+            const expectedSslTag = await loader.load('ssl2')
+
+            const connectionLoader = sslGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'ssl3'),
+              before: toGlobalId('guidanceTags', 'ssl1'),
+              orderBy: {
+                field: 'tag-id',
+                direction: 'DESC',
+              },
+            }
+            const sslTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                  node: {
+                    ...expectedSslTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+              },
+            }
+
+            expect(sslTags).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on TAG_NAME', () => {
+        describe('order is set to ASC', () => {
+          it('returns guidance tag', async () => {
+            const loader = sslGuidanceTagLoader(query)
+            const expectedSslTag = await loader.load('ssl2')
+
+            const connectionLoader = sslGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'ssl1'),
+              before: toGlobalId('guidanceTags', 'ssl3'),
+              orderBy: {
+                field: 'tag-name',
+                direction: 'ASC',
+              },
+            }
+            const sslTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                  node: {
+                    ...expectedSslTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+              },
+            }
+
+            expect(sslTags).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns guidance tag', async () => {
+            const loader = sslGuidanceTagLoader(query)
+            const expectedSslTag = await loader.load('ssl2')
+
+            const connectionLoader = sslGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'ssl3'),
+              before: toGlobalId('guidanceTags', 'ssl1'),
+              orderBy: {
+                field: 'tag-name',
+                direction: 'DESC',
+              },
+            }
+            const sslTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                  node: {
+                    ...expectedSslTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+              },
+            }
+
+            expect(sslTags).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on GUIDANCE', () => {
+        describe('order is set to ASC', () => {
+          it('returns guidance tag', async () => {
+            const loader = sslGuidanceTagLoader(query)
+            const expectedSslTag = await loader.load('ssl2')
+
+            const connectionLoader = sslGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'ssl1'),
+              before: toGlobalId('guidanceTags', 'ssl3'),
+              orderBy: {
+                field: 'guidance',
+                direction: 'ASC',
+              },
+            }
+            const sslTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                  node: {
+                    ...expectedSslTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+              },
+            }
+
+            expect(sslTags).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns guidance tag', async () => {
+            const loader = sslGuidanceTagLoader(query)
+            const expectedSslTag = await loader.load('ssl2')
+
+            const connectionLoader = sslGuidanceTagConnectionsLoader(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              sslGuidanceTags: ['ssl1', 'ssl2', 'ssl3'],
+              first: 5,
+              after: toGlobalId('guidanceTags', 'ssl3'),
+              before: toGlobalId('guidanceTags', 'ssl1'),
+              orderBy: {
+                field: 'guidance',
+                direction: 'DESC',
+              },
+            }
+            const sslTags = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                  node: {
+                    ...expectedSslTag,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+                endCursor: toGlobalId('guidanceTags', expectedSslTag._key),
+              },
+            }
+
+            expect(sslTags).toEqual(expectedStructure)
+          })
+        })
       })
     })
     describe('no ssl results are found', () => {
