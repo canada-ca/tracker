@@ -9,7 +9,7 @@ from gql.transport.exceptions import (
     TransportProtocolError,
 )
 
-from tracker_client.client import get_auth_token, create_client, execute_query
+from tracker_client.core import get_auth_token, create_client, execute_query
 
 # RegEx to check if a JWT is correctly formed
 JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
