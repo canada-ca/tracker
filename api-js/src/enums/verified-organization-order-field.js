@@ -25,10 +25,6 @@ export const VerifiedOrganizationOrderField = new GraphQLEnumType({
       value: 'country',
       description: 'Order verified organization edges by country.',
     },
-    VERIFIED: {
-      value: 'verified',
-      description: 'Order verified organization edges by verification.',
-    },
     SUMMARY_MAIL_PASS: {
       value: 'summary-mail-pass',
       description: 'Order verified organizations by summary mail pass count.',
