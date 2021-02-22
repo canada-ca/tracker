@@ -8,7 +8,7 @@ export const orgLoaderConnectionsByUserId = (
   cleanseInput,
   language,
   i18n,
-) => async ({ after, before, first, last, orderBy }) => {
+) => async ({ after, before, first, last, orderBy, isSuperAdmin }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -358,10 +358,17 @@ export const orgLoaderConnectionsByUserId = (
     sortString = aql`ASC`
   }
 
+  let orgKeysQuery
+  if (isSuperAdmin) {
+    orgKeysQuery = aql`LET orgKeys = (FOR org IN organizations RETURN org._key)`
+  } else {
+    orgKeysQuery = aql`LET orgKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)`
+  }
+
   let organizationInfoCursor
   try {
     organizationInfoCursor = await query`
-    LET orgKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
+    ${orgKeysQuery}
 
     LET retrievedOrgs = (
       FOR org IN organizations

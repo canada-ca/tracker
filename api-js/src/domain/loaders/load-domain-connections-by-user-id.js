@@ -7,7 +7,15 @@ export const domainLoaderConnectionsByUserId = (
   userKey,
   cleanseInput,
   i18n,
-) => async ({ after, before, first, last, ownership, orderBy }) => {
+) => async ({
+  after,
+  before,
+  first,
+  last,
+  ownership,
+  orderBy,
+  isSuperAdmin,
+}) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -256,16 +264,33 @@ export const domainLoaderConnectionsByUserId = (
     sortString = aql`ASC`
   }
 
+  let domainKeysQuery
+  if (isSuperAdmin) {
+    domainKeysQuery = aql`
+      LET domainKeys = UNIQUE(FLATTEN(
+        LET keys = []
+        LET orgIds = (FOR org IN organizations RETURN org._id)
+        FOR orgId IN orgIds 
+            ${ownershipOrgsOnly}
+            RETURN APPEND(keys, claimDomainKeys)
+      ))
+    `
+  } else {
+    domainKeysQuery = aql`
+      LET domainKeys = UNIQUE(FLATTEN(
+        LET keys = []
+        LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
+        FOR orgId IN orgIds 
+            ${ownershipOrgsOnly}
+            RETURN APPEND(keys, claimDomainKeys)
+      ))
+    `
+  }
+
   let requestedDomainInfo
   try {
     requestedDomainInfo = await query`
-    LET domainKeys = UNIQUE(FLATTEN(
-      LET keys = []
-      LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
-      FOR orgId IN orgIds 
-          ${ownershipOrgsOnly}
-          RETURN APPEND(keys, claimDomainKeys)
-    ))
+    ${domainKeysQuery}
     
     LET retrievedDomains = (
       FOR domain IN domains

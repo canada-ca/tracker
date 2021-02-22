@@ -31,8 +31,8 @@ spec:
             - --git-timeout=120s
           resources:
             requests:
-              cpu: 500m
+              cpu: 900m
               memory: 512Mi
             limits:
-              cpu: 500m
+              cpu: 900m
               memory: 512Mi

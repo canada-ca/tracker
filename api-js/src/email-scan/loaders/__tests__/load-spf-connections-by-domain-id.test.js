@@ -42,7 +42,6 @@ describe('when given the load spf connection function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
 
@@ -57,6 +56,10 @@ describe('when given the load spf connection function', () => {
       domain: 'test.domain.gc.ca',
       slug: 'test-domain-gc-ca',
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
@@ -516,6 +519,429 @@ describe('when given the load spf connection function', () => {
           }
 
           expect(spfScans).toEqual(expectedStructure)
+        })
+      })
+    })
+    describe('using orderBy field', () => {
+      let spfOne, spfTwo, spfThree
+      beforeEach(async () => {
+        await truncate()
+        domain = await collections.domains.save({
+          domain: 'test.domain.gc.ca',
+        })
+        spfOne = await collections.spf.save({
+          lookups: 1,
+          record: 'a',
+          spfDefault: 'a',
+          timestamp: '2021-01-26 23:29:21.219962',
+        })
+        spfTwo = await collections.spf.save({
+          lookups: 2,
+          record: 'b',
+          spfDefault: 'b',
+          timestamp: '2021-01-27 23:29:21.219962',
+        })
+        spfThree = await collections.spf.save({
+          lookups: 3,
+          record: 'c',
+          spfDefault: 'c',
+          timestamp: '2021-01-28 23:29:21.219962',
+        })
+        await collections.domainsSPF.save({
+          _to: spfOne._id,
+          _from: domain._id,
+        })
+        await collections.domainsSPF.save({
+          _to: spfTwo._id,
+          _from: domain._id,
+        })
+        await collections.domainsSPF.save({
+          _to: spfThree._id,
+          _from: domain._id,
+        })
+      })
+      describe('ordering on TIMESTAMP', () => {
+        describe('direction is set to ASC', () => {
+          it('returns spf scan', async () => {
+            const loader = spfLoaderByKey(query, user._key, i18n)
+            const expectedSpfScan = await loader.load(spfTwo._key)
+
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('spf', spfOne._key),
+              before: toGlobalId('spf', spfThree._key),
+              orderBy: {
+                field: 'timestamp',
+                direction: 'ASC',
+              },
+            }
+
+            const spfScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('spf', expectedSpfScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSpfScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('spf', expectedSpfScan._key),
+                endCursor: toGlobalId('spf', expectedSpfScan._key),
+              },
+            }
+
+            expect(spfScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns spf scan', async () => {
+            const loader = spfLoaderByKey(query, user._key, i18n)
+            const expectedSpfScan = await loader.load(spfTwo._key)
+
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('spf', spfThree._key),
+              before: toGlobalId('spf', spfOne._key),
+              orderBy: {
+                field: 'timestamp',
+                direction: 'DESC',
+              },
+            }
+
+            const spfScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('spf', expectedSpfScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSpfScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('spf', expectedSpfScan._key),
+                endCursor: toGlobalId('spf', expectedSpfScan._key),
+              },
+            }
+
+            expect(spfScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on LOOKUPS', () => {
+        describe('direction is set to ASC', () => {
+          it('returns spf scan', async () => {
+            const loader = spfLoaderByKey(query, user._key, i18n)
+            const expectedSpfScan = await loader.load(spfTwo._key)
+
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('spf', spfOne._key),
+              before: toGlobalId('spf', spfThree._key),
+              orderBy: {
+                field: 'lookups',
+                direction: 'ASC',
+              },
+            }
+
+            const spfScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('spf', expectedSpfScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSpfScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('spf', expectedSpfScan._key),
+                endCursor: toGlobalId('spf', expectedSpfScan._key),
+              },
+            }
+
+            expect(spfScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns spf scan', async () => {
+            const loader = spfLoaderByKey(query, user._key, i18n)
+            const expectedSpfScan = await loader.load(spfTwo._key)
+
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('spf', spfThree._key),
+              before: toGlobalId('spf', spfOne._key),
+              orderBy: {
+                field: 'lookups',
+                direction: 'DESC',
+              },
+            }
+
+            const spfScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('spf', expectedSpfScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSpfScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('spf', expectedSpfScan._key),
+                endCursor: toGlobalId('spf', expectedSpfScan._key),
+              },
+            }
+
+            expect(spfScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on RECORD', () => {
+        describe('direction is set to ASC', () => {
+          it('returns spf scan', async () => {
+            const loader = spfLoaderByKey(query, user._key, i18n)
+            const expectedSpfScan = await loader.load(spfTwo._key)
+
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('spf', spfOne._key),
+              before: toGlobalId('spf', spfThree._key),
+              orderBy: {
+                field: 'record',
+                direction: 'ASC',
+              },
+            }
+
+            const spfScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('spf', expectedSpfScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSpfScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('spf', expectedSpfScan._key),
+                endCursor: toGlobalId('spf', expectedSpfScan._key),
+              },
+            }
+
+            expect(spfScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns spf scan', async () => {
+            const loader = spfLoaderByKey(query, user._key, i18n)
+            const expectedSpfScan = await loader.load(spfTwo._key)
+
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('spf', spfThree._key),
+              before: toGlobalId('spf', spfOne._key),
+              orderBy: {
+                field: 'record',
+                direction: 'DESC',
+              },
+            }
+
+            const spfScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('spf', expectedSpfScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSpfScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('spf', expectedSpfScan._key),
+                endCursor: toGlobalId('spf', expectedSpfScan._key),
+              },
+            }
+
+            expect(spfScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on SPF_DEFAULT', () => {
+        describe('direction is set to ASC', () => {
+          it('returns spf scan', async () => {
+            const loader = spfLoaderByKey(query, user._key, i18n)
+            const expectedSpfScan = await loader.load(spfTwo._key)
+
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('spf', spfOne._key),
+              before: toGlobalId('spf', spfThree._key),
+              orderBy: {
+                field: 'spf-default',
+                direction: 'ASC',
+              },
+            }
+
+            const spfScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('spf', expectedSpfScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSpfScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('spf', expectedSpfScan._key),
+                endCursor: toGlobalId('spf', expectedSpfScan._key),
+              },
+            }
+
+            expect(spfScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns spf scan', async () => {
+            const loader = spfLoaderByKey(query, user._key, i18n)
+            const expectedSpfScan = await loader.load(spfTwo._key)
+
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('spf', spfThree._key),
+              before: toGlobalId('spf', spfOne._key),
+              orderBy: {
+                field: 'spf-default',
+                direction: 'DESC',
+              },
+            }
+
+            const spfScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('spf', expectedSpfScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSpfScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('spf', expectedSpfScan._key),
+                endCursor: toGlobalId('spf', expectedSpfScan._key),
+              },
+            }
+
+            expect(spfScans).toEqual(expectedStructure)
+          })
         })
       })
     })
