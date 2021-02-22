@@ -7,7 +7,9 @@
 :var DocumentNode YEARLY_DMARC_SUMMARIES: get a domain's yearly DMARC summaries
 :var DocumentNode ALL_ORG_SUMMARIES: get summary metrics for all organizations
 :var DocumentNode SUMMARY_BY_SLUG: get summary metrics for one organization
-:var DocumentNode DOMAIN_RESULTS: get scan results for a domain
+:var DocumentNode ALL_RESULTS: get all scan results for a domain
+:var DocumentNode WEB_RESULTS: get web scan results for a domain
+:var DocumentNode EMAIL_RESULTS: get email scan results for a domain
 :var DocumentNode DOMAIN_STATUS: get pass/fail compliance statuses for a domain
 """
 
@@ -163,7 +165,6 @@ ALL_ORG_SUMMARIES = gql(
             }
         }
     }
-
     """
 )
 
@@ -200,161 +201,330 @@ SUMMARY_BY_SLUG = gql(
     """
 )
 
-# Get scan results for a domain
+# Get all scan results for a domain
 # :param str domain: url to get scan results
 # Query variables should look like {"domain": ${domain_url} }
 # Returns many fields, guidance tags are likely to be of most interest
 # Pagination details (edges and nodes) are stripped during formatting of response
-DOMAIN_RESULTS = gql(
+ALL_RESULTS = gql(
     """
-  query GetScanResults($domain: DomainScalar!) {
-    findDomainByDomain(domain: $domain) {
-      domain
-      lastRan
-      web {
-        https(first: 100) {
-          edges {
-            node {
-              implementation
-              enforced
-              hsts
-              hstsAge
-              preloaded
-              guidanceTags(first: 100) {
-                edges {
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        ssl(first: 100) {
-          edges {
-            node {
-              guidanceTags(first: 100) {
-                edges {
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      email {
-        dkim(first: 100) {
-          edges {
-            node {
-              results(first: 100) {
-                edges {
-                  node {
-                    selector
-                    guidanceTags(first: 100) {
-                      edges {
-                        cursor
+    query getAllResults($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            domain
+            lastRan
+            web {
+                https(first: 100) {
+                    edges {
                         node {
-                          tagId
-                          tagName
-                          guidance
-                          refLinks {
-                            description
-                            refLink
-                          }
-                          refLinksTech {
-                            description
-                            refLink
-                          }
+                            implementation
+                            enforced
+                            hsts
+                            hstsAge
+                            preloaded
+                            guidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
                         }
-                      }
                     }
-                  }
                 }
-              }
-            }
-          }
-        }
-        dmarc(first: 100) {
-          edges {
-            node {
-              dmarcPhase
-              record
-              pPolicy
-              spPolicy
-              pct
-              guidanceTags(first: 100) {
-                edges {
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
+                ssl(first: 100) {
+                    edges {
+                        node {
+                            guidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
                 }
-              }
             }
-          }
-        }
-        spf(first: 100) {
-          edges {
-            node {
-              lookups
-              record
-              spfDefault
-              guidanceTags(first: 100) {
-                edges {
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
+            email {
+                dkim(first: 100) {
+                    edges {
+                        node {
+                            results(first: 100) {
+                                edges {
+                                    node {
+                                        selector
+                                        guidanceTags(first: 100) {
+                                            edges {
+                                                node {
+                                                    tagId
+                                                    tagName
+                                                    guidance
+                                                    refLinks {
+                                                        description
+                                                        refLink
+                                                    }
+                                                    refLinksTech {
+                                                        description
+                                                        refLink
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
                 }
-              }
+                dmarc(first: 100) {
+                    edges {
+                        node {
+                            dmarcPhase
+                            record
+                            pPolicy
+                            spPolicy
+                            pct
+                            guidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                spf(first: 100) {
+                    edges {
+                        node {
+                            lookups
+                            record
+                            spfDefault
+                            guidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     }
-  }
+    """
+)
 
+# Get web scan results for a domain
+# :param str domain: url to get scan results
+# Query variables should look like {"domain": ${domain_url} }
+# Returns many fields, guidance tags are likely to be of most interest
+# Pagination details (edges and nodes) are stripped during formatting of response
+WEB_RESULTS = gql(
+    """
+    query getWebResults($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            domain
+            lastRan
+            web {
+                https(first: 100) {
+                    edges {
+                        node {
+                            implementation
+                            enforced
+                            hsts
+                            hstsAge
+                            preloaded
+                            guidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                ssl(first: 100) {
+                    edges {
+                        node {
+                            guidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    """
+)
 
+# Get email scan results for a domain
+# :param str domain: url to get scan results
+# Query variables should look like {"domain": ${domain_url} }
+# Returns many fields, guidance tags are likely to be of most interest
+# Pagination details (edges and nodes) are stripped during formatting of response
+EMAIL_RESULTS = gql(
+    """
+    query GetScanResults($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            domain
+            lastRan
+            email {
+                dkim(first: 100) {
+                    edges {
+                        node {
+                            results(first: 100) {
+                                edges {
+                                    node {
+                                        selector
+                                        guidanceTags(first: 100) {
+                                            edges {
+                                                cursor
+                                                node {
+                                                    tagId
+                                                    tagName
+                                                    guidance
+                                                    refLinks {
+                                                        description
+                                                        refLink
+                                                    }
+                                                    refLinksTech {
+                                                        description
+                                                        refLink
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                dmarc(first: 100) {
+                    edges {
+                        node {
+                            dmarcPhase
+                            record
+                            pPolicy
+                            spPolicy
+                            pct
+                            guidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                spf(first: 100) {
+                    edges {
+                        node {
+                            lookups
+                            record
+                            spfDefault
+                            guidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     """
 )
 
