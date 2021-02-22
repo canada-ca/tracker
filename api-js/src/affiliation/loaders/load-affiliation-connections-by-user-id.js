@@ -66,9 +66,9 @@ export const affiliationLoaderByUserId = (
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-      limitTemplate = aql`SORT affiliation._key ASC LIMIT TO_NUMBER(${first})`
+      limitTemplate = aql`affiliation._key ASC LIMIT TO_NUMBER(${first})`
     } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-      limitTemplate = aql`SORT affiliation._key DESC LIMIT TO_NUMBER(${last})`
+      limitTemplate = aql`affiliation._key DESC LIMIT TO_NUMBER(${last})`
     }
   } else {
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -96,11 +96,12 @@ export const affiliationLoaderByUserId = (
     LET retrievedAffiliations = (
       FOR affiliation IN affiliations
           FILTER affiliation._key IN affiliationKeys
-          ${afterTemplate}
-          ${beforeTemplate}
-          ${limitTemplate}
           LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
           LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+          ${afterTemplate}
+          ${beforeTemplate}
+          SORT
+          ${limitTemplate}
           RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
     )
 
