@@ -167,7 +167,6 @@
     'Unable to remove user from organization. Please try again.': 'todo',
     'Unable to request a on time scan on this domain.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
-    'Unable to retrieve {0} for domain: {domain}.': 'todo',
     'Unable to select dmarc reports for this period and year.': 'todo',
     'Unable to send TFA code, please try again.': 'todo',
     'Unable to send org invite email. Please try again.': 'todo',
