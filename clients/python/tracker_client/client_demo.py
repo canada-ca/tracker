@@ -1,7 +1,6 @@
 """Contains a main function to quickly demo functionality"""
 import os
 
-# TODO: decide if we should just import whole modules instead
 from core import create_client, execute_query, get_auth_token
 from domains import get_all_domains, get_domains_by_acronym, get_domains_by_name
 from dmarc import get_dmarc_summary, get_yearly_dmarc_summaries
