@@ -1,4 +1,6 @@
-from core import create_client, get_auth_token
+import queries
+from organization import Organization
+from core import create_client, get_auth_token, execute_query
 from results import (
     get_all_results,
     get_domain_status,
@@ -32,6 +34,44 @@ class Domain:
 
     def get_email_results(self):
         return get_email_results(self.client, self.domain_name)
+
+    def get_owners(self):
+        params = {"domain": self.domain_name}
+        result = execute_query(self.client, queries.GET_DOMAIN_OWNERS, params)
+
+        org_list = []
+
+        for edge in result["findDomainByDomain"]["organizations"]["edges"]:
+
+            name = edge["node"]["name"]
+            slug = edge["node"]["slug"]
+            acronym = edge["node"]["acronym"]
+            zone = edge["node"]["zone"]
+            sector = edge["node"]["sector"]
+            country = edge["node"]["country"]
+            province = edge["node"]["province"]
+            city = edge["node"]["city"]
+            # need to make verified a real bool
+            verified = edge["node"]["verified"]
+            domain_count = edge["node"]["domainCount"]
+
+            org_list.append(
+                Organization(
+                    self.client,
+                    name,
+                    acronym,
+                    slug,
+                    zone,
+                    sector,
+                    country,
+                    province,
+                    city,
+                    verified,
+                    domain_count,
+                )
+            )
+
+        return org_list
 
 
 def main():

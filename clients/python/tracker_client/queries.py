@@ -617,3 +617,28 @@ GET_ALL_ORGS = gql(
     }
     """
 )
+
+GET_DOMAIN_OWNERS = gql(
+    """
+    query FindDomainByDomain($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            organizations(first: 100) {
+                edges {
+                    node {
+                    acronym
+                    name
+                    slug
+                    zone
+                    sector
+                    country
+                    province
+                    city
+                    verified
+                    domainCount
+                    }
+                }
+            }
+        }
+    }
+    """
+)
