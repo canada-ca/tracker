@@ -58,6 +58,7 @@ describe('<OrganizationAffiliations />', () => {
           result: {
             data: {
               findOrganizationBySlug: {
+                id: 'testid',
                 affiliations: {
                   pageInfo: {
                     hasNextPage: false,

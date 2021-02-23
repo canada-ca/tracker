@@ -58,6 +58,7 @@ describe('<OrganizationDomains />', () => {
           result: {
             data: {
               findOrganizationBySlug: {
+                id: 'testid',
                 domains: {
                   pageInfo: {
                     hasNextPage: false,
