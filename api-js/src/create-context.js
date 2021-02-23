@@ -9,6 +9,7 @@ import {
   checkDomainOwnership,
   checkDomainPermission,
   checkPermission,
+  checkSuperAdmin,
   checkUserIsAdminForUser,
   tokenize,
   userRequired,
@@ -30,11 +31,6 @@ import {
   affiliationLoaderByUserId,
   affiliationLoaderByOrgId,
 } from './affiliation/loaders'
-import {
-  generateDetailTableFields,
-  generateGqlQuery,
-  dmarcReportLoader,
-} from './dmarc-report/loaders'
 import {
   dkimFailureLoaderConnectionsBySumId,
   dmarcFailureLoaderConnectionsBySumId,
@@ -129,6 +125,7 @@ export const createContext = ({ context, req: request, res: response }) => {
       checkDomainOwnership: checkDomainOwnership({ i18n, userKey, query }),
       checkDomainPermission: checkDomainPermission({ i18n, userKey, query }),
       checkPermission: checkPermission({ i18n, userKey, query }),
+      checkSuperAdmin: checkSuperAdmin({ i18n, userKey, query }),
       checkUserIsAdminForUser: checkUserIsAdminForUser({
         i18n,
         userKey,
@@ -160,12 +157,6 @@ export const createContext = ({ context, req: request, res: response }) => {
     },
     loaders: {
       chartSummaryLoaderByKey: chartSummaryLoaderByKey(query, userKey, i18n),
-      dmarcReportLoader: dmarcReportLoader({
-        generateGqlQuery,
-        generateDetailTableFields,
-        fetch,
-        i18n,
-      }),
       dkimFailureLoaderConnectionsBySumId: dkimFailureLoaderConnectionsBySumId(
         query,
         userKey,
@@ -183,6 +174,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
+        loadStartDateFromPeriod(moment, userKey, i18n),
       ),
       dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
         query,

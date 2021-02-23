@@ -10,6 +10,7 @@ import {
   globalIdField,
 } from 'graphql-relay'
 
+import { verifiedDomainOrder } from '../../verified-domains/inputs'
 import { verifiedDomainConnection } from '../../verified-domains/objects'
 import { organizationSummaryType } from '../../organization/objects'
 import { Acronym, Slug } from '../../scalars'
@@ -78,7 +79,13 @@ export const verifiedOrganizationType = new GraphQLObjectType({
     domains: {
       type: verifiedDomainConnection.connectionType,
       description: 'The domains which are associated with this organization.',
-      args: connectionArgs,
+      args: {
+        orderBy: {
+          type: verifiedDomainOrder,
+          description: 'Ordering options for verified domain connections.',
+        },
+        ...connectionArgs,
+      },
       resolve: async (
         { _id },
         args,

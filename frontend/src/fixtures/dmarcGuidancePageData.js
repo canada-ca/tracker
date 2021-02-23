@@ -2,6 +2,11 @@ export const rawDmarcGuidancePageData = {
   findDomainByDomain: {
     domain: 'cra-arc.gc.ca',
     lastRan: '1612170063153',
+    dmarcPhase: 2,
+    status: {
+      https: 'INFO',
+      ssl: 'PASS',
+    },
     web: {
       https: {
         edges: [
@@ -242,7 +247,6 @@ export const rawDmarcGuidancePageData = {
             node: {
               id: 'NTE1MDUwMjM2OA==',
               timestamp: '1604648562144',
-              dmarcPhase: 2,
               record: 'v=DMARC1; p=none; sp=none; rua=mailto:dmarc@cyber.gc.ca',
               pPolicy: 'quarantine',
               spPolicy: 'missing',

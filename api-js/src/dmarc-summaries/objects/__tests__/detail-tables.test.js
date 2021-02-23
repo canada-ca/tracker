@@ -168,7 +168,7 @@ describe('testing the detailTables gql object', () => {
 
         await expect(
           demoType.dkimFailure.resolve(
-            { _to: dmarcSummary._id },
+            { _id: dmarcSummary._id },
             { first: 1 },
             {
               loaders: {
@@ -215,7 +215,7 @@ describe('testing the detailTables gql object', () => {
 
         await expect(
           demoType.dmarcFailure.resolve(
-            { _to: dmarcSummary._id },
+            { _id: dmarcSummary._id },
             { first: 1 },
             {
               loaders: {
@@ -261,7 +261,7 @@ describe('testing the detailTables gql object', () => {
 
         await expect(
           demoType.fullPass.resolve(
-            { _to: dmarcSummary._id },
+            { _id: dmarcSummary._id },
             { first: 1 },
             {
               loaders: {
@@ -308,7 +308,7 @@ describe('testing the detailTables gql object', () => {
 
         await expect(
           demoType.spfFailure.resolve(
-            { _to: dmarcSummary._id },
+            { _id: dmarcSummary._id },
             { first: 1 },
             {
               loaders: {

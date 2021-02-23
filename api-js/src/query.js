@@ -1,6 +1,7 @@
 import { GraphQLObjectType } from 'graphql'
 
 import { nodeField, nodesField } from './node'
+import * as dmarcSummariesQueries from './dmarc-summaries/queries'
 import * as domainQueries from './domain/queries'
 import * as organizationQueries from './organization/queries'
 import * as summaryQueries from './summaries/queries'
@@ -14,6 +15,8 @@ export const createQuerySchema = () => {
     fields: () => ({
       node: nodeField,
       nodes: nodesField,
+      // Dmarc Summary Queries
+      ...dmarcSummariesQueries,
       // Domain Queries
       ...domainQueries,
       // Organization Queries

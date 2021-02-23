@@ -1,5 +1,6 @@
 import { ArangoTools, dbNameFromFile } from 'arango-tools'
-import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql'
+import { GraphQLNonNull, GraphQLID } from 'graphql'
+import { GraphQLDateTime } from 'graphql-scalars'
 import { toGlobalId } from 'graphql-relay'
 
 import { makeMigrations } from '../../../../migrations'
@@ -29,7 +30,7 @@ describe('given the dkimType object', () => {
       const demoType = dkimType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLString)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
     })
     it('has a results field', () => {
       const demoType = dkimType.getFields()
@@ -118,7 +119,7 @@ describe('given the dkimType object', () => {
 
         expect(
           demoType.timestamp.resolve({ timestamp: '2020-10-02T12:43:39Z' }),
-        ).toEqual('2020-10-02T12:43:39Z')
+        ).toEqual(new Date('2020-10-02T12:43:39Z'))
       })
     })
     describe('testing the results resolver', () => {

@@ -38,6 +38,12 @@ describe('given the domain object', () => {
       expect(demoType).toHaveProperty('domain')
       expect(demoType.domain.type).toMatchObject(Domain)
     })
+    it('has a dmarcPhase field', () => {
+      const demoType = domainType.getFields()
+
+      expect(demoType).toHaveProperty('dmarcPhase')
+      expect(demoType.dmarcPhase.type).toMatchObject(GraphQLString)
+    })
     it('has a lastRan field', () => {
       const demoType = domainType.getFields()
 
@@ -260,6 +266,15 @@ describe('given the domain object', () => {
         )
       })
     })
+    describe('testing the dmarcPhase resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = domainType.getFields()
+
+        expect(
+          demoType.dmarcPhase.resolve({ phase: 'not implemented' }),
+        ).toEqual('not implemented')
+      })
+    })
     describe('testing the lastRan resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainType.getFields()
@@ -403,7 +418,7 @@ describe('given the domain object', () => {
           const expectedEdgeCursor = await query`
             FOR edge IN domainsToDmarcSummaries
               FILTER edge.startDate == "2021-01-01"
-              RETURN MERGE({ domainKey: ${domainOne._key} }, edge) 
+              RETURN MERGE({ domainKey: ${domainOne._key}, startDate: edge.startDate, _id: edge._to })
           `
           const expectedEdge = await expectedEdgeCursor.next()
 
@@ -516,7 +531,7 @@ describe('given the domain object', () => {
         it('returns the resolved value', async () => {
           const expectedEdgesCursor = await query`
             FOR edge IN domainsToDmarcSummaries
-              RETURN MERGE({ domainKey: ${domainOne._key} }, edge)
+              RETURN MERGE({ domainKey: ${domainOne._key}, startDate: edge.startDate, _id: edge._to })
           `
           const expectedResult = await expectedEdgesCursor.all()
 

@@ -1,11 +1,11 @@
 import React from 'react'
-import { Box, Heading, Stack, Text } from '@chakra-ui/core'
-import { object, string } from 'prop-types'
+import { Box, Heading, Icon, Stack, Text } from '@chakra-ui/core'
+import { any, object, string } from 'prop-types'
 import ScanCategoryDetails from './ScanCategoryDetails'
 import WithPseudoBox from './withPseudoBox'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 
-function ScanCard({ scanType, scanData }) {
+function ScanCard({ scanType, scanData, status }) {
   const cardTitle =
     scanType === 'web'
       ? t`Web Scan Results`
@@ -18,6 +18,56 @@ function ScanCard({ scanType, scanData }) {
       : scanType === 'email'
       ? t`Results for scans of email technologies (DMARC, SPF, DKIM).`
       : ''
+
+  const topInfo = () => {
+    if (scanType === 'web') {
+      return (
+        <Box pb="1">
+          {status.https === 'PASS' && status.ssl === 'PASS' ? (
+            <Stack isInline align="center" px="2">
+              <Icon name="check-circle" color="strong" size="icons.md" />
+              <Text fontWeight="bold" fontSize="2xl">
+                <Trans>ITPIN Compliant</Trans>
+              </Text>
+            </Stack>
+          ) : (
+            <Stack isInline align="center" px="2">
+              <Icon name="warning-2" color="moderate" size="icons.md" />
+              <Text fontWeight="bold" fontSize="2xl">
+                <Trans>Changes Required for ITPIN Compliance</Trans>
+              </Text>
+            </Stack>
+          )}
+        </Box>
+      )
+    } else if (scanType === 'email') {
+      return (
+        <Box pb="1">
+          {status === 'not implemented' ? (
+            <Stack isInline align="center" px="2">
+              <Icon name="warning" color="weak" size="icons.md" />
+              <Text fontWeight="bold" fontSize="2xl">
+                <Trans>DMARC Not Implemented</Trans>
+              </Text>
+            </Stack>
+          ) : (
+            <Stack isInline align="center" px="2">
+              <Icon
+                name={parseInt(status, 10) > 2 ? 'warning-2' : 'check-circle'}
+                color={parseInt(status, 10) > 2 ? 'moderate' : 'strong'}
+                size="icons.md"
+              />
+              <Text fontWeight="bold" fontSize="2xl">
+                <Trans>DMARC Implementation Phase: {status}</Trans>
+              </Text>
+            </Stack>
+          )}
+        </Box>
+      )
+    } else {
+      return ''
+    }
+  }
 
   const scanCategories = ['https', 'ssl', 'dmarc', 'spf', 'dkim']
 
@@ -47,6 +97,7 @@ function ScanCard({ scanType, scanData }) {
       </Box>
       <Box>
         <Stack spacing="30px" px="1" mt="1">
+          {topInfo()}
           {categoryList}
         </Stack>
       </Box>
@@ -59,4 +110,5 @@ export default WithPseudoBox(ScanCard)
 ScanCard.propTypes = {
   scanType: string,
   scanData: object,
+  status: any,
 }

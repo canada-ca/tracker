@@ -521,6 +521,628 @@ describe('given the load https connection function', () => {
         })
       })
     })
+    describe('using the orderBy field', () => {
+      let httpsOne, httpsTwo, httpsThree
+      beforeEach(async () => {
+        await truncate()
+        domain = await collections.domains.save({
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        })
+        httpsOne = await collections.https.save({
+          timestamp: '2021-01-26 23:24:34.506578Z',
+          implementation: 'Bad Chain',
+          enforced: 'Moderate',
+          hsts: 'HSTS Fully Implemented',
+          hstsAge: 31536000,
+          preloaded: 'HSTS Not Preloaded',
+        })
+        httpsTwo = await collections.https.save({
+          timestamp: '2021-01-27 23:24:34.506578Z',
+          implementation: 'Bad Hostname',
+          enforced: 'Strict',
+          hsts: 'HSTS Max Age Too Short',
+          hstsAge: 31536001,
+          preloaded: 'HSTS Preload Ready',
+        })
+        httpsThree = await collections.https.save({
+          timestamp: '2021-01-28 23:24:34.506578Z',
+          implementation: 'Valid HTTPS',
+          enforced: 'Weak',
+          hsts: 'No HSTS',
+          hstsAge: 31536002,
+          preloaded: 'HSTS Preloaded',
+        })
+        await collections.domainsHTTPS.save({
+          _to: httpsOne._id,
+          _from: domain._id,
+        })
+        await collections.domainsHTTPS.save({
+          _to: httpsTwo._id,
+          _from: domain._id,
+        })
+        await collections.domainsHTTPS.save({
+          _to: httpsThree._id,
+          _from: domain._id,
+        })
+      })
+      describe('ordering on TIMESTAMP', () => {
+        describe('direction is set to ASC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsOne._key),
+              before: toGlobalId('https', httpsThree._key),
+              orderBy: {
+                field: 'timestamp',
+                direction: 'ASC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsThree._key),
+              before: toGlobalId('https', httpsOne._key),
+              orderBy: {
+                field: 'timestamp',
+                direction: 'DESC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('order on IMPLEMENTATION', () => {
+        describe('direction is set to ASC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsOne._key),
+              before: toGlobalId('https', httpsThree._key),
+              orderBy: {
+                field: 'implementation',
+                direction: 'ASC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsThree._key),
+              before: toGlobalId('https', httpsOne._key),
+              orderBy: {
+                field: 'implementation',
+                direction: 'DESC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on ENFORCED', () => {
+        describe('direction is set to ASC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsOne._key),
+              before: toGlobalId('https', httpsThree._key),
+              orderBy: {
+                field: 'enforced',
+                direction: 'ASC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsThree._key),
+              before: toGlobalId('https', httpsOne._key),
+              orderBy: {
+                field: 'enforced',
+                direction: 'DESC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on HSTS', () => {
+        describe('direction is set to ASC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsOne._key),
+              before: toGlobalId('https', httpsThree._key),
+              orderBy: {
+                field: 'hsts',
+                direction: 'ASC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsThree._key),
+              before: toGlobalId('https', httpsOne._key),
+              orderBy: {
+                field: 'hsts',
+                direction: 'DESC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on HSTS_AGE', () => {
+        describe('direction is set to ASC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsOne._key),
+              before: toGlobalId('https', httpsThree._key),
+              orderBy: {
+                field: 'hsts-age',
+                direction: 'ASC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsThree._key),
+              before: toGlobalId('https', httpsOne._key),
+              orderBy: {
+                field: 'hsts-age',
+                direction: 'DESC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on PRELOADED', () => {
+        describe('direction is set to ASC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsOne._key),
+              before: toGlobalId('https', httpsThree._key),
+              orderBy: {
+                field: 'preloaded',
+                direction: 'ASC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction is set to DESC', () => {
+          it('returns https scans', async () => {
+            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const expectedHttpsScan = await loader.load(httpsTwo._key)
+
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('https', httpsThree._key),
+              before: toGlobalId('https', httpsOne._key),
+              orderBy: {
+                field: 'preloaded',
+                direction: 'DESC',
+              },
+            }
+
+            const httpsScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('https', expectedHttpsScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedHttpsScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('https', expectedHttpsScan._key),
+                endCursor: toGlobalId('https', expectedHttpsScan._key),
+              },
+            }
+
+            expect(httpsScans).toEqual(expectedStructure)
+          })
+        })
+      })
+    })
     describe('no https scans are found', () => {
       it('returns an empty structure', async () => {
         await truncate()

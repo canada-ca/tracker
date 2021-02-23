@@ -1,11 +1,17 @@
 import { connectionArgs } from 'graphql-relay'
 import { t } from '@lingui/macro'
+
+import { organizationOrder } from '../inputs'
 import { organizationConnection } from '../objects'
 
 export const findMyOrganizations = {
   type: organizationConnection.connectionType,
   description: 'Select organizations a user has access to.',
   args: {
+    orderBy: {
+      type: organizationOrder,
+      description: 'Ordering options for organization connections',
+    },
     ...connectionArgs,
   },
   resolve: async (
@@ -14,7 +20,7 @@ export const findMyOrganizations = {
     {
       i18n,
       userKey,
-      auth: { userRequired },
+      auth: { checkSuperAdmin, userRequired },
       loaders: { orgLoaderConnectionsByUserId },
     },
   ) => {
@@ -22,8 +28,10 @@ export const findMyOrganizations = {
 
     await userRequired()
 
+    const isSuperAdmin = await checkSuperAdmin()
+
     try {
-      orgConnections = await orgLoaderConnectionsByUserId(args)
+      orgConnections = await orgLoaderConnectionsByUserId({ isSuperAdmin, ...args })
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userKey} was trying to gather organization connections in findMyOrganizations.`,

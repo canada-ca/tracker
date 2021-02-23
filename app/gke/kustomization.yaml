@@ -4,10 +4,24 @@ resources:
 - ../bases
 - letsencrypt-issuer.yaml
 patchesStrategicMerge:
-- arangodb.yaml
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
 - publicgateway.yaml
 - certificate.yaml
 - knative/config/queues.yaml
 - arangodb-deployment.yaml
+replicas:
+- name: tracker-frontend
+  count: 2
+- name: tracker-api
+  count: 2
+- name: arango-deployment-replication-operator
+  count: 1
+- name: arango-deployment-operator
+  count: 1
+- name: arango-storage-operator
+  count: 1
+components:
+- ../namespaces
+# Flux won't have .env files
+# - ../creds/prod

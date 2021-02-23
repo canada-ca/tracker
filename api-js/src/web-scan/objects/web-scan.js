@@ -1,8 +1,9 @@
 import { GraphQLObjectType } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
-import { GraphQLDateTime } from 'graphql-scalars'
+import { GraphQLDate, GraphQLDateTime } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
+import { httpsOrder, sslOrder } from '../inputs'
 import { httpsConnection } from './https'
 import { sslConnection } from './ssl'
 
@@ -21,13 +22,17 @@ export const webScanType = new GraphQLObjectType({
     https: {
       type: httpsConnection.connectionType,
       args: {
-        starDate: {
-          type: GraphQLDateTime,
+        startDate: {
+          type: GraphQLDate,
           description: 'Start date for date filter.',
         },
         endDate: {
-          type: GraphQLDateTime,
+          type: GraphQLDate,
           description: 'End date for date filter.',
+        },
+        orderBy: {
+          type: httpsOrder,
+          description: 'Ordering options for https connections.',
         },
         ...connectionArgs,
       },
@@ -54,6 +59,10 @@ export const webScanType = new GraphQLObjectType({
         endDate: {
           type: GraphQLDateTime,
           description: 'End date for date filter.',
+        },
+        orderBy: {
+          type: sslOrder,
+          description: 'Ordering options for ssl connections.',
         },
         ...connectionArgs,
       },

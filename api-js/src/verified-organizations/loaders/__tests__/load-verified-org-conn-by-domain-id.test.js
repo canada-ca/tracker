@@ -15,7 +15,17 @@ import {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load organizations connection function', () => {
-  let query, drop, truncate, migrate, collections, org, orgTwo, domain, i18n
+  let query,
+    drop,
+    truncate,
+    migrate,
+    collections,
+    org,
+    orgTwo,
+    i18n,
+    domain,
+    domainTwo,
+    domainThree
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -30,7 +40,6 @@ describe('given the load organizations connection function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     org = await collections.organizations.save({
       verified: true,
       summaries: {
@@ -47,24 +56,24 @@ describe('given the load organizations connection function', () => {
       },
       orgDetails: {
         en: {
-          slug: 'treasury-board-secretariat',
-          acronym: 'TBS',
-          name: 'Treasury Board of Canada Secretariat',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
+          slug: 'slug-org-one',
+          acronym: 'ONE',
+          name: 'org One',
+          zone: 'zone one',
+          sector: 'sector one',
+          country: 'country one',
+          province: 'province one',
+          city: 'city one',
         },
         fr: {
-          slug: 'secretariat-conseil-tresor',
-          acronym: 'SCT',
-          name: 'Secrétariat du Conseil Trésor du Canada',
-          zone: 'FED',
-          sector: 'TBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
+          slug: 'slug-org-one',
+          acronym: 'ONE',
+          name: 'org One',
+          zone: 'zone one',
+          sector: 'sector one',
+          country: 'country one',
+          province: 'province one',
+          city: 'city one',
         },
       },
     })
@@ -72,42 +81,47 @@ describe('given the load organizations connection function', () => {
       verified: true,
       summaries: {
         web: {
-          pass: 50,
-          fail: 1000,
-          total: 1050,
+          pass: 52,
+          fail: 1002,
+          total: 1054,
         },
         mail: {
-          pass: 50,
-          fail: 1000,
-          total: 1050,
+          pass: 52,
+          fail: 1002,
+          total: 1054,
         },
       },
       orgDetails: {
         en: {
-          slug: 'communications-security-establishment',
-          acronym: 'CSE',
-          name: 'Communications Security Establishment',
-          zone: 'FED',
-          sector: 'DND',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
+          slug: 'slug-org-two',
+          acronym: 'TWO',
+          name: 'org two',
+          zone: 'zone two',
+          sector: 'sector two',
+          country: 'country two',
+          province: 'province two',
+          city: 'city two',
         },
         fr: {
-          slug: 'centre-de-la-securite-des-telecommunications',
-          acronym: 'CST',
-          name: 'Centre de la Securite des Telecommunications',
-          zone: 'FED',
-          sector: 'DND',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
+          slug: 'slug-org-two',
+          acronym: 'TWO',
+          name: 'org two',
+          zone: 'zone two',
+          sector: 'sector two',
+          country: 'country two',
+          province: 'province two',
+          city: 'city two',
         },
       },
     })
     domain = await collections.domains.save({
       domain: 'test.domain.gc.ca',
-      slug: 'test-domain-gc-ca',
+    })
+    domainThree = await collections.domains.save({
+      domain: 'test.domain.canada.gc.ca',
+    })
+    domainTwo = await collections.domains.save({
+      domain: 'test.domain.canada.ca',
     })
     await collections.claims.save({
       _from: org._id,
@@ -117,7 +131,19 @@ describe('given the load organizations connection function', () => {
       _from: orgTwo._id,
       _to: domain._id,
     })
+    await collections.claims.save({
+      _from: orgTwo._id,
+      _to: domainTwo._id,
+    })
+    await collections.claims.save({
+      _from: orgTwo._id,
+      _to: domainThree._id,
+    })
     consoleOutput = []
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
@@ -414,6 +440,1448 @@ describe('given the load organizations connection function', () => {
           }
 
           expect(orgs).toEqual(expectedStructure)
+        })
+      })
+      describe('using the orderBy field', () => {
+        let orgThree
+        beforeEach(async () => {
+          orgThree = await collections.organizations.save({
+            verified: true,
+            summaries: {
+              web: {
+                pass: 51,
+                fail: 1001,
+                total: 1052,
+              },
+              mail: {
+                pass: 51,
+                fail: 1001,
+                total: 1052,
+              },
+            },
+            orgDetails: {
+              en: {
+                slug: 'slug-org-three',
+                acronym: 'THREE',
+                name: 'org three',
+                zone: 'zone three',
+                sector: 'sector three',
+                country: 'country three',
+                province: 'province three',
+                city: 'city three',
+              },
+              fr: {
+                slug: 'slug-org-three',
+                acronym: 'THREE',
+                name: 'org three',
+                zone: 'zone three',
+                sector: 'sector three',
+                country: 'country three',
+                province: 'province three',
+                city: 'city three',
+              },
+            },
+          })
+          await collections.claims.save({
+            _from: orgThree._id,
+            _to: domain._id,
+          })
+          await collections.claims.save({
+            _from: orgThree._id,
+            _to: domainTwo._id,
+          })
+        })
+        describe('ordering by ACRONYM', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'acronym',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'acronym',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by NAME', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'name',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'name',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by ZONE', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'zone',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'zone',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SECTOR', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'sector',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'sector',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by COUNTRY', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'country',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'country',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_MAIL_PASS', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-mail-pass',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-mail-pass',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_MAIL_FAIL', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-mail-fail',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-mail-fail',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_MAIL_TOTAL', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-mail-total',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-mail-total',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_WEB_PASS', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-web-pass',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-web-pass',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_WEB_FAIL', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-web-fail',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-web-fail',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_WEB_TOTAL', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-web-total',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-web-total',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by DOMAIN_COUNT', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'domain-count',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'en',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'domain-count',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
         })
       })
       describe('no organizations are found', () => {
@@ -1058,6 +2526,1448 @@ describe('given the load organizations connection function', () => {
           }
 
           expect(orgs).toEqual(expectedStructure)
+        })
+      })
+      describe('using the orderBy field', () => {
+        let orgThree
+        beforeEach(async () => {
+          orgThree = await collections.organizations.save({
+            verified: true,
+            summaries: {
+              web: {
+                pass: 51,
+                fail: 1001,
+                total: 1052,
+              },
+              mail: {
+                pass: 51,
+                fail: 1001,
+                total: 1052,
+              },
+            },
+            orgDetails: {
+              en: {
+                slug: 'slug-org-three',
+                acronym: 'THREE',
+                name: 'org three',
+                zone: 'zone three',
+                sector: 'sector three',
+                country: 'country three',
+                province: 'province three',
+                city: 'city three',
+              },
+              fr: {
+                slug: 'slug-org-three',
+                acronym: 'THREE',
+                name: 'org three',
+                zone: 'zone three',
+                sector: 'sector three',
+                country: 'country three',
+                province: 'province three',
+                city: 'city three',
+              },
+            },
+          })
+          await collections.claims.save({
+            _from: orgThree._id,
+            _to: domain._id,
+          })
+          await collections.claims.save({
+            _from: orgThree._id,
+            _to: domainTwo._id,
+          })
+        })
+        describe('ordering by ACRONYM', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'acronym',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'acronym',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by NAME', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'name',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'name',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by ZONE', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'zone',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'zone',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SECTOR', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'sector',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'sector',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by COUNTRY', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'country',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'country',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_MAIL_PASS', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-mail-pass',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-mail-pass',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_MAIL_FAIL', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-mail-fail',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-mail-fail',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_MAIL_TOTAL', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-mail-total',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-mail-total',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_WEB_PASS', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-web-pass',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-web-pass',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_WEB_FAIL', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-web-fail',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-web-fail',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by SUMMARY_WEB_TOTAL', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'summary-web-total',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'summary-web-total',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering by DOMAIN_COUNT', () => {
+          describe('direction is set to ASC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', org._key),
+                before: toGlobalId('verifiedOrganizations', orgTwo._key),
+                orderBy: {
+                  field: 'domain-count',
+                  direction: 'ASC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('direction is set to DESC', () => {
+            it('returns organizations', async () => {
+              const orgLoader = verifiedOrgLoaderByKey(query, 'fr')
+              const expectedOrg = await orgLoader.load(orgThree._key)
+
+              const connectionLoader = verifiedOrgLoaderConnectionsByDomainId(
+                query,
+                'fr',
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                domainId: domain._id,
+                first: 5,
+                after: toGlobalId('verifiedOrganizations', orgTwo._key),
+                before: toGlobalId('verifiedOrganizations', org._key),
+                orderBy: {
+                  field: 'domain-count',
+                  direction: 'DESC',
+                },
+              }
+
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'verifiedOrganizations',
+                      expectedOrg._key,
+                    ),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  startCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'verifiedOrganizations',
+                    expectedOrg._key,
+                  ),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
         })
       })
       describe('no organizations are found', () => {

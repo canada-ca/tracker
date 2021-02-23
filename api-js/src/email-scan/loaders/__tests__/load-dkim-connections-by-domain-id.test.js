@@ -42,7 +42,6 @@ describe('when given the load dkim connection function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
 
@@ -57,6 +56,10 @@ describe('when given the load dkim connection function', () => {
       domain: 'test.domain.gc.ca',
       slug: 'test-domain-gc-ca',
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
@@ -513,6 +516,133 @@ describe('when given the load dkim connection function', () => {
           }
 
           expect(dkimScans).toEqual(expectedStructure)
+        })
+      })
+    })
+    describe('using orderBy field', () => {
+      let dkimScanOne, dkimScanTwo, dkimScanThree
+      beforeEach(async () => {
+        await truncate()
+        domain = await collections.domains.save({
+          domain: 'test.domain.gc.ca',
+          slug: 'test-domain-gc-ca',
+        })
+        dkimScanOne = await collections.dkim.save({
+          timestamp: '2021-01-26 23:24:34.506578Z',
+        })
+        dkimScanTwo = await collections.dkim.save({
+          timestamp: '2021-01-27 23:24:34.506578Z',
+        })
+        dkimScanThree = await collections.dkim.save({
+          timestamp: '2021-01-28 23:24:34.506578Z',
+        })
+        await collections.domainsDKIM.save({
+          _to: dkimScanOne._id,
+          _from: domain._id,
+        })
+        await collections.domainsDKIM.save({
+          _to: dkimScanTwo._id,
+          _from: domain._id,
+        })
+        await collections.domainsDKIM.save({
+          _to: dkimScanThree._id,
+          _from: domain._id,
+        })
+      })
+      describe('ordering on TIMESTAMP', () => {
+        describe('direction set to ASC', () => {
+          it('returns dkim scan', async () => {
+            const loader = dkimLoaderByKey(query, user._key, i18n)
+            const expectedDkimScan = await loader.load(dkimScanTwo._key)
+
+            const connectionLoader = dkimLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dkimScanOne._key),
+              before: toGlobalId('dkim', dkimScanThree._key),
+              orderBy: {
+                field: 'timestamp',
+                direction: 'ASC',
+              },
+            }
+
+            const dkimScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dkim', expectedDkimScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDkimScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dkim', expectedDkimScan._key),
+                endCursor: toGlobalId('dkim', expectedDkimScan._key),
+              },
+            }
+
+            expect(dkimScans).toEqual(expectedStructure)
+          })
+        })
+        describe('direction set to DESC', () => {
+          it('returns dkim scan', async () => {
+            const loader = dkimLoaderByKey(query, user._key, i18n)
+            const expectedDkimScan = await loader.load(dkimScanTwo._key)
+
+            const connectionLoader = dkimLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('dkim', dkimScanThree._key),
+              before: toGlobalId('dkim', dkimScanOne._key),
+              orderBy: {
+                field: 'timestamp',
+                direction: 'DESC',
+              },
+            }
+
+            const dkimScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('dkim', expectedDkimScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedDkimScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('dkim', expectedDkimScan._key),
+                endCursor: toGlobalId('dkim', expectedDkimScan._key),
+              },
+            }
+
+            expect(dkimScans).toEqual(expectedStructure)
+          })
         })
       })
     })

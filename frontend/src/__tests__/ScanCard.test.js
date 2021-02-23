@@ -20,6 +20,7 @@ const i18n = setupI18n({
 
 const scanType = 'web'
 const scanData = rawDmarcGuidancePageData.findDomainByDomain.web
+const webStatus = rawDmarcGuidancePageData.findDomainByDomain.status
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -38,7 +39,11 @@ describe('<ScanCard />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <ScanCard scanType={scanType} scanData={scanData} />
+              <ScanCard
+                scanType={scanType}
+                scanData={scanData}
+                status={webStatus}
+              />
             </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>

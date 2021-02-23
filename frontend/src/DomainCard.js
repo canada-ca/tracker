@@ -26,18 +26,18 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
 
   return (
     <ListItem {...rest}>
-      <Stack isInline>
+      <PseudoBox width="100%" py="8" display={{ md: 'flex' }}>
         <PseudoBox
-          width="100%"
-          display={{ md: 'flex' }}
-          alignItems="center"
+          pl={{ md: '8' }}
+          as="button"
+          role="link"
           onClick={() => {
             history.push(`/domains/${url}`)
           }}
           _hover={{ bg: 'gray.100' }}
-          p="8"
-          as="button"
-          role="link"
+          display={{ md: 'flex' }}
+          alignItems="center"
+          width="100%"
         >
           <Box flexShrink="0" w={['100%', '40%']} textAlign="left">
             <Text fontWeight="semibold">
@@ -143,11 +143,11 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
                   {generateStatusIcon(status.dmarc)}
                 </Stack>
               </Box>
+              <Divider orientation={['horizontal', 'vertical']} />
             </Box>
           )}
         </PseudoBox>
         <PseudoBox
-          width="fit-content"
           display={{ md: 'flex' }}
           alignItems="center"
           onClick={() => {
@@ -156,7 +156,7 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
             )
           }}
           _hover={{ bg: 'gray.100', p: { textDecoration: 'underline' } }}
-          p="8"
+          p={{ md: '8' }}
           as="button"
           role="link"
           color="teal.400"
@@ -165,7 +165,7 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
             <Trans>DMARC Report</Trans> <Icon name="link" ml="4px" />
           </Text>
         </PseudoBox>
-      </Stack>
+      </PseudoBox>
     </ListItem>
   )
 }

@@ -7,27 +7,116 @@ export const spfLoaderConnectionsByDomainId = (
   userKey,
   cleanseInput,
   i18n,
-) => async ({ domainId, startDate, endDate, after, before, first, last }) => {
+) => async ({
+  domainId,
+  startDate,
+  endDate,
+  after,
+  before,
+  first,
+  last,
+  orderBy,
+}) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(spfScan._key) > TO_NUMBER(${afterId})`
+    if (typeof orderBy === 'undefined') {
+      afterTemplate = aql`FILTER TO_NUMBER(spfScan._key) > TO_NUMBER(${afterId})`
+    } else {
+      let afterTemplateDirection
+      if (orderBy.direction === 'ASC') {
+        afterTemplateDirection = aql`>`
+      } else {
+        afterTemplateDirection = aql`<`
+      }
+
+      let spfField, documentField
+      /* istanbul ignore else */
+      if (orderBy.field === 'timestamp') {
+        spfField = aql`spfScan.timestamp`
+        documentField = aql`DOCUMENT(spf, ${afterId}).timestamp`
+      } else if (orderBy.field === 'lookups') {
+        spfField = aql`spfScan.lookups`
+        documentField = aql`DOCUMENT(spf, ${afterId}).lookups`
+      } else if (orderBy.field === 'record') {
+        spfField = aql`spfScan.record`
+        documentField = aql`DOCUMENT(spf, ${afterId}).record`
+      } else if (orderBy.field === 'spf-default') {
+        spfField = aql`spfScan.spfDefault`
+        documentField = aql`DOCUMENT(spf, ${afterId}).spfDefault`
+      }
+
+      afterTemplate = aql`
+        FILTER ${spfField} ${afterTemplateDirection} ${documentField}
+        OR (${spfField} == ${documentField}
+        AND TO_NUMBER(spfScan._key) > TO_NUMBER(${afterId}))
+      `
+    }
   }
 
   let beforeTemplate = aql``
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    beforeTemplate = aql`FILTER TO_NUMBER(spfScan._key) < TO_NUMBER(${beforeId})`
+    if (typeof orderBy === 'undefined') {
+      beforeTemplate = aql`FILTER TO_NUMBER(spfScan._key) < TO_NUMBER(${beforeId})`
+    } else {
+      let beforeTemplateDirection
+      if (orderBy.direction === 'ASC') {
+        beforeTemplateDirection = aql`<`
+      } else {
+        beforeTemplateDirection = aql`>`
+      }
+
+      let spfField, documentField
+      /* istanbul ignore else */
+      if (orderBy.field === 'timestamp') {
+        spfField = aql`spfScan.timestamp`
+        documentField = aql`DOCUMENT(spf, ${beforeId}).timestamp`
+      } else if (orderBy.field === 'lookups') {
+        spfField = aql`spfScan.lookups`
+        documentField = aql`DOCUMENT(spf, ${beforeId}).lookups`
+      } else if (orderBy.field === 'record') {
+        spfField = aql`spfScan.record`
+        documentField = aql`DOCUMENT(spf, ${beforeId}).record`
+      } else if (orderBy.field === 'spf-default') {
+        spfField = aql`spfScan.spfDefault`
+        documentField = aql`DOCUMENT(spf, ${beforeId}).spfDefault`
+      }
+
+      beforeTemplate = aql`
+        FILTER ${spfField} ${beforeTemplateDirection} ${documentField}
+        OR (${spfField} == ${documentField}
+        AND TO_NUMBER(spfScan._key) < TO_NUMBER(${beforeId}))
+      `
+    }
   }
 
   let startDateTemplate = aql``
   if (typeof startDate !== 'undefined') {
-    startDateTemplate = aql`FILTER spfScan.timestamp >= ${startDate}`
+    startDateTemplate = aql`
+      FILTER DATE_FORMAT(
+        DATE_TIMESTAMP(spfScan.timestamp),
+        "%y-%m-%d"
+      ) >= 
+      DATE_FORMAT(
+        DATE_TIMESTAMP(${startDate}),
+        "%y-%m-%d"
+      )
+    `
   }
 
   let endDateTemplate = aql``
   if (typeof endDate !== 'undefined') {
-    endDateTemplate = aql`FILTER spfScan.timestamp <= ${endDate}`
+    endDateTemplate = aql`
+      FILTER DATE_FORMAT(
+        DATE_TIMESTAMP(spfScan.timestamp),
+        "%y-%m-%d"
+      ) <= 
+      DATE_FORMAT(
+        DATE_TIMESTAMP(${endDate}),
+        "%y-%m-%d"
+      )
+    `
   }
 
   let limitTemplate = aql``
@@ -73,9 +162,9 @@ export const spfLoaderConnectionsByDomainId = (
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-      limitTemplate = aql`SORT spfScan._key ASC LIMIT TO_NUMBER(${first})`
+      limitTemplate = aql`spfScan._key ASC LIMIT TO_NUMBER(${first})`
     } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-      limitTemplate = aql`SORT spfScan._key DESC LIMIT TO_NUMBER(${last})`
+      limitTemplate = aql`spfScan._key DESC LIMIT TO_NUMBER(${last})`
     }
   } else {
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
@@ -86,6 +175,66 @@ export const spfLoaderConnectionsByDomainId = (
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
     )
+  }
+
+  let hasNextPageFilter = aql`FILTER TO_NUMBER(spfScan._key) > TO_NUMBER(LAST(retrievedSpfScans)._key)`
+  let hasPreviousPageFilter = aql`FILTER TO_NUMBER(spfScan._key) < TO_NUMBER(FIRST(retrievedSpfScans)._key)`
+  if (typeof orderBy !== 'undefined') {
+    let hasNextPageDirection
+    let hasPreviousPageDirection
+    if (orderBy.direction === 'ASC') {
+      hasNextPageDirection = aql`>`
+      hasPreviousPageDirection = aql`<`
+    } else {
+      hasNextPageDirection = aql`<`
+      hasPreviousPageDirection = aql`>`
+    }
+
+    let spfField, hasNextPageDocument, hasPreviousPageDocument
+    /* istanbul ignore else */
+    if (orderBy.field === 'timestamp') {
+      spfField = aql`spfScan.timestamp`
+      hasNextPageDocument = aql`DOCUMENT(spf, LAST(retrievedSpfScans)._key).timestamp`
+      hasPreviousPageDocument = aql`DOCUMENT(spf, FIRST(retrievedSpfScans)._key).timestamp`
+    } else if (orderBy.field === 'lookups') {
+      spfField = aql`spfScan.lookups`
+      hasNextPageDocument = aql`DOCUMENT(spf, LAST(retrievedSpfScans)._key).lookups`
+      hasPreviousPageDocument = aql`DOCUMENT(spf, FIRST(retrievedSpfScans)._key).lookups`
+    } else if (orderBy.field === 'record') {
+      spfField = aql`spfScan.record`
+      hasNextPageDocument = aql`DOCUMENT(spf, LAST(retrievedSpfScans)._key).record`
+      hasPreviousPageDocument = aql`DOCUMENT(spf, FIRST(retrievedSpfScans)._key).record`
+    } else if (orderBy.field === 'spf-default') {
+      spfField = aql`spfScan.spfDefault`
+      hasNextPageDocument = aql`DOCUMENT(spf, LAST(retrievedSpfScans)._key).spfDefault`
+      hasPreviousPageDocument = aql`DOCUMENT(spf, FIRST(retrievedSpfScans)._key).spfDefault`
+    }
+
+    hasNextPageFilter = aql`
+      FILTER ${spfField} ${hasNextPageDirection} ${hasNextPageDocument}
+      OR (${spfField} == ${hasNextPageDocument}
+      AND TO_NUMBER(spfScan._key) > TO_NUMBER(LAST(retrievedSpfScans)._key))
+    `
+
+    hasPreviousPageFilter = aql`
+      FILTER ${spfField} ${hasPreviousPageDirection} ${hasPreviousPageDocument}
+      OR (${spfField} == ${hasPreviousPageDocument}
+      AND TO_NUMBER(spfScan._key) < TO_NUMBER(FIRST(retrievedSpfScans)._key))
+    `
+  }
+
+  let sortByField = aql``
+  if (typeof orderBy !== 'undefined') {
+    /* istanbul ignore else */
+    if (orderBy.field === 'timestamp') {
+      sortByField = aql`spfScan.timestamp ${orderBy.direction},`
+    } else if (orderBy.field === 'lookups') {
+      sortByField = aql`spfScan.lookups ${orderBy.direction},`
+    } else if (orderBy.field === 'record') {
+      sortByField = aql`spfScan.record ${orderBy.direction},`
+    } else if (orderBy.field === 'spf-default') {
+      sortByField = aql`spfScan.spfDefault ${orderBy.direction},`
+    }
   }
 
   let sortString
@@ -107,6 +256,8 @@ export const spfLoaderConnectionsByDomainId = (
         ${beforeTemplate}
         ${startDateTemplate}
         ${endDateTemplate}
+        SORT
+        ${sortByField}
         ${limitTemplate}
         RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
     )
@@ -114,16 +265,16 @@ export const spfLoaderConnectionsByDomainId = (
     LET hasNextPage = (LENGTH(
       FOR spfScan IN spf
         FILTER spfScan._key IN spfKeys
-        FILTER TO_NUMBER(spfScan._key) > TO_NUMBER(LAST(retrievedSpfScans)._key)
-        SORT spfScan._key ${sortString} LIMIT 1
+        ${hasNextPageFilter}
+        SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
         RETURN spfScan
     ) > 0 ? true : false)
     
     LET hasPreviousPage = (LENGTH(
       FOR spfScan IN spf
         FILTER spfScan._key IN spfKeys
-        FILTER TO_NUMBER(spfScan._key) < TO_NUMBER(FIRST(retrievedSpfScans)._key)
-        SORT spfScan._key ${sortString} LIMIT 1
+        ${hasPreviousPageFilter}
+        SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
         RETURN spfScan
     ) > 0 ? true : false)
 

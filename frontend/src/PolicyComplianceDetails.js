@@ -5,7 +5,7 @@ import { Trans } from '@lingui/macro'
 
 export function PolicyComplianceDetails({ categoryName, policies }) {
   const smallDevice = window.matchMedia('(max-width: 500px)').matches
-  const infoIcon = <Icon name="info" color="#3f8cd9" />
+  const infoIcon = <Icon name="info" color="info" />
 
   const httpsPolicy = (
     <Stack isInline align="center" px="2" pt={['2', '0']}>
@@ -52,15 +52,6 @@ export function PolicyComplianceDetails({ categoryName, policies }) {
     <Stack isInline align="center" px="2" pt={['2', '0']}>
       {!smallDevice && infoIcon}
       <Box>
-        {policies?.dmarcPhase && (
-          <Stack isInline align="center">
-            {smallDevice && infoIcon}
-            <Text fontWeight="bold">
-              <Trans>Phase:</Trans>
-            </Text>
-            <Text>{policies?.dmarcPhase}</Text>
-          </Stack>
-        )}
         <Stack isInline>
           <Text fontWeight="bold">pPolicy:</Text>
           <Text>{policies?.pPolicy}</Text>
@@ -105,7 +96,7 @@ export function PolicyComplianceDetails({ categoryName, policies }) {
   }
 
   return (
-    <Box bg="#d2e7fc" pb="1">
+    <Box bg="infoMuted" pb="1">
       {getPolicies()}
     </Box>
   )

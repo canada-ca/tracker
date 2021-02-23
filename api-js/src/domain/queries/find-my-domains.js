@@ -2,12 +2,17 @@ import { t } from '@lingui/macro'
 import { GraphQLBoolean } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
+import { domainOrder } from '../inputs'
 import { domainConnection } from '../objects'
 
 export const findMyDomains = {
   type: domainConnection.connectionType,
   description: 'Select domains a user has access to.',
   args: {
+    orderBy: {
+      type: domainOrder,
+      description: 'Ordering options for domain connections.',
+    },
     ownership: {
       type: GraphQLBoolean,
       description:
@@ -21,7 +26,7 @@ export const findMyDomains = {
     {
       i18n,
       userKey,
-      auth: { userRequired },
+      auth: { checkSuperAdmin, userRequired },
       loaders: { domainLoaderConnectionsByUserId },
     },
   ) => {
@@ -29,8 +34,13 @@ export const findMyDomains = {
 
     await userRequired()
 
+    const isSuperAdmin = await checkSuperAdmin()
+
     try {
-      domainConnections = await domainLoaderConnectionsByUserId(args)
+      domainConnections = await domainLoaderConnectionsByUserId({
+        isSuperAdmin,
+        ...args,
+      })
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userKey} was trying to gather domain connections in findMyDomains.`,

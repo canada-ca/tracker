@@ -8,3 +8,13 @@ metadata:
   namespace: api
   annotations:
     fluxcd.io/automated: "true"
+spec:
+  selector:
+    matchLabels:
+      app: tracker-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+

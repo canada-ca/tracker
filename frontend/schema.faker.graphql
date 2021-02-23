@@ -6,6 +6,40 @@ directive @specifiedBy(
 # A field whose value is an upper case letter or an under score that has a length between 1 and 50.
 scalar Acronym
 
+# User Affiliations containing the permission level for the given organization,
+# the users information, and the organizations information.
+type Affiliation implements Node {
+  # The ID of an object
+  id: ID!
+  # User's level of access to a given organization.
+  permission: RoleEnums @examples(values: ["SUPER_ADMIN", "ADMIN", "USER"])
+  # The affiliated users information.
+  user: SharedUser
+  # The affiliated organizations information.
+  organization: Organization
+}
+
+# A connection to a list of items.
+type AffiliationConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [AffiliationEdge] @listLength(min: 0, max: 5)
+  # The total amount of affiliations the user has access to.
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
+}
+
+# An edge in a connection.
+type AffiliationEdge {
+  # The item at the end of the edge
+  node: Affiliation
+  # A cursor for use in pagination
+  cursor: String!
+}
+
 input AuthenticateInput {
   # Security code found in text msg, or email inbox.
   authenticationCode: Int!
@@ -186,11 +220,10 @@ type DKIMConnection {
   # A list of edges.
   edges: [DKIMEdge] @listLength(min: 0, max: 5)
   # The total amount of dkim scans related to a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -233,6 +266,11 @@ type DkimFailureTableConnection {
   pageInfo: PageInfo!
   # A list of edges.
   edges: [DkimFailureTableEdge] @listLength(min: 0, max: 5)
+  # The total amount of dkim failure the user has access to.
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -277,11 +315,10 @@ type DKIMResultConnection {
   # A list of edges.
   edges: [DKIMResultEdge] @listLength(min: 0, max: 5)
   # The total amount of dkim results related to a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -383,6 +420,11 @@ type DmarcFailureTableConnection {
   pageInfo: PageInfo!
   # A list of edges.
   edges: [DmarcFailureTableEdge] @listLength(min: 0, max: 5)
+  # The total amount of dmarc failures the user has access to.
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -391,6 +433,75 @@ type DmarcFailureTableEdge {
   node: DmarcFailureTable
   # A cursor for use in pagination
   cursor: String!
+}
+
+# Object that contains information for a dmarc summary.
+type DmarcSummary implements Node {
+  # The ID of an object
+  id: ID!
+  # The domain that the data in this dmarc summary belongs to.
+  domain: Domain
+  # Start date of data collection.
+  month: PeriodEnums
+  # End date of data collection.
+  year: Year
+  # Category percentages based on the category totals.
+  categoryPercentages: CategoryPercentages
+  # Category totals for quick viewing.
+  categoryTotals: CategoryTotals
+  # Various senders for each category.
+  detailTables: DetailTables
+}
+
+# A connection to a list of items.
+type DmarcSummaryConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+  # A list of edges.
+  edges: [DmarcSummaryEdge] @listLength(min: 0, max: 5)
+  # The total amount of dmarc summaries the user has access to.
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
+}
+
+# An edge in a connection.
+type DmarcSummaryEdge {
+  # The item at the end of the edge
+  node: DmarcSummary
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Ordering options for dmarc summary connections.
+input DmarcSummaryOrder {
+  # The field to order dmarc summaries by.
+  field: DmarcSummaryOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which dmarc summary connections can be ordered.
+enum DmarcSummaryOrderField {
+  # Order dmarc summaries by fail count.
+  FAIL_COUNT
+  # Order dmarc summaries by pass count.
+  PASS_COUNT
+  # Order dmarc summaries by pass dkim only count.
+  PASS_DKIM_COUNT
+  # Order dmarc summaries by pass spf only count.
+  PASS_SPF_COUNT
+  # Order dmarc summaries by fail percentage.
+  FAIL_PERCENTAGE
+  # Order dmarc summaries by pass percentage.
+  PASS_PERCENTAGE
+  # Order dmarc summaries by pass dkim only percentage.
+  PASS_DKIM_PERCENTAGE
+  # Order dmarc summaries by spf only percentage.
+  PASS_SPF_PERCENTAGE
+  # Order dmarc summaries by total messages
+  TOTAL_MESSAGES
 }
 
 # Domain object containing information for a given domain.
@@ -447,9 +558,9 @@ type Domain implements Node {
     month: PeriodEnums!
     # The year in which the returned data is relevant to.
     year: Year!
-  ): Period
+  ): DmarcSummary
   # Yearly summarized DMARC aggregate reports.
-  yearlyDmarcSummaries: [Period] @listLength(min: 13, max: 13)
+  yearlyDmarcSummaries: [DmarcSummary] @listLength(min: 13, max: 13)
 }
 
 # A connection to a list of items.
@@ -459,11 +570,10 @@ type DomainConnection {
   # A list of edges.
   edges: [DomainEdge] @listLength(min: 0, max: 5)
   # The total amount of domains the user has access to.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -472,6 +582,32 @@ type DomainEdge {
   node: Domain
   # A cursor for use in pagination
   cursor: String!
+}
+
+# Ordering options for domain connections.
+input DomainOrder {
+  # The field to order domains by.
+  field: DomainOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which domain connections can be ordered.
+enum DomainOrderField {
+  # Order domains by domain.
+  DOMAIN
+  # Order domains by last ran.
+  LAST_RAN
+  # Order domains by dkim status.
+  DKIM_STATUS
+  # Order domains by dmarc status.
+  DMARC_STATUS
+  # Order domains by https status.
+  HTTPS_STATUS
+  # Order domains by spf status.
+  SPF_STATUS
+  # Order domains by ssl status.
+  SSL_STATUS
 }
 
 # String that conforms to a domain structure.
@@ -562,6 +698,11 @@ type FullPassTableConnection {
   pageInfo: PageInfo!
   # A list of edges.
   edges: [FullPassTableEdge] @listLength(min: 0, max: 5)
+  # The total amount of full passes the user has access to.
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -617,11 +758,10 @@ type GuidanceTagConnection {
   # A list of edges.
   edges: [GuidanceTagEdge] @listLength(min: 0, max: 5)
   # The total amount of guidance tags for a given scan type.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -668,11 +808,10 @@ type HTTPSConnection {
   # A list of edges.
   edges: [HTTPSEdge] @listLength(min: 0, max: 5)
   # The total amount of https scans for a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -713,10 +852,21 @@ enum LanguageEnums {
 }
 
 type Mutation {
+  # This mutation allows admins and higher to invite users to any of their
+  # organizations, if the invited user does not have an account, they will be
+  # able to sign-up and be assigned to that organization in one mutation.
+  inviteUserToOrg(input: InviteUserToOrgInput!): InviteUserToOrgPayload
+  removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
+  # This mutation allows super admins, and admins of the given organization to
+  # update the permission level of a given user that already belongs to the
+  # given organization.
+  updateUserRole(input: UpdateUserRoleInput!): UpdateUserRolePayload
   # Mutation used to create a new domain for an organization.
   createDomain(input: CreateDomainInput!): CreateDomainPayload
   # This mutation allows the removal of unused domains.
   removeDomain(input: RemoveDomainInput!): RemoveDomainPayload
+  # This mutation is used to run a manual scan on a requested domain.
+  requestScan(input: RequestScanInput!): RequestScanPayload
   # Mutation allows the modification of domains if domain is updated through out its life-cycle
   updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
   # This mutation allows the creation of an organization inside the database.
@@ -727,8 +877,6 @@ type Mutation {
   updateOrganization(input: UpdateOrganizationInput!): UpdateOrganizationPayload
   # Mutation allows the verification of an organization.
   verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
-  # This mutation is used to run a manual scan on a requested domain.
-  requestScan(input: RequestScanInput!): RequestScanPayload
   # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
   authenticate(input: AuthenticateInput!): AuthenticatePayload
   # This mutation allows the user to take the token they received in their email to reset their password.
@@ -756,21 +904,20 @@ type Mutation {
   verifyAccount(input: VerifyAccountInput!): VerifyAccountPayload
   # This mutation allows the user to two factor authenticate.
   verifyPhoneNumber(input: verifyPhoneNumberInput!): verifyPhoneNumberPayload
-  # This mutation allows admins and higher to invite users to any of their
-  #     organizations, if the invited user does not have an account, they will be
-  #     able to sign-up and be assigned to that organization in one mutation.
-  inviteUserToOrg(input: InviteUserToOrgInput!): InviteUserToOrgPayload
-  removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
-  # This mutation allows super admins, and admins of the given organization to
-  #     update the permission level of a given user that already belongs to the
-  #     given organization.
-  updateUserRole(input: UpdateUserRoleInput!): UpdateUserRolePayload
 }
 
 # An object with an ID
 interface Node {
   # The id of the object.
   id: ID!
+}
+
+# Possible directions in which to order a list of items when provided an `orderBy` argument.
+enum OrderDirection {
+  # Specifies an ascending order for a given `orderBy` argument.
+  ASC
+  # Specifies a descending order for a given `orderBy` argument.
+  DESC
 }
 
 # Organization object containing information for a given Organization.
@@ -825,7 +972,7 @@ type Organization implements Node {
     first: Int
     before: String
     last: Int
-  ): UserAffiliationsConnection
+  ): AffiliationConnection
 }
 
 # A connection to a list of items.
@@ -835,11 +982,10 @@ type OrganizationConnection {
   # A list of edges.
   edges: [OrganizationEdge] @listLength(min: 1, max: 13)
   # The total amount of organizations the user has access to.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -848,6 +994,50 @@ type OrganizationEdge {
   node: Organization
   # A cursor for use in pagination
   cursor: String!
+}
+
+# Ordering options for organization connections
+input OrganizationOrder {
+  # The field to order organizations by.
+  field: OrganizationOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which organization connections can be ordered.
+enum OrganizationOrderField {
+  # Order organizations by acronym.
+  ACRONYM
+  # Order organizations by name.
+  NAME
+  # Order organizations by slug.
+  SLUG
+  # Order organizations by zone.
+  ZONE
+  # Order organizations by sector.
+  SECTOR
+  # Order organizations by country.
+  COUNTRY
+  # Order organizations by province.
+  PROVINCE
+  # Order organizations by city.
+  CITY
+  # Order organizations by verified.
+  VERIFIED
+  # Order organizations by summary mail pass count.
+  SUMMARY_MAIL_PASS
+  # Order organizations by summary mail fail count.
+  SUMMARY_MAIL_FAIL
+  # Order organizations by summary mail total count.
+  SUMMARY_MAIL_TOTAL
+  # Order organizations by summary web pass count.
+  SUMMARY_WEB_PASS
+  # Order organizations by summary web fail count.
+  SUMMARY_WEB_FAIL
+  # Order organizations by summary web total count.
+  SUMMARY_WEB_TOTAL
+  # Order organizations by domain count.
+  DOMAIN_COUNT
 }
 
 # Summaries based on domains that the organization has claimed.
@@ -868,22 +1058,6 @@ type PageInfo {
   startCursor: String
   # When paginating forwards, the cursor to continue.
   endCursor: String
-}
-
-# Object that contains information for each data collection period.
-type Period {
-  # The domain that the data in this period belongs to.
-  domain: DomainScalar
-  # Start date of data collection.
-  month: PeriodEnums
-  # End date of data collection.
-  year: Year
-  # Category percentages based on the category totals.
-  categoryPercentages: CategoryPercentages
-  # Category totals for quick viewing.
-  categoryTotals: CategoryTotals
-  # Various senders for each category.
-  detailTables: DetailTables
 }
 
 # An enum used to select information from the dmarc-report-api.
@@ -941,7 +1115,7 @@ type PersonalUser implements Node {
     first: Int
     before: String
     last: Int
-  ): UserAffiliationsConnection
+  ): AffiliationConnection
 }
 
 # A field whose value conforms to the standard E.164 format as specified in:
@@ -959,6 +1133,19 @@ type Query {
     # The IDs of objects
     ids: [ID!]!
   ): [Node]!
+  # Query for dmarc summaries the user has access to.
+  findMyDmarcSummaries(
+    # Ordering options for repository connections
+    orderBy: DmarcSummaryOrder
+    # The month in which the returned data is relevant to.
+    month: PeriodEnums!
+    # The year in which the returned data is relevant to.
+    year: Year!
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): DmarcSummaryConnection
   # Retrieve a specific domain by providing a domain.
   findDomainByDomain(
     # The domain you wish to retrieve information for.
@@ -989,15 +1176,15 @@ type Query {
   mailSummary: CategorizedSummary
   # Web summary computed values, used to build summary cards.
   webSummary: CategorizedSummary
-  # Query used to check if the user has an admin role.
-  isUserAdmin: Boolean
+  # Query the currently logged in user.
+  findMe: PersonalUser
   # Query a specific user by user name.
   findUserByUsername(
     # Email address of user you wish to gather data for.
     userName: EmailAddress!
   ): SharedUser
-  # Query the currently logged in user.
-  findMe: PersonalUser
+  # Query used to check if the user has an admin role.
+  isUserAdmin: Boolean
   # Retrieve a specific verified domain by providing a domain.
   findVerifiedDomainByDomain(
     # The domain you wish to retrieve information for.
@@ -1258,11 +1445,10 @@ type SPFConnection {
   # A list of edges.
   edges: [SPFEdge] @listLength(min: 0, max: 5)
   # The total amount of spf scans related to a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -1303,6 +1489,11 @@ type SpfFailureTableConnection {
   pageInfo: PageInfo!
   # A list of edges.
   edges: [SpfFailureTableEdge] @listLength(min: 0, max: 5)
+  # The total amount of spf failures the user has access to.
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -1339,11 +1530,10 @@ type SSLConnection {
   # A list of edges.
   edges: [SSLEdge] @listLength(min: 0, max: 5)
   # The total amount of https scans for a given domain.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -1501,41 +1691,6 @@ type UpdateUserRolePayload {
   clientMutationId: String
 }
 
-# User Affiliations containing the permission level for the given organization,
-# the users information, and the organizations information.
-type UserAffiliations implements Node {
-  # The ID of an object
-  id: ID!
-  # User's level of access to a given organization.
-  permission: RoleEnums @examples(values: ["SUPER_ADMIN", "ADMIN", "USER"])
-  # The affiliated users information.
-  user: SharedUser
-  # The affiliated organizations information.
-  organization: Organization
-}
-
-# A connection to a list of items.
-type UserAffiliationsConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-  # A list of edges.
-  edges: [UserAffiliationsEdge] @listLength(min: 0, max: 5)
-  # The total amount of affiliations the user has access to.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
-}
-
-# An edge in a connection.
-type UserAffiliationsEdge {
-  # The item at the end of the edge
-  node: UserAffiliations
-  # A cursor for use in pagination
-  cursor: String!
-}
-
 # Domain object containing information for a given domain.
 type VerifiedDomain implements Node {
   # The ID of an object
@@ -1585,11 +1740,10 @@ type VerifiedDomainConnection {
   # A list of edges.
   edges: [VerifiedDomainEdge] @listLength(min: 0, max: 5)
   # The total amount of verified domains.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
@@ -1651,11 +1805,10 @@ type VerifiedOrganizationConnection {
   # A list of edges.
   edges: [VerifiedOrganizationEdge] @listLength(min: 0, max: 5)
   # The total amount of verified organizations.
-  totalCount: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
-    )
+  totalCount: Int @fake(
+    type: number
+    options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+  )
 }
 
 # An edge in a connection.
