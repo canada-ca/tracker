@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Heading, Icon, Stack, Text } from '@chakra-ui/core'
-import { object, string } from 'prop-types'
+import { any, object, string } from 'prop-types'
 import ScanCategoryDetails from './ScanCategoryDetails'
 import WithPseudoBox from './withPseudoBox'
 import { t, Trans } from '@lingui/macro'
@@ -43,22 +43,22 @@ function ScanCard({ scanType, scanData, status }) {
     } else if (scanType === 'email') {
       return (
         <Box pb="1">
-          {status ? (
+          {status === 'not implemented' ? (
             <Stack isInline align="center" px="2">
-              <Icon
-                name={status > 2 ? 'warning-2' : 'check-circle'}
-                color={status > 2 ? 'moderate' : 'strong'}
-                size="icons.md"
-              />
+              <Icon name="warning" color="weak" size="icons.md" />
               <Text fontWeight="bold" fontSize="2xl">
-                <Trans>DMARC Implementation Phase: {status}</Trans>
+                <Trans>DMARC Not Implemented</Trans>
               </Text>
             </Stack>
           ) : (
             <Stack isInline align="center" px="2">
-              <Icon name="question" color="gray.500" size="icons.md" />
+              <Icon
+                name={parseInt(status, 10) > 2 ? 'warning-2' : 'check-circle'}
+                color={parseInt(status, 10) > 2 ? 'moderate' : 'strong'}
+                size="icons.md"
+              />
               <Text fontWeight="bold" fontSize="2xl">
-                <Trans>DMARC Phase Unavailable</Trans>
+                <Trans>DMARC Implementation Phase: {status}</Trans>
               </Text>
             </Stack>
           )}
@@ -110,5 +110,5 @@ export default WithPseudoBox(ScanCard)
 ScanCard.propTypes = {
   scanType: string,
   scanData: object,
-  status: object,
+  status: any,
 }
