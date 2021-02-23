@@ -32,7 +32,7 @@ export const domainType = new GraphQLObjectType({
       resolve: ({ domain }) => domain,
     },
     dmarcPhase: {
-      type: GraphQLInt,
+      type: GraphQLString,
       description: 'The current dmarc phase the domain is compliant to.',
       resolve: ({ phase }) => phase,
     },

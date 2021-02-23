@@ -1,12 +1,6 @@
 import moment from 'moment'
 import { ArangoTools, dbNameFromFile } from 'arango-tools'
-import {
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLList,
-  GraphQLString,
-  GraphQLInt,
-} from 'graphql'
+import { GraphQLNonNull, GraphQLID, GraphQLList, GraphQLString } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { makeMigrations } from '../../../../migrations'
@@ -48,7 +42,7 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('dmarcPhase')
-      expect(demoType.dmarcPhase.type).toMatchObject(GraphQLInt)
+      expect(demoType.dmarcPhase.type).toMatchObject(GraphQLString)
     })
     it('has a lastRan field', () => {
       const demoType = domainType.getFields()
@@ -276,7 +270,9 @@ describe('given the domain object', () => {
       it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
-        expect(demoType.dmarcPhase.resolve({ phase: 1 })).toEqual(1)
+        expect(
+          demoType.dmarcPhase.resolve({ phase: 'not implemented' }),
+        ).toEqual('not implemented')
       })
     })
     describe('testing the lastRan resolver', () => {
