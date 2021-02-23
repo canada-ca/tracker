@@ -2041,5 +2041,5 @@ msgid "DMARC Implementation Phase: {status}"
 msgstr "Phase de mise en œuvre de la DMARC: {status}"
 
 #: src/ScanCard.js:54
-msgid "DMARC Phase Unavailable"
-msgstr "La phase DMARC n'est pas disponible"
+msgid "DMARC Not Implemented"
+msgstr "La DMARC n'est pas mise en œuvre"

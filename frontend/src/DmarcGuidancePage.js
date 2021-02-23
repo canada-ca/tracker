@@ -39,8 +39,7 @@ export default function DmarcGuidancePage() {
   const webScan = data.findDomainByDomain.web
   const emailScan = data.findDomainByDomain.email
   const webStatus = data.findDomainByDomain.status
-  const dmarcPhase =
-    data.findDomainByDomain.email?.dmarc.edges[0]?.node.dmarcPhase
+  const dmarcPhase = data.findDomainByDomain.dmarcPhase
 
   return (
     <Stack spacing="25px" mb="6" px="4" mx="auto" overflow="hidden">
@@ -52,10 +51,10 @@ export default function DmarcGuidancePage() {
           color="teal.500"
           whiteSpace="noWrap"
           my="auto"
+          ml="auto"
           to={`/domains/${domainSlug}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
           as={RouteLink}
           d="block"
-          width="100%"
           textAlign={{ base: 'center', md: 'right' }}
         >
           <Trans>DMARC Report</Trans>
