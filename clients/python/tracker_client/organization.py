@@ -5,10 +5,29 @@ from summary import get_summary_by_name
 
 class Organization:
     # Get list of domains outside and pass in, or fetch list at instantiation?
-    def __init__(self, name, acronym, client):
+    def __init__(
+        self,
+        client,
+        name,
+        acronym,
+        slug,
+        zone,
+        sector,
+        country,
+        province,
+        city,
+        verified,
+    ):
+        self.client = client
         self.name = name
         self.acronym = acronym
-        self.client = client
+        self.slug = slug
+        self.zone = zone
+        self.sector = sector
+        self.country = country
+        self.province = province
+        self.city = city
+        self.verified = verified
 
     def get_summary(self):
         # Temporary, will move actual function here soon
@@ -22,7 +41,16 @@ class Organization:
 def main():
     client = create_client(auth_token=get_auth_token())
     test_org = Organization(
-        "Communications Security Establishment Canada", "CSE", client
+        client,
+        "Communications Security Establishment Canada",
+        "CSE",
+        "communications-security-establishment-canada",
+        "foo",
+        "bar",
+        "Canada",
+        "Ontario",
+        "Ottawa",
+        True,
     )
     print(test_org.get_domains())
     print(test_org.get_summary())

@@ -7,11 +7,13 @@ from results import (
 )
 from dmarc import get_dmarc_summary, get_yearly_dmarc_summaries
 
-
+# TODO: add ability to instantiate with just client and domain_name, automatically fill in other attributes from backend
 class Domain:
-    def __init__(self, domain_name, client):
-        self.domain_name = domain_name
+    def __init__(self, client, domain_name, last_ran, dmarc_phase):
         self.client = client
+        self.domain_name = domain_name
+        self.last_ran = last_ran
+        self.dmarc_phase = dmarc_phase
 
     def get_status(self):
         return get_domain_status(self.client, self.domain_name)
@@ -34,7 +36,7 @@ class Domain:
 
 def main():
     client = create_client(auth_token=get_auth_token())
-    test_domain = Domain("cyber.gc.ca", client)
+    test_domain = Domain(client, "cyber.gc.ca", "foo", "bar")
     print(test_domain.get_status())
     print(test_domain.get_monthly_dmarc("september", 2020))
     print(test_domain.get_yearly_dmarc())
