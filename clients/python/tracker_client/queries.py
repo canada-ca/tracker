@@ -546,3 +546,35 @@ DOMAIN_STATUS = gql(
   }
   """
 )
+
+
+GET_DOMAIN = gql(
+    """
+    query FindDomainByDomain($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            domain
+            dmarcPhase
+            lastRan
+        }
+    }
+    """
+)
+
+GET_ORG = gql(
+    """
+    query orgBySlug($orgSlug: Slug!) {
+        findOrganizationBySlug(orgSlug: $orgSlug) {
+            acronym
+            name
+            slug
+            zone
+            sector
+            country
+            province
+            city
+            verified
+            domainCount
+        }
+    }
+    """
+)

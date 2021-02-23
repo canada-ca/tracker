@@ -17,6 +17,7 @@ class Organization:
         province,
         city,
         verified,
+        domain_count,
     ):
         self.client = client
         self.name = name
@@ -28,6 +29,7 @@ class Organization:
         self.province = province
         self.city = city
         self.verified = verified
+        self.domain_count = domain_count
 
     def get_summary(self):
         # Temporary, will move actual function here soon
@@ -51,6 +53,7 @@ def main():
         "Ontario",
         "Ottawa",
         True,
+        99,
     )
     print(test_org.get_domains())
     print(test_org.get_summary())
