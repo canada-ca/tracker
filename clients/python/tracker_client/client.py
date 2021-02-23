@@ -44,7 +44,41 @@ class Client:
         )
 
     def get_organizations(self):
-        pass
+        result = execute_query(self.client, queries.GET_ALL_ORGS)
+
+        org_list = []
+
+        for edge in result["findMyOrganizations"]["edges"]:
+
+            name = edge["node"]["name"]
+            slug = edge["node"]["slug"]
+            acronym = edge["node"]["acronym"]
+            zone = edge["node"]["zone"]
+            sector = edge["node"]["sector"]
+            country = edge["node"]["country"]
+            province = edge["node"]["province"]
+            city = edge["node"]["city"]
+            # need to make verified a real bool
+            verified = edge["node"]["verified"]
+            domain_count = edge["node"]["domainCount"]
+
+            org_list.append(
+                Organization(
+                    self.client,
+                    name,
+                    acronym,
+                    slug,
+                    zone,
+                    sector,
+                    country,
+                    province,
+                    city,
+                    verified,
+                    domain_count,
+                )
+            )
+
+        return org_list
 
     def get_domain(self, domain):
         params = {"domain": domain}

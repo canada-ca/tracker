@@ -594,3 +594,26 @@ GET_ALL_DOMAINS = gql(
     }
     """
 )
+
+GET_ALL_ORGS = gql(
+    """
+    query GetAllOrgs {
+        findMyOrganizations(first: 100) {
+            edges {
+                node {
+                    acronym
+                    name
+                    slug
+                    zone
+                    sector
+                    country
+                    province
+                    city
+                    verified
+                    domainCount
+                }
+            }
+        }
+    }
+    """
+)
