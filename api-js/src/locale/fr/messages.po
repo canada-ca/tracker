@@ -29,7 +29,7 @@ msgstr "todo"
 msgid "Authentication error. Please sign in."
 msgstr "todo"
 
-#: src/organization/objects/organization.js:126
+#: src/organization/objects/organization.js:131
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "todo"
 
@@ -42,7 +42,8 @@ msgid "Could not retrieve specified organization."
 msgstr "todo"
 
 #: src/auth/check-domain-ownership.js:22
-#: src/auth/check-domain-ownership.js:35
+#: src/auth/check-domain-ownership.js:44
+#: src/auth/check-domain-ownership.js:57
 msgid "Error when retrieving dmarc report information. Please try again."
 msgstr "todo"
 
@@ -100,25 +101,25 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:39
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:95
 msgid "Passing both `first` and `last` to paginate the `dkimResults` connection is not supported."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:49
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:85
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:120
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:156
 msgid "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
 msgstr "todo"
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:71
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:174
 msgid "Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:49
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:144
 msgid "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:51
-#: src/domain/loaders/load-domain-connections-by-user-id.js:49
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:131
+#: src/domain/loaders/load-domain-connections-by-user-id.js:139
 msgid "Passing both `first` and `last` to paginate the `domain` connection is not supported."
 msgstr "todo"
 
@@ -130,25 +131,25 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `guidanceTag` connection is not supported."
 msgstr "todo"
 
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:49
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:152
 msgid "Passing both `first` and `last` to paginate the `https` connection is not supported."
 msgstr "todo"
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:43
-#: src/organization/loaders/load-organization-connections-by-user-id.js:43
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:179
+#: src/organization/loaders/load-organization-connections-by-user-id.js:179
 msgid "Passing both `first` and `last` to paginate the `organization` connection is not supported."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:49
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:138
 msgid "Passing both `first` and `last` to paginate the `spf` connection is not supported."
 msgstr "todo"
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:49
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:176
 msgid "Passing both `first` and `last` to paginate the `ssl` connection is not supported."
 msgstr "todo"
 
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:41
-#: src/verified-domains/loaders/load-verified-domain-connections.js:41
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:121
+#: src/verified-domains/loaders/load-verified-domain-connections.js:121
 msgid "Passing both `first` and `last` to paginate the `verifiedDomain` connection is not supported."
 msgstr "todo"
 
@@ -215,12 +216,12 @@ msgstr "todo"
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:94
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:197
 msgid "Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:74
-#: src/domain/loaders/load-domain-connections-by-user-id.js:72
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:154
+#: src/domain/loaders/load-domain-connections-by-user-id.js:162
 msgid "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
@@ -232,13 +233,13 @@ msgstr "todo"
 msgid "Requesting `{amount}` records on the `guidanceTag` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:66
-#: src/organization/loaders/load-organization-connections-by-user-id.js:66
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:202
+#: src/organization/loaders/load-organization-connections-by-user-id.js:202
 msgid "Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:64
-#: src/verified-domains/loaders/load-verified-domain-connections.js:64
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:144
+#: src/verified-domains/loaders/load-verified-domain-connections.js:144
 msgid "Requesting `{amount}` records on the `verifiedDomain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
@@ -247,27 +248,27 @@ msgstr "todo"
 msgid "Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:62
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:118
 msgid "Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:72
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:143
 msgid "Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:73
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:168
 msgid "Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:72
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:175
 msgid "Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:72
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:161
 msgid "Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:72
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:199
 msgid "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
@@ -326,6 +327,8 @@ msgstr "todo"
 
 #: src/auth/check-permission.js:29
 #: src/auth/check-permission.js:55
+#: src/auth/check-super-admin.js:17
+#: src/auth/check-super-admin.js:27
 msgid "Unable to check permission. Please try again."
 msgstr "todo"
 
@@ -375,8 +378,8 @@ msgstr "todo"
 msgid "Unable to find dmarc scan. Please try again."
 msgstr "todo"
 
-#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:26
-#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:40
+#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:36
+#: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:50
 msgid "Unable to find dmarc summary. Please try again."
 msgstr "todo"
 
@@ -397,8 +400,8 @@ msgstr "todo"
 msgid "Unable to find https scan. Please try again."
 msgstr "todo"
 
-#: src/organization/loaders/load-organization-by-key.js:19
 #: src/organization/loaders/load-organization-by-key.js:31
+#: src/organization/loaders/load-organization-by-key.js:43
 #: src/organization/loaders/load-organization-by-slug.js:19
 #: src/organization/loaders/load-organization-by-slug.js:31
 msgid "Unable to find organization. Please try again."
@@ -482,13 +485,13 @@ msgstr "todo"
 msgid "Unable to load dkim guidance tags. Please try again."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:131
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:141
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:244
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:254
 msgid "Unable to load dkim results. Please try again."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:152
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:162
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:268
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:278
 msgid "Unable to load dkim scans. Please try again."
 msgstr "todo"
 
@@ -503,13 +506,13 @@ msgstr "todo"
 msgid "Unable to load dmarc guidance tags. Please try again."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:145
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:155
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:308
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:318
 msgid "Unable to load dmarc scans. Please try again."
 msgstr "todo"
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:177
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:189
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:417
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:429
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:21
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:33
 #: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:19
@@ -517,12 +520,12 @@ msgstr "todo"
 msgid "Unable to load dmarc summaries. Please try again."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:151
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:161
-#: src/domain/loaders/load-domain-connections-by-user-id.js:157
-#: src/domain/queries/find-my-domains.js:38
-#: src/verified-domains/loaders/load-verified-domain-connections.js:141
-#: src/verified-domains/loaders/load-verified-domain-connections.js:151
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:313
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:323
+#: src/domain/loaders/load-domain-connections-by-user-id.js:346
+#: src/domain/queries/find-my-domains.js:48
+#: src/verified-domains/loaders/load-verified-domain-connections.js:302
+#: src/verified-domains/loaders/load-verified-domain-connections.js:312
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
@@ -537,8 +540,8 @@ msgstr "todo"
 msgid "Unable to load https guidance tags. Please try again."
 msgstr "todo"
 
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:143
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:153
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:320
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:330
 msgid "Unable to load https scans. Please try again."
 msgstr "todo"
 
@@ -546,10 +549,10 @@ msgstr "todo"
 msgid "Unable to load mail summary. Please try again."
 msgstr "todo"
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:141
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:151
-#: src/organization/loaders/load-organization-connections-by-user-id.js:146
-#: src/organization/queries/find-my-organizations.js:32
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:426
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:436
+#: src/organization/loaders/load-organization-connections-by-user-id.js:438
+#: src/organization/queries/find-my-organizations.js:40
 msgid "Unable to load organizations. Please try again."
 msgstr "todo"
 
@@ -564,8 +567,8 @@ msgstr "todo"
 msgid "Unable to load spf guidance tags. Please try again."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:143
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:153
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:294
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:304
 msgid "Unable to load spf scans. Please try again."
 msgstr "todo"
 
@@ -574,13 +577,13 @@ msgstr "todo"
 msgid "Unable to load ssl guidance tags. Please try again."
 msgstr "todo"
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:143
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:153
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:368
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:378
 msgid "Unable to load ssl scans. Please try again."
 msgstr "todo"
 
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:136
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:148
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:297
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:309
 msgid "Unable to load verified domains. Please try again."
 msgstr "todo"
 
@@ -600,11 +603,11 @@ msgstr "todo"
 msgid "Unable to query affiliations. Please try again."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-user-id.js:147
+#: src/domain/loaders/load-domain-connections-by-user-id.js:336
 msgid "Unable to query domains. Please try again."
 msgstr "todo"
 
-#: src/organization/loaders/load-organization-connections-by-user-id.js:136
+#: src/organization/loaders/load-organization-connections-by-user-id.js:428
 msgid "Unable to query organizations. Please try again."
 msgstr "todo"
 
@@ -650,10 +653,6 @@ msgstr "todo"
 #: src/user/mutations/reset-password.js:78
 #: src/user/mutations/reset-password.js:111
 msgid "Unable to reset password. Please try again."
-msgstr "todo"
-
-#: src/dmarc-report/loaders/load-dmarc-report.js:39
-msgid "Unable to retrieve {0} for domain: {domain}."
 msgstr "todo"
 
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:34
@@ -819,24 +818,24 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:30
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:86
 msgid "You must provide a `first` or `last` value to properly paginate the `dkimResults` connection."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:40
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:111
 msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 msgstr "todo"
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:62
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:165
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:40
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:135
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:42
-#: src/domain/loaders/load-domain-connections-by-user-id.js:40
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:122
+#: src/domain/loaders/load-domain-connections-by-user-id.js:130
 msgid "You must provide a `first` or `last` value to properly paginate the `domain` connection."
 msgstr "todo"
 
@@ -848,25 +847,25 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `guidanceTag` connection."
 msgstr "todo"
 
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:40
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:143
 msgid "You must provide a `first` or `last` value to properly paginate the `https` connection."
 msgstr "todo"
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:34
-#: src/organization/loaders/load-organization-connections-by-user-id.js:34
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:170
+#: src/organization/loaders/load-organization-connections-by-user-id.js:170
 msgid "You must provide a `first` or `last` value to properly paginate the `organization` connection."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:40
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:129
 msgid "You must provide a `first` or `last` value to properly paginate the `spf` connection."
 msgstr "todo"
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:40
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:167
 msgid "You must provide a `first` or `last` value to properly paginate the `ssl` connection."
 msgstr "todo"
 
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:32
-#: src/verified-domains/loaders/load-verified-domain-connections.js:32
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:112
+#: src/verified-domains/loaders/load-verified-domain-connections.js:112
 msgid "You must provide a `first` or `last` value to properly paginate the `verifiedDomain` connection."
 msgstr "todo"
 
@@ -875,11 +874,11 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection."
 msgstr "todo"
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:20
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:29
 msgid "You must provide a `period` value to access the `dmarcSummaries` connection."
 msgstr "todo"
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:32
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:41
 msgid "You must provide a `year` value to access the `dmarcSummaries` connection."
 msgstr "todo"
 
@@ -887,28 +886,28 @@ msgstr "todo"
 #: src/affiliation/loaders/load-affiliations-by-user-id.js:80
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:84
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:84
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:109
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:212
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:84
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:84
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:89
-#: src/domain/loaders/load-domain-connections-by-user-id.js:87
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:96
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:77
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:88
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:87
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:169
+#: src/domain/loaders/load-domain-connections-by-user-id.js:177
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:167
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:133
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:183
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:176
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:77
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:77
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:77
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:77
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:77
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:81
-#: src/organization/loaders/load-organization-connections-by-user-id.js:81
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:79
-#: src/verified-domains/loaders/load-verified-domain-connections.js:79
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:217
+#: src/organization/loaders/load-organization-connections-by-user-id.js:217
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:159
+#: src/verified-domains/loaders/load-verified-domain-connections.js:159
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:77
 #: src/verified-organizations/loaders/load-verified-organizations-connections.js:78
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:87
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:87
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:190
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:214
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
 msgstr "todo"
 
@@ -933,24 +932,24 @@ msgstr "todo"
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:51
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:107
 msgid "`{argSet}` on the `dkimResults` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:61
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:132
 msgid "`{argSet}` on the `dkim` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:83
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:186
 msgid "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:62
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:157
 msgid "`{argSet}` on the `dmarc` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:63
-#: src/domain/loaders/load-domain-connections-by-user-id.js:61
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:143
+#: src/domain/loaders/load-domain-connections-by-user-id.js:151
 msgid "`{argSet}` on the `domain` connection cannot be less than zero."
 msgstr "todo"
 
@@ -962,25 +961,25 @@ msgstr "todo"
 msgid "`{argSet}` on the `guidanceTag` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/web-scan/loaders/load-https-connections-by-domain-id.js:61
+#: src/web-scan/loaders/load-https-connections-by-domain-id.js:164
 msgid "`{argSet}` on the `https` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:55
-#: src/organization/loaders/load-organization-connections-by-user-id.js:55
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:191
+#: src/organization/loaders/load-organization-connections-by-user-id.js:191
 msgid "`{argSet}` on the `organization` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:61
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:150
 msgid "`{argSet}` on the `spf` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:61
+#: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:188
 msgid "`{argSet}` on the `ssl` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:53
-#: src/verified-domains/loaders/load-verified-domain-connections.js:53
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:133
+#: src/verified-domains/loaders/load-verified-domain-connections.js:133
 msgid "`{argSet}` on the `verifiedDomain` connection cannot be less than zero."
 msgstr "todo"
 

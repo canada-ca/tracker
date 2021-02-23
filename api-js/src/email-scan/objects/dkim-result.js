@@ -8,7 +8,8 @@ import { GraphQLJSON } from 'graphql-scalars'
 
 import { dkimType } from './dkim'
 import { nodeInterface } from '../../node'
-import { guidanceTagConnection } from '../../guidance-tag'
+import { guidanceTagOrder } from '../../guidance-tag/inputs'
+import { guidanceTagConnection } from '../../guidance-tag/objects'
 
 export const dkimResultType = new GraphQLObjectType({
   name: 'DKIMResult',
@@ -47,6 +48,10 @@ export const dkimResultType = new GraphQLObjectType({
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
       args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
         ...connectionArgs,
       },
       description: 'Key tags found during scan.',

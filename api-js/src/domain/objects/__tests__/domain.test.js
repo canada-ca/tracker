@@ -38,6 +38,12 @@ describe('given the domain object', () => {
       expect(demoType).toHaveProperty('domain')
       expect(demoType.domain.type).toMatchObject(Domain)
     })
+    it('has a dmarcPhase field', () => {
+      const demoType = domainType.getFields()
+
+      expect(demoType).toHaveProperty('dmarcPhase')
+      expect(demoType.dmarcPhase.type).toMatchObject(GraphQLString)
+    })
     it('has a lastRan field', () => {
       const demoType = domainType.getFields()
 
@@ -258,6 +264,15 @@ describe('given the domain object', () => {
         expect(demoType.domain.resolve({ domain: 'test.gc.ca' })).toEqual(
           'test.gc.ca',
         )
+      })
+    })
+    describe('testing the dmarcPhase resolver', () => {
+      it('returns the resolved value', () => {
+        const demoType = domainType.getFields()
+
+        expect(
+          demoType.dmarcPhase.resolve({ phase: 'not implemented' }),
+        ).toEqual('not implemented')
       })
     })
     describe('testing the lastRan resolver', () => {

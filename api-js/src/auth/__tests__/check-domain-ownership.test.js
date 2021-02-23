@@ -22,7 +22,6 @@ describe('given the check domain ownership function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -65,6 +64,10 @@ describe('given the check domain ownership function', () => {
       _from: org._id,
     })
     consoleOutput = []
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
@@ -152,7 +155,6 @@ describe('given the check domain ownership function', () => {
       })
     })
   })
-
   describe('given an unsuccessful domain ownership check', () => {
     let user
     beforeEach(async () => {
@@ -191,11 +193,35 @@ describe('given the check domain ownership function', () => {
           },
         })
       })
+      describe('if a database error is encountered during super admin check', () => {
+        let mockQuery
+        it('returns an appropriate error message', async () => {
+          mockQuery = jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred.'))
+          try {
+            const testCheckDomainOwnerShip = checkDomainOwnership({
+              i18n,
+              query: mockQuery,
+              userKey: user._key,
+            })
+            await testCheckDomainOwnerShip({
+              domainId: domain._id,
+            })
+          } catch (err) {
+            expect(err).toEqual(new Error('Error when retrieving dmarc report information. Please try again.'))
+            expect(consoleOutput).toEqual([
+              `Database error when retrieving super admin affiliated organization ownership for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
+            ])
+          }
+        })
+      })
       describe('if a database error is encountered during ownership check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
           mockQuery = jest
             .fn()
+            .mockReturnValueOnce({ count: 0 })
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
@@ -213,7 +239,7 @@ describe('given the check domain ownership function', () => {
               ),
             )
             expect(consoleOutput).toEqual([
-              `Database error when retrieving affiliated organization ownership for user: ${user._id} and the domain: ${domain._id}: Error: Database error occurred.`,
+              `Database error when retrieving affiliated organization ownership for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
             ])
           }
         })
@@ -243,7 +269,7 @@ describe('given the check domain ownership function', () => {
               ),
             )
             expect(consoleOutput).toEqual([
-              `Cursor error when retrieving affiliated organization ownership for user: ${user._id} and the domain: ${domain._id}: Error: Cursor error occurred.`,
+              `Cursor error when retrieving affiliated organization ownership for user: ${user._id} and domain: ${domain._id}: Error: Cursor error occurred.`,
             ])
           }
         })
@@ -264,7 +290,7 @@ describe('given the check domain ownership function', () => {
           },
         })
       })
-      describe('if a database error is encountered during ownership check', () => {
+      describe('if a database error is encountered during super admin check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
           mockQuery = jest
@@ -282,7 +308,31 @@ describe('given the check domain ownership function', () => {
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
             expect(consoleOutput).toEqual([
-              `Database error when retrieving affiliated organization ownership for user: ${user._id} and the domain: ${domain._id}: Error: Database error occurred.`,
+              `Database error when retrieving super admin affiliated organization ownership for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
+            ])
+          }
+        })
+      })
+      describe('if a database error is encountered during ownership check', () => {
+        let mockQuery
+        it('returns an appropriate error message', async () => {
+          mockQuery = jest
+            .fn()
+            .mockReturnValueOnce({ count: 0 })
+            .mockRejectedValue(new Error('Database error occurred.'))
+          try {
+            const testCheckDomainOwnerShip = checkDomainOwnership({
+              i18n,
+              query: mockQuery,
+              userKey: user._key,
+            })
+            await testCheckDomainOwnerShip({
+              domainId: domain._id,
+            })
+          } catch (err) {
+            expect(err).toEqual(new Error('todo'))
+            expect(consoleOutput).toEqual([
+              `Database error when retrieving affiliated organization ownership for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
             ])
           }
         })
@@ -308,7 +358,7 @@ describe('given the check domain ownership function', () => {
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
             expect(consoleOutput).toEqual([
-              `Cursor error when retrieving affiliated organization ownership for user: ${user._id} and the domain: ${domain._id}: Error: Cursor error occurred.`,
+              `Cursor error when retrieving affiliated organization ownership for user: ${user._id} and domain: ${domain._id}: Error: Cursor error occurred.`,
             ])
           }
         })

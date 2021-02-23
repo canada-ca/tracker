@@ -1,10 +1,16 @@
 import { connectionArgs } from 'graphql-relay'
+
+import { verifiedDomainOrder } from '../inputs'
 import { verifiedDomainConnection } from '../objects'
 
 export const findVerifiedDomains = {
   type: verifiedDomainConnection.connectionType,
   description: 'Select verified check domains',
   args: {
+    orderBy: {
+      type: verifiedDomainOrder,
+      description: 'Ordering options for verified domain connections.',
+    },
     ...connectionArgs,
   },
   resolve: async (
@@ -12,7 +18,7 @@ export const findVerifiedDomains = {
     args,
     { loaders: { verifiedDomainLoaderConnections } },
   ) => {
-    const domainConnections = await verifiedDomainLoaderConnections({ ...args })
+    const domainConnections = await verifiedDomainLoaderConnections(args)
     return domainConnections
   },
 }

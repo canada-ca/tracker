@@ -8,7 +8,8 @@ import { GraphQLJSON } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
-import { guidanceTagConnection } from '../../guidance-tag'
+import { guidanceTagOrder } from '../../guidance-tag/inputs'
+import { guidanceTagConnection } from '../../guidance-tag/objects'
 
 export const dmarcType = new GraphQLObjectType({
   name: 'DMARC',
@@ -28,11 +29,6 @@ export const dmarcType = new GraphQLObjectType({
       type: GraphQLString,
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => timestamp,
-    },
-    dmarcPhase: {
-      type: GraphQLInt,
-      description: `DMARC phase found during scan.`,
-      resolve: ({ dmarcPhase }) => dmarcPhase,
     },
     record: {
       type: GraphQLString,
@@ -64,6 +60,10 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
       args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
         ...connectionArgs,
       },
       description: `Key tags found during DMARC Scan.`,

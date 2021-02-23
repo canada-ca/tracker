@@ -20,4 +20,4 @@ replicas:
   count: 1
 components:
 - ../namespaces
-- ../creds/prod
+- ../creds/dev

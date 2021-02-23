@@ -1975,6 +1975,58 @@ describe('given the load organization connections by user id function', () => {
             })
           })
         })
+        describe('isSuperAdmin is set to true', () => {
+          it('returns organizations', async () => {
+            const connectionLoader = orgLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              'en',
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 5,
+              isSuperAdmin: true,
+            }
+            const orgs = await connectionLoader({ ...connectionArgs })
+
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const expectedOrgs = await orgLoader.loadMany([
+              orgOne._key,
+              orgTwo._key,
+            ])
+
+            expectedOrgs[0].id = expectedOrgs[0]._key
+            expectedOrgs[1].id = expectedOrgs[1]._key
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  node: {
+                    ...expectedOrgs[0],
+                  },
+                },
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  node: {
+                    ...expectedOrgs[1],
+                  },
+                },
+              ],
+              totalCount: 2,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              },
+            }
+
+            expect(orgs).toEqual(expectedStructure)
+          })
+        })
       })
       describe('given there are no domain connections to be returned', () => {
         it('returns no organization connections', async () => {
@@ -4148,6 +4200,58 @@ describe('given the load organization connections by user id function', () => {
                 expect(orgs).toEqual(expectedStructure)
               })
             })
+          })
+        })
+        describe('isSuperAdmin is set to true', () => {
+          it('returns organizations', async () => {
+            const connectionLoader = orgLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              'fr',
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 5,
+              isSuperAdmin: true,
+            }
+            const orgs = await connectionLoader({ ...connectionArgs })
+
+            const orgLoader = orgLoaderByKey(query, 'fr')
+            const expectedOrgs = await orgLoader.loadMany([
+              orgOne._key,
+              orgTwo._key,
+            ])
+
+            expectedOrgs[0].id = expectedOrgs[0]._key
+            expectedOrgs[1].id = expectedOrgs[1]._key
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                  node: {
+                    ...expectedOrgs[0],
+                  },
+                },
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  node: {
+                    ...expectedOrgs[1],
+                  },
+                },
+              ],
+              totalCount: 2,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              },
+            }
+
+            expect(orgs).toEqual(expectedStructure)
           })
         })
       })

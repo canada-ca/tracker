@@ -42,7 +42,6 @@ describe('given the load ssl connection function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
 
@@ -57,6 +56,10 @@ describe('given the load ssl connection function', () => {
       domain: 'test.domain.gc.ca',
       slug: 'test-domain-gc-ca',
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
@@ -516,6 +519,1023 @@ describe('given the load ssl connection function', () => {
           }
 
           expect(sslScans).toEqual(expectedStructure)
+        })
+      })
+    })
+    describe('using the orderBy field', () => {
+      let sslOne, sslTwo, sslThree
+      beforeEach(async () => {
+        await truncate()
+        domain = await collections.domains.save({
+          domain: 'test.domain.gc.ca',
+        })
+        sslOne = await collections.ssl.save({
+          acceptable_ciphers: ['a'],
+          acceptable_curves: ['a'],
+          ccs_injection_vulnerable: false,
+          heartbleed_vulnerable: false,
+          strong_ciphers: ['a'],
+          strong_curves: ['a'],
+          supports_ecdh_key_exchange: false,
+          timestamp: '2021-01-26 23:29:19.652119',
+          weak_ciphers: ['a'],
+          weak_curves: ['a'],
+        })
+        sslTwo = await collections.ssl.save({
+          acceptable_ciphers: ['b'],
+          acceptable_curves: ['b'],
+          ccs_injection_vulnerable: false,
+          heartbleed_vulnerable: false,
+          strong_ciphers: ['b'],
+          strong_curves: ['b'],
+          supports_ecdh_key_exchange: false,
+          timestamp: '2021-01-27 23:29:19.652119',
+          weak_ciphers: ['b'],
+          weak_curves: ['b'],
+        })
+        sslThree = await collections.ssl.save({
+          acceptable_ciphers: ['c'],
+          acceptable_curves: ['c'],
+          ccs_injection_vulnerable: false,
+          heartbleed_vulnerable: false,
+          strong_ciphers: ['c'],
+          strong_curves: ['c'],
+          supports_ecdh_key_exchange: false,
+          timestamp: '2021-01-28 23:29:19.652119',
+          weak_ciphers: ['c'],
+          weak_curves: ['c'],
+        })
+        await collections.domainsSSL.save({
+          _to: sslOne._id,
+          _from: domain._id,
+        })
+        await collections.domainsSSL.save({
+          _to: sslTwo._id,
+          _from: domain._id,
+        })
+        await collections.domainsSSL.save({
+          _to: sslThree._id,
+          _from: domain._id,
+        })
+      })
+      describe('ordering on ACCEPTABLE_CIPHERS', () => {
+        describe('direction is set to ASC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'acceptable-ciphers',
+                direction: 'ASC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslThree._key),
+              before: toGlobalId('ssl', sslOne._key),
+              orderBy: {
+                field: 'acceptable-ciphers',
+                direction: 'DESC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on ACCEPTABLE_CURVES', () => {
+        describe('direction is set to ASC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'acceptable-curves',
+                direction: 'ASC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslThree._key),
+              before: toGlobalId('ssl', sslOne._key),
+              orderBy: {
+                field: 'acceptable-curves',
+                direction: 'DESC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on CCS_INJECTION_VULNERABLE', () => {
+        describe('direction is set to ASC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'ccs-injection-vulnerable',
+                direction: 'ASC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'ccs-injection-vulnerable',
+                direction: 'DESC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on HEARTBLEED_VULNERABLE', () => {
+        describe('direction is set to ASC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'heartbleed-vulnerable',
+                direction: 'ASC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'heartbleed-vulnerable',
+                direction: 'DESC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on STRONG_CIPHERS', () => {
+        describe('direction is set to ASC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'strong-ciphers',
+                direction: 'ASC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslThree._key),
+              before: toGlobalId('ssl', sslOne._key),
+              orderBy: {
+                field: 'strong-ciphers',
+                direction: 'DESC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on STRONG_CURVES', () => {
+        describe('direction is set to ASC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'strong-curves',
+                direction: 'ASC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslThree._key),
+              before: toGlobalId('ssl', sslOne._key),
+              orderBy: {
+                field: 'strong-curves',
+                direction: 'DESC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on SUPPORTS_ECDH_KEY_EXCHANGE', () => {
+        describe('direction is set to ASC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'supports-ecdh-key-exchange',
+                direction: 'ASC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'supports-ecdh-key-exchange',
+                direction: 'DESC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on TIMESTAMP', () => {
+        describe('direction is set to ASC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'timestamp',
+                direction: 'ASC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslThree._key),
+              before: toGlobalId('ssl', sslOne._key),
+              orderBy: {
+                field: 'timestamp',
+                direction: 'DESC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on WEAK_CIPHERS', () => {
+        describe('direction is set to ASC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'weak-ciphers',
+                direction: 'ASC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslThree._key),
+              before: toGlobalId('ssl', sslOne._key),
+              orderBy: {
+                field: 'weak-ciphers',
+                direction: 'DESC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+      })
+      describe('ordering on WEAK_CURVES', () => {
+        describe('direction is set to ASC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslOne._key),
+              before: toGlobalId('ssl', sslThree._key),
+              orderBy: {
+                field: 'weak-curves',
+                direction: 'ASC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
+        })
+        describe('ordering is set to DESC', () => {
+          it('returns ssl scan', async () => {
+            const loader = sslLoaderByKey(query, user._key, i18n)
+            const expectedSslScan = await loader.load(sslTwo._key)
+
+            const connectionLoader = sslLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              after: toGlobalId('ssl', sslThree._key),
+              before: toGlobalId('ssl', sslOne._key),
+              orderBy: {
+                field: 'weak-curves',
+                direction: 'DESC',
+              },
+            }
+
+            const sslScans = await connectionLoader(connectionArgs)
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('ssl', expectedSslScan._key),
+                  node: {
+                    domainId: domain._id,
+                    ...expectedSslScan,
+                  },
+                },
+              ],
+              totalCount: 3,
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
+                startCursor: toGlobalId('ssl', expectedSslScan._key),
+                endCursor: toGlobalId('ssl', expectedSslScan._key),
+              },
+            }
+
+            expect(sslScans).toEqual(expectedStructure)
+          })
         })
       })
     })
