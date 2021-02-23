@@ -1,6 +1,12 @@
 from core import create_client, get_auth_token
-from results import get_all_results, get_domain_status, get_email_results, get_web_results
+from results import (
+    get_all_results,
+    get_domain_status,
+    get_email_results,
+    get_web_results,
+)
 from dmarc import get_dmarc_summary, get_yearly_dmarc_summaries
+
 
 class Domain:
     def __init__(self, domain_name, client):

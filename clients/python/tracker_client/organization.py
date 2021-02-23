@@ -1,4 +1,7 @@
-from client import get_domains_by_name, create_client, get_auth_token, get_summary_by_name
+from core import create_client, get_auth_token
+from domains import get_domains_by_name
+from summary import get_summary_by_name
+
 
 class Organization:
     # Get list of domains outside and pass in, or fetch list at instantiation?
@@ -18,7 +21,9 @@ class Organization:
 
 def main():
     client = create_client(auth_token=get_auth_token())
-    test_org = Organization("Communications Security Establishment Canada", "CSE", client)
+    test_org = Organization(
+        "Communications Security Establishment Canada", "CSE", client
+    )
     print(test_org.get_domains())
     print(test_org.get_summary())
 
