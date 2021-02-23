@@ -106,18 +106,12 @@ export default function OrganizationDetails() {
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationDomains
-                orgSlug={orgSlug}
-                domainsPerPage={data.organization.domainCount}
-              />
+              <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationAffiliations
-                orgSlug={orgSlug}
-                usersPerPage={data.organization.affiliations.totalCount}
-              />
+              <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
         </TabPanels>

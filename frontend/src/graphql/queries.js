@@ -448,6 +448,7 @@ export const ORG_DETAILS_PAGE = gql`
 export const PAGINATED_ORG_DOMAINS = gql`
   query OrgDomainsNext($slug: Slug!, $first: Int, $after: String) {
     findOrganizationBySlug(orgSlug: $slug) {
+      id
       domains(first: $first, after: $after) {
         pageInfo {
           hasNextPage
@@ -508,6 +509,7 @@ export const REVERSE_PAGINATED_ORG_DOMAINS = gql`
 export const PAGINATED_ORG_AFFILIATIONS = gql`
   query OrgUsersNext($slug: Slug!, $first: Int, $after: String) {
     findOrganizationBySlug(orgSlug: $slug) {
+      id
       affiliations(first: $first, after: $after) {
         pageInfo {
           hasNextPage
