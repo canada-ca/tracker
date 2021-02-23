@@ -1,5 +1,3 @@
-import json
-
 from slugify import slugify
 from gql.transport.exceptions import (
     TransportQueryError,
@@ -19,6 +17,7 @@ class Client:
         self.client = create_client(url, auth_token=get_auth_token())
 
     def get_organization(self, name):
+        "Get an Organization from specified name"
         slugified_name = slugify(name)
         params = {"orgSlug": slugified_name}
         result = self.execute_query(queries.GET_ORG, params)
@@ -148,14 +147,3 @@ class Client:
             raise
 
         return result
-
-
-def main():
-    session = Client()
-    my_domains = session.get_domains()
-
-    print(my_domains[0].get_status())
-
-
-if __name__ == "__main__":  # pragma: no cover
-    main()

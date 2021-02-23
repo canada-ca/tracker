@@ -1,11 +1,11 @@
 import queries
 import domain as dom
-from core import create_client, get_auth_token
 from summary import get_summary_by_name
 
 
 class Organization:
-    # need to look at pruning attributes or finding another way to reduce arguments
+    """Class that represents an organization in Tracker """
+
     def __init__(
         self,
         client,
@@ -34,10 +34,10 @@ class Organization:
 
     def get_summary(self):
         # Temporary, will move actual function here soon
-        return get_summary_by_name(self.client, self.name)
+        return get_summary_by_name(self.client.client, self.name)
 
-    # TODO: make this return a list of domain objects and create another function for JSON output
     def get_domains(self):
+        """Get a list of Domains controlled by this organization"""
         params = {"orgSlug": self.slug}
         result = self.client.execute_query(queries.GET_ORG_DOMAINS, params)
         print(result)
@@ -50,26 +50,3 @@ class Organization:
             domain_list.append(dom.Domain(self.client, domain, last_ran, dmarc_phase))
 
         return domain_list
-
-
-def main():
-    client = create_client(auth_token=get_auth_token())
-    test_org = Organization(
-        client,
-        "Communications Security Establishment Canada",
-        "CSE",
-        "communications-security-establishment-canada",
-        "foo",
-        "bar",
-        "Canada",
-        "Ontario",
-        "Ottawa",
-        True,
-        99,
-    )
-    print(test_org.get_domains())
-    print(test_org.get_summary())
-
-
-if __name__ == "__main__":  # pragma: no cover
-    main()
