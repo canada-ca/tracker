@@ -1,9 +1,14 @@
 import json
 
 from slugify import slugify
+from gql.transport.exceptions import (
+    TransportQueryError,
+    TransportServerError,
+    TransportProtocolError,
+)
 
 import queries
-from core import create_client, get_auth_token, execute_query
+from core import create_client, get_auth_token
 from domain import Domain
 from organization import Organization
 
@@ -16,7 +21,7 @@ class Client:
     def get_organization(self, name):
         slugified_name = slugify(name)
         params = {"orgSlug": slugified_name}
-        result = execute_query(self.client, queries.GET_ORG, params)
+        result = self.execute_query(queries.GET_ORG, params)
         # TODO: deal with server error here
 
         acronym = result["findOrganizationBySlug"]["acronym"]
@@ -30,7 +35,7 @@ class Client:
         domain_count = result["findOrganizationBySlug"]["domainCount"]
 
         return Organization(
-            self.client,
+            self,
             name,
             acronym,
             slugified_name,
@@ -44,7 +49,8 @@ class Client:
         )
 
     def get_organizations(self):
-        result = execute_query(self.client, queries.GET_ALL_ORGS)
+        """Get a list of Organizations for all organizations you are a member of"""
+        result = self.execute_query(queries.GET_ALL_ORGS)
 
         org_list = []
 
@@ -64,7 +70,7 @@ class Client:
 
             org_list.append(
                 Organization(
-                    self.client,
+                    self,
                     name,
                     acronym,
                     slug,
@@ -81,18 +87,20 @@ class Client:
         return org_list
 
     def get_domain(self, domain):
+        """Get a Domain for the given domain"""
         params = {"domain": domain}
-        result = execute_query(self.client, queries.GET_DOMAIN, params)
+        result = self.execute_query(queries.GET_DOMAIN, params)
         # TODO: deal with server error here
 
         dmarc_phase = result["findDomainByDomain"]["dmarcPhase"]
         last_ran = result["findDomainByDomain"]["lastRan"]
-        new_domain = Domain(self.client, domain, last_ran, dmarc_phase)
+        new_domain = Domain(self, domain, last_ran, dmarc_phase)
 
         return new_domain
 
     def get_domains(self):
-        result = execute_query(self.client, queries.GET_ALL_DOMAINS)
+        """Get a list of Domains for all domains you own"""
+        result = self.execute_query(queries.GET_ALL_DOMAINS)
         # TODO: deal with server error here
 
         domain_list = []
@@ -101,23 +109,52 @@ class Client:
             domain = edge["node"]["domain"]
             dmarc_phase = edge["node"]["dmarcPhase"]
             last_ran = edge["node"]["lastRan"]
-            domain_list.append(Domain(self.client, domain, last_ran, dmarc_phase))
+            domain_list.append(Domain(self, domain, last_ran, dmarc_phase))
 
         return domain_list
+
+    def execute_query(self, query, params=None):
+        """Executes a query on this client, with given parameters.
+
+        Intended for internal use, but if for some reason you need an unformatted
+        response from the API you could call this.
+
+        :param DocumentNode query: a gql query string that has been parsed with gql()
+        :param dict params: variables to pass along with query
+        :return: Results of executing query on API
+        :rtype: dict
+        :raises TransportProtocolError: if server response is not GraphQL
+        :raises TransportServerError: if there is a server error
+        :raises Exception: if any unhandled exception is raised within function"""
+        try:
+            result = self.client.execute(query, variable_values=params)
+
+        except TransportQueryError as error:
+            # Not sure this is the best way to deal with this exception
+            result = {"error": {"message": error.errors[0]["message"]}}
+
+        except TransportProtocolError as error:
+            print("Unexpected response from server:", error)
+            raise
+
+        except TransportServerError as error:
+            print("Server error:", error)
+            raise
+
+        except Exception as error:
+            # Need to be more descriptive
+            # Potentially figure out other errors that could be caught here?
+            print("Fatal error:", error)
+            raise
+
+        return result
 
 
 def main():
     session = Client()
     my_domains = session.get_domains()
 
-    dmarc_fails = []
-    for domain in my_domains:
-        status = json.loads(domain.get_status())
-
-        if status[domain.domain_name]["status"]["dkim"] == "FAIL":
-            dmarc_fails.append(domain.domain_name)
-
-    print(dmarc_fails)
+    print(my_domains[0].get_status())
 
 
 if __name__ == "__main__":  # pragma: no cover

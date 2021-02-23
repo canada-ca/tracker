@@ -1,6 +1,6 @@
 import queries
 import organization as org
-from core import create_client, get_auth_token, execute_query
+from core import create_client, get_auth_token
 from results import (
     get_all_results,
     get_domain_status,
@@ -37,7 +37,7 @@ class Domain:
 
     def get_owners(self):
         params = {"domain": self.domain_name}
-        result = execute_query(self.client, queries.GET_DOMAIN_OWNERS, params)
+        result = self.client.execute_query(self.client, queries.GET_DOMAIN_OWNERS, params)
 
         org_list = []
 

@@ -1,6 +1,6 @@
 import queries
 import domain as dom
-from core import create_client, get_auth_token, execute_query
+from core import create_client, get_auth_token
 from summary import get_summary_by_name
 
 
@@ -39,7 +39,7 @@ class Organization:
     # TODO: make this return a list of domain objects and create another function for JSON output
     def get_domains(self):
         params = {"orgSlug": self.slug}
-        result = execute_query(self.client, queries.GET_ORG_DOMAINS, params)
+        result = self.client.execute_query(queries.GET_ORG_DOMAINS, params)
         print(result)
         domain_list = []
 
