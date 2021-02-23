@@ -4,7 +4,7 @@ import json
 from gql import Client
 
 # Avoid confusion with gql Client
-import tracker_client.client as tc
+import tracker_client.dmarc as tc
 import tracker_client.queries as queries
 
 # pylint: disable=no-member
@@ -13,7 +13,7 @@ import tracker_client.queries as queries
 def test_get_dmarc_summary_error(mocker, error_message):
     """Test that get_dmarc_summary correctly handles error response"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.dmarc.execute_query",
         auto_spec=True,
         return_value=error_message,
     )
@@ -30,7 +30,7 @@ def test_get_dmarc_summary_error(mocker, error_message):
 def test_get_dmarc_summary(mocker, monthly_dmarc_input, monthly_dmarc_output):
     """Test that get_dmarc_summary produces correct output"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.dmarc.execute_query",
         auto_spec=True,
         return_value=monthly_dmarc_input,
     )
@@ -48,7 +48,7 @@ def test_get_dmarc_summary(mocker, monthly_dmarc_input, monthly_dmarc_output):
 def test_get_yearly_dmarc_summaries_error(mocker, error_message):
     """Test that get_yearly_dmarc_summaries correctly handles error response"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.dmarc.execute_query",
         auto_spec=True,
         return_value=error_message,
     )
@@ -65,7 +65,7 @@ def test_get_yearly_dmarc_summaries_error(mocker, error_message):
 def test_get_yearly_dmarc_summaries(mocker, yearly_dmarc_input, yearly_dmarc_output):
     """Test that get_yearly_dmarc_summaries produces correct output"""
     mocker.patch(
-        "tracker_client.client.execute_query",
+        "tracker_client.dmarc.execute_query",
         auto_spec=True,
         return_value=yearly_dmarc_input,
     )
