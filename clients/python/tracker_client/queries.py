@@ -578,3 +578,19 @@ GET_ORG = gql(
     }
     """
 )
+
+GET_ALL_DOMAINS = gql(
+    """
+    query getAllDomains {
+        findMyDomains(first: 100) {
+            edges {
+                node {
+                    domain
+                    dmarcPhase
+                    lastRan
+                }
+            }
+        }
+    }
+    """
+)

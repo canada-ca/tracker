@@ -1,3 +1,5 @@
+import json
+
 from slugify import slugify
 
 import queries
@@ -41,6 +43,9 @@ class Client:
             domain_count,
         )
 
+    def get_organizations(self):
+        pass
+
     def get_domain(self, domain):
         params = {"domain": domain}
         result = execute_query(self.client, queries.GET_DOMAIN, params)
@@ -52,14 +57,33 @@ class Client:
 
         return new_domain
 
+    def get_domains(self):
+        result = execute_query(self.client, queries.GET_ALL_DOMAINS)
+        # TODO: deal with server error here
+
+        domain_list = []
+
+        for edge in result["findMyDomains"]["edges"]:
+            domain = edge["node"]["domain"]
+            dmarc_phase = edge["node"]["dmarcPhase"]
+            last_ran = edge["node"]["lastRan"]
+            domain_list.append(Domain(self.client, domain, last_ran, dmarc_phase))
+
+        return domain_list
+
 
 def main():
     session = Client()
-    test_domain = session.get_domain("cyber.gc.ca")
-    print(test_domain.get_status())
+    my_domains = session.get_domains()
 
-    test_org = session.get_organization("Communications Security Establishment Canada")
-    print(test_org.get_summary())
+    dmarc_fails = []
+    for domain in my_domains:
+        status = json.loads(domain.get_status())
+
+        if status[domain.domain_name]["status"]["dkim"] == "FAIL":
+            dmarc_fails.append(domain.domain_name)
+
+    print(dmarc_fails)
 
 
 if __name__ == "__main__":  # pragma: no cover
