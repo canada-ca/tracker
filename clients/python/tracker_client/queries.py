@@ -642,3 +642,21 @@ GET_DOMAIN_OWNERS = gql(
     }
     """
 )
+
+GET_ORG_DOMAINS = gql(
+    """
+    query orgBySlug($orgSlug: Slug!) {
+        findOrganizationBySlug(orgSlug: $orgSlug) {
+            domains (first: 100) {
+                edges {
+                    node {
+                        domain
+                        dmarcPhase
+                        lastRan
+                    }
+                }
+            }
+        }
+    }
+    """
+)

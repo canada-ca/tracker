@@ -1,10 +1,11 @@
-from core import create_client, get_auth_token
-from domains import get_domains_by_name
+import queries
+import domain as dom
+from core import create_client, get_auth_token, execute_query
 from summary import get_summary_by_name
 
 
 class Organization:
-    # Get list of domains outside and pass in, or fetch list at instantiation?
+    # need to look at pruning attributes or finding another way to reduce arguments
     def __init__(
         self,
         client,
@@ -37,7 +38,18 @@ class Organization:
 
     # TODO: make this return a list of domain objects and create another function for JSON output
     def get_domains(self):
-        return get_domains_by_name(self.client, self.name)
+        params = {"orgSlug": self.slug}
+        result = execute_query(self.client, queries.GET_ORG_DOMAINS, params)
+        print(result)
+        domain_list = []
+
+        for edge in result["findOrganizationBySlug"]["domains"]["edges"]:
+            domain = edge["node"]["domain"]
+            dmarc_phase = edge["node"]["dmarcPhase"]
+            last_ran = edge["node"]["lastRan"]
+            domain_list.append(dom.Domain(self.client, domain, last_ran, dmarc_phase))
+
+        return domain_list
 
 
 def main():

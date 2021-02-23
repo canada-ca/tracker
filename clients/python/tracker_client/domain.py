@@ -1,5 +1,5 @@
 import queries
-from organization import Organization
+import organization as org
 from core import create_client, get_auth_token, execute_query
 from results import (
     get_all_results,
@@ -56,7 +56,7 @@ class Domain:
             domain_count = edge["node"]["domainCount"]
 
             org_list.append(
-                Organization(
+                org.Organization(
                     self.client,
                     name,
                     acronym,

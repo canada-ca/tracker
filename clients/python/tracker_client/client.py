@@ -32,8 +32,8 @@ class Client:
         return Organization(
             self.client,
             name,
-            slugified_name,
             acronym,
+            slugified_name,
             zone,
             sector,
             country,
