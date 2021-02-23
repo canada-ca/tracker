@@ -45,6 +45,11 @@ class Domain:
 
         org_list = []
 
+        # TODO: add better treatment of server error message
+        if "error" in result:
+            print("Server error")
+            return org_list
+
         for edge in result["findDomainByDomain"]["organizations"]["edges"]:
 
             name = edge["node"]["name"]
@@ -55,7 +60,6 @@ class Domain:
             country = edge["node"]["country"]
             province = edge["node"]["province"]
             city = edge["node"]["city"]
-            # need to make verified a real bool
             verified = edge["node"]["verified"]
             domain_count = edge["node"]["domainCount"]
 

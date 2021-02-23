@@ -21,7 +21,11 @@ class Client:
         slugified_name = slugify(name)
         params = {"orgSlug": slugified_name}
         result = self.execute_query(queries.GET_ORG, params)
-        # TODO: deal with server error here
+    
+        # TODO: add better treatment of server error message
+        if "error" in result:
+            print("Server error")
+            return
 
         acronym = result["findOrganizationBySlug"]["acronym"]
         zone = result["findOrganizationBySlug"]["zone"]
@@ -29,7 +33,6 @@ class Client:
         country = result["findOrganizationBySlug"]["country"]
         province = result["findOrganizationBySlug"]["province"]
         city = result["findOrganizationBySlug"]["city"]
-        # need to make verified a real bool
         verified = result["findOrganizationBySlug"]["verified"]
         domain_count = result["findOrganizationBySlug"]["domainCount"]
 
@@ -53,6 +56,11 @@ class Client:
 
         org_list = []
 
+        # TODO: add better treatment of server error message
+        if "error" in result:
+            print("Server error")
+            return org_list
+
         for edge in result["findMyOrganizations"]["edges"]:
 
             name = edge["node"]["name"]
@@ -63,7 +71,6 @@ class Client:
             country = edge["node"]["country"]
             province = edge["node"]["province"]
             city = edge["node"]["city"]
-            # need to make verified a real bool
             verified = edge["node"]["verified"]
             domain_count = edge["node"]["domainCount"]
 
@@ -89,7 +96,11 @@ class Client:
         """Get a Domain for the given domain"""
         params = {"domain": domain}
         result = self.execute_query(queries.GET_DOMAIN, params)
-        # TODO: deal with server error here
+
+        # TODO: add better treatment of server error message
+        if "error" in result:
+            print("Server error")
+            return
 
         dmarc_phase = result["findDomainByDomain"]["dmarcPhase"]
         last_ran = result["findDomainByDomain"]["lastRan"]
@@ -100,9 +111,13 @@ class Client:
     def get_domains(self):
         """Get a list of Domains for all domains you own"""
         result = self.execute_query(queries.GET_ALL_DOMAINS)
-        # TODO: deal with server error here
 
         domain_list = []
+
+        # TODO: add better treatment of server error message
+        if "error" in result:
+            print("Server error")
+            return domain_list
 
         for edge in result["findMyDomains"]["edges"]:
             domain = edge["node"]["domain"]

@@ -40,8 +40,13 @@ class Organization:
         """Get a list of Domains controlled by this organization"""
         params = {"orgSlug": self.slug}
         result = self.client.execute_query(queries.GET_ORG_DOMAINS, params)
-        print(result)
+        
         domain_list = []
+
+        # TODO: add better treatment of server error message
+        if "error" in result:
+            print("Server error")
+            return domain_list
 
         for edge in result["findOrganizationBySlug"]["domains"]["edges"]:
             domain = edge["node"]["domain"]
