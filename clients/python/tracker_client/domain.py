@@ -8,9 +8,9 @@ from results import (
 )
 from dmarc import get_dmarc_summary, get_yearly_dmarc_summaries
 
+
 class Domain:
     """Class that represents a domain in tracker"""
-
     def __init__(self, client, domain_name, last_ran, dmarc_phase):
         self.client = client
         self.domain_name = domain_name
@@ -51,30 +51,8 @@ class Domain:
             return org_list
 
         for edge in result["findDomainByDomain"]["organizations"]["edges"]:
-
-            name = edge["node"]["name"]
-            acronym = edge["node"]["acronym"]
-            zone = edge["node"]["zone"]
-            sector = edge["node"]["sector"]
-            country = edge["node"]["country"]
-            province = edge["node"]["province"]
-            city = edge["node"]["city"]
-            verified = edge["node"]["verified"]
-            domain_count = edge["node"]["domainCount"]
-
             org_list.append(
-                org.Organization(
-                    self.client,
-                    name,
-                    acronym,
-                    zone,
-                    sector,
-                    country,
-                    province,
-                    city,
-                    verified,
-                    domain_count,
-                )
+                org.Organization.from_org_node(self.client, edge["node"])
             )
 
         return org_list

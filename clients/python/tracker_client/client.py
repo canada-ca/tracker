@@ -20,34 +20,15 @@ class Client:
         "Get an Organization from specified name"
         params = {"orgSlug": slugify(name)}
         result = self.execute_query(queries.GET_ORG, params)
-    
+
         # TODO: add better treatment of server error message
         if "error" in result:
             print("Server error")
             return
 
-        acronym = result["findOrganizationBySlug"]["acronym"]
-        zone = result["findOrganizationBySlug"]["zone"]
-        sector = result["findOrganizationBySlug"]["sector"]
-        country = result["findOrganizationBySlug"]["country"]
-        province = result["findOrganizationBySlug"]["province"]
-        city = result["findOrganizationBySlug"]["city"]
-        verified = result["findOrganizationBySlug"]["verified"]
-        domain_count = result["findOrganizationBySlug"]["domainCount"]
+        return Organization.from_org_node(self, result["findOrganizationBySlug"])
 
-        return Organization(
-            self,
-            name,
-            acronym,
-            zone,
-            sector,
-            country,
-            province,
-            city,
-            verified,
-            domain_count,
-        )
-
+    # Consider changing to generator
     def get_organizations(self):
         """Get a list of Organizations for all organizations you are a member of"""
         result = self.execute_query(queries.GET_ALL_ORGS)
@@ -60,31 +41,7 @@ class Client:
             return org_list
 
         for edge in result["findMyOrganizations"]["edges"]:
-
-            name = edge["node"]["name"]
-            acronym = edge["node"]["acronym"]
-            zone = edge["node"]["zone"]
-            sector = edge["node"]["sector"]
-            country = edge["node"]["country"]
-            province = edge["node"]["province"]
-            city = edge["node"]["city"]
-            verified = edge["node"]["verified"]
-            domain_count = edge["node"]["domainCount"]
-
-            org_list.append(
-                Organization(
-                    self,
-                    name,
-                    acronym,
-                    zone,
-                    sector,
-                    country,
-                    province,
-                    city,
-                    verified,
-                    domain_count,
-                )
-            )
+            org_list.append(Organization.from_org_node(self, edge["node"]))
 
         return org_list
 
@@ -104,6 +61,7 @@ class Client:
 
         return new_domain
 
+    # Consider changing to generator
     def get_domains(self):
         """Get a list of Domains for all domains you own"""
         result = self.execute_query(queries.GET_ALL_DOMAINS)
