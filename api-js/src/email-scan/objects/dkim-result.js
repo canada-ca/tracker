@@ -47,6 +47,7 @@ export const dkimResultType = new GraphQLObjectType({
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
+      deprecationReason: 'This has been sub-divided into neutral, negative, and positive tags.',
       args: {
         orderBy: {
           type: guidanceTagOrder,
@@ -54,7 +55,7 @@ export const dkimResultType = new GraphQLObjectType({
         },
         ...connectionArgs,
       },
-      description: 'Key tags found during scan.',
+      description: 'Guidance tags found during scan.',
       resolve: async (
         { guidanceTags },
         args,
@@ -62,6 +63,72 @@ export const dkimResultType = new GraphQLObjectType({
       ) => {
         const dkimTags = await dkimGuidanceTagConnectionsLoader({
           dkimGuidanceTags: guidanceTags,
+          ...args,
+        })
+        return dkimTags
+      },
+    },
+    negativeGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: 'Negative guidance tags found during scan.',
+      resolve: async (
+        { negativeTags },
+        args,
+        { loaders: { dkimGuidanceTagConnectionsLoader } },
+      ) => {
+        const dkimTags = await dkimGuidanceTagConnectionsLoader({
+          dkimGuidanceTags: negativeTags,
+          ...args,
+        })
+        return dkimTags
+      },
+    },
+    neutralGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: 'Neutral guidance tags found during scan.',
+      resolve: async (
+        { neutralTags },
+        args,
+        { loaders: { dkimGuidanceTagConnectionsLoader } },
+      ) => {
+        const dkimTags = await dkimGuidanceTagConnectionsLoader({
+          dkimGuidanceTags: neutralTags,
+          ...args,
+        })
+        return dkimTags
+      },
+    },
+    positiveGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: 'Positive guidance tags found during scan.',
+      resolve: async (
+        { positiveTags },
+        args,
+        { loaders: { dkimGuidanceTagConnectionsLoader } },
+      ) => {
+        const dkimTags = await dkimGuidanceTagConnectionsLoader({
+          dkimGuidanceTags: positiveTags,
           ...args,
         })
         return dkimTags
