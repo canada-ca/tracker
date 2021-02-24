@@ -118,6 +118,7 @@ def format_name_summary(result):
     }
     return result
 
+
 # TODO: refactor this to reduce repetition
 def format_all_results(result):
     """Formats the result dict in get_all_results
