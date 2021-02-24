@@ -1,3 +1,5 @@
+"""This module defines the Domain class, which models domains monitored by Tracker
+and offers methods to get data about domains"""
 import json
 
 import formatting
@@ -6,16 +8,31 @@ import queries
 
 
 class Domain:
-    """Class that represents a domain in tracker"""
+    """Class that represents a domain in Tracker.
 
-    # Naming irregularity with domain/domain_name is to match args to API response
-    # This allows easy use of dict unpacking when creating a Domain instance
-    def __init__(self, client, domain, last_ran, dmarc_phase, dkim_selectors):
+    Attributes provide access to scalar fields for the domain in the GraphQL schema,
+    while methods return JSON data for non-scalar fields. Users should not typically
+    instantiate this class manually, instead use methods provided by
+    :class:`tracker_client.client.Client` to get Domains.
+
+    The naming irregularity between parameters and attributes is to match
+    parameter names to the keys contained in the API responses. This allows easy
+    use of dict unpacking when creating a Domain instance. Attribute names instead
+    adhere to Python convention
+
+    :param Client client: the :class:`tracker_client.client.Client` that created
+        this object. Provides a way for Domain methods to execute queries.
+    :param str domain: name of the domain
+    :param str lastRan: timestamp for last scan run on the domain
+    :param str dmarcPhase: DMARC implementation phase # TODO: Add ref. to relevant docs
+    :param list[str] selectors: DKIM selector strings associated with the domain # TODO: Add ref. to relevant docs
+    """
+    def __init__(self, client, domain, lastRan, dmarcPhase, selectors):
         self.client = client
         self.domain_name = domain
-        self.last_ran = last_ran
-        self.dmarc_phase = dmarc_phase
-        self.dkim_selectors = dkim_selectors
+        self.last_ran = lastRan
+        self.dmarc_phase = dmarcPhase
+        self.dkim_selectors = selectors
 
     def get_status(self):
         """Return pass/fail status information for this Domain
@@ -188,7 +205,12 @@ class Domain:
         return json.dumps(result, indent=4)
 
     def get_owners(self):
-        """Get a list of Organizations that control this domain"""
+        """Get a list of Organizations that control this domain
+        
+        :return: A list of one or more :class:`tracker_client.organization.Organization`s 
+            responsible for this domain
+        :rtype: list[:class:`tracker_client.organization.Organization`]    
+        """
         params = {"domain": self.domain_name}
         result = self.client.execute_query(
             self.client, queries.GET_DOMAIN_OWNERS, params

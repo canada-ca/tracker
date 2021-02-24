@@ -69,8 +69,8 @@ class Client:
         control that domain
 
         :param str domain: name of domain to get and construct Domain for.
-        :return: A :class:`tracker_client.organization.Domain` object
-        :rtype: `tracker_client.organization.Domain`
+        :return: A :class:`tracker_client.domain.Domain` object
+        :rtype: `tracker_client.domain.Domain`
         """
         params = {"domain": domain}
         result = self.execute_query(queries.GET_DOMAIN, params)
@@ -87,8 +87,8 @@ class Client:
     def get_domains(self):
         """Gets a list of Domains for all domains your organizations control
 
-        :return: A list of :class:`tracker_client.organization.Domain` objects
-        :rtype: list[`tracker_client.organization.Domain`]
+        :return: A list of :class:`tracker_client.domain.Domain` objects
+        :rtype: list[`tracker_client.domain.Domain`]
         """
         result = self.execute_query(queries.GET_ALL_DOMAINS)
 
