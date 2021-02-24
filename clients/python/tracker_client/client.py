@@ -55,10 +55,7 @@ class Client:
             print("Server error")
             return
 
-        dmarc_phase = result["findDomainByDomain"]["dmarcPhase"]
-        last_ran = result["findDomainByDomain"]["lastRan"]
-        new_domain = Domain(self, domain, last_ran, dmarc_phase)
-
+        new_domain = Domain.from_dom_node(self, result["findDomainByDomain"])
         return new_domain
 
     # Consider changing to generator
@@ -74,10 +71,7 @@ class Client:
             return domain_list
 
         for edge in result["findMyDomains"]["edges"]:
-            domain = edge["node"]["domain"]
-            dmarc_phase = edge["node"]["dmarcPhase"]
-            last_ran = edge["node"]["lastRan"]
-            domain_list.append(Domain(self, domain, last_ran, dmarc_phase))
+            domain_list.append(Domain.from_dom_node(self, edge["node"]))
 
         return domain_list
 

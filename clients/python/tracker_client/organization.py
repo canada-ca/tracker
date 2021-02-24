@@ -65,9 +65,6 @@ class Organization:
             return domain_list
 
         for edge in result["findOrganizationBySlug"]["domains"]["edges"]:
-            domain = edge["node"]["domain"]
-            dmarc_phase = edge["node"]["dmarcPhase"]
-            last_ran = edge["node"]["lastRan"]
-            domain_list.append(dom.Domain(self.client, domain, last_ran, dmarc_phase))
+            domain_list.append(dom.Domain.from_dom_node(self.client, edge["node"]))
 
         return domain_list

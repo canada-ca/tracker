@@ -11,11 +11,23 @@ from dmarc import get_dmarc_summary, get_yearly_dmarc_summaries
 
 class Domain:
     """Class that represents a domain in tracker"""
-    def __init__(self, client, domain_name, last_ran, dmarc_phase):
+    def __init__(self, client, domain_name, last_ran, dmarc_phase, dkim_selectors):
         self.client = client
         self.domain_name = domain_name
         self.last_ran = last_ran
         self.dmarc_phase = dmarc_phase
+        self.dkim_selectors = dkim_selectors
+
+    @classmethod
+    def from_dom_node(cls, client, node):
+        """ Alternate constructor, returns a Domain given Client and GraphQL node containing a Domain"""
+        args = [
+            node["domain"],
+            node["lastRan"],
+            node["dmarcPhase"],
+            node["selectors"],
+        ]
+        return cls(client, *args)
 
     # All the "client.client"s are temporary
     def get_status(self):
