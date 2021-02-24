@@ -566,7 +566,6 @@ GET_ORG = gql(
         findOrganizationBySlug(orgSlug: $orgSlug) {
             acronym
             name
-            slug
             zone
             sector
             country
@@ -603,7 +602,6 @@ GET_ALL_ORGS = gql(
                 node {
                     acronym
                     name
-                    slug
                     zone
                     sector
                     country
@@ -627,7 +625,6 @@ GET_DOMAIN_OWNERS = gql(
                     node {
                     acronym
                     name
-                    slug
                     zone
                     sector
                     country

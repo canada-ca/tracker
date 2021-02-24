@@ -53,7 +53,6 @@ class Domain:
         for edge in result["findDomainByDomain"]["organizations"]["edges"]:
 
             name = edge["node"]["name"]
-            slug = edge["node"]["slug"]
             acronym = edge["node"]["acronym"]
             zone = edge["node"]["zone"]
             sector = edge["node"]["sector"]
@@ -68,7 +67,6 @@ class Domain:
                     self.client,
                     name,
                     acronym,
-                    slug,
                     zone,
                     sector,
                     country,

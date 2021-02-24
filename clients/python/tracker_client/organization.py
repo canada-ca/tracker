@@ -1,3 +1,5 @@
+from slugify import slugify
+
 import queries
 import domain as dom
 from summary import get_summary_by_name
@@ -11,7 +13,6 @@ class Organization:
         client,
         name,
         acronym,
-        slug,
         zone,
         sector,
         country,
@@ -23,7 +24,6 @@ class Organization:
         self.client = client
         self.name = name
         self.acronym = acronym
-        self.slug = slug
         self.zone = zone
         self.sector = sector
         self.country = country
@@ -38,7 +38,7 @@ class Organization:
 
     def get_domains(self):
         """Get a list of Domains controlled by this organization"""
-        params = {"orgSlug": self.slug}
+        params = {"orgSlug": slugify(self.name)}
         result = self.client.execute_query(queries.GET_ORG_DOMAINS, params)
         
         domain_list = []

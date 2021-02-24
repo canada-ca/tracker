@@ -18,8 +18,7 @@ class Client:
 
     def get_organization(self, name):
         "Get an Organization from specified name"
-        slugified_name = slugify(name)
-        params = {"orgSlug": slugified_name}
+        params = {"orgSlug": slugify(name)}
         result = self.execute_query(queries.GET_ORG, params)
     
         # TODO: add better treatment of server error message
@@ -40,7 +39,6 @@ class Client:
             self,
             name,
             acronym,
-            slugified_name,
             zone,
             sector,
             country,
@@ -64,7 +62,6 @@ class Client:
         for edge in result["findMyOrganizations"]["edges"]:
 
             name = edge["node"]["name"]
-            slug = edge["node"]["slug"]
             acronym = edge["node"]["acronym"]
             zone = edge["node"]["zone"]
             sector = edge["node"]["sector"]
@@ -79,7 +76,6 @@ class Client:
                     self,
                     name,
                     acronym,
-                    slug,
                     zone,
                     sector,
                     country,
