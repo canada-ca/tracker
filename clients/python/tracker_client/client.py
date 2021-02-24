@@ -11,7 +11,6 @@ from domain import Domain
 from organization import Organization
 
 
-# TODO: add other user fields as attributes?
 class Client:
     def __init__(self, url="https://tracker.alpha.canada.ca/graphql"):
         self.client = create_client(url, auth_token=get_auth_token())

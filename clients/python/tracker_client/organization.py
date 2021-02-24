@@ -1,12 +1,15 @@
+import json
+
 from slugify import slugify
 
-import queries
 import domain as dom
-from summary import get_summary_by_name
+from formatting import format_name_summary
+import queries
 
 
 class Organization:
     """Class that represents an organization in Tracker """
+
     def __init__(
         self,
         client,
@@ -32,8 +35,63 @@ class Organization:
         self.domain_count = domainCount
 
     def get_summary(self):
-        # Temporary, will move actual function here soon
-        return get_summary_by_name(self.client.client, self.name)
+        """Get summary metrics for this Organization
+
+        :return: formatted JSON data with summary metrics for an organization
+        :rtype: str
+
+        :Example:
+
+        >>> from tracker_client.client import Client
+        >>> client = Client()
+        >>> my_orgs = client.get_organizations()
+        >>> print(my_orgs[0].get_summary())
+        {
+            "FOO": {
+                "domainCount": 10,
+                "summaries": {
+                    "web": {
+                        "total": 10,
+                        "categories": [
+                            {
+                                "name": "pass",
+                                "count": 1,
+                                "percentage": 10
+                            },
+                            {
+                                "name": "fail",
+                                "count": 9,
+                                "percentage": 90
+                            }
+                        ]
+                    },
+                    "mail": {
+                        "total": 10,
+                        "categories": [
+                            {
+                                "name": "pass",
+                                "count": 5,
+                                "percentage": 50
+                            },
+                            {
+                                "name": "fail",
+                                "count": 5,
+                                "percentage": 50
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+        """
+        params = {"orgSlug": slugify(self.name)}
+
+        result = self.client.execute_query(queries.SUMMARY_BY_SLUG, params)
+
+        if "error" not in result:
+            result = format_name_summary(result)
+
+        return json.dumps(result, indent=4)
 
     # Consider changing to generator
     def get_domains(self):
