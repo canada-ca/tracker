@@ -71,6 +71,30 @@ describe('given the dmarcType object', () => {
         guidanceTagConnection.connectionType,
       )
     })
+    it('has a negativeGuidanceTags field', () => {
+      const demoType = dmarcType.getFields()
+
+      expect(demoType).toHaveProperty('negativeGuidanceTags')
+      expect(demoType.negativeGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a neutralGuidanceTags field', () => {
+      const demoType = dmarcType.getFields()
+
+      expect(demoType).toHaveProperty('neutralGuidanceTags')
+      expect(demoType.neutralGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a positiveGuidanceTags field', () => {
+      const demoType = dmarcType.getFields()
+
+      expect(demoType).toHaveProperty('positiveGuidanceTags')
+      expect(demoType.positiveGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
   })
 
   describe('testing its field resolvers', () => {
@@ -95,6 +119,9 @@ describe('given the dmarcType object', () => {
         spPolicy: 'spPolicy',
         pct: 100,
         guidanceTags: ['dmarc1'],
+        negativeTags: ['dmarc1'],
+        neutralTags: ['dmarc1'],
+        positiveTags: ['dmarc1'],
       })
       await collections.domainsDMARC.save({
         _from: domain._id,
@@ -211,7 +238,7 @@ describe('given the dmarcType object', () => {
         )
       })
     })
-    describe('testing the guidanceTags resolver', () => {
+    describe('testing the guidanceTag resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
@@ -263,6 +290,180 @@ describe('given the dmarcType object', () => {
         await expect(
           demoType.guidanceTags.resolve(
             { guidanceTags },
+            { first: 1 },
+            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the negativeGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = dmarcType.getFields()
+
+        const loader = dmarcGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+        const negativeTags = ['dmarc1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', dmarcGT._key),
+              node: {
+                _id: dmarcGT._id,
+                _key: dmarcGT._key,
+                _rev: dmarcGT._rev,
+                _type: 'guidanceTag',
+                guidance: 'Some Interesting Guidance',
+                id: dmarcGT._key,
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'dmarc1',
+                tagName: 'DMARC-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', dmarcGT._key),
+            endCursor: toGlobalId('guidanceTags', dmarcGT._key),
+          },
+        }
+
+        await expect(
+          demoType.negativeGuidanceTags.resolve(
+            { negativeTags },
+            { first: 1 },
+            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the neutralGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = dmarcType.getFields()
+
+        const loader = dmarcGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+        const neutralTags = ['dmarc1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', dmarcGT._key),
+              node: {
+                _id: dmarcGT._id,
+                _key: dmarcGT._key,
+                _rev: dmarcGT._rev,
+                _type: 'guidanceTag',
+                guidance: 'Some Interesting Guidance',
+                id: dmarcGT._key,
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'dmarc1',
+                tagName: 'DMARC-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', dmarcGT._key),
+            endCursor: toGlobalId('guidanceTags', dmarcGT._key),
+          },
+        }
+
+        await expect(
+          demoType.neutralGuidanceTags.resolve(
+            { neutralTags },
+            { first: 1 },
+            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the positiveGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = dmarcType.getFields()
+
+        const loader = dmarcGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+        const positiveTags = ['dmarc1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', dmarcGT._key),
+              node: {
+                _id: dmarcGT._id,
+                _key: dmarcGT._key,
+                _rev: dmarcGT._rev,
+                _type: 'guidanceTag',
+                guidance: 'Some Interesting Guidance',
+                id: dmarcGT._key,
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'dmarc1',
+                tagName: 'DMARC-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', dmarcGT._key),
+            endCursor: toGlobalId('guidanceTags', dmarcGT._key),
+          },
+        }
+
+        await expect(
+          demoType.positiveGuidanceTags.resolve(
+            { positiveTags },
             { first: 1 },
             { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
           ),

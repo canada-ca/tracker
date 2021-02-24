@@ -57,11 +57,27 @@ describe('given the spfType object', () => {
       expect(demoType).toHaveProperty('rawJson')
       expect(demoType.rawJson.type).toEqual(GraphQLJSON)
     })
-    it('has a guidanceTags field', () => {
+    it('has a negativeGuidanceTags field', () => {
       const demoType = spfType.getFields()
 
-      expect(demoType).toHaveProperty('guidanceTags')
-      expect(demoType.guidanceTags.type).toMatchObject(
+      expect(demoType).toHaveProperty('negativeGuidanceTags')
+      expect(demoType.negativeGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a neutralGuidanceTags field', () => {
+      const demoType = spfType.getFields()
+
+      expect(demoType).toHaveProperty('neutralGuidanceTags')
+      expect(demoType.neutralGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a positiveGuidanceTags field', () => {
+      const demoType = spfType.getFields()
+
+      expect(demoType).toHaveProperty('positiveGuidanceTags')
+      expect(demoType.positiveGuidanceTags.type).toMatchObject(
         guidanceTagConnection.connectionType,
       )
     })
@@ -88,6 +104,9 @@ describe('given the spfType object', () => {
         record: 'txtRecord',
         spfDefault: 'default',
         guidanceTags: ['spf1'],
+        negativeTags: ['spf1'],
+        neutralTags: ['spf1'],
+        positiveTags: ['spf1'],
       })
       await collections.domainsSPF.save({
         _from: domain._id,
@@ -250,6 +269,183 @@ describe('given the spfType object', () => {
         await expect(
           demoType.guidanceTags.resolve(
             { guidanceTags },
+            { first: 1 },
+            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the negativeGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = spfType.getFields()
+
+        const loader = spfGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const negativeTags = ['spf1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', spfGT._key),
+              node: {
+                _id: spfGT._id,
+                _key: spfGT._key,
+                _rev: spfGT._rev,
+                _type: 'guidanceTag',
+                id: spfGT._key,
+                guidance: 'Some Interesting Guidance',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'spf1',
+                tagName: 'SPF-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', spfGT._key),
+            endCursor: toGlobalId('guidanceTags', spfGT._key),
+          },
+        }
+
+        await expect(
+          demoType.negativeGuidanceTags.resolve(
+            { negativeTags },
+            { first: 1 },
+            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the neutralGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = spfType.getFields()
+
+        const loader = spfGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const neutralTags = ['spf1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', spfGT._key),
+              node: {
+                _id: spfGT._id,
+                _key: spfGT._key,
+                _rev: spfGT._rev,
+                _type: 'guidanceTag',
+                id: spfGT._key,
+                guidance: 'Some Interesting Guidance',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'spf1',
+                tagName: 'SPF-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', spfGT._key),
+            endCursor: toGlobalId('guidanceTags', spfGT._key),
+          },
+        }
+
+        await expect(
+          demoType.neutralGuidanceTags.resolve(
+            { neutralTags },
+            { first: 1 },
+            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the positiveGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = spfType.getFields()
+
+        const loader = spfGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const positiveTags = ['spf1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', spfGT._key),
+              node: {
+                _id: spfGT._id,
+                _key: spfGT._key,
+                _rev: spfGT._rev,
+                _type: 'guidanceTag',
+                id: spfGT._key,
+                guidance: 'Some Interesting Guidance',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'spf1',
+                tagName: 'SPF-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', spfGT._key),
+            endCursor: toGlobalId('guidanceTags', spfGT._key),
+          },
+        }
+
+        await expect(
+          demoType.positiveGuidanceTags.resolve(
+            { positiveTags },
             { first: 1 },
             { loaders: { spfGuidanceTagConnectionsLoader: loader } },
           ),

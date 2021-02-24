@@ -55,14 +55,6 @@ describe('given the ssl gql object', () => {
       expect(demoType).toHaveProperty('domain')
       expect(demoType.domain.type).toMatchObject(domainType)
     })
-    it('has a guidanceTags field', () => {
-      const demoType = sslType.getFields()
-
-      expect(demoType).toHaveProperty('guidanceTags')
-      expect(demoType.guidanceTags.type).toMatchObject(
-        guidanceTagConnection.connectionType,
-      )
-    })
     it('has a heartbleedVulnerable field', () => {
       const demoType = sslType.getFields()
 
@@ -119,6 +111,38 @@ describe('given the ssl gql object', () => {
       expect(demoType).toHaveProperty('weakCurves')
       expect(demoType.weakCurves.type).toMatchObject(GraphQLList(GraphQLString))
     })
+    it('has a guidanceTags field', () => {
+      const demoType = sslType.getFields()
+
+      expect(demoType).toHaveProperty('guidanceTags')
+      expect(demoType.guidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a negativeGuidanceTags field', () => {
+      const demoType = sslType.getFields()
+
+      expect(demoType).toHaveProperty('negativeGuidanceTags')
+      expect(demoType.negativeGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a neutralGuidanceTags field', () => {
+      const demoType = sslType.getFields()
+
+      expect(demoType).toHaveProperty('neutralGuidanceTags')
+      expect(demoType.neutralGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a positiveGuidanceTags field', () => {
+      const demoType = sslType.getFields()
+
+      expect(demoType).toHaveProperty('positiveGuidanceTags')
+      expect(demoType.positiveGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
   })
 
   describe('testing the field resolvers', () => {
@@ -139,6 +163,9 @@ describe('given the ssl gql object', () => {
       ssl = await collections.ssl.save({
         timestamp: '2020-10-02T12:43:39Z',
         guidanceTags: ['ssl1'],
+        negativeTags: ['ssl1'],
+        neutralTags: ['ssl1'],
+        positiveTags: ['ssl1'],
       })
       await collections.domainsSSL.save({
         _from: domain._id,
@@ -242,65 +269,6 @@ describe('given the ssl gql object', () => {
         ).resolves.toEqual(expectedResult)
       })
     })
-    describe('testing the guidanceTags resolver', () => {
-      it('returns the resolved value', async () => {
-        const demoType = sslType.getFields()
-
-        const loader = sslGuidanceTagConnectionsLoader(
-          query,
-          '1',
-          cleanseInput,
-          {},
-        )
-
-        const guidanceTags = ['ssl1']
-
-        const expectedResult = {
-          edges: [
-            {
-              cursor: toGlobalId('guidanceTags', sslGT._key),
-              node: {
-                _id: sslGT._id,
-                _key: sslGT._key,
-                _rev: sslGT._rev,
-                _type: 'guidanceTag',
-                id: sslGT._key,
-                guidance: 'Some Interesting Guidance',
-                refLinksGuide: [
-                  {
-                    description: 'refLinksGuide Description',
-                    ref_link: 'www.refLinksGuide.ca',
-                  },
-                ],
-                refLinksTechnical: [
-                  {
-                    description: 'refLinksTechnical Description',
-                    ref_link: 'www.refLinksTechnical.ca',
-                  },
-                ],
-                tagId: 'ssl1',
-                tagName: 'SSL-TAG',
-              },
-            },
-          ],
-          totalCount: 1,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', sslGT._key),
-            endCursor: toGlobalId('guidanceTags', sslGT._key),
-          },
-        }
-
-        await expect(
-          demoType.guidanceTags.resolve(
-            { guidanceTags },
-            { first: 1 },
-            { loaders: { sslGuidanceTagConnectionsLoader: loader } },
-          ),
-        ).resolves.toEqual(expectedResult)
-      })
-    })
     describe('testing the heartbleedVulnerable resolver', () => {
       it('returns the resolved value', () => {
         const demoType = sslType.getFields()
@@ -397,6 +365,242 @@ describe('given the ssl gql object', () => {
         expect(demoType.weakCurves.resolve({ weak_curves: curves })).toEqual([
           'curve123',
         ])
+      })
+    })
+    describe('testing the guidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = sslType.getFields()
+
+        const loader = sslGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const guidanceTags = ['ssl1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', sslGT._key),
+              node: {
+                _id: sslGT._id,
+                _key: sslGT._key,
+                _rev: sslGT._rev,
+                _type: 'guidanceTag',
+                id: sslGT._key,
+                guidance: 'Some Interesting Guidance',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'ssl1',
+                tagName: 'SSL-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', sslGT._key),
+            endCursor: toGlobalId('guidanceTags', sslGT._key),
+          },
+        }
+
+        await expect(
+          demoType.guidanceTags.resolve(
+            { guidanceTags },
+            { first: 1 },
+            { loaders: { sslGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the negativeGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = sslType.getFields()
+
+        const loader = sslGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const negativeTags = ['ssl1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', sslGT._key),
+              node: {
+                _id: sslGT._id,
+                _key: sslGT._key,
+                _rev: sslGT._rev,
+                _type: 'guidanceTag',
+                id: sslGT._key,
+                guidance: 'Some Interesting Guidance',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'ssl1',
+                tagName: 'SSL-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', sslGT._key),
+            endCursor: toGlobalId('guidanceTags', sslGT._key),
+          },
+        }
+
+        await expect(
+          demoType.negativeGuidanceTags.resolve(
+            { negativeTags },
+            { first: 1 },
+            { loaders: { sslGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the neutralGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = sslType.getFields()
+
+        const loader = sslGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const neutralTags = ['ssl1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', sslGT._key),
+              node: {
+                _id: sslGT._id,
+                _key: sslGT._key,
+                _rev: sslGT._rev,
+                _type: 'guidanceTag',
+                id: sslGT._key,
+                guidance: 'Some Interesting Guidance',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'ssl1',
+                tagName: 'SSL-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', sslGT._key),
+            endCursor: toGlobalId('guidanceTags', sslGT._key),
+          },
+        }
+
+        await expect(
+          demoType.neutralGuidanceTags.resolve(
+            { neutralTags },
+            { first: 1 },
+            { loaders: { sslGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
+      })
+    })
+    describe('testing the positiveGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = sslType.getFields()
+
+        const loader = sslGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+
+        const positiveTags = ['ssl1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', sslGT._key),
+              node: {
+                _id: sslGT._id,
+                _key: sslGT._key,
+                _rev: sslGT._rev,
+                _type: 'guidanceTag',
+                id: sslGT._key,
+                guidance: 'Some Interesting Guidance',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'ssl1',
+                tagName: 'SSL-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', sslGT._key),
+            endCursor: toGlobalId('guidanceTags', sslGT._key),
+          },
+        }
+
+        await expect(
+          demoType.positiveGuidanceTags.resolve(
+            { positiveTags },
+            { first: 1 },
+            { loaders: { sslGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).resolves.toEqual(expectedResult)
       })
     })
   })

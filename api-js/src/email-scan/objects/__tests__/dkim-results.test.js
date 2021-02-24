@@ -58,6 +58,30 @@ describe('given the dkim result object', () => {
         guidanceTagConnection.connectionType,
       )
     })
+    it('has a negativeGuidanceTags field', () => {
+      const demoType = dkimResultType.getFields()
+
+      expect(demoType).toHaveProperty('negativeGuidanceTags')
+      expect(demoType.negativeGuidanceTags.type).toEqual(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a neutralGuidanceTags field', () => {
+      const demoType = dkimResultType.getFields()
+
+      expect(demoType).toHaveProperty('neutralGuidanceTags')
+      expect(demoType.neutralGuidanceTags.type).toEqual(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a positiveGuidanceTags field', () => {
+      const demoType = dkimResultType.getFields()
+
+      expect(demoType).toHaveProperty('positiveGuidanceTags')
+      expect(demoType.positiveGuidanceTags.type).toEqual(
+        guidanceTagConnection.connectionType,
+      )
+    })
   })
   describe('testing its field resolvers', () => {
     let query, drop, truncate, migrate, collections, dkim, dkimResult, dkimGT
@@ -79,6 +103,9 @@ describe('given the dkim result object', () => {
         record: 'txtRecord',
         keyLength: '2048',
         guidanceTags: ['dkim1'],
+        negativeTags: ['dkim1'],
+        neutralTags: ['dkim1'],
+        positiveTags: ['dkim1'],
       })
       await collections.dkimToDkimResults.save({
         _to: dkimResult._id,
@@ -228,6 +255,180 @@ describe('given the dkim result object', () => {
         expect(
           await demoType.guidanceTags.resolve(
             { guidanceTags },
+            { first: 1 },
+            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).toEqual(expectedResult)
+      })
+    })
+    describe('testing the negativeGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = dkimResultType.getFields()
+
+        const loader = dkimGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+        const negativeTags = ['dkim1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', dkimGT._key),
+              node: {
+                _id: dkimGT._id,
+                _key: dkimGT._key,
+                _rev: dkimGT._rev,
+                _type: 'guidanceTag',
+                guidance: 'Some Interesting Guidance',
+                id: 'dkim1',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'dkim1',
+                tagName: 'DKIM-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', 'dkim1'),
+            endCursor: toGlobalId('guidanceTags', 'dkim1'),
+          },
+        }
+
+        expect(
+          await demoType.negativeGuidanceTags.resolve(
+            { negativeTags },
+            { first: 1 },
+            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).toEqual(expectedResult)
+      })
+    })
+    describe('testing the neutralGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = dkimResultType.getFields()
+
+        const loader = dkimGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+        const neutralTags = ['dkim1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', dkimGT._key),
+              node: {
+                _id: dkimGT._id,
+                _key: dkimGT._key,
+                _rev: dkimGT._rev,
+                _type: 'guidanceTag',
+                guidance: 'Some Interesting Guidance',
+                id: 'dkim1',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'dkim1',
+                tagName: 'DKIM-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', 'dkim1'),
+            endCursor: toGlobalId('guidanceTags', 'dkim1'),
+          },
+        }
+
+        expect(
+          await demoType.neutralGuidanceTags.resolve(
+            { neutralTags },
+            { first: 1 },
+            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).toEqual(expectedResult)
+      })
+    })
+    describe('testing the positiveGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = dkimResultType.getFields()
+
+        const loader = dkimGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+        const positiveTags = ['dkim1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', dkimGT._key),
+              node: {
+                _id: dkimGT._id,
+                _key: dkimGT._key,
+                _rev: dkimGT._rev,
+                _type: 'guidanceTag',
+                guidance: 'Some Interesting Guidance',
+                id: 'dkim1',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'dkim1',
+                tagName: 'DKIM-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', 'dkim1'),
+            endCursor: toGlobalId('guidanceTags', 'dkim1'),
+          },
+        }
+
+        expect(
+          await demoType.positiveGuidanceTags.resolve(
+            { positiveTags },
             { first: 1 },
             { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
           ),

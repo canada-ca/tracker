@@ -59,6 +59,7 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
+      deprecationReason: 'This has been sub-divided into neutral, negative, and positive tags.',
       args: {
         orderBy: {
           type: guidanceTagOrder,
@@ -66,7 +67,7 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
         },
         ...connectionArgs,
       },
-      description: `Key tags found during DMARC Scan.`,
+      description: `Guidance tags found during DMARC Scan.`,
       resolve: async (
         { guidanceTags },
         args,
@@ -74,6 +75,72 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       ) => {
         const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
           dmarcGuidanceTags: guidanceTags,
+          ...args,
+        })
+        return dmarcTags
+      },
+    },
+    negativeGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Negative guidance tags found during DMARC Scan.`,
+      resolve: async (
+        { negativeTags },
+        args,
+        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+      ) => {
+        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+          dmarcGuidanceTags: negativeTags,
+          ...args,
+        })
+        return dmarcTags
+      },
+    },
+    neutralGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Neutral guidance tags found during DMARC Scan.`,
+      resolve: async (
+        { neutralTags },
+        args,
+        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+      ) => {
+        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+          dmarcGuidanceTags: neutralTags,
+          ...args,
+        })
+        return dmarcTags
+      },
+    },
+    positiveGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Positive guidance tags found during DMARC Scan.`,
+      resolve: async (
+        { positiveTags },
+        args,
+        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+      ) => {
+        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+          dmarcGuidanceTags: positiveTags,
           ...args,
         })
         return dmarcTags
