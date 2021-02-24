@@ -49,28 +49,6 @@ export const sslType = new GraphQLObjectType({
         return domain
       },
     },
-    guidanceTags: {
-      type: guidanceTagConnection.connectionType,
-      args: {
-        orderBy: {
-          type: guidanceTagOrder,
-          description: 'Ordering options for guidance tag connections',
-        },
-        ...connectionArgs,
-      },
-      description: `Key tags found during scan.`,
-      resolve: async (
-        { guidanceTags },
-        args,
-        { loaders: { sslGuidanceTagConnectionsLoader } },
-      ) => {
-        const sslTags = await sslGuidanceTagConnectionsLoader({
-          sslGuidanceTags: guidanceTags,
-          ...args,
-        })
-        return sslTags
-      },
-    },
     heartbleedVulnerable: {
       type: GraphQLBoolean,
       description: 'Denotes vulnerability to "Heartbleed" exploit.',
@@ -115,6 +93,95 @@ export const sslType = new GraphQLObjectType({
       description:
         'List of curves in use by the server deemed to be "weak" or in other words, are not compliant with security standards.',
       resolve: ({ weak_curves: weakCurves }) => weakCurves,
+    },
+    guidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      deprecationReason: 'This has been sub-divided into neutral, negative, and positive tags.',
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Guidance tags found during scan.`,
+      resolve: async (
+        { guidanceTags },
+        args,
+        { loaders: { sslGuidanceTagConnectionsLoader } },
+      ) => {
+        const sslTags = await sslGuidanceTagConnectionsLoader({
+          sslGuidanceTags: guidanceTags,
+          ...args,
+        })
+        return sslTags
+      },
+    },
+    negativeGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Negative guidance tags found during scan.`,
+      resolve: async (
+        { negativeTags },
+        args,
+        { loaders: { sslGuidanceTagConnectionsLoader } },
+      ) => {
+        const sslTags = await sslGuidanceTagConnectionsLoader({
+          sslGuidanceTags: negativeTags,
+          ...args,
+        })
+        return sslTags
+      },
+    },
+    neutralGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Neutral guidance tags found during scan.`,
+      resolve: async (
+        { neutralTags },
+        args,
+        { loaders: { sslGuidanceTagConnectionsLoader } },
+      ) => {
+        const sslTags = await sslGuidanceTagConnectionsLoader({
+          sslGuidanceTags: neutralTags,
+          ...args,
+        })
+        return sslTags
+      },
+    },
+    positiveGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Positive guidance tags found during scan.`,
+      resolve: async (
+        { positiveTags },
+        args,
+        { loaders: { sslGuidanceTagConnectionsLoader } },
+      ) => {
+        const sslTags = await sslGuidanceTagConnectionsLoader({
+          sslGuidanceTags: positiveTags,
+          ...args,
+        })
+        return sslTags
+      },
     },
   }),
   interfaces: [nodeInterface],

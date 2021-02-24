@@ -77,6 +77,30 @@ describe('given the https gql object', () => {
         guidanceTagConnection.connectionType,
       )
     })
+    it('has a negativeGuidanceTags field', () => {
+      const demoType = httpsType.getFields()
+
+      expect(demoType).toHaveProperty('negativeGuidanceTags')
+      expect(demoType.negativeGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a neutralGuidanceTags field', () => {
+      const demoType = httpsType.getFields()
+
+      expect(demoType).toHaveProperty('neutralGuidanceTags')
+      expect(demoType.neutralGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
+    it('has a positiveGuidanceTags field', () => {
+      const demoType = httpsType.getFields()
+
+      expect(demoType).toHaveProperty('positiveGuidanceTags')
+      expect(demoType.positiveGuidanceTags.type).toMatchObject(
+        guidanceTagConnection.connectionType,
+      )
+    })
   })
   describe('testing the field resolvers', () => {
     let query,
@@ -116,6 +140,9 @@ describe('given the https gql object', () => {
         hstsAge: '31622400',
         preloaded: 'HSTS Preloaded',
         guidanceTags: ['https1'],
+        negativeTags: ['https1'],
+        neutralTags: ['https1'],
+        positiveTags: ['https1'],
       })
       await collections.domainsHTTPS.save({
         _from: domain._id,
@@ -297,6 +324,180 @@ describe('given the https gql object', () => {
         expect(
           await demoType.guidanceTags.resolve(
             { guidanceTags },
+            { first: 1 },
+            { loaders: { httpsGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).toEqual(expectedResult)
+      })
+    })
+    describe('testing the negativeGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = httpsType.getFields()
+
+        const loader = httpsGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+        const negativeTags = ['https1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', httpsGT._key),
+              node: {
+                _id: httpsGT._id,
+                _key: httpsGT._key,
+                _rev: httpsGT._rev,
+                _type: 'guidanceTag',
+                guidance: 'Some Interesting Guidance',
+                id: 'https1',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'https1',
+                tagName: 'HTTPS-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', httpsGT._key),
+            endCursor: toGlobalId('guidanceTags', httpsGT._key),
+          },
+        }
+
+        expect(
+          await demoType.negativeGuidanceTags.resolve(
+            { negativeTags },
+            { first: 1 },
+            { loaders: { httpsGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).toEqual(expectedResult)
+      })
+    })
+    describe('testing the neutralGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = httpsType.getFields()
+
+        const loader = httpsGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+        const neutralTags = ['https1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', httpsGT._key),
+              node: {
+                _id: httpsGT._id,
+                _key: httpsGT._key,
+                _rev: httpsGT._rev,
+                _type: 'guidanceTag',
+                guidance: 'Some Interesting Guidance',
+                id: 'https1',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'https1',
+                tagName: 'HTTPS-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', httpsGT._key),
+            endCursor: toGlobalId('guidanceTags', httpsGT._key),
+          },
+        }
+
+        expect(
+          await demoType.neutralGuidanceTags.resolve(
+            { neutralTags },
+            { first: 1 },
+            { loaders: { httpsGuidanceTagConnectionsLoader: loader } },
+          ),
+        ).toEqual(expectedResult)
+      })
+    })
+    describe('testing the positiveGuidanceTags resolver', () => {
+      it('returns the resolved value', async () => {
+        const demoType = httpsType.getFields()
+
+        const loader = httpsGuidanceTagConnectionsLoader(
+          query,
+          '1',
+          cleanseInput,
+          {},
+        )
+        const positiveTags = ['https1']
+
+        const expectedResult = {
+          edges: [
+            {
+              cursor: toGlobalId('guidanceTags', httpsGT._key),
+              node: {
+                _id: httpsGT._id,
+                _key: httpsGT._key,
+                _rev: httpsGT._rev,
+                _type: 'guidanceTag',
+                guidance: 'Some Interesting Guidance',
+                id: 'https1',
+                refLinksGuide: [
+                  {
+                    description: 'refLinksGuide Description',
+                    ref_link: 'www.refLinksGuide.ca',
+                  },
+                ],
+                refLinksTechnical: [
+                  {
+                    description: 'refLinksTechnical Description',
+                    ref_link: 'www.refLinksTechnical.ca',
+                  },
+                ],
+                tagId: 'https1',
+                tagName: 'HTTPS-TAG',
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId('guidanceTags', httpsGT._key),
+            endCursor: toGlobalId('guidanceTags', httpsGT._key),
+          },
+        }
+
+        expect(
+          await demoType.positiveGuidanceTags.resolve(
+            { positiveTags },
             { first: 1 },
             { loaders: { httpsGuidanceTagConnectionsLoader: loader } },
           ),
