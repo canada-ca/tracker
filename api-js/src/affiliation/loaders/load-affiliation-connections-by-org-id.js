@@ -240,41 +240,69 @@ export const affiliationLoaderByOrgId = (
       hasNextPageDocument = aql`DOCUMENT(users, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._to).key).username`
       hasPreviousPageDocument = aql`DOCUMENT(users, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._to).key).username`
     } else if (orderBy.field === 'org-acronym') {
-      affField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).username`
-      hasNextPageDocument = aql`DOCUMENT(users, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).username`
-      hasPreviousPageDocument = aql`DOCUMENT(users, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).username`
-
-      sortByField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).orgDetails).acronym ${orderBy.direction},`
+      affField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).orgDetails).acronym`
+      hasNextPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).orgDetails).acronym`
+      hasPreviousPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).orgDetails).acronym`
     } else if (orderBy.field === 'org-name') {
-      sortByField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).orgDetails).name ${orderBy.direction},`
+      affField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).orgDetails).name`
+      hasNextPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).orgDetails).name`
+      hasPreviousPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).orgDetails).name`
     } else if (orderBy.field === 'org-slug') {
-      sortByField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).orgDetails).slug ${orderBy.direction},`
+      affField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).orgDetails).slug`
+      hasNextPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).orgDetails).slug`
+      hasPreviousPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).orgDetails).slug`
     } else if (orderBy.field === 'org-zone') {
-      sortByField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).orgDetails).zone ${orderBy.direction},`
+      affField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).orgDetails).zone`
+      hasNextPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).orgDetails).zone`
+      hasPreviousPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).orgDetails).zone`
     } else if (orderBy.field === 'org-sector') {
-      sortByField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).orgDetails).sector ${orderBy.direction},`
+      affField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).orgDetails).sector`
+      hasNextPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).orgDetails).sector`
+      hasPreviousPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).orgDetails).sector`
     } else if (orderBy.field === 'org-country') {
-      sortByField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).orgDetails).country ${orderBy.direction},`
+      affField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).orgDetails).country`
+      hasNextPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).orgDetails).country`
+      hasPreviousPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).orgDetails).country`
     } else if (orderBy.field === 'org-province') {
-      sortByField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).orgDetails).province ${orderBy.direction},`
+      affField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).orgDetails).province`
+      hasNextPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).orgDetails).province`
+      hasPreviousPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).orgDetails).province`
     } else if (orderBy.field === 'org-city') {
-      sortByField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).orgDetails).city ${orderBy.direction},`
+      affField = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).orgDetails).city`
+      hasNextPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).orgDetails).city`
+      hasPreviousPageDocument = aql`TRANSLATE(${language}, DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).orgDetails).city`
     } else if (orderBy.field === 'org-verified') {
-      sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).verified ${orderBy.direction},`
+      affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).verified`
+      hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).verified`
+      hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).verified`
     } else if (orderBy.field === 'org-summary-mail-pass') {
-      sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.pass ${orderBy.direction},`
+      affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).summaries.mail.pass`
+      hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.mail.pass`
+      hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.mail.pass`
     } else if (orderBy.field === 'org-summary-mail-fail') {
-      sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.fail ${orderBy.direction},`
+      affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).summaries.mail.fail`
+      hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.mail.fail`
+      hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.mail.fail`
     } else if (orderBy.field === 'org-summary-mail-total') {
-      sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.mail.total ${orderBy.direction},`
+      affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).summaries.mail.total`
+      hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.mail.total`
+      hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.mail.total`
     } else if (orderBy.field === 'org-summary-web-pass') {
-      sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.pass ${orderBy.direction},`
+      affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).summaries.web.pass`
+      hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.web.pass`
+      hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.web.pass`
     } else if (orderBy.field === 'org-summary-web-fail') {
-      sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.fail ${orderBy.direction},`
+      affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).summaries.web.fail`
+      hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.web.fail`
+      hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.web.fail`
     } else if (orderBy.field === 'org-summary-web-total') {
-      sortByField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key).summaries.web.total ${orderBy.direction},`
+      affField = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key).summaries.web.total`
+      hasNextPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key).summaries.web.total`
+      hasPreviousPageDocument = aql`DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key).summaries.web.total`
     } else if (orderBy.field === 'org-domain-count') {
-      sortByField = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(affiliation._from).key)._id claims RETURN e._to) ${orderBy.direction},`
+      affField = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(aff._from).key)._id claims RETURN e._to)`
+      hasNextPageDocument = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._from).key)._id claims RETURN e._to)`
+      hasPreviousPageDocument = aql`COUNT(FOR v, e IN 1..1 ANY DOCUMENT(organizations, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._from).key)._id claims RETURN e._to)`
     }
 
     hasNextPageFilter = aql`

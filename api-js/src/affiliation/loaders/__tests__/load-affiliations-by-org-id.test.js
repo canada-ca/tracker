@@ -27,7 +27,6 @@ describe('given the load affiliations by org id function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -68,6 +67,10 @@ describe('given the load affiliations by org id function', () => {
     })
 
     consoleOutput.length = 0
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
@@ -324,6 +327,329 @@ describe('given the load affiliations by org id function', () => {
           }
 
           expect(affiliations).toEqual(expectedStructure)
+        })
+      })
+      describe('using orderBy field', () => {
+        let affOne,
+          affTwo,
+          affThree,
+          domainOne,
+          domainTwo,
+          domainThree,
+          orgOne,
+          orgTwo,
+          orgThree,
+          userOne,
+          userTwo,
+          userThree
+        beforeEach(async () => {
+          userOne = await collections.users.save({
+            userName: 'user@email.a.ca',
+          })
+          userTwo = await collections.users.save({
+            userName: 'user2@email.b.ca',
+          })
+          userThree = await collections.users.save({
+            userName: 'user3@email.c.ca',
+          })
+          orgOne = await collections.organizations.save({
+            verified: false,
+            summaries: {
+              web: {
+                pass: 50,
+                fail: 1000,
+                total: 1050,
+              },
+              mail: {
+                pass: 50,
+                fail: 1000,
+                total: 1050,
+              },
+            },
+            orgDetails: {
+              en: {
+                slug: 'slug-org-a',
+                acronym: 'ORG_A',
+                name: 'org a',
+                zone: 'zone a',
+                sector: 'sector a',
+                country: 'country a',
+                province: 'province a',
+                city: 'city a',
+              },
+              fr: {
+                slug: 'slug-org-a',
+                acronym: 'ORG_A',
+                name: 'org a',
+                zone: 'zone a',
+                sector: 'sector a',
+                country: 'country a',
+                province: 'province a',
+                city: 'city a',
+              },
+            },
+          })
+          orgTwo = await collections.organizations.save({
+            verified: false,
+            summaries: {
+              web: {
+                pass: 51,
+                fail: 1001,
+                total: 1052,
+              },
+              mail: {
+                pass: 51,
+                fail: 1001,
+                total: 1052,
+              },
+            },
+            orgDetails: {
+              en: {
+                slug: 'slug-org-b',
+                acronym: 'ORG_B',
+                name: 'org b',
+                zone: 'zone b',
+                sector: 'sector b',
+                country: 'country b',
+                province: 'province b',
+                city: 'city b',
+              },
+              fr: {
+                slug: 'slug-org-b',
+                acronym: 'ORG_B',
+                name: 'org b',
+                zone: 'zone b',
+                sector: 'sector b',
+                country: 'country b',
+                province: 'province b',
+                city: 'city b',
+              },
+            },
+          })
+          orgThree = await collections.organizations.save({
+            verified: false,
+            summaries: {
+              web: {
+                pass: 52,
+                fail: 1002,
+                total: 1054,
+              },
+              mail: {
+                pass: 52,
+                fail: 1002,
+                total: 1054,
+              },
+            },
+            orgDetails: {
+              en: {
+                slug: 'slug-org-c',
+                acronym: 'ORG_C',
+                name: 'org c',
+                zone: 'zone c',
+                sector: 'sector c',
+                country: 'country c',
+                province: 'province c',
+                city: 'city c',
+              },
+              fr: {
+                slug: 'slug-org-c',
+                acronym: 'ORG_C',
+                name: 'org c',
+                zone: 'zone c',
+                sector: 'sector c',
+                country: 'country c',
+                province: 'province c',
+                city: 'city c',
+              },
+            },
+          })
+          affOne = await collections.affiliations.save({
+            _from: orgOne._id,
+            _to: userOne._id,
+            permission: 'user',
+          })
+          affTwo = await collections.affiliations.save({
+            _from: orgTwo._id,
+            _to: userTwo._id,
+            permission: 'user',
+          })
+          affThree = await collections.affiliations.save({
+            _from: orgThree._id,
+            _to: userThree._id,
+            permission: 'user',
+          })
+          domainOne = await collections.domains.save({
+            domain: 'test.domain.gc.ca',
+          })
+          domainThree = await collections.domains.save({
+            domain: 'test.domain.canada.gc.ca',
+          })
+          domainTwo = await collections.domains.save({
+            domain: 'test.domain.canada.ca',
+          })
+          await collections.claims.save({
+            _from: orgOne._id,
+            _to: domainOne._id,
+          })
+          await collections.claims.save({
+            _from: orgTwo._id,
+            _to: domainOne._id,
+          })
+          await collections.claims.save({
+            _from: orgTwo._id,
+            _to: domainTwo._id,
+          })
+          await collections.claims.save({
+            _from: orgThree._id,
+            _to: domainOne._id,
+          })
+          await collections.claims.save({
+            _from: orgThree._id,
+            _to: domainTwo._id,
+          })
+          await collections.claims.save({
+            _from: orgThree._id,
+            _to: domainThree._id,
+          })
+        })
+        describe('language is set to english', () => {
+          describe('ordering by USER_USERNAME', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {
+              })
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_ACRONYM', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_NAME', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_SLUG', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_ZONE', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_SECTOR', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_COUNTRY', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_PROVINCE', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_CITY', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_VERIFIED', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_SUMMARY_MAIL_PASS', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_SUMMARY_MAIL_FAIL', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_SUMMARY_MAIL_TOTAL', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_SUMMARY_WEB_PASS', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_SUMMARY_WEB_FAIL', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_SUMMARY_WEB_TOTAL', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
+          describe('ordering by ORG_DOMAIN_COUNT', () => {
+            describe('direction is set to ASC', () => {
+              it('returns affiliation', async () => {})
+            })
+            describe('direction is set to DESC', () => {
+              it('returns affiliation', async () => {})
+            })
+          })
         })
       })
     })
