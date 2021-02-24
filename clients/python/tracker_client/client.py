@@ -1,3 +1,4 @@
+"""This module defines the Client class, used to connect to the Tracker API"""
 from slugify import slugify
 from gql.transport.exceptions import (
     TransportQueryError,
@@ -12,11 +13,26 @@ from organization import Organization
 
 
 class Client:
+    """This class represents the user's connection to Tracker, which is established on instantiation.
+    It allows the user to retrieve :class:`tracker_client.organization.Organization` and
+    :class:`tracker_client.domain.Domain` objects representing organizations they are members of
+    and domains their organization(s) control.
+
+    :param str url: Tracker GraphQL endpoint, defaults to alpha endpoint
+    :attribute GQL Client client: GQL client instance used to execute queries
+    """
+
     def __init__(self, url="https://tracker.alpha.canada.ca/graphql"):
         self.client = create_client(url, auth_token=get_auth_token())
 
     def get_organization(self, name):
-        "Get an Organization from specified name"
+        """Get an Organization from specified name. You must be a member of that
+        organization.
+
+        :param str name: name of organization to get and construct Organization for.
+        :return: A :class:`tracker_client.organization.Organization` object
+        :rtype: `tracker_client.organization.Organization`
+        """
         params = {"orgSlug": slugify(name)}
         result = self.execute_query(queries.GET_ORG, params)
 
@@ -29,7 +45,11 @@ class Client:
 
     # Consider changing to generator
     def get_organizations(self):
-        """Get a list of Organizations for all organizations you are a member of"""
+        """Gets a list of Organizations for all organizations you are a member of
+
+        :return: A list of :class:`tracker_client.organization.Organization` objects
+        :rtype: list[`tracker_client.organization.Organization`]
+        """
         result = self.execute_query(queries.GET_ALL_ORGS)
 
         org_list = []
@@ -45,7 +65,13 @@ class Client:
         return org_list
 
     def get_domain(self, domain):
-        """Get a Domain for the given domain"""
+        """Get a Domain for the given domain. One of your organizations must
+        control that domain
+
+        :param str domain: name of domain to get and construct Domain for.
+        :return: A :class:`tracker_client.organization.Domain` object
+        :rtype: `tracker_client.organization.Domain`
+        """
         params = {"domain": domain}
         result = self.execute_query(queries.GET_DOMAIN, params)
 
@@ -59,7 +85,11 @@ class Client:
 
     # Consider changing to generator
     def get_domains(self):
-        """Get a list of Domains for all domains you own"""
+        """Gets a list of Domains for all domains your organizations control
+
+        :return: A list of :class:`tracker_client.organization.Domain` objects
+        :rtype: list[`tracker_client.organization.Domain`]
+        """
         result = self.execute_query(queries.GET_ALL_DOMAINS)
 
         domain_list = []
