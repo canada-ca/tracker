@@ -87,6 +87,13 @@ export const createDomain = new mutationWithClientMutationId({
       domain: domain,
       lastRan: null,
       selectors: selectors,
+      status: {
+        dkim: null,
+        dmarc: null,
+        https: null,
+        spf: null,
+        ssl: null,
+      },
     }
 
     // Check to see if domain already belongs to same org
