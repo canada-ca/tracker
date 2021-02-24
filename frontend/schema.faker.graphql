@@ -382,8 +382,6 @@ type DMARC implements Node {
   domain: Domain
   # The time when the scan was initiated.
   timestamp: String @fake(type: pastDate)
-  # DMARC phase found during scan.
-  dmarcPhase: Int @examples(values: [1, 2, 3, 4])
   # DMARC record retrieved during scan.
   record: String @examples(
     values: [
@@ -604,6 +602,8 @@ type Domain implements Node {
   lastRan: String @fake(type: recentDate)
   # Domain Keys Identified Mail (DKIM) selector strings associated with domain.
   selectors: [Selector] @listLength(min: 0, max: 2)
+  # DMARC phase found during scan.
+  dmarcPhase: String @examples(values: ["Assess", "deploy", "enforce", "maintain"])
   # The domains scan status, based on the latest scan data.
   status: DomainStatus
   # The organization that this domain belongs to.
