@@ -18,7 +18,7 @@ class Organization:
         province,
         city,
         verified,
-        domain_count,
+        domainCount,
     ):
         self.client = client
         self.name = name
@@ -29,23 +29,7 @@ class Organization:
         self.province = province
         self.city = city
         self.verified = verified
-        self.domain_count = domain_count
-
-    @classmethod
-    def from_org_node(cls, client, node):
-        """ Alternate constructor, returns an Organization given Client and GraphQL node containing an organization"""
-        args = [
-            node["name"],
-            node["acronym"],
-            node["zone"],
-            node["sector"],
-            node["country"],
-            node["province"],
-            node["city"],
-            node["verified"],
-            node["domainCount"],
-        ]
-        return cls(client, *args)
+        self.domain_count = domainCount
 
     def get_summary(self):
         # Temporary, will move actual function here soon
@@ -65,6 +49,6 @@ class Organization:
             return domain_list
 
         for edge in result["findOrganizationBySlug"]["domains"]["edges"]:
-            domain_list.append(dom.Domain.from_dom_node(self.client, edge["node"]))
+            domain_list.append(dom.Domain(self.client, **edge["node"]))
 
         return domain_list

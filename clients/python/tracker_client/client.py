@@ -26,7 +26,7 @@ class Client:
             print("Server error")
             return
 
-        return Organization.from_org_node(self, result["findOrganizationBySlug"])
+        return Organization(self, **result["findOrganizationBySlug"])
 
     # Consider changing to generator
     def get_organizations(self):
@@ -41,7 +41,7 @@ class Client:
             return org_list
 
         for edge in result["findMyOrganizations"]["edges"]:
-            org_list.append(Organization.from_org_node(self, edge["node"]))
+            org_list.append(Organization(self, **edge["node"]))
 
         return org_list
 
@@ -55,7 +55,7 @@ class Client:
             print("Server error")
             return
 
-        new_domain = Domain.from_dom_node(self, result["findDomainByDomain"])
+        new_domain = Domain(self, **result["findDomainByDomain"])
         return new_domain
 
     # Consider changing to generator
@@ -71,7 +71,7 @@ class Client:
             return domain_list
 
         for edge in result["findMyDomains"]["edges"]:
-            domain_list.append(Domain.from_dom_node(self, edge["node"]))
+            domain_list.append(Domain(self, **edge["node"]))
 
         return domain_list
 

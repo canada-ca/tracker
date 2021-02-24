@@ -18,17 +18,6 @@ class Domain:
         self.dmarc_phase = dmarc_phase
         self.dkim_selectors = dkim_selectors
 
-    @classmethod
-    def from_dom_node(cls, client, node):
-        """ Alternate constructor, returns a Domain given Client and GraphQL node containing a Domain"""
-        args = [
-            node["domain"],
-            node["lastRan"],
-            node["dmarcPhase"],
-            node["selectors"],
-        ]
-        return cls(client, *args)
-
     # All the "client.client"s are temporary
     def get_status(self):
         return get_domain_status(self.client.client, self.domain_name)
@@ -64,7 +53,7 @@ class Domain:
 
         for edge in result["findDomainByDomain"]["organizations"]["edges"]:
             org_list.append(
-                org.Organization.from_org_node(self.client, edge["node"])
+                org.Organization(self.client, **edge["node"])
             )
 
         return org_list
