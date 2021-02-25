@@ -37,6 +37,16 @@ steps:
     args: ['run', 'build']
 
   - name: 'gcr.io/cloud-builders/docker'
+    id: generate-image-name
+    entrypoint: 'bash'
+    dir: api-js
+    args:
+      - '-c'
+      - |
+        echo "gcr.io/$PROJECT_ID/frontend:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+
+  - name: 'gcr.io/cloud-builders/docker'
     id: build-if-master
     entrypoint: 'bash'
     dir: frontend
@@ -45,7 +55,8 @@ steps:
     - |
       if [[ "$BRANCH_NAME" == "master" ]]
       then
-        docker build -t gcr.io/$PROJECT_ID/frontend:$BRANCH_NAME-$SHORT_SHA-$(date +%s) .
+        image=$(cat /workspace/imagename)
+        docker build -t $image .
       else
         exit 0
       fi
@@ -58,7 +69,8 @@ steps:
     - |
       if [[ "$BRANCH_NAME" == "master" ]]
       then
-        docker push gcr.io/$PROJECT_ID/frontend:$BRANCH_NAME-$SHORT_SHA-$(date +%s)
+        image=$(cat /workspace/imagename)
+        docker push $image
       else
         exit 0
       fi
