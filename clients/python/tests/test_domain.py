@@ -8,7 +8,7 @@ import tracker_client.queries as queries
 
 # pylint: disable=no-member
 
-
+# TODO: refactor to just return a domain
 @pytest.fixture
 def mock_domain():
     return {
@@ -221,7 +221,7 @@ def test_domain_get_owners(mocker, mock_domain, domain_get_owners_input):
     assert org_list[0].acronym == "FOO"
     assert org_list[1].name == "Fizz Bang"
     assert org_list[0].domain_count == 10
-    assert org_list[1].verified == True
+    assert org_list[1].verified
 
 
 def test_domain_get_owners_error(mocker, mock_domain, error_message, capsys):

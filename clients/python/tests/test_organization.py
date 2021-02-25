@@ -8,7 +8,7 @@ import tracker_client.queries as queries
 
 # pylint: disable=no-member
 
-
+# TODO: refactor to just return an Organization
 @pytest.fixture
 def mock_org():
     return {
