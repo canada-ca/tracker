@@ -131,7 +131,7 @@ class Organization:
 
         if "error" in result:
             print("Server error: ", result)
-            raise ValueError("Unable to get domains for ", self.name)
+            raise ValueError("Unable to get domains for " + self.name)
 
         domain_list = []
         for edge in result["findOrganizationBySlug"]["domains"]["edges"]:

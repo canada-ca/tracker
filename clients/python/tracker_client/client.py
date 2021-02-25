@@ -38,7 +38,7 @@ class Client:
 
         if "error" in result:
             print("Server error: ", result)
-            raise ValueError("Unable to get organization ", name)
+            raise ValueError("Unable to get organization " + name)
 
         return Organization(self, **result["findOrganizationBySlug"])
 
@@ -74,7 +74,7 @@ class Client:
 
         if "error" in result:
             print("Server error: ", result)
-            raise ValueError("Unable to get domain ", domain)
+            raise ValueError("Unable to get domain " + domain)
 
         return Domain(self, **result["findDomainByDomain"])
 

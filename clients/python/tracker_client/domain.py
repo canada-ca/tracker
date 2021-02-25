@@ -219,7 +219,7 @@ class Domain:
 
         if "error" in result:
             print("Server error: ", result)
-            raise ValueError("Unable to get owners for ", self.domain_name)
+            raise ValueError("Unable to get owners for " + self.domain_name)
 
         org_list = []
         for edge in result["findDomainByDomain"]["organizations"]["edges"]:
