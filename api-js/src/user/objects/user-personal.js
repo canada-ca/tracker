@@ -3,6 +3,7 @@ import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
+import { affiliationOrgOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
 import { nodeInterface } from '../../node'
@@ -27,7 +28,9 @@ export const userPersonalType = new GraphQLObjectType({
       type: GraphQLPhoneNumber,
       description: 'The phone number the user has setup with tfa.',
       resolve: ({ phoneDetails }) => {
-        if (typeof phoneDetails === 'undefined') { return null }
+        if (typeof phoneDetails === 'undefined') {
+          return null
+        }
         const { iv, tag, phoneNumber: encrypted } = phoneDetails
         const decipher = crypto.createDecipheriv(
           'aes-256-ccm',
@@ -64,14 +67,20 @@ export const userPersonalType = new GraphQLObjectType({
     affiliations: {
       type: affiliationConnection.connectionType,
       description: 'Users affiliations to various organizations.',
-      args: connectionArgs,
+      args: {
+        orderBy: {
+          type: affiliationOrgOrder,
+          description: 'Ordering options for affiliation connections.',
+        },
+        ...connectionArgs,
+      },
       resolve: async (
         { _id },
         args,
-        { loaders: { affiliationLoaderByUserId } },
+        { loaders: { affiliationConnectionLoaderByUserId } },
       ) => {
-        const affiliations = await affiliationLoaderByUserId({
-          uId: _id,
+        const affiliations = await affiliationConnectionLoaderByUserId({
+          userId: _id,
           ...args,
         })
         return affiliations

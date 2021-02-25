@@ -16,7 +16,7 @@ import { cleanseInput } from '../../../validators'
 import { Acronym, Slug } from '../../../scalars'
 import { domainLoaderConnectionsByOrgId } from '../../../domain/loaders'
 import { domainConnection } from '../../../domain/objects/domain'
-import { affiliationLoaderByOrgId } from '../../../affiliation/loaders'
+import { affiliationConnectionLoaderByOrgId } from '../../../affiliation/loaders'
 import { affiliationConnection } from '../../../affiliation/objects'
 import { organizationType, organizationSummaryType } from '../../objects'
 
@@ -368,7 +368,7 @@ describe('given the organization object', () => {
         it('returns the resolved value', async () => {
           const demoType = organizationType.getFields()
 
-          const loader = affiliationLoaderByOrgId(
+          const loader = affiliationConnectionLoaderByOrgId(
             query,
             user._key,
             cleanseInput,
@@ -410,7 +410,7 @@ describe('given the organization object', () => {
               { first: 5 },
               {
                 auth: { checkPermission },
-                loaders: { affiliationLoaderByOrgId: loader },
+                loaders: { affiliationConnectionLoaderByOrgId: loader },
               },
             ),
           ).resolves.toEqual(expectedResults)
@@ -435,7 +435,7 @@ describe('given the organization object', () => {
           it('returns the resolved value', async () => {
             const demoType = organizationType.getFields()
 
-            const loader = affiliationLoaderByOrgId(
+            const loader = affiliationConnectionLoaderByOrgId(
               query,
               user._key,
               cleanseInput,
@@ -451,7 +451,7 @@ describe('given the organization object', () => {
                 {
                   i18n,
                   auth: { checkPermission },
-                  loaders: { affiliationLoaderByOrgId: loader },
+                  loaders: { affiliationConnectionLoaderByOrgId: loader },
                 },
               )
             } catch (err) {
@@ -481,7 +481,7 @@ describe('given the organization object', () => {
           it('returns the resolved value', async () => {
             const demoType = organizationType.getFields()
 
-            const loader = affiliationLoaderByOrgId(
+            const loader = affiliationConnectionLoaderByOrgId(
               query,
               user._key,
               cleanseInput,
@@ -497,7 +497,7 @@ describe('given the organization object', () => {
                 {
                   i18n,
                   auth: { checkPermission },
-                  loaders: { affiliationLoaderByOrgId: loader },
+                  loaders: { affiliationConnectionLoaderByOrgId: loader },
                 },
               )
             } catch (err) {

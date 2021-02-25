@@ -14,6 +14,7 @@ import {
 import { organizationSummaryType } from './organization-summary'
 import { nodeInterface } from '../../node'
 import { Acronym, Slug } from '../../scalars'
+import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
@@ -108,19 +109,25 @@ export const organizationType = new GraphQLObjectType({
     affiliations: {
       type: affiliationConnection.connectionType,
       description: 'Organization affiliations to various users.',
-      args: connectionArgs,
+      args: {
+        orderBy: {
+          type: affiliationUserOrder,
+          description: 'Ordering options for affiliation connections.',
+        },
+        ...connectionArgs,
+      },
       resolve: async (
         { _id },
         args,
         {
           i18n,
           auth: { checkPermission },
-          loaders: { affiliationLoaderByOrgId },
+          loaders: { affiliationConnectionLoaderByOrgId },
         },
       ) => {
         const permission = await checkPermission({ orgId: _id })
         if (permission === 'admin' || permission === 'super_admin') {
-          const affiliations = await affiliationLoaderByOrgId({
+          const affiliations = await affiliationConnectionLoaderByOrgId({
             orgId: _id,
             ...args,
           })
