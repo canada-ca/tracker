@@ -28,8 +28,8 @@ import {
 
 import {
   affiliationLoaderByKey,
-  affiliationLoaderByUserId,
-  affiliationLoaderByOrgId,
+  affiliationConnectionLoaderByUserId,
+  affiliationConnectionLoaderByOrgId,
 } from './affiliation/loaders'
 import {
   dkimFailureLoaderConnectionsBySumId,
@@ -304,13 +304,14 @@ export const createContext = ({ context, req: request, res: response }) => {
       userLoaderByUserName: userLoaderByUserName(query, userKey, i18n),
       userLoaderByKey: userLoaderByKey(query, userKey, i18n),
       affiliationLoaderByKey: affiliationLoaderByKey(query, userKey, i18n),
-      affiliationLoaderByUserId: affiliationLoaderByUserId(
+      affiliationConnectionLoaderByUserId: affiliationConnectionLoaderByUserId(
         query,
+        request.language,
         userKey,
         cleanseInput,
         i18n,
       ),
-      affiliationLoaderByOrgId: affiliationLoaderByOrgId(
+      affiliationConnectionLoaderByOrgId: affiliationConnectionLoaderByOrgId(
         query,
         userKey,
         cleanseInput,
