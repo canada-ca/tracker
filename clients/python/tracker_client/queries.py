@@ -991,6 +991,7 @@ GET_ORG_DOMAINS = gql(
                         domain
                         dmarcPhase
                         lastRan
+                        selectors
                     }
                 }
             }
