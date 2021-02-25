@@ -155,11 +155,6 @@ type CreateOrganizationPayload {
   clientMutationId: String
 }
 
-# A date string, such as 2007-12-03, compliant with the `full-date` format
-# outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for
-# representation of dates and times using the Gregorian calendar.
-scalar Date
-
 # A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
 # `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO
 # 8601 standard for representation of dates and times using the Gregorian calendar.
@@ -208,11 +203,9 @@ type DKIM implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time when the scan was initiated.
-  timestamp: DateTime @fake(type: pastDate)
+  timestamp: String @fake(type: pastDate)
   # Individual scans results for each dkim selector.
   results(
-    # Ordering options for dkim result connections.
-    orderBy: DKIMResultOrder
     after: String
     first: Int
     before: String
@@ -288,20 +281,6 @@ type DkimFailureTableEdge {
   cursor: String!
 }
 
-# Ordering options for DKIM connections.
-input DKIMOrder {
-  # The field to order DKIM scans by.
-  field: DKIMOrderField!
-  # The ordering direction.
-  direction: OrderDirection!
-}
-
-# Properties by which DKIM connections can be ordered.
-enum DKIMOrderField {
-  # Order DKIM edges by timestamp.
-  TIMESTAMP
-}
-
 # Individual scans results for the given dkim selector.
 type DKIMResult implements Node {
   # The ID of an object
@@ -320,8 +299,38 @@ type DKIMResult implements Node {
   keyLength: String @examples(values: ["sub1024", "1024", "2048", "2048plus"])
   # Raw scan result.
   rawJson: JSON
-  # Key tags found during scan.
+  # Guidance tags found during scan.
   guidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+  # Negative guidance tags found during scan.
+  negativeGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Neutral guidance tags found during scan.
+  neutralGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Positive guidance tags found during scan.
+  positiveGuidanceTags(
     # Ordering options for guidance tag connections
     orderBy: GuidanceTagOrder
     after: String
@@ -352,24 +361,6 @@ type DKIMResultEdge {
   cursor: String!
 }
 
-# Ordering options for DKIM Result connections.
-input DKIMResultOrder {
-  # The field to order DKIM Results by.
-  field: DKIMResultOrderField!
-  # The ordering direction.
-  direction: OrderDirection!
-}
-
-# Properties by which DKIM Result connections can be ordered.
-enum DKIMResultOrderField {
-  # Order DKIM Result edges by timestamp.
-  SELECTOR
-  # Order DKIM Result edges by record.
-  RECORD
-  # Order DKIM Result edges by key length.
-  KEY_LENGTH
-}
-
 # Domain-based Message Authentication, Reporting, and Conformance
 # (DMARC) is a scalable mechanism by which a mail-originating
 # organization can express domain-level policies and preferences for
@@ -382,6 +373,8 @@ type DMARC implements Node {
   domain: Domain
   # The time when the scan was initiated.
   timestamp: String @fake(type: pastDate)
+  # DMARC phase found during scan.
+  dmarcPhase: Int @examples(values: [1, 2, 3, 4])
   # DMARC record retrieved during scan.
   record: String @examples(
     values: [
@@ -399,8 +392,38 @@ type DMARC implements Node {
   pct: Int @examples(values: [0, 20, 60, 70, 90, 100])
   # Raw scan result.
   rawJson: JSON
-  # Key tags found during DMARC Scan.
+  # Guidance tags found during DMARC Scan.
   guidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+  # Negative guidance tags found during DMARC Scan.
+  negativeGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Neutral guidance tags found during DMARC Scan.
+  neutralGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Positive guidance tags found during DMARC Scan.
+  positiveGuidanceTags(
     # Ordering options for guidance tag connections
     orderBy: GuidanceTagOrder
     after: String
@@ -474,28 +497,6 @@ type DmarcFailureTableEdge {
   node: DmarcFailureTable
   # A cursor for use in pagination
   cursor: String!
-}
-
-# Ordering options for DMARC connections.
-input DMARCOrder {
-  # The field to order DMARC scans by.
-  field: DmarcOrderField!
-  # The ordering direction.
-  direction: OrderDirection!
-}
-
-# Properties by which dmarc connections can be ordered.
-enum DmarcOrderField {
-  # Order dmarc summaries by timestamp.
-  TIMESTAMP
-  # Order dmarc summaries by record.
-  RECORD
-  # Order dmarc summaries by p policy.
-  P_POLICY
-  # Order dmarc summaries by sp policy.
-  SP_POLICY
-  # Order dmarc summaries by percentage.
-  PCT
 }
 
 # Object that contains information for a dmarc summary.
@@ -602,14 +603,10 @@ type Domain implements Node {
   lastRan: String @fake(type: recentDate)
   # Domain Keys Identified Mail (DKIM) selector strings associated with domain.
   selectors: [Selector] @listLength(min: 0, max: 2)
-  # DMARC phase found during scan.
-  dmarcPhase: String @examples(values: ["Assess", "deploy", "enforce", "maintain"])
   # The domains scan status, based on the latest scan data.
   status: DomainStatus
   # The organization that this domain belongs to.
   organizations(
-    # Ordering options for organization connections
-    orderBy: OrganizationOrder
     after: String
     first: Int
     before: String
@@ -705,11 +702,9 @@ type EmailScan {
   # DomainKeys Identified Mail (DKIM) Signatures scan results.
   dkim(
     # Start date for date filter.
-    starDate: Date
+    starDate: DateTime
     # End date for date filter.
-    endDate: Date
-    # Ordering options for dkim connections.
-    orderBy: DKIMOrder
+    endDate: DateTime
     after: String
     first: Int
     before: String
@@ -721,8 +716,6 @@ type EmailScan {
     starDate: DateTime
     # End date for date filter.
     endDate: DateTime
-    # Ordering options for dmarc connections.
-    orderBy: DMARCOrder
     after: String
     first: Int
     before: String
@@ -734,8 +727,6 @@ type EmailScan {
     starDate: DateTime
     # End date for date filter.
     endDate: DateTime
-    # Ordering options for spf connections.
-    orderBy: SPFOrder
     after: String
     first: Int
     before: String
@@ -845,24 +836,6 @@ type GuidanceTagEdge {
   cursor: String!
 }
 
-# Ordering options for guidance tag connections.
-input GuidanceTagOrder {
-  # The field to order guidance tags by.
-  field: GuidanceTagOrderField!
-  # The ordering direction.
-  direction: OrderDirection!
-}
-
-# Properties by which Guidance Tag connections can be ordered.
-enum GuidanceTagOrderField {
-  # Order guidance tag edges by tag id.
-  TAG_ID
-  # Order guidance tag edges by tag name.
-  TAG_NAME
-  # Order guidance tag edges by tag guidance.
-  GUIDANCE
-}
-
 # Hyper Text Transfer Protocol Secure scan results.
 type HTTPS implements Node {
   # The ID of an object
@@ -883,8 +856,38 @@ type HTTPS implements Node {
   preloaded: String @examples(values: ["HSTS Preloaded", "HSTS Preload Ready", "HSTS Not Preloaded"])
   # Raw scan result.
   rawJson: JSON
-  # Key tags found during scan.
+  # Guidance tags found during scan.
   guidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+  # Negative guidance tags found during scan.
+  negativeGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Neutral guidance tags found during scan.
+  neutralGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Positive guidance tags found during scan.
+  positiveGuidanceTags(
     # Ordering options for guidance tag connections
     orderBy: GuidanceTagOrder
     after: String
@@ -913,30 +916,6 @@ type HTTPSEdge {
   node: HTTPS
   # A cursor for use in pagination
   cursor: String!
-}
-
-# Ordering options for HTTPS connections.
-input HTTPSOrder {
-  # The field to order HTTPS edges by.
-  field: HTTPSOrderField!
-  # The ordering direction.
-  direction: OrderDirection!
-}
-
-# Properties by which HTTPS connections can be ordered.
-enum HTTPSOrderField {
-  # Order HTTPS edges by timestamp.
-  TIMESTAMP
-  # Order HTTPS edges by implementation.
-  IMPLEMENTATION
-  # Order HTTPS edges by enforced.
-  ENFORCED
-  # Order HTTPS edges by hsts.
-  HSTS
-  # Order HTTPS edges by hsts age.
-  HSTS_AGE
-  # Order HTTPS edges by preloaded.
-  PRELOADED
 }
 
 input InviteUserToOrgInput {
@@ -1076,8 +1055,6 @@ type Organization implements Node {
   )
   # The domains which are associated with this organization.
   domains(
-    # Ordering options for domain connections.
-    orderBy: DomainOrder
     # Limit domains to those that belong to an organization that has ownership.
     ownership: Boolean
     after: String
@@ -1254,7 +1231,7 @@ type Query {
   ): [Node]!
   # Query for dmarc summaries the user has access to.
   findMyDmarcSummaries(
-    # Ordering options for dmarc summaries connections
+    # Ordering options for repository connections
     orderBy: DmarcSummaryOrder
     # The month in which the returned data is relevant to.
     month: PeriodEnums!
@@ -1272,8 +1249,6 @@ type Query {
   ): Domain
   # Select domains a user has access to.
   findMyDomains(
-    # Ordering options for domain connections.
-    orderBy: DomainOrder
     # Limit domains to those that belong to an organization that has ownership.
     ownership: Boolean
     after: String
@@ -1283,8 +1258,6 @@ type Query {
   ): DomainConnection
   # Select organizations a user has access to.
   findMyOrganizations(
-    # Ordering options for organization connections
-    orderBy: OrganizationOrder
     after: String
     first: Int
     before: String
@@ -1315,8 +1288,6 @@ type Query {
   ): VerifiedDomain
   # Select verified check domains
   findVerifiedDomains(
-    # Ordering options for verified domain connections.
-    orderBy: VerifiedDomainOrder
     after: String
     first: Int
     before: String
@@ -1329,8 +1300,6 @@ type Query {
   ): VerifiedOrganization
   # Select organizations a user has access to.
   findVerifiedOrganizations(
-    # Ordering options for verified organization connections.
-    orderBy: VerifiedOrganizationOrder
     after: String
     first: Int
     before: String
@@ -1556,8 +1525,38 @@ type SPF implements Node {
   spfDefault: String @examples(values: ["neutral", "softfail", "include", "fail"])
   # Raw scan result.
   rawJson: JSON
-  # Key tags found during scan.
+  # Guidance tags found during scan.
   guidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+  # Negative guidance tags found during scan.
+  negativeGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Neutral guidance tags found during scan.
+  neutralGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Positive guidance tags found during scan.
+  positiveGuidanceTags(
     # Ordering options for guidance tag connections
     orderBy: GuidanceTagOrder
     after: String
@@ -1633,50 +1632,17 @@ type SpfFailureTableEdge {
   cursor: String!
 }
 
-# Ordering options for SPF connections.
-input SPFOrder {
-  # The field to order SPF scans by.
-  field: SPFOrderField!
-  # The ordering direction.
-  direction: OrderDirection!
-}
-
-# Properties by which SPF connections can be ordered.
-enum SPFOrderField {
-  # Order SPF edges by timestamp.
-  TIMESTAMP
-  # Order SPF edges by lookups.
-  LOOKUPS
-  # Order SPF edges by record.
-  RECORD
-  # Order SPF edges by spf-default.
-  SPF_DEFAULT
-}
-
 # Secure Socket Layer scan results.
 type SSL implements Node {
   # The ID of an object
   id: ID!
-  # List of ciphers in use by the server deemed to be "acceptable".
-  acceptableCiphers: [String] @listLength(min: 0, max: 5) @examples(
-    values: [
-    	"TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
-    	"TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
-    ]
-  )
-  # List of curves in use by the server deemed to be "acceptable".
-  acceptableCurves: [String] @listLength(min: 0, max: 5) @examples(
-    values: [
-      "sect283k1",
-      "sect571k1",
-      "sect409k1",
-    ]
-  )
-  # Denotes vulnerability to OpenSSL CCS Injection.
-  ccsInjectionVulnerable: Boolean @examples(values: [true, false])
   # The domain the scan was ran on.
   domain: Domain
-  # Key tags found during scan.
+  # The time when the scan was initiated.
+  timestamp: String @fake(type: pastDate)
+  # Raw scan result.
+  rawJson: JSON
+  # Guidance tags found during scan.
   guidanceTags(
     # Ordering options for guidance tag connections
     orderBy: GuidanceTagOrder
@@ -1685,30 +1651,36 @@ type SSL implements Node {
     before: String
     last: Int
   ): GuidanceTagConnection
-  # Denotes vulnerability to "Heartbleed" exploit.
-  heartbleedVulnerable: Boolean @examples(values: [true, false])
-  # Raw scan result.
-  rawJson: JSON
-  # List of ciphers in use by the server deemed to be "strong".
-  strongCiphers: [String] @listLength(min: 0, max: 5) @examples(
-    values: [
-      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-    	"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
-    ]
-  )
-  # List of curves in use by the server deemed to be "strong".
-  strongCurves: [String] @listLength(min: 0, max: 5) @examples(values: [
-    "secp521r1",
-    "secp384r1"
-  ])
-  # Denotes support for elliptic curve key pairs.
-  supportsEcdhKeyExchange: Boolean @examples(values: [true, false])
-  # The time when the scan was initiated.
-  timestamp: String @fake(type: pastDate)
-  # List of ciphers in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
-  weakCiphers: [String] @listLength(min: 0, max: 5) @examples(values: ["TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256"])
-  # List of curves in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
-  weakCurves: [String] @listLength(min: 0, max: 5) @examples(values: ["prime256v1", "X448", "X25519"])
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+  # Negative guidance tags found during scan.
+  negativeGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Neutral guidance tags found during scan.
+  neutralGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Positive guidance tags found during scan.
+  positiveGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
 }
 
 # A connection to a list of items.
@@ -1730,38 +1702,6 @@ type SSLEdge {
   node: SSL
   # A cursor for use in pagination
   cursor: String!
-}
-
-# Ordering options for SSL connections.
-input SSLOrder {
-  # The field to order SSL edges by.
-  field: SSLOrderField!
-  # The ordering direction.
-  direction: OrderDirection!
-}
-
-# Properties by which SSL connections can be ordered.
-enum SSLOrderField {
-  # Order SSL edges by their acceptable ciphers.
-  ACCEPTABLE_CIPHERS
-  # Order SSL edges by their acceptable curves.
-  ACCEPTABLE_CURVES
-  # Order SSL edges by ccs-injection-vulnerable.
-  CCS_INJECTION_VULNERABLE
-  # Order SSL edges by heart-bleed-vulnerable.
-  HEARTBLEED_VULNERABLE
-  # Order SSL edges by their strong ciphers.
-  STRONG_CIPHERS
-  # Order SSL edges by their strong curves.
-  STRONG_CURVES
-  # Order SSL edges by supports-ecdh-key-exchange.
-  SUPPORTS_ECDH_KEY_EXCHANGE
-  # Order SSL edges by timestamp.
-  TIMESTAMP
-  # Order SSL edges by their weak ciphers.
-  WEAK_CIPHERS
-  # Order SSL edges by their weak curves.
-  WEAK_CURVES
 }
 
 # Enum used to inform front end if there are any issues, info, or the domain passes a given check.
@@ -1946,8 +1886,6 @@ type VerifiedDomain implements Node {
   lastRan: DateTime @fake(type: recentDate)
   # The organization that this domain belongs to.
   organizations(
-    # Ordering options for verified organization connections.
-    orderBy: VerifiedOrganizationOrder
     after: String
     first: Int
     before: String
@@ -1974,32 +1912,6 @@ type VerifiedDomainEdge {
   node: VerifiedDomain
   # A cursor for use in pagination
   cursor: String!
-}
-
-# Ordering options for verified domain connections.
-input VerifiedDomainOrder {
-  # The field to order verified domains by.
-  field: VerifiedDomainOrderField!
-  # The ordering direction.
-  direction: OrderDirection!
-}
-
-# Properties by which verified domain connections can be ordered.
-enum VerifiedDomainOrderField {
-  # Order verified domain edges by domain.
-  DOMAIN
-  # Order verified domain edges by last ran.
-  LAST_RAN
-  # Order verified domain edges by dkim status.
-  DKIM_STATUS
-  # Order verified domain edges by dmarc status.
-  DMARC_STATUS
-  # Order verified domain edges by https status.
-  HTTPS_STATUS
-  # Order verified domain edges by spf status.
-  SPF_STATUS
-  # Order verified domain edges by ssl status.
-  SSL_STATUS
 }
 
 # Verified Organization object containing information for a given Organization.
@@ -2039,8 +1951,6 @@ type VerifiedOrganization implements Node {
   )
   # The domains which are associated with this organization.
   domains(
-    # Ordering options for verified domain connections.
-    orderBy: VerifiedDomainOrder
     after: String
     first: Int
     before: String
@@ -2067,42 +1977,6 @@ type VerifiedOrganizationEdge {
   node: VerifiedOrganization
   # A cursor for use in pagination
   cursor: String!
-}
-
-# Ordering options for verified organization connections.
-input VerifiedOrganizationOrder {
-  # The field to order verified organizations by.
-  field: VerifiedOrganizationOrderField!
-  # The ordering direction.
-  direction: OrderDirection!
-}
-
-# Properties by which verified organization connections can be ordered.
-enum VerifiedOrganizationOrderField {
-  # Order verified organization edges by acronym.
-  ACRONYM
-  # Order verified organization edges by name.
-  NAME
-  # Order verified organization edges by zone.
-  ZONE
-  # Order verified organization edges by sector.
-  SECTOR
-  # Order verified organization edges by country.
-  COUNTRY
-  # Order verified organizations by summary mail pass count.
-  SUMMARY_MAIL_PASS
-  # Order verified organizations by summary mail fail count.
-  SUMMARY_MAIL_FAIL
-  # Order verified organizations by summary mail total count.
-  SUMMARY_MAIL_TOTAL
-  # Order verified organizations by summary web pass count.
-  SUMMARY_WEB_PASS
-  # Order verified organizations by summary web fail count.
-  SUMMARY_WEB_FAIL
-  # Order verified organizations by summary web total count.
-  SUMMARY_WEB_TOTAL
-  # Order verified organizations by domain count.
-  DOMAIN_COUNT
 }
 
 input VerifyAccountInput {
@@ -2148,11 +2022,9 @@ type WebScan {
   # Hyper Text Transfer Protocol Secure scan results.
   https(
     # Start date for date filter.
-    startDate: Date
+    starDate: DateTime
     # End date for date filter.
-    endDate: Date
-    # Ordering options for https connections.
-    orderBy: HTTPSOrder
+    endDate: DateTime
     after: String
     first: Int
     before: String
@@ -2164,8 +2036,6 @@ type WebScan {
     starDate: DateTime
     # End date for date filter.
     endDate: DateTime
-    # Ordering options for ssl connections.
-    orderBy: SSLOrder
     after: String
     first: Int
     before: String
