@@ -2168,3 +2168,206 @@ def domain_status_output():
             },
         }
     }
+
+
+@pytest.fixture
+def client_all_orgs_input():
+    true = True
+    return {
+        "findMyOrganizations": {
+            "edges": [
+                {
+                    "node": {
+                        "acronym": "FOO",
+                        "name": "Foo Bar",
+                        "zone": "FED",
+                        "sector": "TBS",
+                        "country": "Canada",
+                        "province": "Ontario",
+                        "city": "Ottawa",
+                        "verified": true,
+                        "domainCount": 10,
+                    }
+                },
+                {
+                    "node": {
+                        "acronym": "FIZZ",
+                        "name": "Fizz Bang",
+                        "zone": "FED",
+                        "sector": "TBS",
+                        "country": "Canada",
+                        "province": "Ontario",
+                        "city": "Ottawa",
+                        "verified": true,
+                        "domainCount": 5,
+                    }
+                },
+            ]
+        }
+    }
+
+
+@pytest.fixture
+def client_org_input():
+    true = True
+    return {
+        "findOrganizationBySlug": {
+            "acronym": "FOO",
+            "name": "Foo Bar",
+            "zone": "FED",
+            "sector": "TBS",
+            "country": "Canada",
+            "province": "Ontario",
+            "city": "Ottawa",
+            "verified": true,
+            "domainCount": 10,
+        }
+    }
+
+
+@pytest.fixture
+def client_all_domains_input():
+    return {
+        "findMyDomains": {
+            "edges": [
+                {
+                    "node": {
+                        "domain": "foo.bar",
+                        "dmarcPhase": "not implemented",
+                        "lastRan": "2021-01-27 23:24:26.911236",
+                        "selectors": [],
+                    }
+                },
+                {
+                    "node": {
+                        "domain": "fizz.bang",
+                        "dmarcPhase": "not implemented",
+                        "lastRan": "2021-01-27 23:24:26.911236",
+                        "selectors": [],
+                    }
+                },
+                {
+                    "node": {
+                        "domain": "abc.def",
+                        "dmarcPhase": "not implemented",
+                        "lastRan": "2021-01-27 23:24:26.911236",
+                        "selectors": [],
+                    }
+                },
+            ]
+        }
+    }
+
+
+@pytest.fixture
+def client_domain_input():
+    return {
+        "findDomainByDomain": {
+            "domain": "foo.bar",
+            "dmarcPhase": "not implemented",
+            "lastRan": "2021-01-27 23:24:26.911236",
+            "selectors": [],
+        }
+    }
+
+
+# TODO: refactor to just return a domain
+@pytest.fixture
+def mock_domain():
+    return {
+        "domain": "foo.bar",
+        "dmarcPhase": "not implemented",
+        "lastRan": "2021-01-27 23:24:26.911236",
+        "selectors": [],
+    }
+
+
+@pytest.fixture
+def domain_get_owners_input():
+    true = True
+    return {
+        "findDomainByDomain": {
+            "organizations": {
+                "edges": [
+                    {
+                        "node": {
+                            "acronym": "FOO",
+                            "name": "Foo Bar",
+                            "zone": "FED",
+                            "sector": "TBS",
+                            "country": "Canada",
+                            "province": "Ontario",
+                            "city": "Ottawa",
+                            "verified": true,
+                            "domainCount": 10,
+                        }
+                    },
+                    {
+                        "node": {
+                            "acronym": "FIZZ",
+                            "name": "Fizz Bang",
+                            "zone": "FED",
+                            "sector": "TBS",
+                            "country": "Canada",
+                            "province": "Ontario",
+                            "city": "Ottawa",
+                            "verified": true,
+                            "domainCount": 5,
+                        }
+                    },
+                ]
+            }
+        }
+    }
+
+
+# TODO: refactor to just return an Organization
+@pytest.fixture
+def mock_org():
+    return {
+        "name": "foo",
+        "acronym": "FOO",
+        "zone": "FED",
+        "sector": "TBS",
+        "country": "Canada",
+        "province": "ON",
+        "city": "Ottawa",
+        "verified": True,
+        "domainCount": 12,
+    }
+
+
+@pytest.fixture
+def org_get_domains_input():
+    return {
+        "findOrganizationBySlug": {
+            "domains": {
+                "edges": [
+                    {
+                        "node": {
+                            "domain": "foo.bar",
+                            "dmarcPhase": "not implemented",
+                            "lastRan": "2021-01-27 23:24:26.911236",
+                            "selectors": [],
+                        }
+                    },
+                    {
+                        "node": {
+                            "domain": "fizz.bang",
+                            "dmarcPhase": "not implemented",
+                            "lastRan": "2021-01-27 23:24:26.911236",
+                            "selectors": [],
+                        }
+                    },
+                    {
+                        "node": {
+                            "domain": "abc.def",
+                            "dmarcPhase": "not implemented",
+                            "lastRan": "2021-01-27 23:24:26.911236",
+                            "selectors": [],
+                        }
+                    },
+                ]
+            }
+        }
+    }

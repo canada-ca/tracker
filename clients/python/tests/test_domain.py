@@ -6,58 +6,8 @@ import pytest
 from tracker_client.domain import Domain
 import tracker_client.queries as queries
 
+
 # pylint: disable=no-member
-
-# TODO: refactor to just return a domain
-@pytest.fixture
-def mock_domain():
-    return {
-        "domain": "foo.bar",
-        "dmarcPhase": "not implemented",
-        "lastRan": "2021-01-27 23:24:26.911236",
-        "selectors": [],
-    }
-
-
-@pytest.fixture
-def domain_get_owners_input():
-    true = True
-    return {
-        "findDomainByDomain": {
-            "organizations": {
-                "edges": [
-                    {
-                        "node": {
-                            "acronym": "FOO",
-                            "name": "Foo Bar",
-                            "zone": "FED",
-                            "sector": "TBS",
-                            "country": "Canada",
-                            "province": "Ontario",
-                            "city": "Ottawa",
-                            "verified": true,
-                            "domainCount": 10,
-                        }
-                    },
-                    {
-                        "node": {
-                            "acronym": "FIZZ",
-                            "name": "Fizz Bang",
-                            "zone": "FED",
-                            "sector": "TBS",
-                            "country": "Canada",
-                            "province": "Ontario",
-                            "city": "Ottawa",
-                            "verified": true,
-                            "domainCount": 5,
-                        }
-                    },
-                ]
-            }
-        }
-    }
-
-
 def test_domain_get_status(
     mocker, mock_domain, domain_status_input, domain_status_output
 ):

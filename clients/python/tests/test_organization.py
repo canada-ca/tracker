@@ -6,60 +6,8 @@ import pytest
 from tracker_client.organization import Organization
 import tracker_client.queries as queries
 
+
 # pylint: disable=no-member
-
-# TODO: refactor to just return an Organization
-@pytest.fixture
-def mock_org():
-    return {
-        "name": "foo",
-        "acronym": "FOO",
-        "zone": "FED",
-        "sector": "TBS",
-        "country": "Canada",
-        "province": "ON",
-        "city": "Ottawa",
-        "verified": True,
-        "domainCount": 12,
-    }
-
-
-@pytest.fixture
-def org_get_domains_input():
-    return {
-        "findOrganizationBySlug": {
-            "domains": {
-                "edges": [
-                    {
-                        "node": {
-                            "domain": "foo.bar",
-                            "dmarcPhase": "not implemented",
-                            "lastRan": "2021-01-27 23:24:26.911236",
-                            "selectors": [],
-                        }
-                    },
-                    {
-                        "node": {
-                            "domain": "fizz.bang",
-                            "dmarcPhase": "not implemented",
-                            "lastRan": "2021-01-27 23:24:26.911236",
-                            "selectors": [],
-                        }
-                    },
-                    {
-                        "node": {
-                            "domain": "abc.def",
-                            "dmarcPhase": "not implemented",
-                            "lastRan": "2021-01-27 23:24:26.911236",
-                            "selectors": [],
-                        }
-                    },
-                ]
-            }
-        }
-    }
-
-
 def test_org_get_summary(mocker, mock_org, name_summary_input, org_summary_output):
     """Test that Organization.get_summary produces correct output"""
     client = mocker.MagicMock(spec="tracker_client.client.Client")

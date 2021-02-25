@@ -213,9 +213,7 @@ class Domain:
         :rtype: list[Organization]
         """
         params = {"domain": self.domain_name}
-        result = self.client.execute_query(
-            queries.GET_DOMAIN_OWNERS, params
-        )
+        result = self.client.execute_query(queries.GET_DOMAIN_OWNERS, params)
 
         if "error" in result:
             print("Server error: ", result)
