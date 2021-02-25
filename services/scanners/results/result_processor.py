@@ -129,6 +129,8 @@ def process_https(results, domain_key, db):
         else:
             https_status = "pass"
 
+        if domain.get("status", None) == None:
+            domain.update({"status": {"https": "unknown", "ssl": "unknown", "dmarc": "unknown", "dkim": "unknown", "spf": "unknown"}})
         domain["status"]["https"] = https_status
         db.collection("domains").update(domain)
 
@@ -224,11 +226,13 @@ def process_ssl(results, guidance, domain_key, db):
             {"_from": domain["_id"], "_to": sslEntry["_id"]}
         )
 
-        if len(negative_tags) > 0:
+        if len(negative_tags) > 0 or "ssl5" not in positive_tags:
             ssl_status = "fail"
-        elif "ssl5" in tags:
+        else:
             ssl_status = "pass"
 
+        if domain.get("status", None) == None:
+            domain.update({"status": {"https": "unknown", "ssl": "unknown", "dmarc": "unknown", "dkim": "unknown", "spf": "unknown"}})
         domain["status"]["ssl"] = ssl_status
         db.collection("domains").update(domain)
 
@@ -393,7 +397,7 @@ def process_dns(results, domain_key, db):
             elif sp_tag == "reject":
                 tags["dmarc"].append("dmarc19")
 
-    if results["spf"].get("missing", None) is not None:
+    if (results["spf"].get("missing", None) is not None) or (results["spf"].get("record", "null") == "null"):
         tags["spf"].append("spf2")
     else:
         if results["spf"]["valid"]:
@@ -677,6 +681,9 @@ def process_dns(results, domain_key, db):
             dkim_status = "fail"
         else:
             dkim_status = "pass"
+
+        if domain.get("status", None) == None:
+            domain.update({"status": {"https": "unknown", "ssl": "unknown", "dmarc": "unknown", "dkim": "unknown", "spf": "unknown"}})
 
         for key, val in {
             "dkim": dkim_status,

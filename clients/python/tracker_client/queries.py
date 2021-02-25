@@ -221,7 +221,41 @@ ALL_RESULTS = gql(
                             hsts
                             hstsAge
                             preloaded
-                            guidanceTags(first: 100) {
+                            positiveGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            neutralGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            negativeGuidanceTags(first: 100) {
                                 edges {
                                     node {
                                         tagId
@@ -244,7 +278,41 @@ ALL_RESULTS = gql(
                 ssl(first: 100) {
                     edges {
                         node {
-                            guidanceTags(first: 100) {
+                            positiveGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            neutralGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            negativeGuidanceTags(first: 100) {
                                 edges {
                                     node {
                                         tagId
@@ -273,7 +341,41 @@ ALL_RESULTS = gql(
                                 edges {
                                     node {
                                         selector
-                                        guidanceTags(first: 100) {
+                                        positiveGuidanceTags(first: 100) {
+                                            edges {
+                                                node {
+                                                    tagId
+                                                    tagName
+                                                    guidance
+                                                    refLinks {
+                                                        description
+                                                        refLink
+                                                    }
+                                                    refLinksTech {
+                                                        description
+                                                        refLink
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        neutralGuidanceTags(first: 100) {
+                                            edges {
+                                                node {
+                                                    tagId
+                                                    tagName
+                                                    guidance
+                                                    refLinks {
+                                                        description
+                                                        refLink
+                                                    }
+                                                    refLinksTech {
+                                                        description
+                                                        refLink
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        negativeGuidanceTags(first: 100) {
                                             edges {
                                                 node {
                                                     tagId
@@ -303,7 +405,41 @@ ALL_RESULTS = gql(
                             pPolicy
                             spPolicy
                             pct
-                            guidanceTags(first: 100) {
+                            positiveGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            neutralGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            negativeGuidanceTags(first: 100) {
                                 edges {
                                     node {
                                         tagId
@@ -329,7 +465,41 @@ ALL_RESULTS = gql(
                             lookups
                             record
                             spfDefault
-                            guidanceTags(first: 100) {
+                            positiveGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            neutralGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            negativeGuidanceTags(first: 100) {
                                 edges {
                                     node {
                                         tagId
@@ -375,7 +545,41 @@ WEB_RESULTS = gql(
                             hsts
                             hstsAge
                             preloaded
-                            guidanceTags(first: 100) {
+                            positiveGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            neutralGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            negativeGuidanceTags(first: 100) {
                                 edges {
                                     node {
                                         tagId
@@ -398,7 +602,41 @@ WEB_RESULTS = gql(
                 ssl(first: 100) {
                     edges {
                         node {
-                            guidanceTags(first: 100) {
+                            positiveGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            neutralGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            negativeGuidanceTags(first: 100) {
                                 edges {
                                     node {
                                         tagId
@@ -443,9 +681,42 @@ EMAIL_RESULTS = gql(
                                 edges {
                                     node {
                                         selector
-                                        guidanceTags(first: 100) {
+                                        positiveGuidanceTags(first: 100) {
                                             edges {
-                                                cursor
+                                                node {
+                                                    tagId
+                                                    tagName
+                                                    guidance
+                                                    refLinks {
+                                                        description
+                                                        refLink
+                                                    }
+                                                    refLinksTech {
+                                                        description
+                                                        refLink
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        neutralGuidanceTags(first: 100) {
+                                            edges {
+                                                node {
+                                                    tagId
+                                                    tagName
+                                                    guidance
+                                                    refLinks {
+                                                        description
+                                                        refLink
+                                                    }
+                                                    refLinksTech {
+                                                        description
+                                                        refLink
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        negativeGuidanceTags(first: 100) {
+                                            edges {
                                                 node {
                                                     tagId
                                                     tagName
@@ -474,7 +745,41 @@ EMAIL_RESULTS = gql(
                             pPolicy
                             spPolicy
                             pct
-                            guidanceTags(first: 100) {
+                            positiveGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            neutralGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            negativeGuidanceTags(first: 100) {
                                 edges {
                                     node {
                                         tagId
@@ -500,7 +805,41 @@ EMAIL_RESULTS = gql(
                             lookups
                             record
                             spfDefault
-                            guidanceTags(first: 100) {
+                            positiveGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            neutralGuidanceTags(first: 100) {
+                                edges {
+                                    node {
+                                        tagId
+                                        tagName
+                                        guidance
+                                        refLinks {
+                                            description
+                                            refLink
+                                        }
+                                        refLinksTech {
+                                            description
+                                            refLink
+                                        }
+                                    }
+                                }
+                            }
+                            negativeGuidanceTags(first: 100) {
                                 edges {
                                     node {
                                         tagId

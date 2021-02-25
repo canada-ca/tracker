@@ -119,6 +119,7 @@ def format_name_summary(result):
     return result
 
 
+# TODO: refactor this to reduce repetition
 def format_all_results(result):
     """Formats the result dict in get_all_results
 
@@ -138,31 +139,75 @@ def format_all_results(result):
     }
 
     # Extract the contents of the list of edges for guidance tags
-    for x in result["findDomainByDomain"]["web"].keys():
+    for scan_category in result["findDomainByDomain"]["web"].keys():
 
-        # Remove edges by making the value of guidanceTags the list of nodes
-        result["findDomainByDomain"]["web"][x]["guidanceTags"] = result[
+        # Remove edges by making the value of positiveGuidanceTags the list of nodes
+        result["findDomainByDomain"]["web"][scan_category]["positiveGuidanceTags"] = result[
             "findDomainByDomain"
-        ]["web"][x]["guidanceTags"]["edges"]
+        ]["web"][scan_category]["positiveGuidanceTags"]["edges"]
 
         # Replace the list of nodes with a dict with tagIds as the keys
-        result["findDomainByDomain"]["web"][x]["guidanceTags"] = {
-            x["node"].pop("tagId"): x["node"]
-            for x in result["findDomainByDomain"]["web"][x]["guidanceTags"]
+        result["findDomainByDomain"]["web"][scan_category]["positiveGuidanceTags"] = {
+            scan_category["node"].pop("tagId"): scan_category["node"]
+            for scan_category in result["findDomainByDomain"]["web"][scan_category]["positiveGuidanceTags"]
+        }
+
+        # Remove edges by making the value of neutralGuidanceTags the list of nodes
+        result["findDomainByDomain"]["web"][scan_category]["neutralGuidanceTags"] = result[
+            "findDomainByDomain"
+        ]["web"][scan_category]["neutralGuidanceTags"]["edges"]
+
+        # Replace the list of nodes with a dict with tagIds as the keys
+        result["findDomainByDomain"]["web"][scan_category]["neutralGuidanceTags"] = {
+            scan_category["node"].pop("tagId"): scan_category["node"]
+            for scan_category in result["findDomainByDomain"]["web"][scan_category]["neutralGuidanceTags"]
+        }
+
+        # Remove edges by making the value of negativeGuidanceTags the list of nodes
+        result["findDomainByDomain"]["web"][scan_category]["negativeGuidanceTags"] = result[
+            "findDomainByDomain"
+        ]["web"][scan_category]["negativeGuidanceTags"]["edges"]
+
+        # Replace the list of nodes with a dict with tagIds as the keys
+        result["findDomainByDomain"]["web"][scan_category]["negativeGuidanceTags"] = {
+            scan_category["node"].pop("tagId"): scan_category["node"]
+            for scan_category in result["findDomainByDomain"]["web"][scan_category]["negativeGuidanceTags"]
         }
 
     # Do the same with email guidance tags
-    for x in result["findDomainByDomain"]["email"].keys():
+    for scan_category in result["findDomainByDomain"]["email"].keys():
 
         # dkim results have different structure so exclude them
-        if x != "dkim":
-            result["findDomainByDomain"]["email"][x]["guidanceTags"] = result[
+        if scan_category != "dkim":
+            result["findDomainByDomain"]["email"][scan_category]["positiveGuidanceTags"] = result[
                 "findDomainByDomain"
-            ]["email"][x]["guidanceTags"]["edges"]
+            ]["email"][scan_category]["positiveGuidanceTags"]["edges"]
 
-            result["findDomainByDomain"]["email"][x]["guidanceTags"] = {
-                x["node"].pop("tagId"): x["node"]
-                for x in result["findDomainByDomain"]["email"][x]["guidanceTags"]
+            result["findDomainByDomain"]["email"][scan_category]["positiveGuidanceTags"] = {
+                scan_category["node"].pop("tagId"): scan_category["node"]
+                for scan_category in result["findDomainByDomain"]["email"][scan_category][
+                    "positiveGuidanceTags"
+                ]
+            }
+
+            result["findDomainByDomain"]["email"][scan_category]["neutralGuidanceTags"] = result[
+                "findDomainByDomain"
+            ]["email"][scan_category]["neutralGuidanceTags"]["edges"]
+
+            result["findDomainByDomain"]["email"][scan_category]["neutralGuidanceTags"] = {
+                scan_category["node"].pop("tagId"): scan_category["node"]
+                for scan_category in result["findDomainByDomain"]["email"][scan_category]["neutralGuidanceTags"]
+            }
+
+            result["findDomainByDomain"]["email"][scan_category]["negativeGuidanceTags"] = result[
+                "findDomainByDomain"
+            ]["email"][scan_category]["negativeGuidanceTags"]["edges"]
+
+            result["findDomainByDomain"]["email"][scan_category]["negativeGuidanceTags"] = {
+                scan_category["node"].pop("tagId"): scan_category["node"]
+                for scan_category in result["findDomainByDomain"]["email"][scan_category][
+                    "negativeGuidanceTags"
+                ]
             }
 
     result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
@@ -181,17 +226,38 @@ def format_web_results(result):
         for (k, v) in result["findDomainByDomain"]["web"].items()
     }
 
-    for x in result["findDomainByDomain"]["web"].keys():
-
-        # Remove edges by making the value of guidanceTags the list of nodes
-        result["findDomainByDomain"]["web"][x]["guidanceTags"] = result[
+    for scan_category in result["findDomainByDomain"]["web"].keys():
+        # Remove edges by making the value of positiveGuidanceTags the list of nodes
+        result["findDomainByDomain"]["web"][scan_category]["positiveGuidanceTags"] = result[
             "findDomainByDomain"
-        ]["web"][x]["guidanceTags"]["edges"]
+        ]["web"][scan_category]["positiveGuidanceTags"]["edges"]
 
         # Replace the list of nodes with a dict with tagIds as the keys
-        result["findDomainByDomain"]["web"][x]["guidanceTags"] = {
-            x["node"].pop("tagId"): x["node"]
-            for x in result["findDomainByDomain"]["web"][x]["guidanceTags"]
+        result["findDomainByDomain"]["web"][scan_category]["positiveGuidanceTags"] = {
+            scan_category["node"].pop("tagId"): scan_category["node"]
+            for scan_category in result["findDomainByDomain"]["web"][scan_category]["positiveGuidanceTags"]
+        }
+
+        # Remove edges by making the value of neutralGuidanceTags the list of nodes
+        result["findDomainByDomain"]["web"][scan_category]["neutralGuidanceTags"] = result[
+            "findDomainByDomain"
+        ]["web"][scan_category]["neutralGuidanceTags"]["edges"]
+
+        # Replace the list of nodes with a dict with tagIds as the keys
+        result["findDomainByDomain"]["web"][scan_category]["neutralGuidanceTags"] = {
+            scan_category["node"].pop("tagId"): scan_category["node"]
+            for scan_category in result["findDomainByDomain"]["web"][scan_category]["neutralGuidanceTags"]
+        }
+
+        # Remove edges by making the value of negativeGuidanceTags the list of nodes
+        result["findDomainByDomain"]["web"][scan_category]["negativeGuidanceTags"] = result[
+            "findDomainByDomain"
+        ]["web"][scan_category]["negativeGuidanceTags"]["edges"]
+
+        # Replace the list of nodes with a dict with tagIds as the keys
+        result["findDomainByDomain"]["web"][scan_category]["negativeGuidanceTags"] = {
+            scan_category["node"].pop("tagId"): scan_category["node"]
+            for scan_category in result["findDomainByDomain"]["web"][scan_category]["negativeGuidanceTags"]
         }
 
     result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
@@ -211,19 +277,45 @@ def format_email_results(result):
     }
 
     # Extract the contents of the list of edges for guidance tags
-    for x in result["findDomainByDomain"]["email"].keys():
+    for scan_category in result["findDomainByDomain"]["email"].keys():
 
         # dkim results have different structure so exclude them
-        if x != "dkim":
-            # Remove edges by making the value of guidanceTags the list of nodes
-            result["findDomainByDomain"]["email"][x]["guidanceTags"] = result[
+        if scan_category != "dkim":
+            # Remove edges by making the value of positiveGuidanceTags the list of nodes
+            result["findDomainByDomain"]["email"][scan_category]["positiveGuidanceTags"] = result[
                 "findDomainByDomain"
-            ]["email"][x]["guidanceTags"]["edges"]
+            ]["email"][scan_category]["positiveGuidanceTags"]["edges"]
 
             # Replace the list of nodes with a dict with tagIds as the keys
-            result["findDomainByDomain"]["email"][x]["guidanceTags"] = {
-                x["node"].pop("tagId"): x["node"]
-                for x in result["findDomainByDomain"]["email"][x]["guidanceTags"]
+            result["findDomainByDomain"]["email"][scan_category]["positiveGuidanceTags"] = {
+                scan_category["node"].pop("tagId"): scan_category["node"]
+                for scan_category in result["findDomainByDomain"]["email"][scan_category][
+                    "positiveGuidanceTags"
+                ]
+            }
+
+            # Remove edges by making the value of neutralGuidanceTags the list of nodes
+            result["findDomainByDomain"]["email"][scan_category]["neutralGuidanceTags"] = result[
+                "findDomainByDomain"
+            ]["email"][scan_category]["neutralGuidanceTags"]["edges"]
+
+            # Replace the list of nodes with a dict with tagIds as the keys
+            result["findDomainByDomain"]["email"][scan_category]["neutralGuidanceTags"] = {
+                scan_category["node"].pop("tagId"): scan_category["node"]
+                for scan_category in result["findDomainByDomain"]["email"][scan_category]["neutralGuidanceTags"]
+            }
+
+            # Remove edges by making the value of negativeGuidanceTags the list of nodes
+            result["findDomainByDomain"]["email"][scan_category]["negativeGuidanceTags"] = result[
+                "findDomainByDomain"
+            ]["email"][scan_category]["negativeGuidanceTags"]["edges"]
+
+            # Replace the list of nodes with a dict with tagIds as the keys
+            result["findDomainByDomain"]["email"][scan_category]["negativeGuidanceTags"] = {
+                scan_category["node"].pop("tagId"): scan_category["node"]
+                for scan_category in result["findDomainByDomain"]["email"][scan_category][
+                    "negativeGuidanceTags"
+                ]
             }
 
     result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}

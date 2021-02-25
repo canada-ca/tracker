@@ -62,6 +62,7 @@ export const httpsType = new GraphQLObjectType({
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
+      deprecationReason: 'This has been sub-divided into neutral, negative, and positive tags.',
       args: {
         orderBy: {
           type: guidanceTagOrder,
@@ -69,7 +70,7 @@ export const httpsType = new GraphQLObjectType({
         },
         ...connectionArgs,
       },
-      description: `Key tags found during scan.`,
+      description: `Guidance tags found during scan.`,
       resolve: async (
         { guidanceTags },
         args,
@@ -77,6 +78,72 @@ export const httpsType = new GraphQLObjectType({
       ) => {
         const httpsTags = await httpsGuidanceTagConnectionsLoader({
           httpsGuidanceTags: guidanceTags,
+          ...args,
+        })
+        return httpsTags
+      },
+    },
+    negativeGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Negative guidance tags found during scan.`,
+      resolve: async (
+        { negativeTags },
+        args,
+        { loaders: { httpsGuidanceTagConnectionsLoader } },
+      ) => {
+        const httpsTags = await httpsGuidanceTagConnectionsLoader({
+          httpsGuidanceTags: negativeTags,
+          ...args,
+        })
+        return httpsTags
+      },
+    },
+    neutralGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Neutral guidance tags found during scan.`,
+      resolve: async (
+        { neutralTags },
+        args,
+        { loaders: { httpsGuidanceTagConnectionsLoader } },
+      ) => {
+        const httpsTags = await httpsGuidanceTagConnectionsLoader({
+          httpsGuidanceTags: neutralTags,
+          ...args,
+        })
+        return httpsTags
+      },
+    },
+    positiveGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Positive guidance tags found during scan.`,
+      resolve: async (
+        { positiveTags },
+        args,
+        { loaders: { httpsGuidanceTagConnectionsLoader } },
+      ) => {
+        const httpsTags = await httpsGuidanceTagConnectionsLoader({
+          httpsGuidanceTags: positiveTags,
           ...args,
         })
         return httpsTags

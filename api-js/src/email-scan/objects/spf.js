@@ -52,6 +52,7 @@ export const spfType = new GraphQLObjectType({
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
+      deprecationReason: 'This has been sub-divided into neutral, negative, and positive tags.',
       args: {
         orderBy: {
           type: guidanceTagOrder,
@@ -59,7 +60,7 @@ export const spfType = new GraphQLObjectType({
         },
         ...connectionArgs,
       },
-      description: `Key tags found during scan.`,
+      description: `Guidance tags found during scan.`,
       resolve: async (
         { guidanceTags },
         args,
@@ -67,6 +68,72 @@ export const spfType = new GraphQLObjectType({
       ) => {
         const spfTags = await spfGuidanceTagConnectionsLoader({
           spfGuidanceTags: guidanceTags,
+          ...args,
+        })
+        return spfTags
+      },
+    },
+    negativeGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Negative guidance tags found during scan.`,
+      resolve: async (
+        { negativeTags },
+        args,
+        { loaders: { spfGuidanceTagConnectionsLoader } },
+      ) => {
+        const spfTags = await spfGuidanceTagConnectionsLoader({
+          spfGuidanceTags: negativeTags,
+          ...args,
+        })
+        return spfTags
+      },
+    },
+    neutralGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Neutral guidance tags found during scan.`,
+      resolve: async (
+        { neutralTags },
+        args,
+        { loaders: { spfGuidanceTagConnectionsLoader } },
+      ) => {
+        const spfTags = await spfGuidanceTagConnectionsLoader({
+          spfGuidanceTags: neutralTags,
+          ...args,
+        })
+        return spfTags
+      },
+    },
+    positiveGuidanceTags: {
+      type: guidanceTagConnection.connectionType,
+      args: {
+        orderBy: {
+          type: guidanceTagOrder,
+          description: 'Ordering options for guidance tag connections',
+        },
+        ...connectionArgs,
+      },
+      description: `Positive guidance tags found during scan.`,
+      resolve: async (
+        { positiveTags },
+        args,
+        { loaders: { spfGuidanceTagConnectionsLoader } },
+      ) => {
+        const spfTags = await spfGuidanceTagConnectionsLoader({
+          spfGuidanceTags: positiveTags,
           ...args,
         })
         return spfTags

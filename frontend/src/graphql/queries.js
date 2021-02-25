@@ -179,6 +179,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
     findDomainByDomain(domain: $domain) {
       domain
       lastRan
+      dmarcPhase
       status {
         https
         ssl
@@ -286,7 +287,6 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
-              dmarcPhase
               record
               pPolicy
               spPolicy
