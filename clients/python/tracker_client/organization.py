@@ -120,7 +120,7 @@ class Organization:
     # Consider changing to generator
     def get_domains(self):
         """Get a list of Domains controlled by this Organization
-        
+
         :return: list of :class:`tracker_client.domain.Domain`s controlled by
             this Organization
         :rtype: list[:class:`tracker_client.domain.Domain`]
@@ -128,13 +128,11 @@ class Organization:
         params = {"orgSlug": slugify(self.name)}
         result = self.client.execute_query(queries.GET_ORG_DOMAINS, params)
 
-        domain_list = []
-
-        # TODO: add better treatment of server error message
         if "error" in result:
-            print("Server error")
-            return domain_list
+            print("Server error: ", result)
+            raise ValueError("Unable to get domains for ", self.name)
 
+        domain_list = []
         for edge in result["findOrganizationBySlug"]["domains"]["edges"]:
             domain_list.append(dom.Domain(self.client, **edge["node"]))
 

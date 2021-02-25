@@ -21,7 +21,6 @@ class Client:
     :param str url: Tracker GraphQL endpoint, defaults to alpha endpoint
     :attribute GQL Client client: GQL client instance used to execute queries
     """
-
     def __init__(self, url="https://tracker.alpha.canada.ca/graphql"):
         self.client = create_client(url, auth_token=get_auth_token())
 
@@ -36,10 +35,9 @@ class Client:
         params = {"orgSlug": slugify(name)}
         result = self.execute_query(queries.GET_ORG, params)
 
-        # TODO: add better treatment of server error message
         if "error" in result:
-            print("Server error")
-            return
+            print("Server error: ", result)
+            raise ValueError("Unable to get organization ", name)
 
         return Organization(self, **result["findOrganizationBySlug"])
 
@@ -52,13 +50,11 @@ class Client:
         """
         result = self.execute_query(queries.GET_ALL_ORGS)
 
-        org_list = []
-
-        # TODO: add better treatment of server error message
         if "error" in result:
-            print("Server error")
-            return org_list
+            print("Server error: ", result)
+            raise ValueError("Unable to get your organizations.")
 
+        org_list = []
         for edge in result["findMyOrganizations"]["edges"]:
             org_list.append(Organization(self, **edge["node"]))
 
@@ -75,13 +71,12 @@ class Client:
         params = {"domain": domain}
         result = self.execute_query(queries.GET_DOMAIN, params)
 
-        # TODO: add better treatment of server error message
         if "error" in result:
-            print("Server error")
-            return
+            print("Server error: ", result)
+            raise ValueError("Unable to get domain ", domain)
 
-        new_domain = Domain(self, **result["findDomainByDomain"])
-        return new_domain
+        return Domain(self, **result["findDomainByDomain"])
+
 
     # Consider changing to generator
     def get_domains(self):
@@ -92,13 +87,11 @@ class Client:
         """
         result = self.execute_query(queries.GET_ALL_DOMAINS)
 
-        domain_list = []
-
-        # TODO: add better treatment of server error message
         if "error" in result:
-            print("Server error")
-            return domain_list
+            print("Server error: ", result)
+            raise ValueError("Unable to get your domains.")
 
+        domain_list = []
         for edge in result["findMyDomains"]["edges"]:
             domain_list.append(Domain(self, **edge["node"]))
 

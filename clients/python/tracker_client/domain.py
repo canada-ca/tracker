@@ -206,23 +206,21 @@ class Domain:
 
     def get_owners(self):
         """Get a list of Organizations that control this domain
-        
-        :return: A list of one or more :class:`tracker_client.organization.Organization`s 
+
+        :return: A list of one or more :class:`tracker_client.organization.Organization`s
             responsible for this domain
-        :rtype: list[:class:`tracker_client.organization.Organization`]    
+        :rtype: list[:class:`tracker_client.organization.Organization`]
         """
         params = {"domain": self.domain_name}
         result = self.client.execute_query(
             self.client, queries.GET_DOMAIN_OWNERS, params
         )
 
-        org_list = []
-
-        # TODO: add better treatment of server error message
         if "error" in result:
-            print("Server error")
-            return org_list
+            print("Server error: ", result)
+            raise ValueError("Unable to get owners for ", self.domain_name)
 
+        org_list = []
         for edge in result["findDomainByDomain"]["organizations"]["edges"]:
             org_list.append(org.Organization(self.client, **edge["node"]))
 
