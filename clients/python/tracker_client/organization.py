@@ -34,6 +34,7 @@ class Organization:
     :param bool verified: if the organization is verified or not.
     :param int domainCount: number of domains controlled by the organization.
     """
+
     def __init__(
         self,
         client,
@@ -123,7 +124,7 @@ class Organization:
 
         :return: list of :class:`tracker_client.domain.Domain`s controlled by
             this Organization
-        :rtype: list[:class:`tracker_client.domain.Domain`]
+        :rtype: list[Domain]
         """
         params = {"orgSlug": slugify(self.name)}
         result = self.client.execute_query(queries.GET_ORG_DOMAINS, params)

@@ -27,6 +27,7 @@ class Domain:
     :param str dmarcPhase: DMARC implementation phase # TODO: Add ref. to relevant docs
     :param list[str] selectors: DKIM selector strings associated with the domain # TODO: Add ref. to relevant docs
     """
+
     def __init__(self, client, domain, lastRan, dmarcPhase, selectors):
         self.client = client
         self.domain_name = domain
@@ -209,7 +210,7 @@ class Domain:
 
         :return: A list of one or more :class:`tracker_client.organization.Organization`s
             responsible for this domain
-        :rtype: list[:class:`tracker_client.organization.Organization`]
+        :rtype: list[Organization]
         """
         params = {"domain": self.domain_name}
         result = self.client.execute_query(

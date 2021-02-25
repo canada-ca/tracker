@@ -21,6 +21,7 @@ class Client:
     :param str url: Tracker GraphQL endpoint, defaults to alpha endpoint
     :attribute GQL Client client: GQL client instance used to execute queries
     """
+
     def __init__(self, url="https://tracker.alpha.canada.ca/graphql"):
         self.client = create_client(url, auth_token=get_auth_token())
 
@@ -30,7 +31,7 @@ class Client:
 
         :param str name: name of organization to get and construct Organization for.
         :return: A :class:`tracker_client.organization.Organization` object
-        :rtype: `tracker_client.organization.Organization`
+        :rtype: Organization
         """
         params = {"orgSlug": slugify(name)}
         result = self.execute_query(queries.GET_ORG, params)
@@ -46,7 +47,7 @@ class Client:
         """Gets a list of Organizations for all organizations you are a member of
 
         :return: A list of :class:`tracker_client.organization.Organization` objects
-        :rtype: list[`tracker_client.organization.Organization`]
+        :rtype: list[Organization]
         """
         result = self.execute_query(queries.GET_ALL_ORGS)
 
@@ -66,7 +67,7 @@ class Client:
 
         :param str domain: name of domain to get and construct Domain for.
         :return: A :class:`tracker_client.domain.Domain` object
-        :rtype: `tracker_client.domain.Domain`
+        :rtype: Domain
         """
         params = {"domain": domain}
         result = self.execute_query(queries.GET_DOMAIN, params)
@@ -77,13 +78,12 @@ class Client:
 
         return Domain(self, **result["findDomainByDomain"])
 
-
     # Consider changing to generator
     def get_domains(self):
         """Gets a list of Domains for all domains your organizations control
 
         :return: A list of :class:`tracker_client.domain.Domain` objects
-        :rtype: list[`tracker_client.domain.Domain`]
+        :rtype: list[Domain]
         """
         result = self.execute_query(queries.GET_ALL_DOMAINS)
 
