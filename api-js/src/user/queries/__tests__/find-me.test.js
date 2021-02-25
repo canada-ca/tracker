@@ -6,7 +6,7 @@ import { makeMigrations } from '../../../../migrations'
 import { userRequired } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
-import { affiliationLoaderByUserId } from '../../../affiliation/loaders'
+import { affiliationConnectionLoaderByUserId } from '../../../affiliation/loaders'
 import { userLoaderByKey } from '../../loaders'
 import { cleanseInput } from '../../../validators'
 
@@ -72,7 +72,7 @@ describe('given the findMe query', () => {
             }),
           },
           loaders: {
-            affiliationLoaderByUserId: affiliationLoaderByUserId(
+            affiliationConnectionLoaderByUserId: affiliationConnectionLoaderByUserId(
               query,
               user._key,
               cleanseInput,

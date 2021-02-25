@@ -10,7 +10,7 @@ import { toGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
 import { makeMigrations } from '../../../../migrations'
-import { affiliationLoaderByUserId } from '../../../affiliation/loaders'
+import { affiliationConnectionLoaderByUserId } from '../../../affiliation/loaders'
 import { cleanseInput } from '../../../validators'
 import { affiliationConnection } from '../../../affiliation/objects'
 import { userPersonalType } from '../index'
@@ -176,12 +176,12 @@ describe('given the user object', () => {
           const demoType = userPersonalType.getFields()
 
           const phoneDetails = undefined
-        
-        expect(
-          demoType.phoneNumber.resolve({
-            phoneDetails,
-          }),
-        ).toEqual(null)
+
+          expect(
+            demoType.phoneNumber.resolve({
+              phoneDetails,
+            }),
+          ).toEqual(null)
         })
       })
       describe('testing defined phoneDetails', () => {
@@ -247,7 +247,7 @@ describe('given the user object', () => {
       it('returns the resolved value', async () => {
         const demoType = userPersonalType.getFields()
 
-        const loader = affiliationLoaderByUserId(
+        const loader = affiliationConnectionLoaderByUserId(
           query,
           user._key,
           cleanseInput,
@@ -285,7 +285,7 @@ describe('given the user object', () => {
           demoType.affiliations.resolve(
             { _id: user._id },
             { first: 1 },
-            { loaders: { affiliationLoaderByUserId: loader } },
+            { loaders: { affiliationConnectionLoaderByUserId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

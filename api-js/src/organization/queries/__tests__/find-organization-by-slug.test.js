@@ -11,7 +11,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, tokenize, userRequired } from '../../../auth'
-import { affiliationLoaderByOrgId } from '../../../affiliation/loaders'
+import { affiliationConnectionLoaderByOrgId } from '../../../affiliation/loaders'
 import { domainLoaderConnectionsByOrgId } from '../../../domain/loaders'
 import { userLoaderByUserName, userLoaderByKey } from '../../../user/loaders'
 import { orgLoaderBySlug, orgLoaderByKey } from '../../loaders'
@@ -216,7 +216,7 @@ describe('given findOrganizationBySlugQuery', () => {
                   cleanseInput,
                   i18n,
                 ),
-                affiliationLoaderByOrgId: affiliationLoaderByOrgId(
+                affiliationConnectionLoaderByOrgId: affiliationConnectionLoaderByOrgId(
                   query,
                   user._key,
                   cleanseInput,
@@ -455,7 +455,7 @@ describe('given findOrganizationBySlugQuery', () => {
                   cleanseInput,
                   i18n,
                 ),
-                affiliationLoaderByOrgId: affiliationLoaderByOrgId(
+                affiliationConnectionLoaderByOrgId: affiliationConnectionLoaderByOrgId(
                   query,
                   user._key,
                   cleanseInput,
