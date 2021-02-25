@@ -1,6 +1,6 @@
 import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { makeMigrations } from '../../../../migrations'
-import { affiliationLoaderByKey } from '../../loaders'
+import { affiliationLoaderByKey } from '..'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
