@@ -68,7 +68,7 @@ class Domain:
 
         return json.dumps(result, indent=4)
 
-    def get_monthly_dmarc(self, month, year):
+    def get_monthly_dmarc_summary(self, month, year):
         """Get the DMARC summary for the specified month and year
 
         :param str month: the full name of a month
@@ -214,7 +214,7 @@ class Domain:
         """
         params = {"domain": self.domain_name}
         result = self.client.execute_query(
-            self.client, queries.GET_DOMAIN_OWNERS, params
+            queries.GET_DOMAIN_OWNERS, params
         )
 
         if "error" in result:
