@@ -23,9 +23,9 @@ def test_format_dmarc_yearly(yearly_dmarc_input, yearly_dmarc_output):
     assert format_dmarc_yearly(yearly_dmarc_input) == yearly_dmarc_output
 
 
-def test_format_summary(name_summary_input, org_summary_output):
+def test_format_summary(org_summary_input, org_summary_output):
     """Test formatting of SUMMARY_BY_SLUG results"""
-    assert format_summary(name_summary_input) == org_summary_output
+    assert format_summary(org_summary_input) == org_summary_output
 
 
 def test_format_all_results(all_results_input, all_results_output):

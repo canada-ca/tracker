@@ -1,5 +1,8 @@
 import pytest
 
+import tracker_client.domain as dom
+import tracker_client.organization as org
+
 
 # Register "online" mark
 def pytest_configure(config):
@@ -13,6 +16,59 @@ def error_message():
     return {
         "error": {"message": "No organization with the provided slug could be found."}
     }
+
+
+@pytest.fixture
+def mock_org(mocker):
+    """Returns an Organization with a mock client, on which the execute_query
+    method will return the value passed as an argument.
+
+    Fixtures can't normally accept args, but returning a function makes it
+    possible to use them as if they could
+    """
+
+    def _make_mock_org(rval):
+        attributes = {
+            "name": "foo",
+            "acronym": "FOO",
+            "zone": "FED",
+            "sector": "TBS",
+            "country": "Canada",
+            "province": "ON",
+            "city": "Ottawa",
+            "verified": True,
+            "domainCount": 12,
+        }
+
+        client = mocker.MagicMock(spec="tracker_client.client.Client")
+        client.execute_query = mocker.MagicMock(return_value=rval)
+        return org.Organization(client, **attributes)
+
+    return _make_mock_org
+
+
+@pytest.fixture
+def mock_domain(mocker):
+    """Returns a Domain with a mock client, on which the execute_query
+    method will return the value passed as an argument.
+
+    Fixtures can't normally accept args, but returning a function makes it
+    possible to use them as if they could
+    """
+
+    def _make_mock_domain(rval):
+        attributes = {
+            "domain": "foo.bar",
+            "dmarcPhase": "not implemented",
+            "lastRan": "2021-01-27 23:24:26.911236",
+            "selectors": [],
+        }
+
+        client = mocker.MagicMock(spec="tracker_client.client.Client")
+        client.execute_query = mocker.MagicMock(return_value=rval)
+        return dom.Domain(client, **attributes)
+
+    return _make_mock_domain
 
 
 @pytest.fixture
@@ -358,7 +414,7 @@ def yearly_dmarc_output():
 
 
 @pytest.fixture
-def name_summary_input():
+def org_summary_input():
     return {
         "findOrganizationBySlug": {
             "acronym": "DEF",
@@ -2093,17 +2149,6 @@ def client_domain_input():
     }
 
 
-# TODO: refactor to just return a domain
-@pytest.fixture
-def mock_domain():
-    return {
-        "domain": "foo.bar",
-        "dmarcPhase": "not implemented",
-        "lastRan": "2021-01-27 23:24:26.911236",
-        "selectors": [],
-    }
-
-
 @pytest.fixture
 def domain_get_owners_input():
     true = True
@@ -2140,22 +2185,6 @@ def domain_get_owners_input():
                 ]
             }
         }
-    }
-
-
-# TODO: refactor to just return an Organization
-@pytest.fixture
-def mock_org():
-    return {
-        "name": "foo",
-        "acronym": "FOO",
-        "zone": "FED",
-        "sector": "TBS",
-        "country": "Canada",
-        "province": "ON",
-        "city": "Ottawa",
-        "verified": True,
-        "domainCount": 12,
     }
 
 
