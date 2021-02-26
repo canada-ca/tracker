@@ -1,7 +1,7 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
-import { makeMigrations } from '../../../migrations'
+import { databaseOptions } from '../../../database-options'
 import { checkDomainOwnership } from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
@@ -9,16 +9,19 @@ import frenchMessages from '../../locale/fr/messages'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the check domain ownership function', () => {
-  let query, drop, truncate, migrate, collections, org, domain, i18n
+  let query, drop, truncate, collections, org, domain, i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
     console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {
@@ -209,7 +212,11 @@ describe('given the check domain ownership function', () => {
               domainId: domain._id,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('Error when retrieving dmarc report information. Please try again.'))
+            expect(err).toEqual(
+              new Error(
+                'Error when retrieving dmarc report information. Please try again.',
+              ),
+            )
             expect(consoleOutput).toEqual([
               `Database error when retrieving super admin affiliated organization ownership for user: ${user._id} and domain: ${domain._id}: Error: Database error occurred.`,
             ])
