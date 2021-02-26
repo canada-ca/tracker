@@ -1,10 +1,10 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { chartSummaryLoaderByKey } from '../../loaders'
@@ -12,7 +12,7 @@ import { chartSummaryLoaderByKey } from '../../loaders'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given mailSummary query', () => {
-  let query, drop, truncate, migrate, schema, collections, i18n
+  let query, drop, truncate, schema, collections, i18n
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -21,10 +21,13 @@ describe('given mailSummary query', () => {
       mutation: createMutationSchema(),
     })
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {
