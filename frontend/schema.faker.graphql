@@ -836,6 +836,24 @@ type GuidanceTagEdge {
   cursor: String!
 }
 
+# Ordering options for guidance tag connections.
+input GuidanceTagOrder {
+  # The field to order guidance tags by.
+  field: GuidanceTagOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which Guidance Tag connections can be ordered.
+enum GuidanceTagOrderField {
+  # Order guidance tag edges by tag id.
+  TAG_ID
+  # Order guidance tag edges by tag name.
+  TAG_NAME
+  # Order guidance tag edges by tag guidance.
+  GUIDANCE
+}
+
 # Hyper Text Transfer Protocol Secure scan results.
 type HTTPS implements Node {
   # The ID of an object
