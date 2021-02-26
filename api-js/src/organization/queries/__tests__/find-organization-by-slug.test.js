@@ -19,16 +19,7 @@ import { orgLoaderBySlug, orgLoaderByKey } from '../../loaders'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findOrganizationBySlugQuery', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    schema,
-    collections,
-    org,
-    i18n,
-    user,
-    domain
+  let query, drop, truncate, schema, collections, org, i18n, user, domain
 
   beforeAll(async () => {
     // Create GQL Schema
