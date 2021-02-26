@@ -20,7 +20,7 @@ export const dkimResultLoaderByKey = (query, userKey, i18n) =>
 
     const dkimResultMap = {}
     try {
-      await cursor.each((dkimResult) => {
+      await cursor.forEach((dkimResult) => {
         dkimResultMap[dkimResult._key] = dkimResult
       })
     } catch (err) {

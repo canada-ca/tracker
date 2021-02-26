@@ -20,7 +20,7 @@ export const spfLoaderByKey = (query, userKey, i18n) =>
 
     const spfMap = {}
     try {
-      await cursor.each((spfScan) => {
+      await cursor.forEach((spfScan) => {
         spfMap[spfScan._key] = spfScan
       })
     } catch (err) {

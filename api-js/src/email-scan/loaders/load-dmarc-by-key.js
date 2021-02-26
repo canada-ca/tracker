@@ -20,7 +20,7 @@ export const dmarcLoaderByKey = (query, userKey, i18n) =>
 
     const dmarcMap = {}
     try {
-      await cursor.each((dmarcScan) => {
+      await cursor.forEach((dmarcScan) => {
         dmarcMap[dmarcScan._key] = dmarcScan
       })
     } catch (err) {
