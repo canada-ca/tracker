@@ -1,15 +1,15 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { verifiedDomainLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a verifiedDomainLoaderByKey dataloader', () => {
-  let query, drop, truncate, migrate, collections, i18n, domain1, domain2, org
+  let query, drop, truncate, collections, i18n, domain1, domain2, org
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -18,10 +18,13 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
   })
 
   beforeEach(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     await truncate()
     org = await collections.organizations.save({
       verified: true,
@@ -94,7 +97,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
           RETURN MERGE(domain, { id: domain._key, _type: "verifiedDomain" })
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasMore) {
         const tempUser = await expectedCursor.next()
         domainIds.push(tempUser._key)
         expectedDomains.push(tempUser)
@@ -157,7 +160,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         const expectedDomain = await expectedCursor.next()
 
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
@@ -228,7 +231,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         const expectedDomain = await expectedCursor.next()
 
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }

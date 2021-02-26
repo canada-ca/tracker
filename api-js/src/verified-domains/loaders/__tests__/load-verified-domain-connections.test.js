@@ -1,11 +1,11 @@
 import { setupI18n } from '@lingui/core'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { stringify } from 'jest-matcher-utils'
 import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   verifiedDomainLoaderConnections,
@@ -15,16 +15,7 @@ import {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load domain connection using org id function', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    collections,
-    user,
-    org,
-    domain,
-    domainTwo,
-    i18n
+  let query, drop, truncate, collections, user, org, domain, domainTwo, i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -32,10 +23,13 @@ describe('given the load domain connection using org id function', () => {
   beforeAll(async () => {
     console.error = mockedError
     console.warn = mockedWarn
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {

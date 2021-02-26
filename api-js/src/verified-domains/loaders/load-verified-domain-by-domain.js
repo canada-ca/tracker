@@ -26,7 +26,7 @@ export const verifiedDomainLoaderByDomain = (query, i18n) =>
 
     const domainMap = {}
     try {
-      await cursor.each((domain) => {
+      await cursor.forEach((domain) => {
         domainMap[domain.domain] = domain
       })
     } catch (err) {
