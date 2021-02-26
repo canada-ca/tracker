@@ -85,7 +85,7 @@ GET_ALL_DOMAINS = gql(
                     domain
                     dmarcPhase
                     lastRan
-                    selctors
+                    selectors
                 }
             }
         }
