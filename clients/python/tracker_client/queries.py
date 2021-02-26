@@ -885,3 +885,117 @@ DOMAIN_STATUS = gql(
   }
   """
 )
+
+
+GET_DOMAIN = gql(
+    """
+    query FindDomainByDomain($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            domain
+            dmarcPhase
+            lastRan
+            selectors
+        }
+    }
+    """
+)
+
+GET_ORG = gql(
+    """
+    query orgBySlug($orgSlug: Slug!) {
+        findOrganizationBySlug(orgSlug: $orgSlug) {
+            acronym
+            name
+            zone
+            sector
+            country
+            province
+            city
+            verified
+            domainCount
+        }
+    }
+    """
+)
+
+GET_ALL_DOMAINS = gql(
+    """
+    query getAllDomains {
+        findMyDomains(first: 100) {
+            edges {
+                node {
+                    domain
+                    dmarcPhase
+                    lastRan
+                    selctors
+                }
+            }
+        }
+    }
+    """
+)
+
+GET_ALL_ORGS = gql(
+    """
+    query GetAllOrgs {
+        findMyOrganizations(first: 100) {
+            edges {
+                node {
+                    acronym
+                    name
+                    zone
+                    sector
+                    country
+                    province
+                    city
+                    verified
+                    domainCount
+                }
+            }
+        }
+    }
+    """
+)
+
+GET_DOMAIN_OWNERS = gql(
+    """
+    query FindDomainByDomain($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            organizations(first: 100) {
+                edges {
+                    node {
+                    acronym
+                    name
+                    zone
+                    sector
+                    country
+                    province
+                    city
+                    verified
+                    domainCount
+                    }
+                }
+            }
+        }
+    }
+    """
+)
+
+GET_ORG_DOMAINS = gql(
+    """
+    query orgBySlug($orgSlug: Slug!) {
+        findOrganizationBySlug(orgSlug: $orgSlug) {
+            domains (first: 100) {
+                edges {
+                    node {
+                        domain
+                        dmarcPhase
+                        lastRan
+                        selectors
+                    }
+                }
+            }
+        }
+    }
+    """
+)
