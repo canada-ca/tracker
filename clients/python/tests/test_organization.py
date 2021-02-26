@@ -3,7 +3,6 @@ import json
 
 import pytest
 
-from tracker_client.organization import Organization
 import tracker_client.queries as queries
 
 
