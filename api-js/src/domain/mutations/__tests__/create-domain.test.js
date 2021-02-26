@@ -153,6 +153,13 @@ describe('create a domain', () => {
                     domain
                     lastRan
                     selectors
+                    status {
+                      dkim
+                      dmarc
+                      https
+                      spf
+                      ssl
+                    }
                     organizations (first: 5) {
                       edges{ 
                         node {
@@ -210,6 +217,13 @@ describe('create a domain', () => {
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  status: {
+                    dkim: null,
+                    dmarc: null,
+                    https: null,
+                    spf: null,
+                    ssl: null,
+                  },
                   organizations: {
                     edges: [
                       {
@@ -282,6 +296,13 @@ describe('create a domain', () => {
                     domain
                     lastRan
                     selectors
+                    status {
+                      dkim
+                      dmarc
+                      https
+                      spf
+                      ssl
+                    }
                     organizations (first: 5) {
                       edges{ 
                         node {
@@ -339,6 +360,13 @@ describe('create a domain', () => {
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  status: {
+                    dkim: null,
+                    dmarc: null,
+                    https: null,
+                    spf: null,
+                    ssl: null,
+                  },
                   organizations: {
                     edges: [
                       {
@@ -387,6 +415,13 @@ describe('create a domain', () => {
                   domain
                   lastRan
                   selectors
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                   organizations (first: 5) {
                     edges{ 
                       node {
@@ -444,6 +479,13 @@ describe('create a domain', () => {
                 domain: 'test.gc.ca',
                 lastRan: null,
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                status: {
+                  dkim: null,
+                  dmarc: null,
+                  https: null,
+                  spf: null,
+                  ssl: null,
+                },
                 organizations: {
                   edges: [
                     {
@@ -491,6 +533,13 @@ describe('create a domain', () => {
                   domain
                   lastRan
                   selectors
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                   organizations (first: 5) {
                     edges{ 
                       node {
@@ -548,6 +597,13 @@ describe('create a domain', () => {
                 domain: 'test.gc.ca',
                 lastRan: null,
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                status: {
+                  dkim: null,
+                  dmarc: null,
+                  https: null,
+                  spf: null,
+                  ssl: null,
+                },
                 organizations: {
                   edges: [
                     {
@@ -630,6 +686,13 @@ describe('create a domain', () => {
                   domain
                   lastRan
                   selectors
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                   organizations (first: 5) {
                     edges{ 
                       node {
@@ -687,6 +750,13 @@ describe('create a domain', () => {
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  status: {
+                    dkim: null,
+                    dmarc: null,
+                    https: null,
+                    spf: null,
+                    ssl: null,
+                  },
                   organizations: {
                     edges: [
                       {
@@ -743,6 +813,13 @@ describe('create a domain', () => {
                   domain
                   lastRan
                   selectors
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                   organizations (first: 5) {
                     edges{ 
                       node {
@@ -800,6 +877,13 @@ describe('create a domain', () => {
                   domain: 'test.gc.ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  status: {
+                    dkim: null,
+                    dmarc: null,
+                    https: null,
+                    spf: null,
+                    ssl: null,
+                  },
                   organizations: {
                     edges: [
                       {
@@ -856,6 +940,13 @@ describe('create a domain', () => {
                   domain
                   lastRan
                   selectors
+                  status {
+                    dkim
+                    dmarc
+                    https
+                    spf
+                    ssl
+                  }
                   organizations (first: 5) {
                     edges{ 
                       node {
@@ -918,6 +1009,13 @@ describe('create a domain', () => {
                     'selector3._domainkey',
                     'selector4._domainkey',
                   ],
+                  status: {
+                    dkim: null,
+                    dmarc: null,
+                    https: null,
+                    spf: null,
+                    ssl: null,
+                  },
                   organizations: {
                     edges: [
                       {
