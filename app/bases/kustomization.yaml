@@ -4,7 +4,7 @@ images:
 - name: gcr.io/track-compliance/api
   newTag: master-4003aac
 - name: gcr.io/track-compliance/api-js
-  newTag: master-4ff121c
+  newTag: master-6f8a749-1614298472
 - name: gcr.io/track-compliance/autoscan
   newTag: master-0000000
 - name: gcr.io/track-compliance/db-migration
@@ -12,7 +12,7 @@ images:
 - name: gcr.io/track-compliance/dns
   newTag: master-0000000
 - name: gcr.io/track-compliance/frontend
-  newTag: master-3290595
+  newTag: master-6f8a749-1614298500
 - name: gcr.io/track-compliance/https
   newTag: master-0000000
 - name: gcr.io/track-compliance/result-queue
