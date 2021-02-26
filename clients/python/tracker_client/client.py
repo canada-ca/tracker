@@ -6,10 +6,10 @@ from gql.transport.exceptions import (
     TransportProtocolError,
 )
 
-import queries
 from core import create_client, get_auth_token
 from domain import Domain
 from organization import Organization
+import queries
 
 
 class Client:

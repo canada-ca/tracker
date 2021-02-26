@@ -1,10 +1,10 @@
 """Tests for methods on the Client class"""
-import pytest
 from gql.transport.exceptions import (
     TransportQueryError,
     TransportServerError,
     TransportProtocolError,
 )
+import pytest
 
 from tracker_client.client import Client
 import tracker_client.queries as queries
