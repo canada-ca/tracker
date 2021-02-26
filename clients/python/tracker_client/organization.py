@@ -59,6 +59,26 @@ class Organization:
         self.verified = verified
         self.domain_count = domainCount
 
+    def __str__(self):
+        return self.acronym + " " + self.name
+
+    def __repr__(self):
+        return (
+            "Organization(client=%r, name=%r, acronym=%r, zone=%r, sector=%r, country=%r, province=%r, city=%r, verified=%r, domain_count=%r)"
+            % (
+                self.client,
+                self.name,
+                self.acronym,
+                self.zone,
+                self.sector,
+                self.country,
+                self.province,
+                self.city,
+                self.verified,
+                self.domain_count,
+            )
+        )
+
     def get_summary(self):
         """Get summary metrics for this Organization
 
