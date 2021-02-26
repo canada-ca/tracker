@@ -1,4 +1,4 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
@@ -7,7 +7,7 @@ import { toGlobalId } from 'graphql-relay'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { checkPermission, userRequired } from '../../../auth'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
@@ -17,40 +17,32 @@ import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
 describe('invite user to org', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    schema,
-    collections,
-    transaction,
-    i18n,
-    tokenize
+  let query, drop, truncate, schema, collections, transaction, i18n, tokenize
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     tokenize = jest.fn().mockReturnValue('token')
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
     await graphql(
       schema,
       `
@@ -87,10 +79,14 @@ describe('invite user to org', () => {
         },
       },
     )
-    consoleOutput = []
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -1401,8 +1397,8 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const sendOrgInviteEmail = jest.fn()
 
-          transaction = jest.fn().mockReturnValue({
-            run() {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step() {
               throw new Error('Transaction error occurred.')
             },
           })
@@ -1433,7 +1429,7 @@ describe('invite user to org', () => {
               },
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -1459,7 +1455,7 @@ describe('invite user to org', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction run error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
+            `Transaction step error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
           ])
         })
       })
@@ -1467,8 +1463,8 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const sendOrgInviteEmail = jest.fn()
 
-          transaction = jest.fn().mockReturnValue({
-            run() {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step() {
               return undefined
             },
             commit() {
@@ -1502,7 +1498,7 @@ describe('invite user to org', () => {
               },
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -2823,8 +2819,8 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const sendOrgInviteEmail = jest.fn()
 
-          transaction = jest.fn().mockReturnValue({
-            run() {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step() {
               throw new Error('Transaction error occurred.')
             },
           })
@@ -2855,7 +2851,7 @@ describe('invite user to org', () => {
               },
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -2879,7 +2875,7 @@ describe('invite user to org', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction run error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
+            `Transaction step error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
           ])
         })
       })
@@ -2887,8 +2883,8 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const sendOrgInviteEmail = jest.fn()
 
-          transaction = jest.fn().mockReturnValue({
-            run() {
+          const mockedTransaction = jest.fn().mockReturnValue({
+            step() {
               return undefined
             },
             commit() {
@@ -2922,7 +2918,7 @@ describe('invite user to org', () => {
               },
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),

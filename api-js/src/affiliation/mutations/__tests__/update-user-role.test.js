@@ -1,4 +1,4 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
@@ -6,7 +6,7 @@ import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -17,7 +17,7 @@ import { orgLoaderByKey } from '../../../organization/loaders'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('update a users role', () => {
-  let query, drop, truncate, migrate, schema, collections, transaction, i18n
+  let query, drop, truncate, schema, collections, transaction, i18n
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -36,10 +36,13 @@ describe('update a users role', () => {
     console.warn = mockedWarn
     console.error = mockedError
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     await truncate()
     await graphql(
       schema,
@@ -1376,7 +1379,7 @@ describe('update a users role', () => {
           const userLoaderUserName = userLoaderByUserName(query)
 
           transaction = jest.fn().mockReturnValue({
-            run() {
+            step() {
               throw new Error('Transaction error occurred.')
             },
           })
@@ -1427,7 +1430,7 @@ describe('update a users role', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction run error occurred when user: ${user._key} attempted to update a users: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
+            `Transaction step error occurred when user: ${user._key} attempted to update a users: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
           ])
         })
       })
@@ -1438,7 +1441,7 @@ describe('update a users role', () => {
           const userLoaderUserName = userLoaderByUserName(query)
 
           transaction = jest.fn().mockReturnValue({
-            run() {
+            step() {
               return undefined
             },
             commit() {
@@ -2756,7 +2759,7 @@ describe('update a users role', () => {
           const userLoaderUserName = userLoaderByUserName(query)
 
           transaction = jest.fn().mockReturnValue({
-            run() {
+            step() {
               throw new Error('Transaction error occurred.')
             },
           })
@@ -2805,7 +2808,7 @@ describe('update a users role', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction run error occurred when user: ${user._key} attempted to update a users: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
+            `Transaction step error occurred when user: ${user._key} attempted to update a users: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
           ])
         })
       })
@@ -2816,7 +2819,7 @@ describe('update a users role', () => {
           const userLoaderUserName = userLoaderByUserName(query)
 
           transaction = jest.fn().mockReturnValue({
-            run() {
+            step() {
               return undefined
             },
             commit() {

@@ -1,9 +1,9 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { affiliationType } from '../affiliation'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { userLoaderByKey } from '../../../user/loaders'
 import { orgLoaderByKey } from '../../../organization/loaders'
 import { organizationType } from '../../../organization/objects'
@@ -41,14 +41,16 @@ describe('given the user affiliation object', () => {
   })
 
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, migrate, collections, user, org
+    let query, drop, truncate, collections, user, org
 
     beforeAll(async () => {
-      // Generate DB Items
-      ;({ migrate } = await ArangoTools({ rootPass, url }))
-      ;({ query, drop, truncate, collections } = await migrate(
-        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-      ))
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
 
     beforeEach(async () => {

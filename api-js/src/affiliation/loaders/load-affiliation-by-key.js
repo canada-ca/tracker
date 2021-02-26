@@ -24,7 +24,7 @@ export const affiliationLoaderByKey = (query, userKey, i18n) =>
 
     const affiliationMap = {}
     try {
-      await cursor.each((affiliation) => {
+      await cursor.forEach((affiliation) => {
         affiliationMap[affiliation._key] = affiliation
       })
     } catch (err) {

@@ -1,11 +1,11 @@
 import { setupI18n } from '@lingui/core'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -22,7 +22,6 @@ describe('removing a user from an organization', () => {
     truncate,
     collections,
     transaction,
-    migrate,
     schema,
     i18n,
     orgOne,
@@ -38,10 +37,13 @@ describe('removing a user from an organization', () => {
 
   beforeAll(async () => {
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
 
     // Create GQL Schema
     schema = new GraphQLSchema({
@@ -1023,7 +1025,7 @@ describe('removing a user from an organization', () => {
       describe('when running transaction', () => {
         beforeEach(() => {
           mockedTransaction = jest.fn().mockReturnValue({
-            run() {
+            step() {
               throw new Error('Transaction error occurred.')
             },
           })
@@ -1078,14 +1080,14 @@ describe('removing a user from an organization', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction run error occurred when user: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, error: Error: Transaction error occurred.`,
+            `Transaction step error occurred when user: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, error: Error: Transaction error occurred.`,
           ])
         })
       })
       describe('when committing transaction', () => {
         beforeEach(() => {
           mockedTransaction = jest.fn().mockReturnValue({
-            run() {
+            step() {
               return undefined
             },
             commit() {
@@ -1990,7 +1992,7 @@ describe('removing a user from an organization', () => {
       describe('when running transaction', () => {
         beforeEach(() => {
           mockedTransaction = jest.fn().mockReturnValue({
-            run() {
+            step() {
               throw new Error('Transaction error occurred.')
             },
           })
@@ -2041,14 +2043,14 @@ describe('removing a user from an organization', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction run error occurred when user: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, error: Error: Transaction error occurred.`,
+            `Transaction step error occurred when user: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, error: Error: Transaction error occurred.`,
           ])
         })
       })
       describe('when committing transaction', () => {
         beforeEach(() => {
           mockedTransaction = jest.fn().mockReturnValue({
-            run() {
+            step() {
               return undefined
             },
             commit() {

@@ -186,7 +186,7 @@ export const updateUserRole = new mutationWithClientMutationId({
     }
 
     try {
-      await trx.run(async () => {
+      await trx.step(async () => {
         await query`
           UPSERT { _key: ${affiliation._key} }
             INSERT ${edge}
@@ -196,7 +196,7 @@ export const updateUserRole = new mutationWithClientMutationId({
       })
     } catch (err) {
       console.error(
-        `Transaction run error occurred when user: ${userKey} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
+        `Transaction step error occurred when user: ${userKey} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
