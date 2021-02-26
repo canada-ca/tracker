@@ -19,7 +19,7 @@ export const sslLoaderByKey = (query, userKey, i18n) =>
 
     const sslMap = {}
     try {
-      await cursor.each((sslScan) => {
+      await cursor.forEach((sslScan) => {
         sslMap[sslScan._key] = sslScan
       })
     } catch (err) {

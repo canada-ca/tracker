@@ -1,7 +1,7 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { domainLoaderByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
@@ -37,13 +37,16 @@ describe('given the web scan gql object', () => {
   })
 
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, migrate, collections, domain, https, ssl
+    let query, drop, truncate, collections, domain, https, ssl
 
     beforeAll(async () => {
-      ;({ migrate } = ArangoTools({ rootPass, url }))
-      ;({ query, drop, truncate, collections } = await migrate(
-        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-      ))
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
 
     beforeEach(async () => {

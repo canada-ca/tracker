@@ -19,7 +19,7 @@ export const httpsLoaderByKey = (query, userKey, i18n) =>
 
     const httpsMap = {}
     try {
-      await cursor.each((httpsScan) => {
+      await cursor.forEach((httpsScan) => {
         httpsMap[httpsScan._key] = httpsScan
       })
     } catch (err) {
