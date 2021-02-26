@@ -1,11 +1,11 @@
 import { stringify } from 'jest-matcher-utils'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   verifiedOrgLoaderConnectionsByDomainId,
@@ -18,7 +18,6 @@ describe('given the load organizations connection function', () => {
   let query,
     drop,
     truncate,
-    migrate,
     collections,
     org,
     orgTwo,
@@ -33,10 +32,13 @@ describe('given the load organizations connection function', () => {
   beforeAll(async () => {
     console.error = mockedError
     console.warn = mockedWarn
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {
