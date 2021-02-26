@@ -113,7 +113,7 @@ export const removeDomain = new mutationWithClientMutationId({
       // Remove scan data
       try {
         await Promise.all([
-          trx.run(async () => {
+          trx.step(async () => {
             await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
@@ -123,7 +123,7 @@ export const removeDomain = new mutationWithClientMutationId({
             RETURN true
           `
           }),
-          trx.run(async () => {
+          trx.step(async () => {
             await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
@@ -133,7 +133,7 @@ export const removeDomain = new mutationWithClientMutationId({
             RETURN true
           `
           }),
-          trx.run(async () => {
+          trx.step(async () => {
             await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
@@ -143,7 +143,7 @@ export const removeDomain = new mutationWithClientMutationId({
             RETURN true
           `
           }),
-          trx.run(async () => {
+          trx.step(async () => {
             await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
@@ -153,7 +153,7 @@ export const removeDomain = new mutationWithClientMutationId({
             RETURN true
           `
           }),
-          trx.run(async () => {
+          trx.step(async () => {
             await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
@@ -173,7 +173,7 @@ export const removeDomain = new mutationWithClientMutationId({
 
       // Remove domain
       try {
-        await trx.run(async () => {
+        await trx.step(async () => {
           await query`
           LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { edgeKey: e._key, domainId: e._to })
           LET removeDomainEdges = (FOR domainEdge in domainEdges REMOVE domainEdge.edgeKey IN claims)
@@ -189,7 +189,7 @@ export const removeDomain = new mutationWithClientMutationId({
       }
     } else {
       try {
-        await trx.run(async () => {
+        await trx.step(async () => {
           await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { _key: e._key, _from: e._from, _to: e._to })
             LET edgeKeys = (

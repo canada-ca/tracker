@@ -20,7 +20,7 @@ export const domainLoaderByKey = (query, userKey, i18n) =>
 
     const domainMap = {}
     try {
-      await cursor.each((domain) => {
+      await cursor.forEach((domain) => {
         domainMap[domain._key] = domain
       })
     } catch (err) {

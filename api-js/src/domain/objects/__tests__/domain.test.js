@@ -1,9 +1,9 @@
 import moment from 'moment'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID, GraphQLList, GraphQLString } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { userRequired, tokenize } from '../../../auth'
 import { orgLoaderConnectionArgsByDomainId } from '../../../organization/loaders'
@@ -101,7 +101,6 @@ describe('given the domain object', () => {
     let query,
       drop,
       truncate,
-      migrate,
       collections,
       org,
       user,
@@ -114,11 +113,13 @@ describe('given the domain object', () => {
     const mockedWarn = (output) => consoleOutput.push(output)
 
     beforeAll(async () => {
-      // Generate DB Items
-      ;({ migrate } = await ArangoTools({ rootPass, url }))
-      ;({ query, drop, truncate, collections } = await migrate(
-        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-      ))
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
 
     beforeEach(async () => {

@@ -1,11 +1,11 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 import { v4 as uuidv4 } from 'uuid'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { checkDomainPermission, userRequired } from '../../../auth'
@@ -26,7 +26,6 @@ describe('requesting a one time scan', () => {
   let query,
     drop,
     truncate,
-    migrate,
     schema,
     collections,
     i18n,
@@ -41,11 +40,13 @@ describe('requesting a one time scan', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
@@ -514,7 +515,7 @@ describe('requesting a one time scan', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to run a one time scan on: test-domain.gc.ca however domain cannot be found.`,
+            `User: ${user._key} attempted to step a one time scan on: test-domain.gc.ca however domain cannot be found.`,
           ])
         })
       })
@@ -600,7 +601,7 @@ describe('requesting a one time scan', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to run a one time scan on: test.gc.ca however they do not have permission to do so.`,
+              `User: ${user._key} attempted to step a one time scan on: test.gc.ca however they do not have permission to do so.`,
             ])
           })
         })
@@ -659,7 +660,7 @@ describe('requesting a one time scan', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to run a one time scan on: test.gc.ca however they do not have permission to do so.`,
+              `User: ${user._key} attempted to step a one time scan on: test.gc.ca however they do not have permission to do so.`,
             ])
           })
         })
@@ -1255,7 +1256,7 @@ describe('requesting a one time scan', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to run a one time scan on: test-domain.gc.ca however domain cannot be found.`,
+            `User: ${user._key} attempted to step a one time scan on: test-domain.gc.ca however domain cannot be found.`,
           ])
         })
       })
@@ -1337,7 +1338,7 @@ describe('requesting a one time scan', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to run a one time scan on: test.gc.ca however they do not have permission to do so.`,
+              `User: ${user._key} attempted to step a one time scan on: test.gc.ca however they do not have permission to do so.`,
             ])
           })
         })
@@ -1392,7 +1393,7 @@ describe('requesting a one time scan', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to run a one time scan on: test.gc.ca however they do not have permission to do so.`,
+              `User: ${user._key} attempted to step a one time scan on: test.gc.ca however they do not have permission to do so.`,
             ])
           })
         })
