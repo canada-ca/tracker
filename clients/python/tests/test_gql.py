@@ -2,14 +2,7 @@
 import re
 import pytest
 
-from gql import Client
-from gql.transport.exceptions import (
-    TransportQueryError,
-    TransportServerError,
-    TransportProtocolError,
-)
-
-from tracker_client.core import get_auth_token, create_client, execute_query
+from tracker_client.core import get_auth_token, create_client
 
 # RegEx to check if a JWT is correctly formed
 JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
@@ -68,78 +61,3 @@ def test_create_client_invalid_token_malformed():
     with pytest.raises(ValueError):
         create_client("https://tracker.alpha.canada.ca/graphql", "foo")
 
-
-def test_execute_query_transport_query_error(mocker):
-    """Test that execute_query properly handles an error message from the server"""
-    # This is exactly what a real server error reply contains
-    server_error_response = {
-        "message": "No organization with the provided slug could be found.",
-        "locations": [{"line": 2, "column": 3}],
-        "path": ["findOrganizationBySlug"],
-        "extensions": {"code": "INTERNAL_SERVER_ERROR"},
-    }
-
-    # Imitating the exception gql raises
-    mocker.patch(
-        "gql.Client.execute",
-        auto_spec=True,
-        side_effect=TransportQueryError(
-            str(server_error_response),
-            errors=[server_error_response],
-            data={"foo": None},
-        ),
-    )
-
-    client = Client()
-    result = execute_query(client, None, None)
-    assert result == {
-        "error": {"message": "No organization with the provided slug could be found."}
-    }
-
-
-def test_execute_query_transport_protocol_error(mocker, capsys):
-    """Test that TransportProtocolError is properly re-raised"""
-    mocker.patch("gql.Client.execute", side_effect=TransportProtocolError)
-    client = Client()
-
-    with pytest.raises(TransportProtocolError):
-        execute_query(client, None, None)
-
-    # Check that the warning for TransportProtocolError was printed
-    captured = capsys.readouterr()
-    assert "Unexpected response from server:" in captured.out
-
-
-def test_execute_query_transport_server_error(mocker, capsys):
-    """Test that TransportServerError is properly re-raised"""
-    mocker.patch("gql.Client.execute", side_effect=TransportServerError)
-    client = Client()
-
-    with pytest.raises(TransportServerError):
-        execute_query(client, None, None)
-
-    # Check that the warning for TransportServerError was printed
-    captured = capsys.readouterr()
-    assert "Server error:" in captured.out
-
-
-def test_execute_query_other_error(mocker, capsys):
-    """Test that other exceptions are properly re-raised"""
-    mocker.patch("gql.Client.execute", side_effect=ValueError)
-    client = Client()
-
-    with pytest.raises(ValueError):
-        execute_query(client, None, None)
-
-    # Check that the warning for other errors was printed
-    captured = capsys.readouterr()
-    assert "Fatal error:" in captured.out
-
-
-def test_execute_query_success(mocker, all_domains_input):
-    """Test that a successful response is passed on unchanged"""
-    mocker.patch("gql.Client.execute", return_value=all_domains_input)
-    client = Client()
-
-    result = execute_query(client, None, None)
-    assert result == all_domains_input
