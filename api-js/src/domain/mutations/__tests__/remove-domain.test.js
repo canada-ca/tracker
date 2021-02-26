@@ -1,6 +1,5 @@
 import { setupI18n } from '@lingui/core'
 import { ensure, dbNameFromFile } from 'arango-tools'
-import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
@@ -10,32 +9,29 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, tokenize, userRequired } from '../../../auth'
+import { checkPermission, userRequired } from '../../../auth'
 import { domainLoaderByKey } from '../../loaders'
 import { orgLoaderByKey } from '../../../organization/loaders'
-import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { userLoaderByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('removing a domain', () => {
-  let query, drop, truncate, schema, collections, transaction, i18n
+  let query, drop, truncate, schema, collections, transaction, i18n, user
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-  })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
     ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
@@ -43,47 +39,20 @@ describe('removing a domain', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
+  })
+
+  beforeEach(async () => {
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+    })
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -104,7 +73,7 @@ describe('removing a domain', () => {
     })
     describe('given a successful domain removal', () => {
       describe('users permission is super admin', () => {
-        let org, domain, user, secondOrg, superAdminOrg
+        let org, domain, secondOrg, superAdminOrg
         beforeEach(async () => {
           superAdminOrg = await collections.organizations.save({
             verified: false,
@@ -144,7 +113,6 @@ describe('removing a domain', () => {
               },
             },
           })
-
           domain = await collections.domains.save({
             domain: 'test.gc.ca',
             slug: 'test-gc-ca',
@@ -153,42 +121,31 @@ describe('removing a domain', () => {
             _from: org._id,
             _to: domain._id,
           })
-
           const dkim = await collections.dkim.save({ dkim: true })
           await collections.domainsDKIM.save({
             _from: domain._id,
             _to: dkim._id,
           })
-
           const dmarc = await collections.dmarc.save({ dmarc: true })
           await collections.domainsDMARC.save({
             _from: domain._id,
             _to: dmarc._id,
           })
-
           const spf = await collections.spf.save({ spf: true })
           await collections.domainsSPF.save({
             _from: domain._id,
             _to: spf._id,
           })
-
           const https = await collections.https.save({ https: true })
           await collections.domainsHTTPS.save({
             _from: domain._id,
             _to: https._id,
           })
-
           const ssl = await collections.ssl.save({ ssl: true })
           await collections.domainsSSL.save({
             _from: domain._id,
             _to: ssl._id,
           })
-
-          const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: superAdminOrg._id,
             _to: user._id,
@@ -223,7 +180,6 @@ describe('removing a domain', () => {
                   },
                 },
               })
-
               await collections.claims.save({
                 _from: secondOrg._id,
                 _to: domain._id,
@@ -421,7 +377,6 @@ describe('removing a domain', () => {
                   },
                 },
               })
-
               await collections.claims.save({
                 _from: secondOrg._id,
                 _to: domain._id,
@@ -597,9 +552,9 @@ describe('removing a domain', () => {
           describe('domain belongs to a verified check org', () => {
             beforeEach(async () => {
               await query`
-              FOR org IN organizations
-                UPDATE ${org._key} WITH { verified: true } IN organizations
-            `
+                FOR org IN organizations
+                  UPDATE ${org._key} WITH { verified: true } IN organizations
+              `
             })
             it('returns a status message', async () => {
               const response = await graphql(
@@ -935,7 +890,7 @@ describe('removing a domain', () => {
         })
       })
       describe('users permission is admin', () => {
-        let org, domain, user, secondOrg
+        let org, domain, secondOrg
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: false,
@@ -962,7 +917,6 @@ describe('removing a domain', () => {
               },
             },
           })
-
           domain = await collections.domains.save({
             domain: 'test.gc.ca',
             slug: 'test-gc-ca',
@@ -971,42 +925,31 @@ describe('removing a domain', () => {
             _from: org._id,
             _to: domain._id,
           })
-
           const dkim = await collections.dkim.save({ dkim: true })
           await collections.domainsDKIM.save({
             _from: domain._id,
             _to: dkim._id,
           })
-
           const dmarc = await collections.dmarc.save({ dmarc: true })
           await collections.domainsDMARC.save({
             _from: domain._id,
             _to: dmarc._id,
           })
-
           const spf = await collections.spf.save({ spf: true })
           await collections.domainsSPF.save({
             _from: domain._id,
             _to: spf._id,
           })
-
           const https = await collections.https.save({ https: true })
           await collections.domainsHTTPS.save({
             _from: domain._id,
             _to: https._id,
           })
-
           const ssl = await collections.ssl.save({ ssl: true })
           await collections.domainsSSL.save({
             _from: domain._id,
             _to: ssl._id,
           })
-
-          const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1384,15 +1327,6 @@ describe('removing a domain', () => {
       })
     })
     describe('given an unsuccessful domain removal', () => {
-      let user
-      beforeEach(async () => {
-        const userCursor = await query`
-        FOR user IN users
-          RETURN user
-      `
-        user = await userCursor.next()
-      })
-
       describe('domain does not exist', () => {
         it('returns an error', async () => {
           const response = await graphql(
@@ -1907,7 +1841,7 @@ describe('removing a domain', () => {
             const orgLoader = orgLoaderByKey(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            query = jest
+            const mockedQuery = jest
               .fn()
               .mockReturnValueOnce({
                 next() {
@@ -1938,14 +1872,14 @@ describe('removing a domain', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query,
+                    query: mockedQuery,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
@@ -2028,7 +1962,7 @@ describe('removing a domain', () => {
             const orgLoader = orgLoaderByKey(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            transaction = jest.fn().mockReturnValue({
+            const mockedTransaction = jest.fn().mockReturnValue({
               step() {
                 throw new Error('Transaction error occurred.')
               },
@@ -2053,7 +1987,7 @@ describe('removing a domain', () => {
                 i18n,
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
@@ -2098,7 +2032,7 @@ describe('removing a domain', () => {
                 },
               }
 
-              query = jest
+              const mockedQuery = jest
                 .fn()
                 .mockReturnValueOnce(cursor)
                 .mockReturnValueOnce(cursor)
@@ -2127,14 +2061,14 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query,
+                  query: mockedQuery,
                   collections,
                   transaction,
                   userKey: user._key,
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
-                      query,
+                      query: mockedQuery,
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
@@ -2173,7 +2107,7 @@ describe('removing a domain', () => {
                 },
               }
 
-              query = jest
+              const mockedQuery = jest
                 .fn()
                 .mockReturnValueOnce(cursor)
                 .mockReturnValueOnce(cursor)
@@ -2197,14 +2131,14 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query,
+                  query: mockedQuery,
                   collections,
                   transaction,
                   userKey: user._key,
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
-                      query,
+                      query: mockedQuery,
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
@@ -2237,7 +2171,7 @@ describe('removing a domain', () => {
             const orgLoader = orgLoaderByKey(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            transaction = jest.fn().mockReturnValue({
+            const mockedTransaction = jest.fn().mockReturnValue({
               step() {
                 return undefined
               },
@@ -2265,7 +2199,7 @@ describe('removing a domain', () => {
                 i18n,
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
@@ -2316,7 +2250,7 @@ describe('removing a domain', () => {
     })
     describe('given a successful domain removal', () => {
       describe('users permission is super admin', () => {
-        let org, domain, user, secondOrg, superAdminOrg
+        let org, domain, secondOrg, superAdminOrg
         beforeEach(async () => {
           superAdminOrg = await collections.organizations.save({
             verified: false,
@@ -2356,7 +2290,6 @@ describe('removing a domain', () => {
               },
             },
           })
-
           domain = await collections.domains.save({
             domain: 'test.gc.ca',
             slug: 'test-gc-ca',
@@ -2365,42 +2298,31 @@ describe('removing a domain', () => {
             _from: org._id,
             _to: domain._id,
           })
-
           const dkim = await collections.dkim.save({ dkim: true })
           await collections.domainsDKIM.save({
             _from: domain._id,
             _to: dkim._id,
           })
-
           const dmarc = await collections.dmarc.save({ dmarc: true })
           await collections.domainsDMARC.save({
             _from: domain._id,
             _to: dmarc._id,
           })
-
           const spf = await collections.spf.save({ spf: true })
           await collections.domainsSPF.save({
             _from: domain._id,
             _to: spf._id,
           })
-
           const https = await collections.https.save({ https: true })
           await collections.domainsHTTPS.save({
             _from: domain._id,
             _to: https._id,
           })
-
           const ssl = await collections.ssl.save({ ssl: true })
           await collections.domainsSSL.save({
             _from: domain._id,
             _to: ssl._id,
           })
-
-          const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: superAdminOrg._id,
             _to: user._id,
@@ -2809,9 +2731,9 @@ describe('removing a domain', () => {
           describe('domain belongs to a verified check org', () => {
             beforeEach(async () => {
               await query`
-              FOR org IN organizations
-                UPDATE ${org._key} WITH { verified: true } IN organizations
-            `
+                FOR org IN organizations
+                  UPDATE ${org._key} WITH { verified: true } IN organizations
+              `
             })
             it('returns a status message', async () => {
               const response = await graphql(
@@ -3147,7 +3069,7 @@ describe('removing a domain', () => {
         })
       })
       describe('users permission is admin', () => {
-        let org, domain, user, secondOrg
+        let org, domain, secondOrg
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: false,
@@ -3174,7 +3096,6 @@ describe('removing a domain', () => {
               },
             },
           })
-
           domain = await collections.domains.save({
             domain: 'test.gc.ca',
             slug: 'test-gc-ca',
@@ -3183,42 +3104,31 @@ describe('removing a domain', () => {
             _from: org._id,
             _to: domain._id,
           })
-
           const dkim = await collections.dkim.save({ dkim: true })
           await collections.domainsDKIM.save({
             _from: domain._id,
             _to: dkim._id,
           })
-
           const dmarc = await collections.dmarc.save({ dmarc: true })
           await collections.domainsDMARC.save({
             _from: domain._id,
             _to: dmarc._id,
           })
-
           const spf = await collections.spf.save({ spf: true })
           await collections.domainsSPF.save({
             _from: domain._id,
             _to: spf._id,
           })
-
           const https = await collections.https.save({ https: true })
           await collections.domainsHTTPS.save({
             _from: domain._id,
             _to: https._id,
           })
-
           const ssl = await collections.ssl.save({ ssl: true })
           await collections.domainsSSL.save({
             _from: domain._id,
             _to: ssl._id,
           })
-
-          const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -3596,14 +3506,6 @@ describe('removing a domain', () => {
       })
     })
     describe('given an unsuccessful domain removal', () => {
-      let user
-      beforeEach(async () => {
-        const userCursor = await query`
-        FOR user IN users
-          RETURN user
-      `
-        user = await userCursor.next()
-      })
       describe('domain does not exist', () => {
         it('returns an error', async () => {
           const response = await graphql(
@@ -4055,7 +3957,7 @@ describe('removing a domain', () => {
         })
       })
       describe('database error occurs', () => {
-        let user, org, domain
+        let org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: false,
@@ -4091,12 +3993,6 @@ describe('removing a domain', () => {
             _from: org._id,
             _to: domain._id,
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              RETURN user
-          `
-          user = await userCursor.next()
         })
         describe('when checking to see how many edges there are', () => {
           it('returns an error', async () => {
@@ -4104,7 +4000,7 @@ describe('removing a domain', () => {
             const orgLoader = orgLoaderByKey(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            query = jest
+            const mockedQuery = jest
               .fn()
               .mockReturnValueOnce({
                 next() {
@@ -4135,14 +4031,14 @@ describe('removing a domain', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query,
+                    query: mockedQuery,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
@@ -4168,7 +4064,7 @@ describe('removing a domain', () => {
         })
       })
       describe('Transaction error occurs', () => {
-        let user, org, domain
+        let org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: false,
@@ -4195,7 +4091,6 @@ describe('removing a domain', () => {
               },
             },
           })
-
           domain = await collections.domains.save({
             domain: 'test.gc.ca',
             slug: 'test-gc-ca',
@@ -4204,13 +4099,6 @@ describe('removing a domain', () => {
             _from: org._id,
             _to: domain._id,
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              RETURN user
-          `
-          user = await userCursor.next()
-
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -4291,7 +4179,7 @@ describe('removing a domain', () => {
                 },
               }
 
-              query = jest
+              const mockedQuery = jest
                 .fn()
                 .mockReturnValueOnce(cursor)
                 .mockReturnValueOnce(cursor)
@@ -4320,14 +4208,14 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query,
+                  query: mockedQuery,
                   collections,
                   transaction,
                   userKey: user._key,
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
-                      query,
+                      query: mockedQuery,
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
@@ -4347,7 +4235,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction error occurred while user: ${user._key} attempted to remove test-gc-ca in org: treasury-board-secretariat, error: Error: Transaction error occurred.`,
+                `Transaction error occurred while user: ${user._key} attempted to remove scan data for test-gc-ca in org: treasury-board-secretariat, error: Error: Transaction error occurred.`,
               ])
             })
           })
@@ -4364,7 +4252,7 @@ describe('removing a domain', () => {
                 },
               }
 
-              query = jest
+              const mockedQuery = jest
                 .fn()
                 .mockReturnValueOnce(cursor)
                 .mockReturnValueOnce(cursor)
@@ -4388,14 +4276,14 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query,
+                  query: mockedQuery,
                   collections,
                   transaction,
                   userKey: user._key,
                   auth: {
                     checkPermission: checkPermission({
                       userKey: user._key,
-                      query,
+                      query: mockedQuery,
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
@@ -4426,7 +4314,7 @@ describe('removing a domain', () => {
             const orgLoader = orgLoaderByKey(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            transaction = jest.fn().mockReturnValue({
+            const mockedTransaction = jest.fn().mockReturnValue({
               step() {
                 return undefined
               },
@@ -4454,7 +4342,7 @@ describe('removing a domain', () => {
                 i18n,
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({

@@ -1,6 +1,5 @@
 import { setupI18n } from '@lingui/core'
 import { ensure, dbNameFromFile } from 'arango-tools'
-import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
@@ -10,32 +9,29 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { checkPermission, tokenize, userRequired } from '../../../auth'
+import { checkPermission, userRequired } from '../../../auth'
 import { domainLoaderByKey } from '../../loaders'
 import { orgLoaderByKey } from '../../../organization/loaders'
-import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { userLoaderByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('updating a domain', () => {
-  let query, drop, truncate, schema, collections, transaction
+  let query, drop, truncate, schema, collections, transaction, user
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-  })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
     // Generate DB Items
     ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
@@ -44,52 +40,25 @@ describe('updating a domain', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
+  })
+
+  beforeEach(async () => {
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+    })
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
   describe('given a successful domain update', () => {
-    let org, user, domain
+    let org, domain
     beforeEach(async () => {
       org = await collections.organizations.save({
         orgDetails: {
@@ -124,13 +93,6 @@ describe('updating a domain', () => {
         _to: domain._id,
         _from: org._id,
       })
-
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
     })
     describe('users permission is super admin', () => {
       beforeEach(async () => {
@@ -793,15 +755,6 @@ describe('updating a domain', () => {
         })
       })
       describe('domain cannot be found', () => {
-        let user
-        beforeEach(async () => {
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await userCursor.next()
-        })
         it('returns an error message', async () => {
           const response = await graphql(
             schema,
@@ -864,20 +817,13 @@ describe('updating a domain', () => {
         })
       })
       describe('organization cannot be found', () => {
-        let user, domain
+        let domain
         beforeEach(async () => {
           domain = await collections.domains.save({
             domain: 'test.gc.ca',
             lastRan: null,
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await userCursor.next()
         })
         it('returns an error message', async () => {
           const response = await graphql(
@@ -941,7 +887,7 @@ describe('updating a domain', () => {
         })
       })
       describe('user does not belong to org', () => {
-        let org, user, domain, secondOrg
+        let org, domain, secondOrg
         beforeEach(async () => {
           secondOrg = await collections.organizations.save({
             verified: true,
@@ -1001,14 +947,6 @@ describe('updating a domain', () => {
             _to: domain._id,
             _from: org._id,
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-
-          user = await userCursor.next()
         })
         describe('user has admin in a different org', () => {
           beforeEach(async () => {
@@ -1156,7 +1094,7 @@ describe('updating a domain', () => {
         })
       })
       describe('domain and org do not have any edges', () => {
-        let org, user, domain
+        let org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
             orgDetails: {
@@ -1187,14 +1125,6 @@ describe('updating a domain', () => {
             lastRan: null,
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await userCursor.next()
-
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1264,7 +1194,7 @@ describe('updating a domain', () => {
       })
     })
     describe('database error occurs', () => {
-      let org, user, domain
+      let org, domain
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -1295,14 +1225,6 @@ describe('updating a domain', () => {
           lastRan: null,
           selectors: ['selector1._domainkey', 'selector2._domainkey'],
         })
-
-        const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-        user = await userCursor.next()
-
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
@@ -1315,7 +1237,7 @@ describe('updating a domain', () => {
           const orgLoader = orgLoaderByKey(query, 'en')
           const userLoader = userLoaderByKey(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockReturnValueOnce({
               next() {
@@ -1356,12 +1278,15 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               collections,
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({
+                  userKey: user._key,
+                  query: mockedQuery,
+                }),
                 userRequired: userRequired({
                   userKey: user._key,
                   userLoaderByKey: userLoader,
@@ -1391,7 +1316,7 @@ describe('updating a domain', () => {
       })
     })
     describe('transaction error occurs', () => {
-      let org, user, domain
+      let org, domain
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -1426,14 +1351,6 @@ describe('updating a domain', () => {
           _to: domain._id,
           _from: org._id,
         })
-
-        const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-        user = await userCursor.next()
-
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
@@ -1446,7 +1363,7 @@ describe('updating a domain', () => {
           const orgLoader = orgLoaderByKey(query, 'en')
           const userLoader = userLoaderByKey(query)
 
-          transaction = jest.fn().mockReturnValue({
+          const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               throw new Error('Transaction error occurred.')
             },
@@ -1481,7 +1398,7 @@ describe('updating a domain', () => {
               i18n,
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -1518,7 +1435,7 @@ describe('updating a domain', () => {
           const orgLoader = orgLoaderByKey(query, 'en')
           const userLoader = userLoaderByKey(query)
 
-          transaction = jest.fn().mockReturnValue({
+          const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               return undefined
             },
@@ -1556,7 +1473,7 @@ describe('updating a domain', () => {
               i18n,
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -1604,15 +1521,6 @@ describe('updating a domain', () => {
         })
       })
       describe('domain cannot be found', () => {
-        let user
-        beforeEach(async () => {
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await userCursor.next()
-        })
         it('returns an error message', async () => {
           const response = await graphql(
             schema,
@@ -1673,20 +1581,13 @@ describe('updating a domain', () => {
         })
       })
       describe('organization cannot be found', () => {
-        let user, domain
+        let domain
         beforeEach(async () => {
           domain = await collections.domains.save({
             domain: 'test.gc.ca',
             lastRan: null,
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await userCursor.next()
         })
         it('returns an error message', async () => {
           const response = await graphql(
@@ -1748,7 +1649,7 @@ describe('updating a domain', () => {
         })
       })
       describe('user does not belong to org', () => {
-        let org, user, domain, secondOrg
+        let org, domain, secondOrg
         beforeEach(async () => {
           secondOrg = await collections.organizations.save({
             verified: true,
@@ -1808,14 +1709,6 @@ describe('updating a domain', () => {
             _to: domain._id,
             _from: org._id,
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-
-          user = await userCursor.next()
         })
         describe('user has admin in a different org', () => {
           beforeEach(async () => {
@@ -1959,7 +1852,7 @@ describe('updating a domain', () => {
         })
       })
       describe('domain and org do not have any edges', () => {
-        let org, user, domain
+        let org, domain
         beforeEach(async () => {
           org = await collections.organizations.save({
             orgDetails: {
@@ -1990,14 +1883,6 @@ describe('updating a domain', () => {
             lastRan: null,
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await userCursor.next()
-
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -2065,7 +1950,7 @@ describe('updating a domain', () => {
       })
     })
     describe('database error occurs', () => {
-      let org, user, domain
+      let org, domain
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -2096,14 +1981,6 @@ describe('updating a domain', () => {
           lastRan: null,
           selectors: ['selector1._domainkey', 'selector2._domainkey'],
         })
-
-        const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-        user = await userCursor.next()
-
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
@@ -2116,7 +1993,7 @@ describe('updating a domain', () => {
           const orgLoader = orgLoaderByKey(query, 'en')
           const userLoader = userLoaderByKey(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockReturnValueOnce({
               next() {
@@ -2157,12 +2034,15 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               collections,
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({
+                  userKey: user._key,
+                  query: mockedQuery,
+                }),
                 userRequired: userRequired({
                   userKey: user._key,
                   userLoaderByKey: userLoader,
@@ -2190,7 +2070,7 @@ describe('updating a domain', () => {
       })
     })
     describe('transaction error occurs', () => {
-      let org, user, domain
+      let org, domain
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -2225,14 +2105,6 @@ describe('updating a domain', () => {
           _to: domain._id,
           _from: org._id,
         })
-
-        const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-        user = await userCursor.next()
-
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
@@ -2245,7 +2117,7 @@ describe('updating a domain', () => {
           const orgLoader = orgLoaderByKey(query, 'en')
           const userLoader = userLoaderByKey(query)
 
-          transaction = jest.fn().mockReturnValue({
+          const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               throw new Error('Transaction error occurred.')
             },
@@ -2280,7 +2152,7 @@ describe('updating a domain', () => {
               i18n,
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -2315,7 +2187,7 @@ describe('updating a domain', () => {
           const orgLoader = orgLoaderByKey(query, 'en')
           const userLoader = userLoaderByKey(query)
 
-          transaction = jest.fn().mockReturnValue({
+          const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               return undefined
             },
@@ -2353,7 +2225,7 @@ describe('updating a domain', () => {
               i18n,
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
