@@ -1,6 +1,12 @@
 """ This module contains the gql documents used by client.py to query the Tracker API
 
 :var DocumentNode SIGN_IN_MUTATION: sign in and get authentication token
+:var DocumentNode GET_DOMAIN: get scalar fields of a domain
+:var DocumentNode GET_ORG: get scalar fields of an organization
+:var DocumentNode GET_ALL_DOMAINS: get scalar fields of all your domains
+:var DocumentNode GET_ALL_ORGS: get scalar fields of all your organizations
+:var DocumentNode GET_DOMAIN_OWNERS: get scalar fields of a domain's owning organizations
+:var DocumentNode GET_ORG_DOMAINS: get scalar fields of an organization's owned domains
 :var DocumentNode DMARC_SUMMARY: get a domain's DMARC summary for one month
 :var DocumentNode YEARLY_DMARC_SUMMARIES: get a domain's yearly DMARC summaries
 :var DocumentNode SUMMARY_BY_SLUG: get summary metrics for one organization
@@ -23,6 +29,135 @@ SIGNIN_MUTATION = gql(
                 ... on RegularSignInResult {
                     authResult {
                         authToken
+                    }
+                }
+            }
+        }
+    }
+    """
+)
+
+# Get scalar fields of a domain
+# :param str domain: url to get domain for
+# Query variables should look like {"domain": ${domain_url} }
+GET_DOMAIN = gql(
+    """
+    query FindDomainByDomain($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            domain
+            dmarcPhase
+            lastRan
+            selectors
+        }
+    }
+    """
+)
+
+# Get scalar fields of an organization
+# :param str orgSlug: a slugified organization name
+# slugified-looks-like-this (all lowercase, alphanumeric, spaces replaced with hyphens)
+#  Query variables should look like {"orgSlug": ${slugified-str} }
+GET_ORG = gql(
+    """
+    query orgBySlug($orgSlug: Slug!) {
+        findOrganizationBySlug(orgSlug: $orgSlug) {
+            acronym
+            name
+            zone
+            sector
+            country
+            province
+            city
+            verified
+            domainCount
+        }
+    }
+    """
+)
+
+# Get scalar fields of all your domains
+GET_ALL_DOMAINS = gql(
+    """
+    query getAllDomains {
+        findMyDomains(first: 100) {
+            edges {
+                node {
+                    domain
+                    dmarcPhase
+                    lastRan
+                    selctors
+                }
+            }
+        }
+    }
+    """
+)
+
+# Get scalar fields of all your orgs
+GET_ALL_ORGS = gql(
+    """
+    query GetAllOrgs {
+        findMyOrganizations(first: 100) {
+            edges {
+                node {
+                    acronym
+                    name
+                    zone
+                    sector
+                    country
+                    province
+                    city
+                    verified
+                    domainCount
+                }
+            }
+        }
+    }
+    """
+)
+
+# Get scalar fields of a domain's owning organizations
+# :param str domain: url to get owners for
+# Query variables should look like {"domain": ${domain_url} }
+GET_DOMAIN_OWNERS = gql(
+    """
+    query FindDomainByDomain($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            organizations(first: 100) {
+                edges {
+                    node {
+                    acronym
+                    name
+                    zone
+                    sector
+                    country
+                    province
+                    city
+                    verified
+                    domainCount
+                    }
+                }
+            }
+        }
+    }
+    """
+)
+
+# Get scalar fields of all domains owned by an organization
+# :param str orgSlug: a slugified organization name
+# slugified-looks-like-this (all lowercase, alphanumeric, spaces replaced with hyphens)
+#  Query variables should look like {"orgSlug": ${slugified-str} }
+GET_ORG_DOMAINS = gql(
+    """
+    query orgBySlug($orgSlug: Slug!) {
+        findOrganizationBySlug(orgSlug: $orgSlug) {
+            domains (first: 100) {
+                edges {
+                    node {
+                        domain
+                        dmarcPhase
+                        lastRan
+                        selectors
                     }
                 }
             }
@@ -801,118 +936,4 @@ DOMAIN_STATUS = gql(
     }
   }
   """
-)
-
-
-GET_DOMAIN = gql(
-    """
-    query FindDomainByDomain($domain: DomainScalar!) {
-        findDomainByDomain(domain: $domain) {
-            domain
-            dmarcPhase
-            lastRan
-            selectors
-        }
-    }
-    """
-)
-
-GET_ORG = gql(
-    """
-    query orgBySlug($orgSlug: Slug!) {
-        findOrganizationBySlug(orgSlug: $orgSlug) {
-            acronym
-            name
-            zone
-            sector
-            country
-            province
-            city
-            verified
-            domainCount
-        }
-    }
-    """
-)
-
-GET_ALL_DOMAINS = gql(
-    """
-    query getAllDomains {
-        findMyDomains(first: 100) {
-            edges {
-                node {
-                    domain
-                    dmarcPhase
-                    lastRan
-                    selctors
-                }
-            }
-        }
-    }
-    """
-)
-
-GET_ALL_ORGS = gql(
-    """
-    query GetAllOrgs {
-        findMyOrganizations(first: 100) {
-            edges {
-                node {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
-                    verified
-                    domainCount
-                }
-            }
-        }
-    }
-    """
-)
-
-GET_DOMAIN_OWNERS = gql(
-    """
-    query FindDomainByDomain($domain: DomainScalar!) {
-        findDomainByDomain(domain: $domain) {
-            organizations(first: 100) {
-                edges {
-                    node {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
-                    verified
-                    domainCount
-                    }
-                }
-            }
-        }
-    }
-    """
-)
-
-GET_ORG_DOMAINS = gql(
-    """
-    query orgBySlug($orgSlug: Slug!) {
-        findOrganizationBySlug(orgSlug: $orgSlug) {
-            domains (first: 100) {
-                edges {
-                    node {
-                        domain
-                        dmarcPhase
-                        lastRan
-                        selectors
-                    }
-                }
-            }
-        }
-    }
-    """
 )
