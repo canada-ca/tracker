@@ -52,7 +52,8 @@ export const spfType = new GraphQLObjectType({
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
-      deprecationReason: 'This has been sub-divided into neutral, negative, and positive tags.',
+      deprecationReason:
+        'This has been sub-divided into neutral, negative, and positive tags.',
       args: {
         orderBy: {
           type: guidanceTagOrder,

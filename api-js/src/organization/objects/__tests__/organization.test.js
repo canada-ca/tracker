@@ -115,15 +115,7 @@ describe('given the organization object', () => {
   })
 
   describe('testing the field resolvers', () => {
-    let query,
-      drop,
-      truncate,
-      collections,
-      org,
-      user,
-      domain,
-      affiliation,
-      i18n
+    let query, drop, truncate, collections, org, user, domain, affiliation, i18n
 
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({

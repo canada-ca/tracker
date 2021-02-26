@@ -16,15 +16,7 @@ import { orgLoaderConnectionsByUserId } from '../../loaders'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findMyOrganizationsQuery', () => {
-  let query,
-    drop,
-    truncate,
-    schema,
-    collections,
-    orgOne,
-    orgTwo,
-    i18n,
-    user
+  let query, drop, truncate, schema, collections, orgOne, orgTwo, i18n, user
 
   beforeAll(async () => {
     // Create GQL Schema

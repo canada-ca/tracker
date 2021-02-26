@@ -59,7 +59,8 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
     },
     guidanceTags: {
       type: guidanceTagConnection.connectionType,
-      deprecationReason: 'This has been sub-divided into neutral, negative, and positive tags.',
+      deprecationReason:
+        'This has been sub-divided into neutral, negative, and positive tags.',
       args: {
         orderBy: {
           type: guidanceTagOrder,

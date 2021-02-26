@@ -103,14 +103,7 @@ describe('given the https gql object', () => {
     })
   })
   describe('testing the field resolvers', () => {
-    let query,
-      drop,
-      truncate,
-      collections,
-      user,
-      domain,
-      https,
-      httpsGT
+    let query, drop, truncate, collections, user, domain, https, httpsGT
 
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({

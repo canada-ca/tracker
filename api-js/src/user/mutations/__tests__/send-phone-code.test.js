@@ -129,7 +129,9 @@ describe('user send password reset email', () => {
           },
         }
 
-        user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
+        user = await userLoaderByUserName(query, '1', {}).load(
+          'test.account@istio.actually.exists',
+        )
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({
@@ -432,7 +434,9 @@ describe('user send password reset email', () => {
           },
         }
 
-        user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
+        user = await userLoaderByUserName(query, '1', {}).load(
+          'test.account@istio.actually.exists',
+        )
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({

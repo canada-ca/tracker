@@ -31,7 +31,10 @@ export const findMyOrganizations = {
     const isSuperAdmin = await checkSuperAdmin()
 
     try {
-      orgConnections = await orgLoaderConnectionsByUserId({ isSuperAdmin, ...args })
+      orgConnections = await orgLoaderConnectionsByUserId({
+        isSuperAdmin,
+        ...args,
+      })
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userKey} was trying to gather organization connections in findMyOrganizations.`,

@@ -122,7 +122,9 @@ describe('user send password reset email', () => {
           },
         }
 
-        const user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
+        const user = await userLoaderByUserName(query, '1', {}).load(
+          'test.account@istio.actually.exists',
+        )
 
         const token = tokenize({
           parameters: { userKey: user._key },
@@ -260,7 +262,9 @@ describe('user send password reset email', () => {
           },
         }
 
-        const user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
+        const user = await userLoaderByUserName(query, '1', {}).load(
+          'test.account@istio.actually.exists',
+        )
 
         const token = tokenize({
           parameters: { userKey: user._key },

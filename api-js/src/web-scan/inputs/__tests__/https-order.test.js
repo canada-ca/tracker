@@ -17,9 +17,7 @@ describe('given the httpsOrder input object', () => {
       const demoType = httpsOrder.getFields()
 
       expect(demoType).toHaveProperty('field')
-      expect(demoType.field.type).toMatchObject(
-        GraphQLNonNull(HttpsOrderField),
-      )
+      expect(demoType.field.type).toMatchObject(GraphQLNonNull(HttpsOrderField))
     })
   })
 })

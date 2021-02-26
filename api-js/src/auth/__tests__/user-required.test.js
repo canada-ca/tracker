@@ -49,7 +49,9 @@ describe('given a userLoaderByKey dataloader', () => {
   describe('provided a user id', () => {
     it('returns the user', async () => {
       // Get User From db
-      const expectedUser = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
+      const expectedUser = await userLoaderByUserName(query, '1', {}).load(
+        'test.account@istio.actually.exists',
+      )
 
       const testUserRequired = userRequired({
         userKey: expectedUser._key,

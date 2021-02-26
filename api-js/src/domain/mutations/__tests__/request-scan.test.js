@@ -23,16 +23,7 @@ describe('requesting a one time scan', () => {
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
 
-  let query,
-    drop,
-    truncate,
-    schema,
-    collections,
-    i18n,
-    org,
-    user,
-    domain,
-    org2
+  let query, drop, truncate, schema, collections, i18n, org, user, domain, org2
 
   beforeAll(async () => {
     // Create GQL Schema

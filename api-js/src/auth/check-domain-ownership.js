@@ -6,7 +6,7 @@ export const checkDomainOwnership = ({ i18n, query, userKey }) => async ({
   let userAffiliatedOwnership, ownership
   const userKeyString = `users/${userKey}`
 
-    // Check to see if the user is a super admin
+  // Check to see if the user is a super admin
   let superAdminAffiliationCursor
   try {
     superAdminAffiliationCursor = await query`
@@ -19,7 +19,9 @@ export const checkDomainOwnership = ({ i18n, query, userKey }) => async ({
       `Database error when retrieving super admin affiliated organization ownership for user: ${userKeyString} and domain: ${domainId}: ${err}`,
     )
     throw new Error(
-      i18n._(t`Error when retrieving dmarc report information. Please try again.`),
+      i18n._(
+        t`Error when retrieving dmarc report information. Please try again.`,
+      ),
     )
   }
 

@@ -1,11 +1,10 @@
 import { GraphQLObjectType } from 'graphql'
-import { defineMessage  } from "@lingui/macro"
+import { defineMessage } from '@lingui/macro'
 
 import { categorizedSummaryType } from '../../summaries'
 
-
-const pass = defineMessage({ message: "pass"})
-const fail = defineMessage({ message: "fail"})
+const pass = defineMessage({ message: 'pass' })
+const fail = defineMessage({ message: 'fail' })
 
 export const organizationSummaryType = new GraphQLObjectType({
   name: 'OrganizationSummary',
