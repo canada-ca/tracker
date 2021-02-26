@@ -1,4 +1,4 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
@@ -6,7 +6,7 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -16,7 +16,7 @@ import { userLoaderByKey } from '../../loaders'
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, migrate, schema, collections, mockTokenize
+  let query, drop, truncate, schema, collections, mockTokenize
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -37,10 +37,13 @@ describe('authenticate user account', () => {
     console.warn = mockedWarn
     console.error = mockedError
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     await truncate()
     consoleOutput = []
   })

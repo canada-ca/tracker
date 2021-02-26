@@ -1,15 +1,15 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { userLoaderByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a userLoaderByKey dataloader', () => {
-  let query, drop, truncate, migrate, collections, i18n
+  let query, drop, truncate, collections, i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -30,10 +30,13 @@ describe('given a userLoaderByKey dataloader', () => {
   })
 
   beforeEach(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     await truncate()
     await collections.users.save({
       userName: 'test.account@istio.actually.exists',
@@ -81,7 +84,7 @@ describe('given a userLoaderByKey dataloader', () => {
           RETURN MERGE({ id: user._key, _type: "user" }, user)
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasMore) {
         const tempUser = await expectedCursor.next()
         userKeys.push(tempUser._key)
         expectedUsers.push(tempUser)
@@ -144,7 +147,7 @@ describe('given a userLoaderByKey dataloader', () => {
         const expectedUser = await expectedCursor.next()
 
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
@@ -215,7 +218,7 @@ describe('given a userLoaderByKey dataloader', () => {
         const expectedUser = await expectedCursor.next()
 
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }

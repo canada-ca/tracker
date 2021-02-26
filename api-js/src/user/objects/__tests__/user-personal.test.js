@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import {
   GraphQLNonNull,
   GraphQLID,
@@ -9,7 +9,7 @@ import {
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { affiliationConnectionLoaderByUserId } from '../../../affiliation/loaders'
 import { cleanseInput } from '../../../validators'
 import { affiliationConnection } from '../../../affiliation/objects'
@@ -73,14 +73,17 @@ describe('given the user object', () => {
   })
 
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, migrate, collections, user, org, affiliation
+    let query, drop, truncate, collections, user, org, affiliation
 
     beforeAll(async () => {
       // Generate DB Items
-      ;({ migrate } = await ArangoTools({ rootPass, url }))
-      ;({ query, drop, truncate, collections } = await migrate(
-        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-      ))
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
 
     beforeEach(async () => {

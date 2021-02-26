@@ -1,10 +1,10 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { userLoaderByKey } from '../../loaders'
@@ -15,13 +15,16 @@ describe('user send password reset email', () => {
   const originalInfo = console.info
   afterEach(() => (console.info = originalInfo))
 
-  let query, drop, truncate, migrate, collections, schema, i18n
+  let query, drop, truncate, collections, schema, i18n
 
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),

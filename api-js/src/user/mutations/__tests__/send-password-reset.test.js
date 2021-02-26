@@ -1,11 +1,11 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -19,13 +19,16 @@ describe('user send password reset email', () => {
   const originalInfo = console.info
   afterEach(() => (console.info = originalInfo))
 
-  let query, drop, truncate, migrate, collections, schema, request, i18n
+  let query, drop, truncate, collections, schema, request, i18n
 
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
@@ -120,7 +123,9 @@ describe('user send password reset email', () => {
             },
           }
 
-          const user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
+          const user = await userLoaderByUserName(query, '1', {}).load(
+            'test.account@istio.actually.exists',
+          )
 
           const token = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },
@@ -260,7 +265,9 @@ describe('user send password reset email', () => {
             },
           }
 
-          const user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
+          const user = await userLoaderByUserName(query, '1', {}).load(
+            'test.account@istio.actually.exists',
+          )
 
           const token = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },

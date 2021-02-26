@@ -1,11 +1,11 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -17,7 +17,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, migrate, schema, i18n, tokenize
+  let query, drop, truncate, schema, i18n, tokenize
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -26,10 +26,13 @@ describe('authenticate user account', () => {
       mutation: createMutationSchema(),
     })
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     tokenize = jest.fn().mockReturnValue('token')
   })
 
