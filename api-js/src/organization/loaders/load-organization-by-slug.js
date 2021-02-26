@@ -21,7 +21,7 @@ export const orgLoaderBySlug = (query, language, userKey, i18n) =>
 
     const orgMap = {}
     try {
-      await cursor.each((org) => {
+      await cursor.forEach((org) => {
         orgMap[org.slug] = org
       })
     } catch (err) {

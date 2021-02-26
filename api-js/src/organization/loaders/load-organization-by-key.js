@@ -33,7 +33,7 @@ export const orgLoaderByKey = (query, language, userKey, i18n) =>
 
     const orgMap = {}
     try {
-      await cursor.each((org) => {
+      await cursor.forEach((org) => {
         orgMap[org._key] = org
       })
     } catch (err) {
