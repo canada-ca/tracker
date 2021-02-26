@@ -25,7 +25,7 @@ def format_dmarc_yearly(result):
     return result
 
 
-def format_name_summary(result):
+def format_summary(result):
     """Formats the result dict in get_summary_by_name
 
     :param dict result: unformatted dict with results of SUMMARY_BY_SLUG

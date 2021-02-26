@@ -60,4 +60,3 @@ def test_create_client_invalid_token_malformed():
     """Check that create_client raises a ValueError when given malformed auth-token"""
     with pytest.raises(ValueError):
         create_client("https://tracker.alpha.canada.ca/graphql", "foo")
-

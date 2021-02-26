@@ -1,14 +1,9 @@
-"""This module provides utility functions related to gql, mostly for internal use"""
+"""This module provides utility functions related to gql, for internal use"""
 import os
 import re
 
 from gql import Client
 from gql.transport.aiohttp import AIOHTTPTransport
-from gql.transport.exceptions import (
-    TransportQueryError,
-    TransportServerError,
-    TransportProtocolError,
-)
 
 from queries import SIGNIN_MUTATION
 
@@ -87,4 +82,3 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
     result = client.execute(SIGNIN_MUTATION, variable_values=params)
     auth_token = result["signIn"]["result"]["authResult"]["authToken"]
     return auth_token
-

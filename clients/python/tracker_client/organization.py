@@ -5,7 +5,7 @@ import json
 from slugify import slugify
 
 import domain as dom
-from formatting import format_name_summary
+from formatting import format_summary
 import queries
 
 
@@ -114,7 +114,7 @@ class Organization:
         result = self.client.execute_query(queries.SUMMARY_BY_SLUG, params)
 
         if "error" not in result:
-            result = format_name_summary(result)
+            result = format_summary(result)
 
         return json.dumps(result, indent=4)
 
