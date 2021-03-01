@@ -144,16 +144,16 @@ export const createContext = ({ context, req: request, res: response }) => {
       slugify,
     },
     notify: {
-      sendAuthEmail: sendAuthEmail(notifyClient, i18n),
-      sendAuthTextMsg: sendAuthTextMsg(notifyClient, i18n),
-      sendOrgInviteCreateAccount: sendOrgInviteCreateAccount(
+      sendAuthEmail: sendAuthEmail({ notifyClient, i18n }),
+      sendAuthTextMsg: sendAuthTextMsg({ notifyClient, i18n }),
+      sendOrgInviteCreateAccount: sendOrgInviteCreateAccount({
         notifyClient,
         i18n,
-      ),
-      sendOrgInviteEmail: sendOrgInviteEmail(notifyClient, i18n),
-      sendPasswordResetEmail: sendPasswordResetEmail(notifyClient, i18n),
-      sendTfaTextMsg: sendTfaTextMsg(notifyClient, i18n),
-      sendVerificationEmail: sendVerificationEmail(notifyClient, i18n),
+      }),
+      sendOrgInviteEmail: sendOrgInviteEmail({ notifyClient, i18n }),
+      sendPasswordResetEmail: sendPasswordResetEmail({ notifyClient, i18n }),
+      sendTfaTextMsg: sendTfaTextMsg({ notifyClient, i18n }),
+      sendVerificationEmail: sendVerificationEmail({ notifyClient, i18n }),
     },
     loaders: {
       chartSummaryLoaderByKey: chartSummaryLoaderByKey(query, userKey, i18n),

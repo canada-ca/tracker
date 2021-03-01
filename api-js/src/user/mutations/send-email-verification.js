@@ -41,14 +41,6 @@ export const sendEmailVerification = new mutationWithClientMutationId({
     const user = await userLoaderByUserName.load(userName)
 
     if (typeof user !== 'undefined') {
-      // Choose template based on users preferred language
-      let templateId
-      if (user.preferredLang === 'french') {
-        templateId = 'f2c9b64a-c754-4ffd-93e9-33fdb0b5ae0b'
-      } else {
-        templateId = '6e3368a7-0d75-47b1-b4b2-878234e554c9'
-      }
-
       const token = tokenize({
         parameters: { userKey: user._key },
       })
@@ -57,7 +49,7 @@ export const sendEmailVerification = new mutationWithClientMutationId({
         'host',
       )}/validate/${token}`
 
-      await sendVerificationEmail({ templateId, user, verifyUrl })
+      await sendVerificationEmail({ user, verifyUrl })
 
       console.info(`User: ${user._key} successfully sent a verification email.`)
     } else {

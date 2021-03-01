@@ -110,14 +110,7 @@ export const sendPhoneCode = new mutationWithClientMutationId({
     await userLoaderByKey.clear(user._key)
     user = await userLoaderByKey.load(user._key)
 
-    let templateId
-    if (user.preferredLang === 'french') {
-      templateId = 'de8433ce-4a0b-48b8-a99f-4fe085127af5'
-    } else {
-      templateId = 'd6846e21-cae7-46e9-9e36-8a3f735c90ee'
-    }
-
-    await sendTfaTextMsg({ templateId, phoneNumber, user })
+    await sendTfaTextMsg({ phoneNumber, user })
 
     console.info(`User: ${user._key} successfully sent tfa code.`)
     return {
