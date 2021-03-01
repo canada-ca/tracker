@@ -4,6 +4,8 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendAuthEmail } from '../index'
 
+const { NOTIFICATION_AUTHENTICATE_EMAIL_ID } = process.env
+
 describe('given the sendAuthEmail function', () => {
   let i18n
   let consoleOutput = []
@@ -41,11 +43,11 @@ describe('given the sendAuthEmail function', () => {
         tfaCode: 123456,
       }
 
-      const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
+      const mockedSendAuthEmail = sendAuthEmail({ notifyClient, i18n })
       await mockedSendAuthEmail({ user })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-        'a517d99f-ddb2-4494-87e1-d5ae6ca53090',
+        NOTIFICATION_AUTHENTICATE_EMAIL_ID,
         user.userName,
         {
           personalisation: {
@@ -86,7 +88,7 @@ describe('given the sendAuthEmail function', () => {
         }
 
         try {
-          const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
+          const mockedSendAuthEmail = sendAuthEmail({ notifyClient, i18n })
           await mockedSendAuthEmail({ user })
         } catch (err) {
           expect(err).toEqual(
@@ -130,7 +132,7 @@ describe('given the sendAuthEmail function', () => {
         }
 
         try {
-          const mockedSendAuthEmail = sendAuthEmail(notifyClient, i18n)
+          const mockedSendAuthEmail = sendAuthEmail({ notifyClient, i18n })
           await mockedSendAuthEmail({ user })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))

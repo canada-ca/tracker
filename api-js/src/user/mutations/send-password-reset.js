@@ -41,14 +41,6 @@ export const sendPasswordResetLink = new mutationWithClientMutationId({
     const user = await userLoaderByUserName.load(userName)
 
     if (typeof user !== 'undefined') {
-      let templateId
-      // Check users preferred lang
-      if (user.preferredLang === 'french') {
-        templateId = '11aef4a3-b1a3-42b9-8246-7a0aa2bfe805'
-      } else {
-        templateId = '8c3d96cc-3cbe-4043-b157-4f4a2bbb57b1'
-      }
-
       const token = tokenize({
         parameters: { userKey: user._key, currentPassword: user.password },
       })
@@ -56,7 +48,7 @@ export const sendPasswordResetLink = new mutationWithClientMutationId({
         'host',
       )}/reset-password/${token}`
 
-      await sendPasswordResetEmail({ templateId, user, resetUrl })
+      await sendPasswordResetEmail({ user, resetUrl })
 
       console.info(
         `User: ${user._key} successfully sent a password reset email.`,

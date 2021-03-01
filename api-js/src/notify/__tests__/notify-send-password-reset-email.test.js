@@ -4,6 +4,11 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendPasswordResetEmail } from '../index'
 
+const {
+  NOTIFICATION_PASSWORD_RESET_EN,
+  NOTIFICATION_PASSWORD_RESET_FR,
+} = process.env
+
 describe('given the sendPasswordResetEmail function', () => {
   let i18n
   let consoleOutput = []
@@ -29,40 +34,6 @@ describe('given the sendPasswordResetEmail function', () => {
     consoleOutput = []
   })
 
-  describe('email successfully sent', () => {
-    it('returns nothing', async () => {
-      const sendEmail = jest.fn()
-      const notifyClient = {
-        sendEmail,
-      }
-
-      const user = {
-        userName: 'test@email.ca',
-        displayName: 'Test Account',
-      }
-
-      const mockedSendPasswordResetEmail = sendPasswordResetEmail(
-        notifyClient,
-        i18n,
-      )
-      await mockedSendPasswordResetEmail({
-        templateId: 'test_id',
-        user,
-        resetUrl: 'reset.url',
-      })
-
-      expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-        'test_id',
-        user.userName,
-        {
-          personalisation: {
-            user: user.displayName,
-            password_reset_url: 'reset.url',
-          },
-        },
-      )
-    })
-  })
   describe('language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -78,6 +49,40 @@ describe('given the sendPasswordResetEmail function', () => {
         },
       })
     })
+    describe('email successfully sent', () => {
+      it('returns nothing', async () => {
+        const sendEmail = jest.fn()
+        const notifyClient = {
+          sendEmail,
+        }
+
+        const user = {
+          userName: 'test@email.ca',
+          displayName: 'Test Account',
+          preferredLang: 'english',
+        }
+
+        const mockedSendPasswordResetEmail = sendPasswordResetEmail({
+          notifyClient,
+          i18n,
+        })
+        await mockedSendPasswordResetEmail({
+          user,
+          resetUrl: 'reset.url',
+        })
+
+        expect(notifyClient.sendEmail).toHaveBeenCalledWith(
+          NOTIFICATION_PASSWORD_RESET_EN,
+          user.userName,
+          {
+            personalisation: {
+              user: user.displayName,
+              password_reset_url: 'reset.url',
+            },
+          },
+        )
+      })
+    })
     describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
         const sendEmail = jest
@@ -90,15 +95,15 @@ describe('given the sendPasswordResetEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
+          preferredLang: 'english',
         }
 
         try {
-          const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+          const mockedSendPasswordResetEmail = sendPasswordResetEmail({
             notifyClient,
             i18n,
-          )
+          })
           await mockedSendPasswordResetEmail({
-            templateId: 'test_id',
             user,
             resetUrl: 'reset.url',
           })
@@ -129,6 +134,40 @@ describe('given the sendPasswordResetEmail function', () => {
         },
       })
     })
+    describe('email successfully sent', () => {
+      it('returns nothing', async () => {
+        const sendEmail = jest.fn()
+        const notifyClient = {
+          sendEmail,
+        }
+
+        const user = {
+          userName: 'test@email.ca',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+        }
+
+        const mockedSendPasswordResetEmail = sendPasswordResetEmail({
+          notifyClient,
+          i18n,
+        })
+        await mockedSendPasswordResetEmail({
+          user,
+          resetUrl: 'reset.url',
+        })
+
+        expect(notifyClient.sendEmail).toHaveBeenCalledWith(
+          NOTIFICATION_PASSWORD_RESET_FR,
+          user.userName,
+          {
+            personalisation: {
+              user: user.displayName,
+              password_reset_url: 'reset.url',
+            },
+          },
+        )
+      })
+    })
     describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
         const sendEmail = jest
@@ -141,15 +180,15 @@ describe('given the sendPasswordResetEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
+          preferredLang: 'french',
         }
 
         try {
-          const mockedSendPasswordResetEmail = sendPasswordResetEmail(
+          const mockedSendPasswordResetEmail = sendPasswordResetEmail({
             notifyClient,
             i18n,
-          )
+          })
           await mockedSendPasswordResetEmail({
-            templateId: 'test_id',
             user,
             resetUrl: 'reset.url',
           })

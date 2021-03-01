@@ -1,10 +1,19 @@
 import { t } from '@lingui/macro'
 
-export const sendTfaTextMsg = (notifyClient, i18n) => async ({
-  templateId,
+const {
+  NOTIFICATION_TWO_FACTOR_CODE_EN,
+  NOTIFICATION_TWO_FACTOR_CODE_FR,
+} = process.env
+
+export const sendTfaTextMsg = ({ notifyClient, i18n }) => async ({
   phoneNumber,
   user,
 }) => {
+  let templateId = NOTIFICATION_TWO_FACTOR_CODE_EN
+  if (user.preferredLang === 'french') {
+    templateId = NOTIFICATION_TWO_FACTOR_CODE_FR
+  }
+
   try {
     await notifyClient.sendSms(templateId, phoneNumber, {
       personalisation: {

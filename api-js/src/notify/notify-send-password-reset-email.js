@@ -1,10 +1,19 @@
 import { t } from '@lingui/macro'
 
-export const sendPasswordResetEmail = (notifyClient, i18n) => async ({
-  templateId,
+const {
+  NOTIFICATION_PASSWORD_RESET_EN,
+  NOTIFICATION_PASSWORD_RESET_FR,
+} = process.env
+
+export const sendPasswordResetEmail = ({ notifyClient, i18n }) => async ({
   user,
   resetUrl,
 }) => {
+  let templateId = NOTIFICATION_PASSWORD_RESET_EN
+  if (user.preferredLang === 'french') {
+    templateId = NOTIFICATION_PASSWORD_RESET_FR
+  }
+
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {

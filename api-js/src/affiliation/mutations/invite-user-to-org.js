@@ -97,13 +97,6 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
 
     // If there is not associated account with that user name send invite to org with create account
     if (typeof requestedUser === 'undefined') {
-      let templateId
-      if (preferredLang === 'french') {
-        templateId = '3c10d11b-f502-439d-bca1-afa551012310'
-      } else {
-        templateId = 'e66e1a68-8041-40be-af0e-83d064965431'
-      }
-
       const token = tokenize({
         parameters: { userName, orgId: org._id, requestedRole },
       })
@@ -112,8 +105,7 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
       )}/create-user/${token}`
 
       await sendOrgInviteCreateAccount({
-        templateId,
-        user: { userName: userName },
+        user: { userName: userName, preferredLang },
         orgName: org.name,
         createAccountLink,
       })
@@ -155,14 +147,7 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to invite user. Please try again.`))
       }
 
-      let templateId
-      if (requestedUser.preferredLang === 'french') {
-        templateId = 'a6eb3fdd-c7ab-4404-af04-316abd2fb221'
-      } else {
-        templateId = 'eccc6a60-44e8-40ff-8b15-ed82155b769f'
-      }
       await sendOrgInviteEmail({
-        templateId,
         user: requestedUser,
         orgName: org.name,
       })

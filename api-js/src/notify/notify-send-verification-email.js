@@ -1,10 +1,19 @@
 import { t } from '@lingui/macro'
 
-export const sendVerificationEmail = (notifyClient, i18n) => async ({
-  templateId,
+const {
+  NOTIFICATION_VERIFICATION_EMAIL_EN,
+  NOTIFICATION_VERIFICATION_EMAIL_FR,
+} = process.env
+
+export const sendVerificationEmail = ({ notifyClient, i18n }) => async ({
   user,
   verifyUrl,
 }) => {
+  let templateId = NOTIFICATION_VERIFICATION_EMAIL_EN
+  if (user.preferredLang === 'french') {
+    templateId = NOTIFICATION_VERIFICATION_EMAIL_FR
+  }
+
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {
