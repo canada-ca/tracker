@@ -135,7 +135,6 @@ describe('user send password reset email', () => {
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({
-          templateId: 'f2c9b64a-c754-4ffd-93e9-33fdb0b5ae0b',
           user,
           verifyUrl,
         })
@@ -275,7 +274,6 @@ describe('user send password reset email', () => {
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({
-          templateId: '6e3368a7-0d75-47b1-b4b2-878234e554c9',
           user,
           verifyUrl,
         })

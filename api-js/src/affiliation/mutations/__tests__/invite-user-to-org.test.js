@@ -227,7 +227,6 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
                 user: secondaryUser,
                 orgName: 'Treasury Board of Canada Secretariat',
               })
@@ -312,7 +311,6 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
                 user: secondaryUser,
                 orgName: 'Treasury Board of Canada Secretariat',
               })
@@ -397,7 +395,6 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
                 user: secondaryUser,
                 orgName: 'Treasury Board of Canada Secretariat',
               })
@@ -479,8 +476,10 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
-                user: { userName: 'test@email.gc.ca' },
+                user: {
+                  userName: 'test@email.gc.ca',
+                  preferredLang: 'english',
+                },
                 orgName: 'Treasury Board of Canada Secretariat',
                 createAccountLink,
               })
@@ -562,8 +561,10 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
-                user: { userName: 'test@email.gc.ca' },
+                user: {
+                  userName: 'test@email.gc.ca',
+                  preferredLang: 'english',
+                },
                 orgName: 'Treasury Board of Canada Secretariat',
                 createAccountLink,
               })
@@ -645,8 +646,10 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
-                user: { userName: 'test@email.gc.ca' },
+                user: {
+                  userName: 'test@email.gc.ca',
+                  preferredLang: 'english',
+                },
                 orgName: 'Treasury Board of Canada Secretariat',
                 createAccountLink,
               })
@@ -742,7 +745,6 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
                 user: secondaryUser,
                 orgName: 'Treasury Board of Canada Secretariat',
               })
@@ -827,7 +829,6 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
                 user: secondaryUser,
                 orgName: 'Treasury Board of Canada Secretariat',
               })
@@ -911,8 +912,10 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
-                user: { userName: 'test@email.gc.ca' },
+                user: {
+                  userName: 'test@email.gc.ca',
+                  preferredLang: 'english',
+                },
                 orgName: 'Treasury Board of Canada Secretariat',
                 createAccountLink,
               })
@@ -994,8 +997,10 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
-                user: { userName: 'test@email.gc.ca' },
+                user: {
+                  userName: 'test@email.gc.ca',
+                  preferredLang: 'english',
+                },
                 orgName: 'Treasury Board of Canada Secretariat',
                 createAccountLink,
               })
@@ -1666,7 +1671,6 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
                 user: secondaryUser,
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
               })
@@ -1750,7 +1754,6 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
                 user: secondaryUser,
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
               })
@@ -1834,7 +1837,6 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
                 user: secondaryUser,
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
               })
@@ -1917,8 +1919,7 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
-                user: { userName: 'test@email.gc.ca' },
+                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
@@ -1999,8 +2000,7 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
-                user: { userName: 'test@email.gc.ca' },
+                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
@@ -2081,8 +2081,7 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
-                user: { userName: 'test@email.gc.ca' },
+                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
@@ -2177,7 +2176,6 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
                 user: secondaryUser,
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
               })
@@ -2261,7 +2259,6 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
                 user: secondaryUser,
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
               })
@@ -2344,8 +2341,7 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
-                user: { userName: 'test@email.gc.ca' },
+                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
@@ -2426,8 +2422,7 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
-                user: { userName: 'test@email.gc.ca' },
+                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
