@@ -299,8 +299,40 @@ type DKIMResult implements Node {
   keyLength: String @examples(values: ["sub1024", "1024", "2048", "2048plus"])
   # Raw scan result.
   rawJson: JSON
-  # Key tags found during scan.
+  # Guidance tags found during scan.
   guidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+  # Negative guidance tags found during scan.
+  negativeGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Neutral guidance tags found during scan.
+  neutralGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Positive guidance tags found during scan.
+  positiveGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
     after: String
     first: Int
     before: String
@@ -360,8 +392,40 @@ type DMARC implements Node {
   pct: Int @examples(values: [0, 20, 60, 70, 90, 100])
   # Raw scan result.
   rawJson: JSON
-  # Key tags found during DMARC Scan.
+  # Guidance tags found during DMARC Scan.
   guidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+  # Negative guidance tags found during DMARC Scan.
+  negativeGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Neutral guidance tags found during DMARC Scan.
+  neutralGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Positive guidance tags found during DMARC Scan.
+  positiveGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
     after: String
     first: Int
     before: String
@@ -772,6 +836,24 @@ type GuidanceTagEdge {
   cursor: String!
 }
 
+# Ordering options for guidance tag connections.
+input GuidanceTagOrder {
+  # The field to order guidance tags by.
+  field: GuidanceTagOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which Guidance Tag connections can be ordered.
+enum GuidanceTagOrderField {
+  # Order guidance tag edges by tag id.
+  TAG_ID
+  # Order guidance tag edges by tag name.
+  TAG_NAME
+  # Order guidance tag edges by tag guidance.
+  GUIDANCE
+}
+
 # Hyper Text Transfer Protocol Secure scan results.
 type HTTPS implements Node {
   # The ID of an object
@@ -792,8 +874,40 @@ type HTTPS implements Node {
   preloaded: String @examples(values: ["HSTS Preloaded", "HSTS Preload Ready", "HSTS Not Preloaded"])
   # Raw scan result.
   rawJson: JSON
-  # Key tags found during scan.
+  # Guidance tags found during scan.
   guidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+  # Negative guidance tags found during scan.
+  negativeGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Neutral guidance tags found during scan.
+  neutralGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Positive guidance tags found during scan.
+  positiveGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
     after: String
     first: Int
     before: String
@@ -1429,8 +1543,40 @@ type SPF implements Node {
   spfDefault: String @examples(values: ["neutral", "softfail", "include", "fail"])
   # Raw scan result.
   rawJson: JSON
-  # Key tags found during scan.
+  # Guidance tags found during scan.
   guidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+  # Negative guidance tags found during scan.
+  negativeGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Neutral guidance tags found during scan.
+  neutralGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Positive guidance tags found during scan.
+  positiveGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
     after: String
     first: Int
     before: String
@@ -1514,8 +1660,40 @@ type SSL implements Node {
   timestamp: String @fake(type: pastDate)
   # Raw scan result.
   rawJson: JSON
-  # Key tags found during scan.
+  # Guidance tags found during scan.
   guidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
+  # Negative guidance tags found during scan.
+  negativeGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Neutral guidance tags found during scan.
+  neutralGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): GuidanceTagConnection
+  # Positive guidance tags found during scan.
+  positiveGuidanceTags(
+    # Ordering options for guidance tag connections
+    orderBy: GuidanceTagOrder
     after: String
     first: Int
     before: String
