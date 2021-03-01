@@ -102,7 +102,7 @@ export const resetPassword = new mutationWithClientMutationId({
     try {
       await query`
         FOR user IN users
-          UPDATE ${user._key} WITH { password: ${hashedPassword} } IN users
+          UPDATE ${user._key} WITH { password: ${hashedPassword}, failedLoginAttempts: 0 } IN users
       `
     } catch (err) {
       console.error(

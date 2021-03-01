@@ -228,6 +228,62 @@ describe('reset users password', () => {
           `User: ${user._key} successfully signed in, and sent auth msg.`,
         ])
       })
+      it('resets failed login attempts', async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            UPDATE user._key WITH { failedLoginAttempts: 5 } IN users
+            RETURN user
+        `
+        const user = await userCursor.next()
+
+        const resetToken = tokenize({
+          parameters: { userKey: user._key, currentPassword: user.password },
+        })
+
+        await graphql(
+          schema,
+          `
+            mutation {
+              resetPassword (
+                input: {
+                  password: "newpassword123"
+                  confirmPassword: "newpassword123"
+                  resetToken: "${resetToken}"
+                }
+              ) {
+                status
+              }
+            }
+          `,
+          null,
+          {
+            i18n,
+            query,
+            auth: {
+              bcrypt,
+              tokenize,
+              verifyToken: verifyToken({}),
+            },
+            validators: {
+              cleanseInput,
+            },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
+              userLoaderByKey: userLoaderByKey(query),
+            },
+          },
+        )
+
+        const checkCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const checkUser = await checkCursor.next()
+
+        expect(checkUser.failedLoginAttempts).toEqual(0)
+      })
     })
     describe('user does not successfully reset their password', () => {
       describe('userKey cannot be found in token parameters', () => {
