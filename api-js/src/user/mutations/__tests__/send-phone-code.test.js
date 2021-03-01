@@ -1,11 +1,11 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -19,7 +19,7 @@ describe('user send password reset email', () => {
   const originalInfo = console.info
   afterEach(() => (console.info = originalInfo))
 
-  let query, drop, truncate, migrate, collections, schema, request, i18n
+  let query, drop, truncate, collections, schema, request, i18n
 
   beforeAll(async () => {
     schema = new GraphQLSchema({
@@ -30,9 +30,16 @@ describe('user send password reset email', () => {
       protocol: 'https',
       get: (text) => text,
     }
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
@@ -40,15 +47,14 @@ describe('user send password reset email', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
-    consoleOutput = []
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -69,7 +75,6 @@ describe('user send password reset email', () => {
     })
     describe('successfully send a phone code', () => {
       beforeEach(async () => {
-        await truncate()
         await collections.users.save({
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
@@ -126,7 +131,9 @@ describe('user send password reset email', () => {
           },
         }
 
-        user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
+        user = await userLoaderByUserName(query, '1', {}).load(
+          'test.account@istio.actually.exists',
+        )
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({
@@ -140,6 +147,16 @@ describe('user send password reset email', () => {
       })
     })
     describe('unsuccessful phone code sending', () => {
+      let user
+      beforeEach(async () => {
+        user = await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'english',
+          tfaValidated: false,
+          emailValidated: false,
+        })
+      })
       describe('no user associated with account', () => {
         it('returns status text', async () => {
           const response = await graphql(
@@ -227,25 +244,10 @@ describe('user send password reset email', () => {
         })
       })
       describe('database error occurs on tfa code insert', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN MERGE({ id: user._key }, user)
-          `
-          const user = await cursor.next()
           const loaderById = userLoaderByKey(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -263,7 +265,7 @@ describe('user send password reset email', () => {
               i18n,
               request,
               userKey: user._key,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -291,25 +293,10 @@ describe('user send password reset email', () => {
         })
       })
       describe('database error occurs on phone number insert', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN MERGE({ id: user._key }, user)
-          `
-          const user = await cursor.next()
           const loaderById = userLoaderByKey(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockResolvedValueOnce(query)
             .mockRejectedValue(new Error('Database error occurred.'))
@@ -328,7 +315,7 @@ describe('user send password reset email', () => {
               i18n,
               request,
               userKey: user._key,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -373,9 +360,9 @@ describe('user send password reset email', () => {
       })
     })
     describe('successfully send a phone code', () => {
+      let user
       beforeEach(async () => {
-        await truncate()
-        await collections.users.save({
+        user = await collections.users.save({
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
           preferredLang: 'english',
@@ -384,12 +371,6 @@ describe('user send password reset email', () => {
         })
       })
       it('returns status text', async () => {
-        const cursor = await query`
-          FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-        `
-        let user = await cursor.next()
         const response = await graphql(
           schema,
           `
@@ -429,7 +410,9 @@ describe('user send password reset email', () => {
           },
         }
 
-        user = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
+        user = await userLoaderByUserName(query, '1', {}).load(
+          'test.account@istio.actually.exists',
+        )
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({
@@ -443,6 +426,16 @@ describe('user send password reset email', () => {
       })
     })
     describe('unsuccessful phone code sending', () => {
+      let user
+      beforeEach(async () => {
+        user = await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'english',
+          tfaValidated: false,
+          emailValidated: false,
+        })
+      })
       describe('no user associated with account', () => {
         it('returns status text', async () => {
           const response = await graphql(
@@ -526,25 +519,10 @@ describe('user send password reset email', () => {
         })
       })
       describe('database error occurs on tfa code insert', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN MERGE({ id: user._key }, user)
-          `
-          const user = await cursor.next()
           const loaderById = userLoaderByKey(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -562,7 +540,7 @@ describe('user send password reset email', () => {
               i18n,
               request,
               userKey: user._key,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -587,25 +565,10 @@ describe('user send password reset email', () => {
         })
       })
       describe('database error occurs on phone number insert', () => {
-        beforeEach(async () => {
-          await collections.users.save({
-            userName: 'test.account@istio.actually.exists',
-            displayName: 'Test Account',
-            preferredLang: 'english',
-            tfaValidated: false,
-            emailValidated: false,
-          })
-        })
         it('returns an error message', async () => {
-          const cursor = await query`
-            FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN MERGE({ id: user._key }, user)
-          `
-          const user = await cursor.next()
           const loaderById = userLoaderByKey(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockResolvedValueOnce(query)
             .mockRejectedValue(new Error('Database error occurred.'))
@@ -624,7 +587,7 @@ describe('user send password reset email', () => {
               i18n,
               request,
               userKey: user._key,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,

@@ -24,7 +24,7 @@ export const verifiedOrgLoaderByKey = (query, language, i18n) =>
 
     const orgMap = {}
     try {
-      await cursor.each((org) => {
+      await cursor.forEach((org) => {
         orgMap[org._key] = org
       })
     } catch (err) {

@@ -1,4 +1,4 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import {
   GraphQLInt,
   GraphQLBoolean,
@@ -8,7 +8,7 @@ import {
 } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { verifiedDomainLoaderConnectionsByOrgId } from '../../../verified-domains/loaders'
 import { verifiedDomainConnection } from '../../../verified-domains/objects'
@@ -103,13 +103,16 @@ describe('given the verified organization object', () => {
   })
 
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, migrate, collections, org, domain
+    let query, drop, truncate, collections, org, domain
 
     beforeAll(async () => {
-      ;({ migrate } = await ArangoTools({ rootPass, url }))
-      ;({ query, drop, truncate, collections } = await migrate(
-        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-      ))
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
 
     beforeEach(async () => {

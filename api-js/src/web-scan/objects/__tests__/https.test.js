@@ -1,9 +1,9 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLDateTime, GraphQLJSON } from 'graphql-scalars'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { domainLoaderByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
@@ -103,21 +103,16 @@ describe('given the https gql object', () => {
     })
   })
   describe('testing the field resolvers', () => {
-    let query,
-      drop,
-      truncate,
-      migrate,
-      collections,
-      user,
-      domain,
-      https,
-      httpsGT
+    let query, drop, truncate, collections, user, domain, https, httpsGT
 
     beforeAll(async () => {
-      ;({ migrate } = await ArangoTools({ rootPass, url }))
-      ;({ query, drop, truncate, collections } = await migrate(
-        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-      ))
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
 
     beforeEach(async () => {

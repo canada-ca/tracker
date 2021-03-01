@@ -1,24 +1,27 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { sslLoaderByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the sslLoaderByKey function', () => {
-  let query, drop, truncate, migrate, collections, i18n
+  let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -35,10 +38,13 @@ describe('given the sslLoaderByKey function', () => {
   })
 
   beforeEach(async () => {
+    await collections.ssl.save({})
+    await collections.ssl.save({})
+  })
+
+  afterEach(async () => {
     consoleErrorOutput.length = 0
     await truncate()
-    await collections.ssl.save({})
-    await collections.ssl.save({})
   })
 
   afterAll(async () => {
@@ -70,7 +76,7 @@ describe('given the sslLoaderByKey function', () => {
           RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasMore) {
         const tempSsl = await expectedCursor.next()
         sslKeys.push(tempSsl._key)
         expectedSslScans.push(tempSsl)
@@ -119,7 +125,7 @@ describe('given the sslLoaderByKey function', () => {
     describe('given a cursor error', () => {
       it('raises an error', async () => {
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
@@ -174,7 +180,7 @@ describe('given the sslLoaderByKey function', () => {
     describe('given a cursor error', () => {
       it('raises an error', async () => {
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }

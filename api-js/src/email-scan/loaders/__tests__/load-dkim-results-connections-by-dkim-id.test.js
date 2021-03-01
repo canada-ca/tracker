@@ -1,11 +1,11 @@
 import { stringify } from 'jest-matcher-utils'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   dkimResultsLoaderConnectionByDkimId,
@@ -15,7 +15,7 @@ import {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('when given the load dkim results connection function', () => {
-  let query, drop, truncate, migrate, collections, user, dkimScan, i18n
+  let query, drop, truncate, collections, user, dkimScan, i18n
 
   const consoleWarnOutput = []
   const mockedWarn = (output) => consoleWarnOutput.push(output)
@@ -26,10 +26,13 @@ describe('when given the load dkim results connection function', () => {
   beforeAll(async () => {
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {

@@ -1,91 +1,62 @@
 import { setupI18n } from '@lingui/core'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
-import bcrypt from 'bcryptjs'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, tokenize, userRequired } from '../../../auth'
-import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { checkPermission, userRequired } from '../../../auth'
+import { userLoaderByKey } from '../../../user/loaders'
 import { orgLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('removing an organization', () => {
-  let query, drop, truncate, migrate, schema, collections, transaction
+  let query, drop, truncate, schema, collections, transaction, user
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+    })
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
   describe('given a successful org removal', () => {
-    let org, domain, user, i18n
+    let org, domain, i18n
     beforeEach(async () => {
       org = await collections.organizations.save({
         verified: false,
@@ -169,11 +140,6 @@ describe('removing an organization', () => {
       })
       describe('super admin can remove any org', () => {
         beforeEach(async () => {
-          const userCursor = await query`
-            FOR user IN users
-              RETURN user
-          `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -435,11 +401,6 @@ describe('removing an organization', () => {
       })
       describe('admin can remove a regular org', () => {
         beforeEach(async () => {
-          const userCursor = await query`
-            FOR user IN users
-              RETURN user
-          `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -579,11 +540,6 @@ describe('removing an organization', () => {
       })
       describe('super admin can remove any org', () => {
         beforeEach(async () => {
-          const userCursor = await query`
-            FOR user IN users
-              RETURN user
-          `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -843,11 +799,6 @@ describe('removing an organization', () => {
       })
       describe('admin can remove a regular org', () => {
         beforeEach(async () => {
-          const userCursor = await query`
-            FOR user IN users
-              RETURN user
-          `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -989,12 +940,6 @@ describe('removing an organization', () => {
       })
       describe('organization does not exist', () => {
         it('returns an error message', async () => {
-          const userCursor = await query`
-            FOR user IN users
-              RETURN user
-          `
-          const user = await userCursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -1043,7 +988,7 @@ describe('removing an organization', () => {
         })
       })
       describe('user does not have permission', () => {
-        let org, user, secondOrg
+        let org, secondOrg
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: true,
@@ -1098,11 +1043,6 @@ describe('removing an organization', () => {
         })
         describe('org to be removed is verified check', () => {
           beforeEach(async () => {
-            const userCursor = await query`
-              FOR user IN users
-                RETURN user
-            `
-            user = await userCursor.next()
             await collections.affiliations.save({
               _from: org._id,
               _to: user._id,
@@ -1162,11 +1102,6 @@ describe('removing an organization', () => {
         })
         describe('user is an admin in a different organization', () => {
           beforeEach(async () => {
-            const userCursor = await query`
-              FOR user IN users
-                RETURN user
-            `
-            user = await userCursor.next()
             await collections.affiliations.save({
               _from: org._id,
               _to: user._id,
@@ -1226,7 +1161,7 @@ describe('removing an organization', () => {
         })
       })
       describe('transaction error occurs', () => {
-        let user, org
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: false,
@@ -1253,12 +1188,6 @@ describe('removing an organization', () => {
               },
             },
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              RETURN user
-          `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1270,8 +1199,8 @@ describe('removing an organization', () => {
             const orgLoader = orgLoaderByKey(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            transaction = jest.fn().mockReturnValue({
-              run() {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step() {
                 throw new Error('Database error occurred.')
               },
             })
@@ -1294,7 +1223,7 @@ describe('removing an organization', () => {
                 i18n,
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
@@ -1337,7 +1266,7 @@ describe('removing an organization', () => {
               },
             }
 
-            query = jest
+            const mockedQuery = jest
               .fn()
               .mockReturnValueOnce(cursor)
               .mockReturnValueOnce(cursor)
@@ -1364,14 +1293,14 @@ describe('removing an organization', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query,
+                    query: mockedQuery,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
@@ -1403,8 +1332,8 @@ describe('removing an organization', () => {
             const orgLoader = orgLoaderByKey(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            transaction = jest.fn().mockReturnValue({
-              run() {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step() {
                 return undefined
               },
               commit() {
@@ -1430,7 +1359,7 @@ describe('removing an organization', () => {
                 i18n,
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
@@ -1481,12 +1410,6 @@ describe('removing an organization', () => {
       })
       describe('organization does not exist', () => {
         it('returns an error message', async () => {
-          const userCursor = await query`
-            FOR user IN users
-              RETURN user
-          `
-          const user = await userCursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -1531,7 +1454,7 @@ describe('removing an organization', () => {
         })
       })
       describe('user does not have permission', () => {
-        let org, user, secondOrg
+        let org, secondOrg
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: true,
@@ -1586,11 +1509,6 @@ describe('removing an organization', () => {
         })
         describe('org to be removed is verified check', () => {
           beforeEach(async () => {
-            const userCursor = await query`
-              FOR user IN users
-                RETURN user
-            `
-            user = await userCursor.next()
             await collections.affiliations.save({
               _from: org._id,
               _to: user._id,
@@ -1646,11 +1564,6 @@ describe('removing an organization', () => {
         })
         describe('user is an admin in a different organization', () => {
           beforeEach(async () => {
-            const userCursor = await query`
-              FOR user IN users
-                RETURN user
-            `
-            user = await userCursor.next()
             await collections.affiliations.save({
               _from: org._id,
               _to: user._id,
@@ -1706,7 +1619,7 @@ describe('removing an organization', () => {
         })
       })
       describe('transaction error occurs', () => {
-        let user, org
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             verified: false,
@@ -1733,12 +1646,6 @@ describe('removing an organization', () => {
               },
             },
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              RETURN user
-          `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1750,8 +1657,8 @@ describe('removing an organization', () => {
             const orgLoader = orgLoaderByKey(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            transaction = jest.fn().mockReturnValue({
-              run() {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step() {
                 throw new Error('Database error occurred.')
               },
             })
@@ -1774,7 +1681,7 @@ describe('removing an organization', () => {
                 i18n,
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
@@ -1813,7 +1720,7 @@ describe('removing an organization', () => {
               },
             }
 
-            query = jest
+            const mockedQuery = jest
               .fn()
               .mockReturnValueOnce(cursor)
               .mockReturnValueOnce(cursor)
@@ -1840,14 +1747,14 @@ describe('removing an organization', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query,
+                    query: mockedQuery,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
@@ -1875,8 +1782,8 @@ describe('removing an organization', () => {
             const orgLoader = orgLoaderByKey(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            transaction = jest.fn().mockReturnValue({
-              run() {
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step() {
                 return undefined
               },
               commit() {
@@ -1902,7 +1809,7 @@ describe('removing an organization', () => {
                 i18n,
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({

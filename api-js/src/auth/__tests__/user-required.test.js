@@ -1,7 +1,7 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
-import { makeMigrations } from '../../../migrations'
+import { databaseOptions } from '../../../database-options'
 import { userLoaderByKey, userLoaderByUserName } from '../../user/loaders'
 import { userRequired } from '../index'
 import englishMessages from '../../locale/en/messages'
@@ -10,7 +10,7 @@ import frenchMessages from '../../locale/fr/messages'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a userLoaderByKey dataloader', () => {
-  let query, drop, truncate, migrate, collections, i18n
+  let query, drop, truncate, collections, i18n
 
   let consoleOutput = []
   const mockedWarn = (output) => consoleOutput.push(output)
@@ -18,14 +18,16 @@ describe('given a userLoaderByKey dataloader', () => {
   beforeAll(async () => {
     console.warn = mockedWarn
     console.error = mockedError
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
     await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -37,13 +39,19 @@ describe('given a userLoaderByKey dataloader', () => {
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
   describe('provided a user id', () => {
     it('returns the user', async () => {
       // Get User From db
-      const expectedUser = await userLoaderByUserName(query, '1', {}).load('test.account@istio.actually.exists')
+      const expectedUser = await userLoaderByUserName(query, '1', {}).load(
+        'test.account@istio.actually.exists',
+      )
 
       const testUserRequired = userRequired({
         userKey: expectedUser._key,

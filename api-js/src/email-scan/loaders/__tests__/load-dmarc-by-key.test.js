@@ -1,24 +1,27 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { dmarcLoaderByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the dmarcLoaderByKey function', () => {
-  let query, drop, truncate, migrate, collections, i18n
+  let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
 
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     console.error = mockedError
     i18n = setupI18n({
       locale: 'en',
@@ -69,7 +72,7 @@ describe('given the dmarcLoaderByKey function', () => {
         RETURN MERGE({ id: dmarcScan._key, _type: "dmarc" }, dmarcScan)
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasMore) {
         const tempDmarc = await expectedCursor.next()
         dmarcKeys.push(tempDmarc._key)
         expectedDkimScans.push(tempDmarc)
@@ -119,7 +122,7 @@ describe('given the dmarcLoaderByKey function', () => {
     describe('given a cursor error', () => {
       it('raises an error', async () => {
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
@@ -176,7 +179,7 @@ describe('given the dmarcLoaderByKey function', () => {
     describe('given a cursor error', () => {
       it('raises an error', async () => {
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }

@@ -1,9 +1,9 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { dkimLoaderByKey } from '../../loaders'
 import { dkimType, dkimResultType } from '../index'
@@ -84,13 +84,16 @@ describe('given the dkim result object', () => {
     })
   })
   describe('testing its field resolvers', () => {
-    let query, drop, truncate, migrate, collections, dkim, dkimResult, dkimGT
+    let query, drop, truncate, collections, dkim, dkimResult, dkimGT
 
     beforeAll(async () => {
-      ;({ migrate } = await ArangoTools({ rootPass, url }))
-      ;({ query, drop, truncate, collections } = await migrate(
-        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-      ))
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
 
     beforeEach(async () => {

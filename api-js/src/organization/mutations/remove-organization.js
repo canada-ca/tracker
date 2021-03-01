@@ -86,7 +86,7 @@ export const removeOrganization = new mutationWithClientMutationId({
 
     try {
       await Promise.all([
-        trx.run(async () => {
+        trx.step(async () => {
           await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
@@ -96,7 +96,7 @@ export const removeOrganization = new mutationWithClientMutationId({
             RETURN true
           `
         }),
-        trx.run(async () => {
+        trx.step(async () => {
           await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
@@ -106,7 +106,7 @@ export const removeOrganization = new mutationWithClientMutationId({
             RETURN true
           `
         }),
-        trx.run(async () => {
+        trx.step(async () => {
           await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
@@ -116,7 +116,7 @@ export const removeOrganization = new mutationWithClientMutationId({
             RETURN true
           `
         }),
-        trx.run(async () => {
+        trx.step(async () => {
           await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
@@ -126,7 +126,7 @@ export const removeOrganization = new mutationWithClientMutationId({
             RETURN true
           `
         }),
-        trx.run(async () => {
+        trx.step(async () => {
           await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
@@ -148,7 +148,7 @@ export const removeOrganization = new mutationWithClientMutationId({
 
     try {
       await Promise.all([
-        trx.run(async () => {
+        trx.step(async () => {
           await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             LET removeDomainEdges = (FOR domainEdge in domainEdges REMOVE domainEdge.edgeKey IN claims)
@@ -156,14 +156,14 @@ export const removeOrganization = new mutationWithClientMutationId({
             RETURN true
           `
         }),
-        trx.run(async () => {
+        trx.step(async () => {
           await query`
             LET userEdges = (FOR v, e IN 1..1 ANY ${organization._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
             LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
             RETURN true
           `
         }),
-        trx.run(async () => {
+        trx.step(async () => {
           await query`
             REMOVE ${organization._key} IN organizations
           `

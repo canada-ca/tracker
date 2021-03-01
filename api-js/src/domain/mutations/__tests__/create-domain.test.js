@@ -1,10 +1,10 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
@@ -21,38 +21,31 @@ import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('create a domain', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    schema,
-    collections,
-    transaction,
-    user,
-    org
+  let query, drop, truncate, schema, collections, transaction, user, org
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
     await graphql(
       schema,
       `
@@ -119,10 +112,14 @@ describe('create a domain', () => {
         RETURN user
     `
     user = await userCursor.next()
-    consoleOutput = []
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -1313,7 +1310,7 @@ describe('create a domain', () => {
               cleanseInput,
             )
 
-            query = jest
+            const mockedQuery = jest
               .fn()
               .mockReturnValueOnce({
                 next() {
@@ -1361,14 +1358,14 @@ describe('create a domain', () => {
                 request: {
                   language: 'en',
                 },
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query,
+                    query: mockedQuery,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
@@ -1414,8 +1411,8 @@ describe('create a domain', () => {
               cleanseInput,
             )
 
-            transaction = jest.fn().mockReturnValueOnce({
-              run() {
+            const mockedTransaction = jest.fn().mockReturnValueOnce({
+              step() {
                 return 'user'
               },
               commit() {
@@ -1459,7 +1456,7 @@ describe('create a domain', () => {
                 },
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
@@ -1752,7 +1749,7 @@ describe('create a domain', () => {
               cleanseInput,
             )
 
-            query = jest
+            const mockedQuery = jest
               .fn()
               .mockReturnValueOnce({
                 next() {
@@ -1800,14 +1797,14 @@ describe('create a domain', () => {
                 request: {
                   language: 'en',
                 },
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query,
+                    query: mockedQuery,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
@@ -1851,8 +1848,8 @@ describe('create a domain', () => {
               cleanseInput,
             )
 
-            transaction = jest.fn().mockReturnValueOnce({
-              run() {
+            const mockedTransaction = jest.fn().mockReturnValueOnce({
+              step() {
                 return 'user'
               },
               commit() {
@@ -1896,7 +1893,7 @@ describe('create a domain', () => {
                 },
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({

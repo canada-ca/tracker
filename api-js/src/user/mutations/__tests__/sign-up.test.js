@@ -1,4 +1,4 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
@@ -7,7 +7,7 @@ import request from 'supertest'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -16,14 +16,20 @@ import { userLoaderByUserName } from '../../loaders'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('user sign up', () => {
-  let query, drop, truncate, migrate, collections, schema, i18n, tokenize
+  let query, drop, truncate, collections, schema, i18n, tokenize
 
   beforeAll(async () => {
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     tokenize = jest.fn().mockReturnValue('token')
   })
 
@@ -35,18 +41,14 @@ describe('user sign up', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-  })
-
-  afterEach(() => {
-    consoleOutput = []
   })
 
   afterEach(async () => {
+    consoleOutput = []
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -395,7 +397,7 @@ describe('user sign up', () => {
         it('throws an error', async () => {
           const loader = userLoaderByUserName(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -429,7 +431,7 @@ describe('user sign up', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 auth: {
                   bcrypt,
                   tokenize,
@@ -462,7 +464,7 @@ describe('user sign up', () => {
               throw new Error('Cursor error occurred.')
             },
           }
-          query = jest.fn().mockReturnValue(cursor)
+          const mockedQuery = jest.fn().mockReturnValue(cursor)
 
           try {
             await graphql(
@@ -494,7 +496,7 @@ describe('user sign up', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 auth: {
                   bcrypt,
                   tokenize,
@@ -706,7 +708,7 @@ describe('user sign up', () => {
         it('throws an error', async () => {
           const loader = userLoaderByUserName(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -740,7 +742,7 @@ describe('user sign up', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 auth: {
                   bcrypt,
                   tokenize,
@@ -771,7 +773,7 @@ describe('user sign up', () => {
               throw new Error('Cursor error occurred.')
             },
           }
-          query = jest.fn().mockReturnValue(cursor)
+          const mockedQuery = jest.fn().mockReturnValue(cursor)
 
           try {
             await graphql(
@@ -803,7 +805,7 @@ describe('user sign up', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 auth: {
                   bcrypt,
                   tokenize,

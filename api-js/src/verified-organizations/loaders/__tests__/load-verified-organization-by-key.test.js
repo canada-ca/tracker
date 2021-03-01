@@ -1,28 +1,30 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { verifiedOrgLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a verifiedOrgLoaderByKey dataloader', () => {
-  let query, drop, truncate, migrate, collections, i18n
+  let query, drop, truncate, collections, i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
     console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {
-    await truncate()
     await collections.organizations.save({
       verified: true,
       summaries: {
@@ -97,6 +99,10 @@ describe('given a verifiedOrgLoaderByKey dataloader', () => {
         },
       },
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
     consoleOutput = []
   })
 
@@ -146,7 +152,7 @@ describe('given a verifiedOrgLoaderByKey dataloader', () => {
             RETURN MERGE({ _id: org._id, _key: org._key, id: org._key, _rev: org._rev, _type: "verifiedOrganization", verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("en", org.orgDetails))
         `
 
-        while (expectedCursor.hasNext()) {
+        while (expectedCursor.hasMore) {
           const tempOrg = await expectedCursor.next()
           orgIds.push(tempOrg._key)
           expectedOrgs.push(tempOrg)
@@ -182,7 +188,7 @@ describe('given a verifiedOrgLoaderByKey dataloader', () => {
     describe('cursor error is raised', () => {
       it('returns an error', async () => {
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
@@ -247,7 +253,7 @@ describe('given a verifiedOrgLoaderByKey dataloader', () => {
               RETURN MERGE({ _id: org._id, _key: org._key, id: org._key, _rev: org._rev, _type: "verifiedOrganization", verified: org.verified, domainCount: COUNT(domains), summaries: org.summaries }, TRANSLATE("fr", org.orgDetails))
           `
 
-        while (expectedCursor.hasNext()) {
+        while (expectedCursor.hasMore) {
           const tempOrg = await expectedCursor.next()
           orgIds.push(tempOrg._key)
           expectedOrgs.push(tempOrg)
@@ -279,7 +285,7 @@ describe('given a verifiedOrgLoaderByKey dataloader', () => {
     describe('cursor error is raised', () => {
       it('returns an error', async () => {
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }

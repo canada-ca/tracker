@@ -17,9 +17,7 @@ describe('given the dkimOrder input object', () => {
       const demoType = dkimOrder.getFields()
 
       expect(demoType).toHaveProperty('field')
-      expect(demoType.field.type).toMatchObject(
-        GraphQLNonNull(DkimOrderField),
-      )
+      expect(demoType.field.type).toMatchObject(GraphQLNonNull(DkimOrderField))
     })
   })
 })

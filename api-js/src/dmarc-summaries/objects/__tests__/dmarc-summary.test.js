@@ -1,9 +1,9 @@
 import moment from 'moment'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { categoryTotalsType } from '../category-totals'
 import { categoryPercentagesType } from '../category-percentages'
 import { detailTablesType } from '../detail-tables'
@@ -64,16 +64,16 @@ describe('testing the period gql object', () => {
     })
   })
   describe('testing the field resolvers', () => {
-    let query, drop, truncate, migrate, collections, dmarcSummary
+    let query, drop, truncate, collections, dmarcSummary
 
     beforeAll(async () => {
-      ;({ migrate } = await ArangoTools({ rootPass, url }))
-      ;({ query, drop, truncate, collections } = await migrate(
-        makeMigrations({
-          databaseName: dbNameFromFile(__filename),
-          rootPass,
-        }),
-      ))
+      ;({ query, drop, truncate, collections } = await ensure({
+        type: 'database',
+        name: dbNameFromFile(__filename),
+        url,
+        rootPassword: rootPass,
+        options: databaseOptions({ rootPass }),
+      }))
     })
 
     beforeEach(async () => {

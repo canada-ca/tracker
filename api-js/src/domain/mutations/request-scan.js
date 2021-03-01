@@ -13,7 +13,7 @@ const {
 export const requestScan = new mutationWithClientMutationId({
   name: 'RequestScan',
   description:
-    'This mutation is used to run a manual scan on a requested domain.',
+    'This mutation is used to step a manual scan on a requested domain.',
   inputFields: () => ({
     domain: {
       type: Domain,
@@ -55,7 +55,7 @@ export const requestScan = new mutationWithClientMutationId({
 
     if (typeof domain === 'undefined') {
       console.warn(
-        `User: ${userKey} attempted to run a one time scan on: ${requestedDomain} however domain cannot be found.`,
+        `User: ${userKey} attempted to step a one time scan on: ${requestedDomain} however domain cannot be found.`,
       )
       throw new Error(
         i18n._(t`Unable to request a on time scan on this domain.`),
@@ -67,7 +67,7 @@ export const requestScan = new mutationWithClientMutationId({
 
     if (!permission) {
       console.warn(
-        `User: ${userKey} attempted to run a one time scan on: ${domain.domain} however they do not have permission to do so.`,
+        `User: ${userKey} attempted to step a one time scan on: ${domain.domain} however they do not have permission to do so.`,
       )
       throw new Error(
         i18n._(t`Unable to request a on time scan on this domain.`),

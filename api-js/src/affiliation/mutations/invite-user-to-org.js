@@ -141,7 +141,7 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
 
       // Create affiliation
       try {
-        await trx.run(() =>
+        await trx.step(() =>
           collections.affiliations.save({
             _from: org._id,
             _to: requestedUser._id,
@@ -150,7 +150,7 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
         )
       } catch (err) {
         console.error(
-          `Transaction run error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
+          `Transaction step error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to invite user. Please try again.`))
       }

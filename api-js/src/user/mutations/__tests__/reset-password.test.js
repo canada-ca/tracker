@@ -1,11 +1,11 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -17,30 +17,32 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
 
 describe('reset users password', () => {
-  let query, drop, truncate, migrate, schema, i18n
+  let query, drop, truncate, schema, i18n
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    // Generate DB Items
+    ;({ query, drop, truncate } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
     await graphql(
       schema,
       `
@@ -77,10 +79,14 @@ describe('reset users password', () => {
         },
       },
     )
-    consoleOutput = []
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -159,7 +165,7 @@ describe('reset users password', () => {
           `User: ${user._key} successfully reset their password.`,
         ])
 
-        consoleOutput = []
+        consoleOutput.length = 0
 
         const testSignIn = await graphql(
           schema,
@@ -627,7 +633,7 @@ describe('reset users password', () => {
             parameters: { userKey: user._key, currentPassword: user.password },
           })
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -649,7 +655,7 @@ describe('reset users password', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -752,7 +758,7 @@ describe('reset users password', () => {
           `User: ${user._key} successfully reset their password.`,
         ])
 
-        consoleOutput = []
+        consoleOutput.length = 0
 
         const testSignIn = await graphql(
           schema,
@@ -1204,7 +1210,7 @@ describe('reset users password', () => {
             parameters: { userKey: user._key, currentPassword: user.password },
           })
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -1226,7 +1232,7 @@ describe('reset users password', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,

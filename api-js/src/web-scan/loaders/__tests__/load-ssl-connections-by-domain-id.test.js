@@ -1,18 +1,18 @@
 import { stringify } from 'jest-matcher-utils'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { sslLoaderByKey, sslLoaderConnectionsByDomainId } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load ssl connection function', () => {
-  let query, drop, truncate, migrate, collections, user, domain, i18n
+  let query, drop, truncate, collections, user, domain, i18n
 
   const consoleWarnOutput = []
   const mockedWarn = (output) => consoleWarnOutput.push(output)
@@ -23,10 +23,13 @@ describe('given the load ssl connection function', () => {
   beforeAll(async () => {
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     i18n = setupI18n({
       locale: 'en',
       localeData: {
@@ -42,9 +45,6 @@ describe('given the load ssl connection function', () => {
   })
 
   beforeEach(async () => {
-    consoleWarnOutput.length = 0
-    consoleErrorOutput.length = 0
-
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -59,6 +59,8 @@ describe('given the load ssl connection function', () => {
   })
 
   afterEach(async () => {
+    consoleWarnOutput.length = 0
+    consoleErrorOutput.length = 0
     await truncate()
   })
 

@@ -1,92 +1,65 @@
 import { setupI18n } from '@lingui/core'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
-import bcrypt from 'bcryptjs'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { checkPermission, tokenize, userRequired } from '../../../auth'
-import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { checkPermission, userRequired } from '../../../auth'
+import { userLoaderByKey } from '../../../user/loaders'
 import { orgLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('updating an organization', () => {
-  let query, drop, truncate, migrate, schema, collections, transaction
+  let query, drop, truncate, schema, collections, transaction, user
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    // Generate DB Items
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
+    consoleOutput.length = 0
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+    })
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
   describe('given a successful organization update', () => {
+    let org
     beforeEach(async () => {
-      await collections.organizations.save({
+      org = await collections.organizations.save({
         orgDetails: {
           en: {
             slug: 'treasury-board-secretariat',
@@ -112,28 +85,12 @@ describe('updating an organization', () => {
       })
     })
     describe('users permission level is super_admin', () => {
-      let user, org
       beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        const orgCursor = await query`
-          FOR org IN organizations
-            FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
-        `
-        user = await userCursor.next()
-        org = await orgCursor.next()
-
-        await query`
-          INSERT {
-            _from: ${org._id},
-            _to: ${user._id},
-            permission: "super_admin"
-          } INTO affiliations
-        `
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'super_admin',
+        })
       })
       describe('users language is english', () => {
         describe('updating the acronym', () => {
@@ -1335,28 +1292,12 @@ describe('updating an organization', () => {
       })
     })
     describe('users permission level is admin', () => {
-      let user, org
       beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        const orgCursor = await query`
-          FOR org IN organizations
-            FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
-        `
-        user = await userCursor.next()
-        org = await orgCursor.next()
-
-        await query`
-          INSERT {
-            _from: ${org._id},
-            _to: ${user._id},
-            permission: "admin"
-          } INTO affiliations
-        `
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'admin',
+        })
       })
       describe('users language is english', () => {
         describe('updating the acronym', () => {
@@ -2576,8 +2517,9 @@ describe('updating an organization', () => {
         })
       })
       describe('user is located in the database', () => {
+        let org
         beforeEach(async () => {
-          await collections.organizations.save({
+          org = await collections.organizations.save({
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -2603,30 +2545,13 @@ describe('updating an organization', () => {
           })
         })
         describe('user does not have the proper permissions', () => {
-          let user, org
-          beforeEach(async () => {
-            const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-            const orgCursor = await query`
-                FOR org IN organizations
-                  FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-                  RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
-              `
-            user = await userCursor.next()
-            org = await orgCursor.next()
-          })
           describe('user has user level permission', () => {
             beforeEach(async () => {
-              await query`
-                INSERT {
-                  _from: ${org._id},
-                  _to: ${user._id},
-                  permission: "user"
-                } INTO affiliations
-              `
+              await collections.affiliations.save({
+                _from: org._id,
+                _to: user._id,
+                permission: 'user',
+              })
             })
             it('returns an error', async () => {
               const response = await graphql(
@@ -2747,39 +2672,6 @@ describe('updating an organization', () => {
       })
       describe('organization cannot be found', () => {
         describe('organization does not exist in database', () => {
-          let user
-          beforeEach(async () => {
-            await collections.organizations.save({
-              orgDetails: {
-                en: {
-                  slug: 'treasury-board-secretariat',
-                  acronym: 'TBS',
-                  name: 'Treasury Board of Canada Secretariat',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-                fr: {
-                  slug: 'secretariat-conseil-tresor',
-                  acronym: 'SCT',
-                  name: 'Secrétariat du Conseil Trésor du Canada',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-              },
-            })
-            const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-            user = await userCursor.next()
-          })
           it('returns an error', async () => {
             const response = await graphql(
               schema,
@@ -2839,9 +2731,9 @@ describe('updating an organization', () => {
         })
       })
       describe('database error occurs', () => {
-        let user, org
+        let org
         beforeEach(async () => {
-          await collections.organizations.save({
+          org = await collections.organizations.save({
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -2865,27 +2757,11 @@ describe('updating an organization', () => {
               },
             },
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const orgCursor = await query`
-            FOR org IN organizations
-              FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
-          `
-          user = await userCursor.next()
-          org = await orgCursor.next()
-
-          await query`
-            INSERT {
-              _from: ${org._id},
-              _to: ${user._id},
-              permission: "admin"
-            } INTO affiliations
-          `
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
         })
         describe('when gathering all the org details', () => {
           it('returns an error', async () => {
@@ -3063,7 +2939,7 @@ describe('updating an organization', () => {
             const userLoader = userLoaderByKey(query)
 
             transaction = jest.fn().mockReturnValue({
-              run() {
+              step() {
                 return {
                   next() {
                     return {
@@ -3172,8 +3048,9 @@ describe('updating an organization', () => {
         })
       })
       describe('user is located in the database', () => {
+        let org
         beforeEach(async () => {
-          await collections.organizations.save({
+          org = await collections.organizations.save({
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -3199,30 +3076,13 @@ describe('updating an organization', () => {
           })
         })
         describe('user does not have the proper permissions', () => {
-          let user, org
-          beforeEach(async () => {
-            const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-            const orgCursor = await query`
-                FOR org IN organizations
-                  FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-                  RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
-              `
-            user = await userCursor.next()
-            org = await orgCursor.next()
-          })
           describe('user has user level permission', () => {
             beforeEach(async () => {
-              await query`
-                INSERT {
-                  _from: ${org._id},
-                  _to: ${user._id},
-                  permission: "user"
-                } INTO affiliations
-              `
+              await collections.affiliations.save({
+                _from: org._id,
+                _to: user._id,
+                permission: 'user',
+              })
             })
             it('returns an error', async () => {
               const response = await graphql(
@@ -3335,39 +3195,6 @@ describe('updating an organization', () => {
       })
       describe('organization cannot be found', () => {
         describe('organization does not exist in database', () => {
-          let user
-          beforeEach(async () => {
-            await collections.organizations.save({
-              orgDetails: {
-                en: {
-                  slug: 'treasury-board-secretariat',
-                  acronym: 'TBS',
-                  name: 'Treasury Board of Canada Secretariat',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-                fr: {
-                  slug: 'secretariat-conseil-tresor',
-                  acronym: 'SCT',
-                  name: 'Secrétariat du Conseil Trésor du Canada',
-                  zone: 'FED',
-                  sector: 'TBS',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-              },
-            })
-            const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-            user = await userCursor.next()
-          })
           it('returns an error', async () => {
             const response = await graphql(
               schema,
@@ -3423,9 +3250,9 @@ describe('updating an organization', () => {
         })
       })
       describe('database error occurs', () => {
-        let user, org
+        let org
         beforeEach(async () => {
-          await collections.organizations.save({
+          org = await collections.organizations.save({
             orgDetails: {
               en: {
                 slug: 'treasury-board-secretariat',
@@ -3449,27 +3276,11 @@ describe('updating an organization', () => {
               },
             },
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const orgCursor = await query`
-            FOR org IN organizations
-              FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
-          `
-          user = await userCursor.next()
-          org = await orgCursor.next()
-
-          await query`
-            INSERT {
-              _from: ${org._id},
-              _to: ${user._id},
-              permission: "admin"
-            } INTO affiliations
-          `
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
         })
         describe('when gathering all the org details', () => {
           it('returns an error', async () => {
@@ -3543,42 +3354,11 @@ describe('updating an organization', () => {
             const orgLoader = orgLoaderByKey(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            const mockQuery = jest
-              .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'super_admin'
-                },
-              })
-              .mockReturnValueOnce({
-                next() {
-                  return {
-                    orgDetails: {
-                      en: {
-                        slug: 'treasury-board-secretariat',
-                        acronym: 'TBS',
-                        name: 'Treasury Board of Canada Secretariat',
-                        zone: 'FED',
-                        sector: 'TBS',
-                        country: 'Canada',
-                        province: 'Ontario',
-                        city: 'Ottawa',
-                      },
-                      fr: {
-                        slug: 'secretariat-conseil-tresor',
-                        acronym: 'SCT',
-                        name: 'Secrétariat du Conseil Trésor du Canada',
-                        zone: 'FED',
-                        sector: 'TBS',
-                        country: 'Canada',
-                        province: 'Ontario',
-                        city: 'Ottawa',
-                      },
-                    },
-                  }
-                },
-              })
-              .mockRejectedValue(new Error('Database error occurred.'))
+            const mockedTransaction = jest.fn().mockReturnValue({
+              step() {
+                throw new Error('Database error occurred.')
+              },
+            })
 
             const response = await graphql(
               schema,
@@ -3599,15 +3379,15 @@ describe('updating an organization', () => {
               null,
               {
                 i18n,
-                query: mockQuery,
+                query: query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
                     i18n,
                     userKey: user._key,
-                    query: mockQuery,
+                    query: query,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
@@ -3639,7 +3419,7 @@ describe('updating an organization', () => {
             const userLoader = userLoaderByKey(query)
 
             transaction = jest.fn().mockReturnValue({
-              run() {
+              step() {
                 return {
                   next() {
                     return {

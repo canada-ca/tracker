@@ -82,7 +82,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
 
     // Upsert new org details
     try {
-      await trx.run(
+      await trx.step(
         async () =>
           await query`
             UPSERT { _key: ${orgKey} }

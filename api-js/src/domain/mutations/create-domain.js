@@ -137,10 +137,10 @@ export const createDomain = new mutationWithClientMutationId({
     const trx = await transaction(collectionStrings)
 
     if (typeof checkDomain === 'undefined') {
-      const insertedDomain = await trx.run(() =>
+      const insertedDomain = await trx.step(() =>
         collections.domains.save(insertDomain),
       )
-      await trx.run(() =>
+      await trx.step(() =>
         collections.claims.save({ _from: org._id, _to: insertedDomain._id }),
       )
     } else {
@@ -152,7 +152,7 @@ export const createDomain = new mutationWithClientMutationId({
       })
       insertDomain.selectors = selectorList
 
-      await trx.run(
+      await trx.step(
         async () =>
           await query`
         UPSERT { _key: ${checkDomain._key} }
@@ -161,7 +161,7 @@ export const createDomain = new mutationWithClientMutationId({
           IN domains
       `,
       )
-      await trx.run(() =>
+      await trx.step(() =>
         collections.claims.save({ _from: org._id, _to: checkDomain._id }),
       )
     }

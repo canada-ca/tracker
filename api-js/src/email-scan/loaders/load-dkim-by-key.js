@@ -20,7 +20,7 @@ export const dkimLoaderByKey = (query, userKey, i18n) =>
 
     const dkimMap = {}
     try {
-      await cursor.each((dkimScan) => {
+      await cursor.forEach((dkimScan) => {
         dkimMap[dkimScan._key] = dkimScan
       })
     } catch (err) {

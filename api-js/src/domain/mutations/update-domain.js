@@ -137,7 +137,7 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     try {
-      await trx.run(
+      await trx.step(
         async () =>
           await query`
           UPSERT { _key: ${domain._key} }
@@ -148,7 +148,7 @@ export const updateDomain = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(
-        `Transaction run error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
+        `Transaction step error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }

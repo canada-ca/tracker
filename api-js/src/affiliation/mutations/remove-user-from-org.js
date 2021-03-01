@@ -126,7 +126,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       const trx = await transaction(collectionStrings)
 
       try {
-        await trx.run(async () => {
+        await trx.step(async () => {
           await query`
           FOR aff IN affiliations
             FILTER aff._from == ${requestedOrg._id}
@@ -137,7 +137,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         })
       } catch (err) {
         console.error(
-          `Transaction run error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
+          `Transaction step error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
         )
         throw new Error(
           i18n._(t`Unable to remove user from organization. Please try again.`),

@@ -39,7 +39,7 @@ export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
 
     const summaryMap = {}
     try {
-      await cursor.each((summary) => {
+      await cursor.forEach((summary) => {
         summaryMap[summary._key] = summary
       })
     } catch (err) {

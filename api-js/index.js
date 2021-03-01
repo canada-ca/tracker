@@ -1,7 +1,7 @@
 import './src/env'
-import { ArangoTools } from 'arango-tools'
+import { ensure } from 'arango-tools'
 import { Server } from './src/server'
-import { makeMigrations } from './migrations'
+import { databaseOptions } from './database-options'
 
 const {
   PORT = 4000,
@@ -16,10 +16,13 @@ const {
 } = process.env
 
 ;(async () => {
-  const { migrate } = await ArangoTools({ rootPass, url })
-  const { query, collections, transaction } = await migrate(
-    makeMigrations({ databaseName, rootPass }),
-  )
+  const { query, collections, transaction } = await ensure({
+    type: 'database',
+    name: databaseName,
+    url,
+    rootPassword: rootPass,
+    options: databaseOptions({ rootPass }),
+  })
 
   Server(PORT, maxDepth, complexityCost, scalarCost, objectCost, listFactor, {
     query,
@@ -27,11 +30,7 @@ const {
     transaction,
   }).listen(PORT, (err) => {
     if (err) throw err
-    console.log(
-      `🚀 Server ready at http://localhost:${PORT}/graphql`,
-    )
-    console.log(
-      `🚀 Subscriptions ready at ws://localhost:${PORT}/graphql`,
-    )
+    console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`)
+    console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}/graphql`)
   })
 })()

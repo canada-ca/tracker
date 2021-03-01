@@ -1,28 +1,30 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { domainLoaderByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a domainLoaderByKey dataloader', () => {
-  let query, drop, truncate, migrate, collections, i18n
+  let query, drop, truncate, collections, i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
     console.error = mockedError
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
     await collections.domains.save({
       domain: 'test.canada.ca',
       slug: 'test-canada-ca',
@@ -35,6 +37,10 @@ describe('given a domainLoaderByKey dataloader', () => {
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -63,7 +69,7 @@ describe('given a domainLoaderByKey dataloader', () => {
           RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasMore) {
         const tempDomain = await expectedCursor.next()
         domainIds.push(tempDomain._key)
         expectedDomains.push(tempDomain)
@@ -98,10 +104,10 @@ describe('given a domainLoaderByKey dataloader', () => {
         `
         const expectedDomain = await expectedCursor.next()
 
-        query = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = domainLoaderByKey(query, '1234', i18n)
+        const loader = domainLoaderByKey(mockedQuery, '1234', i18n)
 
         try {
           await loader.load(expectedDomain._key)
@@ -126,12 +132,12 @@ describe('given a domainLoaderByKey dataloader', () => {
         const expectedDomain = await expectedCursor.next()
 
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = domainLoaderByKey(query, '1234', i18n)
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = domainLoaderByKey(mockedQuery, '1234', i18n)
 
         try {
           await loader.load(expectedDomain._key)
@@ -171,10 +177,10 @@ describe('given a domainLoaderByKey dataloader', () => {
         `
         const expectedDomain = await expectedCursor.next()
 
-        query = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = domainLoaderByKey(query, '1234', i18n)
+        const loader = domainLoaderByKey(mockedQuery, '1234', i18n)
 
         try {
           await loader.load(expectedDomain._key)
@@ -197,12 +203,12 @@ describe('given a domainLoaderByKey dataloader', () => {
         const expectedDomain = await expectedCursor.next()
 
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = domainLoaderByKey(query, '1234', i18n)
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = domainLoaderByKey(mockedQuery, '1234', i18n)
 
         try {
           await loader.load(expectedDomain._key)

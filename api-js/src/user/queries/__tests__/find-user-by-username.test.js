@@ -1,9 +1,9 @@
 import { setupI18n } from '@lingui/core'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { userRequired, checkUserIsAdminForUser } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
@@ -15,16 +15,7 @@ import frenchMessages from '../../../locale/fr/messages'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the findUserByUsername query', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    schema,
-    collections,
-    org,
-    i18n,
-    user,
-    userTwo
+  let query, drop, truncate, schema, collections, org, i18n, user, userTwo
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -33,10 +24,13 @@ describe('given the findUserByUsername query', () => {
       mutation: createMutationSchema(),
     })
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   let consoleOutput = []

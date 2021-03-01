@@ -1,7 +1,7 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import {
   dkimFailureLoaderConnectionsBySumId,
   dmarcFailureLoaderConnectionsBySumId,
@@ -17,13 +17,16 @@ import { spfFailureConnection } from '../spf-failure-table'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('testing the detailTables gql object', () => {
-  let query, drop, truncate, migrate, collections, dmarcSummary
+  let query, drop, truncate, collections, dmarcSummary
 
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {

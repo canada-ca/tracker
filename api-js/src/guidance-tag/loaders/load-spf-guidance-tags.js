@@ -21,7 +21,7 @@ export const spfGuidanceTagLoader = (query, userKey, i18n) =>
 
     const tagMap = {}
     try {
-      await cursor.each((tag) => {
+      await cursor.forEach((tag) => {
         tagMap[tag._key] = tag
       })
     } catch (err) {

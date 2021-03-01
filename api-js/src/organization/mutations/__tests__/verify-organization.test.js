@@ -1,10 +1,10 @@
 import { setupI18n } from '@lingui/core'
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
@@ -17,14 +17,17 @@ import { orgLoaderByKey } from '../../loaders'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('removing an organization', () => {
-  let query, drop, truncate, migrate, schema, collections, transaction, i18n
+  let query, drop, truncate, schema, collections, transaction, i18n
 
   beforeAll(async () => {
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
@@ -696,7 +699,7 @@ describe('removing an organization', () => {
         describe('when running transaction', () => {
           it('throws an error message', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
-              run() {
+              step() {
                 throw new Error('Database error occurred.')
               },
               commit() {
@@ -760,7 +763,7 @@ describe('removing an organization', () => {
         describe('when committing transaction', () => {
           it('throws an error message', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
-              run() {
+              step() {
                 return undefined
               },
               commit() {
@@ -1228,7 +1231,7 @@ describe('removing an organization', () => {
         describe('when running transaction', () => {
           it('throws an error message', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
-              run() {
+              step() {
                 throw new Error('Database error occurred.')
               },
               commit() {
@@ -1288,7 +1291,7 @@ describe('removing an organization', () => {
         describe('when committing transaction', () => {
           it('throws an error message', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
-              run() {
+              step() {
                 return undefined
               },
               commit() {

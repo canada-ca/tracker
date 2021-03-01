@@ -20,7 +20,7 @@ export const userLoaderByUserName = (query, userKey, i18n) =>
 
     const userMap = {}
     try {
-      await cursor.each((user) => {
+      await cursor.forEach((user) => {
         userMap[user.userName] = user
       })
     } catch (err) {

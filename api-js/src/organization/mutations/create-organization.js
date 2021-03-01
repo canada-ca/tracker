@@ -173,7 +173,7 @@ export const createOrganization = new mutationWithClientMutationId({
 
     let cursor
     try {
-      cursor = await trx.run(
+      cursor = await trx.step(
         async () =>
           await query`
             INSERT ${organizationDetails} INTO organizations 
@@ -191,7 +191,7 @@ export const createOrganization = new mutationWithClientMutationId({
     const organization = await cursor.next()
 
     try {
-      await trx.run(
+      await trx.step(
         async () =>
           await query`
             INSERT {

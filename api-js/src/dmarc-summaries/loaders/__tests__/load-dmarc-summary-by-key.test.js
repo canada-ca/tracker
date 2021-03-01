@@ -1,9 +1,9 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { dmarcSumLoaderByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -12,7 +12,6 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
   let query,
     drop,
     truncate,
-    migrate,
     collections,
     i18n,
     domain,
@@ -22,11 +21,14 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
     console.error = mockedError
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {
@@ -154,7 +156,7 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
           }
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasMore) {
         const temp = await expectedCursor.next()
         summaryKeys.push(temp._key)
         expectedSummaries.push(temp)
@@ -203,7 +205,7 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
@@ -259,7 +261,7 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }

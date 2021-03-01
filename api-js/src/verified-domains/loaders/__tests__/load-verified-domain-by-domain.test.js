@@ -1,28 +1,30 @@
-import { ArangoTools, dbNameFromFile } from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { makeMigrations } from '../../../../migrations'
+import { databaseOptions } from '../../../../database-options'
 import { verifiedDomainLoaderByDomain } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a verifiedDomainLoaderByDomain dataloader', () => {
-  let query, drop, truncate, migrate, collections, i18n, domain1, domain2, org
+  let query, drop, truncate, collections, i18n, domain1, domain2, org
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
     console.error = mockedError
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
     org = await collections.organizations.save({
       verified: true,
       orgDetails: {
@@ -66,6 +68,10 @@ describe('given a verifiedDomainLoaderByDomain dataloader', () => {
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -94,7 +100,7 @@ describe('given a verifiedDomainLoaderByDomain dataloader', () => {
           RETURN MERGE(domain, { id: domain._key, _type: "verifiedDomain" })
       `
 
-      while (expectedCursor.hasNext()) {
+      while (expectedCursor.hasMore) {
         const tempUser = await expectedCursor.next()
         domainDomains.push(tempUser.domain)
         expectedDomains.push(tempUser)
@@ -129,10 +135,10 @@ describe('given a verifiedDomainLoaderByDomain dataloader', () => {
         `
         const expectedDomain = await expectedCursor.next()
 
-        query = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = verifiedDomainLoaderByDomain(query, i18n)
+        const loader = verifiedDomainLoaderByDomain(mockedQuery, i18n)
 
         try {
           await loader.load(expectedDomain.domain)
@@ -157,12 +163,12 @@ describe('given a verifiedDomainLoaderByDomain dataloader', () => {
         const expectedDomain = await expectedCursor.next()
 
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = verifiedDomainLoaderByDomain(query, i18n)
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = verifiedDomainLoaderByDomain(mockedQuery, i18n)
 
         try {
           await loader.load(expectedDomain.domain)
@@ -202,10 +208,10 @@ describe('given a verifiedDomainLoaderByDomain dataloader', () => {
         `
         const expectedDomain = await expectedCursor.next()
 
-        query = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = verifiedDomainLoaderByDomain(query, i18n)
+        const loader = verifiedDomainLoaderByDomain(mockedQuery, i18n)
 
         try {
           await loader.load(expectedDomain.domain)
@@ -228,12 +234,12 @@ describe('given a verifiedDomainLoaderByDomain dataloader', () => {
         const expectedDomain = await expectedCursor.next()
 
         const cursor = {
-          each() {
+          forEach() {
             throw new Error('Cursor error occurred.')
           },
         }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = verifiedDomainLoaderByDomain(query, i18n)
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = verifiedDomainLoaderByDomain(mockedQuery, i18n)
 
         try {
           await loader.load(expectedDomain.domain)
