@@ -2,7 +2,7 @@ import setuptools
 
 requirements = [
     "aiohttp>=3.7.1,<3.8.0",
-    "gql>=3.0",
+    "gql>=3.0.0a5",
     "python-slugify>=4.0.1",
 ]
 
@@ -11,7 +11,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="tracker_client",
-    version="1.0.0a",
+    version="1.0.0-a",
     author="Thomas Nickerson",
     author_email="contact@cyber.gc.ca",
     description="A Python client for the GoC Tracker API",

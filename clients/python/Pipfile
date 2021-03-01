@@ -4,10 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-gql = {editable = true, git = "https://github.com/graphql-python/gql.git"}
+gql = ">=3.0.0a5"
 aiohttp = "*"
 websockets = "*"
 python-slugify = "*"
+wheel = "*"
 
 [dev-packages]
 black = "*"
@@ -15,6 +16,9 @@ pytest = "*"
 pytest-mock = "*"
 pylint = "*"
 bandit = "*"
+wheel = "*"
+setuptools = "*"
+twine = "*"
 
 [requires]
 python_version = "3.8"
