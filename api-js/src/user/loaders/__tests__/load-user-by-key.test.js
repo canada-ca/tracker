@@ -11,7 +11,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 describe('given a userLoaderByKey dataloader', () => {
   let query, drop, truncate, collections, i18n
 
-  let consoleOutput = []
+  const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
     console.error = mockedError
@@ -27,9 +27,6 @@ describe('given a userLoaderByKey dataloader', () => {
         fr: frenchMessages.messages,
       },
     })
-  })
-
-  beforeEach(async () => {
     ;({ query, drop, truncate, collections } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
@@ -37,7 +34,9 @@ describe('given a userLoaderByKey dataloader', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-    await truncate()
+  })
+
+  beforeEach(async () => {
     await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -52,10 +51,14 @@ describe('given a userLoaderByKey dataloader', () => {
       tfaValidated: false,
       emailValidated: false,
     })
-    consoleOutput = []
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -113,16 +116,16 @@ describe('given a userLoaderByKey dataloader', () => {
     describe('database error is raised', () => {
       it('returns an error', async () => {
         const expectedCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "random@email.ca"
-          RETURN MERGE({ id: user._key, _type: "user" }, user)
-      `
+          FOR user IN users
+            FILTER user.userName == "random@email.ca"
+            RETURN MERGE({ id: user._key, _type: "user" }, user)
+        `
         const expectedUser = await expectedCursor.next()
 
-        query = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByKey(query, '1234', i18n)
+        const loader = userLoaderByKey(mockedQuery, '1234', i18n)
 
         try {
           await loader.load(expectedUser._key)
@@ -140,10 +143,10 @@ describe('given a userLoaderByKey dataloader', () => {
     describe('cursor error is raised', () => {
       it('throws an error', async () => {
         const expectedCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "random@email.ca"
-          RETURN MERGE({ id: user._key, _type: "user" }, user)
-      `
+          FOR user IN users
+            FILTER user.userName == "random@email.ca"
+            RETURN MERGE({ id: user._key, _type: "user" }, user)
+        `
         const expectedUser = await expectedCursor.next()
 
         const cursor = {
@@ -151,8 +154,8 @@ describe('given a userLoaderByKey dataloader', () => {
             throw new Error('Cursor error occurred.')
           },
         }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByKey(query, '1234', i18n)
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = userLoaderByKey(mockedQuery, '1234', i18n)
 
         try {
           await loader.load(expectedUser._key)
@@ -186,16 +189,16 @@ describe('given a userLoaderByKey dataloader', () => {
     describe('database error is raised', () => {
       it('returns an error', async () => {
         const expectedCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "random@email.ca"
-          RETURN MERGE({ id: user._key, _type: "user" }, user)
-      `
+          FOR user IN users
+            FILTER user.userName == "random@email.ca"
+            RETURN MERGE({ id: user._key, _type: "user" }, user)
+        `
         const expectedUser = await expectedCursor.next()
 
-        query = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByKey(query, '1234', i18n)
+        const loader = userLoaderByKey(mockedQuery, '1234', i18n)
 
         try {
           await loader.load(expectedUser._key)
@@ -211,10 +214,10 @@ describe('given a userLoaderByKey dataloader', () => {
     describe('cursor error is raised', () => {
       it('throws an error', async () => {
         const expectedCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "random@email.ca"
-          RETURN MERGE({ id: user._key, _type: "user" }, user)
-      `
+          FOR user IN users
+            FILTER user.userName == "random@email.ca"
+            RETURN MERGE({ id: user._key, _type: "user" }, user)
+        `
         const expectedUser = await expectedCursor.next()
 
         const cursor = {
@@ -222,8 +225,8 @@ describe('given a userLoaderByKey dataloader', () => {
             throw new Error('Cursor error occurred.')
           },
         }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByKey(query, '1234', i18n)
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = userLoaderByKey(mockedQuery, '1234', i18n)
 
         try {
           await loader.load(expectedUser._key)

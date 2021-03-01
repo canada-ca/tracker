@@ -18,24 +18,19 @@ const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 describe('authenticate user account', () => {
   let query, drop, truncate, schema, collections, mockTokenize
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-
-    mockTokenize = jest.fn().mockReturnValue('token')
-  })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
     // Generate DB Items
     ;({ query, drop, truncate, collections } = await ensure({
       type: 'database',
@@ -44,11 +39,19 @@ describe('authenticate user account', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-    await truncate()
-    consoleOutput = []
+    mockTokenize = jest.fn().mockReturnValue('token')
+  })
+
+
+  beforeEach(async () => {
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -438,7 +441,7 @@ describe('authenticate user account', () => {
             secret: String(SIGN_IN_KEY),
           })
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -469,7 +472,7 @@ describe('authenticate user account', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -775,7 +778,7 @@ describe('authenticate user account', () => {
             secret: String(SIGN_IN_KEY),
           })
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -806,7 +809,7 @@ describe('authenticate user account', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,

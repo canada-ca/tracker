@@ -19,22 +19,19 @@ const mockNotify = jest.fn()
 describe('reset users password', () => {
   let query, drop, truncate, schema, i18n
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-  })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
     // Generate DB Items
     ;({ query, drop, truncate } = await ensure({
       type: 'database',
@@ -43,7 +40,9 @@ describe('reset users password', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-    await truncate()
+  })
+
+  beforeEach(async () => {
     await graphql(
       schema,
       `
@@ -80,10 +79,14 @@ describe('reset users password', () => {
         },
       },
     )
-    consoleOutput = []
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -162,7 +165,7 @@ describe('reset users password', () => {
           `User: ${user._key} successfully reset their password.`,
         ])
 
-        consoleOutput = []
+        consoleOutput.length = 0
 
         const testSignIn = await graphql(
           schema,
@@ -630,7 +633,7 @@ describe('reset users password', () => {
             parameters: { userKey: user._key, currentPassword: user.password },
           })
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -652,7 +655,7 @@ describe('reset users password', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,
@@ -755,7 +758,7 @@ describe('reset users password', () => {
           `User: ${user._key} successfully reset their password.`,
         ])
 
-        consoleOutput = []
+        consoleOutput.length = 0
 
         const testSignIn = await graphql(
           schema,
@@ -1207,7 +1210,7 @@ describe('reset users password', () => {
             parameters: { userKey: user._key, currentPassword: user.password },
           })
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -1229,7 +1232,7 @@ describe('reset users password', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               auth: {
                 bcrypt,
                 tokenize,

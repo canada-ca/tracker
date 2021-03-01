@@ -21,6 +21,14 @@ describe('given the findMe query', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    // Generate DB Items
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   let consoleOutput = []
@@ -32,15 +40,7 @@ describe('given the findMe query', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    // Generate DB Items
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
-    await truncate()
+
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -48,10 +48,14 @@ describe('given the findMe query', () => {
       tfaValidated: false,
       emailValidated: false,
     })
-    consoleOutput = []
   })
 
   afterEach(async () => {
+    await truncate()
+    consoleOutput = []
+  })
+
+  afterAll(async () => {
     await drop()
   })
 

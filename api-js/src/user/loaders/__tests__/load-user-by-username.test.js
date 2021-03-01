@@ -37,7 +37,6 @@ describe('given a userLoaderByUserName dataloader', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -53,6 +52,10 @@ describe('given a userLoaderByUserName dataloader', () => {
       emailValidated: false,
     })
     consoleOutput = []
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {

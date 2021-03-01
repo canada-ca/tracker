@@ -45,11 +45,11 @@ describe('user send password reset email', () => {
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
-    await truncate()
+    consoleOutput = []
   })
 
-  afterEach(() => {
-    consoleOutput = []
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {

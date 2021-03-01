@@ -23,7 +23,13 @@ describe('user sign up', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     tokenize = jest.fn().mockReturnValue('token')
   })
 
@@ -35,21 +41,14 @@ describe('user sign up', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    ;({ query, drop, truncate, collections } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
-    await truncate()
-  })
-
-  afterEach(() => {
-    consoleOutput = []
   })
 
   afterEach(async () => {
+    consoleOutput = []
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -398,7 +397,7 @@ describe('user sign up', () => {
         it('throws an error', async () => {
           const loader = userLoaderByUserName(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -432,7 +431,7 @@ describe('user sign up', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 auth: {
                   bcrypt,
                   tokenize,
@@ -465,7 +464,7 @@ describe('user sign up', () => {
               throw new Error('Cursor error occurred.')
             },
           }
-          query = jest.fn().mockReturnValue(cursor)
+          const mockedQuery = jest.fn().mockReturnValue(cursor)
 
           try {
             await graphql(
@@ -497,7 +496,7 @@ describe('user sign up', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 auth: {
                   bcrypt,
                   tokenize,
@@ -709,7 +708,7 @@ describe('user sign up', () => {
         it('throws an error', async () => {
           const loader = userLoaderByUserName(query)
 
-          query = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -743,7 +742,7 @@ describe('user sign up', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 auth: {
                   bcrypt,
                   tokenize,
@@ -774,7 +773,7 @@ describe('user sign up', () => {
               throw new Error('Cursor error occurred.')
             },
           }
-          query = jest.fn().mockReturnValue(cursor)
+          const mockedQuery = jest.fn().mockReturnValue(cursor)
 
           try {
             await graphql(
@@ -806,7 +805,7 @@ describe('user sign up', () => {
               null,
               {
                 i18n,
-                query,
+                query: mockedQuery,
                 auth: {
                   bcrypt,
                   tokenize,
