@@ -42,9 +42,6 @@ describe('given findVerifiedOrganizations', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    await truncate()
-    consoleOutput = []
-
     orgOne = await collections.organizations.save({
       verified: true,
       orgDetails: {
@@ -95,6 +92,11 @@ describe('given findVerifiedOrganizations', () => {
         },
       },
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
+    consoleOutput = []
   })
 
   afterAll(async () => {

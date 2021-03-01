@@ -25,7 +25,6 @@ describe('given a verifiedOrgLoaderByKey dataloader', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     await collections.organizations.save({
       verified: true,
       summaries: {
@@ -100,6 +99,10 @@ describe('given a verifiedOrgLoaderByKey dataloader', () => {
         },
       },
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
     consoleOutput = []
   })
 

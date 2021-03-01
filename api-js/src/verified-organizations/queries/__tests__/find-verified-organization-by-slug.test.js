@@ -42,9 +42,6 @@ describe('given findOrganizationBySlugQuery', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-
-    await truncate()
-    consoleOutput = []
     org = await collections.organizations.save({
       verified: true,
       orgDetails: {
@@ -75,6 +72,11 @@ describe('given findOrganizationBySlugQuery', () => {
       _from: org._id,
       _to: domain._id,
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
+    consoleOutput = []
   })
 
   afterAll(async () => {

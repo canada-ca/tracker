@@ -141,11 +141,10 @@ describe('given the load organizations connection function', () => {
       _from: orgTwo._id,
       _to: domainThree._id,
     })
-
-    consoleOutput = []
   })
 
   afterEach(async () => {
+    consoleOutput = []
     await truncate()
   })
 
