@@ -1,10 +1,10 @@
 """Tests for methods on the Client class"""
-import pytest
 from gql.transport.exceptions import (
     TransportQueryError,
     TransportServerError,
     TransportProtocolError,
 )
+import pytest
 
 from tracker_client.client import Client
 import tracker_client.queries as queries
@@ -83,15 +83,15 @@ def test_client_execute_query_other_error(mocker, capsys):
     assert "Fatal error:" in captured.out
 
 
-def test_client_execute_query_success(mocker, all_domains_input):
+def test_client_execute_query_success(mocker, client_all_domains_input):
     """Test that a successful response is passed on unchanged"""
     mocker.patch("tracker_client.client.get_auth_token")
     mocker.patch("tracker_client.client.create_client")
     test_client = Client()
-    test_client.client.execute = mocker.MagicMock(return_value=all_domains_input)
+    test_client.client.execute = mocker.MagicMock(return_value=client_all_domains_input)
 
     result = test_client.execute_query(None)
-    assert result == all_domains_input
+    assert result == client_all_domains_input
 
 
 def test_client_get_organizations(mocker, client_all_orgs_input):

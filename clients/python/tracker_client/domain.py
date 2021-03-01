@@ -35,6 +35,21 @@ class Domain:
         self.dmarc_phase = dmarcPhase
         self.dkim_selectors = selectors
 
+    def __str__(self):
+        return self.domain_name
+
+    def __repr__(self):
+        return (
+            "Domain(client=%r, domain=%r, lastRan=%r, dmarcPhase=%r, selectors=%r)"
+            % (
+                self.client,
+                self.domain_name,
+                self.last_ran,
+                self.dmarc_phase,
+                self.dkim_selectors,
+            )
+        )
+
     def get_status(self):
         """Return pass/fail status information for this Domain
 

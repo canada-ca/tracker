@@ -1,59 +1,6 @@
 """Provides results formatting functions used in client.py"""
 
 
-def format_all_domains(result):
-    """Formats the result dict in get_all_domains
-
-    :param dict result: unformatted dict with results of ALL_DOMAINS_QUERY
-    :return: formatted results
-    :rtype: dict
-    """
-    # Extract the list of nodes from the resulting dict
-    result = result["findMyOrganizations"]["edges"]
-    # Move the dict value of "node" up a level
-    result = [n["node"] for n in result]
-
-    # For each dict element of the list, change the value of "domains"
-    # to the list of domains contained in the nodes of its edges
-    for x in result:
-        x["domains"] = x["domains"]["edges"]
-        x["domains"] = [n["node"] for n in x["domains"]]
-        x["domains"] = [n["domain"] for n in x["domains"]]
-
-    # Create a new dict in the desired format to return
-    result = {x["acronym"]: x["domains"] for x in result}
-    return result
-
-
-def format_acronym_domains(result, acronym):
-    """Formats the result dict in get_domains_by_acronym
-
-    :param dict result: unformatted dict with results of ALL_DOMAINS_QUERY
-    :param str acronym: an acronym referring to an organization
-    :return: formatted results, filtered to only the org identified by acronym
-    :rtype: dict
-    :raises KeyError: if user does not have membership in an org with a matching acronym
-    """
-    result = format_all_domains(result)
-    result = {acronym.upper(): result[acronym.upper()]}
-    return result
-
-
-def format_name_domains(result):
-    """Formats the result dict in get_domains_by_name
-
-    :param dict result: unformatted dict with results of DOMAINS_BY_SLUG
-    :return: formatted results
-    :rtype: dict
-    """
-    result = result["findOrganizationBySlug"]
-    result["domains"] = result["domains"]["edges"]
-    result["domains"] = [n["node"] for n in result["domains"]]
-    result["domains"] = [n["domain"] for n in result["domains"]]
-    result = {result["acronym"]: result["domains"]}
-    return result
-
-
 def format_dmarc_monthly(result):
     """Formats the result dict in get_dmarc_summary
 
@@ -78,34 +25,7 @@ def format_dmarc_yearly(result):
     return result
 
 
-def format_all_summaries(result):
-    """Formats the result dict in get_all_summaries
-
-    :param dict result: unformatted dict with results of ALL_ORG_SUMMARIES
-    :return: formatted results
-    :rtype: dict
-    """
-    result = result["findMyOrganizations"]["edges"]
-    result = {x["node"].pop("acronym"): x["node"] for x in result}
-    return result
-
-
-def format_acronym_summary(result, acronym):
-    """Formats the result dict in get_summary_by_acronym
-
-    :param dict result: unformatted dict with results of ALL_ORG_SUMMARIES
-    :param str acronym: an acronym referring to an organization
-    :return: formatted results, filtered to only the org identified by acronym
-    :rtype: dict
-    :raises KeyError: if user does not have membership in an org with a matching acronym
-    """
-    result = format_all_summaries(result)
-    # dict in assignment is to keep the org identified in the return value
-    result = {acronym.upper(): result[acronym.upper()]}
-    return result
-
-
-def format_name_summary(result):
+def format_summary(result):
     """Formats the result dict in get_summary_by_name
 
     :param dict result: unformatted dict with results of SUMMARY_BY_SLUG

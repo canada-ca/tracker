@@ -1,14 +1,9 @@
-"""This module provides utility functions related to gql, mostly for internal use"""
+"""This module provides utility functions related to gql, for internal use"""
 import os
 import re
 
 from gql import Client
 from gql.transport.aiohttp import AIOHTTPTransport
-from gql.transport.exceptions import (
-    TransportQueryError,
-    TransportServerError,
-    TransportProtocolError,
-)
 
 from queries import SIGNIN_MUTATION
 
@@ -87,43 +82,3 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
     result = client.execute(SIGNIN_MUTATION, variable_values=params)
     auth_token = result["signIn"]["result"]["authResult"]["authToken"]
     return auth_token
-
-
-# TODO: Make error messages better
-def execute_query(client, query, params=None):
-    """Executes a query on given client, with given parameters.
-
-    Intended for internal use, but if for some reason you need an unformatted
-    response from the API you could call this.
-
-    :param Client client: a gql client to execute the query on
-    :param DocumentNode query: a gql query string that has been parsed with gql()
-    :param dict params: variables to pass along with query
-    :return: Results of executing query on API
-    :rtype: dict
-    :raises TransportProtocolError: if server response is not GraphQL
-    :raises TransportServerError: if there is a server error
-    :raises Exception: if any unhandled exception is raised within function
-    """
-    try:
-        result = client.execute(query, variable_values=params)
-
-    except TransportQueryError as error:
-        # Not sure this is the best way to deal with this exception
-        result = {"error": {"message": error.errors[0]["message"]}}
-
-    except TransportProtocolError as error:
-        print("Unexpected response from server:", error)
-        raise
-
-    except TransportServerError as error:
-        print("Server error:", error)
-        raise
-
-    except Exception as error:
-        # Need to be more descriptive
-        # Potentially figure out other errors that could be caught here?
-        print("Fatal error:", error)
-        raise
-
-    return result

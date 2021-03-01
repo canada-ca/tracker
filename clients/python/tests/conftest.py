@@ -1,5 +1,8 @@
 import pytest
 
+import tracker_client.domain as dom
+import tracker_client.organization as org
+
 
 # Register "online" mark
 def pytest_configure(config):
@@ -16,83 +19,56 @@ def error_message():
 
 
 @pytest.fixture
-def all_domains_input():
-    return {
-        "findMyOrganizations": {
-            "edges": [
-                {
-                    "node": {
-                        "acronym": "ABC",
-                        "domains": {
-                            "edges": [
-                                {"node": {"domain": "abc.def.ca"}},
-                                {"node": {"domain": "test-test.cd.ca"}},
-                            ]
-                        },
-                    }
-                },
-                {
-                    "node": {
-                        "acronym": "DEF",
-                        "domains": {
-                            "edges": [
-                                {"node": {"domain": "qwe-rty.com"}},
-                                {"node": {"domain": "foo.bar.baz"}},
-                                {"node": {"domain": "fizz-buzz.bang"}},
-                                {"node": {"domain": "xyz-abc-mn.net"}},
-                            ]
-                        },
-                    }
-                },
-                {
-                    "node": {
-                        "acronym": "GHI",
-                        "domains": {
-                            "edges": [
-                                {"node": {"domain": "abcdef.xyz"}},
-                            ]
-                        },
-                    }
-                },
-            ]
+def mock_org(mocker):
+    """Returns an Organization with a mock client, on which the execute_query
+    method will return the value passed as an argument.
+
+    Fixtures can't normally accept args, but returning a function makes it
+    possible to use them as if they could
+    """
+
+    def _make_mock_org(rval):
+        attributes = {
+            "name": "foo",
+            "acronym": "FOO",
+            "zone": "FED",
+            "sector": "TBS",
+            "country": "Canada",
+            "province": "ON",
+            "city": "Ottawa",
+            "verified": True,
+            "domainCount": 12,
         }
-    }
+
+        client = mocker.MagicMock(spec="tracker_client.client.Client")
+        client.execute_query = mocker.MagicMock(return_value=rval)
+        return org.Organization(client, **attributes)
+
+    return _make_mock_org
 
 
 @pytest.fixture
-def all_domains_output():
-    return {
-        "ABC": ["abc.def.ca", "test-test.cd.ca"],
-        "DEF": [
-            "qwe-rty.com",
-            "foo.bar.baz",
-            "fizz-buzz.bang",
-            "xyz-abc-mn.net",
-        ],
-        "GHI": ["abcdef.xyz"],
-    }
+def mock_domain(mocker):
+    """Returns a Domain with a mock client, on which the execute_query
+    method will return the value passed as an argument.
 
+    Fixtures can't normally accept args, but returning a function makes it
+    possible to use them as if they could
+    """
 
-@pytest.fixture
-def name_domain_input():
-    return {
-        "findOrganizationBySlug": {
-            "acronym": "DEF",
-            "domains": {
-                "edges": [
-                    {"node": {"domain": "qwe-rty.com"}},
-                    {"node": {"domain": "foo.bar.baz"}},
-                    {"node": {"domain": "fizz-buzz.bang"}},
-                    {"node": {"domain": "xyz-abc-mn.net"}},
-                ]
-            },
+    def _make_mock_domain(rval):
+        attributes = {
+            "domain": "foo.bar",
+            "dmarcPhase": "not implemented",
+            "lastRan": "2021-01-27 23:24:26.911236",
+            "selectors": [],
         }
-    }
 
+        client = mocker.MagicMock(spec="tracker_client.client.Client")
+        client.execute_query = mocker.MagicMock(return_value=rval)
+        return dom.Domain(client, **attributes)
 
-@pytest.fixture
-def org_domains_output():
-    return {"DEF": ["qwe-rty.com", "foo.bar.baz", "fizz-buzz.bang", "xyz-abc-mn.net"]}
+    return _make_mock_domain
 
 
 @pytest.fixture
@@ -438,105 +414,7 @@ def yearly_dmarc_output():
 
 
 @pytest.fixture
-def all_summaries_input():
-    return {
-        "findMyOrganizations": {
-            "edges": [
-                {
-                    "node": {
-                        "acronym": "ABC",
-                        "domainCount": 6,
-                        "summaries": {
-                            "web": {
-                                "total": 6,
-                                "categories": [
-                                    {"name": "pass", "count": 0, "percentage": 0},
-                                    {"name": "fail", "count": 6, "percentage": 100},
-                                ],
-                            },
-                            "mail": {
-                                "total": 6,
-                                "categories": [
-                                    {"name": "pass", "count": 4, "percentage": 66.7},
-                                    {"name": "fail", "count": 2, "percentage": 33.3},
-                                ],
-                            },
-                        },
-                    }
-                },
-                {
-                    "node": {
-                        "acronym": "DEF",
-                        "domainCount": 12,
-                        "summaries": {
-                            "web": {
-                                "total": 12,
-                                "categories": [
-                                    {"name": "pass", "count": 1, "percentage": 8.3},
-                                    {"name": "fail", "count": 11, "percentage": 91.7},
-                                ],
-                            },
-                            "mail": {
-                                "total": 12,
-                                "categories": [
-                                    {"name": "pass", "count": 7, "percentage": 58.3},
-                                    {"name": "fail", "count": 5, "percentage": 41.7},
-                                ],
-                            },
-                        },
-                    }
-                },
-            ]
-        }
-    }
-
-
-@pytest.fixture
-def all_summaries_output():
-    return {
-        "ABC": {
-            "domainCount": 6,
-            "summaries": {
-                "web": {
-                    "total": 6,
-                    "categories": [
-                        {"name": "pass", "count": 0, "percentage": 0},
-                        {"name": "fail", "count": 6, "percentage": 100},
-                    ],
-                },
-                "mail": {
-                    "total": 6,
-                    "categories": [
-                        {"name": "pass", "count": 4, "percentage": 66.7},
-                        {"name": "fail", "count": 2, "percentage": 33.3},
-                    ],
-                },
-            },
-        },
-        "DEF": {
-            "domainCount": 12,
-            "summaries": {
-                "web": {
-                    "total": 12,
-                    "categories": [
-                        {"name": "pass", "count": 1, "percentage": 8.3},
-                        {"name": "fail", "count": 11, "percentage": 91.7},
-                    ],
-                },
-                "mail": {
-                    "total": 12,
-                    "categories": [
-                        {"name": "pass", "count": 7, "percentage": 58.3},
-                        {"name": "fail", "count": 5, "percentage": 41.7},
-                    ],
-                },
-            },
-        },
-    }
-
-
-@pytest.fixture
-def name_summary_input():
+def org_summary_input():
     return {
         "findOrganizationBySlug": {
             "acronym": "DEF",
@@ -2271,17 +2149,6 @@ def client_domain_input():
     }
 
 
-# TODO: refactor to just return a domain
-@pytest.fixture
-def mock_domain():
-    return {
-        "domain": "foo.bar",
-        "dmarcPhase": "not implemented",
-        "lastRan": "2021-01-27 23:24:26.911236",
-        "selectors": [],
-    }
-
-
 @pytest.fixture
 def domain_get_owners_input():
     true = True
@@ -2318,22 +2185,6 @@ def domain_get_owners_input():
                 ]
             }
         }
-    }
-
-
-# TODO: refactor to just return an Organization
-@pytest.fixture
-def mock_org():
-    return {
-        "name": "foo",
-        "acronym": "FOO",
-        "zone": "FED",
-        "sector": "TBS",
-        "country": "Canada",
-        "province": "ON",
-        "city": "Ottawa",
-        "verified": True,
-        "domainCount": 12,
     }
 
 

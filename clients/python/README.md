@@ -1,6 +1,6 @@
 # Tracker Python API Client
 
-The Tracker Python API Client provides a simple Python interface for the [Tracker GraphQL API](https://github.com/canada-ca/tracker/blob/master/api-js/README.md), with the aim of allowing users to easily integrate data from Tracker into existing workflows and platforms. It allows access to the JSON data served by the API without requiring specific knowledge of [GraphQL](https://graphql.org/) or the Tracker API. This is done by providing functions that execute canned queries against the API using [gql](https://github.com/graphql-python/gql). Responses are formatted to remove pagination related structures, and to ensure useful keys are always present.
+The Tracker Python API Client provides a simple Python interface for the [Tracker GraphQL API](https://github.com/canada-ca/tracker/blob/master/api-js/README.md), with the aim of allowing users to easily integrate data from Tracker into existing workflows and platforms. It allows access to the JSON data served by the API without requiring specific knowledge of [GraphQL](https://graphql.org/) or the Tracker API. This is done by providing an object-oriented interface to execute canned queries against the API using [gql](https://github.com/graphql-python/gql). Responses are formatted to remove pagination related structures, and to ensure useful keys are always present.
 
 
 ## Installation
@@ -47,37 +47,29 @@ You should be mindful that setting these variables manually can result in creden
 
 ### Basic Usage
 
-You will generally start by creating a client with `create_client(auth_token=get_auth_token())` and storing the result. All functions that make queries expect such a client to be passed as the first argument.
+Start by importing the `Client` class (see below for examples). Instantiating `Client` will connect to Tracker and authenticate with your credentials, at which point you can begin getting `Domain` and `Organization` objects using that `Client` instance's methods. You can then operate on these objects to get the data you need from Tracker.
 
 ### Examples
 
-#### Get all domains in my organizations
+#### See all of your domains
 
-Supposing I belong to two organizations with the acronyms "FOO" and "BAR":
+Note the use of a list comprehension inside the call to `print`. Calling `print` on a container uses contained objects' `__repr__` rather than `__str__`, so the list comprehension simply serves to make the output more human-friendly.
 
 ```python
->>> import tracker_client.client as tracker_client
->>> client = tracker_client.create_client(auth_token=tracker_client.get_auth_token())
->>> print(tracker_client.get_all_domains(client))
-{
-    "FOO": [
-        "foo.bar",
-        "foo.bar.baz"
-    ],
-    "BAR": [
-        "fizz.buzz",
-        "buzz.bang",
-        "ab.cd.ef",
-    ]
-}
+>>> from tracker_client.client import Client
+>>> client = Client()
+>>> domain_list = client.get_domains()
+>>> print([str(domain) for domain in domain_list])
+["foo.bar", "foo.bar.baz", "fizz.buzz", "buzz.bang", "ab.cd.ef"]
 ```
 
-The following examples continue the previous one (assume the package has been imported as above and a `client` object with a valid token exists).
+The following examples assume the package has been imported as above and a `Client` has been instantiated as client.
 
-#### Get a DMARC summary for a domain
+#### Get a DMARC summary for a specific domain
 
 ```python
->>> print(tracker_client.get_dmarc_summary(client, "foo.bar", "september", 2020))
+>>> foobar = client.get_domain("foo.bar")
+>>> print(foobar.get_dmarc_summary("september", 2020))
 {
     "foo.bar": {
         "month": "SEPTEMBER",
@@ -93,10 +85,11 @@ The following examples continue the previous one (assume the package has been im
 }
 ```
 
-#### Get summary metrics for an organization
+#### Get summary metrics for a specific organization
 
 ```python
->>> print(tracker_client.get_summary_by_acronym(client, "foo"))
+>>> foo = client.get_organization("Foo Bar")
+>>> print(foo.get_summary())
 {
     "FOO": {
         "domainCount": 10,
@@ -139,7 +132,8 @@ The following examples continue the previous one (assume the package has been im
 #### Get the status of a domain 
 
 ```python
->>> print(tracker_client.get_domain_status(client, "foo.bar"))
+>>> foobar = client.get_domain("foo.bar")
+>>> print(foobar.get_domain_status())
 {
     "foo.bar": {
         "lastRan": "2021-01-23 22:33:26.921529",
@@ -152,6 +146,24 @@ The following examples continue the previous one (assume the package has been im
         }
     }
 }
+```
+
+#### Get a list of all domains not properly implementing DMARC
+
+Supposing all your domains, except "foo.bar", properly implement DMARC:
+
+```python
+>>> import json
+>>> client = Client()
+>>> domain_list = client.get_domains()
+>>> dmarc_fails = []
+>>> for domain in domain_list:
+...     status = json.loads(domain.get_status())
+...     if status[domain.domain_name]["status"]["dmarc"] == "FAIL":
+...         dmarc_fails.append(domain.domain_name)
+...
+>>> print(dmarc_fails)
+["foo.bar"]
 ```
 
 > **NOTE**: Because of gql limitations, the client is not currently compatible with IPython or Jupyter.

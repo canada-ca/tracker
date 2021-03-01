@@ -5,7 +5,7 @@ import json
 from slugify import slugify
 
 import domain as dom
-from formatting import format_name_summary
+from formatting import format_summary
 import queries
 
 
@@ -58,6 +58,26 @@ class Organization:
         self.city = city
         self.verified = verified
         self.domain_count = domainCount
+
+    def __str__(self):
+        return self.acronym + " " + self.name
+
+    def __repr__(self):
+        return (
+            "Organization(client=%r, name=%r, acronym=%r, zone=%r, sector=%r, country=%r, province=%r, city=%r, verified=%r, domain_count=%r)"
+            % (
+                self.client,
+                self.name,
+                self.acronym,
+                self.zone,
+                self.sector,
+                self.country,
+                self.province,
+                self.city,
+                self.verified,
+                self.domain_count,
+            )
+        )
 
     def get_summary(self):
         """Get summary metrics for this Organization
@@ -114,7 +134,7 @@ class Organization:
         result = self.client.execute_query(queries.SUMMARY_BY_SLUG, params)
 
         if "error" not in result:
-            result = format_name_summary(result)
+            result = format_summary(result)
 
         return json.dumps(result, indent=4)
 
