@@ -1,5 +1,4 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
-import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
@@ -10,31 +9,28 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import { tokenize, userRequired } from '../../../auth'
-import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { userRequired } from '../../../auth'
+import { userLoaderByKey } from '../../../user/loaders'
 import { orgLoaderBySlug } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
 describe('create an organization', () => {
-  let query, drop, truncate, schema, collections, transaction
+  let query, drop, truncate, schema, collections, transaction, user
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-  })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
     ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
@@ -42,60 +38,26 @@ describe('create an organization', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
+  })
+
+  beforeEach(async () => {
+    consoleOutput.length = 0
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+    })
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
   describe('given a successful org creation', () => {
     describe('language is set to english', () => {
       it('returns the organizations information', async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        const user = await userCursor.next()
-
         const response = await graphql(
           schema,
           `
@@ -194,13 +156,6 @@ describe('create an organization', () => {
     })
     describe('language is set to french', () => {
       it('returns the organizations information', async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        const user = await userCursor.next()
-
         const response = await graphql(
           schema,
           `
@@ -343,13 +298,6 @@ describe('create an organization', () => {
           })
         })
         it('returns an error', async () => {
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await userCursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -428,17 +376,10 @@ describe('create an organization', () => {
       describe('transaction error occurs', () => {
         describe('when inserting organization', () => {
           it('returns an error', async () => {
-            const userCursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            const user = await userCursor.next()
-
             const orgLoader = orgLoaderBySlug(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            query = jest
+            const mockedQuery = jest
               .fn()
               .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -484,7 +425,7 @@ describe('create an organization', () => {
                 request: {
                   language: 'en',
                 },
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
@@ -519,17 +460,10 @@ describe('create an organization', () => {
         })
         describe('when inserting edge', () => {
           it('returns an error message', async () => {
-            const userCursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            const user = await userCursor.next()
-
             const orgLoader = orgLoaderBySlug(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            query = jest
+            const mockedQuery = jest
               .fn()
               .mockResolvedValueOnce({
                 next() {
@@ -580,7 +514,7 @@ describe('create an organization', () => {
                 request: {
                   language: 'en',
                 },
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
@@ -615,17 +549,10 @@ describe('create an organization', () => {
         })
         describe('when committing information to db', () => {
           it('returns an error message', async () => {
-            const userCursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            const user = await userCursor.next()
-
             const orgLoader = orgLoaderBySlug(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            transaction = jest.fn().mockReturnValue({
+            const mockedTransaction = jest.fn().mockReturnValue({
               step() {
                 return {
                   next() {
@@ -682,7 +609,7 @@ describe('create an organization', () => {
                 },
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   userRequired: userRequired({
@@ -758,13 +685,6 @@ describe('create an organization', () => {
           })
         })
         it('returns an error', async () => {
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          const user = await userCursor.next()
-
           const response = await graphql(
             schema,
             `
@@ -839,17 +759,10 @@ describe('create an organization', () => {
       describe('transaction error occurs', () => {
         describe('when inserting organization', () => {
           it('returns an error', async () => {
-            const userCursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            const user = await userCursor.next()
-
             const orgLoader = orgLoaderBySlug(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            query = jest
+            const mockedQuery = jest
               .fn()
               .mockRejectedValue(new Error('Database error occurred.'))
 
@@ -895,7 +808,7 @@ describe('create an organization', () => {
                 request: {
                   language: 'en',
                 },
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
@@ -926,17 +839,10 @@ describe('create an organization', () => {
         })
         describe('when inserting edge', () => {
           it('returns an error message', async () => {
-            const userCursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            const user = await userCursor.next()
-
             const orgLoader = orgLoaderBySlug(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            query = jest
+            const mockedQuery = jest
               .fn()
               .mockResolvedValueOnce({
                 next() {
@@ -987,7 +893,7 @@ describe('create an organization', () => {
                 request: {
                   language: 'en',
                 },
-                query,
+                query: mockedQuery,
                 collections,
                 transaction,
                 userKey: user._key,
@@ -1018,17 +924,10 @@ describe('create an organization', () => {
         })
         describe('when committing information to db', () => {
           it('returns an error message', async () => {
-            const userCursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            const user = await userCursor.next()
-
             const orgLoader = orgLoaderBySlug(query, 'en')
             const userLoader = userLoaderByKey(query)
 
-            transaction = jest.fn().mockReturnValue({
+            const mockedTransaction = jest.fn().mockReturnValue({
               step() {
                 return {
                   next() {
@@ -1085,7 +984,7 @@ describe('create an organization', () => {
                 },
                 query,
                 collections,
-                transaction,
+                transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   userRequired: userRequired({

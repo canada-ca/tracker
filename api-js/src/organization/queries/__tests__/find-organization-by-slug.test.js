@@ -1,5 +1,4 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
-import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
@@ -10,10 +9,10 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, tokenize, userRequired } from '../../../auth'
+import { checkPermission, userRequired } from '../../../auth'
 import { affiliationConnectionLoaderByOrgId } from '../../../affiliation/loaders'
 import { domainLoaderConnectionsByOrgId } from '../../../domain/loaders'
-import { userLoaderByUserName, userLoaderByKey } from '../../../user/loaders'
+import { userLoaderByKey } from '../../../user/loaders'
 import { orgLoaderBySlug, orgLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -21,23 +20,19 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 describe('given findOrganizationBySlugQuery', () => {
   let query, drop, truncate, schema, collections, org, i18n, user, domain
 
+  const consoleOutput = []
+  const mockedInfo = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.info = mockedInfo
+    console.warn = mockedWarn
+    console.error = mockedError
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-  })
-
-  let consoleOutput = []
-  const mockedInfo = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  const mockedError = (output) => consoleOutput.push(output)
-
-  beforeEach(async () => {
-    console.info = mockedInfo
-    console.warn = mockedWarn
-    console.error = mockedError
     // Generate DB Items
     ;({ query, drop, truncate, collections } = await ensure({
       type: 'database',
@@ -46,45 +41,12 @@ describe('given findOrganizationBySlugQuery', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
-    consoleOutput = []
+  })
 
+  beforeEach(async () => {
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+    })
     org = await collections.organizations.save({
       orgDetails: {
         en: {
@@ -116,9 +78,14 @@ describe('given findOrganizationBySlugQuery', () => {
       _from: org._id,
       _to: domain._id,
     })
+    consoleOutput.length = 0
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -139,28 +106,11 @@ describe('given findOrganizationBySlugQuery', () => {
     })
     describe('given successful organization retrieval', () => {
       beforeEach(async () => {
-        const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-        user = await userCursor.next()
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
           permission: 'user',
         })
-      })
-      afterEach(async () => {
-        await query`
-            LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-            LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-            RETURN true
-          `
-        await query`
-            FOR affiliation IN affiliations
-              REMOVE affiliation IN affiliations
-          `
       })
       describe('authorized user queries organization by slug', () => {
         it('returns organization', async () => {
@@ -244,15 +194,6 @@ describe('given findOrganizationBySlugQuery', () => {
       })
     })
     describe('given unsuccessful organization retrieval', () => {
-      let user
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-      })
       describe('user does not belong to organization', () => {
         it('returns an appropriate error message', async () => {
           const response = await graphql(
@@ -378,28 +319,11 @@ describe('given findOrganizationBySlugQuery', () => {
     })
     describe('given successful organization retrieval', () => {
       beforeEach(async () => {
-        const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-        user = await userCursor.next()
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
           permission: 'user',
         })
-      })
-      afterEach(async () => {
-        await query`
-            LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
-            LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-            RETURN true
-          `
-        await query`
-            FOR affiliation IN affiliations
-              REMOVE affiliation IN affiliations
-          `
       })
       describe('authorized user queries organization by slug', () => {
         it('returns organization', async () => {
@@ -482,7 +406,6 @@ describe('given findOrganizationBySlugQuery', () => {
         })
       })
     })
-
     describe('given unsuccessful organization retrieval', () => {
       beforeAll(() => {
         i18n = setupI18n({
@@ -497,14 +420,6 @@ describe('given findOrganizationBySlugQuery', () => {
             fr: frenchMessages.messages,
           },
         })
-      })
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
       })
       describe('user does not belong to organization', () => {
         it('returns an appropriate error message', async () => {
