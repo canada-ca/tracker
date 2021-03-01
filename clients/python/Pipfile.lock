@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c640a4fa1c135ec14a043f3e1102706617164042e99411acb0fc48ebe94e8f4d"
+            "sha256": "bb3b9bc9744bc12918879edfc73028cb27f4e48e905bf4abfd3a34bbd12e5cb8"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -83,9 +83,11 @@
             "version": "==3.0.4"
         },
         "gql": {
-            "editable": true,
-            "git": "https://github.com/graphql-python/gql.git",
-            "ref": "459d5ebacce95c817effcd18be152d6cf360cf2b"
+            "hashes": [
+                "sha256:a87bc42934a70902c005a317567cc57e460b160a9c606db8be62e618e29c336c"
+            ],
+            "index": "pypi",
+            "version": "==3.0.0a5"
         },
         "graphql-core": {
             "hashes": [
