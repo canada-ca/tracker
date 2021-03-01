@@ -104,4 +104,17 @@ export const databaseOptions = ({ rootPass }) => [
     type: 'edgecollection',
     name: 'domainsToDmarcSummaries',
   },
+  {
+    type: 'searchview',
+    name: 'domainSearch',
+    options: {
+      links: {
+        domains: {
+          fields: {
+            domain: { analyzers: ['::delimiter_en'] },
+          },
+        },
+      },
+    },
+  },
 ]
