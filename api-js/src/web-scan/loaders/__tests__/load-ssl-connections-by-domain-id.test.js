@@ -45,9 +45,6 @@ describe('given the load ssl connection function', () => {
   })
 
   beforeEach(async () => {
-    consoleWarnOutput.length = 0
-    consoleErrorOutput.length = 0
-
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -62,6 +59,8 @@ describe('given the load ssl connection function', () => {
   })
 
   afterEach(async () => {
+    consoleWarnOutput.length = 0
+    consoleErrorOutput.length = 0
     await truncate()
   })
 

@@ -38,10 +38,13 @@ describe('given the sslLoaderByKey function', () => {
   })
 
   beforeEach(async () => {
+    await collections.ssl.save({})
+    await collections.ssl.save({})
+  })
+
+  afterEach(async () => {
     consoleErrorOutput.length = 0
     await truncate()
-    await collections.ssl.save({})
-    await collections.ssl.save({})
   })
 
   afterAll(async () => {

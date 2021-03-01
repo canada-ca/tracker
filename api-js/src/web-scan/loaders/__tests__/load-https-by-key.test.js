@@ -38,10 +38,13 @@ describe('given the httpsLoaderByKey function', () => {
   })
 
   beforeEach(async () => {
+    await collections.https.save({})
+    await collections.https.save({})
+  })
+
+  afterEach(async () => {
     consoleErrorOutput.length = 0
     await truncate()
-    await collections.https.save({})
-    await collections.https.save({})
   })
 
   afterAll(async () => {

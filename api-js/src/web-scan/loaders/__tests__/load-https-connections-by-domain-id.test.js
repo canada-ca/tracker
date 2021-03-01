@@ -45,10 +45,6 @@ describe('given the load https connection function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
-    consoleWarnOutput.length = 0
-    consoleErrorOutput.length = 0
-
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -60,6 +56,12 @@ describe('given the load https connection function', () => {
       domain: 'test.domain.gc.ca',
       slug: 'test-domain-gc-ca',
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
+    consoleWarnOutput.length = 0
+    consoleErrorOutput.length = 0
   })
 
   afterAll(async () => {
