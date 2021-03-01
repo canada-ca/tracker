@@ -54,8 +54,6 @@ describe('given findVerifiedDomains query', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    await truncate()
-    consoleOutput = []
     org = await collections.organizations.save({
       verified: true,
       orgDetails: {
@@ -97,6 +95,11 @@ describe('given findVerifiedDomains query', () => {
       _to: domain._id,
       _from: org._id,
     })
+  })
+
+  afterEach(async () => {
+    await truncate()
+    consoleOutput = []
   })
 
   afterAll(async () => {

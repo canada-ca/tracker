@@ -15,9 +15,6 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
   const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
     console.error = mockedError
-  })
-
-  beforeEach(async () => {
     ;({ query, drop, truncate, collections } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
@@ -25,7 +22,9 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
-    await truncate()
+  })
+
+  beforeEach(async () => {
     org = await collections.organizations.save({
       verified: true,
       orgDetails: {
@@ -65,10 +64,14 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
       _from: org._id,
       _to: domain2._id,
     })
-    consoleOutput = []
   })
 
   afterEach(async () => {
+    consoleOutput = []
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -132,10 +135,10 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         `
         const expectedDomain = await expectedCursor.next()
 
-        query = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = verifiedDomainLoaderByKey(query, i18n)
+        const loader = verifiedDomainLoaderByKey(mockedQuery, i18n)
 
         try {
           await loader.load(expectedDomain._key)
@@ -164,8 +167,8 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
             throw new Error('Cursor error occurred.')
           },
         }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = verifiedDomainLoaderByKey(query, i18n)
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = verifiedDomainLoaderByKey(mockedQuery, i18n)
 
         try {
           await loader.load(expectedDomain._key)
@@ -205,10 +208,10 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         `
         const expectedDomain = await expectedCursor.next()
 
-        query = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = verifiedDomainLoaderByKey(query, i18n)
+        const loader = verifiedDomainLoaderByKey(mockedQuery, i18n)
 
         try {
           await loader.load(expectedDomain._key)
@@ -235,8 +238,8 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
             throw new Error('Cursor error occurred.')
           },
         }
-        query = jest.fn().mockReturnValue(cursor)
-        const loader = verifiedDomainLoaderByKey(query, i18n)
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = verifiedDomainLoaderByKey(mockedQuery, i18n)
 
         try {
           await loader.load(expectedDomain._key)

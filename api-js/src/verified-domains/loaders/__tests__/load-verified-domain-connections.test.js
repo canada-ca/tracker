@@ -33,7 +33,6 @@ describe('given the load domain connection using org id function', () => {
   })
 
   beforeEach(async () => {
-    consoleOutput = []
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -88,6 +87,7 @@ describe('given the load domain connection using org id function', () => {
   })
 
   afterEach(async () => {
+    consoleOutput = []
     await truncate()
   })
 

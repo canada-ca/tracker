@@ -33,8 +33,6 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
-    consoleOutput = []
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -88,9 +86,15 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
     })
   })
 
+  afterEach(async () => {
+    await truncate()
+    consoleOutput = []
+  })
+
   afterAll(async () => {
     await drop()
   })
+
   describe('given a successful load', () => {
     describe('using no cursor', () => {
       it('returns multiple domains', async () => {
