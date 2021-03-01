@@ -4,6 +4,11 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendTfaTextMsg } from '../index'
 
+const {
+  NOTIFICATION_TWO_FACTOR_CODE_EN,
+  NOTIFICATION_TWO_FACTOR_CODE_FR,
+} = process.env
+
 describe('given the sendTfaTextMsg function', () => {
   let i18n
   let consoleOutput = []
@@ -28,36 +33,6 @@ describe('given the sendTfaTextMsg function', () => {
   beforeEach(async () => {
     consoleOutput = []
   })
-
-  describe('text message successfully sent', () => {
-    it('returns nothing', async () => {
-      const sendSms = jest.fn()
-      const notifyClient = {
-        sendSms,
-      }
-      const user = {
-        phoneNumber: '+12345678901',
-        tfaCode: 123456,
-      }
-
-      const mockedSendTfaTextMsg = sendTfaTextMsg(notifyClient, i18n)
-      await mockedSendTfaTextMsg({
-        templateId: 'test-id',
-        phoneNumber: user.phoneNumber,
-        user,
-      })
-
-      expect(notifyClient.sendSms).toHaveBeenCalledWith(
-        'test-id',
-        user.phoneNumber,
-        {
-          personalisation: {
-            verify_code: user.tfaCode,
-          },
-        },
-      )
-    })
-  })
   describe('language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -73,6 +48,35 @@ describe('given the sendTfaTextMsg function', () => {
         },
       })
     })
+    describe('text message successfully sent', () => {
+      it('returns nothing', async () => {
+        const sendSms = jest.fn()
+        const notifyClient = {
+          sendSms,
+        }
+        const user = {
+          phoneNumber: '+12345678901',
+          tfaCode: 123456,
+          preferredLang: 'english',
+        }
+
+        const mockedSendTfaTextMsg = sendTfaTextMsg({ notifyClient, i18n })
+        await mockedSendTfaTextMsg({
+          phoneNumber: user.phoneNumber,
+          user,
+        })
+
+        expect(notifyClient.sendSms).toHaveBeenCalledWith(
+          NOTIFICATION_TWO_FACTOR_CODE_EN,
+          user.phoneNumber,
+          {
+            personalisation: {
+              verify_code: user.tfaCode,
+            },
+          },
+        )
+      })
+    })
     describe('an error occurs while sending text message', () => {
       it('throws an error message', async () => {
         const sendSms = jest
@@ -84,12 +88,12 @@ describe('given the sendTfaTextMsg function', () => {
         const user = {
           phoneNumber: '+12345678901',
           tfaCode: 123456,
+          preferredLang: 'english',
         }
 
         try {
-          const mockedSendTfaTextMsg = sendTfaTextMsg(notifyClient, i18n)
+          const mockedSendTfaTextMsg = sendTfaTextMsg({ notifyClient, i18n })
           await mockedSendTfaTextMsg({
-            templateId: 'test-id',
             phoneNumber: user.phoneNumber,
             user,
           })
@@ -122,6 +126,35 @@ describe('given the sendTfaTextMsg function', () => {
         },
       })
     })
+    describe('text message successfully sent', () => {
+      it('returns nothing', async () => {
+        const sendSms = jest.fn()
+        const notifyClient = {
+          sendSms,
+        }
+        const user = {
+          phoneNumber: '+12345678901',
+          tfaCode: 123456,
+          preferredLang: 'french',
+        }
+
+        const mockedSendTfaTextMsg = sendTfaTextMsg({ notifyClient, i18n })
+        await mockedSendTfaTextMsg({
+          phoneNumber: user.phoneNumber,
+          user,
+        })
+
+        expect(notifyClient.sendSms).toHaveBeenCalledWith(
+          NOTIFICATION_TWO_FACTOR_CODE_FR,
+          user.phoneNumber,
+          {
+            personalisation: {
+              verify_code: user.tfaCode,
+            },
+          },
+        )
+      })
+    })
     describe('an error occurs while sending text message', () => {
       it('throws an error message', async () => {
         const sendSms = jest
@@ -133,12 +166,12 @@ describe('given the sendTfaTextMsg function', () => {
         const user = {
           phoneNumber: '+12345678901',
           tfaCode: 123456,
+          preferredLang: 'french',
         }
 
         try {
-          const mockedSendTfaTextMsg = sendTfaTextMsg(notifyClient, i18n)
+          const mockedSendTfaTextMsg = sendTfaTextMsg({ notifyClient, i18n })
           await mockedSendTfaTextMsg({
-            templateId: 'test-id',
             phoneNumber: user.phoneNumber,
             user,
           })

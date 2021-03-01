@@ -1,10 +1,16 @@
 import { t } from '@lingui/macro'
 
-export const sendOrgInviteEmail = (notifyClient, i18n) => async ({
-  templateId,
+const { NOTIFICATION_ORG_INVITE_EN, NOTIFICATION_ORG_INVITE_FR } = process.env
+
+export const sendOrgInviteEmail = ({ notifyClient, i18n }) => async ({
   user,
   orgName,
 }) => {
+  let templateId = NOTIFICATION_ORG_INVITE_EN
+  if (user.preferredLang === 'french') {
+    templateId = NOTIFICATION_ORG_INVITE_FR
+  }
+
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {

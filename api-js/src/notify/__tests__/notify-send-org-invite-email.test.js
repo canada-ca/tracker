@@ -4,6 +4,8 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendOrgInviteEmail } from '../index'
 
+const { NOTIFICATION_ORG_INVITE_EN, NOTIFICATION_ORG_INVITE_FR } = process.env
+
 describe('given the sendOrgInviteEmail function', () => {
   let i18n
   let consoleOutput = []
@@ -28,38 +30,6 @@ describe('given the sendOrgInviteEmail function', () => {
   beforeEach(async () => {
     consoleOutput = []
   })
-
-  describe('email successfully sent', () => {
-    it('returns nothing', async () => {
-      const sendEmail = jest.fn()
-      const notifyClient = {
-        sendEmail,
-      }
-
-      const user = {
-        userName: 'test@email.ca',
-        displayName: 'Test Account',
-      }
-
-      const mockedSendOrgInviteEmail = sendOrgInviteEmail(notifyClient, i18n)
-      await mockedSendOrgInviteEmail({
-        templateId: 'test_id',
-        user,
-        orgName: 'Test Org',
-      })
-
-      expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-        'test_id',
-        user.userName,
-        {
-          personalisation: {
-            display_name: user.displayName,
-            organization_name: 'Test Org',
-          },
-        },
-      )
-    })
-  })
   describe('language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -75,6 +45,40 @@ describe('given the sendOrgInviteEmail function', () => {
         },
       })
     })
+    describe('email successfully sent', () => {
+      it('returns nothing', async () => {
+        const sendEmail = jest.fn()
+        const notifyClient = {
+          sendEmail,
+        }
+
+        const user = {
+          userName: 'test@email.ca',
+          displayName: 'Test Account',
+          preferredLang: 'english',
+        }
+
+        const mockedSendOrgInviteEmail = sendOrgInviteEmail({
+          notifyClient,
+          i18n,
+        })
+        await mockedSendOrgInviteEmail({
+          user,
+          orgName: 'Test Org',
+        })
+
+        expect(notifyClient.sendEmail).toHaveBeenCalledWith(
+          NOTIFICATION_ORG_INVITE_EN,
+          user.userName,
+          {
+            personalisation: {
+              display_name: user.displayName,
+              organization_name: 'Test Org',
+            },
+          },
+        )
+      })
+    })
     describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
         const sendEmail = jest
@@ -87,15 +91,15 @@ describe('given the sendOrgInviteEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
+          preferredLang: 'english',
         }
 
         try {
-          const mockedSendOrgInviteEmail = sendOrgInviteEmail(
+          const mockedSendOrgInviteEmail = sendOrgInviteEmail({
             notifyClient,
             i18n,
-          )
+          })
           await mockedSendOrgInviteEmail({
-            templateId: 'test_id',
             user,
             orgName: 'Test Org',
           })
@@ -126,6 +130,40 @@ describe('given the sendOrgInviteEmail function', () => {
         },
       })
     })
+    describe('email successfully sent', () => {
+      it('returns nothing', async () => {
+        const sendEmail = jest.fn()
+        const notifyClient = {
+          sendEmail,
+        }
+
+        const user = {
+          userName: 'test@email.ca',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+        }
+
+        const mockedSendOrgInviteEmail = sendOrgInviteEmail({
+          notifyClient,
+          i18n,
+        })
+        await mockedSendOrgInviteEmail({
+          user,
+          orgName: 'Test Org',
+        })
+
+        expect(notifyClient.sendEmail).toHaveBeenCalledWith(
+          NOTIFICATION_ORG_INVITE_FR,
+          user.userName,
+          {
+            personalisation: {
+              display_name: user.displayName,
+              organization_name: 'Test Org',
+            },
+          },
+        )
+      })
+    })
     describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
         const sendEmail = jest
@@ -138,15 +176,15 @@ describe('given the sendOrgInviteEmail function', () => {
         const user = {
           userName: 'test@email.ca',
           displayName: 'Test Account',
+          preferredLang: 'french',
         }
 
         try {
-          const mockedSendOrgInviteEmail = sendOrgInviteEmail(
+          const mockedSendOrgInviteEmail = sendOrgInviteEmail({
             notifyClient,
             i18n,
-          )
+          })
           await mockedSendOrgInviteEmail({
-            templateId: 'test_id',
             user,
             orgName: 'Test Org',
           })

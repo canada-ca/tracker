@@ -4,6 +4,11 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendVerificationEmail } from '../index'
 
+const {
+  NOTIFICATION_VERIFICATION_EMAIL_EN,
+  NOTIFICATION_VERIFICATION_EMAIL_FR,
+} = process.env
+
 describe('given the sendVerificationEmail function', () => {
   let i18n
   let consoleOutput = []
@@ -28,40 +33,6 @@ describe('given the sendVerificationEmail function', () => {
   beforeEach(async () => {
     consoleOutput = []
   })
-
-  describe('email successfully sent', () => {
-    it('returns nothing', async () => {
-      const sendEmail = jest.fn()
-      const notifyClient = {
-        sendEmail,
-      }
-      const user = {
-        userName: 'test.email@email.ca',
-        displayName: 'Test Account',
-      }
-
-      const mockedSendVerificationEmail = sendVerificationEmail(
-        notifyClient,
-        i18n,
-      )
-      await mockedSendVerificationEmail({
-        templateId: 'test-id',
-        verifyUrl: 'verify.url',
-        user,
-      })
-
-      expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-        'test-id',
-        user.userName,
-        {
-          personalisation: {
-            user: user.displayName,
-            verify_email_url: 'verify.url',
-          },
-        },
-      )
-    })
-  })
   describe('language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
@@ -77,6 +48,39 @@ describe('given the sendVerificationEmail function', () => {
         },
       })
     })
+    describe('email successfully sent', () => {
+      it('returns nothing', async () => {
+        const sendEmail = jest.fn()
+        const notifyClient = {
+          sendEmail,
+        }
+        const user = {
+          userName: 'test.email@email.ca',
+          displayName: 'Test Account',
+          preferredLang: 'english',
+        }
+
+        const mockedSendVerificationEmail = sendVerificationEmail({
+          notifyClient,
+          i18n,
+        })
+        await mockedSendVerificationEmail({
+          verifyUrl: 'verify.url',
+          user,
+        })
+
+        expect(notifyClient.sendEmail).toHaveBeenCalledWith(
+          NOTIFICATION_VERIFICATION_EMAIL_EN,
+          user.userName,
+          {
+            personalisation: {
+              user: user.displayName,
+              verify_email_url: 'verify.url',
+            },
+          },
+        )
+      })
+    })
     describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
         const sendEmail = jest
@@ -88,15 +92,15 @@ describe('given the sendVerificationEmail function', () => {
         const user = {
           userName: 'test.email@email.ca',
           displayName: 'Test Account',
+          preferredLang: 'english',
         }
 
         try {
-          const mockedSendVerificationEmail = sendVerificationEmail(
+          const mockedSendVerificationEmail = sendVerificationEmail({
             notifyClient,
             i18n,
-          )
+          })
           await mockedSendVerificationEmail({
-            templateId: 'test-id',
             verifyUrl: 'verify.url',
             user,
           })
@@ -127,6 +131,39 @@ describe('given the sendVerificationEmail function', () => {
         },
       })
     })
+    describe('email successfully sent', () => {
+      it('returns nothing', async () => {
+        const sendEmail = jest.fn()
+        const notifyClient = {
+          sendEmail,
+        }
+        const user = {
+          userName: 'test.email@email.ca',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+        }
+
+        const mockedSendVerificationEmail = sendVerificationEmail({
+          notifyClient,
+          i18n,
+        })
+        await mockedSendVerificationEmail({
+          verifyUrl: 'verify.url',
+          user,
+        })
+
+        expect(notifyClient.sendEmail).toHaveBeenCalledWith(
+          NOTIFICATION_VERIFICATION_EMAIL_FR,
+          user.userName,
+          {
+            personalisation: {
+              user: user.displayName,
+              verify_email_url: 'verify.url',
+            },
+          },
+        )
+      })
+    })
     describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
         const sendEmail = jest
@@ -138,15 +175,15 @@ describe('given the sendVerificationEmail function', () => {
         const user = {
           userName: 'test.email@email.ca',
           displayName: 'Test Account',
+          preferredLang: 'french',
         }
 
         try {
-          const mockedSendVerificationEmail = sendVerificationEmail(
+          const mockedSendVerificationEmail = sendVerificationEmail({
             notifyClient,
             i18n,
-          )
+          })
           await mockedSendVerificationEmail({
-            templateId: 'test-id',
             verifyUrl: 'verify.url',
             user,
           })

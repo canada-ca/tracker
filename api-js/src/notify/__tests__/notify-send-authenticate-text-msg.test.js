@@ -5,7 +5,7 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendAuthTextMsg } from '../index'
 
-const { CIPHER_KEY } = process.env
+const { CIPHER_KEY, NOTIFICATION_AUTHENTICATE_TEXT_ID } = process.env
 
 describe('given the sendAuthTextMsg function', () => {
   let i18n
@@ -59,11 +59,11 @@ describe('given the sendAuthTextMsg function', () => {
         phoneDetails,
       }
 
-      const mockedSendAuthTextMsg = sendAuthTextMsg(notifyClient, i18n)
+      const mockedSendAuthTextMsg = sendAuthTextMsg({ notifyClient, i18n })
       await mockedSendAuthTextMsg({ user })
 
       expect(notifyClient.sendSms).toHaveBeenCalledWith(
-        'bccda53c-278f-4d8c-a8d1-7b58cade2bd8',
+        NOTIFICATION_AUTHENTICATE_TEXT_ID,
         user.phoneNumber,
         {
           personalisation: {
@@ -118,7 +118,7 @@ describe('given the sendAuthTextMsg function', () => {
         }
 
         try {
-          const mockedSendAuthTextMsg = sendAuthTextMsg(notifyClient, i18n)
+          const mockedSendAuthTextMsg = sendAuthTextMsg({ notifyClient, i18n })
           await mockedSendAuthTextMsg({ user })
         } catch (err) {
           expect(err).toEqual(
@@ -177,7 +177,7 @@ describe('given the sendAuthTextMsg function', () => {
         }
 
         try {
-          const mockedSendAuthTextMsg = sendAuthTextMsg(notifyClient, i18n)
+          const mockedSendAuthTextMsg = sendAuthTextMsg({ notifyClient, i18n })
           await mockedSendAuthTextMsg({ user })
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
