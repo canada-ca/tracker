@@ -52,7 +52,11 @@ export const authenticate = new mutationWithClientMutationId({
       typeof tokenParameters.userKey === 'undefined'
     ) {
       console.warn(`Authentication token does not contain the userKey`)
-      throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to authenticate. Please try again.`),
+      }
     }
 
     // Gather sign in user
@@ -62,7 +66,11 @@ export const authenticate = new mutationWithClientMutationId({
       console.warn(
         `User: ${tokenParameters.userKey} attempted to authenticate, no account is associated with this id.`,
       )
-      throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to authenticate. Please try again.`),
+      }
     }
 
     // Check to see if security token matches the user submitted one

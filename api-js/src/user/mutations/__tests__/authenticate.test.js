@@ -227,11 +227,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to authenticate. Please try again.'),
-          ]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'Unable to authenticate. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `Authentication token does not contain the userKey`,
           ])
@@ -291,11 +298,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to authenticate. Please try again.'),
-          ]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'Unable to authenticate. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `Authentication token does not contain the userKey`,
           ])
@@ -355,11 +369,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to authenticate. Please try again.'),
-          ]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'Unable to authenticate. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to authenticate, no account is associated with this id.`,
           ])
@@ -602,9 +623,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `Authentication token does not contain the userKey`,
           ])
@@ -664,9 +694,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `Authentication token does not contain the userKey`,
           ])
@@ -726,9 +765,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to authenticate, no account is associated with this id.`,
           ])
