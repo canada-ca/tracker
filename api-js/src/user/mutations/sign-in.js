@@ -10,7 +10,7 @@ const { SIGN_IN_KEY } = process.env
 export const signIn = new mutationWithClientMutationId({
   name: 'SignIn',
   description:
-    'This mutation allows users to give their credentials and be taken to the authentication page to verify their account',
+    'This mutation allows users to give their credentials and either signed in, re-directed to the tfa auth page, or given an error.',
   inputFields: () => ({
     userName: {
       type: GraphQLNonNull(GraphQLEmailAddress),
@@ -24,7 +24,8 @@ export const signIn = new mutationWithClientMutationId({
   outputFields: () => ({
     result: {
       type: signInUnion,
-      description: '',
+      description:
+        '`SignInUnion` returning either a `regularSignInResult`, `tfaSignInResult`, or `signInError` object.',
       resolve: (payload) => payload,
     },
   }),
