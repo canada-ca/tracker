@@ -73,9 +73,9 @@ export const authenticate = new mutationWithClientMutationId({
       // Reset Failed Login attempts
       try {
         await query`
-                FOR u IN users
-                  UPDATE ${user._key} WITH { tfaCode: null } IN users
-              `
+          FOR u IN users
+            UPDATE ${user._key} WITH { tfaCode: null } IN users
+        `
       } catch (err) {
         console.error(
           `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: ${err}`,
