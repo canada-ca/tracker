@@ -1476,6 +1476,14 @@ type SharedUser implements Node {
   userName: EmailAddress @fake(type: email)
 }
 
+# This object is used to inform the user if any errors occurred during sign in.
+type SignInError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input SignInInput {
   # The email the user signed up with.
   userName: EmailAddress!
