@@ -18,6 +18,8 @@
       'If an account with this username is found, a password reset link will be found in your inbox.',
     'If an account with this username is found, an email verification link will be found in your inbox.':
       'If an account with this username is found, an email verification link will be found in your inbox.',
+    'Incorrect username or password. Please try again.':
+      'Incorrect username or password. Please try again.',
     'Invalid token, please request a new one.':
       'Invalid token, please request a new one.',
     'New passwords do not match. Please try again.':
