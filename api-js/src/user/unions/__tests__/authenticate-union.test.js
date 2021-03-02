@@ -18,6 +18,7 @@ describe('given the authenticateUnion', () => {
     describe('testing the authResultType type', () => {
       it('returns the correct type', () => {
         const obj = {
+          _type: 'authResult',
           authResult: {},
         }
 
@@ -27,7 +28,7 @@ describe('given the authenticateUnion', () => {
     describe('testing the authenticateError type', () => {
       it('returns the correct type', () => {
         const obj = {
-          error: 'authenticate-error',
+          _type: 'error',
           code: 401,
           description: 'text',
         }
