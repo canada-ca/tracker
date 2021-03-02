@@ -17,7 +17,7 @@ setuptools.setup(
     description="A Python client for the GoC Tracker API",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/canada-ca/tracker",
+    url="https://github.com/canada-ca/tracker/tree/master/clients/python",
     license = "MIT",
     classifiers=[
         'Development Status :: 3 - Alpha',
