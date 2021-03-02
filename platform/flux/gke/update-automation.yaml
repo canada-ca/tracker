@@ -1,0 +1,17 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImageUpdateAutomation
+metadata:
+  name: tracker-updater
+  namespace: flux-system
+spec:
+  checkout:
+    branch: master
+    gitRepositoryRef:
+      name: tracker
+  commit:
+    authorEmail: fluxcd@users.noreply.github.com
+    authorName: fluxcd
+    messageTemplate: '[ci skip] update image'
+  interval: 1m0s
+

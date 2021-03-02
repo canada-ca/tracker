@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: flux-system
+spec:
+  interval: 2m0s
+  path: ./app/gke
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: tracker
+  timeout: 2m0s
+  dependsOn:
+    - name: platform
+
