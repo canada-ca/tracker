@@ -42,7 +42,6 @@ describe('authenticate user account', () => {
     mockTokenize = jest.fn().mockReturnValue('token')
   })
 
-
   beforeEach(async () => {
     consoleOutput.length = 0
   })
@@ -88,15 +87,21 @@ describe('authenticate user account', () => {
                 authenticateToken: "${token}"
               }
             ) {
-              authResult {
-                authToken
-                user {
-                  id
-                  userName
-                  displayName
-                  preferredLang
-                  phoneValidated
-                  emailValidated
+              result {
+                ... on AuthResult {
+                  authToken
+                  user {
+                    id
+                    userName
+                    displayName
+                    preferredLang
+                    phoneValidated
+                    emailValidated
+                  }
+                }
+                ... on AuthenticateError {
+                  code
+                  description
                 }
               }
             }
@@ -122,7 +127,7 @@ describe('authenticate user account', () => {
       const expectedResult = {
         data: {
           authenticate: {
-            authResult: {
+            result: {
               authToken: 'token',
               user: {
                 id: `${toGlobalId('users', user._key)}`,
@@ -184,15 +189,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -242,15 +253,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -300,15 +317,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -375,15 +398,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -455,15 +484,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -529,15 +564,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -585,15 +626,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -641,15 +688,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -714,15 +767,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -792,15 +851,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }

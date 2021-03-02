@@ -22,7 +22,8 @@ export const authenticate = new mutationWithClientMutationId({
   outputFields: () => ({
     result: {
       type: authenticateUnion,
-      description: 'Authenticate union returning either a `authResult` or `authenticateError` object.',
+      description:
+        'Authenticate union returning either a `authResult` or `authenticateError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -87,10 +88,9 @@ export const authenticate = new mutationWithClientMutationId({
       user.id = user._key
 
       return {
-        authResult: {
-          token,
-          user,
-        },
+        _type: 'authResult',
+        token,
+        user,
       }
     } else {
       console.warn(

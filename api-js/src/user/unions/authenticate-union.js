@@ -5,8 +5,8 @@ export const authenticateUnion = new GraphQLUnionType({
   name: 'AuthenticateUnion',
   description: '',
   types: [authResultType, authenticateError],
-  resolveType(value) {
-    if ('authResult' in value) {
+  resolveType({ _type }) {
+    if (_type === 'authResult') {
       return authResultType
     } else {
       return authenticateError
