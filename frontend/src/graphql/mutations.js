@@ -60,8 +60,12 @@ export const AUTHENTICATE = gql`
         authenticateToken: $authenticateToken
       }
     ) {
-      authResult {
+      ... on AuthResult {
         ...RequiredAuthResultFields
+      }
+      ... on AuthenticateError {
+        code
+        description
       }
     }
   }
