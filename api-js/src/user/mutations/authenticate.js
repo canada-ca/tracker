@@ -1,7 +1,7 @@
 import { GraphQLNonNull, GraphQLString, GraphQLInt } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
-import { authResultType } from '../../user'
+import { authenticateUnion } from '../unions'
 
 const { SIGN_IN_KEY } = process.env
 
@@ -20,12 +20,10 @@ export const authenticate = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    authResult: {
-      type: authResultType,
-      description: 'The authenticated users information, and JWT.',
-      resolve: async (payload) => {
-        return payload.authResult
-      },
+    result: {
+      type: authenticateUnion,
+      description: 'Authenticate union returning either a `authResult` or `authenticateError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
