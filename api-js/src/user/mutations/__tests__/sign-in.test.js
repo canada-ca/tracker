@@ -137,10 +137,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                   }
                 }
@@ -220,10 +218,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                   }
                 }
@@ -303,10 +299,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                   }
                 }
@@ -336,9 +330,7 @@ describe('authenticate user account', () => {
             data: {
               signIn: {
                 result: {
-                  authResult: {
-                    authToken: 'token',
-                  },
+                  authToken: 'token',
                 },
               },
             },
@@ -387,10 +379,8 @@ describe('authenticate user account', () => {
                     authenticateToken
                     sendMethod
                   }
-                  ... on RegularSignInResult {
-                    authResult {
-                      authToken
-                    }
+                  ... on AuthResult {
+                    authToken
                   }
                 }
               }
@@ -444,10 +434,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                     ... on SignInError {
                       code
@@ -524,10 +512,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                     ... on SignInError {
                       code
@@ -602,10 +588,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -670,10 +658,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                     ... on SignInError {
                       code
@@ -750,10 +736,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -823,10 +811,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -898,10 +888,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -984,10 +976,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1067,10 +1061,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1150,10 +1146,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1183,9 +1181,7 @@ describe('authenticate user account', () => {
             data: {
               signIn: {
                 result: {
-                  authResult: {
-                    authToken: 'token',
-                  },
+                  authToken: 'token',
                 },
               },
             },
@@ -1234,10 +1230,12 @@ describe('authenticate user account', () => {
                     authenticateToken
                     sendMethod
                   }
-                  ... on RegularSignInResult {
-                    authResult {
-                      authToken
-                    }
+                  ... on AuthResult {
+                    authToken
+                  }
+                  ... on SignInError {
+                    code
+                    description
                   }
                 }
               }
@@ -1291,10 +1289,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                     ... on SignInError {
                       code
@@ -1370,10 +1366,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                     ... on SignInError {
                       code
@@ -1447,10 +1441,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1515,10 +1511,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                     ... on SignInError {
                       code
@@ -1595,10 +1589,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1666,10 +1662,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1739,10 +1737,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }

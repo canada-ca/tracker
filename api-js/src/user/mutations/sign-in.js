@@ -52,6 +52,7 @@ export const signIn = new mutationWithClientMutationId({
         `User: ${userName} attempted to sign in, no account is associated with this email.`,
       )
       return {
+        _type: 'error',
         code: 400,
         description: i18n._(
           t`Incorrect username or password. Please try again.`,
@@ -65,6 +66,7 @@ export const signIn = new mutationWithClientMutationId({
         `User: ${user._key} tried to sign in, but has too many login attempts.`,
       )
       return {
+        _type: 'error',
         code: 401,
         description: i18n._(
           t`Too many failed login attempts, please reset your password, and try again.`,
@@ -129,6 +131,7 @@ export const signIn = new mutationWithClientMutationId({
           })
 
           return {
+            _type: 'tfa',
             sendMethod,
             authenticateToken,
           }
@@ -142,10 +145,9 @@ export const signIn = new mutationWithClientMutationId({
           })
 
           return {
-            authResult: {
-              token,
-              user,
-            },
+            _type: 'regular',
+            token,
+            user,
           }
         }
       } else {
@@ -167,6 +169,7 @@ export const signIn = new mutationWithClientMutationId({
           `User attempted to authenticate: ${user._key} with invalid credentials.`,
         )
         return {
+          _type: 'error',
           code: 400,
           description: i18n._(
             t`Incorrect username or password. Please try again.`,

@@ -1,16 +1,16 @@
 import { GraphQLUnionType } from 'graphql'
-import { regularSignInResult, signInError, tfaSignInResult } from '../objects'
+import { authResultType, signInError, tfaSignInResult } from '../objects'
 
 export const signInUnion = new GraphQLUnionType({
   name: 'SignInUnion',
   description:
     'This union is used with the `SignIn` mutation, allowing for multiple styles of logging in, and support any errors that may occur',
-  types: [regularSignInResult, signInError, tfaSignInResult],
-  resolveType(value) {
-    if ('sendMethod' in value) {
+  types: [authResultType, signInError, tfaSignInResult],
+  resolveType({ _type }) {
+    if (_type === 'tfa') {
       return tfaSignInResult
-    } else if ('authResult' in value) {
-      return regularSignInResult
+    } else if (_type === 'regular') {
+      return authResultType
     } else {
       return signInError
     }
