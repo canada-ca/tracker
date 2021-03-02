@@ -52,15 +52,15 @@ export default function SignInPage() {
     },
     onCompleted({ signIn }) {
       // 2FA not enabled
-      if (signIn.result.__typename === 'RegularSignInResult') {
+      if (signIn.result.__typename === 'AuthResult') {
         login({
-          jwt: signIn.result.authResult.authToken,
-          tfaSendMethod: signIn.result.authResult.user.tfaSendMethod,
-          userName: signIn.result.authResult.user.userName,
+          jwt: signIn.result.authToken,
+          tfaSendMethod: signIn.result.user.tfaSendMethod,
+          userName: signIn.result.user.userName,
         })
-        if (signIn.result.authResult.user.preferredLang === 'ENGLISH')
+        if (signIn.result.user.preferredLang === 'ENGLISH')
           activate('en')
-        else if (signIn.result.authResult.user.preferredLang === 'FRENCH')
+        else if (signIn.result.user.preferredLang === 'FRENCH')
           activate('fr')
         // // redirect to the home page.
         history.push(from)
