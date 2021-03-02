@@ -1,4 +1,5 @@
 export * from './auth-result'
+export * from './authenticate-error'
 export * from './reset-password-error'
 export * from './reset-password-result'
 export * from './sign-in-error'
