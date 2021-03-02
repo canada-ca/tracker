@@ -124,6 +124,66 @@ spec:
             secretKeyRef:
               name: api
               key: SSL_SCANNER_ENDPOINT
+        - name: NOTIFICATION_AUTHENTICATE_EMAIL_ID
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_AUTHENTICATE_EMAIL_ID
+        - name: NOTIFICATION_AUTHENTICATE_TEXT_ID
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_AUTHENTICATE_TEXT_ID
+        - name: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN
+        - name: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR
+        - name: NOTIFICATION_ORG_INVITE_EN
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_ORG_INVITE_EN
+        - name: NOTIFICATION_ORG_INVITE_FR
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_ORG_INVITE_FR
+        - name: NOTIFICATION_PASSWORD_RESET_EN
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_PASSWORD_RESET_EN
+        - name: NOTIFICATION_PASSWORD_RESET_FR
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_PASSWORD_RESET_FR
+        - name: NOTIFICATION_TWO_FACTOR_CODE_EN
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_TWO_FACTOR_CODE_EN
+        - name: NOTIFICATION_TWO_FACTOR_CODE_FR
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_TWO_FACTOR_CODE_FR
+        - name: NOTIFICATION_VERIFICATION_EMAIL_EN
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_VERIFICATION_EMAIL_EN
+        - name: NOTIFICATION_VERIFICATION_EMAIL_FR
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_VERIFICATION_EMAIL_FR
         resources:
           limits:
             cpu: 300m
