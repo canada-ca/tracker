@@ -5,6 +5,7 @@ from gql.transport.exceptions import (
     TransportServerError,
     TransportProtocolError,
 )
+from graphql.error import GraphQLError
 
 from core import create_client, get_auth_token
 from domain import Domain
@@ -129,6 +130,10 @@ class Client:
         except TransportServerError as error:
             print("Server error:", error)
             raise
+        
+        # Raised if query validation fails, likely caused by schema changes
+        except GraphQLError as error:
+            print("Query validation error, client may be out of date:", error)
 
         except Exception as error:
             # Need to be more descriptive
