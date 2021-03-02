@@ -82,7 +82,19 @@ export default function SignInPage() {
           }`,
           { from },
         )
-      } else {
+      }
+      // Non server side error occurs
+      else if (signIn.result.__typename === 'SignInError') {
+        toast({
+          title: t`Unable to sign in to your account, please try again.`,
+          description: signIn.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      }
+      else {
         toast({
           title: t`Incorrect send method received.`,
           description: t`Incorrect signIn.result typename.`,
