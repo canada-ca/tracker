@@ -41,6 +41,10 @@ export const SIGN_IN = gql`
             ...RequiredAuthResultFields
           }
         }
+        ... on SignInError {
+          code
+          description
+        }
       }
     }
   }
