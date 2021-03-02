@@ -1485,12 +1485,14 @@ input SignInInput {
 }
 
 type SignInPayload {
+  # `SignInUnion` returning either a `regularSignInResult`, `tfaSignInResult`, or `signInError` object.
   result: SignInUnion
   clientMutationId: String
 }
 
-# This union is used when signing in to allow non-tfa users to still sign in.
-union SignInUnion = RegularSignInResult | TFASignInResult
+# This union is used with the `SignIn` mutation, allowing for multiple styles of
+# logging in, and support any errors that may occur
+union SignInUnion = AuthResult | SignInError | TFASignInResult
 input SignUpInput {
   # The name that will be displayed to other users.
   displayName: String!
