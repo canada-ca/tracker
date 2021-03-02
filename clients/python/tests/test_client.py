@@ -4,6 +4,7 @@ from gql.transport.exceptions import (
     TransportServerError,
     TransportProtocolError,
 )
+from graphql.error import GraphQLError
 import pytest
 
 from tracker_client.client import Client
@@ -73,6 +74,22 @@ def test_client_execute_query_transport_server_error(mocker, capsys):
     assert "Server error:" in captured.out
 
 
+def test_client_execute_query_graphql_error(mocker, capsys):
+    """Test that GraphQLError is properly re-raised"""
+    mocker.patch("tracker_client.client.get_auth_token")
+    mocker.patch("tracker_client.client.create_client")
+    test_client = Client()
+    # GraphQLError requires a message
+    test_client.client.execute = mocker.MagicMock(side_effect=GraphQLError("test"))
+
+    with pytest.raises(GraphQLError):
+        test_client.execute_query(None)
+
+    # Check that the warning for GraphQLError was printed
+    captured = capsys.readouterr()
+    assert "Query validation error, client may be out of date:" in captured.out
+
+
 def test_client_execute_query_other_error(mocker, capsys):
     """Test that other exceptions are properly re-raised"""
     mocker.patch("tracker_client.client.get_auth_token")
@@ -112,7 +129,7 @@ def test_client_get_organizations(mocker, client_all_orgs_input):
     assert org_list[0].acronym == "FOO"
     assert org_list[1].name == "Fizz Bang"
     assert org_list[0].domain_count == 10
-    assert org_list[1].verified == True
+    assert org_list[1].verified
 
 
 def test_client_get_organizations_error(mocker, error_message, capsys):

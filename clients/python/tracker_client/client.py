@@ -130,10 +130,11 @@ class Client:
         except TransportServerError as error:
             print("Server error:", error)
             raise
-        
+
         # Raised if query validation fails, likely caused by schema changes
         except GraphQLError as error:
             print("Query validation error, client may be out of date:", error)
+            raise
 
         except Exception as error:
             # Need to be more descriptive
