@@ -50,7 +50,12 @@ export const signIn = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} attempted to sign in, no account is associated with this email.`,
       )
-      throw new Error(i18n._(t`Unable to sign in, please try again.`))
+      return {
+        code: 400,
+        description: i18n._(
+          t`Incorrect username or password. Please try again.`,
+        ),
+      }
     }
 
     // Check against failed attempt info
@@ -58,11 +63,12 @@ export const signIn = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} tried to sign in, but has too many login attempts.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        code: 401,
+        description: i18n._(
           t`Too many failed login attempts, please reset your password, and try again.`,
         ),
-      )
+      }
     } else {
       // Check to see if passwords match
       if (bcrypt.compareSync(password, user.password)) {
@@ -159,7 +165,12 @@ export const signIn = new mutationWithClientMutationId({
         console.warn(
           `User attempted to authenticate: ${user._key} with invalid credentials.`,
         )
-        throw new Error(i18n._(t`Unable to sign in, please try again.`))
+        return {
+          code: 400,
+          description: i18n._(
+            t`Incorrect username or password. Please try again.`,
+          ),
+        }
       }
     }
   },
