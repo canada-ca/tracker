@@ -106,12 +106,13 @@ describe('<TwoFactorAuthenticatePage />', () => {
           result: {
             data: {
               authenticate: {
-                authResult: {
+                result: {
                   user: {
                     userName: 'Thalia.Rosenbaum@gmail.com',
                     tfaSendMethod: 'PHONE',
                   },
                   authToken: 'test123stringJWT',
+                  __typename: 'AuthResult',
                 },
               },
             },
