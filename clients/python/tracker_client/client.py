@@ -114,8 +114,13 @@ class Client:
             result = self.client.execute(query, variable_values=params)
 
         except TransportQueryError as error:
-            # Not sure this is the best way to deal with this exception
-            result = {"error": {"message": error.errors[0]["message"]}}
+            # Returns a message with all errors and the path where they occurred
+            result = {
+                "error": [
+                    {"message": err["message"], "path": err["path"]}
+                    for err in error.errors
+                ]
+            }
 
         except TransportProtocolError as error:
             print("Unexpected response from server:", error)

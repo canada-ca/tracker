@@ -34,7 +34,12 @@ def test_client_execute_query_transport_query_error(mocker):
 
     result = test_client.execute_query(None)
     assert result == {
-        "error": {"message": "No organization with the provided slug could be found."}
+        "error": [
+            {
+                "message": "No organization with the provided slug could be found.",
+                "path": ["findOrganizationBySlug"],
+            }
+        ]
     }
 
 
