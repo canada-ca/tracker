@@ -110,6 +110,7 @@ class Client:
         :rtype: dict
         :raises TransportProtocolError: if server response is not GraphQL
         :raises TransportServerError: if there is a server error
+        :raises GraphQLError: if query validation fails
         :raises Exception: if any unhandled exception is raised within function"""
         try:
             result = self.client.execute(query, variable_values=params)
