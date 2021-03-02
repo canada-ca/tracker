@@ -3,7 +3,7 @@ import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
 export const signInError = new GraphQLObjectType({
   name: 'SignInError',
   description:
-    'This object is used when the user has validated either their email or phone.',
+    'This object is used to inform the user if any errors occurred during sign in.',
   fields: () => ({
     code: {
       type: GraphQLInt,

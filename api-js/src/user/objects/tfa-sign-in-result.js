@@ -3,7 +3,7 @@ import { GraphQLObjectType, GraphQLString } from 'graphql'
 export const tfaSignInResult = new GraphQLObjectType({
   name: 'TFASignInResult',
   description:
-    'This object is used when the user has validated either their email or phone.',
+    'This object is used when the user signs in and has validated either their email or phone.',
   fields: () => ({
     authenticateToken: {
       type: GraphQLString,
