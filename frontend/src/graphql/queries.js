@@ -436,6 +436,31 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
   }
 `
 
+export const PAGINATED_ORG_DOMAINS = gql`
+  query PaginatedOrgDomains($orgSlug: Slug!, $first: Int, $after: String) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
+      name
+      domains(first: $first, after: $after) {
+        edges {
+          node {
+            id
+            domain
+            lastRan
+          }
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        totalCount
+      }
+    }
+  }
+`
+
 export const ORG_DETAILS_PAGE = gql`
   query OrgDetails($slug: Slug!) {
     organization: findOrganizationBySlug(orgSlug: $slug) {

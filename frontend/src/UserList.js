@@ -27,7 +27,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { PAGINATED_ORG_AFFILIATIONS as FORWARD } from './graphql/queries'
 
-export default function UserList({ permission, orgId, orgSlug, usersPerPage }) {
+export default function UserList({ permission, orgSlug, usersPerPage }) {
   const toast = useToast()
   const { currentUser } = useUserState()
   const [addedUserName, setAddedUserName] = useState()
@@ -298,13 +298,13 @@ export default function UserList({ permission, orgId, orgSlug, usersPerPage }) {
       <Stack isInline align="center" mb="4">
         <Button
           onClick={previous}
-          disable={!!hasPreviousPage}
+          isDisabled={!hasPreviousPage}
           aria-label="Previous page"
         >
           <Trans>Previous</Trans>
         </Button>
 
-        <Button onClick={next} disable={!!hasNextPage} aria-label="Next page">
+        <Button onClick={next} isDisabled={!hasNextPage} aria-label="Next page">
           <Trans>Next</Trans>
         </Button>
       </Stack>
@@ -314,7 +314,6 @@ export default function UserList({ permission, orgId, orgSlug, usersPerPage }) {
 
 UserList.propTypes = {
   orgSlug: string,
-  orgId: string,
   permission: string,
   usersPerPage: number,
 }
