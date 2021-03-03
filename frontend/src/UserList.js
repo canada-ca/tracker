@@ -26,6 +26,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { PAGINATED_ORG_AFFILIATIONS as FORWARD } from './graphql/queries'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
 export default function UserList({ permission, orgSlug, usersPerPage }) {
   const toast = useToast()
@@ -295,19 +296,13 @@ export default function UserList({ permission, orgSlug, usersPerPage }) {
           )
         })
       )}
-      <Stack isInline align="center" mb="4">
-        <Button
-          onClick={previous}
-          isDisabled={!hasPreviousPage}
-          aria-label="Previous page"
-        >
-          <Trans>Previous</Trans>
-        </Button>
-
-        <Button onClick={next} isDisabled={!hasNextPage} aria-label="Next page">
-          <Trans>Next</Trans>
-        </Button>
-      </Stack>
+      <RelayPaginationControls
+        onlyPagination={true}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+      />
     </Stack>
   )
 }

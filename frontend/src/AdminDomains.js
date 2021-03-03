@@ -41,6 +41,7 @@ import { usePaginatedCollection } from './usePaginatedCollection'
 import { PAGINATED_ORG_DOMAINS as FORWARD } from './graphql/queries'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
 export function AdminDomains({ orgSlug, domainsPerPage }) {
   const [domainSearch, setDomainSearch] = useState('')
@@ -276,19 +277,13 @@ export function AdminDomains({ orgSlug, domainsPerPage }) {
         </Stack>
       </Stack>
 
-      <Stack isInline align="center" mb="4">
-        <Button
-          onClick={previous}
-          isDisabled={!hasPreviousPage}
-          aria-label="Previous page"
-        >
-          <Trans>Previous</Trans>
-        </Button>
-
-        <Button onClick={next} isDisabled={!hasNextPage} aria-label="Next page">
-          <Trans>Next</Trans>
-        </Button>
-      </Stack>
+      <RelayPaginationControls
+        onlyPagination={true}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+      />
 
       <SlideIn in={updateIsOpen}>
         {(styles) => (

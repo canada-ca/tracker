@@ -11,15 +11,35 @@ export function RelayPaginationControls({
   selectedDisplayLimit,
   setSelectedDisplayLimit,
   displayLimitOptions,
+  onlyPagination,
   ...props
 }) {
-  const options = displayLimitOptions.map((limit) => {
-    return (
-      <option value={limit} key={`option-${limit}`}>
-        {limit}
-      </option>
+  let displayLimitControls = ''
+  if (!onlyPagination) {
+    const options = displayLimitOptions.map((limit) => {
+      return (
+        <option value={limit} key={`option-${limit}`}>
+          {limit}
+        </option>
+      )
+    })
+
+    displayLimitControls = (
+      <>
+        <Text ml="auto">
+          <Trans>Page Size:</Trans>
+        </Text>
+
+        <Select
+          value={selectedDisplayLimit}
+          onChange={(e) => setSelectedDisplayLimit(parseInt(e.target.value))}
+          width="fit-content"
+        >
+          {options}
+        </Select>
+      </>
     )
-  })
+  }
 
   return (
     <Stack isInline align="center" mb="4" {...props}>
@@ -41,17 +61,7 @@ export function RelayPaginationControls({
         <Trans>Next</Trans>
       </Button>
 
-      <Text ml="auto">
-        <Trans>Page Size:</Trans>
-      </Text>
-
-      <Select
-        value={selectedDisplayLimit}
-        onChange={(e) => setSelectedDisplayLimit(parseInt(e.target.value))}
-        width="fit-content"
-      >
-        {options}
-      </Select>
+      {displayLimitControls}
     </Stack>
   )
 }
@@ -64,4 +74,5 @@ RelayPaginationControls.propTypes = {
   selectedDisplayLimit: number,
   setSelectedDisplayLimit: func,
   displayLimitOptions: array,
+  onlyPagination: bool,
 }
