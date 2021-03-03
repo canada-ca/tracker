@@ -80,5 +80,5 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
     params = {"creds": {"userName": username, "password": password}}
 
     result = client.execute(SIGNIN_MUTATION, variable_values=params)
-    auth_token = result["signIn"]["result"]["authResult"]["authToken"]
+    auth_token = result["signIn"]["result"]["authToken"]
     return auth_token
