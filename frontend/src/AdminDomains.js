@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import {
   Stack,
@@ -20,7 +20,6 @@ import {
   ModalFooter,
   FormLabel,
   FormControl,
-  Button,
 } from '@chakra-ui/core'
 import { Domain } from './Domain'
 import { string, number } from 'prop-types'
