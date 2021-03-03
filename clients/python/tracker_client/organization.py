@@ -63,20 +63,17 @@ class Organization:
         return self.acronym + " " + self.name
 
     def __repr__(self):
-        return (
-            "Organization(client=%r, name=%r, acronym=%r, zone=%r, sector=%r, country=%r, province=%r, city=%r, verified=%r, domain_count=%r)"
-            % (
-                self.client,
-                self.name,
-                self.acronym,
-                self.zone,
-                self.sector,
-                self.country,
-                self.province,
-                self.city,
-                self.verified,
-                self.domain_count,
-            )
+        return "Organization(client=%r, name=%r, acronym=%r, zone=%r, sector=%r, country=%r, province=%r, city=%r, verified=%r, domain_count=%r)" % (
+            self.client,
+            self.name,
+            self.acronym,
+            self.zone,
+            self.sector,
+            self.country,
+            self.province,
+            self.city,
+            self.verified,
+            self.domain_count,
         )
 
     def get_summary(self):

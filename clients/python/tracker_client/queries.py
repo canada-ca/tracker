@@ -922,18 +922,18 @@ EMAIL_RESULTS = gql(
 # Query variables should look like {"domain": ${domain_url} }
 DOMAIN_STATUS = gql(
     """
-  query GetDomainStatus($domain: DomainScalar!) {
-    findDomainByDomain(domain: $domain) {
-      domain
-      lastRan
-      status {
-        https
-        ssl
-        dmarc
-        dkim
-        spf
-      }
+    query GetDomainStatus($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            domain
+            lastRan
+            status {
+                https
+                ssl
+                dmarc
+                dkim
+                spf
+            }
+        }
     }
-  }
-  """
+    """
 )

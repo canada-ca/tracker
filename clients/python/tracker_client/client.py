@@ -5,6 +5,7 @@ from gql.transport.exceptions import (
     TransportServerError,
     TransportProtocolError,
 )
+from graphql.error import GraphQLError
 
 from core import create_client, get_auth_token
 from domain import Domain
@@ -109,13 +110,19 @@ class Client:
         :rtype: dict
         :raises TransportProtocolError: if server response is not GraphQL
         :raises TransportServerError: if there is a server error
+        :raises GraphQLError: if query validation fails
         :raises Exception: if any unhandled exception is raised within function"""
         try:
             result = self.client.execute(query, variable_values=params)
 
         except TransportQueryError as error:
-            # Not sure this is the best way to deal with this exception
-            result = {"error": {"message": error.errors[0]["message"]}}
+            # Returns a message with all errors and the path where they occurred
+            result = {
+                "error": [
+                    {"message": err["message"], "path": err["path"]}
+                    for err in error.errors
+                ]
+            }
 
         except TransportProtocolError as error:
             print("Unexpected response from server:", error)
@@ -123,6 +130,11 @@ class Client:
 
         except TransportServerError as error:
             print("Server error:", error)
+            raise
+
+        # Raised if query validation fails, likely caused by schema changes
+        except GraphQLError as error:
+            print("Query validation error, client may be out of date:", error)
             raise
 
         except Exception as error:
