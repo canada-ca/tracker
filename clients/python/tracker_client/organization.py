@@ -60,7 +60,7 @@ class Organization:
         :param str city: see class docstring.
         :param bool verified: see class docstring.
         :param int domainCount: sets domain_count.
-        """ 
+        """
         self.client = client
         self.name = name
         self.acronym = acronym

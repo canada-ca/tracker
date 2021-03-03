@@ -25,7 +25,7 @@ def test_client_execute_query_transport_query_error(mocker):
     mocker.patch("tracker_client.client.get_auth_token")
     mocker.patch("tracker_client.client.create_client")
     test_client = Client()
-    test_client.client.execute = mocker.MagicMock(
+    test_client.gql_client.execute = mocker.MagicMock(
         side_effect=TransportQueryError(
             str(server_error_response),
             errors=[server_error_response],
@@ -49,7 +49,7 @@ def test_client_execute_query_transport_protocol_error(mocker, capsys):
     mocker.patch("tracker_client.client.get_auth_token")
     mocker.patch("tracker_client.client.create_client")
     test_client = Client()
-    test_client.client.execute = mocker.MagicMock(side_effect=TransportProtocolError)
+    test_client.gql_client.execute = mocker.MagicMock(side_effect=TransportProtocolError)
 
     with pytest.raises(TransportProtocolError):
         test_client.execute_query(None)
@@ -64,7 +64,7 @@ def test_client_execute_query_transport_server_error(mocker, capsys):
     mocker.patch("tracker_client.client.get_auth_token")
     mocker.patch("tracker_client.client.create_client")
     test_client = Client()
-    test_client.client.execute = mocker.MagicMock(side_effect=TransportServerError)
+    test_client.gql_client.execute = mocker.MagicMock(side_effect=TransportServerError)
 
     with pytest.raises(TransportServerError):
         test_client.execute_query(None)
@@ -80,7 +80,7 @@ def test_client_execute_query_graphql_error(mocker, capsys):
     mocker.patch("tracker_client.client.create_client")
     test_client = Client()
     # GraphQLError requires a message
-    test_client.client.execute = mocker.MagicMock(side_effect=GraphQLError("test"))
+    test_client.gql_client.execute = mocker.MagicMock(side_effect=GraphQLError("test"))
 
     with pytest.raises(GraphQLError):
         test_client.execute_query(None)
@@ -95,7 +95,7 @@ def test_client_execute_query_other_error(mocker, capsys):
     mocker.patch("tracker_client.client.get_auth_token")
     mocker.patch("tracker_client.client.create_client")
     test_client = Client()
-    test_client.client.execute = mocker.MagicMock(side_effect=ValueError)
+    test_client.gql_client.execute = mocker.MagicMock(side_effect=ValueError)
 
     with pytest.raises(ValueError):
         test_client.execute_query(None)
@@ -110,7 +110,7 @@ def test_client_execute_query_success(mocker, client_all_domains_input):
     mocker.patch("tracker_client.client.get_auth_token")
     mocker.patch("tracker_client.client.create_client")
     test_client = Client()
-    test_client.client.execute = mocker.MagicMock(return_value=client_all_domains_input)
+    test_client.gql_client.execute = mocker.MagicMock(return_value=client_all_domains_input)
 
     result = test_client.execute_query(None)
     assert result == client_all_domains_input
