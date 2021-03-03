@@ -113,7 +113,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
               <Stack isInline align="center" mb="4">
                 <Button
                   onClick={previous}
-                  disable={!!hasPreviousPage}
+                  isDisabled={!hasPreviousPage}
                   aria-label="Previous page"
                 >
                   <Trans>Previous</Trans>
@@ -121,16 +121,12 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
 
                 <Button
                   onClick={next}
-                  disable={!!hasNextPage}
+                  isDisabled={!hasNextPage}
                   aria-label="Next page"
                 >
                   <Trans>Next</Trans>
                 </Button>
               </Stack>
-
-              <Trans>
-                *All data represented is mocked for demonstration purposes
-              </Trans>
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
