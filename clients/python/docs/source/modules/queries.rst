@@ -1,4 +1,4 @@
-tracker\_client.queries module
+tracker\_client.queries
 ------------------------------
 
 .. currentmodule:: tracker_client.queries

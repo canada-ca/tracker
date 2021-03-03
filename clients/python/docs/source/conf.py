@@ -42,6 +42,9 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# If true, the current module name will be prepended to all description
+# unit titles (such as .. function::).
+add_module_names = False
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -60,4 +63,6 @@ html_static_path = ['_static']
 autodoc_default_options = {
     'members': True,
 }
+
+autodoc_member_order = 'bysource'
 autosummary_generate = True
