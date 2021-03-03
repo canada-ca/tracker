@@ -8,7 +8,7 @@ from gql.transport.aiohttp import AIOHTTPTransport
 from queries import SIGNIN_MUTATION
 
 
-JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
+_JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
 """Regex to validate a JWT"""
 
 
@@ -34,7 +34,7 @@ def create_transport(url, auth_token=None):
         if not isinstance(auth_token, str):
             raise TypeError("auth_token must be a string")
 
-        if not re.match(JWT_RE, auth_token):
+        if not re.match(_JWT_RE, auth_token):
             raise ValueError("auth_token is not a valid JWT")
 
         transport = AIOHTTPTransport(
