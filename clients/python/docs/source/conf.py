@@ -65,4 +65,3 @@ autodoc_default_options = {
 }
 
 autodoc_member_order = 'bysource'
-autosummary_generate = True
