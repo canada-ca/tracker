@@ -5,3 +5,5 @@ resources:
 patchesStrategicMerge:
 - app-kustomization.yaml
 - platform-kustomization.yaml
+components:
+- ../creds/readonly
