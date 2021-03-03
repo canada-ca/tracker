@@ -5,3 +5,5 @@ resources:
 - api-image-policy.yaml
 - frontend-image-policy.yaml
 - update-automation.yaml
+components:
+- ../creds/readwrite

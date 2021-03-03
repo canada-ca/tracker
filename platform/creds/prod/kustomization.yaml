@@ -1,12 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 secretGenerator:
-- files:
-  - identity
-  - identity.pub
-  - known_hosts
-  name: flux-credentials
-  namespace: flux-system
 - envs:
   - kiali.env
   name: kiali
@@ -15,3 +9,4 @@ generatorOptions:
   disableNameSuffixHash: true
 components:
 - ../../components/namespaces
+
