@@ -18,8 +18,8 @@ class Client:
     :class:`~tracker_client.domain.Domain` objects representing organizations they are members of
     and domains their organization(s) control.
 
-    :param str url: Tracker GraphQL endpoint, defaults to alpha endpoint
-    :ivar gql.Client gql_client: gql client instance used to execute queries
+    :param str url: Tracker GraphQL endpoint, defaults to alpha endpoint.
+    :ivar gql.Client gql_client: gql client instance used to execute queries.
     """
 
     def __init__(self, url="https://tracker.alpha.canada.ca/graphql"):

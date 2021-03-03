@@ -1,4 +1,4 @@
-"""This module provides utility functions related to gql, for internal use"""
+"""This module provides utility functions related to gql, for internal use."""
 import os
 import re
 
@@ -13,16 +13,16 @@ _JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
 
 
 def create_transport(url, auth_token=None):
-    """Create and return a gql transport object
+    """Create and return a gql transport object.
 
-    Users should rarely, if ever, need to call this
+    Users should rarely, if ever, need to call this.
 
-    :param str url: the Tracker GraphQL endpoint url
-    :param str auth_token: JWT auth token, omit when initially obtaining the token (default is none)
-    :return: A gql transport for given url
+    :param str url: the Tracker GraphQL endpoint url.
+    :param str auth_token: JWT auth token, omit when initially obtaining the token (default is none).
+    :return: A gql transport for given url.
     :rtype: AIOHTTPTransport
-    :raises ValueError: if auth_token is not a valid JWT
-    :raises TypeError: if auth_token is not a string
+    :raises ValueError: if auth_token is not a valid JWT.
+    :raises TypeError: if auth_token is not a string.
     """
     if auth_token is None:
         transport = AIOHTTPTransport(url=url)
@@ -48,9 +48,9 @@ def create_transport(url, auth_token=None):
 def create_client(url="https://tracker.alpha.canada.ca/graphql", auth_token=None):
     """Create and return a gql client object
 
-    :param str url: the Tracker GraphQL endpoint url (default is "https://tracker.alpha.canada.ca/graphql")
-    :param str auth_token: JWT auth token, omit when initially obtaining the token (default is None)
-    :return: A gql client with AIOHTTPTransport
+    :param str url: the Tracker GraphQL endpoint url.
+    :param str auth_token: JWT auth token, omit when initially obtaining the token (default is None).
+    :return: A gql client with AIOHTTPTransport.
     :rtype: Client
     """
     client = Client(
@@ -63,10 +63,10 @@ def create_client(url="https://tracker.alpha.canada.ca/graphql", auth_token=None
 def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
     """Get a token to use for authentication.
 
-    Takes in environment variables "TRACKER_UNAME" and "TRACKER_PASS" to get credentials
+    Takes in environment variables "TRACKER_UNAME" and "TRACKER_PASS" to get credentials.
 
-    :param str url: the Tracker GraphQL endpoint url (default is "https://tracker.alpha.canada.ca/graphql")
-    :return: JWT auth token to allow access to Tracker
+    :param str url: the Tracker GraphQL endpoint url.
+    :return: JWT auth token to allow access to Tracker.
     :rtype: str
     """
     client = create_client(url)
