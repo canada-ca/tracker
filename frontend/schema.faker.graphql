@@ -1476,6 +1476,14 @@ type SharedUser implements Node {
   userName: EmailAddress @fake(type: email)
 }
 
+# This object is used to inform the user if any errors occurred during sign in.
+type SignInError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input SignInInput {
   # The email the user signed up with.
   userName: EmailAddress!
@@ -1485,12 +1493,14 @@ input SignInInput {
 }
 
 type SignInPayload {
+  # `SignInUnion` returning either a `regularSignInResult`, `tfaSignInResult`, or `signInError` object.
   result: SignInUnion
   clientMutationId: String
 }
 
-# This union is used when signing in to allow non-tfa users to still sign in.
-union SignInUnion = RegularSignInResult | TFASignInResult
+# This union is used with the `SignIn` mutation, allowing for multiple styles of
+# logging in, and support any errors that may occur
+union SignInUnion = AuthResult | SignInError | TFASignInResult
 input SignUpInput {
   # The name that will be displayed to other users.
   displayName: String!

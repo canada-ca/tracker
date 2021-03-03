@@ -182,10 +182,8 @@ describe('reset users password', () => {
                     authenticateToken
                     sendMethod
                   }
-                  ... on RegularSignInResult {
-                    authResult {
-                      authToken
-                    }
+                  ... on AuthResult {
+                    authToken
                   }
                 }
               }
@@ -215,9 +213,7 @@ describe('reset users password', () => {
           data: {
             signIn: {
               result: {
-                authResult: {
-                  authToken: 'token',
-                },
+                authToken: 'token',
               },
             },
           },
@@ -831,10 +827,8 @@ describe('reset users password', () => {
                     authenticateToken
                     sendMethod
                   }
-                  ... on RegularSignInResult {
-                    authResult {
-                      authToken
-                    }
+                  ... on AuthResult {
+                    authToken
                   }
                 }
               }
@@ -864,9 +858,7 @@ describe('reset users password', () => {
           data: {
             signIn: {
               result: {
-                authResult: {
-                  authToken: 'token',
-                },
+                authToken: 'token',
               },
             },
           },
