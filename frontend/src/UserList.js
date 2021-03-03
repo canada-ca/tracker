@@ -10,7 +10,6 @@ import {
   useToast,
   Select,
   Box,
-  Button,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { UserCard } from './UserCard'
@@ -28,7 +27,7 @@ import { usePaginatedCollection } from './usePaginatedCollection'
 import { PAGINATED_ORG_AFFILIATIONS as FORWARD } from './graphql/queries'
 import { RelayPaginationControls } from './RelayPaginationControls'
 
-export default function UserList({ permission, orgSlug, usersPerPage }) {
+export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const toast = useToast()
   const { currentUser } = useUserState()
   const [addedUserName, setAddedUserName] = useState()
@@ -311,4 +310,5 @@ UserList.propTypes = {
   orgSlug: string,
   permission: string,
   usersPerPage: number,
+  orgId: string,
 }

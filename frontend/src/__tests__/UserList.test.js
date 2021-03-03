@@ -8,9 +8,10 @@ import { I18nProvider } from '@lingui/react'
 import { createMemoryHistory } from 'history'
 import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
-
 import { setupI18n } from '@lingui/core'
-import { rawAdminPanelData } from '../fixtures/adminPanelData'
+import { rawOrgUserListData } from '../fixtures/orgUserListData'
+import { createCache } from '../client'
+import { PAGINATED_ORG_AFFILIATIONS as FORWARD } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -22,7 +23,34 @@ const i18n = setupI18n({
   },
 })
 
-const data = rawAdminPanelData.data
+const mocks = [
+  {
+    request: {
+      query: FORWARD,
+      variables: { first: 4, orgSlug: 'test-org.slug' },
+    },
+    result: { data: rawOrgUserListData },
+  },
+  {
+    request: {
+      query: UPDATE_USER_ROLE,
+      variables: {
+        userName:
+          rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node
+            .user.userName,
+        orgId: rawOrgUserListData.findOrganizationBySlug.id,
+        role: 'SUPER_ADMIN',
+      },
+    },
+    result: {
+      data: {
+        updateUserRole: {
+          status: 'string',
+        },
+      },
+    },
+  },
+]
 
 describe('<UserList />', () => {
   it('successfully renders with mocked data', async () => {
@@ -37,12 +65,12 @@ describe('<UserList />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']}>
-              <MockedProvider>
+              <MockedProvider mocks={mocks} cache={createCache()}>
                 <UserList
                   permission={'SUPER_ADMIN'}
-                  userListData={data.findOrganizationBySlug.affiliations}
-                  orgId={data.findOrganizationBySlug.id}
-                  orgName={data.findOrganizationBySlug.name}
+                  usersPerPage={4}
+                  orgSlug={'test-org.slug'}
+                  orgId={rawOrgUserListData.findOrganizationBySlug.id}
                 />
               </MockedProvider>
             </MemoryRouter>
@@ -54,7 +82,8 @@ describe('<UserList />', () => {
     await waitFor(() =>
       expect(
         getByText(
-          data.findOrganizationBySlug.affiliations.edges[0].node.user.userName,
+          rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node
+            .user.userName,
         ),
       ).toBeInTheDocument(),
     )
@@ -67,33 +96,11 @@ describe('<UserList />', () => {
         initialIndex: 0,
       })
 
-      const mocks = [
-        {
-          request: {
-            query: UPDATE_USER_ROLE,
-            variables: {
-              userName:
-                data.findOrganizationBySlug.affiliations.edges[0].node.user
-                  .userName,
-              orgId: data.findOrganizationBySlug.id,
-              role: 'SUPER_ADMIN',
-            },
-          },
-          result: {
-            data: {
-              updateUserRole: {
-                status: 'string',
-              },
-            },
-          },
-        },
-      ]
-
       const {
         getAllByText,
         getByDisplayValue,
         getByText,
-        getByLabelText,
+        findByLabelText,
       } = render(
         <UserStateProvider
           initialState={{
@@ -105,12 +112,12 @@ describe('<UserList />', () => {
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <Router history={history}>
-                <MockedProvider mocks={mocks} addTypename={false}>
+                <MockedProvider mocks={mocks} cache={createCache()}>
                   <UserList
                     permission={'SUPER_ADMIN'}
-                    userListData={data.findOrganizationBySlug.affiliations}
-                    orgId={data.findOrganizationBySlug.id}
-                    orgName={data.findOrganizationBySlug.name}
+                    usersPerPage={4}
+                    orgSlug={'test-org.slug'}
+                    orgId={rawOrgUserListData.findOrganizationBySlug.id}
                   />
                 </MockedProvider>
               </Router>
@@ -119,7 +126,8 @@ describe('<UserList />', () => {
         </UserStateProvider>,
       )
 
-      const userRole = getByLabelText(/Role:/i)
+      const userRole = await findByLabelText(/Role:/i)
+      // const userRole = await findByText('Role:')
       await waitFor(() => {
         expect(userRole.type).toEqual('select-one')
       })
