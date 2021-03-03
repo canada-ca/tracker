@@ -112,9 +112,9 @@ class Client:
         :param dict params: variables to pass along with query.
         :return: Results of executing query on API.
         :rtype: dict
-        :raises TransportProtocolError: if server response is not GraphQL
-        :raises TransportServerError: if there is a server error
-        :raises GraphQLError: if query validation fails
+        :raises TransportProtocolError: if server response is not GraphQL.
+        :raises TransportServerError: if there is a server error.
+        :raises GraphQLError: if query validation fails.
         :raises Exception: if any unhandled exception is raised within function"""
         try:
             result = self.gql_client.execute(query, variable_values=params)
