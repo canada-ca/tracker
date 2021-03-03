@@ -10,11 +10,11 @@ import {
   useToast,
   Select,
   Box,
+  Button,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
-import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
-import { string, shape } from 'prop-types'
+import { number, string } from 'prop-types'
 import { useMutation } from '@apollo/client'
 import { INVITE_USER_TO_ORG, UPDATE_USER_ROLE } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
@@ -24,16 +24,10 @@ import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { usePaginatedCollection } from './usePaginatedCollection'
+import { PAGINATED_ORG_AFFILIATIONS as FORWARD } from './graphql/queries'
 
-export default function UserList({ permission, userListData, orgId }) {
-  let users = []
-  if (userListData && userListData.edges) {
-    users = userListData.edges
-  }
-
-  const [userList] = useState(users)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [usersPerPage] = useState(4)
+export default function UserList({ permission, orgId, orgSlug, usersPerPage }) {
   const toast = useToast()
   const { currentUser } = useUserState()
   const [addedUserName, setAddedUserName] = useState()
@@ -44,15 +38,29 @@ export default function UserList({ permission, userListData, orgId }) {
       .email(fieldRequirements.email.email.message),
   })
 
-  // Get current users
-  const indexOfLastUser = currentPage * usersPerPage
-  const indexOfFirstUser = indexOfLastUser - usersPerPage
-  const currentUsers = userList.slice(indexOfFirstUser, indexOfLastUser)
+  const {
+    loading,
+    error,
+    nodes,
+    next,
+    previous,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    fetchHeaders: { authorization: currentUser.jwt },
+    recordsPerPage: usersPerPage,
+    variables: { orgSlug },
+    relayRoot: 'findOrganizationBySlug.affiliations',
+  })
 
-  const [updateUserRole, { loading, error }] = useMutation(UPDATE_USER_ROLE, {
-    onError(error) {
+  const [
+    updateUserRole,
+    { loading: _updateLoading, error: _updateError },
+  ] = useMutation(UPDATE_USER_ROLE, {
+    onError(updateError) {
       toast({
-        title: error.message,
+        title: updateError.message,
         description: t`Unable to change user role, please try again.`,
         status: 'error',
         duration: 9000,
@@ -110,9 +118,6 @@ export default function UserList({ permission, userListData, orgId }) {
       </LoadingMessage>
     )
   if (error) return <ErrorFallbackMessage error={error} />
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   // TODO: Add mutation to this
   // const removeUser = (user) => {
@@ -232,15 +237,15 @@ export default function UserList({ permission, userListData, orgId }) {
         )}
       </Formik>
 
-      {userList.length === 0 ? (
+      {nodes.length === 0 ? (
         <Text fontSize="2xl" fontWeight="bold" textAlign="center">
           <Trans>No users in this organization</Trans>
         </Text>
       ) : (
-        currentUsers.map(({ node }, index) => {
+        nodes.map((node) => {
           let userRole = node.permission
           return (
-            <Box key={`${node.user.userName}:${index}`}>
+            <Box key={`${node.user.userName}:${node.id}`}>
               <Stack isInline align="center">
                 {/* TODO: IMPLEMENT USER REMOVAL (NEEDS API SUPPORT NOV-23-2020 */}
                 {/* <TrackerButton */}
@@ -290,29 +295,26 @@ export default function UserList({ permission, userListData, orgId }) {
           )
         })
       )}
+      <Stack isInline align="center" mb="4">
+        <Button
+          onClick={previous}
+          disable={!!hasPreviousPage}
+          aria-label="Previous page"
+        >
+          <Trans>Previous</Trans>
+        </Button>
 
-      {userList.length > 0 && (
-        <PaginationButtons
-          perPage={usersPerPage}
-          total={userList.length}
-          paginate={paginate}
-          currentPage={currentPage}
-        />
-      )}
+        <Button onClick={next} disable={!!hasNextPage} aria-label="Next page">
+          <Trans>Next</Trans>
+        </Button>
+      </Stack>
     </Stack>
   )
 }
 
 UserList.propTypes = {
-  userListData: shape({
-    userId: string,
-    permission: string,
-    user: shape({
-      userName: string,
-      displayName: string,
-    }),
-  }),
-  orgName: string,
+  orgSlug: string,
   orgId: string,
   permission: string,
+  usersPerPage: number,
 }
