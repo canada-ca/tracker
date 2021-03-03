@@ -42,7 +42,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
 
-export function AdminDomains({ orgSlug, domainsPerPage }) {
+export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [domainSearch, setDomainSearch] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()
   const [editingDomainId, setEditingDomainId] = useState()
@@ -421,5 +421,6 @@ export function AdminDomains({ orgSlug, domainsPerPage }) {
 
 AdminDomains.propTypes = {
   orgSlug: string.isRequired,
+  orgId: string.isRequired,
   domainsPerPage: number,
 }

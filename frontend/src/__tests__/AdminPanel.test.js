@@ -9,8 +9,10 @@ import AdminPanel from '../AdminPanel'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { rawOrgDomainListData } from '../fixtures/orgDomainListData'
 import { rawOrgUserListData } from '../fixtures/orgUserListData'
-import { PAGINATED_ORG_DOMAINS } from '../graphql/queries'
-import { PAGINATED_ORG_AFFILIATIONS } from '../graphql/queries'
+import {
+  PAGINATED_ORG_DOMAINS,
+  PAGINATED_ORG_AFFILIATIONS,
+} from '../graphql/queries'
 import { createCache } from '../client'
 
 const i18n = setupI18n({

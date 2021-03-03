@@ -4,9 +4,7 @@ import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
 import {
-  Button,
   Heading,
-  Stack,
   Box,
   Divider,
   InputGroup,

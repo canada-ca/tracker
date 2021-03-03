@@ -310,5 +310,5 @@ UserList.propTypes = {
   orgSlug: string,
   permission: string,
   usersPerPage: number,
-  orgId: string,
+  orgId: string.isRequired,
 }
