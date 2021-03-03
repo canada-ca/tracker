@@ -118,9 +118,11 @@ export const updateUserProfile = new mutationWithClientMutationId({
       tfaSendMethod = 'email'
     } else if (
       subTfaSendMethod === 'none' ||
-      typeof user.tfaSendMethod !== 'undefined'
+      typeof user.tfaSendMethod === 'undefined'
     ) {
       tfaSendMethod = 'none'
+    } else {
+      tfaSendMethod = user.tfaSendMethod
     }
 
     // Create object containing updated data

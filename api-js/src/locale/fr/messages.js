@@ -12,6 +12,7 @@
       'todo',
     'If an account with this username is found, an email verification link will be found in your inbox.':
       'todo',
+    'Incorrect username or password. Please try again.': 'todo',
     'Invalid token, please request a new one.': 'todo',
     'New passwords do not match. Please try again.': 'todo',
     'No domain with the provided domain could be found.': 'todo',

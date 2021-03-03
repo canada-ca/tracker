@@ -8,6 +8,11 @@ api/api.current.graphql
 **/node_modules
 **/coverage
 
+**/identity
+**/identity.pub
+**/known_hosts
+
+
 *.log
 
 # virtualenv

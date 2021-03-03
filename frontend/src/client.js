@@ -11,6 +11,12 @@ export function createCache() {
           findMyOrganizations: relayStylePagination(),
         },
       },
+      Organization: {
+        fields: {
+          domains: relayStylePagination(),
+          affiliations: relayStylePagination(),
+        },
+      },
       Period: {
         keyFields: ['month', 'year', 'domain'],
         fields: {

@@ -1,18 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
-- name: gcr.io/track-compliance/api
-  newTag: master-4003aac
-- name: gcr.io/track-compliance/api-js
-  newTag: master-df61fbf-1614336522
 - name: gcr.io/track-compliance/autoscan
   newTag: master-0000000
 - name: gcr.io/track-compliance/db-migration
   newTag: master-0000000
 - name: gcr.io/track-compliance/dns
   newTag: master-0000000
-- name: gcr.io/track-compliance/frontend
-  newTag: master-6f8a749-1614298500
 - name: gcr.io/track-compliance/https
   newTag: master-0000000
 - name: gcr.io/track-compliance/result-queue

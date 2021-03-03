@@ -36,10 +36,12 @@ export const SIGN_IN = gql`
           authenticateToken
           sendMethod
         }
-        ... on RegularSignInResult {
-          authResult {
-            ...RequiredAuthResultFields
-          }
+        ... on AuthResult {
+          ...RequiredAuthResultFields
+        }
+        ... on SignInError {
+          code
+          description
         }
       }
     }

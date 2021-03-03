@@ -182,14 +182,12 @@ describe('<SignInPage />', () => {
               data: {
                 signIn: {
                   result: {
-                    authResult: {
-                      user: {
-                        userName: 'Thalia.Rosenbaum@gmail.com',
-                        tfaSendMethod: false,
-                      },
-                      authToken: 'test123stringJWT',
+                    user: {
+                      userName: 'Thalia.Rosenbaum@gmail.com',
+                      tfaSendMethod: false,
                     },
-                    __typename: 'RegularSignInResult',
+                    authToken: 'test123stringJWT',
+                    __typename: 'AuthResult',
                   },
                 },
               },

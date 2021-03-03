@@ -99,45 +99,9 @@ describe('<OrganizationDetails />', () => {
                     ],
                   },
                 },
-                domains: {
-                  pageInfo: {
-                    hasNextPage: false,
-                    hasPreviousPage: false,
-                  },
-                  edges: [
-                    {
-                      node: {
-                        id: 'OTY2NTI4OTY4NA==',
-                        domain: 'tbs-sct.gc.ca',
-                        lastRan: '2020-06-18T00:42:12.414Z',
-                        status: {
-                          dkim: 'PASS',
-                          dmarc: 'PASS',
-                          https: 'PASS',
-                          spf: 'PASS',
-                          ssl: 'PASS',
-                        },
-                      },
-                    },
-                  ],
-                },
+
                 affiliations: {
-                  pageInfo: {
-                    hasNextPage: false,
-                    hasPreviousPage: false,
-                  },
                   totalCount: 5,
-                  edges: [
-                    {
-                      node: {
-                        permission: 'ADMIN',
-                        user: {
-                          id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
-                          userName: 'testuser@testemail.gc.ca',
-                        },
-                      },
-                    },
-                  ],
                 },
               },
             },
