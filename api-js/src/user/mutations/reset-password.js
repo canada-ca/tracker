@@ -2,6 +2,8 @@ import { GraphQLNonNull, GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
+import { resetPasswordUnion } from '../unions'
+
 export const resetPassword = new mutationWithClientMutationId({
   name: 'ResetPassword',
   description:
@@ -22,13 +24,10 @@ export const resetPassword = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
-      description:
-        'Informs the user if the password reset was successful, and to redirect to sign in page.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+    result: {
+      type: resetPasswordUnion,
+      description: '',
+      resetPassword: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -114,6 +113,7 @@ export const resetPassword = new mutationWithClientMutationId({
     console.info(`User: ${user._key} successfully reset their password.`)
 
     return {
+      _type: 'regular',
       status: i18n._(t`Password was successfully reset.`),
     }
   },
