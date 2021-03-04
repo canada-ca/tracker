@@ -8,6 +8,12 @@ steps:
       - PIPENV_NOSPIN=TRUE
 
   - name: 'gcr.io/track-compliance/ci'
+    id: lint-client
+    dir: clients/python
+    entrypoint: /bin/sh
+    args: ['-c', 'pipenv run black --check tracker_client/ && pipenv run bandit -r tracker_client/']
+
+  - name: 'gcr.io/track-compliance/ci'
     id: test-client
     dir: clients/python
     entrypoint: pipenv
