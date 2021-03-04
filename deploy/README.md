@@ -53,6 +53,7 @@ After that it's basically the same:
 ```bash
 kustomize build platform/creds/prod | kubectl apply -f -
 kustomize build app/creds/prod | kubectl apply -f -
+kustomize build deploy/creds/readwrite | kubectl apply -f -
 kustomize build deploy/gke | kubectl apply -f -
 ```
 
