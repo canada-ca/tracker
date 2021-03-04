@@ -8,5 +8,7 @@ spec:
   interval: 1m0s
   ref:
     branch: master
-  url: https://github.com/canada-ca/tracker
+  secretRef:
+    name: flux-credentials
+  url: ssh://git@github.com/canada-ca/tracker
 
