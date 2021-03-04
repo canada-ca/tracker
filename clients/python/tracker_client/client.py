@@ -20,11 +20,12 @@ class Client:
     and domains their organization(s) control.
 
     :param str url: Tracker GraphQL endpoint, defaults to alpha endpoint.
+    :param str lang: desired language to get data from Tracker in ('en' or 'fr').
     :ivar gql.Client gql_client: gql client instance used to execute queries.
     """
 
-    def __init__(self, url="https://tracker.alpha.canada.ca/graphql"):
-        self.gql_client = create_client(url, auth_token=get_auth_token())
+    def __init__(self, url="https://tracker.alpha.canada.ca/graphql", language="en"):
+        self.gql_client = create_client(url, get_auth_token(), language)
 
     def get_organization(self, name):
         """Get an :class:`~tracker_client.organization.Organization` from specified name. You must be a member of that
