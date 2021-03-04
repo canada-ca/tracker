@@ -26,10 +26,8 @@ SIGNIN_MUTATION = gql(
     mutation signIn($creds: SignInInput!) {
         signIn (input: $creds) {
             result {
-                ... on RegularSignInResult {
-                    authResult {
-                        authToken
-                    }
+                ... on AuthResult {
+                    authToken
                 }
             }
         }

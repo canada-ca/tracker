@@ -18,6 +18,7 @@ bandit = "*"
 wheel = "*"
 setuptools = "*"
 twine = "*"
+sphinx = "*"
 
 [requires]
 python_version = "3.8"

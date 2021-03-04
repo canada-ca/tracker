@@ -52,3 +52,6 @@ api/.ipynb
 
 #API lingui ignores
 api-js/src/locale/_build
+
+# Python client ignores
+clients/python/docs/build

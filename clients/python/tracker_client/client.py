@@ -1,4 +1,4 @@
-"""This module defines the Client class, used to connect to the Tracker API"""
+"""This module defines the Client class, used to connect to the Tracker API."""
 from slugify import slugify
 from gql.transport.exceptions import (
     TransportQueryError,
@@ -15,24 +15,25 @@ import queries
 
 class Client:
     """This class represents the user's connection to Tracker, which is established on instantiation.
-    It allows the user to retrieve :class:`tracker_client.organization.Organization` and
-    :class:`tracker_client.domain.Domain` objects representing organizations they are members of
+    It allows the user to retrieve :class:`~tracker_client.organization.Organization` and
+    :class:`~tracker_client.domain.Domain` objects representing organizations they are members of
     and domains their organization(s) control.
 
-    :param str url: Tracker GraphQL endpoint, defaults to alpha endpoint
-    :attribute GQL Client client: GQL client instance used to execute queries
+    :param str url: Tracker GraphQL endpoint, defaults to alpha endpoint.
+    :ivar gql.Client gql_client: gql client instance used to execute queries.
     """
 
     def __init__(self, url="https://tracker.alpha.canada.ca/graphql"):
-        self.client = create_client(url, auth_token=get_auth_token())
+        self.gql_client = create_client(url, auth_token=get_auth_token())
 
     def get_organization(self, name):
-        """Get an Organization from specified name. You must be a member of that
+        """Get an :class:`~tracker_client.organization.Organization` from specified name. You must be a member of that
         organization.
 
-        :param str name: name of organization to get and construct Organization for.
-        :return: A :class:`tracker_client.organization.Organization` object
+        :param str name: name of organization to get and construct :class:`~tracker_client.organization.Organization` for.
+        :return: The specified organization.
         :rtype: Organization
+        :raises ValueError: if an invalid organization name is given.
         """
         params = {"orgSlug": slugify(name)}
         result = self.execute_query(queries.GET_ORG, params)
@@ -45,10 +46,11 @@ class Client:
 
     # Consider changing to generator
     def get_organizations(self):
-        """Gets a list of Organizations for all organizations you are a member of
+        """Get a list of your :class:`organizations <tracker_client.organization.Organization>`.
 
-        :return: A list of :class:`tracker_client.organization.Organization` objects
+        :return: A list of your organizations.
         :rtype: list[Organization]
+        :raises ValueError: if your organizations can't be retrieved.
         """
         result = self.execute_query(queries.GET_ALL_ORGS)
 
@@ -63,12 +65,13 @@ class Client:
         return org_list
 
     def get_domain(self, domain):
-        """Get a Domain for the given domain. One of your organizations must
-        control that domain
+        """Get a :class:`~tracker_client.domain.Domain` for the given domain. One of your organizations must
+        control that domain.
 
         :param str domain: name of domain to get and construct Domain for.
-        :return: A :class:`tracker_client.domain.Domain` object
+        :return: The specified domain.
         :rtype: Domain
+        :raises ValueError: if an invalid domain is requested.
         """
         params = {"domain": domain}
         result = self.execute_query(queries.GET_DOMAIN, params)
@@ -81,10 +84,11 @@ class Client:
 
     # Consider changing to generator
     def get_domains(self):
-        """Gets a list of Domains for all domains your organizations control
+        """Get a list of your :class:`domains <tracker_client.domain.Domain>`.
 
-        :return: A list of :class:`tracker_client.domain.Domain` objects
+        :return: A list of your domains.
         :rtype: list[Domain]
+        :raises ValueError: if your domains can't be retrieved.
         """
         result = self.execute_query(queries.GET_ALL_DOMAINS)
 
@@ -104,16 +108,16 @@ class Client:
         Intended for internal use, but if for some reason you need an unformatted
         response from the API you could call this.
 
-        :param DocumentNode query: a gql query string that has been parsed with gql()
-        :param dict params: variables to pass along with query
-        :return: Results of executing query on API
+        :param DocumentNode query: a gql query string that has been parsed with gql().
+        :param dict params: variables to pass along with query.
+        :return: Results of executing query on API.
         :rtype: dict
-        :raises TransportProtocolError: if server response is not GraphQL
-        :raises TransportServerError: if there is a server error
-        :raises GraphQLError: if query validation fails
+        :raises TransportProtocolError: if server response is not GraphQL.
+        :raises TransportServerError: if there is a server error.
+        :raises GraphQLError: if query validation fails.
         :raises Exception: if any unhandled exception is raised within function"""
         try:
-            result = self.client.execute(query, variable_values=params)
+            result = self.gql_client.execute(query, variable_values=params)
 
         except TransportQueryError as error:
             # Returns a message with all errors and the path where they occurred
