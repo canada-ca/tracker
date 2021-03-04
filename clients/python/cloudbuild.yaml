@@ -1,0 +1,17 @@
+steps:
+  - name: 'gcr.io/track-compliance/ci'
+    id: install-client-deps
+    dir: clients/python
+    entrypoint: pipenv
+    args: ['sync', '-d', '--bare']
+    env:
+      - PIPENV_NOSPIN=TRUE
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-client
+    dir: clients/python
+    entrypoint: pipenv
+    args: ['run', 'pytest']
+    env:
+      - TRACKER_UNAME=$_TRACKER_UNAME
+      - TRACKER_PASS=$_TRACKER_PASS
