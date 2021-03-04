@@ -1,8 +1,9 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql'
 
-export const resetPasswordResult = new GraphQLObjectType({
+export const resetPasswordResultType = new GraphQLObjectType({
   name: 'ResetPasswordResult',
-  description: '',
+  description:
+    'This object is used to inform the user that no errors were encountered while resetting their password.',
   fields: () => ({
     status: {
       type: GraphQLString,

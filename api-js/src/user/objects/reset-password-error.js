@@ -1,17 +1,18 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
 
-export const resetPasswordError = new GraphQLObjectType({
+export const resetPasswordErrorType = new GraphQLObjectType({
   name: 'ResetPasswordError',
-  description: '',
+  description:
+    'This object is used to inform the user if any errors occurred while resetting their password.',
   fields: () => ({
     code: {
       type: GraphQLInt,
-      description: '',
+      description: 'Error code to inform user what the issue is related to.',
       resolve: ({ code }) => code,
     },
     description: {
       type: GraphQLString,
-      description: '',
+      description: 'Description of the issue that was encountered.',
       resolve: ({ description }) => description,
     },
   }),
