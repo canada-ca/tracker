@@ -35,16 +35,37 @@ export default function ResetPasswordPage() {
         position: 'top-left',
       })
     },
-    onCompleted() {
-      history.push('/sign-in')
-      toast({
-        title: t`Password Updated`,
-        description: t`You may now sign in with your new password`,
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
+    onCompleted({ resetPassword }) {
+      if (resetPassword.result.__typename === 'ResetPasswordResult') {
+        history.push('/sign-in')
+        toast({
+          title: t`Password Updated`,
+          description: t`You may now sign in with your new password`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else if (resetPassword.result.__typename === 'ResetPasswordError') {
+        toast({
+          title: t`Unable to reset your password, please try again.`,
+          description: resetPassword.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect resetPassword.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect resetPassword.result typename.')
+      }
     },
   })
 
