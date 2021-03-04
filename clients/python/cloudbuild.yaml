@@ -11,7 +11,7 @@ steps:
     id: test-client
     dir: clients/python
     entrypoint: pipenv
-    args: ['run', 'pytest']
+    args: ['run', 'pytest', '-m', 'not online']
     env:
       - TRACKER_UNAME=$_TRACKER_UNAME
       - TRACKER_PASS=$_TRACKER_PASS

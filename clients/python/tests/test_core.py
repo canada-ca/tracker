@@ -34,7 +34,6 @@ def test_get_auth_token_no_creds(monkeypatch):
         get_auth_token()
 
 
-@pytest.mark.online
 def test_create_client():
     """Check that create_client creates a client when not passed auth_token."""
     client = create_client()
@@ -42,7 +41,6 @@ def test_create_client():
     assert client.transport is not None
 
 
-@pytest.mark.online
 def test_create_client_with_auth():
     """Check that create_client creates a client when passed auth_token."""
     client = create_client(auth_token=REAL_JWT)
