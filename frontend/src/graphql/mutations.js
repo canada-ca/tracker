@@ -81,7 +81,15 @@ export const RESET_PASSWORD = gql`
         resetToken: $resetToken
       }
     ) {
-      status
+      result {
+        ... on ResetPasswordError {
+          code
+          description
+        }
+        ... on ResetPasswordResult {
+          status
+        }
+      }
     }
   }
 `

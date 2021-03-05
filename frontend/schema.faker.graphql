@@ -1402,6 +1402,14 @@ type RequestScanPayload {
   clientMutationId: String
 }
 
+# This object is used to inform the user if any errors occurred while resetting their password.
+type ResetPasswordError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input ResetPasswordInput {
   # The users new password.
   password: String!
@@ -1413,10 +1421,20 @@ input ResetPasswordInput {
 }
 
 type ResetPasswordPayload {
-  # Informs the user if the password reset was successful, and to redirect to sign in page.
-  status: String
+  # `ResetPasswordUnion` returning either a `ResetPasswordResult`, or `ResetPasswordError` object.
+  result: ResetPasswordUnion
   clientMutationId: String
 }
+
+# This object is used to inform the user that no errors were encountered while resetting their password.
+type ResetPasswordResult {
+  # Informs the user if the password reset was successful, and to redirect to sign in page.
+  status: String
+}
+
+# This union is used with the `ResetPassword` mutation, allowing for users to
+# reset their password, and support any errors that may occur
+union ResetPasswordUnion = ResetPasswordError | ResetPasswordResult
 
 # An enum used to assign, and test users roles.
 enum RoleEnums {
