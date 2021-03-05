@@ -1484,6 +1484,14 @@ type SendPasswordResetLinkPayload {
   clientMutationId: String
 }
 
+# This object is used to inform the user if any errors occurred while sending a code to their phone.
+type SendPhoneCodeError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input sendPhoneCodeInput {
   # The phone number that the text message will be sent to.
   phoneNumber: PhoneNumber!
@@ -1491,10 +1499,20 @@ input sendPhoneCodeInput {
 }
 
 type sendPhoneCodePayload {
-  # Informs the user if the text message was successfully sent.
-  status: String
+  # `SendPhoneCodeUnion` returning either a `SendPhoneCodeResult`, or `SendPhoneCodeError` object.
+  result: SendPhoneCodeUnion
   clientMutationId: String
 }
+
+# This object is used to inform the user that no errors were encountered while sending their phone code.
+type SendPhoneCodeResult {
+  # Informs the user if their phone code was successfully sent.
+  status: String
+}
+
+# This union is used with the `sendPhoneCode` mutation, allowing for users to send
+# a verification code to their phone, and support any errors that may occur
+union SendPhoneCodeUnion = SendPhoneCodeError | SendPhoneCodeResult
 
 # This object is used for showing none personal user details,
 # and is used for limiting admins to the personal details of users.
