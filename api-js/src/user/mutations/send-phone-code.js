@@ -1,8 +1,10 @@
 import crypto from 'crypto'
-import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLNonNull } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { GraphQLPhoneNumber } from 'graphql-scalars'
 import { t } from '@lingui/macro'
+
+import { sendPhoneCodeUnion } from '../unions'
 
 const { CIPHER_KEY } = process.env
 
@@ -17,13 +19,11 @@ export const sendPhoneCode = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
+    result: {
+      type: sendPhoneCodeUnion,
       description:
-        'Informs the user if the text message was successfully sent.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+        '`SendPhoneCodeUnion` returning either a `SendPhoneCodeResult`, or `SendPhoneCodeError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -45,7 +45,11 @@ export const sendPhoneCode = new mutationWithClientMutationId({
       console.warn(
         `User attempted to send TFA text message, however the userKey does not exist.`,
       )
-      throw new Error(i18n._(t`Authentication error, please sign in again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Authentication error, please sign in again.`),
+      }
     }
 
     // Get User From Db
@@ -55,7 +59,11 @@ export const sendPhoneCode = new mutationWithClientMutationId({
       console.warn(
         `User attempted to send TFA text message, however no account is associated with this key: ${userKey}.`,
       )
-      throw new Error(i18n._(t`Unable to send TFA code, please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to send TFA code, please try again.`),
+      }
     }
 
     // Generate TFA code
@@ -114,6 +122,7 @@ export const sendPhoneCode = new mutationWithClientMutationId({
 
     console.info(`User: ${user._key} successfully sent tfa code.`)
     return {
+      _type: 'regular',
       status: i18n._(
         t`Two factor code has been successfully sent, you will receive a text message shortly.`,
       ),

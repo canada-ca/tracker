@@ -96,7 +96,15 @@ describe('user send password reset email', () => {
           `
             mutation {
               sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
-                status
+                result {
+                  ... on SendPhoneCodeResult {
+                    status
+                  }
+                  ... on SendPhoneCodeError {
+                    code
+                    description
+                  }
+                }
               }
             }
           `,
@@ -125,8 +133,10 @@ describe('user send password reset email', () => {
         const expectedResult = {
           data: {
             sendPhoneCode: {
-              status:
-                'Two factor code has been successfully sent, you will receive a text message shortly.',
+              result: {
+                status:
+                  'Two factor code has been successfully sent, you will receive a text message shortly.',
+              },
             },
           },
         }
@@ -163,7 +173,15 @@ describe('user send password reset email', () => {
             `
               mutation {
                 sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
-                  status
+                  result {
+                    ... on SendPhoneCodeResult {
+                      status
+                    }
+                    ... on SendPhoneCodeError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -189,11 +207,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to send TFA code, please try again.'),
-          ]
+          const error = {
+            data: {
+              sendPhoneCode: {
+                result: {
+                  code: 400,
+                  description: 'Unable to send TFA code, please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User attempted to send TFA text message, however no account is associated with this key: 1.`,
           ])
@@ -206,7 +231,15 @@ describe('user send password reset email', () => {
             `
               mutation {
                 sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
-                  status
+                  result {
+                    ... on SendPhoneCodeResult {
+                      status
+                    }
+                    ... on SendPhoneCodeError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -232,11 +265,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Authentication error, please sign in again.'),
-          ]
+          const error = {
+            data: {
+              sendPhoneCode: {
+                result: {
+                  code: 400,
+                  description: 'Authentication error, please sign in again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User attempted to send TFA text message, however the userKey does not exist.`,
           ])
@@ -255,7 +295,15 @@ describe('user send password reset email', () => {
             `
               mutation {
                 sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
-                  status
+                  result {
+                    ... on SendPhoneCodeResult {
+                      status
+                    }
+                    ... on SendPhoneCodeError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -305,7 +353,15 @@ describe('user send password reset email', () => {
             `
               mutation {
                 sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
-                  status
+                  result {
+                    ... on SendPhoneCodeResult {
+                      status
+                    }
+                    ... on SendPhoneCodeError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -375,7 +431,15 @@ describe('user send password reset email', () => {
           `
             mutation {
               sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
-                status
+                result {
+                  ... on SendPhoneCodeResult {
+                    status
+                  }
+                  ... on SendPhoneCodeError {
+                    code
+                    description
+                  }
+                }
               }
             }
           `,
@@ -404,7 +468,9 @@ describe('user send password reset email', () => {
         const expectedResult = {
           data: {
             sendPhoneCode: {
-              status: 'todo',
+              result: {
+                status: 'todo',
+              },
             },
           },
         }
@@ -441,7 +507,15 @@ describe('user send password reset email', () => {
             `
               mutation {
                 sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
-                  status
+                  result {
+                    ... on SendPhoneCodeResult {
+                      status
+                    }
+                    ... on SendPhoneCodeError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -467,9 +541,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              sendPhoneCode: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User attempted to send TFA text message, however no account is associated with this key: 1.`,
           ])
@@ -482,7 +565,15 @@ describe('user send password reset email', () => {
             `
               mutation {
                 sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
-                  status
+                  result {
+                    ... on SendPhoneCodeResult {
+                      status
+                    }
+                    ... on SendPhoneCodeError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -508,9 +599,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              sendPhoneCode: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User attempted to send TFA text message, however the userKey does not exist.`,
           ])
@@ -529,7 +629,15 @@ describe('user send password reset email', () => {
             `
               mutation {
                 sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
-                  status
+                  result {
+                    ... on SendPhoneCodeResult {
+                      status
+                    }
+                    ... on SendPhoneCodeError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -576,7 +684,15 @@ describe('user send password reset email', () => {
             `
               mutation {
                 sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
-                  status
+                  result {
+                    ... on SendPhoneCodeResult {
+                      status
+                    }
+                    ... on SendPhoneCodeError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
