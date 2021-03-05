@@ -1,9 +1,10 @@
 import { GraphQLNonNull, GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
-import { LanguageEnums } from '../../enums'
 import { GraphQLEmailAddress } from 'graphql-scalars'
-import { authResultType } from '../../user'
+
+import { LanguageEnums } from '../../enums'
+import { signUpUnion } from '../unions'
 
 export const signUp = new mutationWithClientMutationId({
   name: 'SignUp',
@@ -38,12 +39,11 @@ export const signUp = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    authResult: {
-      type: authResultType,
-      description: 'The authenticated users information, and JWT.',
-      resolve: async ({ authResult }) => {
-        return authResult
-      },
+    result: {
+      type: signUpUnion,
+      description:
+        '`SignUpUnion` returning either a `AuthResult`, or `SignUpError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -68,7 +68,11 @@ export const signUp = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} tried to sign up but did not meet requirements.`,
       )
-      throw new Error(i18n._(t`Password is too short.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Password is too short.`),
+      }
     }
 
     // Check that password and password confirmation match
@@ -76,7 +80,11 @@ export const signUp = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} tried to sign up but passwords do not match.`,
       )
-      throw new Error(i18n._(t`Passwords do not match.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Passwords do not match.`),
+      }
     }
 
     // Check to see if user already exists
@@ -86,7 +94,11 @@ export const signUp = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} tried to sign up, however there is already an account in use with that username.`,
       )
-      throw new Error(i18n._(t`Username already in use.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Username already in use.`),
+      }
     }
 
     // Hash Users Password
@@ -134,10 +146,9 @@ export const signUp = new mutationWithClientMutationId({
     console.info(`User: ${userName} successfully created a new account.`)
 
     return {
-      authResult: {
-        token,
-        user: insertedUser,
-      },
+      _type: 'authResult',
+      token,
+      user: insertedUser,
     }
   },
 })

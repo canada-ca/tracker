@@ -20,8 +20,14 @@ export const SIGN_UP = gql`
         signUpToken: $signUpToken
       }
     ) {
-      authResult {
-        ...RequiredAuthResultFields
+      result {
+        ... on AuthResult {
+          ...RequiredAuthResultFields
+        }
+        ... on SignUpError {
+          code
+          description
+        }
       }
     }
   }

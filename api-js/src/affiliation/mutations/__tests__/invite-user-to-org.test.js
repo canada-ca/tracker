@@ -56,9 +56,11 @@ describe('invite user to org', () => {
               preferredLang: FRENCH
             }
           ) {
-            authResult {
-              user {
-                id
+            result {
+              ... on AuthResult {
+                user {
+                  id
+                }
               }
             }
           }

@@ -57,9 +57,11 @@ describe('update a users role', () => {
               preferredLang: FRENCH
             }
           ) {
-            authResult {
-              user {
-                id
+            result {
+              ... on AuthResult {
+                user {
+                  id
+                }
               }
             }
           }

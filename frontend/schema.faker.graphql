@@ -1530,6 +1530,15 @@ type SignInPayload {
 # This union is used with the `SignIn` mutation, allowing for multiple styles of
 # logging in, and support any errors that may occur
 union SignInUnion = AuthResult | SignInError | TFASignInResult
+
+# This object is used to inform the user if any errors occurred during sign up.
+type SignUpError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input SignUpInput {
   # The name that will be displayed to other users.
   displayName: String!
@@ -1547,10 +1556,13 @@ input SignUpInput {
 }
 
 type SignUpPayload {
-  # The authenticated users information, and JWT.
-  authResult: AuthResult
+  # `SignUpUnion` returning either a `AuthResult`, or `SignUpError` object.
+  result: SignUpUnion
   clientMutationId: String
 }
+
+# This union is used with the `signUp` mutation, allowing for the user to sign up, and support any errors that may occur.
+union SignUpUnion = AuthResult | SignUpError
 
 # A field whos values contain numbers, letters, dashes, and underscores.
 scalar Slug
