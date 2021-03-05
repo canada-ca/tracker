@@ -1886,6 +1886,14 @@ type UpdateOrganizationPayload {
   clientMutationId: String
 }
 
+# This object is used to inform the user if any errors occurred while updating their password.
+type UpdateUserPasswordError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input UpdateUserPasswordInput {
   # The users current password to verify it is the current user.
   currentPassword: String!
@@ -1897,10 +1905,22 @@ input UpdateUserPasswordInput {
 }
 
 type UpdateUserPasswordPayload {
-  # The status if the user profile update was successful.
-  status: String
+  # `UpdateUserPasswordUnion` returning either a `UpdateUserPasswordResultType`, or `UpdateUserPasswordError` object.
+  result: UpdateUserPasswordUnion
   clientMutationId: String
 }
+
+# This object is used to inform the user that no errors were encountered while updating their password.
+type UpdateUserPasswordResultType {
+  # Informs the user if their password was successfully updated.
+  status: String
+}
+
+# This union is used with the `updateUserPassword` mutation, allowing for users to
+# update their password, and support any errors that may occur
+union UpdateUserPasswordUnion =
+    UpdateUserPasswordError
+  | UpdateUserPasswordResultType
 
 input UpdateUserProfileInput {
   # The updated display name the user wishes to change to.
