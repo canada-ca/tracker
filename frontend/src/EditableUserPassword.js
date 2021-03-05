@@ -51,16 +51,42 @@ function EditableUserPassword() {
           position: 'top-left',
         })
       },
-      onCompleted() {
-        toast({
-          title: t`Changed User Password`,
-          description: t`You have successfully updated your password.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        onClose()
+      onCompleted({ updateUserPassword }) {
+        if (
+          updateUserPassword.result.__typeName ===
+          'UpdateUserPasswordResultType'
+        ) {
+          toast({
+            title: t`Changed User Password`,
+            description: t`You have successfully updated your password.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          onClose()
+        } else if (
+          updateUserPassword.result.__typeName === 'UpdateUserPasswordError'
+        ) {
+          toast({
+            title: t`Unable to update your password, please try again.`,
+            description: updateUserPassword.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect updateUserPassword.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect updateUserPassword.result typename.')
+        }
       },
     },
   )
