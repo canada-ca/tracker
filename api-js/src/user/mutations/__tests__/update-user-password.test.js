@@ -129,7 +129,15 @@ describe('authenticate user account', () => {
                   updatedPasswordConfirm: "newtestpassword123"
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserPasswordResultType {
+                    status
+                  }
+                  ... on UpdateUserPasswordError {
+                    code
+                    description
+                  }
+                }
               }
             }
           `,
@@ -155,7 +163,9 @@ describe('authenticate user account', () => {
         const expectedResponse = {
           data: {
             updateUserPassword: {
-              status: 'Password was successfully updated.',
+              result: {
+                status: 'Password was successfully updated.',
+              },
             },
           },
         }
@@ -235,7 +245,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -258,11 +276,19 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Authentication error, please sign in again.'),
-          ]
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to update password, authentication error occurred, please sign in again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             'User attempted to update password, but the user id is undefined.',
           ])
@@ -281,7 +307,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -304,11 +338,19 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to update password. Please try again.'),
-          ]
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to update password, authentication error occurred, please sign in again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to update their password, but no account is associated with that id.`,
           ])
@@ -327,7 +369,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -350,13 +400,19 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to update password, current password does not match. Please try again.',
-            ),
-          ]
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to update password, current password does not match. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their password, however they did not enter the current password correctly.`,
           ])
@@ -375,7 +431,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "oldtestpassword123"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -398,13 +462,19 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to update password, new passwords do not match. Please try again.',
-            ),
-          ]
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to update password, new passwords do not match. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their password, however the new passwords do not match.`,
           ])
@@ -423,7 +493,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "password"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -446,13 +524,19 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to update password, passwords are required to be 12 characters or longer. Please try again.',
-            ),
-          ]
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to update password, passwords are required to be 12 characters or longer. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their password, however the new password does not meet GoC requirements.`,
           ])
@@ -478,7 +562,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -541,7 +633,15 @@ describe('authenticate user account', () => {
                   updatedPasswordConfirm: "newtestpassword123"
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserPasswordResultType {
+                    status
+                  }
+                  ... on UpdateUserPasswordError {
+                    code
+                    description
+                  }
+                }
               }
             }
           `,
@@ -567,7 +667,9 @@ describe('authenticate user account', () => {
         const expectedResponse = {
           data: {
             updateUserPassword: {
-              status: 'todo',
+              result: {
+                status: 'todo',
+              },
             },
           },
         }
@@ -647,7 +749,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -670,9 +780,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             'User attempted to update password, but the user id is undefined.',
           ])
@@ -691,7 +810,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -714,9 +841,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to update their password, but no account is associated with that id.`,
           ])
@@ -735,7 +871,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -758,9 +902,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their password, however they did not enter the current password correctly.`,
           ])
@@ -779,7 +932,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "oldtestpassword123"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -802,9 +963,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their password, however the new passwords do not match.`,
           ])
@@ -823,7 +993,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "password"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -846,9 +1024,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their password, however the new password does not meet GoC requirements.`,
           ])
@@ -874,7 +1061,15 @@ describe('authenticate user account', () => {
                     updatedPasswordConfirm: "newtestpassword123"
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserPasswordResultType {
+                      status
+                    }
+                    ... on UpdateUserPasswordError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
