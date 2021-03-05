@@ -56,9 +56,11 @@ describe('reset users password', () => {
               preferredLang: FRENCH
             }
           ) {
-            authResult {
-              user {
-                id
+            result {
+              ... on AuthResult {
+                user {
+                  id
+                }
               }
             }
           }

@@ -58,9 +58,11 @@ describe('authenticate user account', () => {
               preferredLang: FRENCH
             }
           ) {
-            authResult {
-              user {
-                id
+            result {
+              ... on AuthResult {
+                user {
+                  id
+                }
               }
             }
           }
