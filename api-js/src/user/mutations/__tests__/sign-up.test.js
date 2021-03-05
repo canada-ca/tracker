@@ -1,6 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { graphql, GraphQLSchema } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 import request from 'supertest'
@@ -68,15 +68,21 @@ describe('user sign up', () => {
                   preferredLang: ENGLISH
                 }
               ) {
-                authResult {
-                  authToken
-                  user {
-                    id
-                    userName
-                    displayName
-                    preferredLang
-                    phoneValidated
-                    emailValidated
+                result {
+                  ... on AuthResult {
+                    authToken
+                    user {
+                      id
+                      userName
+                      displayName
+                      preferredLang
+                      phoneValidated
+                      emailValidated
+                    }
+                  }
+                  ... on SignUpError {
+                    code
+                    description
                   }
                 }
               }
@@ -109,7 +115,7 @@ describe('user sign up', () => {
         const expectedResult = {
           data: {
             signUp: {
-              authResult: {
+              result: {
                 authToken: 'token',
                 user: {
                   id: `${toGlobalId('users', users[0]._key)}`,
@@ -145,16 +151,21 @@ describe('user sign up', () => {
                   preferredLang: FRENCH
                 }
               ) {
-                authResult {
-                  authToken
-                  user {
-                    id
-                    userName
-                    displayName
-                    preferredLang
-                    phoneValidated
-                    emailValidated
-                    tfaSendMethod
+                result {
+                  ... on AuthResult {
+                    authToken
+                    user {
+                      id
+                      userName
+                      displayName
+                      preferredLang
+                      phoneValidated
+                      emailValidated
+                    }
+                  }
+                  ... on SignUpError {
+                    code
+                    description
                   }
                 }
               }
@@ -186,7 +197,7 @@ describe('user sign up', () => {
         const expectedResult = {
           data: {
             signUp: {
-              authResult: {
+              result: {
                 authToken: 'token',
                 user: {
                   id: `${toGlobalId('users', user._key)}`,
@@ -195,7 +206,6 @@ describe('user sign up', () => {
                   preferredLang: 'FRENCH',
                   phoneValidated: false,
                   emailValidated: false,
-                  tfaSendMethod: 'NONE',
                 },
               },
             },
@@ -240,14 +250,21 @@ describe('user sign up', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  authResult {
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on SignUpError {
+                      code
+                      description
                     }
                   }
                 }
@@ -270,9 +287,18 @@ describe('user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('Password is too short.')]
+          const error = {
+            data: {
+              signUp: {
+                result: {
+                  code: 400,
+                  description: 'Password is too short.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             'User: test.account@istio.actually.exists tried to sign up but did not meet requirements.',
           ])
@@ -293,14 +319,21 @@ describe('user sign up', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  authResult {
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on SignUpError {
+                      code
+                      description
                     }
                   }
                 }
@@ -323,9 +356,18 @@ describe('user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('Passwords do not match.')]
+          const error = {
+            data: {
+              signUp: {
+                result: {
+                  code: 400,
+                  description: 'Passwords do not match.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             'User: test.account@istio.actually.exists tried to sign up but passwords do not match.',
           ])
@@ -355,14 +397,21 @@ describe('user sign up', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  authResult {
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on SignUpError {
+                      code
+                      description
                     }
                   }
                 }
@@ -385,9 +434,18 @@ describe('user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('Username already in use.')]
+          const error = {
+            data: {
+              signUp: {
+                result: {
+                  code: 400,
+                  description: 'Username already in use.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             'User: test.account@istio.actually.exists tried to sign up, however there is already an account in use with that username.',
           ])
@@ -415,14 +473,21 @@ describe('user sign up', () => {
                       preferredLang: FRENCH
                     }
                   ) {
-                    authResult {
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
+                    result {
+                      ... on AuthResult {
+                        authToken
+                        user {
+                          id
+                          userName
+                          displayName
+                          preferredLang
+                          phoneValidated
+                          emailValidated
+                        }
+                      }
+                      ... on SignUpError {
+                        code
+                        description
                       }
                     }
                   }
@@ -480,14 +545,21 @@ describe('user sign up', () => {
                       preferredLang: FRENCH
                     }
                   ) {
-                    authResult {
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
+                    result {
+                      ... on AuthResult {
+                        authToken
+                        user {
+                          id
+                          userName
+                          displayName
+                          preferredLang
+                          phoneValidated
+                          emailValidated
+                        }
+                      }
+                      ... on SignUpError {
+                        code
+                        description
                       }
                     }
                   }
@@ -551,14 +623,21 @@ describe('user sign up', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  authResult {
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on SignUpError {
+                      code
+                      description
                     }
                   }
                 }
@@ -581,9 +660,18 @@ describe('user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              signUp: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             'User: test.account@istio.actually.exists tried to sign up but did not meet requirements.',
           ])
@@ -604,14 +692,21 @@ describe('user sign up', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  authResult {
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on SignUpError {
+                      code
+                      description
                     }
                   }
                 }
@@ -634,9 +729,18 @@ describe('user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              signUp: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             'User: test.account@istio.actually.exists tried to sign up but passwords do not match.',
           ])
@@ -666,14 +770,21 @@ describe('user sign up', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  authResult {
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on SignUpError {
+                      code
+                      description
                     }
                   }
                 }
@@ -696,9 +807,18 @@ describe('user sign up', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              signUp: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             'User: test.account@istio.actually.exists tried to sign up, however there is already an account in use with that username.',
           ])
@@ -726,14 +846,21 @@ describe('user sign up', () => {
                       preferredLang: FRENCH
                     }
                   ) {
-                    authResult {
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
+                    result {
+                      ... on AuthResult {
+                        authToken
+                        user {
+                          id
+                          userName
+                          displayName
+                          preferredLang
+                          phoneValidated
+                          emailValidated
+                        }
+                      }
+                      ... on SignUpError {
+                        code
+                        description
                       }
                     }
                   }
@@ -789,14 +916,21 @@ describe('user sign up', () => {
                       preferredLang: FRENCH
                     }
                   ) {
-                    authResult {
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
+                    result {
+                      ... on AuthResult {
+                        authToken
+                        user {
+                          id
+                          userName
+                          displayName
+                          preferredLang
+                          phoneValidated
+                          emailValidated
+                        }
+                      }
+                      ... on SignUpError {
+                        code
+                        description
                       }
                     }
                   }
