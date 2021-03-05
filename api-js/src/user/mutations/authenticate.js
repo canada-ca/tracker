@@ -1,7 +1,7 @@
 import { GraphQLNonNull, GraphQLString, GraphQLInt } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
-import { authResultType } from '../../user'
+import { authenticateUnion } from '../unions'
 
 const { SIGN_IN_KEY } = process.env
 
@@ -20,12 +20,11 @@ export const authenticate = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    authResult: {
-      type: authResultType,
-      description: 'The authenticated users information, and JWT.',
-      resolve: async (payload) => {
-        return payload.authResult
-      },
+    result: {
+      type: authenticateUnion,
+      description:
+        'Authenticate union returning either a `authResult` or `authenticateError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -53,7 +52,11 @@ export const authenticate = new mutationWithClientMutationId({
       typeof tokenParameters.userKey === 'undefined'
     ) {
       console.warn(`Authentication token does not contain the userKey`)
-      throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to authenticate. Please try again.`),
+      }
     }
 
     // Gather sign in user
@@ -63,7 +66,11 @@ export const authenticate = new mutationWithClientMutationId({
       console.warn(
         `User: ${tokenParameters.userKey} attempted to authenticate, no account is associated with this id.`,
       )
-      throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to authenticate. Please try again.`),
+      }
     }
 
     // Check to see if security token matches the user submitted one
@@ -73,9 +80,9 @@ export const authenticate = new mutationWithClientMutationId({
       // Reset Failed Login attempts
       try {
         await query`
-                FOR u IN users
-                  UPDATE ${user._key} WITH { tfaCode: null } IN users
-              `
+          FOR u IN users
+            UPDATE ${user._key} WITH { tfaCode: null } IN users
+        `
       } catch (err) {
         console.error(
           `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: ${err}`,
@@ -89,10 +96,9 @@ export const authenticate = new mutationWithClientMutationId({
       user.id = user._key
 
       return {
-        authResult: {
-          token,
-          user,
-        },
+        _type: 'authResult',
+        token,
+        user,
       }
     } else {
       console.warn(

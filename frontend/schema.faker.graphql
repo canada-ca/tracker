@@ -40,6 +40,14 @@ type AffiliationEdge {
   cursor: String!
 }
 
+# This object is used to inform the user if any errors occurred during authentication.
+type AuthenticateError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input AuthenticateInput {
   # Security code found in text msg, or email inbox.
   authenticationCode: Int!
@@ -49,11 +57,14 @@ input AuthenticateInput {
 }
 
 type AuthenticatePayload {
-  # The authenticated users information, and JWT.
-  authResult: AuthResult
+  # Authenticate union returning either a `authResult` or `authenticateError` object.
+  result: AuthenticateUnion
   clientMutationId: String
 }
 
+# This union is used with the `authenticate` mutation, allowing for the
+# user to authenticate, and support any errors that may occur
+union AuthenticateUnion = AuthResult | AuthenticateError
 # An object used to return information when users sign up or authenticate.
 type AuthResult {
   # JWT used for accessing controlled content.
