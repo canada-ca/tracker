@@ -29,6 +29,10 @@ SIGNIN_MUTATION = gql(
                 ... on AuthResult {
                     authToken
                 }
+                ... on SignInError{
+                    code
+                    description
+                }
             }
         }
     }
