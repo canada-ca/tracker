@@ -38,18 +38,20 @@ def create_transport(url, auth_token, language):
         if not re.match(_JWT_RE, auth_token):
             raise ValueError("auth_token is not a valid JWT")
 
-        if language.lower() != 'en' and language.lower() != 'fr':
+        if language.lower() != "en" and language.lower() != "fr":
             raise ValueError("Language must be 'en' or 'fr'")
 
         transport = AIOHTTPTransport(
             url=url,
-            headers={"authorization": auth_token, 'accept-language': language.lower()},
+            headers={"authorization": auth_token, "accept-language": language.lower()},
         )
 
     return transport
 
 
-def create_client(url="https://tracker.alpha.canada.ca/graphql", auth_token=None, language='en'):
+def create_client(
+    url="https://tracker.alpha.canada.ca/graphql", auth_token=None, language="en"
+):
     """Create and return a gql client object
 
     :param str url: the Tracker GraphQL endpoint url.
