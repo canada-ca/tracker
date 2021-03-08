@@ -130,10 +130,6 @@ GET_DOMAIN_OWNERS = gql(
     query FindDomainByDomain($domain: DomainScalar!) {
         findDomainByDomain(domain: $domain) {
             organizations(first: 100) {
-                pageInfo{
-                    hasNextPage
-                    endCursor
-                }
                 edges {
                     node {
                     acronym
@@ -159,9 +155,9 @@ GET_DOMAIN_OWNERS = gql(
 #  Query variables should look like {"orgSlug": ${slugified-str} }
 GET_ORG_DOMAINS = gql(
     """
-    query orgBySlug($orgSlug: Slug!) {
+    query orgBySlug($orgSlug: Slug!, $after: String) {
         findOrganizationBySlug(orgSlug: $orgSlug) {
-            domains (first: 100) {
+            domains (first: 100, after: $after) {
                 pageInfo {
                     hasNextPage
                     endCursor

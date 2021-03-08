@@ -156,15 +156,28 @@ class Organization:
             this Organization.
         :rtype: List[Domain]
         """
-        params = {"orgSlug": slugify(self.name)}
-        result = self.client.execute_query(queries.GET_ORG_DOMAINS, params)
-
-        if "error" in result:
-            print("Server error: ", result)
-            raise ValueError("Unable to get domains for " + self.name)
-
+        params = {"orgSlug": slugify(self.name), "after": ""}
+        has_next = True
         domain_list = []
-        for edge in result["findOrganizationBySlug"]["domains"]["edges"]:
-            domain_list.append(dom.Domain(self.client, **edge["node"]))
+
+        # The maximum number of domains that can be requested at once is 100
+        # This loop gets 100 domains, checks if there are more, and if there are
+        # it gets another 100 starting after the last domain it got
+        while has_next:
+            result = self.client.execute_query(queries.GET_ORG_DOMAINS, params)
+
+            if "error" in result:
+                print("Server error: ", result)
+                raise ValueError("Unable to get domains for " + self.name)
+
+            for edge in result["findOrganizationBySlug"]["domains"]["edges"]:
+                domain_list.append(dom.Domain(self.client, **edge["node"]))
+
+            params["after"] = result["findOrganizationBySlug"]["domains"]["pageInfo"][
+                "endCursor"
+            ]
+            has_next = result["findOrganizationBySlug"]["domains"]["pageInfo"][
+                "hasNextPage"
+            ]
 
         return domain_list

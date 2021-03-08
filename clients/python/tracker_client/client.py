@@ -57,6 +57,9 @@ class Client:
         has_next = True
         org_list = []
 
+        # The maximum number of organizations that can be requested at once is 100
+        # This loop gets 100 orgs, checks if there are more, and if there are
+        # it gets another 100 starting after the last org it got
         while has_next:
             result = self.execute_query(queries.GET_ALL_ORGS, params)
 
