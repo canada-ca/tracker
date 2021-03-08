@@ -24,10 +24,17 @@ const {
     options: databaseOptions({ rootPass }),
   })
 
-  Server(PORT, maxDepth, complexityCost, scalarCost, objectCost, listFactor, {
-    query,
-    collections,
-    transaction,
+  Server({
+    maxDepth,
+    complexityCost,
+    scalarCost,
+    objectCost,
+    listFactor,
+    context: {
+      query,
+      collections,
+      transaction,
+    },
   }).listen(PORT, (err) => {
     if (err) throw err
     console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`)
