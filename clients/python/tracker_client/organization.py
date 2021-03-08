@@ -173,11 +173,12 @@ class Organization:
             for edge in result["findOrganizationBySlug"]["domains"]["edges"]:
                 domain_list.append(dom.Domain(self.client, **edge["node"]))
 
-            params["after"] = result["findOrganizationBySlug"]["domains"]["pageInfo"][
-                "endCursor"
-            ]
             has_next = result["findOrganizationBySlug"]["domains"]["pageInfo"][
                 "hasNextPage"
+            ]
+
+            params["after"] = result["findOrganizationBySlug"]["domains"]["pageInfo"][
+                "endCursor"
             ]
 
         return domain_list

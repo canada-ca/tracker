@@ -70,8 +70,8 @@ class Client:
             for edge in result["findMyOrganizations"]["edges"]:
                 org_list.append(Organization(self, **edge["node"]))
 
-            params["after"] = result["findMyOrganizations"]["pageInfo"]["endCursor"]
             has_next = result["findMyOrganizations"]["pageInfo"]["hasNextPage"]
+            params["after"] = result["findMyOrganizations"]["pageInfo"]["endCursor"]
 
         return org_list
 
@@ -118,8 +118,8 @@ class Client:
             for edge in result["findMyDomains"]["edges"]:
                 domain_list.append(Domain(self, **edge["node"]))
 
-            params["after"] = result["findMyDomains"]["pageInfo"]["endCursor"]
             has_next = result["findMyDomains"]["pageInfo"]["hasNextPage"]
+            params["after"] = result["findMyDomains"]["pageInfo"]["endCursor"]
 
         return domain_list
 

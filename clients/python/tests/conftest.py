@@ -2051,8 +2051,10 @@ def domain_status_output():
 @pytest.fixture
 def client_all_orgs_input():
     true = True
+    false = False
     return {
         "findMyOrganizations": {
+            "pageInfo": {"hasNextPage": false, "endCursor": "abc"},
             "edges": [
                 {
                     "node": {
@@ -2080,7 +2082,7 @@ def client_all_orgs_input():
                         "domainCount": 5,
                     }
                 },
-            ]
+            ],
         }
     }
 
@@ -2105,8 +2107,10 @@ def client_org_input():
 
 @pytest.fixture
 def client_all_domains_input():
+    false = False
     return {
         "findMyDomains": {
+            "pageInfo": {"hasNextPage": false, "endCursor": "abc"},
             "edges": [
                 {
                     "node": {
@@ -2132,7 +2136,7 @@ def client_all_domains_input():
                         "selectors": [],
                     }
                 },
-            ]
+            ],
         }
     }
 
@@ -2190,9 +2194,11 @@ def domain_get_owners_input():
 
 @pytest.fixture
 def org_get_domains_input():
+    false = False
     return {
         "findOrganizationBySlug": {
             "domains": {
+                "pageInfo": {"hasNextPage": false, "endCursor": "abc"},
                 "edges": [
                     {
                         "node": {
@@ -2218,7 +2224,7 @@ def org_get_domains_input():
                             "selectors": [],
                         }
                     },
-                ]
+                ],
             }
         }
     }

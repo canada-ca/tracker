@@ -30,7 +30,7 @@ def test_org_get_domains(mock_org, org_get_domains_input):
     domain_list = test_org.get_domains()
 
     test_org.client.execute_query.assert_called_once_with(
-        queries.GET_ORG_DOMAINS, {"orgSlug": "foo"}
+        queries.GET_ORG_DOMAINS, {"orgSlug": "foo", "after": "abc"}
     )
     assert domain_list[0].domain_name == "foo.bar"
     assert domain_list[1].dmarc_phase == "not implemented"
