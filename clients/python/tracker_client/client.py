@@ -53,15 +53,22 @@ class Client:
         :rtype: list[Organization]
         :raises ValueError: if your organizations can't be retrieved.
         """
-        result = self.execute_query(queries.GET_ALL_ORGS)
-
-        if "error" in result:
-            print("Server error: ", result)
-            raise ValueError("Unable to get your organizations.")
-
+        params = {"after": ""}
+        has_next = True
         org_list = []
-        for edge in result["findMyOrganizations"]["edges"]:
-            org_list.append(Organization(self, **edge["node"]))
+
+        while has_next:
+            result = self.execute_query(queries.GET_ALL_ORGS, params)
+
+            if "error" in result:
+                print("Server error: ", result)
+                raise ValueError("Unable to get your organizations.")
+
+            for edge in result["findMyOrganizations"]["edges"]:
+                org_list.append(Organization(self, **edge["node"]))
+
+            params["after"] = result["findMyOrganizations"]["pageInfo"]["endCursor"]
+            has_next = result["findMyOrganizations"]["pageInfo"]["hasNextPage"]
 
         return org_list
 

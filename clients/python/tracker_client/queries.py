@@ -98,8 +98,8 @@ GET_ALL_DOMAINS = gql(
 # Get scalar fields of all your orgs
 GET_ALL_ORGS = gql(
     """
-    query GetAllOrgs {
-        findMyOrganizations(first: 100) {
+    query GetAllOrgs($after: String) {
+        findMyOrganizations(first: 100, after: $after) {
             pageInfo{
                 hasNextPage
                 endCursor
