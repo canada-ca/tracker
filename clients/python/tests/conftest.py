@@ -2050,11 +2050,9 @@ def domain_status_output():
 
 @pytest.fixture
 def client_all_orgs_input():
-    true = True
-    false = False
     return {
         "findMyOrganizations": {
-            "pageInfo": {"hasNextPage": false, "endCursor": "abc"},
+            "pageInfo": {"hasNextPage": False, "endCursor": "abc"},
             "edges": [
                 {
                     "node": {
@@ -2065,7 +2063,7 @@ def client_all_orgs_input():
                         "country": "Canada",
                         "province": "Ontario",
                         "city": "Ottawa",
-                        "verified": true,
+                        "verified": True,
                         "domainCount": 10,
                     }
                 },
@@ -2078,7 +2076,7 @@ def client_all_orgs_input():
                         "country": "Canada",
                         "province": "Ontario",
                         "city": "Ottawa",
-                        "verified": true,
+                        "verified": True,
                         "domainCount": 5,
                     }
                 },
@@ -2089,7 +2087,6 @@ def client_all_orgs_input():
 
 @pytest.fixture
 def client_org_input():
-    true = True
     return {
         "findOrganizationBySlug": {
             "acronym": "FOO",
@@ -2099,7 +2096,7 @@ def client_org_input():
             "country": "Canada",
             "province": "Ontario",
             "city": "Ottawa",
-            "verified": true,
+            "verified": True,
             "domainCount": 10,
         }
     }
@@ -2107,10 +2104,9 @@ def client_org_input():
 
 @pytest.fixture
 def client_all_domains_input():
-    false = False
     return {
         "findMyDomains": {
-            "pageInfo": {"hasNextPage": false, "endCursor": "abc"},
+            "pageInfo": {"hasNextPage": False, "endCursor": "abc"},
             "edges": [
                 {
                     "node": {
@@ -2155,7 +2151,6 @@ def client_domain_input():
 
 @pytest.fixture
 def domain_get_owners_input():
-    true = True
     return {
         "findDomainByDomain": {
             "organizations": {
@@ -2169,7 +2164,7 @@ def domain_get_owners_input():
                             "country": "Canada",
                             "province": "Ontario",
                             "city": "Ottawa",
-                            "verified": true,
+                            "verified": True,
                             "domainCount": 10,
                         }
                     },
@@ -2182,7 +2177,7 @@ def domain_get_owners_input():
                             "country": "Canada",
                             "province": "Ontario",
                             "city": "Ottawa",
-                            "verified": true,
+                            "verified": True,
                             "domainCount": 5,
                         }
                     },
@@ -2194,11 +2189,10 @@ def domain_get_owners_input():
 
 @pytest.fixture
 def org_get_domains_input():
-    false = False
     return {
         "findOrganizationBySlug": {
             "domains": {
-                "pageInfo": {"hasNextPage": false, "endCursor": "abc"},
+                "pageInfo": {"hasNextPage": False, "endCursor": "abc"},
                 "edges": [
                     {
                         "node": {
