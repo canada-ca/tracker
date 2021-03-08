@@ -12,10 +12,8 @@ _JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
 """Regex to validate a JWT"""
 
 
-def create_transport(url, auth_token, language):
+def _create_transport(url, auth_token, language):
     """Create and return a gql transport object.
-
-    Users should rarely, if ever, need to call this.
 
     :param str url: the Tracker GraphQL endpoint url.
     :param str auth_token: JWT auth token, omit when initially obtaining the token (default is none).
@@ -61,7 +59,7 @@ def create_client(
     :rtype: Client
     """
     client = Client(
-        transport=create_transport(url, auth_token, language),
+        transport=_create_transport(url, auth_token, language),
         fetch_schema_from_transport=True,
     )
     return client
