@@ -78,6 +78,10 @@ GET_ALL_DOMAINS = gql(
     """
     query getAllDomains {
         findMyDomains(first: 100) {
+            pageInfo{
+                hasNextPage
+                endCursor
+            }
             edges {
                 node {
                     domain
@@ -96,6 +100,10 @@ GET_ALL_ORGS = gql(
     """
     query GetAllOrgs {
         findMyOrganizations(first: 100) {
+            pageInfo{
+                hasNextPage
+                endCursor
+            }
             edges {
                 node {
                     acronym
@@ -122,6 +130,10 @@ GET_DOMAIN_OWNERS = gql(
     query FindDomainByDomain($domain: DomainScalar!) {
         findDomainByDomain(domain: $domain) {
             organizations(first: 100) {
+                pageInfo{
+                    hasNextPage
+                    endCursor
+                }
                 edges {
                     node {
                     acronym
@@ -150,6 +162,10 @@ GET_ORG_DOMAINS = gql(
     query orgBySlug($orgSlug: Slug!) {
         findOrganizationBySlug(orgSlug: $orgSlug) {
             domains (first: 100) {
+                pageInfo {
+                    hasNextPage
+                    endCursor
+                }
                 edges {
                     node {
                         domain
