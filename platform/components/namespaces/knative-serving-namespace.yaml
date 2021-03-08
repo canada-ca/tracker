@@ -3,6 +3,4 @@ kind: Namespace
 metadata:
   name: knative-serving
   labels:
-    serving.knative.dev/release: "v0.20.0"
----
-
+    serving.knative.dev/release: "v0.21.0"
