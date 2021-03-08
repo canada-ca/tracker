@@ -12,13 +12,14 @@ _JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
 """Regex to validate a JWT"""
 
 
-def create_transport(url, auth_token=None):
+def create_transport(url, auth_token, language):
     """Create and return a gql transport object.
 
     Users should rarely, if ever, need to call this.
 
     :param str url: the Tracker GraphQL endpoint url.
     :param str auth_token: JWT auth token, omit when initially obtaining the token (default is none).
+    :param str lang: value to set the http "accept-language" header to.
     :return: A gql transport for given url.
     :rtype: AIOHTTPTransport
     :raises ValueError: if auth_token is not a valid JWT.
@@ -37,24 +38,28 @@ def create_transport(url, auth_token=None):
         if not re.match(_JWT_RE, auth_token):
             raise ValueError("auth_token is not a valid JWT")
 
+        if language.lower() != 'en' and language.lower() != 'fr':
+            raise ValueError("Language must be 'en' or 'fr'")
+
         transport = AIOHTTPTransport(
             url=url,
-            headers={"authorization": auth_token},
+            headers={"authorization": auth_token, 'accept-language': language.lower()},
         )
 
     return transport
 
 
-def create_client(url="https://tracker.alpha.canada.ca/graphql", auth_token=None):
+def create_client(url="https://tracker.alpha.canada.ca/graphql", auth_token=None, language='en'):
     """Create and return a gql client object
 
     :param str url: the Tracker GraphQL endpoint url.
     :param str auth_token: JWT auth token, omit when initially obtaining the token (default is None).
+    :param str lang: desired language to get data from Tracker in ('en' or 'fr').
     :return: A gql client with AIOHTTPTransport.
     :rtype: Client
     """
     client = Client(
-        transport=create_transport(url=url, auth_token=auth_token),
+        transport=create_transport(url, auth_token, language),
         fetch_schema_from_transport=True,
     )
     return client
