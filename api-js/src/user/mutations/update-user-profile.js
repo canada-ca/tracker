@@ -3,7 +3,9 @@ import { GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 import { t } from '@lingui/macro'
+
 import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
+import { updateUserProfileUnion } from '../unions'
 
 const { CIPHER_KEY } = process.env
 
@@ -36,10 +38,11 @@ export const updateUserProfile = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
-      description: 'The status if the user profile update was successful.',
-      resolve: ({ status }) => status,
+    result: {
+      type: updateUserProfileUnion,
+      description:
+        '`UpdateUserProfileUnion` returning either a `UpdateUserProfileResult`, or `UpdateUserProfileError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -64,7 +67,11 @@ export const updateUserProfile = new mutationWithClientMutationId({
       console.warn(
         `User attempted to update their profile, but the user id is undefined.`,
       )
-      throw new Error(i18n._(t`Authentication error, please sign in again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Authentication error, please sign in again.`),
+      }
     }
 
     // Get user info from DB
@@ -74,7 +81,11 @@ export const updateUserProfile = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update their profile, but no account is associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to update profile. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to update profile. Please try again.`),
+      }
     }
 
     // Check to see if user name is already in use
@@ -165,6 +176,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
 
     console.info(`User: ${user._key} successfully updated their profile.`)
     return {
+      _type: 'success',
       status: i18n._(t`Profile successfully updated.`),
       user: returnUser,
     }
