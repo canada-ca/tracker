@@ -53,7 +53,7 @@ function EditableUserPassword() {
       },
       onCompleted({ updateUserPassword }) {
         if (
-          updateUserPassword.result.__typeName ===
+          updateUserPassword.result.__typename ===
           'UpdateUserPasswordResultType'
         ) {
           toast({
@@ -66,7 +66,7 @@ function EditableUserPassword() {
           })
           onClose()
         } else if (
-          updateUserPassword.result.__typeName === 'UpdateUserPasswordError'
+          updateUserPassword.result.__typename === 'UpdateUserPasswordError'
         ) {
           toast({
             title: t`Unable to update your password, please try again.`,
