@@ -10,7 +10,7 @@ export const updateUserProfileUnion = new GraphQLUnionType({
     'This union is used with the `updateUserProfile` mutation, allowing for users to update their profile, and support any errors that may occur',
   types: [updateUserProfileErrorType, updateUserProfileResultType],
   resolveType({ _type }) {
-    if (_type === 'regular') {
+    if (_type === 'success') {
       return updateUserProfileResultType
     } else {
       return updateUserProfileErrorType

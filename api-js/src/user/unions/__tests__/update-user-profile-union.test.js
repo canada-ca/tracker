@@ -21,7 +21,7 @@ describe('given the updateUserProfileUnion', () => {
     describe('testing the updateUserProfileResultType', () => {
       it('returns the correct type', () => {
         const obj = {
-          _type: 'regular',
+          _type: 'success',
           authResult: {},
         }
 
