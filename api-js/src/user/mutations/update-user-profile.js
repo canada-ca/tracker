@@ -160,9 +160,13 @@ export const updateUserProfile = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
 
+    await userLoaderByKey.clear(user._key)
+    const returnUser = await userLoaderByKey.load(userKey)
+
     console.info(`User: ${user._key} successfully updated their profile.`)
     return {
       status: i18n._(t`Profile successfully updated.`),
+      user: returnUser,
     }
   },
 })
