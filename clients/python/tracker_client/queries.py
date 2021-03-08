@@ -76,8 +76,8 @@ GET_ORG = gql(
 # Get scalar fields of all your domains
 GET_ALL_DOMAINS = gql(
     """
-    query getAllDomains {
-        findMyDomains(first: 100) {
+    query getAllDomains($after: String) {
+        findMyDomains(first: 100, after: $after) {
             pageInfo{
                 hasNextPage
                 endCursor
