@@ -26,6 +26,7 @@ import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EmailField from './EmailField'
 import { TrackerButton } from './TrackerButton'
+import { UpdateUserProfileUserName } from './graphql/fragments'
 
 function EditableUserEmail({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -34,7 +35,7 @@ function EditableUserEmail({ detailValue }) {
   const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE,
+    UPDATE_USER_PROFILE({ UpdateUserProfileFields: UpdateUserProfileUserName }),
     {
       context: {
         headers: {
@@ -51,16 +52,39 @@ function EditableUserEmail({ detailValue }) {
           position: 'top-left',
         })
       },
-      onCompleted() {
-        toast({
-          title: t`Changed User Email`,
-          description: t`You have successfully updated your email.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        onClose()
+      onCompleted({ updateUserProfile }) {
+        if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
+          toast({
+            title: t`Changed User Email`,
+            description: t`You have successfully updated your email.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          onClose()
+        } else if (
+          updateUserProfile.result.__typename === 'UpdateUserProfileError'
+        ) {
+          toast({
+            title: t`Unable to update to your username, please try again.`,
+            description: updateUserProfile.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect updateUserProfile.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect updateUserProfile.result typename.')
+        }
       },
     },
   )

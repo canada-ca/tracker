@@ -16,6 +16,7 @@ import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useUserState } from './UserState'
 import { TrackerButton } from './TrackerButton'
+import { UpdateUserProfileTfaSendMethod } from './graphql/fragments'
 
 function EditableUserTFAMethod({
   currentTFAMethod,
@@ -26,7 +27,9 @@ function EditableUserTFAMethod({
   const toast = useToast()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE,
+    UPDATE_USER_PROFILE({
+      UpdateUserProfileFields: UpdateUserProfileTfaSendMethod,
+    }),
     {
       context: {
         headers: {
@@ -43,15 +46,38 @@ function EditableUserTFAMethod({
           position: 'top-left',
         })
       },
-      onCompleted() {
-        toast({
-          title: t`Changed TFA Send Method`,
-          description: t`You have successfully updated your TFA send method.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
+      onCompleted({ updateUserProfile }) {
+        if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
+          toast({
+            title: t`Changed TFA Send Method`,
+            description: t`You have successfully updated your TFA send method.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else if (
+          updateUserProfile.result.__typename === 'UpdateUserProfileError'
+        ) {
+          toast({
+            title: t`Unable to update to your TFA send method, please try again.`,
+            description: updateUserProfile.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect updateUserProfile.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect updateUserProfile.result typename.')
+        }
       },
     },
   )
