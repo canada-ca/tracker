@@ -39,15 +39,14 @@ const createValidationRules = (
 }
 
 export const Server = (
-  // TODO refactor
-  // no longer used but preserved because of coupling to argument order
-  _PORT = '4000',
-  maxDepth,
-  complexityCost,
-  scalarCost,
-  objectCost,
-  listFactor,
-  context = {},
+  {
+    maxDepth,
+    complexityCost,
+    scalarCost,
+    objectCost,
+    listFactor,
+    context = {},
+  },
 ) => {
   const app = express()
 
