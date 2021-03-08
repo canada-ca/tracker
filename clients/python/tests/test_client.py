@@ -138,6 +138,29 @@ def test_client_get_organizations(mocker, client_all_orgs_input):
     assert org_list[1].verified
 
 
+def test_client_get_organizations_pagination(
+    mocker, client_all_orgs_input, client_all_orgs_has_next_input
+):
+    """Test that Client.get_organizations correctly requests more organizations if hasNextPage is true"""
+
+    def mock_return(query, params):
+        if params["after"] == "abc":
+            return client_all_orgs_input
+        return client_all_orgs_has_next_input
+
+    mocker.patch("tracker_client.client.get_auth_token")
+    mocker.patch("tracker_client.client.create_client")
+    test_client = Client()
+    test_client.execute_query = mock_return
+
+    org_list = test_client.get_organizations()
+
+    # If get_domains didn't try to paginate, len(domain_list) will be 2.
+    # If it didn't stop trying to get more domains after hasNextPage became false
+    # then the length will be greater than 4.
+    assert len(org_list) == 4
+
+
 def test_client_get_organizations_error(mocker, error_message, capsys):
     """Test that Client.get_organizations correctly handles error response"""
     mocker.patch("tracker_client.client.get_auth_token")
@@ -205,6 +228,29 @@ def test_client_get_domains(mocker, client_all_domains_input):
     assert domain_list[1].dmarc_phase == "not implemented"
     assert domain_list[2].last_ran == "2021-01-27 23:24:26.911236"
     assert domain_list[0].dkim_selectors == []
+
+
+def test_client_get_domains_pagination(
+    mocker, client_all_domains_input, client_all_domains_has_next_input
+):
+    """Test that Client.get_domains correctly requests more domains if hasNextPage is true"""
+
+    def mock_return(query, params):
+        if params["after"] == "abc":
+            return client_all_domains_input
+        return client_all_domains_has_next_input
+
+    mocker.patch("tracker_client.client.get_auth_token")
+    mocker.patch("tracker_client.client.create_client")
+    test_client = Client()
+    test_client.execute_query = mock_return
+
+    domain_list = test_client.get_domains()
+
+    # If get_domains didn't try to paginate, len(domain_list) will be 3.
+    # If it didn't stop trying to get more domains after hasNextPage became false
+    # then the length will be greater than 6.
+    assert len(domain_list) == 6
 
 
 def test_client_get_domains_error(mocker, error_message, capsys):

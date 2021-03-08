@@ -2086,6 +2086,43 @@ def client_all_orgs_input():
 
 
 @pytest.fixture
+def client_all_orgs_has_next_input():
+    return {
+        "findMyOrganizations": {
+            "pageInfo": {"hasNextPage": True, "endCursor": "abc"},
+            "edges": [
+                {
+                    "node": {
+                        "acronym": "FOO",
+                        "name": "Foo Bar",
+                        "zone": "FED",
+                        "sector": "TBS",
+                        "country": "Canada",
+                        "province": "Ontario",
+                        "city": "Ottawa",
+                        "verified": True,
+                        "domainCount": 10,
+                    }
+                },
+                {
+                    "node": {
+                        "acronym": "FIZZ",
+                        "name": "Fizz Bang",
+                        "zone": "FED",
+                        "sector": "TBS",
+                        "country": "Canada",
+                        "province": "Ontario",
+                        "city": "Ottawa",
+                        "verified": True,
+                        "domainCount": 5,
+                    }
+                },
+            ],
+        }
+    }
+
+
+@pytest.fixture
 def client_org_input():
     return {
         "findOrganizationBySlug": {
@@ -2107,6 +2144,41 @@ def client_all_domains_input():
     return {
         "findMyDomains": {
             "pageInfo": {"hasNextPage": False, "endCursor": "abc"},
+            "edges": [
+                {
+                    "node": {
+                        "domain": "foo.bar",
+                        "dmarcPhase": "not implemented",
+                        "lastRan": "2021-01-27 23:24:26.911236",
+                        "selectors": [],
+                    }
+                },
+                {
+                    "node": {
+                        "domain": "fizz.bang",
+                        "dmarcPhase": "not implemented",
+                        "lastRan": "2021-01-27 23:24:26.911236",
+                        "selectors": [],
+                    }
+                },
+                {
+                    "node": {
+                        "domain": "abc.def",
+                        "dmarcPhase": "not implemented",
+                        "lastRan": "2021-01-27 23:24:26.911236",
+                        "selectors": [],
+                    }
+                },
+            ],
+        }
+    }
+
+
+@pytest.fixture
+def client_all_domains_has_next_input():
+    return {
+        "findMyDomains": {
+            "pageInfo": {"hasNextPage": True, "endCursor": "abc"},
             "edges": [
                 {
                     "node": {
@@ -2193,6 +2265,43 @@ def org_get_domains_input():
         "findOrganizationBySlug": {
             "domains": {
                 "pageInfo": {"hasNextPage": False, "endCursor": "abc"},
+                "edges": [
+                    {
+                        "node": {
+                            "domain": "foo.bar",
+                            "dmarcPhase": "not implemented",
+                            "lastRan": "2021-01-27 23:24:26.911236",
+                            "selectors": [],
+                        }
+                    },
+                    {
+                        "node": {
+                            "domain": "fizz.bang",
+                            "dmarcPhase": "not implemented",
+                            "lastRan": "2021-01-27 23:24:26.911236",
+                            "selectors": [],
+                        }
+                    },
+                    {
+                        "node": {
+                            "domain": "abc.def",
+                            "dmarcPhase": "not implemented",
+                            "lastRan": "2021-01-27 23:24:26.911236",
+                            "selectors": [],
+                        }
+                    },
+                ],
+            }
+        }
+    }
+
+
+@pytest.fixture
+def org_get_domains_has_next_input():
+    return {
+        "findOrganizationBySlug": {
+            "domains": {
+                "pageInfo": {"hasNextPage": True, "endCursor": "abc"},
                 "edges": [
                     {
                         "node": {
