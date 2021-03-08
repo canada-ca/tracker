@@ -22,7 +22,7 @@ def create_transport(url, auth_token, language):
     :param str lang: value to set the http "accept-language" header to.
     :return: A gql transport for given url.
     :rtype: AIOHTTPTransport
-    :raises ValueError: if auth_token is not a valid JWT.
+    :raises ValueError: if auth_token is not a valid JWT or language is not "en" or "fr".
     :raises TypeError: if auth_token is not a string.
     """
     if auth_token is None:
@@ -75,6 +75,8 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
     :param str url: the Tracker GraphQL endpoint url.
     :return: JWT auth token to allow access to Tracker.
     :rtype: str
+    :raises ValueError: if credentials aren't found in environment.
+    :raises RuntimeError: if the server replies with an error.
     """
     client = create_client(url)
 
@@ -87,6 +89,7 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
     params = {"creds": {"userName": username, "password": password}}
     result = client.execute(SIGNIN_MUTATION, variable_values=params)
 
+    # Only true on SignInError
     if "code" in result["signIn"]["result"]:
         print("Unable to sign in to Tracker.")
         raise RuntimeError(result["signIn"]["result"])
