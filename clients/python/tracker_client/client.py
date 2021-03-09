@@ -53,15 +53,25 @@ class Client:
         :rtype: list[Organization]
         :raises ValueError: if your organizations can't be retrieved.
         """
-        result = self.execute_query(queries.GET_ALL_ORGS)
-
-        if "error" in result:
-            print("Server error: ", result)
-            raise ValueError("Unable to get your organizations.")
-
+        params = {"after": ""}
+        has_next = True
         org_list = []
-        for edge in result["findMyOrganizations"]["edges"]:
-            org_list.append(Organization(self, **edge["node"]))
+
+        # The maximum number of organizations that can be requested at once is 100
+        # This loop gets 100 orgs, checks if there are more, and if there are
+        # it gets another 100 starting after the last org it got
+        while has_next:
+            result = self.execute_query(queries.GET_ALL_ORGS, params)
+
+            if "error" in result:
+                print("Server error: ", result)
+                raise ValueError("Unable to get your organizations.")
+
+            for edge in result["findMyOrganizations"]["edges"]:
+                org_list.append(Organization(self, **edge["node"]))
+
+            has_next = result["findMyOrganizations"]["pageInfo"]["hasNextPage"]
+            params["after"] = result["findMyOrganizations"]["pageInfo"]["endCursor"]
 
         return org_list
 
@@ -91,15 +101,25 @@ class Client:
         :rtype: list[Domain]
         :raises ValueError: if your domains can't be retrieved.
         """
-        result = self.execute_query(queries.GET_ALL_DOMAINS)
-
-        if "error" in result:
-            print("Server error: ", result)
-            raise ValueError("Unable to get your domains.")
-
+        params = {"after": ""}
+        has_next = True
         domain_list = []
-        for edge in result["findMyDomains"]["edges"]:
-            domain_list.append(Domain(self, **edge["node"]))
+
+        # The maximum number of domains that can be requested at once is 100
+        # This loop gets 100 domains, checks if there are more, and if there are
+        # it gets another 100 starting after the last domain it got
+        while has_next:
+            result = self.execute_query(queries.GET_ALL_DOMAINS, params)
+
+            if "error" in result:
+                print("Server error: ", result)
+                raise ValueError("Unable to get your domains.")
+
+            for edge in result["findMyDomains"]["edges"]:
+                domain_list.append(Domain(self, **edge["node"]))
+
+            has_next = result["findMyDomains"]["pageInfo"]["hasNextPage"]
+            params["after"] = result["findMyDomains"]["pageInfo"]["endCursor"]
 
         return domain_list
 

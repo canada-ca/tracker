@@ -2050,9 +2050,9 @@ def domain_status_output():
 
 @pytest.fixture
 def client_all_orgs_input():
-    true = True
     return {
         "findMyOrganizations": {
+            "pageInfo": {"hasNextPage": False, "endCursor": "abc"},
             "edges": [
                 {
                     "node": {
@@ -2063,7 +2063,7 @@ def client_all_orgs_input():
                         "country": "Canada",
                         "province": "Ontario",
                         "city": "Ottawa",
-                        "verified": true,
+                        "verified": True,
                         "domainCount": 10,
                     }
                 },
@@ -2076,18 +2076,54 @@ def client_all_orgs_input():
                         "country": "Canada",
                         "province": "Ontario",
                         "city": "Ottawa",
-                        "verified": true,
+                        "verified": True,
                         "domainCount": 5,
                     }
                 },
-            ]
+            ],
+        }
+    }
+
+
+@pytest.fixture
+def client_all_orgs_has_next_input():
+    return {
+        "findMyOrganizations": {
+            "pageInfo": {"hasNextPage": True, "endCursor": "abc"},
+            "edges": [
+                {
+                    "node": {
+                        "acronym": "FOO",
+                        "name": "Foo Bar",
+                        "zone": "FED",
+                        "sector": "TBS",
+                        "country": "Canada",
+                        "province": "Ontario",
+                        "city": "Ottawa",
+                        "verified": True,
+                        "domainCount": 10,
+                    }
+                },
+                {
+                    "node": {
+                        "acronym": "FIZZ",
+                        "name": "Fizz Bang",
+                        "zone": "FED",
+                        "sector": "TBS",
+                        "country": "Canada",
+                        "province": "Ontario",
+                        "city": "Ottawa",
+                        "verified": True,
+                        "domainCount": 5,
+                    }
+                },
+            ],
         }
     }
 
 
 @pytest.fixture
 def client_org_input():
-    true = True
     return {
         "findOrganizationBySlug": {
             "acronym": "FOO",
@@ -2097,7 +2133,7 @@ def client_org_input():
             "country": "Canada",
             "province": "Ontario",
             "city": "Ottawa",
-            "verified": true,
+            "verified": True,
             "domainCount": 10,
         }
     }
@@ -2107,6 +2143,7 @@ def client_org_input():
 def client_all_domains_input():
     return {
         "findMyDomains": {
+            "pageInfo": {"hasNextPage": False, "endCursor": "abc"},
             "edges": [
                 {
                     "node": {
@@ -2132,7 +2169,42 @@ def client_all_domains_input():
                         "selectors": [],
                     }
                 },
-            ]
+            ],
+        }
+    }
+
+
+@pytest.fixture
+def client_all_domains_has_next_input():
+    return {
+        "findMyDomains": {
+            "pageInfo": {"hasNextPage": True, "endCursor": "abc"},
+            "edges": [
+                {
+                    "node": {
+                        "domain": "foo.bar",
+                        "dmarcPhase": "not implemented",
+                        "lastRan": "2021-01-27 23:24:26.911236",
+                        "selectors": [],
+                    }
+                },
+                {
+                    "node": {
+                        "domain": "fizz.bang",
+                        "dmarcPhase": "not implemented",
+                        "lastRan": "2021-01-27 23:24:26.911236",
+                        "selectors": [],
+                    }
+                },
+                {
+                    "node": {
+                        "domain": "abc.def",
+                        "dmarcPhase": "not implemented",
+                        "lastRan": "2021-01-27 23:24:26.911236",
+                        "selectors": [],
+                    }
+                },
+            ],
         }
     }
 
@@ -2151,7 +2223,6 @@ def client_domain_input():
 
 @pytest.fixture
 def domain_get_owners_input():
-    true = True
     return {
         "findDomainByDomain": {
             "organizations": {
@@ -2165,7 +2236,7 @@ def domain_get_owners_input():
                             "country": "Canada",
                             "province": "Ontario",
                             "city": "Ottawa",
-                            "verified": true,
+                            "verified": True,
                             "domainCount": 10,
                         }
                     },
@@ -2178,7 +2249,7 @@ def domain_get_owners_input():
                             "country": "Canada",
                             "province": "Ontario",
                             "city": "Ottawa",
-                            "verified": true,
+                            "verified": True,
                             "domainCount": 5,
                         }
                     },
@@ -2193,6 +2264,7 @@ def org_get_domains_input():
     return {
         "findOrganizationBySlug": {
             "domains": {
+                "pageInfo": {"hasNextPage": False, "endCursor": "abc"},
                 "edges": [
                     {
                         "node": {
@@ -2218,7 +2290,44 @@ def org_get_domains_input():
                             "selectors": [],
                         }
                     },
-                ]
+                ],
+            }
+        }
+    }
+
+
+@pytest.fixture
+def org_get_domains_has_next_input():
+    return {
+        "findOrganizationBySlug": {
+            "domains": {
+                "pageInfo": {"hasNextPage": True, "endCursor": "abc"},
+                "edges": [
+                    {
+                        "node": {
+                            "domain": "foo.bar",
+                            "dmarcPhase": "not implemented",
+                            "lastRan": "2021-01-27 23:24:26.911236",
+                            "selectors": [],
+                        }
+                    },
+                    {
+                        "node": {
+                            "domain": "fizz.bang",
+                            "dmarcPhase": "not implemented",
+                            "lastRan": "2021-01-27 23:24:26.911236",
+                            "selectors": [],
+                        }
+                    },
+                    {
+                        "node": {
+                            "domain": "abc.def",
+                            "dmarcPhase": "not implemented",
+                            "lastRan": "2021-01-27 23:24:26.911236",
+                            "selectors": [],
+                        }
+                    },
+                ],
             }
         }
     }
