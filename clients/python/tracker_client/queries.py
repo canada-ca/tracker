@@ -26,10 +26,32 @@ SIGNIN_MUTATION = gql(
     mutation SignIn($creds: SignInInput!) {
         signIn (input: $creds) {
             result {
+                ... on TFASignInResult {
+                    sendMethod
+                    authenticateToken
+                }
                 ... on AuthResult {
                     authToken
                 }
                 ... on SignInError{
+                    code
+                    description
+                }
+            }
+        }
+    }
+    """
+)
+
+TFA_AUTH = gql(
+    """
+    mutation Authenticate($authInput: AuthenticateInput!) {
+        authenticate(input: $authInput) {
+            result {
+                ... on AuthResult {
+                    authToken
+                }
+                ... on AuthenticateError {
                     code
                     description
                 }
