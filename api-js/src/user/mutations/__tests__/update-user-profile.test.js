@@ -1209,7 +1209,7 @@ describe('authenticate user account', () => {
               updateUserProfile: {
                 result: {
                   code: 400,
-                  description: 'Unable to update profile. Please try again.',
+                  description: 'Username not available, please try another.',
                 },
               },
             },
@@ -1283,7 +1283,7 @@ describe('authenticate user account', () => {
           )
 
           const error = [
-            new GraphQLError('Username not available, please try another.'),
+            new GraphQLError('Unable to update profile. Please try again.'),
           ]
 
           expect(response.errors).toEqual(error)
