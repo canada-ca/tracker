@@ -12,17 +12,15 @@ _JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
 """Regex to validate a JWT"""
 
 
-def create_transport(url, auth_token, language):
+def _create_transport(url, auth_token, language):
     """Create and return a gql transport object.
-
-    Users should rarely, if ever, need to call this.
 
     :param str url: the Tracker GraphQL endpoint url.
     :param str auth_token: JWT auth token, omit when initially obtaining the token (default is none).
     :param str lang: value to set the http "accept-language" header to.
     :return: A gql transport for given url.
     :rtype: AIOHTTPTransport
-    :raises ValueError: if auth_token is not a valid JWT.
+    :raises ValueError: if auth_token is not a valid JWT or language is not "en" or "fr".
     :raises TypeError: if auth_token is not a string.
     """
     if auth_token is None:
@@ -61,7 +59,7 @@ def create_client(
     :rtype: Client
     """
     client = Client(
-        transport=create_transport(url, auth_token, language),
+        transport=_create_transport(url, auth_token, language),
         fetch_schema_from_transport=True,
     )
     return client
@@ -75,6 +73,8 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
     :param str url: the Tracker GraphQL endpoint url.
     :return: JWT auth token to allow access to Tracker.
     :rtype: str
+    :raises ValueError: if credentials aren't found in environment.
+    :raises RuntimeError: if the server replies with an error.
     """
     client = create_client(url)
 
@@ -85,7 +85,12 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
         raise ValueError("Tracker credentials missing from environment.")
 
     params = {"creds": {"userName": username, "password": password}}
-
     result = client.execute(SIGNIN_MUTATION, variable_values=params)
+
+    # Only true on SignInError
+    if "code" in result["signIn"]["result"]:
+        print("Unable to sign in to Tracker.")
+        raise RuntimeError(result["signIn"]["result"])
+
     auth_token = result["signIn"]["result"]["authToken"]
     return auth_token
