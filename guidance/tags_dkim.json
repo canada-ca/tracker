@@ -18,7 +18,12 @@
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 6376 (DKIM)",
+                "tech_link": "https://tools.ietf.org/html/rfc6376"
+            }
+        ]
     },
     "dkim3": {
         "tagName": "DKIM-missing-mx-O365",
@@ -61,7 +66,12 @@
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
+                "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+            }
+        ]
     },
     "dkim6": {
         "tagName": "P-1024",
@@ -72,7 +82,12 @@
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
+                "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+            }
+        ]
     },
     "dkim7": {
         "tagName": "P-2048",
@@ -83,7 +98,12 @@
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
+                "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+            }
+        ]
     },
     "dkim8": {
         "tagName": "P-4096",
@@ -94,7 +114,12 @@
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
+                "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+            }
+        ]
     },
     "dkim9": {
         "tagName": "P-invalid",
@@ -105,7 +130,12 @@
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
+                "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+            }
+        ]
     },
     "dkim10": {
         "tagName": "P-update-recommended",
@@ -127,7 +157,12 @@
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
+                "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+            }
+        ]
     },
     "dkim12": {
         "tagName": "DKIM-value-invalid",
@@ -138,20 +173,26 @@
                 "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation",
+                "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+            }
+        ]
     },
     "dkim13": {
         "tagName": "T-enabled",
-        "guidance": "Testing enabled",
+        "guidance": "DKIM flag \"t=y\" disables DKIM verification",
         "refLinksGuide": [
             {
-                "description": "DKIM Flag t"
+                "description": "B.2.1 DKIM Records",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
             }
         ],
         "refLinksTechnical": [
             {
-                "description": "Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.",
-                "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6.1"
+                "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation",
+                "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
             }
         ]
     },
@@ -160,8 +201,8 @@
         "guidance": "Public key used for multiple domains",
         "refLinksGuide": [
             {
-                "description": "A.5.3 Rotate DKIM Keys",
-                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna53"
+                "description": "A.3.4 Deploy DKIM for ALl Domains and Senders",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33"
             }
         ],
         "refLinksTechnical": [""]
