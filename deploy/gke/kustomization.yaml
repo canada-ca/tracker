@@ -4,6 +4,7 @@ resources:
 - ../bases
 - api-image-policy.yaml
 - frontend-image-policy.yaml
+- autoscan-image-policy.yaml
 - update-automation.yaml
 patches:
 - path: tracker-repo.yaml
