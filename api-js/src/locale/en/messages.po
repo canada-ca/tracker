@@ -13,7 +13,7 @@ msgstr ""
 
 #: src/user/mutations/send-phone-code.js:51
 #: src/user/mutations/update-user-password.js:54
-#: src/user/mutations/update-user-profile.js:67
+#: src/user/mutations/update-user-profile.js:73
 #: src/user/mutations/verify-phone-number.js:34
 msgid "Authentication error, please sign in again."
 msgstr "Authentication error, please sign in again."
@@ -196,7 +196,7 @@ msgstr "Permission check error. Unable to request domain information."
 msgid "Permission error, not an admin for this user."
 msgstr "Permission error, not an admin for this user."
 
-#: src/user/mutations/update-user-profile.js:165
+#: src/user/mutations/update-user-profile.js:184
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -741,9 +741,8 @@ msgstr "Unable to update password, passwords are required to be 12 characters or
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:77
 #: src/user/mutations/update-user-profile.js:87
-#: src/user/mutations/update-user-profile.js:160
+#: src/user/mutations/update-user-profile.js:175
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
@@ -800,6 +799,10 @@ msgstr "User role was updated successfully."
 #: src/user/mutations/sign-up.js:100
 msgid "Username already in use."
 msgstr "Username already in use."
+
+#: src/user/mutations/update-user-profile.js:101
+msgid "Username not available, please try another."
+msgstr "Username not available, please try another."
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:37
 msgid "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
