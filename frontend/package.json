@@ -75,7 +75,7 @@
     "jest": "^26.6.2",
     "jest-emotion": "^10.0.32",
     "mq-polyfill": "^1.1.8",
-    "prettier": "^2.1.2",
+    "prettier": "^2.2.1",
     "react-hot-loader": "^4.13.0",
     "react-test-renderer": "^16.14.0",
     "supertest": "^6.0.0",
