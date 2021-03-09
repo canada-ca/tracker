@@ -282,6 +282,7 @@ ALL_RESULTS = gql(
                 https(first: 100) {
                     edges {
                         node {
+                            timestamp
                             implementation
                             enforced
                             hsts
@@ -344,6 +345,16 @@ ALL_RESULTS = gql(
                 ssl(first: 100) {
                     edges {
                         node {
+                            timestamp
+                            strongCiphers
+                            strongCurves
+                            acceptableCiphers
+                            acceptableCurves
+                            weakCiphers
+                            weakCurves
+                            ccsInjectionVulnerable
+                            heartbleedVulnerable
+                            supportsEcdhKeyExchange
                             positiveGuidanceTags(first: 100) {
                                 edges {
                                     node {
@@ -403,10 +414,13 @@ ALL_RESULTS = gql(
                 dkim(first: 100) {
                     edges {
                         node {
+                            timestamp
                             results(first: 100) {
                                 edges {
                                     node {
                                         selector
+                                        record
+                                        keyLength
                                         positiveGuidanceTags(first: 100) {
                                             edges {
                                                 node {
@@ -467,6 +481,7 @@ ALL_RESULTS = gql(
                 dmarc(first: 100) {
                     edges {
                         node {
+                            timestamp
                             record
                             pPolicy
                             spPolicy
@@ -528,6 +543,7 @@ ALL_RESULTS = gql(
                 spf(first: 100) {
                     edges {
                         node {
+                            timestamp
                             lookups
                             record
                             spfDefault
@@ -606,6 +622,7 @@ WEB_RESULTS = gql(
                 https(first: 100) {
                     edges {
                         node {
+                            timestamp
                             implementation
                             enforced
                             hsts
@@ -668,6 +685,16 @@ WEB_RESULTS = gql(
                 ssl(first: 100) {
                     edges {
                         node {
+                            timestamp
+                            strongCiphers
+                            strongCurves
+                            acceptableCiphers
+                            acceptableCurves
+                            weakCiphers
+                            weakCurves
+                            ccsInjectionVulnerable
+                            heartbleedVulnerable
+                            supportsEcdhKeyExchange
                             positiveGuidanceTags(first: 100) {
                                 edges {
                                     node {
@@ -743,10 +770,13 @@ EMAIL_RESULTS = gql(
                 dkim(first: 100) {
                     edges {
                         node {
+                            timestamp
                             results(first: 100) {
                                 edges {
                                     node {
                                         selector
+                                        record
+                                        keyLength
                                         positiveGuidanceTags(first: 100) {
                                             edges {
                                                 node {
@@ -807,6 +837,7 @@ EMAIL_RESULTS = gql(
                 dmarc(first: 100) {
                     edges {
                         node {
+                            timestamp
                             record
                             pPolicy
                             spPolicy
@@ -868,6 +899,7 @@ EMAIL_RESULTS = gql(
                 spf(first: 100) {
                     edges {
                         node {
+                            timestamp
                             lookups
                             record
                             spfDefault
