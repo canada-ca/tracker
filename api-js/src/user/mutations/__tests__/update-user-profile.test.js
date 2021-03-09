@@ -1291,6 +1291,60 @@ describe('authenticate user account', () => {
           ])
         })
       })
+      describe('user attempts to set email to one that is already in use', () => {
+        beforeEach(async () => {
+          await collections.users.save({
+            userName: 'john.doe@istio.actually.works',
+          })
+        })
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserProfile(
+                  input: { userName: "john.doe@istio.actually.works" }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userKey: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable to update profile. Please try again.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to update their username, but the username is already in use.`,
+          ])
+        })
+      })
       describe('database error occurs when updating profile', () => {
         it('returns an error message', async () => {
           const cursor = await query`
@@ -2576,6 +2630,58 @@ describe('authenticate user account', () => {
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to update their profile, but no account is associated with that id.`,
+          ])
+        })
+      })
+      describe('user attempts to set email to one that is already in use', () => {
+        beforeEach(async () => {
+          await collections.users.save({
+            userName: 'john.doe@istio.actually.works',
+          })
+        })
+        it('returns an error message', async () => {
+          const cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateUserProfile(
+                  input: { userName: "john.doe@istio.actually.works" }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              userKey: user._key,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to update their username, but the username is already in use.`,
           ])
         })
       })
