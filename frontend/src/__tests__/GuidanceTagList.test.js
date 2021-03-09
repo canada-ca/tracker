@@ -5,7 +5,7 @@ import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
+import { rawEmailGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { GuidanceTagList } from '../GuidanceTagList'
 
 const i18n = setupI18n({
@@ -19,8 +19,11 @@ const i18n = setupI18n({
 })
 
 const selectorNode =
-  rawDmarcGuidancePageData.findDomainByDomain.email.dkim.edges
-const guidanceTags = selectorNode.dkimGuidanceTags
+  rawEmailGuidancePageData.findDomainByDomain.email.dkim.edges[0].node.results
+    .edges[0].node
+const negativeTags = selectorNode.negativeGuidanceTags.edges
+const neutralTags = selectorNode.neutralGuidanceTags.edges
+const positiveTags = selectorNode.positiveGuidanceTags.edges
 const selector = selectorNode.selector
 const categoryName = 'dkim'
 
@@ -42,7 +45,9 @@ describe('<GuidanceTagList />', () => {
           <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <GuidanceTagList
-                guidanceTags={guidanceTags}
+                negativeTags={negativeTags}
+                neutralTags={neutralTags}
+                positiveTags={positiveTags}
                 selector={selector}
                 categoryName={categoryName}
               />
@@ -51,6 +56,6 @@ describe('<GuidanceTagList />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/Properly configured!/i))
+    await waitFor(() => getAllByText(/DKIM record missing but MX uses O365/i))
   })
 })

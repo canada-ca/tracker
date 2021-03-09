@@ -6,7 +6,7 @@ import { PolicyComplianceDetails } from '../PolicyComplianceDetails'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
+import { rawWebGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -20,7 +20,7 @@ const i18n = setupI18n({
 
 const categoryName = 'https'
 const policies =
-  rawDmarcGuidancePageData.findDomainByDomain.web.https.edges[0].node
+  rawWebGuidancePageData.findDomainByDomain.web.https.edges[0].node
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

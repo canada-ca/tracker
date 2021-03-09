@@ -6,7 +6,7 @@ import ScanCard from '../ScanCard'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
+import { rawWebGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -19,8 +19,8 @@ const i18n = setupI18n({
 })
 
 const scanType = 'web'
-const scanData = rawDmarcGuidancePageData.findDomainByDomain.web
-const webStatus = rawDmarcGuidancePageData.findDomainByDomain.status
+const scanData = rawWebGuidancePageData.findDomainByDomain.web
+const webStatus = rawWebGuidancePageData.findDomainByDomain.status
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

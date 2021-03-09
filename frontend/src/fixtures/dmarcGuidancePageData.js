@@ -1,8 +1,7 @@
-export const rawDmarcGuidancePageData = {
+export const rawWebGuidancePageData = {
   findDomainByDomain: {
     domain: 'cra-arc.gc.ca',
     lastRan: '1612170063153',
-    dmarcPhase: 2,
     status: {
       https: 'INFO',
       ssl: 'PASS',
@@ -20,7 +19,7 @@ export const rawDmarcGuidancePageData = {
               hsts: 'HSTS Fully Implemented',
               hstsAge: '31622400',
               preloaded: 'HSTS Preload Ready',
-              guidanceTags: {
+              negativeGuidanceTags: {
                 edges: [
                   {
                     cursor: 'string',
@@ -39,17 +38,31 @@ export const rawDmarcGuidancePageData = {
                       refLinksTech: [],
                     },
                   },
+                ],
+              },
+              neutralGuidanceTags: {
+                edges: [
                   {
                     cursor: 'string',
                     node: {
-                      tagId: 'dkim2',
-                      tagName: 'DKIM-GC',
+                      tagId: 'dkim3',
+                      tagName: 'DKIM-missing-O365-misconfigured',
                       guidance:
-                        'Government of Canada domains subject to TBS guidelines',
-                      refLinks: [],
+                        'DKIM record missing but MX uses O365. Follow cloud-specific guidance',
+                      refLinks: [
+                        {
+                          description: '3.2.2 Third Parties and DKIM',
+                          refLink:
+                            'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
+                        },
+                      ],
                       refLinksTech: [],
                     },
                   },
+                ],
+              },
+              positiveGuidanceTags: {
+                edges: [
                   {
                     cursor: 'string',
                     node: {
@@ -90,32 +103,15 @@ export const rawDmarcGuidancePageData = {
             node: {
               id: 'MzE0NDA1NTgzMw==',
               timestamp: '1611109178432',
-              guidanceTags: {
+              negativeGuidanceTags: {
                 edges: [
                   {
                     cursor: 'string',
                     node: {
                       tagId: 'dkim3',
-                      tagName: 'DKIM-missing',
+                      tagName: 'DKIM-missing-O365-misconfigured',
                       guidance:
-                        'DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365.',
-                      refLinks: [],
-                      refLinksTech: [
-                        {
-                          description: 'IT PIN',
-                          refLink:
-                            'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
-                        },
-                      ],
-                    },
-                  },
-                  {
-                    cursor: 'string',
-                    node: {
-                      tagId: 'dkim2',
-                      tagName: 'DKIM-GC',
-                      guidance:
-                        'Government of Canada domains subject to TBS guidelines',
+                        'DKIM record missing but MX uses O365. Follow cloud-specific guidance',
                       refLinks: [
                         {
                           description: '3.2.2 Third Parties and DKIM',
@@ -123,11 +119,57 @@ export const rawDmarcGuidancePageData = {
                             'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
                         },
                       ],
-                      refLinksTech: [
+                      refLinksTech: [],
+                    },
+                  },
+                ],
+              },
+              neutralGuidanceTags: {
+                edges: [
+                  {
+                    cursor: 'string',
+                    node: {
+                      tagId: 'dkim3',
+                      tagName: 'DKIM-missing-O365-misconfigured',
+                      guidance:
+                        'DKIM record missing but MX uses O365. Follow cloud-specific guidance',
+                      refLinks: [
+                        {
+                          description: '3.2.2 Third Parties and DKIM',
+                          refLink:
+                            'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
+                        },
+                      ],
+                      refLinksTech: [],
+                    },
+                  },
+                ],
+              },
+              positiveGuidanceTags: {
+                edges: [
+                  {
+                    cursor: 'string',
+                    node: {
+                      tagId: 'dkim4',
+                      tagName: 'DKIM-missing-mx-O365',
+                      guidance:
+                        'Government of Canada domains subject to TBS guidelines',
+                      refLinks: [
+                        {
+                          description:
+                            'A.3.4 Deploy DKIM for All Domains and senders',
+                          refLink: '',
+                        },
                         {
                           description: 'IT PIN',
                           refLink:
                             'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322',
+                        },
+                      ],
+                      refLinksTech: [
+                        {
+                          description: '3.2.2 Third Parties and DKIM',
+                          refLink: '',
                         },
                       ],
                     },
@@ -139,6 +181,14 @@ export const rawDmarcGuidancePageData = {
         ],
       },
     },
+  },
+}
+
+export const rawEmailGuidancePageData = {
+  findDomainByDomain: {
+    domain: 'cra-arc.gc.ca',
+    lastRan: '1612170063153',
+    dmarcPhase: 2,
     email: {
       dkim: {
         edges: [
@@ -153,38 +203,63 @@ export const rawDmarcGuidancePageData = {
                     cursor: 'string',
                     node: {
                       selector: 'selector1',
-                      guidanceTags: {
+                      negativeGuidanceTags: {
                         edges: [
                           {
                             cursor: 'string',
                             node: {
                               tagId: 'dkim3',
-                              tagName: 'DKIM-GC',
-                              guidance: 'Follow implementation guide',
+                              tagName: 'DKIM-missing-O365-misconfigured',
+                              guidance:
+                                'DKIM record missing but MX uses O365. Follow cloud-specific guidance',
                               refLinks: [
                                 {
-                                  description:
-                                    'A.3.4 Deploy DKIM for All Domains and senders',
+                                  description: '3.2.2 Third Parties and DKIM',
                                   refLink:
                                     'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
                                 },
                               ],
-                              refLinksTech: [
-                                {
-                                  description: '3.2.2 Third Parties and DKIM',
-                                  refLink: '',
-                                },
-                              ],
+                              refLinksTech: [],
                             },
                           },
+                        ],
+                      },
+                      neutralGuidanceTags: {
+                        edges: [
+                          {
+                            cursor: 'string',
+                            node: {
+                              tagId: 'dkim3',
+                              tagName: 'DKIM-missing-O365-misconfigured',
+                              guidance:
+                                'DKIM record missing but MX uses O365. Follow cloud-specific guidance',
+                              refLinks: [
+                                {
+                                  description: '3.2.2 Third Parties and DKIM',
+                                  refLink:
+                                    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
+                                },
+                              ],
+                              refLinksTech: [],
+                            },
+                          },
+                        ],
+                      },
+                      positiveGuidanceTags: {
+                        edges: [
                           {
                             cursor: 'string',
                             node: {
                               tagId: 'dkim4',
-                              tagName: 'DKIM-missing',
+                              tagName: 'DKIM-missing-mx-O365',
                               guidance:
                                 'Government of Canada domains subject to TBS guidelines',
                               refLinks: [
+                                {
+                                  description:
+                                    'A.3.4 Deploy DKIM for All Domains and senders',
+                                  refLink: '',
+                                },
                                 {
                                   description: 'IT PIN',
                                   refLink:
@@ -194,37 +269,6 @@ export const rawDmarcGuidancePageData = {
                               refLinksTech: [
                                 {
                                   description: '3.2.2 Third Parties and DKIM',
-                                  refLink:
-                                    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
-                                },
-                                {
-                                  description: 'IT PIN',
-                                  refLink: '',
-                                },
-                              ],
-                            },
-                          },
-                          {
-                            cursor: 'string',
-                            node: {
-                              tagId: 'dkim3',
-                              tagName: 'DKIM-missing-O365-misconfigured',
-                              guidance:
-                                'DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365.',
-                              refLinks: [],
-                              refLinksTech: [],
-                            },
-                          },
-                          {
-                            cursor: 'string',
-                            node: {
-                              tagId: 'dkim3',
-                              tagName: 'DKIM-missing',
-                              guidance: 'Follow implementation guide',
-                              refLinks: [],
-                              refLinksTech: [
-                                {
-                                  description: 'IT PIN',
                                   refLink: '',
                                 },
                               ],
@@ -251,21 +295,73 @@ export const rawDmarcGuidancePageData = {
               pPolicy: 'quarantine',
               spPolicy: 'missing',
               pct: 90,
-              guidanceTags: {
+              negativeGuidanceTags: {
                 edges: [
                   {
                     cursor: 'string',
                     node: {
-                      tagId: 'dkim1',
-                      tagName: 'DKIM-missing',
+                      tagId: 'dkim3',
+                      tagName: 'DKIM-missing-O365-misconfigured',
                       guidance:
-                        'Government of Canada domains subject to TBS guidelines',
-                      refLinks: [],
-                      refLinksTech: [
+                        'DKIM record missing but MX uses O365. Follow cloud-specific guidance',
+                      refLinks: [
                         {
                           description: '3.2.2 Third Parties and DKIM',
                           refLink:
+                            'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
+                        },
+                      ],
+                      refLinksTech: [],
+                    },
+                  },
+                ],
+              },
+              neutralGuidanceTags: {
+                edges: [
+                  {
+                    cursor: 'string',
+                    node: {
+                      tagId: 'dkim3',
+                      tagName: 'DKIM-missing-O365-misconfigured',
+                      guidance:
+                        'DKIM record missing but MX uses O365. Follow cloud-specific guidance',
+                      refLinks: [
+                        {
+                          description: '3.2.2 Third Parties and DKIM',
+                          refLink:
+                            'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
+                        },
+                      ],
+                      refLinksTech: [],
+                    },
+                  },
+                ],
+              },
+              positiveGuidanceTags: {
+                edges: [
+                  {
+                    cursor: 'string',
+                    node: {
+                      tagId: 'dkim4',
+                      tagName: 'DKIM-missing-mx-O365',
+                      guidance:
+                        'Government of Canada domains subject to TBS guidelines',
+                      refLinks: [
+                        {
+                          description:
+                            'A.3.4 Deploy DKIM for All Domains and senders',
+                          refLink: '',
+                        },
+                        {
+                          description: 'IT PIN',
+                          refLink:
                             'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322',
+                        },
+                      ],
+                      refLinksTech: [
+                        {
+                          description: '3.2.2 Third Parties and DKIM',
+                          refLink: '',
                         },
                       ],
                     },
@@ -287,28 +383,61 @@ export const rawDmarcGuidancePageData = {
               record:
                 'v=spf1 ip4:198.103.111.114/31 ip4:205.193.224.70 ip4:205.193.224.90 ip4:216.13.57.101 ip4:216.13.57.102 ip4:209.82.9.21 ip4:209.82.9.23 ip4:198.103.112.150/31 ip4:205.192.34.113 ip4:205.192.34.56 ip4:205.192.34.58 -all',
               spfDefault: 'softfail',
-              guidanceTags: {
+              negativeGuidanceTags: {
                 edges: [
                   {
                     cursor: 'string',
                     node: {
-                      tagId: 'dkim2',
-                      tagName: 'DKIM-missing-mx-O365',
+                      tagId: 'dkim3',
+                      tagName: 'DKIM-missing-O365-misconfigured',
                       guidance:
-                        'DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365.',
+                        'DKIM record missing but MX uses O365. Follow cloud-specific guidance',
                       refLinks: [
                         {
-                          description: 'IT PIN',
+                          description: '3.2.2 Third Parties and DKIM',
                           refLink:
                             'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
                         },
+                      ],
+                      refLinksTech: [],
+                    },
+                  },
+                ],
+              },
+              neutralGuidanceTags: {
+                edges: [
+                  {
+                    cursor: 'string',
+                    node: {
+                      tagId: 'dkim3',
+                      tagName: 'DKIM-missing-O365-misconfigured',
+                      guidance:
+                        'DKIM record missing but MX uses O365. Follow cloud-specific guidance',
+                      refLinks: [
                         {
-                          description: 'IT PIN',
+                          description: '3.2.2 Third Parties and DKIM',
                           refLink:
-                            'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322',
+                            'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34',
                         },
+                      ],
+                      refLinksTech: [],
+                    },
+                  },
+                ],
+              },
+              positiveGuidanceTags: {
+                edges: [
+                  {
+                    cursor: 'string',
+                    node: {
+                      tagId: 'dkim4',
+                      tagName: 'DKIM-missing-mx-O365',
+                      guidance:
+                        'Government of Canada domains subject to TBS guidelines',
+                      refLinks: [
                         {
-                          description: 'IT PIN',
+                          description:
+                            'A.3.4 Deploy DKIM for All Domains and senders',
                           refLink: '',
                         },
                         {
@@ -317,7 +446,12 @@ export const rawDmarcGuidancePageData = {
                             'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322',
                         },
                       ],
-                      refLinksTech: [],
+                      refLinksTech: [
+                        {
+                          description: '3.2.2 Third Parties and DKIM',
+                          refLink: '',
+                        },
+                      ],
                     },
                   },
                 ],

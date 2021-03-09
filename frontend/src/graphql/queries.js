@@ -174,12 +174,11 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN_OLD = gql`
   }
 `
 
-export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
+export const GET_WEB_GUIDANCE_TAGS_OF_DOMAIN = gql`
   query FindDomainByDomain($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
       domain
       lastRan
-      dmarcPhase
       status {
         https
         ssl
@@ -196,7 +195,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
               hsts
               hstsAge
               preloaded
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -223,7 +258,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -245,6 +316,16 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
           }
         }
       }
+    }
+  }
+`
+
+export const GET_EMAIL_GUIDANCE_TAGS_OF_DOMAIN = gql`
+  query FindDomainByDomain($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      domain
+      lastRan
+      dmarcPhase
       email {
         dkim(first: 10) {
           edges {
@@ -257,7 +338,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                   cursor
                   node {
                     selector
-                    guidanceTags(first: 5) {
+                    negativeGuidanceTags(first: 5) {
+                      edges {
+                        cursor
+                        node {
+                          tagId
+                          tagName
+                          guidance
+                          refLinks {
+                            description
+                            refLink
+                          }
+                          refLinksTech {
+                            description
+                            refLink
+                          }
+                        }
+                      }
+                    }
+                    neutralGuidanceTags(first: 5) {
+                      edges {
+                        cursor
+                        node {
+                          tagId
+                          tagName
+                          guidance
+                          refLinks {
+                            description
+                            refLink
+                          }
+                          refLinksTech {
+                            description
+                            refLink
+                          }
+                        }
+                      }
+                    }
+                    positiveGuidanceTags(first: 5) {
                       edges {
                         cursor
                         node {
@@ -291,7 +408,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
               pPolicy
               spPolicy
               pct
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -321,7 +474,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
               lookups
               record
               spfDefault
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
