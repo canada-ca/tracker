@@ -92,6 +92,12 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
         print("Unable to sign in to Tracker.")
         raise RuntimeError(result["signIn"]["result"])
 
+    # Only true on TFASignInResult
+    if "sendMethod" in result["signIn"]["result"]:
+        send_method = result["signIn"]["result"]["sendMethod"]
+        tfa_token = result["signIn"]["result"]["authenticateToken"]
+        return _tfa_get_auth_token(send_method, tfa_token, client)
+
     auth_token = result["signIn"]["result"]["authToken"]
     return auth_token
 
@@ -107,17 +113,23 @@ def _tfa_get_auth_token(send_method, token, client):
     :raises RuntimeError: if the server replies with an error.
     """
     if send_method == "email":
-        auth_code = int(input("Please enter the authentication code sent to you by email:"))
+        auth_code = int(
+            input("Please enter the authentication code sent to you by email: ")
+        )
     if send_method == "phone":
-        auth_code = int(input("Please enter the authentication code sent to you by SMS:"))
+        auth_code = int(
+            input("Please enter the authentication code sent to you by SMS: ")
+        )
 
-    params = {"authInput": {"authenticationCode": auth_code, "authenticateToken": token}}
+    params = {
+        "authInput": {"authenticationCode": auth_code, "authenticateToken": token}
+    }
     result = client.execute(TFA_AUTH, variable_values=params)
 
     # Only true on AuthenticateError
-    if "code" in result["signIn"]["result"]:
+    if "code" in result["authenticate"]["result"]:
         print("Unable to authenticate.")
-        raise RuntimeError(result["signIn"]["result"])
+        raise RuntimeError(result["authenticate"]["result"])
 
     auth_token = result["authenticate"]["result"]["authToken"]
     return auth_token
