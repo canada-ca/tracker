@@ -161,7 +161,15 @@ export const UPDATE_USER_PASSWORD = gql`
         updatedPasswordConfirm: $updatedPasswordConfirm
       }
     ) {
-      status
+      result {
+      ... on UpdateUserPasswordResultType {
+        status
+      }
+      ... on UpdateUserPasswordError {
+        code
+        description
+      }
+    }
     }
   }
 `

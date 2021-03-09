@@ -285,7 +285,7 @@ msgstr "todo"
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "todo"
 
-#: src/affiliation/mutations/invite-user-to-org.js:171
+#: src/affiliation/mutations/invite-user-to-org.js:172
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "todo"
 
@@ -301,7 +301,7 @@ msgstr "todo"
 msgid "Successfully removed user from organization."
 msgstr "todo"
 
-#: src/affiliation/mutations/invite-user-to-org.js:119
+#: src/affiliation/mutations/invite-user-to-org.js:120
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "todo"
 
@@ -464,9 +464,9 @@ msgid "Unable to find verified organization. Please try again."
 msgstr "todo"
 
 #: src/affiliation/mutations/invite-user-to-org.js:79
-#: src/affiliation/mutations/invite-user-to-org.js:92
-#: src/affiliation/mutations/invite-user-to-org.js:147
-#: src/affiliation/mutations/invite-user-to-org.js:162
+#: src/affiliation/mutations/invite-user-to-org.js:93
+#: src/affiliation/mutations/invite-user-to-org.js:148
+#: src/affiliation/mutations/invite-user-to-org.js:163
 msgid "Unable to invite user. Please try again."
 msgstr "todo"
 
