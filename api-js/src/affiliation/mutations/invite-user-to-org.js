@@ -83,11 +83,12 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
     const permission = await checkPermission({ orgId: org._id })
 
     if (
+      typeof permission === 'undefined' ||
       permission === 'user' ||
       (permission === 'admin' && requestedRole === 'super_admin')
     ) {
       console.warn(
-        `User: ${userKey} attempted to invite user: ${userName} to org: ${org.slug} with role: ${requestedRole} but does not have permission to do so.`,
+        `User: ${userKey} attempted to invite user: ${userName} to org: ${org._key} with role: ${requestedRole} but does not have permission to do so.`,
       )
       throw new Error(i18n._(t`Unable to invite user. Please try again.`))
     }
