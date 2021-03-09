@@ -4,88 +4,160 @@
         "guidance": "No SPF record for envelope-from domain",
         "refLinksGuide": [
             {
-                "description": "SPF record"
+                "description": "A.3.3 Deploy SPF for All Domains",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 7208 (SPF), 3 SPF Records",
+                "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+            }
+        ]
     },
     "agg2": {
         "tagName": "agg-spf-invalid",
         "guidance": "SPF record is invalid",
         "refLinksGuide": [
             {
-                "description": "SPF record"
+                "description": "B.1 SPF",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb1"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 7208 (SPF), 3 SPF Records",
+                "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+            }
+        ]
     },
     "agg3": {
         "tagName": "agg-spf-failed",
         "guidance": "IP address not authorized for envelope-from or header-from domain",
         "refLinksGuide": [
             {
-                "description": "SPF record"
+                "description": "B.1 SPF",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb1"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical": [
+            {
+                "description": "RFC 7208 (SPF), 2.6 Reults of Evaluation",
+                "tech_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
+            }
+        ]
     },
     "agg4": {
         "tagName": "agg-spf-mismatch",
         "guidance": "Header-from and envelope-from are different public domains",
-        "refLinksGuide": [""],
-        "refLinksTechnical": [""]
+        "refLinksGuide": [
+            {
+                "description": "2.4.1 DMARC Validation",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241"
+            }
+        ],
+        "refLinksTechnical":[
+            {
+                "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
+                "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+            }
+        ]
     },
     "agg5": {
         "tagName": "agg-spf-strict",
         "guidance": "Header-from and envelope-from domains are not strictly aligned",
-        "refLinksLuide": [
+        "refLinksGuide": [
             {
-                "description": "DMARC record"
+                "description": "2.4.1 DMARC Validation",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical":[
+            {
+                "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
+                "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+            }
+        ]
     },
     "agg6": {
         "tagName": "agg-dkim-unsigned",
         "guidance": "No DKIM signature was applied",
-        "refLinksGuide": [""],
-        "refLinksTechnical": [""]
+        "refLinksGuide": [
+            {
+                "description": "A.3.4 Deploy DKIM for All Domains and Senders",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
+            }
+        ],
+        "refLinksTechnical":[
+            {
+                "description": "RFC 6376 (DKIM)",
+                "tech_link": "https://tools.ietf.org/html/rfc6376"
+            }
+        ]
     },
     "agg7": {
         "tagName": "agg-dkim-invalid",
         "guidance": "DKIM record is invalid",
         "refLinksGuide": [
             {
-                "description": "DKIM record"
+                "description": "B.2 DKIM",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb2"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical":[
+            {
+                "description": "RFC 6376 (DKIM), 7.5 _domainkey DNS TXT Resource Record Tag Specifications",
+                "tech_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
+            }
+        ]
     },
     "agg8": {
         "tagName": "agg-dkim-failed",
         "guidance": "DKIM signature verification failed",
         "refLinksGuide": [
             {
-                "description": "DKIM record"
+                "description": "B.2 DKIM",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb2"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical":[
+            {
+                "description": "RFC 6376 (DKIM), 6 Verifier Actions",
+                "tech_link": "https://tools.ietf.org/html/rfc6376#section-6"
+            }
+        ]
     },
     "agg9": {
         "tagName": "agg-dkim-mismatch",
         "guidance": "DKIM header and envelope-from are different public domains",
-        "refLinksGuide": [""],
-        "refLinksTechnical": [""]
+        "refLinksGuide": [
+            {
+                "description": "2.4.1 DMARC Validation",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241"
+            }
+        ],
+        "refLinksTechnical":[
+            {
+                "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
+                "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+            }
+        ]
     },
     "agg10": {
         "tagName": "agg-dkim-strict",
         "guidance": "DKIM header and envelope-from are not strictly aligned",
         "refLinksGuide": [
             {
-                "description": "DMARC record"
+                "description": "2.4.1 DMARC Validation",
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a241"
             }
         ],
-        "refLinksTechnical": [""]
+        "refLinksTechnical":[
+            {
+                "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
+                "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+            }
+        ]
     }
 
 }
