@@ -21,6 +21,7 @@ export const UpdateUserProfileDisplayName = {
       fragment UpdateUserProfileFields on UpdateUserProfileResult {
         status
         user {
+          id
           displayName
         }
       }
@@ -34,6 +35,7 @@ export const UpdateUserProfileUserName = {
       fragment UpdateUserProfileFields on UpdateUserProfileResult {
         status
         user {
+          id
           userName
         }
       }
@@ -47,6 +49,7 @@ export const UpdateUserProfileLanguage = {
       fragment UpdateUserProfileFields on UpdateUserProfileResult {
         status
         user {
+          id
           preferredLang
         }
       }
@@ -60,6 +63,7 @@ export const UpdateUserProfileTfaSendMethod = {
       fragment UpdateUserProfileFields on UpdateUserProfileResult {
         status
         user {
+          id
           tfaSendMethod
         }
       }
@@ -73,6 +77,7 @@ export const UpdateUserProfilePhoneNumber = {
       fragment UpdateUserProfileFields on UpdateUserProfileResult {
         status
         user {
+          id
           phoneNumber
         }
       }
