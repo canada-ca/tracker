@@ -45,7 +45,6 @@ def retrieve_tls_guidance():
                 url="https://api.github.com/graphql",
                 headers={"Authorization": "bearer " + GITHUB_TOKEN},
             ),
-            fetch_schema_from_transport=True,
         )
 
         # fmt: off
