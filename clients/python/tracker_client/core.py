@@ -5,7 +5,7 @@ import re
 from gql import Client
 from gql.transport.aiohttp import AIOHTTPTransport
 
-from queries import SIGNIN_MUTATION
+from queries import SIGNIN_MUTATION, TFA_AUTH
 
 
 _JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"
@@ -93,4 +93,31 @@ def get_auth_token(url="https://tracker.alpha.canada.ca/graphql"):
         raise RuntimeError(result["signIn"]["result"])
 
     auth_token = result["signIn"]["result"]["authToken"]
+    return auth_token
+
+
+def _tfa_get_auth_token(send_method, token, client):
+    """Get a token from a TFA enabled account to use for authentication .
+
+    :param str send_method: how the TFA code was sent ("phone" or "email").
+    :param str token: JWT from sign in mutation.
+    :param Client client: gql client instance.
+    :return: JWT auth token to allow access to Tracker.
+    :rtype: str
+    :raises RuntimeError: if the server replies with an error.
+    """
+    if send_method == "email":
+        auth_code = int(input("Please enter the authentication code sent to you by email:"))
+    if send_method == "phone":
+        auth_code = int(input("Please enter the authentication code sent to you by SMS:"))
+
+    params = {"authInput": {"authenticationCode": auth_code, "authenticateToken": token}}
+    result = client.execute(TFA_AUTH, variable_values=params)
+
+    # Only true on AuthenticateError
+    if "code" in result["signIn"]["result"]:
+        print("Unable to authenticate.")
+        raise RuntimeError(result["signIn"]["result"])
+
+    auth_token = result["authenticate"]["result"]["authToken"]
     return auth_token
