@@ -43,6 +43,9 @@ SIGNIN_MUTATION = gql(
     """
 )
 
+# Finish sign in by completing TFA
+# :param dict creds: a dict with a authentication code and token
+# Mutation variables should look like {"authInput": {"authenticationCode": auth_code, "authenticateToken": token}}
 TFA_AUTH = gql(
     """
     mutation Authenticate($authInput: AuthenticateInput!) {
