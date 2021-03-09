@@ -95,7 +95,11 @@ export const updateUserProfile = new mutationWithClientMutationId({
         console.warn(
           `User: ${userKey} attempted to update their username, but the username is already in use.`,
         )
-        throw new Error(i18n._(t`Unable to update profile. Please try again.`))
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Username not available, please try another.`),
+        }
       }
     }
 

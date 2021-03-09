@@ -1170,7 +1170,18 @@ describe('authenticate user account', () => {
                 updateUserProfile(
                   input: { userName: "john.doe@istio.actually.works" }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1193,11 +1204,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to update profile. Please try again.'),
-          ]
+          const error = {
+            data: {
+              updateUserProfile: {
+                result: {
+                  code: 400,
+                  description: 'Unable to update profile. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their username, but the username is already in use.`,
           ])
@@ -1265,7 +1283,7 @@ describe('authenticate user account', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update profile. Please try again.'),
+            new GraphQLError('Username not available, please try another.'),
           ]
 
           expect(response.errors).toEqual(error)
@@ -2385,7 +2403,18 @@ describe('authenticate user account', () => {
                 updateUserProfile(
                   input: { userName: "john.doe@istio.actually.works" }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2408,9 +2437,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserProfile: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their username, but the username is already in use.`,
           ])
