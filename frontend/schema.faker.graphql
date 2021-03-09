@@ -1922,23 +1922,48 @@ union UpdateUserPasswordUnion =
     UpdateUserPasswordError
   | UpdateUserPasswordResultType
 
-input UpdateUserProfileInput {
-  # The updated display name the user wishes to change to.
-  displayName: String
-  # The updated user name the user wishes to change to.
-  userName: EmailAddress
-  # The updated preferred language the user wishes to change to.
-  preferredLang: LanguageEnums
-  # The updated phone number the user wishes to change to.
-  phoneNumber: PhoneNumber
-  # The method in which the user wishes to have their TFA code sent via.
-  tfaSendMethod: TFASendMethodEnum
+type UpdateUserProfilePayload {
+  # `UpdateUserProfileUnion` returning either a `UpdateUserProfileResult`, or `UpdateUserProfileError` object.
+  result: UpdateUserProfileUnion
   clientMutationId: String
 }
 
-type UpdateUserProfilePayload {
-  # The status if the user profile update was successful.
+# This union is used with the `updateUserProfile` mutation, allowing for users to update their profile, and support any errors that may occur
+union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
+
+# This object is used to inform the user if any errors occurred while updating their profile.
+type UpdateUserProfileError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user that no errors were encountered while resetting their password.
+type UpdateUserProfileResult {
+  # Informs the user if the password reset was successful, and to redirect to sign in page.
   status: String
+
+  # Return the newly updated user information.
+  user: PersonalUser
+}
+
+input UpdateUserProfileInput {
+  # The updated display name the user wishes to change to.
+  displayName: String
+
+  # The updated user name the user wishes to change to.
+  userName: EmailAddress
+
+  # The updated preferred language the user wishes to change to.
+  preferredLang: LanguageEnums
+
+  # The updated phone number the user wishes to change to.
+  phoneNumber: PhoneNumber
+
+  # The method in which the user wishes to have their TFA code sent via.
+  tfaSendMethod: TFASendMethodEnum
   clientMutationId: String
 }
 
