@@ -279,7 +279,7 @@ ALL_RESULTS = gql(
             domain
             lastRan
             web {
-                https(first: 100) {
+                https(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -342,7 +342,7 @@ ALL_RESULTS = gql(
                         }
                     }
                 }
-                ssl(first: 100) {
+                ssl(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -411,7 +411,7 @@ ALL_RESULTS = gql(
                 }
             }
             email {
-                dkim(first: 100) {
+                dkim(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -478,7 +478,7 @@ ALL_RESULTS = gql(
                         }
                     }
                 }
-                dmarc(first: 100) {
+                dmarc(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -540,7 +540,7 @@ ALL_RESULTS = gql(
                         }
                     }
                 }
-                spf(first: 100) {
+                spf(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -619,7 +619,7 @@ WEB_RESULTS = gql(
             domain
             lastRan
             web {
-                https(first: 100) {
+                https(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -682,7 +682,7 @@ WEB_RESULTS = gql(
                         }
                     }
                 }
-                ssl(first: 100) {
+                ssl(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -767,7 +767,7 @@ EMAIL_RESULTS = gql(
             domain
             lastRan
             email {
-                dkim(first: 100) {
+                dkim(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -834,7 +834,7 @@ EMAIL_RESULTS = gql(
                         }
                     }
                 }
-                dmarc(first: 100) {
+                dmarc(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -896,7 +896,7 @@ EMAIL_RESULTS = gql(
                         }
                     }
                 }
-                spf(first: 100) {
+                spf(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
