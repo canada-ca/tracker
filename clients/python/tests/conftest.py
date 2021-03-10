@@ -476,6 +476,7 @@ def all_results_input():
                     "edges": [
                         {
                             "node": {
+                                "timestamp": "2021-03-09T00:30:42.980Z",
                                 "implementation": "Valid HTTPS",
                                 "enforced": "Strict",
                                 "hsts": "HSTS Fully Implemented",
@@ -558,6 +559,26 @@ def all_results_input():
                     "edges": [
                         {
                             "node": {
+                                "timestamp": "2021-03-08 23:04:32.586275",
+                                "strongCiphers": [
+                                    "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                                    "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                                ],
+                                "strongCurves": [],
+                                "acceptableCiphers": [
+                                    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+                                    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+                                    "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+                                    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+                                    "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+                                    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+                                ],
+                                "acceptableCurves": [],
+                                "weakCiphers": [],
+                                "weakCurves": ["prime256v1"],
+                                "ccsInjectionVulnerable": False,
+                                "heartbleedVulnerable": False,
+                                "supportsEcdhKeyExchange": True,
                                 "positiveGuidanceTags": {
                                     "edges": [
                                         {
@@ -638,7 +659,7 @@ def all_results_input():
                     "edges": [
                         {
                             "node": {
-                                "dmarcPhase": null,
+                                "timestamp": "2021-03-08 23:04:32.586275",
                                 "record": "v=DMARC1; p=None; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1",
                                 "pPolicy": "None",
                                 "spPolicy": "None",
@@ -834,6 +855,7 @@ def all_results_input():
                     "edges": [
                         {
                             "node": {
+                                "timestamp": "2021-03-08 23:04:32.586275",
                                 "lookups": 4,
                                 "record": "v=spf1 mx a:edge.cyber.gc.ca include:spf.protection.outlook.com -all",
                                 "spfDefault": "-all",
@@ -943,6 +965,7 @@ def all_results_output():
             "web": {
                 "https": [
                     {
+                        "timestamp": "2021-03-09T00:30:42.980Z",
                         "implementation": "Valid HTTPS",
                         "enforced": "Strict",
                         "hsts": "HSTS Fully Implemented",
@@ -997,6 +1020,26 @@ def all_results_output():
                 ],
                 "ssl": [
                     {
+                        "timestamp": "2021-03-08 23:04:32.586275",
+                        "strongCiphers": [
+                            "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                        ],
+                        "strongCurves": [],
+                        "acceptableCiphers": [
+                            "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+                            "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+                            "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+                            "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+                            "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+                            "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+                        ],
+                        "acceptableCurves": [],
+                        "weakCiphers": [],
+                        "weakCurves": ["prime256v1"],
+                        "ccsInjectionVulnerable": False,
+                        "heartbleedVulnerable": False,
+                        "supportsEcdhKeyExchange": True,
                         "positiveGuidanceTags": {
                             "ssl6": {
                                 "tagName": "SSL-invalid-cipher",
@@ -1058,7 +1101,7 @@ def all_results_output():
                 "dkim": [{"results": {"edges": []}}],
                 "dmarc": [
                     {
-                        "dmarcPhase": null,
+                        "timestamp": "2021-03-08 23:04:32.586275",
                         "record": "v=DMARC1; p=None; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1",
                         "pPolicy": "None",
                         "spPolicy": "None",
@@ -1200,6 +1243,7 @@ def all_results_output():
                 ],
                 "spf": [
                     {
+                        "timestamp": "2021-03-08 23:04:32.586275",
                         "lookups": 4,
                         "record": "v=spf1 mx a:edge.cyber.gc.ca include:spf.protection.outlook.com -all",
                         "spfDefault": "-all",
@@ -1280,6 +1324,7 @@ def web_results_input():
                     "edges": [
                         {
                             "node": {
+                                "timestamp": "2021-03-09T00:30:42.980Z",
                                 "implementation": "Valid HTTPS",
                                 "enforced": "Strict",
                                 "hsts": "HSTS Fully Implemented",
@@ -1362,6 +1407,26 @@ def web_results_input():
                     "edges": [
                         {
                             "node": {
+                                "timestamp": "2021-03-08 23:04:32.586275",
+                                "strongCiphers": [
+                                    "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                                    "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                                ],
+                                "strongCurves": [],
+                                "acceptableCiphers": [
+                                    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+                                    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+                                    "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+                                    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+                                    "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+                                    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+                                ],
+                                "acceptableCurves": [],
+                                "weakCiphers": [],
+                                "weakCurves": ["prime256v1"],
+                                "ccsInjectionVulnerable": False,
+                                "heartbleedVulnerable": False,
+                                "supportsEcdhKeyExchange": True,
                                 "positiveGuidanceTags": {
                                     "edges": [
                                         {
@@ -1449,6 +1514,7 @@ def web_results_output():
             "web": {
                 "https": [
                     {
+                        "timestamp": "2021-03-09T00:30:42.980Z",
                         "implementation": "Valid HTTPS",
                         "enforced": "Strict",
                         "hsts": "HSTS Fully Implemented",
@@ -1503,6 +1569,26 @@ def web_results_output():
                 ],
                 "ssl": [
                     {
+                        "timestamp": "2021-03-08 23:04:32.586275",
+                        "strongCiphers": [
+                            "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                        ],
+                        "strongCurves": [],
+                        "acceptableCiphers": [
+                            "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+                            "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+                            "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+                            "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+                            "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+                            "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+                        ],
+                        "acceptableCurves": [],
+                        "weakCiphers": [],
+                        "weakCurves": ["prime256v1"],
+                        "ccsInjectionVulnerable": False,
+                        "heartbleedVulnerable": False,
+                        "supportsEcdhKeyExchange": True,
                         "positiveGuidanceTags": {
                             "ssl6": {
                                 "tagName": "SSL-invalid-cipher",
@@ -1572,12 +1658,21 @@ def email_results_input():
             "domain": "abcdef.gh.ij",
             "lastRan": "2021-01-27 23:24:26.911236",
             "email": {
-                "dkim": {"edges": [{"node": {"results": {"edges": []}}}]},
+                "dkim": {
+                    "edges": [
+                        {
+                            "node": {
+                                "timestamp": "2021-03-09T00:30:42.980Z",
+                                "results": {"edges": []},
+                            }
+                        }
+                    ]
+                },
                 "dmarc": {
                     "edges": [
                         {
                             "node": {
-                                "dmarcPhase": null,
+                                "timestamp": "2021-03-08 23:04:32.586275",
                                 "record": "v=DMARC1; p=None; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1",
                                 "pPolicy": "None",
                                 "spPolicy": "None",
@@ -1773,6 +1868,7 @@ def email_results_input():
                     "edges": [
                         {
                             "node": {
+                                "timestamp": "2021-03-08 23:04:32.586275",
                                 "lookups": 4,
                                 "record": "v=spf1 mx a:edge.cyber.gc.ca include:spf.protection.outlook.com -all",
                                 "spfDefault": "-all",
@@ -1880,10 +1976,12 @@ def email_results_output():
         "abcdef.gh.ij": {
             "lastRan": "2021-01-27 23:24:26.911236",
             "email": {
-                "dkim": [{"results": {"edges": []}}],
+                "dkim": [
+                    {"timestamp": "2021-03-09T00:30:42.980Z", "results": {"edges": []}}
+                ],
                 "dmarc": [
                     {
-                        "dmarcPhase": null,
+                        "timestamp": "2021-03-08 23:04:32.586275",
                         "record": "v=DMARC1; p=None; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1",
                         "pPolicy": "None",
                         "spPolicy": "None",
@@ -2025,6 +2123,7 @@ def email_results_output():
                 ],
                 "spf": [
                     {
+                        "timestamp": "2021-03-08 23:04:32.586275",
                         "lookups": 4,
                         "record": "v=spf1 mx a:edge.cyber.gc.ca include:spf.protection.outlook.com -all",
                         "spfDefault": "-all",
