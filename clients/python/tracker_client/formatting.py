@@ -1,4 +1,4 @@
-"""Provides results formatting functions used in client.py"""
+"""Provides results formatting functions used in methods on Domain and Organization classes"""
 
 GUIDANCE_TAG_CATEGORIES = (
     "positiveGuidanceTags",

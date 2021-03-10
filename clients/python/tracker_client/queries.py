@@ -1,4 +1,4 @@
-""" This module contains the gql documents used by client.py to query the Tracker API
+""" This module contains the gql documents used to query the Tracker API
 
 :var DocumentNode SIGN_IN_MUTATION: sign in and get authentication token
 :var DocumentNode GET_DOMAIN: get scalar fields of a domain
