@@ -941,7 +941,7 @@ def all_results_output():
         "abcdef.gh.ij": {
             "lastRan": "2021-01-27 23:24:26.911236",
             "web": {
-                "https": {
+                "https": [{
                     "implementation": "Valid HTTPS",
                     "enforced": "Strict",
                     "hsts": "HSTS Fully Implemented",
@@ -986,8 +986,8 @@ def all_results_output():
                             "refLinksTech": [{"description": null, "refLink": null}],
                         }
                     },
-                },
-                "ssl": {
+                }],
+                "ssl": [{
                     "positiveGuidanceTags": {
                         "ssl6": {
                             "tagName": "SSL-invalid-cipher",
@@ -1042,11 +1042,11 @@ def all_results_output():
                             ],
                         }
                     },
-                },
+                }],
             },
             "email": {
-                "dkim": {"results": {"edges": []}},
-                "dmarc": {
+                "dkim": [{"results": {"edges": []}}],
+                "dmarc": [{
                     "dmarcPhase": null,
                     "record": "v=DMARC1; p=None; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1",
                     "pPolicy": "None",
@@ -1168,8 +1168,8 @@ def all_results_output():
                             ],
                         },
                     },
-                },
-                "spf": {
+                }],
+                "spf": [{
                     "lookups": 4,
                     "record": "v=spf1 mx a:edge.cyber.gc.ca include:spf.protection.outlook.com -all",
                     "spfDefault": "-all",
@@ -1223,7 +1223,7 @@ def all_results_output():
                             "refLinksTech": [{"description": null, "refLink": null}],
                         },
                     },
-                },
+                }],
             },
         }
     }
@@ -1408,108 +1408,118 @@ def web_results_output():
         "abcdef.gh.ij": {
             "lastRan": "2021-01-27 23:24:26.911236",
             "web": {
-                "https": [{
-                    "implementation": "Valid HTTPS",
-                    "enforced": "Strict",
-                    "hsts": "HSTS Fully Implemented",
-                    "hstsAge": "31536000",
-                    "preloaded": "HSTS Preload Ready",
-                    "positiveGuidanceTags": {
-                        "https11": {
-                            "tagName": "HSTS-preload-ready",
-                            "guidance": "Domain not pre-loaded by HSTS, but is pre-load ready",
-                            "refLinks": [
-                                {
-                                    "description": "6.1.2 Direction",
-                                    "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
-                                }
-                            ],
-                            "refLinksTech": [{"description": null, "refLink": null}],
-                        }
-                    },
-                    "neutralGuidanceTags": {
-                        "https11": {
-                            "tagName": "HSTS-preload-ready",
-                            "guidance": "Domain not pre-loaded by HSTS, but is pre-load ready",
-                            "refLinks": [
-                                {
-                                    "description": "6.1.2 Direction",
-                                    "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
-                                }
-                            ],
-                            "refLinksTech": [{"description": null, "refLink": null}],
-                        }
-                    },
-                    "negativeGuidanceTags": {
-                        "https11": {
-                            "tagName": "HSTS-preload-ready",
-                            "guidance": "Domain not pre-loaded by HSTS, but is pre-load ready",
-                            "refLinks": [
-                                {
-                                    "description": "6.1.2 Direction",
-                                    "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
-                                }
-                            ],
-                            "refLinksTech": [{"description": null, "refLink": null}],
-                        }
-                    },
-                }],
-                "ssl": [{
-                    "positiveGuidanceTags": {
-                        "ssl6": {
-                            "tagName": "SSL-invalid-cipher",
-                            "guidance": "One or more ciphers in use are not compliant with guidelines",
-                            "refLinks": [
-                                {
-                                    "description": "6.1.3/6.1.4/6.1.5 Direction",
-                                    "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
-                                }
-                            ],
-                            "refLinksTech": [
-                                {
-                                    "description": "See ITSP.40.062 for approved cipher list",
-                                    "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
-                                }
-                            ],
-                        }
-                    },
-                    "neutralGuidanceTags": {
-                        "ssl6": {
-                            "tagName": "SSL-invalid-cipher",
-                            "guidance": "One or more ciphers in use are not compliant with guidelines",
-                            "refLinks": [
-                                {
-                                    "description": "6.1.3/6.1.4/6.1.5 Direction",
-                                    "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
-                                }
-                            ],
-                            "refLinksTech": [
-                                {
-                                    "description": "See ITSP.40.062 for approved cipher list",
-                                    "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
-                                }
-                            ],
-                        }
-                    },
-                    "negativeGuidanceTags": {
-                        "ssl6": {
-                            "tagName": "SSL-invalid-cipher",
-                            "guidance": "One or more ciphers in use are not compliant with guidelines",
-                            "refLinks": [
-                                {
-                                    "description": "6.1.3/6.1.4/6.1.5 Direction",
-                                    "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
-                                }
-                            ],
-                            "refLinksTech": [
-                                {
-                                    "description": "See ITSP.40.062 for approved cipher list",
-                                    "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
-                                }
-                            ],
-                        }
-                    },
-                }],
+                "https": [
+                    {
+                        "implementation": "Valid HTTPS",
+                        "enforced": "Strict",
+                        "hsts": "HSTS Fully Implemented",
+                        "hstsAge": "31536000",
+                        "preloaded": "HSTS Preload Ready",
+                        "positiveGuidanceTags": {
+                            "https11": {
+                                "tagName": "HSTS-preload-ready",
+                                "guidance": "Domain not pre-loaded by HSTS, but is pre-load ready",
+                                "refLinks": [
+                                    {
+                                        "description": "6.1.2 Direction",
+                                        "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            }
+                        },
+                        "neutralGuidanceTags": {
+                            "https11": {
+                                "tagName": "HSTS-preload-ready",
+                                "guidance": "Domain not pre-loaded by HSTS, but is pre-load ready",
+                                "refLinks": [
+                                    {
+                                        "description": "6.1.2 Direction",
+                                        "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            }
+                        },
+                        "negativeGuidanceTags": {
+                            "https11": {
+                                "tagName": "HSTS-preload-ready",
+                                "guidance": "Domain not pre-loaded by HSTS, but is pre-load ready",
+                                "refLinks": [
+                                    {
+                                        "description": "6.1.2 Direction",
+                                        "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            }
+                        },
+                    }
+                ],
+                "ssl": [
+                    {
+                        "positiveGuidanceTags": {
+                            "ssl6": {
+                                "tagName": "SSL-invalid-cipher",
+                                "guidance": "One or more ciphers in use are not compliant with guidelines",
+                                "refLinks": [
+                                    {
+                                        "description": "6.1.3/6.1.4/6.1.5 Direction",
+                                        "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {
+                                        "description": "See ITSP.40.062 for approved cipher list",
+                                        "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
+                                    }
+                                ],
+                            }
+                        },
+                        "neutralGuidanceTags": {
+                            "ssl6": {
+                                "tagName": "SSL-invalid-cipher",
+                                "guidance": "One or more ciphers in use are not compliant with guidelines",
+                                "refLinks": [
+                                    {
+                                        "description": "6.1.3/6.1.4/6.1.5 Direction",
+                                        "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {
+                                        "description": "See ITSP.40.062 for approved cipher list",
+                                        "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
+                                    }
+                                ],
+                            }
+                        },
+                        "negativeGuidanceTags": {
+                            "ssl6": {
+                                "tagName": "SSL-invalid-cipher",
+                                "guidance": "One or more ciphers in use are not compliant with guidelines",
+                                "refLinks": [
+                                    {
+                                        "description": "6.1.3/6.1.4/6.1.5 Direction",
+                                        "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6",
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {
+                                        "description": "See ITSP.40.062 for approved cipher list",
+                                        "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062",
+                                    }
+                                ],
+                            }
+                        },
+                    }
+                ],
             },
         }
     }
@@ -1832,184 +1842,213 @@ def email_results_output():
             "lastRan": "2021-01-27 23:24:26.911236",
             "email": {
                 "dkim": [{"results": {"edges": []}}],
-                "dmarc": [{
-                    "dmarcPhase": null,
-                    "record": "v=DMARC1; p=None; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1",
-                    "pPolicy": "None",
-                    "spPolicy": "None",
-                    "pct": 100,
-                    "positiveGuidanceTags": {
-                        "dmarc4": {
-                            "tagName": "P-none",
-                            "guidance": "Follow implementation guide",
-                            "refLinks": [
-                                {
-                                    "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
-                                    "refLink": null,
-                                }
-                            ],
-                            "refLinksTech": [
-                                {
-                                    "description": "RFC 6.3 General Record Format, P",
-                                    "refLink": null,
-                                }
-                            ],
+                "dmarc": [
+                    {
+                        "dmarcPhase": null,
+                        "record": "v=DMARC1; p=None; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1",
+                        "pPolicy": "None",
+                        "spPolicy": "None",
+                        "pct": 100,
+                        "positiveGuidanceTags": {
+                            "dmarc4": {
+                                "tagName": "P-none",
+                                "guidance": "Follow implementation guide",
+                                "refLinks": [
+                                    {
+                                        "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
+                                        "refLink": null,
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {
+                                        "description": "RFC 6.3 General Record Format, P",
+                                        "refLink": null,
+                                    }
+                                ],
+                            },
+                            "dmarc7": {
+                                "tagName": "PCT-100",
+                                "guidance": "Policy applies to all of maniflow",
+                                "refLinks": [
+                                    {
+                                        "description": "B.3.1 DMARC Records",
+                                        "refLink": null,
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {
+                                        "description": "RFC 6.3 General Record Format, PCT",
+                                        "refLink": null,
+                                    }
+                                ],
+                            },
+                            "dmarc10": {
+                                "tagName": "RUA-CCCS",
+                                "guidance": "CCCS added to Aggregate sender list",
+                                "refLinks": [
+                                    {
+                                        "description": "B.3.1 DMARC Records",
+                                        "refLink": null,
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            },
+                            "dmarc11": {
+                                "tagName": "RUF-CCCS",
+                                "guidance": "CCCS added to Forensic sender list",
+                                "refLinks": [
+                                    {
+                                        "description": "Missing from guide",
+                                        "refLink": null,
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            },
+                            "dmarc14": {
+                                "tagName": "TXT-DMARC-enabled",
+                                "guidance": "Verification TXT records for all 3rd party senders exist",
+                                "refLinks": [{"description": "TBD", "refLink": null}],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            },
+                            "dmarc17": {
+                                "tagName": "SP-none",
+                                "guidance": "Follow implementation guide",
+                                "refLinks": [
+                                    {
+                                        "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
+                                        "refLink": null,
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {
+                                        "description": "RFC 6.3 General Record Format, SP",
+                                        "refLink": null,
+                                    }
+                                ],
+                            },
+                            "dmarc23": {
+                                "tagName": "DMARC-valid",
+                                "guidance": "DMARC record is properly formed",
+                                "refLinks": [
+                                    {
+                                        "description": "Implementation Guidance: Email Domain Protection",
+                                        "refLink": null,
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            },
                         },
-                        "dmarc7": {
-                            "tagName": "PCT-100",
-                            "guidance": "Policy applies to all of maniflow",
-                            "refLinks": [
-                                {"description": "B.3.1 DMARC Records", "refLink": null}
-                            ],
-                            "refLinksTech": [
-                                {
-                                    "description": "RFC 6.3 General Record Format, PCT",
-                                    "refLink": null,
-                                }
-                            ],
+                        "neutralGuidanceTags": {
+                            "dmarc4": {
+                                "tagName": "P-none",
+                                "guidance": "Follow implementation guide",
+                                "refLinks": [
+                                    {
+                                        "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
+                                        "refLink": null,
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {
+                                        "description": "RFC 6.3 General Record Format, P",
+                                        "refLink": null,
+                                    }
+                                ],
+                            },
                         },
-                        "dmarc10": {
-                            "tagName": "RUA-CCCS",
-                            "guidance": "CCCS added to Aggregate sender list",
-                            "refLinks": [
-                                {"description": "B.3.1 DMARC Records", "refLink": null}
-                            ],
-                            "refLinksTech": [{"description": null, "refLink": null}],
+                        "negativeGuidanceTags": {
+                            "dmarc4": {
+                                "tagName": "P-none",
+                                "guidance": "Follow implementation guide",
+                                "refLinks": [
+                                    {
+                                        "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
+                                        "refLink": null,
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {
+                                        "description": "RFC 6.3 General Record Format, P",
+                                        "refLink": null,
+                                    }
+                                ],
+                            },
                         },
-                        "dmarc11": {
-                            "tagName": "RUF-CCCS",
-                            "guidance": "CCCS added to Forensic sender list",
-                            "refLinks": [
-                                {"description": "Missing from guide", "refLink": null}
-                            ],
-                            "refLinksTech": [{"description": null, "refLink": null}],
+                    }
+                ],
+                "spf": [
+                    {
+                        "lookups": 4,
+                        "record": "v=spf1 mx a:edge.cyber.gc.ca include:spf.protection.outlook.com -all",
+                        "spfDefault": "-all",
+                        "positiveGuidanceTags": {
+                            "spf8": {
+                                "tagName": "ALL-hardfail",
+                                "guidance": "Follow implementation guide",
+                                "refLinks": [
+                                    {
+                                        "description": "B.1.1 SPF Records",
+                                        "refLink": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            },
+                            "spf12": {
+                                "tagName": "SPF-valid",
+                                "guidance": "SPF record is properly formed",
+                                "refLinks": [
+                                    {
+                                        "description": "Implementation Guidance: Email Domain Protection",
+                                        "refLink": null,
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            },
                         },
-                        "dmarc14": {
-                            "tagName": "TXT-DMARC-enabled",
-                            "guidance": "Verification TXT records for all 3rd party senders exist",
-                            "refLinks": [{"description": "TBD", "refLink": null}],
-                            "refLinksTech": [{"description": null, "refLink": null}],
+                        "neutralGuidanceTags": {
+                            "spf8": {
+                                "tagName": "ALL-hardfail",
+                                "guidance": "Follow implementation guide",
+                                "refLinks": [
+                                    {
+                                        "description": "B.1.1 SPF Records",
+                                        "refLink": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            },
                         },
-                        "dmarc17": {
-                            "tagName": "SP-none",
-                            "guidance": "Follow implementation guide",
-                            "refLinks": [
-                                {
-                                    "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
-                                    "refLink": null,
-                                }
-                            ],
-                            "refLinksTech": [
-                                {
-                                    "description": "RFC 6.3 General Record Format, SP",
-                                    "refLink": null,
-                                }
-                            ],
+                        "negativeGuidanceTags": {
+                            "spf8": {
+                                "tagName": "ALL-hardfail",
+                                "guidance": "Follow implementation guide",
+                                "refLinks": [
+                                    {
+                                        "description": "B.1.1 SPF Records",
+                                        "refLink": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
+                                    }
+                                ],
+                                "refLinksTech": [
+                                    {"description": null, "refLink": null}
+                                ],
+                            },
                         },
-                        "dmarc23": {
-                            "tagName": "DMARC-valid",
-                            "guidance": "DMARC record is properly formed",
-                            "refLinks": [
-                                {
-                                    "description": "Implementation Guidance: Email Domain Protection",
-                                    "refLink": null,
-                                }
-                            ],
-                            "refLinksTech": [{"description": null, "refLink": null}],
-                        },
-                    },
-                    "neutralGuidanceTags": {
-                        "dmarc4": {
-                            "tagName": "P-none",
-                            "guidance": "Follow implementation guide",
-                            "refLinks": [
-                                {
-                                    "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
-                                    "refLink": null,
-                                }
-                            ],
-                            "refLinksTech": [
-                                {
-                                    "description": "RFC 6.3 General Record Format, P",
-                                    "refLink": null,
-                                }
-                            ],
-                        },
-                    },
-                    "negativeGuidanceTags": {
-                        "dmarc4": {
-                            "tagName": "P-none",
-                            "guidance": "Follow implementation guide",
-                            "refLinks": [
-                                {
-                                    "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
-                                    "refLink": null,
-                                }
-                            ],
-                            "refLinksTech": [
-                                {
-                                    "description": "RFC 6.3 General Record Format, P",
-                                    "refLink": null,
-                                }
-                            ],
-                        },
-                    },
-                }],
-                "spf": [{
-                    "lookups": 4,
-                    "record": "v=spf1 mx a:edge.cyber.gc.ca include:spf.protection.outlook.com -all",
-                    "spfDefault": "-all",
-                    "positiveGuidanceTags": {
-                        "spf8": {
-                            "tagName": "ALL-hardfail",
-                            "guidance": "Follow implementation guide",
-                            "refLinks": [
-                                {
-                                    "description": "B.1.1 SPF Records",
-                                    "refLink": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
-                                }
-                            ],
-                            "refLinksTech": [{"description": null, "refLink": null}],
-                        },
-                        "spf12": {
-                            "tagName": "SPF-valid",
-                            "guidance": "SPF record is properly formed",
-                            "refLinks": [
-                                {
-                                    "description": "Implementation Guidance: Email Domain Protection",
-                                    "refLink": null,
-                                }
-                            ],
-                            "refLinksTech": [{"description": null, "refLink": null}],
-                        },
-                    },
-                    "neutralGuidanceTags": {
-                        "spf8": {
-                            "tagName": "ALL-hardfail",
-                            "guidance": "Follow implementation guide",
-                            "refLinks": [
-                                {
-                                    "description": "B.1.1 SPF Records",
-                                    "refLink": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
-                                }
-                            ],
-                            "refLinksTech": [{"description": null, "refLink": null}],
-                        },
-                    },
-                    "negativeGuidanceTags": {
-                        "spf8": {
-                            "tagName": "ALL-hardfail",
-                            "guidance": "Follow implementation guide",
-                            "refLinks": [
-                                {
-                                    "description": "B.1.1 SPF Records",
-                                    "refLink": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11",
-                                }
-                            ],
-                            "refLinksTech": [{"description": null, "refLink": null}],
-                        },
-                    },
-                }],
+                    }
+                ],
             },
         }
     }
