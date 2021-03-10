@@ -37,7 +37,7 @@
         "refLinksTechnical": [
             {
                 "description": "Microsoft DKIM Guidance",
-                "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+                "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
             }
         ]
     },
@@ -53,7 +53,7 @@
         "refLinksTechnical": [
             {
                 "description": "Microsoft DKIM Guidance",
-                "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+                "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
             }
         ]
     },

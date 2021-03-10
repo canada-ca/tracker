@@ -48,7 +48,7 @@
         "refLinksGuide": [
             {
                 "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
             }
         ],
         "refLinksTechnical":[
@@ -64,7 +64,7 @@
         "refLinksGuide": [
             {
                 "description": "A.4 Enforce",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
             }
         ],
         "refLinksTechnical":[
@@ -80,7 +80,7 @@
         "refLinksGuide": [
             {
                 "description": "A.5 Maintain",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
             }
         ],
         "refLinksTechnical":[
@@ -96,7 +96,7 @@
         "refLinksGuide": [
             {
                 "description": "B.3.1 DMARC Records",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
             }
         ],
         "refLinksTechnical":[
@@ -112,7 +112,7 @@
         "refLinksGuide": [
             {
                 "description": "B.3.1 DMARC Records",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
             }
         ],
         "refLinksTechnical":[
@@ -128,7 +128,7 @@
         "refLinksGuide": [
             {
                 "description": "B.3.1 DMARC Records",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
             }
         ],
         "refLinksTechnical":[
@@ -144,7 +144,7 @@
         "refLinksGuide": [
             {
                 "description": "B.3.1 DMARC Records",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
             }
         ],
         "refLinksTechnical":[
@@ -160,7 +160,7 @@
         "refLinksGuide": [
             {
                 "description": "2.4.2 DMARC Reporting",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242"
             }
         ],
         "refLinksTechnical":[
@@ -176,7 +176,7 @@
         "refLinksGuide": [
             {
                 "description": "A.2.3 Deploy Initial DMARC record",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
             }
         ],
         "refLinksTechnical":[
@@ -192,7 +192,7 @@
         "refLinksGuide": [
             {
                 "description": "2.4.2 DMARC Reporting",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a242"
             }
         ],
         "refLinksTechnical":[
@@ -208,7 +208,7 @@
         "refLinksGuide": [
             {
                 "description": "3.2.3 Third Parties and DMARC",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
             }
         ],
         "refLinksTechnical":[
@@ -224,7 +224,7 @@
         "refLinksGuide": [
             {
                 "description": "3.2.3 Third Parties and DMARC",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
             }
         ],
         "refLinksTechnical":[
@@ -240,7 +240,7 @@
         "refLinksGuide": [
             {
                 "description": "A.2.3 Deploy Initial DMARC record",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
             }
         ],
         "refLinksTechnical":[
@@ -256,7 +256,7 @@
         "refLinksGuide": [
             {
                 "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
             }
         ],
         "refLinksTechnical":[
@@ -272,7 +272,7 @@
         "refLinksGuide": [
             {
                 "description": "A.4 Enforce",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
             }
         ],
         "refLinksTechnical":[
@@ -288,7 +288,7 @@
         "refLinksGuide": [
             {
                 "description": "A.5 Maintain",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
             }
         ],
         "refLinksTechnical":[
@@ -304,7 +304,7 @@
         "refLinksGuide": [
             {
                 "description": "B.3.1 DMARC Records",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
             }
         ],
         "refLinksTechnical":[
@@ -320,7 +320,7 @@
         "refLinksGuide": [
             {
                 "description": "B.3.1 DMARC Records",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
             }
         ],
         "refLinksTechnical":[
@@ -336,7 +336,7 @@
         "refLinksGuide": [
             {
                 "description": "3.2.3 Third Parties and DMARC",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
             }
         ],
         "refLinksTechnical":[
@@ -352,7 +352,7 @@
         "refLinksGuide": [
             {
                 "description": "B.3.1 DMARC Records",
-                "guide_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+                "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
             }
         ],
         "refLinksTechnical":[

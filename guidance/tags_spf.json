@@ -134,7 +134,7 @@
         "refLinksTechnical": [
             {
                 "description": "RFC 7208 (SPF), 6.1 redirect: Redirected Query",
-                "ref_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
+                "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
             }
         ]
     },
@@ -150,7 +150,7 @@
         "refLinksTechnical": [
             {
                 "description": "RFC 7208 (SPF), 5.3 a",
-                "ref_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
+                "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
             }
         ]
     },
@@ -166,7 +166,7 @@
         "refLinksTechnical": [
             {
                 "description": "RFC 7208 (SPF), 4.6.4 DNS Lookup Limits",
-                "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
+                "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
             }
         ]
     },
@@ -176,7 +176,7 @@
         "refLinksGuide": [
             {
                 "description": "Implementation Guidance: Email Domain Protection",
-                "guide_link": "https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection"
+                "ref_link": "https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection"
             }
         ],
         "refLinksTechnical": [
