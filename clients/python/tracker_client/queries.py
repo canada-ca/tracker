@@ -269,17 +269,18 @@ SUMMARY_BY_SLUG = gql(
 
 # Get all scan results for a domain
 # :param str domain: url to get scan results
-# Query variables should look like {"domain": ${domain_url} }
+# :param int first: number of results to get
+# Query variables should look like {"domain": ${domain_url}, "first": ${some_int} }
 # Returns many fields, guidance tags are likely to be of most interest
 # Pagination details (edges and nodes) are stripped during formatting of response
 ALL_RESULTS = gql(
     """
-    query GetAllResults($domain: DomainScalar!) {
+    query GetAllResults($domain: DomainScalar!, $first: Int!) {
         findDomainByDomain(domain: $domain) {
             domain
             lastRan
             web {
-                https(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
+                https(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -342,7 +343,7 @@ ALL_RESULTS = gql(
                         }
                     }
                 }
-                ssl(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
+                ssl(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -411,7 +412,7 @@ ALL_RESULTS = gql(
                 }
             }
             email {
-                dkim(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
+                dkim(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -478,7 +479,7 @@ ALL_RESULTS = gql(
                         }
                     }
                 }
-                dmarc(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
+                dmarc(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -540,7 +541,7 @@ ALL_RESULTS = gql(
                         }
                     }
                 }
-                spf(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
+                spf(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -609,17 +610,18 @@ ALL_RESULTS = gql(
 
 # Get web scan results for a domain
 # :param str domain: url to get scan results
-# Query variables should look like {"domain": ${domain_url} }
+# :param int first: number of results to get
+# Query variables should look like {"domain": ${domain_url}, "first": ${some_int} }
 # Returns many fields, guidance tags are likely to be of most interest
 # Pagination details (edges and nodes) are stripped during formatting of response
 WEB_RESULTS = gql(
     """
-    query GetWebResults($domain: DomainScalar!) {
+    query GetWebResults($domain: DomainScalar!, $first: Int!) {
         findDomainByDomain(domain: $domain) {
             domain
             lastRan
             web {
-                https(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
+                https(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -682,7 +684,7 @@ WEB_RESULTS = gql(
                         }
                     }
                 }
-                ssl(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
+                ssl(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -762,12 +764,12 @@ WEB_RESULTS = gql(
 # Pagination details (edges and nodes) are stripped during formatting of response
 EMAIL_RESULTS = gql(
     """
-    query GetEmailResults($domain: DomainScalar!) {
+    query GetEmailResults($domain: DomainScalar!, $first: Int!) {
         findDomainByDomain(domain: $domain) {
             domain
             lastRan
             email {
-                dkim(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
+                dkim(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -834,7 +836,7 @@ EMAIL_RESULTS = gql(
                         }
                     }
                 }
-                dmarc(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
+                dmarc(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp
@@ -896,7 +898,7 @@ EMAIL_RESULTS = gql(
                         }
                     }
                 }
-                spf(first: 100, orderBy: { field: TIMESTAMP, direction: DESC }) {
+                spf(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
                             timestamp

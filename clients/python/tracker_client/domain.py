@@ -175,16 +175,18 @@ class Domain:
 
         return json.dumps(result, indent=4)
 
-    def get_all_results(self):
-        """Get all scan results for this Domain.
+    def get_all_results(self, all_scans=False):
+        """Get web and email scan results for this Domain.
 
+        :param bool all_scans: if True, get all scans. If False, get only most recent.
         :return: formatted JSON data containing all scan results for the domain.
         :rtype: str
 
         :Example:
 
         """
-        params = {"domain": self.domain_name}
+        num_results = 100 if all_scans else 1
+        params = {"domain": self.domain_name, "first": num_results}
         result = self.client.execute_query(queries.ALL_RESULTS, params)
 
         if "error" not in result:
@@ -192,16 +194,18 @@ class Domain:
 
         return json.dumps(result, indent=4)
 
-    def get_web_results(self):
+    def get_web_results(self, all_scans=False):
         """Get web scan results for this Domain.
 
+        :param bool all_scans: if True, get all scans. If False, get only most recent.
         :return: formatted JSON data containing web scan results for the domain.
         :rtype: str
 
         :Example:
 
         """
-        params = {"domain": self.domain_name}
+        num_results = 100 if all_scans else 1
+        params = {"domain": self.domain_name, "first": num_results}
         result = self.client.execute_query(queries.WEB_RESULTS, params)
 
         if "error" not in result:
@@ -209,16 +213,18 @@ class Domain:
 
         return json.dumps(result, indent=4)
 
-    def get_email_results(self):
+    def get_email_results(self, all_scans=False):
         """Get email scan results for this Domain.
 
+        :param bool all_scans: if True, get all scans. If False, get only most recent.
         :return: formatted JSON data containing email scan results for the domain.
         :rtype: str
 
         :Example:
 
         """
-        params = {"domain": self.domain_name}
+        num_results = 100 if all_scans else 1
+        params = {"domain": self.domain_name, "first": num_results}
         result = self.client.execute_query(queries.EMAIL_RESULTS, params)
 
         if "error" not in result:
