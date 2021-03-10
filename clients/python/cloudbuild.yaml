@@ -1,0 +1,29 @@
+steps:
+  - name: 'gcr.io/track-compliance/ci'
+    id: install-client-deps
+    dir: clients/python
+    entrypoint: pipenv
+    args: ['sync', '-d', '--bare']
+    env:
+      - PIPENV_NOSPIN=TRUE
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: lint-client
+    dir: clients/python
+    entrypoint: /bin/sh
+    args: ['-c', 'pipenv run black --check tracker_client/ && pipenv run bandit -r tracker_client/']
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-client
+    dir: clients/python
+    entrypoint: pipenv
+    args: ['run', 'pytest', '-m', 'not online']
+    env:
+      - TRACKER_UNAME=$_TRACKER_UNAME
+      - TRACKER_PASS=$_TRACKER_PASS
+      - PYTHONPATH=$_PYTHONPATH
+
+timeout: 1200s
+options:
+  machineType: 'E2_HIGHCPU_8'
+  

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Text, Image, Stack, useToast } from '@chakra-ui/core'
+import { Image, Stack, useToast } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
 import trackerLogo from './images/tracker_v-03.png'
 import { WelcomeMessage } from './WelcomeMessage'
@@ -49,11 +49,6 @@ export function LandingPage() {
       </Stack>
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <SummaryGroup web={data.webSummary} mail={data.mailSummary} />
-        <Text>
-          <Trans>
-            *All data represented is mocked for demonstration purposes
-          </Trans>
-        </Text>
       </ErrorBoundary>
     </Layout>
   )

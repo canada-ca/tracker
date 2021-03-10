@@ -14,7 +14,7 @@ spec:
     name: letsencrypt
   privateKey:
     algorithm: RSA
-    encoding: PKCS8
+    encoding: PKCS8 # ITSP.40.062 6.2 Signature Algorithms
     size: 4096
   secretName: tracker-credential
 status: {}

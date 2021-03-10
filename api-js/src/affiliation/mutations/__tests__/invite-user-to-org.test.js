@@ -56,9 +56,11 @@ describe('invite user to org', () => {
               preferredLang: FRENCH
             }
           ) {
-            authResult {
-              user {
-                id
+            result {
+              ... on AuthResult {
+                user {
+                  id
+                }
               }
             }
           }
@@ -1150,6 +1152,100 @@ describe('invite user to org', () => {
           ])
         })
       })
+      describe('user with undefined permission attempts to invite a user', () => {
+        let org, user
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key }, user)
+          `
+          user = await userCursor.next()
+        })
+        it('returns an error message', async () => {
+          const sendOrgInviteCreateAccount = jest.fn()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userKey: user._key,
+              auth: {
+                checkPermission: checkPermission({ userKey: user._key, query }),
+                tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteCreateAccount },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable to invite user. Please try again.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: user but does not have permission to do so.`,
+          ])
+        })
+      })
       describe('user with user level permission attempts to invite a user', () => {
         let org, user
         beforeEach(async () => {
@@ -1244,7 +1340,7 @@ describe('invite user to org', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: secretariat-conseil-tresor with role: user but does not have permission to do so.`,
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: user but does not have permission to do so.`,
           ])
         })
       })
@@ -1342,7 +1438,7 @@ describe('invite user to org', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: secretariat-conseil-tresor with role: super_admin but does not have permission to do so.`,
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: super_admin but does not have permission to do so.`,
           ])
         })
       })
@@ -2658,7 +2754,7 @@ describe('invite user to org', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: secretariat-conseil-tresor with role: user but does not have permission to do so.`,
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: user but does not have permission to do so.`,
           ])
         })
       })
@@ -2754,7 +2850,7 @@ describe('invite user to org', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: secretariat-conseil-tresor with role: super_admin but does not have permission to do so.`,
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: super_admin but does not have permission to do so.`,
           ])
         })
       })

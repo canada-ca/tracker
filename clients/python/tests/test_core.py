@@ -34,7 +34,6 @@ def test_get_auth_token_no_creds(monkeypatch):
         get_auth_token()
 
 
-@pytest.mark.online
 def test_create_client():
     """Check that create_client creates a client when not passed auth_token."""
     client = create_client()
@@ -42,7 +41,6 @@ def test_create_client():
     assert client.transport is not None
 
 
-@pytest.mark.online
 def test_create_client_with_auth():
     """Check that create_client creates a client when passed auth_token."""
     client = create_client(auth_token=REAL_JWT)
@@ -53,10 +51,16 @@ def test_create_client_with_auth():
 def test_create_client_invalid_token_not_str():
     """Check that create_client raises a TypeError when given non-string auth-token"""
     with pytest.raises(TypeError):
-        create_client("https://tracker.alpha.canada.ca/graphql", 123)
+        create_client(auth_token=123)
 
 
 def test_create_client_invalid_token_malformed():
     """Check that create_client raises a ValueError when given malformed auth-token"""
     with pytest.raises(ValueError):
-        create_client("https://tracker.alpha.canada.ca/graphql", "foo")
+        create_client(auth_token="foo")
+
+
+def test_create_client_invalid_language():
+    """Check that create_client raises a ValueError when given invalid language"""
+    with pytest.raises(ValueError):
+        create_client(auth_token=REAL_JWT, language="foo")

@@ -1,10 +1,11 @@
-"""This module defines the Client class, used to connect to the Tracker API"""
+"""This module defines the Client class, used to connect to the Tracker API."""
 from slugify import slugify
 from gql.transport.exceptions import (
     TransportQueryError,
     TransportServerError,
     TransportProtocolError,
 )
+from graphql.error import GraphQLError
 
 from core import create_client, get_auth_token
 from domain import Domain
@@ -14,24 +15,26 @@ import queries
 
 class Client:
     """This class represents the user's connection to Tracker, which is established on instantiation.
-    It allows the user to retrieve :class:`tracker_client.organization.Organization` and
-    :class:`tracker_client.domain.Domain` objects representing organizations they are members of
+    It allows the user to retrieve :class:`~tracker_client.organization.Organization` and
+    :class:`~tracker_client.domain.Domain` objects representing organizations they are members of
     and domains their organization(s) control.
 
-    :param str url: Tracker GraphQL endpoint, defaults to alpha endpoint
-    :attribute GQL Client client: GQL client instance used to execute queries
+    :param str url: Tracker GraphQL endpoint, defaults to alpha endpoint.
+    :param str lang: desired language to get data from Tracker in ('en' or 'fr').
+    :ivar gql.Client gql_client: gql client instance used to execute queries.
     """
 
-    def __init__(self, url="https://tracker.alpha.canada.ca/graphql"):
-        self.client = create_client(url, auth_token=get_auth_token())
+    def __init__(self, url="https://tracker.alpha.canada.ca/graphql", language="en"):
+        self.gql_client = create_client(url, get_auth_token(), language)
 
     def get_organization(self, name):
-        """Get an Organization from specified name. You must be a member of that
+        """Get an :class:`~tracker_client.organization.Organization` from specified name. You must be a member of that
         organization.
 
-        :param str name: name of organization to get and construct Organization for.
-        :return: A :class:`tracker_client.organization.Organization` object
+        :param str name: name of organization to get and construct :class:`~tracker_client.organization.Organization` for.
+        :return: The specified organization.
         :rtype: Organization
+        :raises ValueError: if an invalid organization name is given.
         """
         params = {"orgSlug": slugify(name)}
         result = self.execute_query(queries.GET_ORG, params)
@@ -44,30 +47,42 @@ class Client:
 
     # Consider changing to generator
     def get_organizations(self):
-        """Gets a list of Organizations for all organizations you are a member of
+        """Get a list of your :class:`organizations <tracker_client.organization.Organization>`.
 
-        :return: A list of :class:`tracker_client.organization.Organization` objects
+        :return: A list of your organizations.
         :rtype: list[Organization]
+        :raises ValueError: if your organizations can't be retrieved.
         """
-        result = self.execute_query(queries.GET_ALL_ORGS)
-
-        if "error" in result:
-            print("Server error: ", result)
-            raise ValueError("Unable to get your organizations.")
-
+        params = {"after": ""}
+        has_next = True
         org_list = []
-        for edge in result["findMyOrganizations"]["edges"]:
-            org_list.append(Organization(self, **edge["node"]))
+
+        # The maximum number of organizations that can be requested at once is 100
+        # This loop gets 100 orgs, checks if there are more, and if there are
+        # it gets another 100 starting after the last org it got
+        while has_next:
+            result = self.execute_query(queries.GET_ALL_ORGS, params)
+
+            if "error" in result:
+                print("Server error: ", result)
+                raise ValueError("Unable to get your organizations.")
+
+            for edge in result["findMyOrganizations"]["edges"]:
+                org_list.append(Organization(self, **edge["node"]))
+
+            has_next = result["findMyOrganizations"]["pageInfo"]["hasNextPage"]
+            params["after"] = result["findMyOrganizations"]["pageInfo"]["endCursor"]
 
         return org_list
 
     def get_domain(self, domain):
-        """Get a Domain for the given domain. One of your organizations must
-        control that domain
+        """Get a :class:`~tracker_client.domain.Domain` for the given domain. One of your organizations must
+        control that domain.
 
         :param str domain: name of domain to get and construct Domain for.
-        :return: A :class:`tracker_client.domain.Domain` object
+        :return: The specified domain.
         :rtype: Domain
+        :raises ValueError: if an invalid domain is requested.
         """
         params = {"domain": domain}
         result = self.execute_query(queries.GET_DOMAIN, params)
@@ -80,20 +95,31 @@ class Client:
 
     # Consider changing to generator
     def get_domains(self):
-        """Gets a list of Domains for all domains your organizations control
+        """Get a list of your :class:`domains <tracker_client.domain.Domain>`.
 
-        :return: A list of :class:`tracker_client.domain.Domain` objects
+        :return: A list of your domains.
         :rtype: list[Domain]
+        :raises ValueError: if your domains can't be retrieved.
         """
-        result = self.execute_query(queries.GET_ALL_DOMAINS)
-
-        if "error" in result:
-            print("Server error: ", result)
-            raise ValueError("Unable to get your domains.")
-
+        params = {"after": ""}
+        has_next = True
         domain_list = []
-        for edge in result["findMyDomains"]["edges"]:
-            domain_list.append(Domain(self, **edge["node"]))
+
+        # The maximum number of domains that can be requested at once is 100
+        # This loop gets 100 domains, checks if there are more, and if there are
+        # it gets another 100 starting after the last domain it got
+        while has_next:
+            result = self.execute_query(queries.GET_ALL_DOMAINS, params)
+
+            if "error" in result:
+                print("Server error: ", result)
+                raise ValueError("Unable to get your domains.")
+
+            for edge in result["findMyDomains"]["edges"]:
+                domain_list.append(Domain(self, **edge["node"]))
+
+            has_next = result["findMyDomains"]["pageInfo"]["hasNextPage"]
+            params["after"] = result["findMyDomains"]["pageInfo"]["endCursor"]
 
         return domain_list
 
@@ -103,19 +129,25 @@ class Client:
         Intended for internal use, but if for some reason you need an unformatted
         response from the API you could call this.
 
-        :param DocumentNode query: a gql query string that has been parsed with gql()
-        :param dict params: variables to pass along with query
-        :return: Results of executing query on API
+        :param DocumentNode query: a gql query string that has been parsed with gql().
+        :param dict params: variables to pass along with query.
+        :return: Results of executing query on API.
         :rtype: dict
-        :raises TransportProtocolError: if server response is not GraphQL
-        :raises TransportServerError: if there is a server error
+        :raises TransportProtocolError: if server response is not GraphQL.
+        :raises TransportServerError: if there is a server error.
+        :raises GraphQLError: if query validation fails.
         :raises Exception: if any unhandled exception is raised within function"""
         try:
-            result = self.client.execute(query, variable_values=params)
+            result = self.gql_client.execute(query, variable_values=params)
 
         except TransportQueryError as error:
-            # Not sure this is the best way to deal with this exception
-            result = {"error": {"message": error.errors[0]["message"]}}
+            # Returns a message with all errors and the path where they occurred
+            result = {
+                "error": [
+                    {"message": err["message"], "path": err["path"]}
+                    for err in error.errors
+                ]
+            }
 
         except TransportProtocolError as error:
             print("Unexpected response from server:", error)
@@ -123,6 +155,11 @@ class Client:
 
         except TransportServerError as error:
             print("Server error:", error)
+            raise
+
+        # Raised if query validation fails, likely caused by schema changes
+        except GraphQLError as error:
+            print("Query validation error, client may be out of date:", error)
             raise
 
         except Exception as error:

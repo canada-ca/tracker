@@ -30,12 +30,32 @@ def test_org_get_domains(mock_org, org_get_domains_input):
     domain_list = test_org.get_domains()
 
     test_org.client.execute_query.assert_called_once_with(
-        queries.GET_ORG_DOMAINS, {"orgSlug": "foo"}
+        queries.GET_ORG_DOMAINS, {"orgSlug": "foo", "after": "abc"}
     )
     assert domain_list[0].domain_name == "foo.bar"
     assert domain_list[1].dmarc_phase == "not implemented"
     assert domain_list[2].last_ran == "2021-01-27 23:24:26.911236"
     assert domain_list[0].dkim_selectors == []
+
+
+def test_org_get_domains_pagination(
+    mock_org, org_get_domains_input, org_get_domains_has_next_input
+):
+    """Test that Organization.get_domains correctly requests more domains if hasNextPage is true"""
+
+    def mock_return(query, params):
+        if params["after"] == "abc":
+            return org_get_domains_input
+        return org_get_domains_has_next_input
+
+    test_org = mock_org(None)
+    test_org.client.execute_query = mock_return
+    domain_list = test_org.get_domains()
+
+    # If get_domains didn't try to paginate, len(domain_list) will be 3.
+    # If it didn't stop trying to get more domains after hasNextPage became false
+    # then the length will be greater than 6.
+    assert len(domain_list) == 6
 
 
 def test_org_get_domains_error(mock_org, error_message, capsys):

@@ -2,6 +2,8 @@ import { GraphQLNonNull, GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
+import { resetPasswordUnion } from '../unions'
+
 export const resetPassword = new mutationWithClientMutationId({
   name: 'ResetPassword',
   description:
@@ -22,13 +24,11 @@ export const resetPassword = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
+    result: {
+      type: resetPasswordUnion,
       description:
-        'Informs the user if the password reset was successful, and to redirect to sign in page.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+        '`ResetPasswordUnion` returning either a `ResetPasswordResult`, or `ResetPasswordError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -57,7 +57,11 @@ export const resetPassword = new mutationWithClientMutationId({
       console.warn(
         `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
       )
-      throw new Error(i18n._(t`Unable to reset password. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to reset password. Please try again.`),
+      }
     }
 
     // Check if user exists
@@ -67,7 +71,11 @@ export const resetPassword = new mutationWithClientMutationId({
       console.warn(
         `A user attempted to reset the password for ${tokenParameters.userKey}, however there is no associated account.`,
       )
-      throw new Error(i18n._(t`Unable to reset password. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to reset password. Please try again.`),
+      }
     }
 
     // Check if password in token matches token in db
@@ -75,7 +83,11 @@ export const resetPassword = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} attempted to reset password, however the current password does not match the current hashed password in the db.`,
       )
-      throw new Error(i18n._(t`Unable to reset password. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to reset password. Please try again.`),
+      }
     }
 
     // Check to see if newly submitted passwords match
@@ -83,7 +95,11 @@ export const resetPassword = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} attempted to reset their password, however the submitted passwords do not match.`,
       )
-      throw new Error(i18n._(t`New passwords do not match. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`New passwords do not match. Please try again.`),
+      }
     }
 
     // Check to see if password meets GoC requirements
@@ -91,9 +107,13 @@ export const resetPassword = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} attempted to reset their password, however the submitted password is not long enough.`,
       )
-      throw new Error(
-        i18n._(t`Password is not strong enough. Please try again.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
+          t`Password is not strong enough. Please try again.`,
+        ),
+      }
     }
 
     // Update users password in db
@@ -114,6 +134,7 @@ export const resetPassword = new mutationWithClientMutationId({
     console.info(`User: ${user._key} successfully reset their password.`)
 
     return {
+      _type: 'regular',
       status: i18n._(t`Password was successfully reset.`),
     }
   },

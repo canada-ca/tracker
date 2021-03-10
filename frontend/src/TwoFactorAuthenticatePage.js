@@ -41,25 +41,51 @@ export default function TwoFactorAuthenticatePage() {
       })
     },
     onCompleted({ authenticate }) {
-      login({
-        jwt: authenticate.authResult.authToken,
-        tfaSendMethod: authenticate.authResult.user.tfaSendMethod,
-        userName: authenticate.authResult.user.userName,
-      })
-      if (authenticate.authResult.user.preferredLang === 'ENGLISH')
-        activate('en')
-      else if (authenticate.authResult.user.preferredLang === 'FRENCH')
-        activate('fr')
-      // // redirect to the home page.
-      history.replace(from)
-      // // Display a welcome message
-      toast({
-        title: i18n._(t`Sign In.`),
-        description: i18n._(t`Welcome, you are successfully signed in!`),
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-      })
+      // User successfully completes tfa validation
+      if (authenticate.result.__typename === 'AuthResult') {
+        login({
+          jwt: authenticate.result.authToken,
+          tfaSendMethod: authenticate.result.user.tfaSendMethod,
+          userName: authenticate.result.user.userName,
+        })
+        if (authenticate.result.user.preferredLang === 'ENGLISH')
+          activate('en')
+        else if (authenticate.result.user.preferredLang === 'FRENCH')
+          activate('fr')
+        // // redirect to the home page.
+        history.replace(from)
+        // // Display a welcome message
+        toast({
+          title: i18n._(t`Sign In.`),
+          description: i18n._(t`Welcome, you are successfully signed in!`),
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+      }
+      // Non server error occurs
+      else if (authenticate.result.__typename === 'AuthenticateError') {
+        toast({
+          title: i18n._(
+            t`Unable to sign in to your account, please try again.`,
+          ),
+          description: authenticate.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      }
+      else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect authenticate.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect authenticate.result typename.')
+      }
     },
   })
 

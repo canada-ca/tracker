@@ -20,8 +20,14 @@ export const SIGN_UP = gql`
         signUpToken: $signUpToken
       }
     ) {
-      authResult {
-        ...RequiredAuthResultFields
+      result {
+        ... on AuthResult {
+          ...RequiredAuthResultFields
+        }
+        ... on SignUpError {
+          code
+          description
+        }
       }
     }
   }
@@ -36,10 +42,12 @@ export const SIGN_IN = gql`
           authenticateToken
           sendMethod
         }
-        ... on RegularSignInResult {
-          authResult {
-            ...RequiredAuthResultFields
-          }
+        ... on AuthResult {
+          ...RequiredAuthResultFields
+        }
+        ... on SignInError {
+          code
+          description
         }
       }
     }
@@ -58,8 +66,14 @@ export const AUTHENTICATE = gql`
         authenticateToken: $authenticateToken
       }
     ) {
-      authResult {
-        ...RequiredAuthResultFields
+      result {
+        ... on AuthResult {
+          ...RequiredAuthResultFields
+        }
+        ... on AuthenticateError {
+          code
+          description
+        }
       }
     }
   }
@@ -79,7 +93,15 @@ export const RESET_PASSWORD = gql`
         resetToken: $resetToken
       }
     ) {
-      status
+      result {
+        ... on ResetPasswordError {
+          code
+          description
+        }
+        ... on ResetPasswordResult {
+          status
+        }
+      }
     }
   }
 `
@@ -139,7 +161,15 @@ export const UPDATE_USER_PASSWORD = gql`
         updatedPasswordConfirm: $updatedPasswordConfirm
       }
     ) {
-      status
+      result {
+      ... on UpdateUserPasswordResultType {
+        status
+      }
+      ... on UpdateUserPasswordError {
+        code
+        description
+      }
+    }
     }
   }
 `

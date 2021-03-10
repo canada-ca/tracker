@@ -110,10 +110,6 @@ export default function AdminPage() {
                 permission={orgDetails.permission}
                 mr="4"
               />
-              <Trans>
-                *search bars do not actively search databases currently. They
-                are used to demonstrate the 'add' button feature
-              </Trans>
             </Stack>
           ) : (
             <Text fontSize="2xl" fontWeight="bold" textAlign="center">

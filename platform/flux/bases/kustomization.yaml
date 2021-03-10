@@ -1,9 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- flux.yaml
-- api-registry.yaml
-- frontend-registry.yaml
-- tracker-repo.yaml
-- app-kustomization.yaml
-- platform-kustomization.yaml

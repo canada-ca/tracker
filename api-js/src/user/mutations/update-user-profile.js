@@ -48,7 +48,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       i18n,
       query,
       userKey,
-      loaders: { userLoaderByKey },
+      loaders: { userLoaderByKey, userLoaderByUserName },
       validators: { cleanseInput },
     },
   ) => {
@@ -75,6 +75,17 @@ export const updateUserProfile = new mutationWithClientMutationId({
         `User: ${userKey} attempted to update their profile, but no account is associated with that id.`,
       )
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
+    }
+
+    // Check to see if user name is already in use
+    if (userName !== '') {
+      const checkUser = await userLoaderByUserName.load(userName)
+      if (typeof checkUser !== 'undefined') {
+        console.warn(
+          `User: ${userKey} attempted to update their username, but the username is already in use.`,
+        )
+        throw new Error(i18n._(t`Unable to update profile. Please try again.`))
+      }
     }
 
     let updatedPhoneDetails, phoneValidated
@@ -118,9 +129,11 @@ export const updateUserProfile = new mutationWithClientMutationId({
       tfaSendMethod = 'email'
     } else if (
       subTfaSendMethod === 'none' ||
-      typeof user.tfaSendMethod !== 'undefined'
+      typeof user.tfaSendMethod === 'undefined'
     ) {
       tfaSendMethod = 'none'
+    } else {
+      tfaSendMethod = user.tfaSendMethod
     }
 
     // Create object containing updated data

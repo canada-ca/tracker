@@ -23,13 +23,15 @@ from gql import gql
 # Mutation variables should look like {"creds":{"userName": ${username}, "password": ${password}}}
 SIGNIN_MUTATION = gql(
     """
-    mutation signIn($creds: SignInInput!) {
+    mutation SignIn($creds: SignInInput!) {
         signIn (input: $creds) {
             result {
-                ... on RegularSignInResult {
-                    authResult {
-                        authToken
-                    }
+                ... on AuthResult {
+                    authToken
+                }
+                ... on SignInError{
+                    code
+                    description
                 }
             }
         }
@@ -59,7 +61,7 @@ GET_DOMAIN = gql(
 #  Query variables should look like {"orgSlug": ${slugified-str} }
 GET_ORG = gql(
     """
-    query orgBySlug($orgSlug: Slug!) {
+    query OrgBySlug($orgSlug: Slug!) {
         findOrganizationBySlug(orgSlug: $orgSlug) {
             acronym
             name
@@ -78,8 +80,12 @@ GET_ORG = gql(
 # Get scalar fields of all your domains
 GET_ALL_DOMAINS = gql(
     """
-    query getAllDomains {
-        findMyDomains(first: 100) {
+    query GetAllDomains($after: String) {
+        findMyDomains(first: 100, after: $after) {
+            pageInfo{
+                hasNextPage
+                endCursor
+            }
             edges {
                 node {
                     domain
@@ -96,8 +102,12 @@ GET_ALL_DOMAINS = gql(
 # Get scalar fields of all your orgs
 GET_ALL_ORGS = gql(
     """
-    query GetAllOrgs {
-        findMyOrganizations(first: 100) {
+    query GetAllOrgs($after: String) {
+        findMyOrganizations(first: 100, after: $after) {
+            pageInfo{
+                hasNextPage
+                endCursor
+            }
             edges {
                 node {
                     acronym
@@ -121,7 +131,7 @@ GET_ALL_ORGS = gql(
 # Query variables should look like {"domain": ${domain_url} }
 GET_DOMAIN_OWNERS = gql(
     """
-    query FindDomainByDomain($domain: DomainScalar!) {
+    query GetDomainOwners($domain: DomainScalar!) {
         findDomainByDomain(domain: $domain) {
             organizations(first: 100) {
                 edges {
@@ -149,9 +159,13 @@ GET_DOMAIN_OWNERS = gql(
 #  Query variables should look like {"orgSlug": ${slugified-str} }
 GET_ORG_DOMAINS = gql(
     """
-    query orgBySlug($orgSlug: Slug!) {
+    query OrgDomainsBySlug($orgSlug: Slug!, $after: String) {
         findOrganizationBySlug(orgSlug: $orgSlug) {
-            domains (first: 100) {
+            domains (first: 100, after: $after) {
+                pageInfo {
+                    hasNextPage
+                    endCursor
+                }
                 edges {
                     node {
                         domain
@@ -173,7 +187,7 @@ GET_ORG_DOMAINS = gql(
 # Query variables should look like: {"domain": ${domain_url}, "month": ${MONTH_IN_ALL_CAPS}, "year": ${numeric_year_as_str}}
 DMARC_SUMMARY = gql(
     """
-    query domainDMARCSummary(
+    query DomainDMARCSummary(
         $domain: DomainScalar!
         $month: PeriodEnums!
         $year: Year!
@@ -201,7 +215,7 @@ DMARC_SUMMARY = gql(
 # Query variables should look like {"domain": ${domain_url} }
 DMARC_YEARLY_SUMMARIES = gql(
     """
-    query domainAllDMARCSummaries($domain: DomainScalar!) {
+    query DomainAllDMARCSummaries($domain: DomainScalar!) {
         findDomainByDomain(domain: $domain) {
             domain
             yearlyDmarcSummaries {
@@ -226,7 +240,7 @@ DMARC_YEARLY_SUMMARIES = gql(
 #  Query variables should look like {"orgSlug": ${slugified-str} }
 SUMMARY_BY_SLUG = gql(
     """
-    query getSummaryBySlug($orgSlug: Slug!) {
+    query GetSummaryBySlug($orgSlug: Slug!) {
         findOrganizationBySlug(orgSlug: $orgSlug) {
             acronym
             domainCount
@@ -260,7 +274,7 @@ SUMMARY_BY_SLUG = gql(
 # Pagination details (edges and nodes) are stripped during formatting of response
 ALL_RESULTS = gql(
     """
-    query getAllResults($domain: DomainScalar!) {
+    query GetAllResults($domain: DomainScalar!) {
         findDomainByDomain(domain: $domain) {
             domain
             lastRan
@@ -584,7 +598,7 @@ ALL_RESULTS = gql(
 # Pagination details (edges and nodes) are stripped during formatting of response
 WEB_RESULTS = gql(
     """
-    query getWebResults($domain: DomainScalar!) {
+    query GetWebResults($domain: DomainScalar!) {
         findDomainByDomain(domain: $domain) {
             domain
             lastRan
@@ -721,7 +735,7 @@ WEB_RESULTS = gql(
 # Pagination details (edges and nodes) are stripped during formatting of response
 EMAIL_RESULTS = gql(
     """
-    query GetScanResults($domain: DomainScalar!) {
+    query GetEmailResults($domain: DomainScalar!) {
         findDomainByDomain(domain: $domain) {
             domain
             lastRan
@@ -922,18 +936,18 @@ EMAIL_RESULTS = gql(
 # Query variables should look like {"domain": ${domain_url} }
 DOMAIN_STATUS = gql(
     """
-  query GetDomainStatus($domain: DomainScalar!) {
-    findDomainByDomain(domain: $domain) {
-      domain
-      lastRan
-      status {
-        https
-        ssl
-        dmarc
-        dkim
-        spf
-      }
+    query GetDomainStatus($domain: DomainScalar!) {
+        findDomainByDomain(domain: $domain) {
+            domain
+            lastRan
+            status {
+                https
+                ssl
+                dmarc
+                dkim
+                spf
+            }
+        }
     }
-  }
-  """
+    """
 )

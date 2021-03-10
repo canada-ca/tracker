@@ -2,7 +2,6 @@ import request from 'supertest'
 import { Server } from '../server'
 
 const {
-  PORT = 4000,
   DEPTH_LIMIT: maxDepth,
   COST_LIMIT: complexityCost,
   SCALAR_COST: scalarCost,
@@ -41,19 +40,18 @@ describe('parse server', () => {
     describe('endpoint is alive', () => {
       it('returns 200', async () => {
         const response = await request(
-          Server(
-            PORT,
+          Server({
             maxDepth,
             complexityCost,
             scalarCost,
             objectCost,
             listFactor,
-            {
+            context: {
               query: jest.fn(),
               collections: jest.fn(),
               transaction: jest.fn(),
             },
-          ),
+          }),
         )
           .post('/graphql')
           .set('Accept', 'application/json')
@@ -66,10 +64,17 @@ describe('parse server', () => {
       describe('query cost is too high', () => {
         it('returns an error message', async () => {
           const response = await request(
-            Server(PORT, maxDepth, 1, 100, 100, 100, {
-              query: jest.fn(),
-              collections: jest.fn(),
-              transaction: jest.fn(),
+            Server({
+              maxDepth,
+              complexityCost: 1,
+              scalarCost: 100,
+              objectCost: 100,
+              listFactor: 100,
+              context: {
+                query: jest.fn(),
+                collections: jest.fn(),
+                transaction: jest.fn(),
+              },
             }),
           )
             .post('/graphql')
@@ -85,10 +90,17 @@ describe('parse server', () => {
       describe('query depth is too high', () => {
         it('returns an error message', async () => {
           const response = await request(
-            Server(PORT, 1, 1000, 1, 1, 1, {
-              query: jest.fn(),
-              collections: jest.fn(),
-              transaction: jest.fn(),
+            Server({
+              maxDepth: 1,
+              complexityCost: 1000,
+              scalarCost: 1,
+              objectCost: 1,
+              listFactor: 1,
+              context: {
+                query: jest.fn(),
+                collections: jest.fn(),
+                transaction: jest.fn(),
+              },
             }),
           )
             .post('/graphql')

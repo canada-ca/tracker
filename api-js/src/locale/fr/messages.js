@@ -12,6 +12,7 @@
       'todo',
     'If an account with this username is found, an email verification link will be found in your inbox.':
       'todo',
+    'Incorrect username or password. Please try again.': 'todo',
     'Invalid token, please request a new one.': 'todo',
     'New passwords do not match. Please try again.': 'todo',
     'No domain with the provided domain could be found.': 'todo',
@@ -179,6 +180,8 @@
     'Unable to two factor authenticate. Please try again.': 'todo',
     'Unable to update domain. Please try again.': 'todo',
     'Unable to update organization. Please try again.': 'todo',
+    'Unable to update password, authentication error occurred, please sign in again.':
+      'todo',
     'Unable to update password, current password does not match. Please try again.':
       'todo',
     'Unable to update password, new passwords do not match. Please try again.':

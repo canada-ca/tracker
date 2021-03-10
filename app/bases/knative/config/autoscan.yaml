@@ -15,28 +15,28 @@ spec:
         spec:
           containers:
           - name: autoscan
-            image: gcr.io/track-compliance/services/autoscan
+            image: gcr.io/track-compliance/services/autoscan:master-05b22b2-1615242767 # {"$imagepolicy": "flux-system:autoscan"}
             env:
-              - name: DB_USER
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: DB_USER
-              - name: DB_PASS
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: DB_PASS
-              - name: DB_HOST
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: DB_HOST
-              - name: DB_PORT
-                value: "8529"
-              - name: DB_NAME
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_HOST
+            - name: DB_PORT
+              value: "8529"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
           restartPolicy: OnFailure

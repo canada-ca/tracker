@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -12,9 +12,6 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Box,
-  Divider,
-  Text,
   Icon,
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
@@ -24,14 +21,12 @@ import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
-import { DomainCard } from './DomainCard'
-import { ListOf } from './ListOf'
-import { PaginationButtons } from './PaginationButtons'
-import { UserCard } from './UserCard'
+import { OrganizationDomains } from './OrganizationDomains'
+import { OrganizationAffiliations } from './OrganizationAffiliations'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
-  const { currentUser, isLoggedIn } = useUserState()
+  const { currentUser } = useUserState()
   const toast = useToast()
   const history = useHistory()
   const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
@@ -58,27 +53,6 @@ export default function OrganizationDetails() {
   if (data?.organization) {
     orgName = data.organization.name
   }
-
-  let domains = []
-  if (data?.organization?.domains?.edges) {
-    domains = data.organization.domains.edges.map((e) => e.node)
-  }
-
-  let users = []
-  if (data?.organization?.affiliations?.edges) {
-    users = data.organization.affiliations.edges.map((e) => e.node)
-  }
-
-  const [currentPage, setCurrentPage] = useState(1)
-  const [domainsPerPage] = useState(10)
-
-  // Get current domains
-  const indexOfLastDomain = currentPage * domainsPerPage
-  const indexOfFirstDomain = indexOfLastDomain - domainsPerPage
-  const currentDomains = domains.slice(indexOfFirstDomain, indexOfLastDomain)
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   if (loading) {
     return (
@@ -113,11 +87,9 @@ export default function OrganizationDetails() {
           <Tab>
             <Trans>Domains</Trans>
           </Tab>
-          {isLoggedIn() && (
-            <Tab>
-              <Trans>Users</Trans>
-            </Tab>
-          )}
+          <Tab>
+            <Trans>Users</Trans>
+          </Tab>
         </TabList>
 
         <TabPanels>
@@ -134,70 +106,14 @@ export default function OrganizationDetails() {
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <ListOf
-                elements={currentDomains}
-                ifEmpty={() => (
-                  <Text fontSize="xl" fontWeight="bold">
-                    <Trans>No Domains</Trans>
-                  </Text>
-                )}
-                mb="4"
-              >
-                {({ id, domain, lastRan, status }, index) => (
-                  <ErrorBoundary
-                    key={`${id}:${index}`}
-                    FallbackComponent={ErrorFallbackMessage}
-                  >
-                    <Box>
-                      <DomainCard
-                        url={domain}
-                        lastRan={lastRan}
-                        status={status}
-                      />
-                      <Divider borderColor="gray.900" />
-                    </Box>
-                  </ErrorBoundary>
-                )}
-              </ListOf>
-              {domains.length > 0 && (
-                <PaginationButtons
-                  perPage={domainsPerPage}
-                  total={domains.length}
-                  paginate={paginate}
-                  currentPage={currentPage}
-                />
-              )}
-              <Trans>
-                *All data represented is mocked for demonstration purposes
-              </Trans>
+              <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
-          {isLoggedIn() && (
-            <TabPanel>
-              <ListOf
-                elements={users}
-                ifEmpty={() => (
-                  <Text fontSize="xl" fontWeight="bold">
-                    <Trans>No Users</Trans>
-                  </Text>
-                )}
-                mb="4"
-              >
-                {({ permission, user }, index) => (
-                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                    <Box key={`${user.id}:${index}`}>
-                      <UserCard
-                        userName={user.userName}
-                        role={permission}
-                        tfa={user.tfaValidated}
-                      />
-                      <Divider borderColor="gray.900" />
-                    </Box>
-                  </ErrorBoundary>
-                )}
-              </ListOf>
-            </TabPanel>
-          )}
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
+            </ErrorBoundary>
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </Layout>

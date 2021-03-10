@@ -11,7 +11,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="tracker_client",
-    version="1.0.0-a",
+    version="1.0.0-alpha.1",
     author="Thomas Nickerson",
     author_email="contact@cyber.gc.ca",
     description="A Python client for the GoC Tracker API",

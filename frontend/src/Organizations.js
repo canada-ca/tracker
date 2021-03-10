@@ -98,9 +98,6 @@ export default function Organisations({ orgsPerPage = 10 }) {
           next={next}
           previous={previous}
         />
-        <Trans>
-          *All data represented is mocked for demonstration purposes
-        </Trans>
       </ErrorBoundary>
     </Layout>
   )

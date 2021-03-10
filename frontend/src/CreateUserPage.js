@@ -58,24 +58,45 @@ export default function CreateUserPage() {
       })
     },
     onCompleted({ signUp }) {
-      login({
-        jwt: signUp.authResult.authToken,
-        tfaSendMethod: signUp.authResult.user.tfaSendMethod,
-        userName: signUp.authResult.user.userName,
-      })
-      if (signUp.authResult.user.preferredLang === 'ENGLISH') activate('en')
-      else if (signUp.authResult.user.preferredLang === 'FRENCH') activate('fr')
-      // redirect to the home page.
-      history.push('/')
-      // Display a welcome message
-      toast({
-        title: t`Account created.`,
-        description: t`Welcome, you are successfully signed in to your new account!`,
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
+      if (signUp.result.__typename === 'AuthResult') {
+        login({
+          jwt: signUp.result.authToken,
+          tfaSendMethod: signUp.result.user.tfaSendMethod,
+          userName: signUp.result.user.userName,
+        })
+        if (signUp.result.user.preferredLang === 'ENGLISH') activate('en')
+        else if (signUp.result.user.preferredLang === 'FRENCH') activate('fr')
+        // redirect to the home page.
+        history.push('/')
+        // Display a welcome message
+        toast({
+          title: t`Account created.`,
+          description: t`Welcome, you are successfully signed in to your new account!`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else if (signUp.result.__typename === 'SignUpError') {
+        toast({
+          title: t`Unable to create account, please try again.`,
+          description: signUp.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect signUp.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect signUp.result typename.')
+      }
     },
   })
 

@@ -56,9 +56,11 @@ describe('reset users password', () => {
               preferredLang: FRENCH
             }
           ) {
-            authResult {
-              user {
-                id
+            result {
+              ... on AuthResult {
+                user {
+                  id
+                }
               }
             }
           }
@@ -129,7 +131,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -155,7 +165,9 @@ describe('reset users password', () => {
         const expectedResponse = {
           data: {
             resetPassword: {
-              status: 'Password was successfully reset.',
+              result: {
+                status: 'Password was successfully reset.',
+              },
             },
           },
         }
@@ -182,10 +194,8 @@ describe('reset users password', () => {
                     authenticateToken
                     sendMethod
                   }
-                  ... on RegularSignInResult {
-                    authResult {
-                      authToken
-                    }
+                  ... on AuthResult {
+                    authToken
                   }
                 }
               }
@@ -215,9 +225,7 @@ describe('reset users password', () => {
           data: {
             signIn: {
               result: {
-                authResult: {
-                  authToken: 'token',
-                },
+                authToken: 'token',
               },
             },
           },
@@ -252,7 +260,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -303,7 +319,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
               `,
@@ -326,11 +350,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to reset password. Please try again.'),
-          ]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'Unable to reset password. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
@@ -353,7 +384,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
               `,
@@ -376,11 +415,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to reset password. Please try again.'),
-          ]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'Unable to reset password. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
@@ -403,7 +449,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -426,11 +480,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to reset password. Please try again.'),
-          ]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'Unable to reset password. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `A user attempted to reset the password for 1, however there is no associated account.`,
           ])
@@ -463,7 +524,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -486,11 +555,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to reset password. Please try again.'),
-          ]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'Unable to reset password. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to reset password, however the current password does not match the current hashed password in the db.`,
           ])
@@ -520,7 +596,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -543,11 +627,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('New passwords do not match. Please try again.'),
-          ]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'New passwords do not match. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to reset their password, however the submitted passwords do not match.`,
           ])
@@ -577,7 +668,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -600,13 +699,19 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Password is not strong enough. Please try again.',
-            ),
-          ]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description:
+                    'Password is not strong enough. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to reset their password, however the submitted password is not long enough.`,
           ])
@@ -640,7 +745,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -704,7 +817,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -778,7 +899,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -804,7 +933,9 @@ describe('reset users password', () => {
         const expectedResponse = {
           data: {
             resetPassword: {
-              status: 'todo',
+              result: {
+                status: 'todo',
+              },
             },
           },
         }
@@ -831,10 +962,8 @@ describe('reset users password', () => {
                     authenticateToken
                     sendMethod
                   }
-                  ... on RegularSignInResult {
-                    authResult {
-                      authToken
-                    }
+                  ... on AuthResult {
+                    authToken
                   }
                 }
               }
@@ -864,9 +993,7 @@ describe('reset users password', () => {
           data: {
             signIn: {
               result: {
-                authResult: {
-                  authToken: 'token',
-                },
+                authToken: 'token',
               },
             },
           },
@@ -896,7 +1023,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
               `,
@@ -919,9 +1054,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
@@ -944,7 +1088,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
               `,
@@ -967,9 +1119,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
           ])
@@ -992,7 +1153,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -1015,9 +1184,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `A user attempted to reset the password for 1, however there is no associated account.`,
           ])
@@ -1050,7 +1228,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -1073,9 +1259,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to reset password, however the current password does not match the current hashed password in the db.`,
           ])
@@ -1105,7 +1300,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -1128,9 +1331,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to reset their password, however the submitted passwords do not match.`,
           ])
@@ -1160,7 +1372,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -1183,9 +1403,18 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              resetPassword: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to reset their password, however the submitted password is not long enough.`,
           ])
@@ -1219,7 +1448,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,
@@ -1281,7 +1518,15 @@ describe('reset users password', () => {
                   resetToken: "${resetToken}"
                 }
               ) {
-                status
+                result {
+                  ... on ResetPasswordError {
+                    code
+                    description
+                  }
+                  ... on ResetPasswordResult {
+                    status
+                  }
+                }
               }
             }
           `,

@@ -489,12 +489,26 @@ export const ORG_DETAILS_PAGE = gql`
           }
         }
       }
-      domains(first: 10) {
+      affiliations(first: 1) {
+        totalCount
+      }
+    }
+  }
+`
+
+export const PAGINATED_ORG_DOMAINS = gql`
+  query OrgDomainsNext($slug: Slug!, $first: Int, $after: String) {
+    findOrganizationBySlug(orgSlug: $slug) {
+      id
+      domains(first: $first, after: $after) {
         pageInfo {
           hasNextPage
+          endCursor
           hasPreviousPage
+          startCursor
         }
         edges {
+          cursor
           node {
             id
             domain
@@ -509,13 +523,80 @@ export const ORG_DETAILS_PAGE = gql`
           }
         }
       }
-      affiliations(first: 10) {
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_ORG_DOMAINS = gql`
+  query OrgDomainsPrev($slug: Slug!, $last: Int, $before: String) {
+    pagination: findOrganizationBySlug(orgSlug: $slug) {
+      domains(last: $last, before: $before) {
         pageInfo {
           hasNextPage
+          endCursor
           hasPreviousPage
+          startCursor
+        }
+        edges {
+          cursor
+          node {
+            id
+            domain
+            lastRan
+            status {
+              dkim
+              dmarc
+              https
+              spf
+              ssl
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const PAGINATED_ORG_AFFILIATIONS = gql`
+  query OrgUsersNext($slug: Slug!, $first: Int, $after: String) {
+    findOrganizationBySlug(orgSlug: $slug) {
+      id
+      affiliations(first: $first, after: $after) {
+        pageInfo {
+          hasNextPage
+          endCursor
+          hasPreviousPage
+          startCursor
         }
         totalCount
         edges {
+          cursor
+          node {
+            permission
+            user {
+              id
+              userName
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_ORG_AFFILIATIONS = gql`
+  query OrgUsersPrev($slug: Slug!, $last: Int, $before: String) {
+    pagination: findOrganizationBySlug(orgSlug: $slug) {
+      affiliations(last: $last, before: $before) {
+        pageInfo {
+          hasNextPage
+          endCursor
+          hasPreviousPage
+          startCursor
+        }
+        totalCount
+        edges {
+          cursor
           node {
             permission
             user {

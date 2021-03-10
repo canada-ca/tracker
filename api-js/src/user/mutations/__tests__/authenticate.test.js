@@ -42,7 +42,6 @@ describe('authenticate user account', () => {
     mockTokenize = jest.fn().mockReturnValue('token')
   })
 
-
   beforeEach(async () => {
     consoleOutput.length = 0
   })
@@ -88,15 +87,21 @@ describe('authenticate user account', () => {
                 authenticateToken: "${token}"
               }
             ) {
-              authResult {
-                authToken
-                user {
-                  id
-                  userName
-                  displayName
-                  preferredLang
-                  phoneValidated
-                  emailValidated
+              result {
+                ... on AuthResult {
+                  authToken
+                  user {
+                    id
+                    userName
+                    displayName
+                    preferredLang
+                    phoneValidated
+                    emailValidated
+                  }
+                }
+                ... on AuthenticateError {
+                  code
+                  description
                 }
               }
             }
@@ -122,7 +127,7 @@ describe('authenticate user account', () => {
       const expectedResult = {
         data: {
           authenticate: {
-            authResult: {
+            result: {
               authToken: 'token',
               user: {
                 id: `${toGlobalId('users', user._key)}`,
@@ -184,15 +189,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -216,11 +227,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to authenticate. Please try again.'),
-          ]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'Unable to authenticate. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `Authentication token does not contain the userKey`,
           ])
@@ -242,15 +260,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -274,11 +298,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to authenticate. Please try again.'),
-          ]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'Unable to authenticate. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `Authentication token does not contain the userKey`,
           ])
@@ -300,15 +331,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -332,11 +369,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to authenticate. Please try again.'),
-          ]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'Unable to authenticate. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to authenticate, no account is associated with this id.`,
           ])
@@ -375,15 +419,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -455,15 +505,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -529,15 +585,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -561,9 +623,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `Authentication token does not contain the userKey`,
           ])
@@ -585,15 +656,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -617,9 +694,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `Authentication token does not contain the userKey`,
           ])
@@ -641,15 +727,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -673,9 +765,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              authenticate: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to authenticate, no account is associated with this id.`,
           ])
@@ -714,15 +815,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }
@@ -792,15 +899,21 @@ describe('authenticate user account', () => {
                     authenticateToken: "${token}"
                   }
                 ) {
-                  authResult {
-                    authToken
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      phoneValidated
-                      emailValidated
+                  result {
+                    ... on AuthResult {
+                      authToken
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        phoneValidated
+                        emailValidated
+                      }
+                    }
+                    ... on AuthenticateError {
+                      code
+                      description
                     }
                   }
                 }

@@ -10,7 +10,7 @@ const { SIGN_IN_KEY } = process.env
 export const signIn = new mutationWithClientMutationId({
   name: 'SignIn',
   description:
-    'This mutation allows users to give their credentials and be taken to the authentication page to verify their account',
+    'This mutation allows users to give their credentials and either signed in, re-directed to the tfa auth page, or given an error.',
   inputFields: () => ({
     userName: {
       type: GraphQLNonNull(GraphQLEmailAddress),
@@ -24,7 +24,8 @@ export const signIn = new mutationWithClientMutationId({
   outputFields: () => ({
     result: {
       type: signInUnion,
-      description: '',
+      description:
+        '`SignInUnion` returning either a `regularSignInResult`, `tfaSignInResult`, or `signInError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -50,7 +51,13 @@ export const signIn = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} attempted to sign in, no account is associated with this email.`,
       )
-      throw new Error(i18n._(t`Unable to sign in, please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
+          t`Incorrect username or password. Please try again.`,
+        ),
+      }
     }
 
     // Check against failed attempt info
@@ -58,11 +65,13 @@ export const signIn = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} tried to sign in, but has too many login attempts.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 401,
+        description: i18n._(
           t`Too many failed login attempts, please reset your password, and try again.`,
         ),
-      )
+      }
     } else {
       // Check to see if passwords match
       if (bcrypt.compareSync(password, user.password)) {
@@ -122,6 +131,7 @@ export const signIn = new mutationWithClientMutationId({
           })
 
           return {
+            _type: 'tfa',
             sendMethod,
             authenticateToken,
           }
@@ -135,10 +145,9 @@ export const signIn = new mutationWithClientMutationId({
           })
 
           return {
-            authResult: {
-              token,
-              user,
-            },
+            _type: 'regular',
+            token,
+            user,
           }
         }
       } else {
@@ -159,7 +168,13 @@ export const signIn = new mutationWithClientMutationId({
         console.warn(
           `User attempted to authenticate: ${user._key} with invalid credentials.`,
         )
-        throw new Error(i18n._(t`Unable to sign in, please try again.`))
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(
+            t`Incorrect username or password. Please try again.`,
+          ),
+        }
       }
     }
   },

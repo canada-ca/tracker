@@ -40,6 +40,14 @@ type AffiliationEdge {
   cursor: String!
 }
 
+# This object is used to inform the user if any errors occurred during authentication.
+type AuthenticateError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input AuthenticateInput {
   # Security code found in text msg, or email inbox.
   authenticationCode: Int!
@@ -49,11 +57,14 @@ input AuthenticateInput {
 }
 
 type AuthenticatePayload {
-  # The authenticated users information, and JWT.
-  authResult: AuthResult
+  # Authenticate union returning either a `authResult` or `authenticateError` object.
+  result: AuthenticateUnion
   clientMutationId: String
 }
 
+# This union is used with the `authenticate` mutation, allowing for the
+# user to authenticate, and support any errors that may occur
+union AuthenticateUnion = AuthResult | AuthenticateError
 # An object used to return information when users sign up or authenticate.
 type AuthResult {
   # JWT used for accessing controlled content.
@@ -1402,6 +1413,14 @@ type RequestScanPayload {
   clientMutationId: String
 }
 
+# This object is used to inform the user if any errors occurred while resetting their password.
+type ResetPasswordError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input ResetPasswordInput {
   # The users new password.
   password: String!
@@ -1413,10 +1432,20 @@ input ResetPasswordInput {
 }
 
 type ResetPasswordPayload {
-  # Informs the user if the password reset was successful, and to redirect to sign in page.
-  status: String
+  # `ResetPasswordUnion` returning either a `ResetPasswordResult`, or `ResetPasswordError` object.
+  result: ResetPasswordUnion
   clientMutationId: String
 }
+
+# This object is used to inform the user that no errors were encountered while resetting their password.
+type ResetPasswordResult {
+  # Informs the user if the password reset was successful, and to redirect to sign in page.
+  status: String
+}
+
+# This union is used with the `ResetPassword` mutation, allowing for users to
+# reset their password, and support any errors that may occur
+union ResetPasswordUnion = ResetPasswordError | ResetPasswordResult
 
 # An enum used to assign, and test users roles.
 enum RoleEnums {
@@ -1455,6 +1484,14 @@ type SendPasswordResetLinkPayload {
   clientMutationId: String
 }
 
+# This object is used to inform the user if any errors occurred while sending a code to their phone.
+type SendPhoneCodeError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input sendPhoneCodeInput {
   # The phone number that the text message will be sent to.
   phoneNumber: PhoneNumber!
@@ -1462,10 +1499,20 @@ input sendPhoneCodeInput {
 }
 
 type sendPhoneCodePayload {
-  # Informs the user if the text message was successfully sent.
-  status: String
+  # `SendPhoneCodeUnion` returning either a `SendPhoneCodeResult`, or `SendPhoneCodeError` object.
+  result: SendPhoneCodeUnion
   clientMutationId: String
 }
+
+# This object is used to inform the user that no errors were encountered while sending their phone code.
+type SendPhoneCodeResult {
+  # Informs the user if their phone code was successfully sent.
+  status: String
+}
+
+# This union is used with the `sendPhoneCode` mutation, allowing for users to send
+# a verification code to their phone, and support any errors that may occur
+union SendPhoneCodeUnion = SendPhoneCodeError | SendPhoneCodeResult
 
 # This object is used for showing none personal user details,
 # and is used for limiting admins to the personal details of users.
@@ -1474,6 +1521,14 @@ type SharedUser implements Node {
   id: ID!
   # Users email address.
   userName: EmailAddress @fake(type: email)
+}
+
+# This object is used to inform the user if any errors occurred during sign in.
+type SignInError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
 }
 
 input SignInInput {
@@ -1485,12 +1540,23 @@ input SignInInput {
 }
 
 type SignInPayload {
+  # `SignInUnion` returning either a `regularSignInResult`, `tfaSignInResult`, or `signInError` object.
   result: SignInUnion
   clientMutationId: String
 }
 
-# This union is used when signing in to allow non-tfa users to still sign in.
-union SignInUnion = RegularSignInResult | TFASignInResult
+# This union is used with the `SignIn` mutation, allowing for multiple styles of
+# logging in, and support any errors that may occur
+union SignInUnion = AuthResult | SignInError | TFASignInResult
+
+# This object is used to inform the user if any errors occurred during sign up.
+type SignUpError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input SignUpInput {
   # The name that will be displayed to other users.
   displayName: String!
@@ -1508,10 +1574,13 @@ input SignUpInput {
 }
 
 type SignUpPayload {
-  # The authenticated users information, and JWT.
-  authResult: AuthResult
+  # `SignUpUnion` returning either a `AuthResult`, or `SignUpError` object.
+  result: SignUpUnion
   clientMutationId: String
 }
+
+# This union is used with the `signUp` mutation, allowing for the user to sign up, and support any errors that may occur.
+union SignUpUnion = AuthResult | SignUpError
 
 # A field whos values contain numbers, letters, dashes, and underscores.
 scalar Slug
@@ -1817,6 +1886,14 @@ type UpdateOrganizationPayload {
   clientMutationId: String
 }
 
+# This object is used to inform the user if any errors occurred while updating their password.
+type UpdateUserPasswordError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input UpdateUserPasswordInput {
   # The users current password to verify it is the current user.
   currentPassword: String!
@@ -1828,10 +1905,22 @@ input UpdateUserPasswordInput {
 }
 
 type UpdateUserPasswordPayload {
-  # The status if the user profile update was successful.
-  status: String
+  # `UpdateUserPasswordUnion` returning either a `UpdateUserPasswordResultType`, or `UpdateUserPasswordError` object.
+  result: UpdateUserPasswordUnion
   clientMutationId: String
 }
+
+# This object is used to inform the user that no errors were encountered while updating their password.
+type UpdateUserPasswordResultType {
+  # Informs the user if their password was successfully updated.
+  status: String
+}
+
+# This union is used with the `updateUserPassword` mutation, allowing for users to
+# update their password, and support any errors that may occur
+union UpdateUserPasswordUnion =
+    UpdateUserPasswordError
+  | UpdateUserPasswordResultType
 
 input UpdateUserProfileInput {
   # The updated display name the user wishes to change to.

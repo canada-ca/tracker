@@ -58,9 +58,11 @@ describe('authenticate user account', () => {
               preferredLang: FRENCH
             }
           ) {
-            authResult {
-              user {
-                id
+            result {
+              ... on AuthResult {
+                user {
+                  id
+                }
               }
             }
           }
@@ -137,10 +139,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                   }
                 }
@@ -220,10 +220,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                   }
                 }
@@ -303,10 +301,8 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
                     }
                   }
                 }
@@ -336,9 +332,7 @@ describe('authenticate user account', () => {
             data: {
               signIn: {
                 result: {
-                  authResult: {
-                    authToken: 'token',
-                  },
+                  authToken: 'token',
                 },
               },
             },
@@ -387,10 +381,8 @@ describe('authenticate user account', () => {
                     authenticateToken
                     sendMethod
                   }
-                  ... on RegularSignInResult {
-                    authResult {
-                      authToken
-                    }
+                  ... on AuthResult {
+                    authToken
                   }
                 }
               }
@@ -444,10 +436,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -473,11 +467,19 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to sign in, please try again.'),
-          ]
+          const error = {
+            data: {
+              signIn: {
+                result: {
+                  code: 400,
+                  description:
+                    'Incorrect username or password. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: test.account@istio.does.not.actually.exists attempted to sign in, no account is associated with this email.`,
           ])
@@ -512,10 +514,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -540,11 +544,20 @@ describe('authenticate user account', () => {
               },
             },
           )
-          const error = [
-            new GraphQLError('Unable to sign in, please try again.'),
-          ]
 
-          expect(response.errors).toEqual(error)
+          const error = {
+            data: {
+              signIn: {
+                result: {
+                  code: 400,
+                  description:
+                    'Incorrect username or password. Please try again.',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User attempted to authenticate: ${user._key} with invalid credentials.`,
           ])
@@ -577,10 +590,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -645,10 +660,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -673,13 +690,19 @@ describe('authenticate user account', () => {
               },
             },
           )
-          const error = [
-            new GraphQLError(
-              'Too many failed login attempts, please reset your password, and try again.',
-            ),
-          ]
+          const error = {
+            data: {
+              signIn: {
+                result: {
+                  code: 401,
+                  description:
+                    'Too many failed login attempts, please reset your password, and try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} tried to sign in, but has too many login attempts.`,
           ])
@@ -715,10 +738,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -788,10 +813,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -863,10 +890,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -949,10 +978,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1032,10 +1063,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1115,10 +1148,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1148,9 +1183,7 @@ describe('authenticate user account', () => {
             data: {
               signIn: {
                 result: {
-                  authResult: {
-                    authToken: 'token',
-                  },
+                  authToken: 'token',
                 },
               },
             },
@@ -1199,10 +1232,12 @@ describe('authenticate user account', () => {
                     authenticateToken
                     sendMethod
                   }
-                  ... on RegularSignInResult {
-                    authResult {
-                      authToken
-                    }
+                  ... on AuthResult {
+                    authToken
+                  }
+                  ... on SignInError {
+                    code
+                    description
                   }
                 }
               }
@@ -1256,10 +1291,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1285,9 +1322,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              signIn: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: test.account@istio.does.not.actually.exists attempted to sign in, no account is associated with this email.`,
           ])
@@ -1322,10 +1368,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1350,9 +1398,19 @@ describe('authenticate user account', () => {
               },
             },
           )
-          const error = [new GraphQLError('todo')]
 
-          expect(response.errors).toEqual(error)
+          const error = {
+            data: {
+              signIn: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User attempted to authenticate: ${user._key} with invalid credentials.`,
           ])
@@ -1385,10 +1443,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1453,10 +1513,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1481,9 +1543,19 @@ describe('authenticate user account', () => {
               },
             },
           )
-          const error = [new GraphQLError('todo')]
 
-          expect(response.errors).toEqual(error)
+          const error = {
+            data: {
+              signIn: {
+                result: {
+                  code: 401,
+                  description: 'todo',
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} tried to sign in, but has too many login attempts.`,
           ])
@@ -1519,10 +1591,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1590,10 +1664,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1663,10 +1739,12 @@ describe('authenticate user account', () => {
                       authenticateToken
                       sendMethod
                     }
-                    ... on RegularSignInResult {
-                      authResult {
-                        authToken
-                      }
+                    ... on AuthResult {
+                      authToken
+                    }
+                    ... on SignInError {
+                      code
+                      description
                     }
                   }
                 }
