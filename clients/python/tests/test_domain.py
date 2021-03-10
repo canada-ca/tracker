@@ -73,7 +73,7 @@ def test_domain_get_all_results(mock_domain, all_results_input, all_results_outp
     result = test_domain.get_all_results()
 
     test_domain.client.execute_query.assert_called_once_with(
-        queries.ALL_RESULTS, {"domain": "foo.bar"}
+        queries.ALL_RESULTS, {"domain": "foo.bar", "first": 1}
     )
     assert result == json.dumps(all_results_output, indent=4)
 
@@ -90,7 +90,7 @@ def test_domain_get_web_results(mock_domain, web_results_input, web_results_outp
     result = test_domain.get_web_results()
 
     test_domain.client.execute_query.assert_called_once_with(
-        queries.WEB_RESULTS, {"domain": "foo.bar"}
+        queries.WEB_RESULTS, {"domain": "foo.bar", "first": 1}
     )
     assert result == json.dumps(web_results_output, indent=4)
 
@@ -109,7 +109,7 @@ def test_domain_get_email_results(
     result = test_domain.get_email_results()
 
     test_domain.client.execute_query.assert_called_once_with(
-        queries.EMAIL_RESULTS, {"domain": "foo.bar"}
+        queries.EMAIL_RESULTS, {"domain": "foo.bar", "first": 1}
     )
     assert result == json.dumps(email_results_output, indent=4)
 
