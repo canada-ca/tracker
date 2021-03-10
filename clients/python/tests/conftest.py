@@ -1831,8 +1831,8 @@ def email_results_output():
         "abcdef.gh.ij": {
             "lastRan": "2021-01-27 23:24:26.911236",
             "email": {
-                "dkim": {"results": {"edges": []}},
-                "dmarc": {
+                "dkim": [{"results": {"edges": []}}],
+                "dmarc": [{
                     "dmarcPhase": null,
                     "record": "v=DMARC1; p=None; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1",
                     "pPolicy": "None",
@@ -1954,8 +1954,8 @@ def email_results_output():
                             ],
                         },
                     },
-                },
-                "spf": {
+                }],
+                "spf": [{
                     "lookups": 4,
                     "record": "v=spf1 mx a:edge.cyber.gc.ca include:spf.protection.outlook.com -all",
                     "spfDefault": "-all",
@@ -2009,7 +2009,7 @@ def email_results_output():
                             "refLinksTech": [{"description": null, "refLink": null}],
                         },
                     },
-                },
+                }],
             },
         }
     }

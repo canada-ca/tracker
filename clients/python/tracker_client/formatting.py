@@ -198,71 +198,19 @@ def format_email_results(result):
     :rtype: dict"""
     # Extract the contents of the list of nodes holding email results
     result["findDomainByDomain"]["email"] = {
-        k: v["edges"][0]["node"]
+        k: list(map(lambda item: item["node"], v["edges"]))
         for (k, v) in result["findDomainByDomain"]["email"].items()
     }
 
-    # Extract the contents of the list of edges for guidance tags
-    for scan_category in result["findDomainByDomain"]["email"].keys():
-
-        # dkim results have different structure so exclude them
-        if scan_category != "dkim":
-            # Remove edges by making the value of positiveGuidanceTags the list of nodes
-            result["findDomainByDomain"]["email"][scan_category][
-                "positiveGuidanceTags"
-            ] = result["findDomainByDomain"]["email"][scan_category][
-                "positiveGuidanceTags"
-            ][
-                "edges"
-            ]
-
-            # Replace the list of nodes with a dict with tagIds as the keys
-            result["findDomainByDomain"]["email"][scan_category][
-                "positiveGuidanceTags"
-            ] = {
-                scan_category["node"].pop("tagId"): scan_category["node"]
-                for scan_category in result["findDomainByDomain"]["email"][
-                    scan_category
-                ]["positiveGuidanceTags"]
-            }
-
-            # Remove edges by making the value of neutralGuidanceTags the list of nodes
-            result["findDomainByDomain"]["email"][scan_category][
-                "neutralGuidanceTags"
-            ] = result["findDomainByDomain"]["email"][scan_category][
-                "neutralGuidanceTags"
-            ][
-                "edges"
-            ]
-
-            # Replace the list of nodes with a dict with tagIds as the keys
-            result["findDomainByDomain"]["email"][scan_category][
-                "neutralGuidanceTags"
-            ] = {
-                scan_category["node"].pop("tagId"): scan_category["node"]
-                for scan_category in result["findDomainByDomain"]["email"][
-                    scan_category
-                ]["neutralGuidanceTags"]
-            }
-
-            # Remove edges by making the value of negativeGuidanceTags the list of nodes
-            result["findDomainByDomain"]["email"][scan_category][
-                "negativeGuidanceTags"
-            ] = result["findDomainByDomain"]["email"][scan_category][
-                "negativeGuidanceTags"
-            ][
-                "edges"
-            ]
-
-            # Replace the list of nodes with a dict with tagIds as the keys
-            result["findDomainByDomain"]["email"][scan_category][
-                "negativeGuidanceTags"
-            ] = {
-                scan_category["node"].pop("tagId"): scan_category["node"]
-                for scan_category in result["findDomainByDomain"]["email"][
-                    scan_category
-                ]["negativeGuidanceTags"]
-            }
+    # For each scan category, change guidance tags from lists of edges with nodes
+    # to dicts with tagId as keys
+    for scan_category in result["findDomainByDomain"]["email"]:
+        # dkim is structured differently and has no results currently
+        if(scan_category) != "dkim":
+            for scan in result["findDomainByDomain"]["email"][scan_category]:
+                for tag_category in ("positiveGuidanceTags", "neutralGuidanceTags", "negativeGuidanceTags"):
+                    scan[tag_category] = scan[tag_category]["edges"]
+                    scan[tag_category] = {tag["node"].pop("tagId"): tag["node"] for tag in scan[tag_category]}
 
     result = {result["findDomainByDomain"].pop("domain"): result["findDomainByDomain"]}
     return result
