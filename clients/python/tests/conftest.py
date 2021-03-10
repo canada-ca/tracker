@@ -1408,7 +1408,7 @@ def web_results_output():
         "abcdef.gh.ij": {
             "lastRan": "2021-01-27 23:24:26.911236",
             "web": {
-                "https": {
+                "https": [{
                     "implementation": "Valid HTTPS",
                     "enforced": "Strict",
                     "hsts": "HSTS Fully Implemented",
@@ -1453,8 +1453,8 @@ def web_results_output():
                             "refLinksTech": [{"description": null, "refLink": null}],
                         }
                     },
-                },
-                "ssl": {
+                }],
+                "ssl": [{
                     "positiveGuidanceTags": {
                         "ssl6": {
                             "tagName": "SSL-invalid-cipher",
@@ -1509,7 +1509,7 @@ def web_results_output():
                             ],
                         }
                     },
-                },
+                }],
             },
         }
     }
