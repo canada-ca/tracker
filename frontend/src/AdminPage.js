@@ -52,10 +52,14 @@ export default function AdminPage() {
   data.findMe.affiliations?.edges.forEach((edge) => {
     const {
       permission,
-      organization: { slug, acronym },
+      organization: { slug, acronym, id },
     } = edge.node
     if (permission === 'ADMIN' || permission === 'SUPER_ADMIN') {
-      adminAffiliations[acronym] = { slug: slug, permission: permission }
+      adminAffiliations[acronym] = {
+        slug: slug,
+        permission: permission,
+        id: id,
+      }
     }
   })
 
@@ -102,6 +106,7 @@ export default function AdminPage() {
             <Stack>
               <AdminPanel
                 orgSlug={orgDetails.slug}
+                orgId={orgDetails.id}
                 permission={orgDetails.permission}
                 mr="4"
               />

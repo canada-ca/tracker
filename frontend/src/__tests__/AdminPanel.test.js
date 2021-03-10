@@ -5,10 +5,15 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
-import { ADMIN_PANEL } from '../graphql/queries'
 import AdminPanel from '../AdminPanel'
-import { rawAdminPanelData } from '../fixtures/adminPanelData'
 import { MemoryRouter, Route } from 'react-router-dom'
+import { rawOrgDomainListData } from '../fixtures/orgDomainListData'
+import { rawOrgUserListData } from '../fixtures/orgUserListData'
+import {
+  PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
+  PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
+} from '../graphql/queries'
+import { createCache } from '../client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -20,22 +25,25 @@ const i18n = setupI18n({
   },
 })
 
+const mocks = [
+  {
+    request: {
+      query: PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
+      variables: { first: 4, orgSlug: 'test-org.slug' },
+    },
+    result: { data: rawOrgUserListData },
+  },
+  {
+    request: {
+      query: PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
+      variables: { first: 4, orgSlug: 'test-org.slug' },
+    },
+    result: { data: rawOrgDomainListData },
+  },
+]
+
 describe('<AdminPanel />', () => {
   it('renders both a domain list and user list', async () => {
-    const mocks = [
-      {
-        request: {
-          query: ADMIN_PANEL,
-          variables: {
-            orgSlug: 'test-org',
-            domainsFirst: 5,
-            affiliationsFirst: 5,
-          },
-        },
-        result: rawAdminPanelData,
-      },
-    ]
-
     const { getByText } = render(
       <UserStateProvider
         initialState={{
@@ -48,8 +56,12 @@ describe('<AdminPanel />', () => {
           <ThemeProvider theme={theme}>
             <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
               <Route path="/admin">
-                <MockedProvider mocks={mocks} addTypename={false}>
-                  <AdminPanel orgSlug="test-org" permission="ADMIN" />
+                <MockedProvider mocks={mocks} cache={createCache()}>
+                  <AdminPanel
+                    orgSlug="test-org.slug"
+                    permission="ADMIN"
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                  />
                 </MockedProvider>
               </Route>
             </MemoryRouter>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import {
   Stack,
@@ -21,9 +21,8 @@ import {
   FormLabel,
   FormControl,
 } from '@chakra-ui/core'
-import { PaginationButtons } from './PaginationButtons'
 import { Domain } from './Domain'
-import { string, object } from 'prop-types'
+import { string, number } from 'prop-types'
 import { ListOf } from './ListOf'
 import { TrackerButton } from './TrackerButton'
 import { useMutation } from '@apollo/client'
@@ -37,16 +36,13 @@ import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
 import { object as yupObject, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { useUserState } from './UserState'
+import { usePaginatedCollection } from './usePaginatedCollection'
+import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from './graphql/queries'
+import { LoadingMessage } from './LoadingMessage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
-export function AdminDomains({ domainsData, orgSlug, orgId }) {
-  let domains = []
-  if (domainsData && domainsData.edges) {
-    domains = domainsData.edges.map((edge) => edge.node)
-  }
-
-  const [domainList, setDomainList] = useState(domains)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [domainsPerPage] = useState(4)
+export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [domainSearch, setDomainSearch] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()
   const [editingDomainId, setEditingDomainId] = useState()
@@ -66,27 +62,21 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
   const initialFocusRef = useRef()
   const { currentUser } = useUserState()
 
-  // Get current domains
-  const indexOfLastDomain = currentPage * domainsPerPage
-  const indexOfFirstDomain = indexOfLastDomain - domainsPerPage
-  const currentDomains = domainList.slice(indexOfFirstDomain, indexOfLastDomain)
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
-
-  // Update domains list if domainsData changes (domain added, removed, updated)
-  useEffect(() => {
-    setDomainList(domains)
-  }, [domainsData]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Set current page to last page when current page > total number of pages
-  // (avoids "Page 17 of 16" for example)
-  useEffect(() => {
-    const totalDomainPages = Math.ceil(domainList.length / domainsPerPage)
-    if (currentPage > totalDomainPages) {
-      paginate(totalDomainPages)
-    }
-  }, [domainList]) // eslint-disable-line react-hooks/exhaustive-deps
+  const {
+    loading,
+    error,
+    nodes,
+    next,
+    previous,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    fetchHeaders: { authorization: currentUser.jwt },
+    recordsPerPage: domainsPerPage,
+    variables: { orgSlug },
+    relayRoot: 'findOrganizationBySlug.domains',
+  })
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['AdminPanel'],
@@ -187,6 +177,14 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
     ),
   })
 
+  if (loading)
+    return (
+      <LoadingMessage>
+        <Trans>Domain List</Trans>
+      </LoadingMessage>
+    )
+  if (error) return <ErrorFallbackMessage error={error} />
+
   return (
     <Stack mb="6" w="100%">
       <Text fontSize="2xl" fontWeight="bold">
@@ -237,7 +235,7 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
         <Stack direction="row" spacing={4}>
           <Stack spacing={4} flexWrap="wrap">
             <ListOf
-              elements={currentDomains}
+              elements={nodes}
               ifEmpty={() => (
                 <Text fontSize="lg" fontWeight="bold">
                   <Trans>No Domains</Trans>
@@ -278,14 +276,13 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
         </Stack>
       </Stack>
 
-      {domainList.length > 0 && (
-        <PaginationButtons
-          perPage={domainsPerPage}
-          total={domainList.length}
-          paginate={paginate}
-          currentPage={currentPage}
-        />
-      )}
+      <RelayPaginationControls
+        onlyPagination={true}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+      />
 
       <SlideIn in={updateIsOpen}>
         {(styles) => (
@@ -423,7 +420,7 @@ export function AdminDomains({ domainsData, orgSlug, orgId }) {
 }
 
 AdminDomains.propTypes = {
-  domainsData: object,
   orgSlug: string.isRequired,
   orgId: string.isRequired,
+  domainsPerPage: number,
 }
