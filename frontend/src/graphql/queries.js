@@ -410,7 +410,7 @@ export const ADMIN_PANEL = gql`
   }
 `
 
-export const PAGINATED_ORG_AFFILIATIONS = gql`
+export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
   query PaginatedOrgAffiliations($orgSlug: Slug!, $first: Int, $after: String) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
@@ -436,7 +436,7 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
   }
 `
 
-export const PAGINATED_ORG_DOMAINS = gql`
+export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
   query PaginatedOrgDomains($orgSlug: Slug!, $first: Int, $after: String) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id

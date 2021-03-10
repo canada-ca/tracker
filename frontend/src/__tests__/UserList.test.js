@@ -11,7 +11,7 @@ import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { rawOrgUserListData } from '../fixtures/orgUserListData'
 import { createCache } from '../client'
-import { PAGINATED_ORG_AFFILIATIONS as FORWARD } from '../graphql/queries'
+import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',

@@ -24,7 +24,7 @@ import { object, string as yupString } from 'yup'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
-import { PAGINATED_ORG_AFFILIATIONS as FORWARD } from './graphql/queries'
+import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from './graphql/queries'
 import { RelayPaginationControls } from './RelayPaginationControls'
 
 export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {

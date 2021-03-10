@@ -8,7 +8,7 @@ import { setupI18n } from '@lingui/core'
 import { AdminDomains } from '../AdminDomains'
 import { MockedProvider } from '@apollo/client/testing'
 import { createCache } from '../client'
-import { PAGINATED_ORG_DOMAINS as FORWARD } from '../graphql/queries'
+import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import {
   rawOrgDomainListData,
   rawOrgDomainListDataEmpty,

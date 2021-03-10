@@ -10,8 +10,8 @@ import { MemoryRouter, Route } from 'react-router-dom'
 import { rawOrgDomainListData } from '../fixtures/orgDomainListData'
 import { rawOrgUserListData } from '../fixtures/orgUserListData'
 import {
-  PAGINATED_ORG_DOMAINS,
-  PAGINATED_ORG_AFFILIATIONS,
+  PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
+  PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
 } from '../graphql/queries'
 import { createCache } from '../client'
 
@@ -28,14 +28,14 @@ const i18n = setupI18n({
 const mocks = [
   {
     request: {
-      query: PAGINATED_ORG_AFFILIATIONS,
+      query: PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
       variables: { first: 4, orgSlug: 'test-org.slug' },
     },
     result: { data: rawOrgUserListData },
   },
   {
     request: {
-      query: PAGINATED_ORG_DOMAINS,
+      query: PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
       variables: { first: 4, orgSlug: 'test-org.slug' },
     },
     result: { data: rawOrgDomainListData },
