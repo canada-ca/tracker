@@ -33,10 +33,10 @@ export default function SignInPage() {
   const { from } = location.state || { from: { pathname: '/' } }
 
   const validationSchema = object().shape({
-    password: string().required(fieldRequirements.password.required.message),
+    password: string().required(i18n._(fieldRequirements.password.required.message)),
     email: string()
-      .required(fieldRequirements.email.required.message)
-      .email(fieldRequirements.email.email.message),
+      .required(i18n._(fieldRequirements.email.required.message))
+      .email(i18n._(fieldRequirements.email.email.message)),
   })
 
   const [signIn, { loading }] = useMutation(SIGN_IN, {
