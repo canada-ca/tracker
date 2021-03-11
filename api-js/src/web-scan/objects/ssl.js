@@ -80,7 +80,7 @@ export const sslType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
-      resolve: ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => new Date(timestamp),
     },
     weakCiphers: {
       type: GraphQLList(GraphQLString),

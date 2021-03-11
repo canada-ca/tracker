@@ -193,7 +193,7 @@ describe('given the dmarcType object', () => {
 
         expect(
           demoType.timestamp.resolve({ timestamp: '2020-10-02T12:43:39Z' }),
-        ).toEqual('2020-10-02T12:43:39Z')
+        ).toEqual(new Date('2020-10-02T12:43:39Z'))
       })
     })
     describe('testing the record resolver', () => {

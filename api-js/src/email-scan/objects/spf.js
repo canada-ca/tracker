@@ -28,7 +28,7 @@ export const spfType = new GraphQLObjectType({
     timestamp: {
       type: GraphQLDateTime,
       description: `The time the scan was initiated.`,
-      resolve: ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => new Date(timestamp),
     },
     lookups: {
       type: GraphQLInt,
