@@ -19,6 +19,7 @@ import {
 import WithPseudoBox from './withPseudoBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
@@ -93,8 +94,8 @@ function EditableUserPhoneNumber({ detailValue }) {
 
   const validationSchema = object().shape({
     phoneNumber: number()
-      .required(fieldRequirements.phoneNumber.required.message)
-      .typeError(fieldRequirements.phoneNumber.typeError.message),
+      .required(i18n._(fieldRequirements.phoneNumber.required.message))
+      .typeError(i18n._(fieldRequirements.phoneNumber.typeError.message)),
   })
 
   return (
