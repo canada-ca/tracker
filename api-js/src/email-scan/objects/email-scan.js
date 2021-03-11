@@ -23,7 +23,7 @@ export const emailScanType = new GraphQLObjectType({
     dkim: {
       type: dkimConnection.connectionType,
       args: {
-        starDate: {
+        startDate: {
           type: GraphQLDate,
           description: 'Start date for date filter.',
         },
@@ -53,7 +53,7 @@ export const emailScanType = new GraphQLObjectType({
     dmarc: {
       type: dmarcConnection.connectionType,
       args: {
-        starDate: {
+        startDate: {
           type: GraphQLDateTime,
           description: 'Start date for date filter.',
         },
@@ -83,7 +83,7 @@ export const emailScanType = new GraphQLObjectType({
     spf: {
       type: spfConnection.connectionType,
       args: {
-        starDate: {
+        startDate: {
           type: GraphQLDateTime,
           description: 'Start date for date filter.',
         },

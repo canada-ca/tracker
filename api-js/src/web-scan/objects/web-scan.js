@@ -52,7 +52,7 @@ export const webScanType = new GraphQLObjectType({
     ssl: {
       type: sslConnection.connectionType,
       args: {
-        starDate: {
+        startDate: {
           type: GraphQLDateTime,
           description: 'Start date for date filter.',
         },
