@@ -33,7 +33,9 @@ export default function SignInPage() {
   const { from } = location.state || { from: { pathname: '/' } }
 
   const validationSchema = object().shape({
-    password: string().required(i18n._(fieldRequirements.password.required.message)),
+    password: string().required(
+      i18n._(fieldRequirements.password.required.message),
+    ),
     email: string()
       .required(i18n._(fieldRequirements.email.required.message))
       .email(i18n._(fieldRequirements.email.email.message)),
@@ -58,10 +60,8 @@ export default function SignInPage() {
           tfaSendMethod: signIn.result.user.tfaSendMethod,
           userName: signIn.result.user.userName,
         })
-        if (signIn.result.user.preferredLang === 'ENGLISH')
-          activate('en')
-        else if (signIn.result.user.preferredLang === 'FRENCH')
-          activate('fr')
+        if (signIn.result.user.preferredLang === 'ENGLISH') activate('en')
+        else if (signIn.result.user.preferredLang === 'FRENCH') activate('fr')
         // // redirect to the home page.
         history.push(from)
         // // Display a welcome message
@@ -93,8 +93,7 @@ export default function SignInPage() {
           isClosable: true,
           position: 'top-left',
         })
-      }
-      else {
+      } else {
         toast({
           title: t`Incorrect send method received.`,
           description: t`Incorrect signIn.result typename.`,
