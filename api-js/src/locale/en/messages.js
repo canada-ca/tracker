@@ -229,6 +229,10 @@
       'Too many failed login attempts, please reset your password, and try again.',
     'Two factor code has been successfully sent, you will receive a text message shortly.':
       'Two factor code has been successfully sent, you will receive a text message shortly.',
+    'Two factor code is incorrect. Please try again.':
+      'Two factor code is incorrect. Please try again.',
+    'Two factor code length is incorrect. Please try again.':
+      'Two factor code length is incorrect. Please try again.',
     'Unable to authenticate. Please try again.':
       'Unable to authenticate. Please try again.',
     'Unable to check permission. Please try again.':
