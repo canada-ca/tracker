@@ -19,8 +19,7 @@ const i18n = setupI18n({
 })
 
 const selectorNode =
-  rawEmailGuidancePageData.findDomainByDomain.email.dkim.edges[0].node.results
-    .edges[0].node
+  rawEmailGuidancePageData.findDomainByDomain.email.dmarc.edges[0].node
 const negativeTags = selectorNode.negativeGuidanceTags.edges
 const neutralTags = selectorNode.neutralGuidanceTags.edges
 const positiveTags = selectorNode.positiveGuidanceTags.edges
@@ -36,7 +35,7 @@ Object.defineProperty(window, 'matchMedia', {
 })
 
 describe('<GuidanceTagList />', () => {
-  it('renders', async () => {
+  it('renders negative guidance tags', async () => {
     const { getAllByText } = render(
       <UserStateProvider
         initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
@@ -56,6 +55,52 @@ describe('<GuidanceTagList />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/DKIM record missing but MX uses O365/i))
+    await waitFor(() =>
+      getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),
+    )
+  })
+  it('renders neutral guidance tags', async () => {
+    const { getAllByText } = render(
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <GuidanceTagList
+                negativeTags={negativeTags}
+                neutralTags={neutralTags}
+                positiveTags={positiveTags}
+                selector={selector}
+                categoryName={categoryName}
+              />
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
+    )
+    await waitFor(() => getAllByText(/IT PIN/i))
+  })
+  it('renders positive guidance tags', async () => {
+    const { getAllByText } = render(
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfaSendMethod: null }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <GuidanceTagList
+                negativeTags={negativeTags}
+                neutralTags={neutralTags}
+                positiveTags={positiveTags}
+                selector={selector}
+                categoryName={categoryName}
+              />
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
+    )
+    await waitFor(() => getAllByText(/3.2.2 Third Parties and DKIM/i))
   })
 })

@@ -19,8 +19,8 @@ const i18n = setupI18n({
 })
 
 const guidanceTag =
-  rawEmailGuidancePageData.findDomainByDomain.email.dkim.edges[0].node.results
-    .edges[0].node.negativeGuidanceTags.edges[0].node
+  rawEmailGuidancePageData.findDomainByDomain.email.dmarc.edges[0].node
+    .negativeGuidanceTags.edges[0].node
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -45,6 +45,8 @@ describe('<GuidanceTagDetails />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/3.2.2 Third Parties and DKIM/i))
+    await waitFor(() =>
+      getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),
+    )
   })
 })

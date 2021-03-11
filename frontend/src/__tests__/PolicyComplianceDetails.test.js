@@ -48,6 +48,6 @@ describe('<ScanCategoryDetails />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/Bad Hostname/i))
+    await waitFor(() => getAllByText(/Bad Chain/i))
   })
 })
