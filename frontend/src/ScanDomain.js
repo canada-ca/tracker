@@ -1,5 +1,6 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import { TrackerButton } from './TrackerButton'
 import { Formik } from 'formik'
 import { Box, Text, useToast } from '@chakra-ui/core'
@@ -15,7 +16,9 @@ export function ScanDomain() {
   const toast = useToast()
   const { currentUser } = useUserState()
   const validationSchema = object().shape({
-    domain: string().required(fieldRequirements.domainUrl.required.message),
+    domain: string().required(
+      i18n._(fieldRequirements.domainUrl.required.message),
+    ),
   })
   const [requestScan, { loading }] = useMutation(REQUEST_SCAN, {
     context: {
