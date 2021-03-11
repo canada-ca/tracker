@@ -96,7 +96,7 @@ function EditableUserPhoneNumber({ detailValue }) {
   const validationSchema = object().shape({
     phoneNumber: yupString()
       .required(fieldRequirements.phoneNumber.required.message)
-      .matches(PHONE_NUMBER_REGEX),
+      .matches(PHONE_NUMBER_REGEX, fieldRequirements.phoneNumber.matches),
   })
 
   return (

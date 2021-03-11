@@ -30,7 +30,7 @@ export const fieldRequirements = {
     required: { message: t`Domain url field must not be empty` },
   },
   phoneNumber: {
-    typeError: { message: t`Phone number must only contains numbers` },
+    matches: { message: t`Phone number must be a valid phone number of the form +17895551234 (10-15 digits)`},
     required: { message: t`Phone number field must not be empty` },
   },
 }
