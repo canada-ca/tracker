@@ -91,7 +91,7 @@ function EditableUserPhoneNumber({ detailValue }) {
     },
   )
 
-  const PHONE_NUMBER_REGEX = /^\+[1-9]\d{1,14}$/
+  const PHONE_NUMBER_REGEX = /^\+[1-9]\d{10,15}$/
 
   const validationSchema = object().shape({
     phoneNumber: yupString()
