@@ -39,7 +39,7 @@ export default function CreateUserPage() {
     confirmPassword: string()
       .required(i18n._(fieldRequirements.confirmPassword.required.message))
       .oneOf(
-        fieldRequirements.confirmPassword.oneOf.types,
+        i18n._(fieldRequirements.confirmPassword.oneOf.types),
         i18n._(fieldRequirements.confirmPassword.oneOf.message),
       ),
     lang: string()
