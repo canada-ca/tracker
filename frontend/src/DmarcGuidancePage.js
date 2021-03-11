@@ -57,13 +57,6 @@ export default function DmarcGuidancePage() {
       </LoadingMessage>
     )
 
-  // if (emailLoading)
-  //   return (
-  //     <LoadingMessage>
-  //       <Trans>Guidance Tags</Trans>
-  //     </LoadingMessage>
-  //   )
-
   if (webError) return <ErrorFallbackMessage error={webError} />
   if (emailError) return <ErrorFallbackMessage error={emailError} />
 

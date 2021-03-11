@@ -79,9 +79,9 @@ export function GuidanceTagList({
     <Box my="2">
       {selectorHeading}
       {positiveTagList}
-      <Divider />
+      <Divider borderColor="gray.50" />
       {neutralTagList}
-      <Divider />
+      <Divider borderColor="gray.50" />
       {negativeTagList}
       {!positiveTagList.length &&
         !neutralTagList.length &&
