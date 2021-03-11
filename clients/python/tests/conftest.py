@@ -3,6 +3,7 @@ import pytest
 import tracker_client.domain as dom
 import tracker_client.organization as org
 
+REAL_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkZvbyIsImlhdCI6MTUxNjIzOTAyMn0.sTo9dB352rSrMPeks8oTGuSpbuHytmoM7zENg_RfkDQ"
 
 # Register "online" mark
 def pytest_configure(config):
@@ -2331,3 +2332,30 @@ def org_get_domains_has_next_input():
             }
         }
     }
+
+
+@pytest.fixture
+def get_auth_success():
+    return {"signIn": {"result": {"authToken": REAL_JWT}}}
+
+
+@pytest.fixture
+def get_auth_error():
+    return {"signIn": {"result": {"code": "foo", "description": "bar"}}}
+
+
+@pytest.fixture
+def get_auth_tfa():
+    return {
+        "signIn": {"result": {"sendMethod": "phone", "authenticateToken": REAL_JWT}}
+    }
+
+
+@pytest.fixture
+def get_tfa_auth_success():
+    return {"authenticate": {"result": {"authToken": REAL_JWT}}}
+
+
+@pytest.fixture
+def get_tfa_auth_error():
+    return {"authenticate": {"result": {"code": "foo", "description": "bar"}}}

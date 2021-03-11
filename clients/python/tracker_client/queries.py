@@ -26,10 +26,35 @@ SIGNIN_MUTATION = gql(
     mutation SignIn($creds: SignInInput!) {
         signIn (input: $creds) {
             result {
+                ... on TFASignInResult {
+                    sendMethod
+                    authenticateToken
+                }
                 ... on AuthResult {
                     authToken
                 }
                 ... on SignInError{
+                    code
+                    description
+                }
+            }
+        }
+    }
+    """
+)
+
+# Finish sign in by completing TFA
+# :param dict creds: a dict with a authentication code and token
+# Mutation variables should look like {"authInput": {"authenticationCode": auth_code, "authenticateToken": token}}
+TFA_AUTH = gql(
+    """
+    mutation Authenticate($authInput: AuthenticateInput!) {
+        authenticate(input: $authInput) {
+            result {
+                ... on AuthResult {
+                    authToken
+                }
+                ... on AuthenticateError {
                     code
                     description
                 }
