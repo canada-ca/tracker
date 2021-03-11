@@ -169,7 +169,7 @@ type CreateOrganizationPayload {
 # A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
 # `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO
 # 8601 standard for representation of dates and times using the Gregorian calendar.
-scalar DateTime
+scalar Date
 
 # Object that contains the various senders and details for each category.
 type DetailTables {
@@ -214,7 +214,7 @@ type DKIM implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time when the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: Date @fake(type: pastDate)
   # Individual scans results for each dkim selector.
   results(
     after: String
@@ -383,7 +383,7 @@ type DMARC implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time when the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: Date @fake(type: pastDate)
   # DMARC phase found during scan.
   dmarcPhase: Int @examples(values: [1, 2, 3, 4])
   # DMARC record retrieved during scan.
@@ -713,9 +713,9 @@ type EmailScan {
   # DomainKeys Identified Mail (DKIM) Signatures scan results.
   dkim(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: Date
     # End date for date filter.
-    endDate: DateTime
+    endDate: Date
     after: String
     first: Int
     before: String
@@ -724,9 +724,9 @@ type EmailScan {
   # Domain-based Message Authentication, Reporting, and Conformance (DMARC) scan results.
   dmarc(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: Date
     # End date for date filter.
-    endDate: DateTime
+    endDate: Date
     after: String
     first: Int
     before: String
@@ -735,9 +735,9 @@ type EmailScan {
   # Sender Policy Framework (SPF) scan results.
   spf(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: Date
     # End date for date filter.
-    endDate: DateTime
+    endDate: Date
     after: String
     first: Int
     before: String
@@ -872,7 +872,7 @@ type HTTPS implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: Date @fake(type: pastDate)
   # State of the HTTPS implementation on the server and any issues therein.
   implementation: String @examples(values: ["Valid HTTPS", "Downgrades HTTPS", "Bad Chain", "Bad Hostname"])
   # Degree to which HTTPS is enforced on the server based on behaviour.
@@ -1598,7 +1598,7 @@ type SPF implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: Date @fake(type: pastDate)
   # The amount of DNS lookups.
   lookups: Int @examples(values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   # SPF record retrieved during the scan of the given domain.
@@ -1726,7 +1726,7 @@ type SSL implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time when the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: Date @fake(type: pastDate)
   # Raw scan result.
   rawJson: JSON
   # Guidance tags found during scan.
@@ -2015,7 +2015,7 @@ type VerifiedDomain implements Node {
     ]
   )
   # The last time that a scan was ran on this domain.
-  lastRan: DateTime @fake(type: recentDate)
+  lastRan: Date @fake(type: recentDate)
   # The organization that this domain belongs to.
   organizations(
     after: String
@@ -2154,9 +2154,9 @@ type WebScan {
   # Hyper Text Transfer Protocol Secure scan results.
   https(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: Date
     # End date for date filter.
-    endDate: DateTime
+    endDate: Date
     after: String
     first: Int
     before: String
@@ -2165,9 +2165,9 @@ type WebScan {
   # Secure Socket Layer scan results.
   ssl(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: Date
     # End date for date filter.
-    endDate: DateTime
+    endDate: Date
     after: String
     first: Int
     before: String
