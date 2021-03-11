@@ -175,16 +175,29 @@ class Domain:
 
         return json.dumps(result, indent=4)
 
-    def get_all_results(self):
-        """Get all scan results for this Domain.
+    def get_all_results(self, all_scans=False):
+        """Get web and email scan results for this Domain.
 
+        :param bool all_scans: if True, get all scans. If False, get only most recent.
         :return: formatted JSON data containing all scan results for the domain.
         :rtype: str
 
         :Example:
 
+        >>> from tracker_client.client import Client
+        >>> client = Client()
+        >>> foobar = client.get_domain("foo.bar")
+        >>> print(foobar.get_all_results())
+        {
+            "foo.bar": {
+                "lastRan": "2021-03-08 23:01:27.416532",
+                "web": {...}, # See Domain.get_web_results example below
+                "email": {...} # See Domain.get_email_results example below
+            }
+        }
         """
-        params = {"domain": self.domain_name}
+        num_results = 100 if all_scans else 1
+        params = {"domain": self.domain_name, "first": num_results}
         result = self.client.execute_query(queries.ALL_RESULTS, params)
 
         if "error" not in result:
@@ -192,16 +205,88 @@ class Domain:
 
         return json.dumps(result, indent=4)
 
-    def get_web_results(self):
+    def get_web_results(self, all_scans=False):
         """Get web scan results for this Domain.
 
+        :param bool all_scans: if True, get all scans. If False, get only most recent.
         :return: formatted JSON data containing web scan results for the domain.
         :rtype: str
 
         :Example:
 
+        >>> from tracker_client.client import Client
+        >>> client = Client()
+        >>> foobar = client.get_domain("foo.bar")
+        >>> print(foobar.get_web_results())
+        {
+            "foo.bar": {
+                "lastRan": "2021-03-08 23:01:27.416532",
+                "web": {
+                    "https": [
+                        {
+                            "timestamp": "2021-03-09T00:28:12.880Z",
+                            "implementation": "Valid HTTPS",
+                            "enforced": "Strict",
+                            "hsts": "HSTS Fully Implemented",
+                            "hstsAge": "31536000",
+                            "preloaded": "HSTS Preloaded",
+                            "positiveGuidanceTags": {},
+                            "neutralGuidanceTags": {},
+                            "negativeGuidanceTags": {}
+                        }
+                    ],
+                    "ssl": [
+                        {
+                            "timestamp": "2021-03-08 23:01:31.545568",
+                            "strongCiphers": [
+                                "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                                "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+                            ],
+                            "strongCurves": [],
+                            "acceptableCiphers": [
+                                "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+                                "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+                                "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+                                "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+                                "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+                                "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256"
+                            ],
+                            "acceptableCurves": [],
+                            "weakCiphers": [],
+                            "weakCurves": [
+                                "prime256v1"
+                            ],
+                            "ccsInjectionVulnerable": false,
+                            "heartbleedVulnerable": false,
+                            "supportsEcdhKeyExchange": true,
+                            "positiveGuidanceTags": {
+                                "ssl5": {
+                                    "tagName": "SSL-acceptable-certificate",
+                                    "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
+                                    "refLinks": [
+                                        {
+                                            "description": "6.1.3 Direction",
+                                            "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                                        }
+                                    ],
+                                    "refLinksTech": [
+                                        {
+                                            "description": "See ITSP.40.062 for approved cipher list",
+                                            "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                                        }
+                                    ]
+                                }
+                            },
+                            "neutralGuidanceTags": {},
+                            "negativeGuidanceTags": {}
+                        }
+                    ]
+                }
+            }
+        }
         """
-        params = {"domain": self.domain_name}
+        num_results = 100 if all_scans else 1
+        params = {"domain": self.domain_name, "first": num_results}
         result = self.client.execute_query(queries.WEB_RESULTS, params)
 
         if "error" not in result:
@@ -209,16 +294,177 @@ class Domain:
 
         return json.dumps(result, indent=4)
 
-    def get_email_results(self):
+    def get_email_results(self, all_scans=False):
         """Get email scan results for this Domain.
 
+        :param bool all_scans: if True, get all scans. If False, get only most recent.
         :return: formatted JSON data containing email scan results for the domain.
         :rtype: str
 
         :Example:
 
+        >>> from tracker_client.client import Client
+        >>> client = Client()
+        >>> foobar = client.get_domain("foo.bar")
+        >>> print(foobar.get_email_results())
+        {
+            "foo.bar": {
+                "lastRan": "2021-03-08 23:01:27.416532",
+                "email": {
+                    "dkim": [
+                        {
+                            "timestamp": "2021-03-09T00:28:12.880Z",
+                            "results": {
+                                "edges": []
+                            }
+                        }
+                    ],
+                    "dmarc": [
+                        {
+                            "timestamp": "2021-03-08 23:01:31.545568",
+                            "record": "v=DMARC1; p=None; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1",
+                            "pPolicy": "None",
+                            "spPolicy": "None",
+                            "pct": 100,
+                            "positiveGuidanceTags": {
+                                "dmarc23": {
+                                    "tagName": "DMARC-valid",
+                                    "guidance": "DMARC record is properly formed",
+                                    "refLinks": [
+                                        {
+                                            "description": "Implementation Guidance: Email Domain Protection",
+                                            "refLink": null
+                                        }
+                                    ],
+                                    "refLinksTech": [
+                                        {
+                                            "description": null,
+                                            "refLink": null
+                                        }
+                                    ]
+                                }
+                            },
+                            "neutralGuidanceTags": {
+                                "dmarc10": {
+                                    "tagName": "RUA-CCCS",
+                                    "guidance": "CCCS added to Aggregate sender list",
+                                    "refLinks": [
+                                        {
+                                            "description": "B.3.1 DMARC Records",
+                                            "refLink": null
+                                        }
+                                    ],
+                                    "refLinksTech": [
+                                        {
+                                            "description": null,
+                                            "refLink": null
+                                        }
+                                    ]
+                                },
+                                "dmarc14": {
+                                    "tagName": "TXT-DMARC-enabled",
+                                    "guidance": "Verification TXT records for all 3rd party senders exist",
+                                    "refLinks": [
+                                        {
+                                            "description": "TBD",
+                                            "refLink": null
+                                        }
+                                    ],
+                                    "refLinksTech": [
+                                        {
+                                            "description": null,
+                                            "refLink": null
+                                        }
+                                    ]
+                                },
+                                "dmarc17": {
+                                    "tagName": "SP-none",
+                                    "guidance": "Follow implementation guide",
+                                    "refLinks": [
+                                        {
+                                            "description": "A.3.5 Monitor DMARC Reports and Correct Misconfigurations",
+                                            "refLink": null
+                                        }
+                                    ],
+                                    "refLinksTech": [
+                                        {
+                                            "description": "RFC 6.3 General Record Format, SP",
+                                            "refLink": null
+                                        }
+                                    ]
+                                }
+                            },
+                            "negativeGuidanceTags": {
+                                "dmarc11": {
+                                    "tagName": "RUF-CCCS",
+                                    "guidance": "CCCS added to Forensic sender list",
+                                    "refLinks": [
+                                        {
+                                            "description": "Missing from guide",
+                                            "refLink": null
+                                        }
+                                    ],
+                                    "refLinksTech": [
+                                        {
+                                            "description": null,
+                                            "refLink": null
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    "spf": [
+                        {
+                            "timestamp": "2021-03-08 23:01:31.545568",
+                            "lookups": 5,
+                            "record": "v=spf1 a:a.foo.bar a:b.foo.bar a:c.foo.bar include:spf.protection.outlook.com -all",
+                            "spfDefault": "-all",
+                            "positiveGuidanceTags": {
+                                "spf12": {
+                                    "tagName": "SPF-valid",
+                                    "guidance": "SPF record is properly formed",
+                                    "refLinks": [
+                                        {
+                                            "description": "Implementation Guidance: Email Domain Protection",
+                                            "refLink": null
+                                        }
+                                    ],
+                                    "refLinksTech": [
+                                        {
+                                            "description": null,
+                                            "refLink": null
+                                        }
+                                    ]
+                                }
+                            },
+                            "neutralGuidanceTags": {
+                                "spf8": {
+                                    "tagName": "ALL-hardfail",
+                                    "guidance": "Follow implementation guide",
+                                    "refLinks": [
+                                        {
+                                            "description": "B.1.1 SPF Records",
+                                            "refLink": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
+                                        }
+                                    ],
+                                    "refLinksTech": [
+                                        {
+                                            "description": null,
+                                            "refLink": null
+                                        }
+                                    ]
+                                }
+                            },
+                            "negativeGuidanceTags": {}
+                        }
+                    ]
+                }
+            }
+        }
         """
-        params = {"domain": self.domain_name}
+        num_results = 100 if all_scans else 1
+        params = {"domain": self.domain_name, "first": num_results}
         result = self.client.execute_query(queries.EMAIL_RESULTS, params)
 
         if "error" not in result:
