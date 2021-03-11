@@ -1,6 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID } from 'graphql'
-import { GraphQLDateTime } from 'graphql-scalars'
+import { GraphQLDate } from 'graphql-scalars'
 import { toGlobalId } from 'graphql-relay'
 
 import { databaseOptions } from '../../../../database-options'
@@ -30,7 +30,7 @@ describe('given the dkimType object', () => {
       const demoType = dkimType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDate)
     })
     it('has a results field', () => {
       const demoType = dkimType.getFields()

@@ -7,7 +7,7 @@ import {
   GraphQLBoolean,
 } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
-import { GraphQLJSON, GraphQLDateTime } from 'graphql-scalars'
+import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
@@ -95,7 +95,7 @@ describe('given the ssl gql object', () => {
       const demoType = sslType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDate)
     })
     it('has a weakCiphers field', () => {
       const demoType = sslType.getFields()

@@ -1,7 +1,7 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID, GraphQLInt, GraphQLString } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
-import { GraphQLJSON, GraphQLDateTime } from 'graphql-scalars'
+import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
@@ -31,7 +31,7 @@ describe('given the spfType object', () => {
       const demoType = spfType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDate)
     })
     it('has a lookups field', () => {
       const demoType = spfType.getFields()
