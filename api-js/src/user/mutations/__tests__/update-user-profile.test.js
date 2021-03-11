@@ -78,7 +78,7 @@ describe('authenticate user account', () => {
     })
     describe('given successful update of users profile', () => {
       describe('user updates their display name', () => {
-        it('returns a successful status message', async () => {
+        it('returns a successful status message, and the updated user info', async () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -91,7 +91,18 @@ describe('authenticate user account', () => {
             `
               mutation {
                 updateUserProfile(input: { displayName: "John Doe" }) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -117,7 +128,12 @@ describe('authenticate user account', () => {
           const expectedResponse = {
             data: {
               updateUserProfile: {
-                status: 'Profile successfully updated.',
+                result: {
+                  user: {
+                    displayName: 'John Doe',
+                  },
+                  status: 'Profile successfully updated.',
+                },
               },
             },
           }
@@ -126,54 +142,10 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
-        })
-        it('updates the users display name', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(input: { displayName: "John Doe" }) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.displayName).toEqual('John Doe')
         })
       })
       describe('user updates their user name', () => {
-        it('returns a successful status message', async () => {
+        it('returns a successful status message, and the updated user info', async () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -188,7 +160,18 @@ describe('authenticate user account', () => {
                 updateUserProfile(
                   input: { userName: "john.doe@istio.actually.works" }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        userName
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -214,7 +197,12 @@ describe('authenticate user account', () => {
           const expectedResponse = {
             data: {
               updateUserProfile: {
-                status: 'Profile successfully updated.',
+                result: {
+                  user: {
+                    userName: 'john.doe@istio.actually.works',
+                  },
+                  status: 'Profile successfully updated.',
+                },
               },
             },
           }
@@ -223,56 +211,10 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
-        })
-        it('updates the user name', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: { userName: "john.doe@istio.actually.works" }
-                ) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "john.doe@istio.actually.works"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.userName).toEqual('john.doe@istio.actually.works')
         })
       })
       describe('user updates their preferred language', () => {
-        it('returns a successful status message', async () => {
+        it('returns a successful status message, and the updated user info', async () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -285,7 +227,18 @@ describe('authenticate user account', () => {
             `
               mutation {
                 updateUserProfile(input: { preferredLang: ENGLISH }) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        preferredLang
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -311,7 +264,12 @@ describe('authenticate user account', () => {
           const expectedResponse = {
             data: {
               updateUserProfile: {
-                status: 'Profile successfully updated.',
+                result: {
+                  user: {
+                    preferredLang: 'ENGLISH',
+                  },
+                  status: 'Profile successfully updated.',
+                },
               },
             },
           }
@@ -320,50 +278,6 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
-        })
-        it('updates the preferred language', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(input: { preferredLang: ENGLISH }) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.preferredLang).toEqual('english')
         })
       })
       describe('user attempts to update their phone number', () => {
@@ -394,7 +308,7 @@ describe('authenticate user account', () => {
                 phoneDetails: updatedPhoneDetails,
               })
             })
-            it('returns a successful status message', async () => {
+            it('returns a successful status message, and the updated user info', async () => {
               let cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -407,7 +321,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { phoneNumber: "+98765432112" }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            phoneNumber
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -433,7 +358,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'Profile successfully updated.',
+                    result: {
+                      user: {
+                        phoneNumber: '+98765432112',
+                      },
+                      status: 'Profile successfully updated.',
+                    },
                   },
                 },
               }
@@ -490,7 +420,7 @@ describe('authenticate user account', () => {
                 phoneDetails: updatedPhoneDetails,
               })
             })
-            it('returns a successful status message', async () => {
+            it('returns a successful status message, and the updated user info', async () => {
               let cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -503,7 +433,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { phoneNumber: "+12345678998" }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            phoneNumber
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -529,7 +470,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'Profile successfully updated.',
+                    result: {
+                      user: {
+                        phoneNumber: '+12345678998',
+                      },
+                      status: 'Profile successfully updated.',
+                    },
                   },
                 },
               }
@@ -585,7 +531,18 @@ describe('authenticate user account', () => {
               `
                 mutation {
                   updateUserProfile(input: { phoneNumber: "+12345678998" }) {
-                    status
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          phoneNumber
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -611,7 +568,12 @@ describe('authenticate user account', () => {
             const expectedResponse = {
               data: {
                 updateUserProfile: {
-                  status: 'Profile successfully updated.',
+                  result: {
+                    user: {
+                      phoneNumber: null,
+                    },
+                    status: 'Profile successfully updated.',
+                  },
                 },
               },
             }
@@ -662,7 +624,7 @@ describe('authenticate user account', () => {
                 phoneDetails: updatedPhoneDetails,
               })
             })
-            it('returns message', async () => {
+            it('returns message, and the updated user info', async () => {
               const cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -675,7 +637,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: PHONE }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            tfaSendMethod
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -701,7 +674,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'Profile successfully updated.',
+                    result: {
+                      user: {
+                        tfaSendMethod: 'PHONE',
+                      },
+                      status: 'Profile successfully updated.',
+                    },
                   },
                 },
               }
@@ -710,50 +688,6 @@ describe('authenticate user account', () => {
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successfully updated their profile.`,
               ])
-            })
-            it('sets tfaSendMethod to `phone`', async () => {
-              let cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              let user = await cursor.next()
-
-              await graphql(
-                schema,
-                `
-                  mutation {
-                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  userKey: user._key,
-                  auth: {
-                    bcrypt,
-                    tokenize,
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                  loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
-                  },
-                },
-              )
-
-              cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              user = await cursor.next()
-              expect(user.tfaSendMethod).toEqual('phone')
             })
           })
           describe('user is not phone validated', () => {
@@ -784,7 +718,7 @@ describe('authenticate user account', () => {
                 phoneDetails: updatedPhoneDetails,
               })
             })
-            it('returns message', async () => {
+            it('returns message, and the updated user info', async () => {
               const cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -797,7 +731,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: PHONE }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            tfaSendMethod
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -823,7 +768,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'Profile successfully updated.',
+                    result: {
+                      user: {
+                        tfaSendMethod: 'NONE',
+                      },
+                      status: 'Profile successfully updated.',
+                    },
                   },
                 },
               }
@@ -832,50 +782,6 @@ describe('authenticate user account', () => {
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successfully updated their profile.`,
               ])
-            })
-            it('does not change tfaSendMethod', async () => {
-              let cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              let user = await cursor.next()
-
-              await graphql(
-                schema,
-                `
-                  mutation {
-                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  userKey: user._key,
-                  auth: {
-                    bcrypt,
-                    tokenize,
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                  loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
-                  },
-                },
-              )
-
-              cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              user = await cursor.next()
-              expect(user.tfaSendMethod).toEqual('none')
             })
           })
         })
@@ -891,7 +797,7 @@ describe('authenticate user account', () => {
                 tfaSendMethod: 'none',
               })
             })
-            it('returns message', async () => {
+            it('returns message, and the updated user info', async () => {
               const cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -904,7 +810,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: EMAIL }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            tfaSendMethod
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -930,7 +847,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'Profile successfully updated.',
+                    result: {
+                      user: {
+                        tfaSendMethod: 'EMAIL',
+                      },
+                      status: 'Profile successfully updated.',
+                    },
                   },
                 },
               }
@@ -939,50 +861,6 @@ describe('authenticate user account', () => {
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successfully updated their profile.`,
               ])
-            })
-            it('sets tfaSendMethod to `email`', async () => {
-              let cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              let user = await cursor.next()
-
-              await graphql(
-                schema,
-                `
-                  mutation {
-                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  userKey: user._key,
-                  auth: {
-                    bcrypt,
-                    tokenize,
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                  loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
-                  },
-                },
-              )
-
-              cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              user = await cursor.next()
-              expect(user.tfaSendMethod).toEqual('email')
             })
           })
           describe('user is not email validated', () => {
@@ -996,7 +874,7 @@ describe('authenticate user account', () => {
                 tfaSendMethod: 'none',
               })
             })
-            it('returns message', async () => {
+            it('returns message, and the updated user info', async () => {
               const cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -1009,7 +887,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: EMAIL }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            tfaSendMethod
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -1035,7 +924,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'Profile successfully updated.',
+                    result: {
+                      user: {
+                        tfaSendMethod: 'NONE',
+                      },
+                      status: 'Profile successfully updated.',
+                    },
                   },
                 },
               }
@@ -1044,50 +938,6 @@ describe('authenticate user account', () => {
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successfully updated their profile.`,
               ])
-            })
-            it('does not change tfaSendMethod', async () => {
-              let cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              let user = await cursor.next()
-
-              await graphql(
-                schema,
-                `
-                  mutation {
-                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  userKey: user._key,
-                  auth: {
-                    bcrypt,
-                    tokenize,
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                  loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
-                  },
-                },
-              )
-
-              cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              user = await cursor.next()
-              expect(user.tfaSendMethod).toEqual('none')
             })
           })
         })
@@ -1102,7 +952,7 @@ describe('authenticate user account', () => {
               tfaSendMethod: 'email',
             })
           })
-          it('returns message', async () => {
+          it('returns message, and the updated user info', async () => {
             const cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -1115,7 +965,18 @@ describe('authenticate user account', () => {
               `
                 mutation {
                   updateUserProfile(input: { tfaSendMethod: NONE }) {
-                    status
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          tfaSendMethod
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1141,7 +1002,12 @@ describe('authenticate user account', () => {
             const expectedResponse = {
               data: {
                 updateUserProfile: {
-                  status: 'Profile successfully updated.',
+                  result: {
+                    user: {
+                      tfaSendMethod: 'NONE',
+                    },
+                    status: 'Profile successfully updated.',
+                  },
                 },
               },
             }
@@ -1150,50 +1016,6 @@ describe('authenticate user account', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully updated their profile.`,
             ])
-          })
-          it('sets tfaSendMethod to `none`', async () => {
-            let cursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            let user = await cursor.next()
-
-            await graphql(
-              schema,
-              `
-                mutation {
-                  updateUserProfile(input: { tfaSendMethod: NONE }) {
-                    status
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                userKey: user._key,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
-                  userLoaderByKey: userLoaderByKey(query),
-                },
-              },
-            )
-
-            cursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            user = await cursor.next()
-            expect(user.tfaSendMethod).toEqual('none')
           })
         })
       })
@@ -1212,7 +1034,18 @@ describe('authenticate user account', () => {
                     preferredLang: ENGLISH
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1235,11 +1068,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Authentication error, please sign in again.'),
-          ]
+          const error = {
+            data: {
+              updateUserProfile: {
+                result: {
+                  code: 400,
+                  description: 'Authentication error, please sign in again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             'User attempted to update their profile, but the user id is undefined.',
           ])
@@ -1258,7 +1098,18 @@ describe('authenticate user account', () => {
                     preferredLang: ENGLISH
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1281,11 +1132,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to update profile. Please try again.'),
-          ]
+          const error = {
+            data: {
+              updateUserProfile: {
+                result: {
+                  code: 400,
+                  description: 'Unable to update profile. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to update their profile, but no account is associated with that id.`,
           ])
@@ -1312,7 +1170,18 @@ describe('authenticate user account', () => {
                 updateUserProfile(
                   input: { userName: "john.doe@istio.actually.works" }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1335,11 +1204,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to update profile. Please try again.'),
-          ]
+          const error = {
+            data: {
+              updateUserProfile: {
+                result: {
+                  code: 400,
+                  description: 'Username not available, please try another.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their username, but the username is already in use.`,
           ])
@@ -1372,7 +1248,18 @@ describe('authenticate user account', () => {
                     preferredLang: ENGLISH
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1424,7 +1311,7 @@ describe('authenticate user account', () => {
     })
     describe('given successful update of users profile', () => {
       describe('user updates their display name', () => {
-        it('returns a successful status message', async () => {
+        it('returns a successful status message, and the updated user info', async () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -1437,7 +1324,18 @@ describe('authenticate user account', () => {
             `
               mutation {
                 updateUserProfile(input: { displayName: "John Doe" }) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        displayName
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1463,7 +1361,12 @@ describe('authenticate user account', () => {
           const expectedResponse = {
             data: {
               updateUserProfile: {
-                status: 'todo',
+                result: {
+                  user: {
+                    displayName: 'John Doe',
+                  },
+                  status: 'todo',
+                },
               },
             },
           }
@@ -1472,54 +1375,10 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
-        })
-        it('updates the users display name', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(input: { displayName: "John Doe" }) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.displayName).toEqual('John Doe')
         })
       })
       describe('user updates their user name', () => {
-        it('returns a successful status message', async () => {
+        it('returns a successful status message, and the updated user info', async () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -1534,7 +1393,18 @@ describe('authenticate user account', () => {
                 updateUserProfile(
                   input: { userName: "john.doe@istio.actually.works" }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        userName
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1560,7 +1430,12 @@ describe('authenticate user account', () => {
           const expectedResponse = {
             data: {
               updateUserProfile: {
-                status: 'todo',
+                result: {
+                  user: {
+                    userName: 'john.doe@istio.actually.works',
+                  },
+                  status: 'todo',
+                },
               },
             },
           }
@@ -1569,56 +1444,10 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
-        })
-        it('updates the user name', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: { userName: "john.doe@istio.actually.works" }
-                ) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "john.doe@istio.actually.works"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.userName).toEqual('john.doe@istio.actually.works')
         })
       })
       describe('user updates their preferred language', () => {
-        it('returns a successful status message', async () => {
+        it('returns a successful status message, and the updated user info', async () => {
           const cursor = await query`
             FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
@@ -1631,7 +1460,18 @@ describe('authenticate user account', () => {
             `
               mutation {
                 updateUserProfile(input: { preferredLang: ENGLISH }) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        preferredLang
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1657,7 +1497,12 @@ describe('authenticate user account', () => {
           const expectedResponse = {
             data: {
               updateUserProfile: {
-                status: 'todo',
+                result: {
+                  user: {
+                    preferredLang: 'ENGLISH',
+                  },
+                  status: 'todo',
+                },
               },
             },
           }
@@ -1666,50 +1511,6 @@ describe('authenticate user account', () => {
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully updated their profile.`,
           ])
-        })
-        it('updates the preferred language', async () => {
-          let cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          let user = await cursor.next()
-
-          await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(input: { preferredLang: ENGLISH }) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: user._key,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          cursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-          user = await cursor.next()
-          expect(user.preferredLang).toEqual('english')
         })
       })
       describe('user attempts to update their phone number', () => {
@@ -1740,7 +1541,7 @@ describe('authenticate user account', () => {
                 phoneDetails: updatedPhoneDetails,
               })
             })
-            it('returns a successful status message', async () => {
+            it('returns a successful status message, and the updated user info', async () => {
               let cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -1753,7 +1554,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { phoneNumber: "+98765432112" }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            phoneNumber
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -1779,7 +1591,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'todo',
+                    result: {
+                      user: {
+                        phoneNumber: '+98765432112',
+                      },
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -1836,7 +1653,7 @@ describe('authenticate user account', () => {
                 phoneDetails: updatedPhoneDetails,
               })
             })
-            it('returns a successful status message', async () => {
+            it('returns a successful status message, and the updated user info', async () => {
               let cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -1849,7 +1666,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { phoneNumber: "+12345678998" }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            phoneNumber
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -1875,7 +1703,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'todo',
+                    result: {
+                      user: {
+                        phoneNumber: '+12345678998',
+                      },
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -1918,7 +1751,7 @@ describe('authenticate user account', () => {
               phoneValidated: false,
             })
           })
-          it('does not update their phone number', async () => {
+          it('does not update their phone number, and the updated user info', async () => {
             let cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -1931,7 +1764,18 @@ describe('authenticate user account', () => {
               `
                 mutation {
                   updateUserProfile(input: { phoneNumber: "+12345678998" }) {
-                    status
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          phoneNumber
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1957,7 +1801,12 @@ describe('authenticate user account', () => {
             const expectedResponse = {
               data: {
                 updateUserProfile: {
-                  status: 'todo',
+                  result: {
+                    user: {
+                      phoneNumber: null,
+                    },
+                    status: 'todo',
+                  },
                 },
               },
             }
@@ -2008,7 +1857,7 @@ describe('authenticate user account', () => {
                 phoneDetails: updatedPhoneDetails,
               })
             })
-            it('returns message', async () => {
+            it('returns message, and the updated user info', async () => {
               const cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -2021,7 +1870,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: PHONE }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            tfaSendMethod
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2047,7 +1907,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'todo',
+                    result: {
+                      user: {
+                        tfaSendMethod: 'PHONE',
+                      },
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2056,50 +1921,6 @@ describe('authenticate user account', () => {
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successfully updated their profile.`,
               ])
-            })
-            it('sets tfaSendMethod to `phone`', async () => {
-              let cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              let user = await cursor.next()
-
-              await graphql(
-                schema,
-                `
-                  mutation {
-                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  userKey: user._key,
-                  auth: {
-                    bcrypt,
-                    tokenize,
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                  loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
-                  },
-                },
-              )
-
-              cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              user = await cursor.next()
-              expect(user.tfaSendMethod).toEqual('phone')
             })
           })
           describe('user is not phone validated', () => {
@@ -2130,7 +1951,7 @@ describe('authenticate user account', () => {
                 phoneDetails: updatedPhoneDetails,
               })
             })
-            it('returns message', async () => {
+            it('returns message, and the updated user info', async () => {
               const cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -2143,7 +1964,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: PHONE }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            tfaSendMethod
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2169,7 +2001,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'todo',
+                    result: {
+                      user: {
+                        tfaSendMethod: 'NONE',
+                      },
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2178,50 +2015,6 @@ describe('authenticate user account', () => {
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successfully updated their profile.`,
               ])
-            })
-            it('does not change tfaSendMethod', async () => {
-              let cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              let user = await cursor.next()
-
-              await graphql(
-                schema,
-                `
-                  mutation {
-                    updateUserProfile(input: { tfaSendMethod: PHONE }) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  userKey: user._key,
-                  auth: {
-                    bcrypt,
-                    tokenize,
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                  loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
-                  },
-                },
-              )
-
-              cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              user = await cursor.next()
-              expect(user.tfaSendMethod).toEqual('none')
             })
           })
         })
@@ -2237,7 +2030,7 @@ describe('authenticate user account', () => {
                 tfaSendMethod: 'none',
               })
             })
-            it('returns message', async () => {
+            it('returns message, and the updated user info', async () => {
               const cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -2250,7 +2043,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: EMAIL }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            tfaSendMethod
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2276,7 +2080,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'todo',
+                    result: {
+                      user: {
+                        tfaSendMethod: 'EMAIL',
+                      },
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2285,50 +2094,6 @@ describe('authenticate user account', () => {
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successfully updated their profile.`,
               ])
-            })
-            it('sets tfaSendMethod to `email`', async () => {
-              let cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              let user = await cursor.next()
-
-              await graphql(
-                schema,
-                `
-                  mutation {
-                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  userKey: user._key,
-                  auth: {
-                    bcrypt,
-                    tokenize,
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                  loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
-                  },
-                },
-              )
-
-              cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              user = await cursor.next()
-              expect(user.tfaSendMethod).toEqual('email')
             })
           })
           describe('user is not email validated', () => {
@@ -2342,7 +2107,7 @@ describe('authenticate user account', () => {
                 tfaSendMethod: 'none',
               })
             })
-            it('returns message', async () => {
+            it('returns message, and the updated user info', async () => {
               const cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -2355,7 +2120,18 @@ describe('authenticate user account', () => {
                 `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: EMAIL }) {
-                      status
+                      result {
+                        ... on UpdateUserProfileResult {
+                          status
+                          user {
+                            tfaSendMethod
+                          }
+                        }
+                        ... on UpdateUserProfileError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2381,7 +2157,12 @@ describe('authenticate user account', () => {
               const expectedResponse = {
                 data: {
                   updateUserProfile: {
-                    status: 'todo',
+                    result: {
+                      user: {
+                        tfaSendMethod: 'NONE',
+                      },
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2390,50 +2171,6 @@ describe('authenticate user account', () => {
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successfully updated their profile.`,
               ])
-            })
-            it('does not change tfaSendMethod', async () => {
-              let cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              let user = await cursor.next()
-
-              await graphql(
-                schema,
-                `
-                  mutation {
-                    updateUserProfile(input: { tfaSendMethod: EMAIL }) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  i18n,
-                  query,
-                  userKey: user._key,
-                  auth: {
-                    bcrypt,
-                    tokenize,
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                  loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
-                  },
-                },
-              )
-
-              cursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-              `
-              user = await cursor.next()
-              expect(user.tfaSendMethod).toEqual('none')
             })
           })
         })
@@ -2448,7 +2185,7 @@ describe('authenticate user account', () => {
               tfaSendMethod: 'email',
             })
           })
-          it('returns message', async () => {
+          it('returns message, and the updated user info', async () => {
             const cursor = await query`
                 FOR user IN users
                   FILTER user.userName == "test.account@istio.actually.exists"
@@ -2461,7 +2198,18 @@ describe('authenticate user account', () => {
               `
                 mutation {
                   updateUserProfile(input: { tfaSendMethod: NONE }) {
-                    status
+                    result {
+                      ... on UpdateUserProfileResult {
+                        status
+                        user {
+                          tfaSendMethod
+                        }
+                      }
+                      ... on UpdateUserProfileError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2487,7 +2235,12 @@ describe('authenticate user account', () => {
             const expectedResponse = {
               data: {
                 updateUserProfile: {
-                  status: 'todo',
+                  result: {
+                    user: {
+                      tfaSendMethod: 'NONE',
+                    },
+                    status: 'todo',
+                  },
                 },
               },
             }
@@ -2496,50 +2249,6 @@ describe('authenticate user account', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} successfully updated their profile.`,
             ])
-          })
-          it('sets tfaSendMethod to `none`', async () => {
-            let cursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            let user = await cursor.next()
-
-            await graphql(
-              schema,
-              `
-                mutation {
-                  updateUserProfile(input: { tfaSendMethod: NONE }) {
-                    status
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query,
-                userKey: user._key,
-                auth: {
-                  bcrypt,
-                  tokenize,
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
-                  userLoaderByKey: userLoaderByKey(query),
-                },
-              },
-            )
-
-            cursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            user = await cursor.next()
-            expect(user.tfaSendMethod).toEqual('none')
           })
         })
       })
@@ -2558,7 +2267,18 @@ describe('authenticate user account', () => {
                     preferredLang: ENGLISH
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2581,9 +2301,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserProfile: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             'User attempted to update their profile, but the user id is undefined.',
           ])
@@ -2602,7 +2331,18 @@ describe('authenticate user account', () => {
                     preferredLang: ENGLISH
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2625,9 +2365,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserProfile: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to update their profile, but no account is associated with that id.`,
           ])
@@ -2654,7 +2403,18 @@ describe('authenticate user account', () => {
                 updateUserProfile(
                   input: { userName: "john.doe@istio.actually.works" }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2677,9 +2437,18 @@ describe('authenticate user account', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserProfile: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their username, but the username is already in use.`,
           ])
@@ -2712,7 +2481,18 @@ describe('authenticate user account', () => {
                     preferredLang: ENGLISH
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserProfileResult {
+                      status
+                      user {
+                        id
+                      }
+                    }
+                    ... on UpdateUserProfileError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,

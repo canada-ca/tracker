@@ -395,6 +395,8 @@
     'User role was updated successfully.':
       'User role was updated successfully.',
     'Username already in use.': 'Username already in use.',
+    'Username not available, please try another.':
+      'Username not available, please try another.',
     'You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection.':
       'You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection.':

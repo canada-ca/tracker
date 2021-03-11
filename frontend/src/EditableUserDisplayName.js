@@ -26,6 +26,7 @@ import { useUserState } from './UserState'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
 import { TrackerButton } from './TrackerButton'
+import { UpdateUserProfileDisplayName } from './graphql/fragments'
 
 function EditableUserDisplayName({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -34,7 +35,9 @@ function EditableUserDisplayName({ detailValue }) {
   const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE,
+    UPDATE_USER_PROFILE({
+      UpdateUserProfileFields: UpdateUserProfileDisplayName,
+    }),
     {
       context: {
         headers: {
@@ -51,16 +54,39 @@ function EditableUserDisplayName({ detailValue }) {
           position: 'top-left',
         })
       },
-      onCompleted() {
-        toast({
-          title: t`Changed User Display Name`,
-          description: t`You have successfully updated your display name.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        onClose()
+      onCompleted({ updateUserProfile }) {
+        if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
+          toast({
+            title: t`Changed User Display Name`,
+            description: t`You have successfully updated your display name.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          onClose()
+        } else if (
+          updateUserProfile.result.__typename === 'UpdateUserProfileError'
+        ) {
+          toast({
+            title: t`Unable to update to your display name, please try again.`,
+            description: updateUserProfile.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect updateUserProfile.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect updateUserProfile.result typename.')
+        }
       },
     },
   )

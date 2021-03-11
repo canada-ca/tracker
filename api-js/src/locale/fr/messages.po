@@ -13,7 +13,7 @@ msgstr ""
 
 #: src/user/mutations/send-phone-code.js:51
 #: src/user/mutations/update-user-password.js:54
-#: src/user/mutations/update-user-profile.js:67
+#: src/user/mutations/update-user-profile.js:73
 #: src/user/mutations/verify-phone-number.js:34
 msgid "Authentication error, please sign in again."
 msgstr "todo"
@@ -196,7 +196,7 @@ msgstr "todo"
 msgid "Permission error, not an admin for this user."
 msgstr "todo"
 
-#: src/user/mutations/update-user-profile.js:165
+#: src/user/mutations/update-user-profile.js:184
 msgid "Profile successfully updated."
 msgstr "todo"
 
@@ -741,9 +741,8 @@ msgstr "todo"
 msgid "Unable to update password. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/update-user-profile.js:77
 #: src/user/mutations/update-user-profile.js:87
-#: src/user/mutations/update-user-profile.js:160
+#: src/user/mutations/update-user-profile.js:175
 msgid "Unable to update profile. Please try again."
 msgstr "todo"
 
@@ -799,6 +798,10 @@ msgstr "todo"
 
 #: src/user/mutations/sign-up.js:100
 msgid "Username already in use."
+msgstr "todo"
+
+#: src/user/mutations/update-user-profile.js:101
+msgid "Username not available, please try another."
 msgstr "todo"
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:37
