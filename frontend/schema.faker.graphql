@@ -214,7 +214,7 @@ type DKIM implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time when the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: DateTime @fake(type: pastDate)
   # Individual scans results for each dkim selector.
   results(
     after: String
@@ -383,7 +383,7 @@ type DMARC implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time when the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: DateTime @fake(type: pastDate)
   # DMARC phase found during scan.
   dmarcPhase: Int @examples(values: [1, 2, 3, 4])
   # DMARC record retrieved during scan.
@@ -713,7 +713,7 @@ type EmailScan {
   # DomainKeys Identified Mail (DKIM) Signatures scan results.
   dkim(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: DateTime
     # End date for date filter.
     endDate: DateTime
     after: String
@@ -724,7 +724,7 @@ type EmailScan {
   # Domain-based Message Authentication, Reporting, and Conformance (DMARC) scan results.
   dmarc(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: DateTime
     # End date for date filter.
     endDate: DateTime
     after: String
@@ -735,7 +735,7 @@ type EmailScan {
   # Sender Policy Framework (SPF) scan results.
   spf(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: DateTime
     # End date for date filter.
     endDate: DateTime
     after: String
@@ -872,7 +872,7 @@ type HTTPS implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: DateTime @fake(type: pastDate)
   # State of the HTTPS implementation on the server and any issues therein.
   implementation: String @examples(values: ["Valid HTTPS", "Downgrades HTTPS", "Bad Chain", "Bad Hostname"])
   # Degree to which HTTPS is enforced on the server based on behaviour.
@@ -1598,7 +1598,7 @@ type SPF implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: DateTime @fake(type: pastDate)
   # The amount of DNS lookups.
   lookups: Int @examples(values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   # SPF record retrieved during the scan of the given domain.
@@ -1726,7 +1726,7 @@ type SSL implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time when the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: DateTime @fake(type: pastDate)
   # Raw scan result.
   rawJson: JSON
   # Guidance tags found during scan.
@@ -2154,7 +2154,7 @@ type WebScan {
   # Hyper Text Transfer Protocol Secure scan results.
   https(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: DateTime
     # End date for date filter.
     endDate: DateTime
     after: String
@@ -2165,7 +2165,7 @@ type WebScan {
   # Secure Socket Layer scan results.
   ssl(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: DateTime
     # End date for date filter.
     endDate: DateTime
     after: String
