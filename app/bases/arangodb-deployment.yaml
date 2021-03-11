@@ -1,13 +1,13 @@
-apiVersion: database.arangodb.com/v1alpha
 kind: ArangoDeployment
+apiVersion: database.arangodb.com/v1alpha
 metadata:
   name: arangodb
   namespace: db
 spec:
-  metadata:
-  image: arangodb/arangodb:3.7.3
-  environment: Development
-  mode: Single
+  image: arangodb/arangodb:3.7.6
+  environment: Production
+  # environment: Development
+  mode: Cluster
   tls:
     caSecretName: None
   externalAccess:
@@ -17,9 +17,26 @@ spec:
       root: arangodb
   metrics:
     enabled: true
-  coordinators:
-    count: 1
   agents:
-    count: 1
+    count: 3
+    resources:
+      requests:
+        storage: 8Gi
   dbservers:
-    count: 1
+    count: 3
+    resources:
+      requests:
+        storage: 10Gi
+  coordinators:
+    count: 3
+  single:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        volumeMode: Filesystem
+    storageClassName: standard2
+

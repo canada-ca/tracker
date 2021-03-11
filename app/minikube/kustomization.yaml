@@ -4,7 +4,7 @@ resources:
 - ../bases
 - selfsigned-issuer.yaml
 patchesStrategicMerge:
-- arangodb.yaml
+- arangodb-deployment.yaml
 replicas:
 - name: tracker-frontend
   count: 1
