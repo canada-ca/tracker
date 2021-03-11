@@ -22,7 +22,7 @@ import { t, Trans } from '@lingui/macro'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
-import { number, object } from 'yup'
+import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import PhoneNumberField from './PhoneNumberField'
@@ -91,10 +91,12 @@ function EditableUserPhoneNumber({ detailValue }) {
     },
   )
 
+  const PHONE_NUMBER_REGEX = /^\+[1-9]\d{1,14}$/
+
   const validationSchema = object().shape({
-    phoneNumber: number()
+    phoneNumber: yupString()
       .required(fieldRequirements.phoneNumber.required.message)
-      .typeError(fieldRequirements.phoneNumber.typeError.message),
+      .matches(PHONE_NUMBER_REGEX),
   })
 
   return (
