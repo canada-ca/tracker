@@ -9,7 +9,6 @@ patchesStrategicMerge:
 - publicgateway.yaml
 - certificate.yaml
 - knative/config/queues.yaml
-- arangodb-deployment.yaml
 replicas:
 - name: tracker-frontend
   count: 2
@@ -23,5 +22,3 @@ replicas:
   count: 1
 components:
 - ../namespaces
-# Flux won't have .env files
-# - ../creds/prod

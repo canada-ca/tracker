@@ -6,7 +6,7 @@ metadata:
 spec:
   metadata:
   image: arangodb/arangodb:3.7.3
-  environment: Production
+  environment: Development
   mode: Single
   tls:
     caSecretName: None
@@ -23,6 +23,3 @@ spec:
     count: 1
   dbservers:
     count: 1
-    resources:
-      requests:
-        storage: 80Gi
