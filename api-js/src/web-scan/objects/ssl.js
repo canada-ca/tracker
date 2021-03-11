@@ -10,7 +10,7 @@ import {
   connectionDefinitions,
   globalIdField,
 } from 'graphql-relay'
-import { GraphQLJSON } from 'graphql-scalars'
+import { GraphQLJSON, GraphQLDateTime } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
@@ -78,7 +78,7 @@ export const sslType = new GraphQLObjectType({
         supportsEcdhKeyExchange,
     },
     timestamp: {
-      type: GraphQLString,
+      type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => timestamp,
     },

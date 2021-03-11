@@ -4,7 +4,7 @@ import {
   connectionDefinitions,
   globalIdField,
 } from 'graphql-relay'
-import { GraphQLJSON } from 'graphql-scalars'
+import { GraphQLJSON, GraphQLDateTime } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
@@ -26,7 +26,7 @@ export const spfType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLString,
+      type: GraphQLDateTime,
       description: `The time the scan was initiated.`,
       resolve: ({ timestamp }) => timestamp,
     },

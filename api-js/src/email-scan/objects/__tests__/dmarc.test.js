@@ -1,7 +1,7 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLInt } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
-import { GraphQLJSON } from 'graphql-scalars'
+import { GraphQLJSON, GraphQLDateTime } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
@@ -31,7 +31,7 @@ describe('given the dmarcType object', () => {
       const demoType = dmarcType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLString)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
     })
     it('has a record field', () => {
       const demoType = dmarcType.getFields()
