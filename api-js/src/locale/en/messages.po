@@ -69,13 +69,16 @@ msgid "New passwords do not match. Please try again."
 msgstr "New passwords do not match. Please try again."
 
 #: src/organization/queries/find-organization-by-slug.js:40
-#: src/verified-organizations/queries/find-verified-organization-by-slug.js:34
 msgid "No organization with the provided slug could be found."
 msgstr "No organization with the provided slug could be found."
 
 #: src/verified-domains/queries/find-verified-domain-by-domain.js:33
 msgid "No verified domain with the provided domain could be found."
 msgstr "No verified domain with the provided domain could be found."
+
+#: src/verified-organizations/queries/find-verified-organization-by-slug.js:35
+msgid "No verified organization with the provided slug could be found."
+msgstr "No verified organization with the provided slug could be found."
 
 #: src/organization/mutations/verify-organization.js:68
 msgid "Organization has already been verified."
@@ -140,6 +143,11 @@ msgstr "Passing both `first` and `last` to paginate the `SpfFailureTable` connec
 msgid "Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported."
 
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:175
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:176
+msgid "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported."
+
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:83
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:174
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
@@ -161,11 +169,6 @@ msgstr "Passing both `first` and `last` to paginate the `https` connection is no
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:176
 msgid "Passing both `first` and `last` to paginate the `ssl` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `ssl` connection is not supported."
-
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:175
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:176
-msgid "Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported."
-msgstr "Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported."
 
 #: src/user/mutations/sign-up.js:74
 msgid "Password does not meet requirements."
@@ -304,6 +307,11 @@ msgstr "Requesting `{amount}` records on the `SpfFailureTable` connection exceed
 msgid "Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records."
 
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:198
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:199
+msgid "Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
+
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:106
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:197
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
@@ -317,11 +325,6 @@ msgstr "Requesting `{amount}` records on the `dmarcSummaries` connection exceeds
 #: src/domain/loaders/load-domain-connections-by-user-id.js:162
 msgid "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records."
-
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:198
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:199
-msgid "Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:118
 msgid "Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records."
@@ -514,8 +517,8 @@ msgstr "Unable to find user affiliation(s). Please try again."
 #: src/verified-organizations/loaders/load-verified-organization-by-key.js:35
 #: src/verified-organizations/loaders/load-verified-organization-by-slug.js:21
 #: src/verified-organizations/loaders/load-verified-organization-by-slug.js:33
-msgid "Unable to find verified organization. Please try again."
-msgstr "Unable to find verified organization. Please try again."
+msgid "Unable to find verified organization(s). Please try again."
+msgstr "Unable to find verified organization(s). Please try again."
 
 #: src/affiliation/mutations/invite-user-to-org.js:75
 msgid "Unable to invite user to unknown organization."
@@ -685,8 +688,8 @@ msgstr "Unable to load verified domain(s). Please try again."
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:433
 #: src/verified-organizations/loaders/load-verified-organizations-connections.js:423
 #: src/verified-organizations/loaders/load-verified-organizations-connections.js:435
-msgid "Unable to load verified organizations. Please try again."
-msgstr "Unable to load verified organizations. Please try again."
+msgid "Unable to load verified organization(s). Please try again."
+msgstr "Unable to load verified organization(s). Please try again."
 
 #: src/summaries/queries/web-summary.js:13
 msgid "Unable to load web summary. Please try again."
@@ -988,6 +991,11 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Spf
 msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection."
 
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:166
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:167
+msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection."
+
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:74
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:165
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
@@ -1009,11 +1017,6 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `htt
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:167
 msgid "You must provide a `first` or `last` value to properly paginate the `ssl` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `ssl` connection."
-
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:166
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:167
-msgid "You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection."
-msgstr "You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection."
 
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:29
 msgid "You must provide a `period` value to access the `dmarcSummaries` connection."
@@ -1102,6 +1105,11 @@ msgstr "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.
 msgid "`{argSet}` on the `VerifiedDomain` connection cannot be less than zero."
 msgstr "`{argSet}` on the `VerifiedDomain` connection cannot be less than zero."
 
+#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:187
+#: src/verified-organizations/loaders/load-verified-organizations-connections.js:188
+msgid "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
+msgstr "`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero."
+
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:95
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:186
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
@@ -1123,11 +1131,6 @@ msgstr "`{argSet}` on the `https` connection cannot be less than zero."
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:188
 msgid "`{argSet}` on the `ssl` connection cannot be less than zero."
 msgstr "`{argSet}` on the `ssl` connection cannot be less than zero."
-
-#: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:187
-#: src/verified-organizations/loaders/load-verified-organizations-connections.js:188
-msgid "`{argSet}` on the `verifiedOrganization` connection cannot be less than zero."
-msgstr "`{argSet}` on the `verifiedOrganization` connection cannot be less than zero."
 
 #: src/organization/objects/organization-summary.js:7
 #: src/summaries/queries/mail-summary.js:22

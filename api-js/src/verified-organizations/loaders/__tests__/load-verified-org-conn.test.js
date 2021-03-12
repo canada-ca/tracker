@@ -1906,7 +1906,7 @@ describe('given the load organizations connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection.',
               ),
             )
           }
@@ -1934,7 +1934,7 @@ describe('given the load organizations connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported.',
               ),
             )
           }
@@ -1964,7 +1964,7 @@ describe('given the load organizations connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `verifiedOrganization` connection cannot be less than zero.',
+                  '`first` on the `VerifiedOrganization` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1993,7 +1993,7 @@ describe('given the load organizations connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `verifiedOrganization` connection cannot be less than zero.',
+                  '`last` on the `VerifiedOrganization` connection cannot be less than zero.',
                 ),
               )
             }
@@ -2024,7 +2024,7 @@ describe('given the load organizations connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `101` records on the `verifiedOrganization` connection exceeds the `first` limit of 100 records.',
+                  'Requesting `101` records on the `VerifiedOrganization` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -2053,7 +2053,7 @@ describe('given the load organizations connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `101` records on the `verifiedOrganization` connection exceeds the `last` limit of 100 records.',
+                  'Requesting `101` records on the `VerifiedOrganization` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -2155,7 +2155,7 @@ describe('given the load organizations connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Unable to load verified organizations. Please try again.',
+                'Unable to load verified organization(s). Please try again.',
               ),
             )
           }
@@ -2192,7 +2192,7 @@ describe('given the load organizations connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Unable to load verified organizations. Please try again.',
+                  'Unable to load verified organization(s). Please try again.',
                 ),
               )
             }

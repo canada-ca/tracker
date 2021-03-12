@@ -31,7 +31,9 @@ export const findVerifiedOrganizationBySlug = {
     if (typeof org === 'undefined') {
       console.warn(`User could not retrieve verified organization.`)
       throw new Error(
-        i18n._(t`No organization with the provided slug could be found.`),
+        i18n._(
+          t`No verified organization with the provided slug could be found.`,
+        ),
       )
     }
 

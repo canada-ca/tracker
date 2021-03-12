@@ -175,7 +175,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
         } catch (err) {
           expect(err).toEqual(
             new Error(
-              'Unable to find verified organization. Please try again.',
+              'Unable to find verified organization(s). Please try again.',
             ),
           )
         }
@@ -200,7 +200,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
         } catch (err) {
           expect(err).toEqual(
             new Error(
-              'Unable to find verified organization. Please try again.',
+              'Unable to find verified organization(s). Please try again.',
             ),
           )
         }

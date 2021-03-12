@@ -164,7 +164,7 @@ export const verifiedOrgLoaderConnections = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`verifiedOrganization\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`VerifiedOrganization\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -173,7 +173,7 @@ export const verifiedOrgLoaderConnections = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`verifiedOrganization\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`VerifiedOrganization\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -185,7 +185,7 @@ export const verifiedOrgLoaderConnections = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`verifiedOrganization\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`VerifiedOrganization\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -196,7 +196,7 @@ export const verifiedOrgLoaderConnections = (
       )
       throw new Error(
         i18n._(
-          t`Requesting \`${amount}\` records on the \`verifiedOrganization\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting \`${amount}\` records on the \`VerifiedOrganization\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -420,7 +420,7 @@ export const verifiedOrgLoaderConnections = (
       `Database error occurred while user was trying to gather orgs in verifiedOrgLoaderConnections, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load verified organizations. Please try again.`),
+      i18n._(t`Unable to load verified organization(s). Please try again.`),
     )
   }
 
@@ -432,7 +432,7 @@ export const verifiedOrgLoaderConnections = (
       `Cursor error occurred while user was trying to gather orgs in verifiedOrgLoaderConnections, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load verified organizations. Please try again.`),
+      i18n._(t`Unable to load verified organization(s). Please try again.`),
     )
   }
 

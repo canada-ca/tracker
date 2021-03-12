@@ -18,7 +18,7 @@ export const verifiedOrgLoaderBySlug = (query, language, i18n) =>
         `Database error when running verifiedOrgLoaderBySlug: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find verified organization. Please try again.`),
+        i18n._(t`Unable to find verified organization(s). Please try again.`),
       )
     }
 
@@ -30,7 +30,7 @@ export const verifiedOrgLoaderBySlug = (query, language, i18n) =>
     } catch (err) {
       console.error(`Cursor error during verifiedOrgLoaderBySlug: ${err}`)
       throw new Error(
-        i18n._(t`Unable to find verified organization. Please try again.`),
+        i18n._(t`Unable to find verified organization(s). Please try again.`),
       )
     }
 
