@@ -17,6 +17,7 @@
     'New passwords do not match. Please try again.': 'todo',
     'No organization with the provided slug could be found.': 'todo',
     'No verified domain with the provided domain could be found.': 'todo',
+    'No verified organization with the provided slug could be found.': 'todo',
     'Organization has already been verified.': 'todo',
     'Organization name already in use, please choose another and try again.':
       'todo',
@@ -36,25 +37,25 @@
       'todo',
     'Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported.':
       'todo',
+    'Passing both `first` and `last` to paginate the `HTTPS` connection is not supported.':
+      'todo',
     'Passing both `first` and `last` to paginate the `Organization` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `SPF` connection is not supported.':
       'todo',
+    'Passing both `first` and `last` to paginate the `SSL` connection is not supported.':
+      'todo',
     'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `domain` connection is not supported.':
-      'todo',
-    'Passing both `first` and `last` to paginate the `https` connection is not supported.':
-      'todo',
-    'Passing both `first` and `last` to paginate the `ssl` connection is not supported.':
-      'todo',
-    'Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported.':
       'todo',
     'Password does not meet requirements.': 'todo',
     'Password does not requirements. Please try again.': 'todo',
@@ -109,13 +110,13 @@
       'todo',
     'Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
+    'Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.':
-      'todo',
-    'Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -123,11 +124,11 @@
       'todo',
     'Requesting {amount} records on the `DMARC` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
+    'Requesting {amount} records on the `HTTPS` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
-    'Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records.':
-      'todo',
-    'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.':
+    'Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Successfully dispatched one time scan.': 'todo',
     'Successfully email verified account, and set TFA send method to email.':
@@ -144,8 +145,6 @@
     'Token value incorrect, please sign in again.': 'todo',
     'Too many failed login attempts, please reset your password, and try again.':
       'todo<<<<<<< HEAD=======',
-    'Two factor code has been successfully sent, you will receive a text message shortly.':
-      'todo>>>>>>> update user error messages',
     'Two factor code is incorrect. Please try again.': 'todo',
     'Two factor code length is incorrect. Please try again.': 'todo',
     'Unable to add user to organization. Please try again.': 'todo',
@@ -162,14 +161,14 @@
     'Unable to find DMARC scan(s). Please try again.': 'todo',
     'Unable to find DMARC summary data. Please try again.': 'todo',
     'Unable to find HTTPS guidance tag(s). Please try again.': 'todo',
+    'Unable to find HTTPS scan(s). Please try again.': 'todo',
     'Unable to find SPF guidance tag(s). Please try again.': 'todo',
     'Unable to find SPF scan(s). Please try again.': 'todo',
     'Unable to find SSL guidance tag(s). Please try again.': 'todo',
-    'Unable to find https scan. Please try again.': 'todo',
-    'Unable to find ssl scan. Please try again.': 'todo',
+    'Unable to find SSL scan(s). Please try again.': 'todo',
     'Unable to find the requested domain.': 'todo',
     'Unable to find user affiliation(s). Please try again.': 'todo',
-    'Unable to find verified organization. Please try again.': 'todo',
+    'Unable to find verified organization(s). Please try again.': 'todo',
     'Unable to invite user to unknown organization.': 'todo',
     'Unable to invite user. Please try again.': 'todo',
     'Unable to invite yourself to an org.': 'todo',
@@ -182,24 +181,24 @@
     'Unable to load DMARC scan(s). Please try again.': 'todo',
     'Unable to load DMARC summary data. Please try again.': 'todo',
     'Unable to load HTTPS guidance tag(s). Please try again.': 'todo',
+    'Unable to load HTTPS scan(s). Please try again.': 'todo',
     'Unable to load SPF failure data. Please try again.': 'todo',
     'Unable to load SPF guidance tag(s). Please try again.': 'todo',
     'Unable to load SPF scan(s). Please try again.': 'todo',
     'Unable to load SSL guidance tag(s). Please try again.': 'todo',
+    'Unable to load SSL scan(s). Please try again.': 'todo',
     'Unable to load affiliation(s). Please try again.': 'todo',
     'Unable to load domain(s). Please try again.': 'todo',
     'Unable to load domain. Please try again.': 'todo',
     'Unable to load domains. Please try again.': 'todo',
     'Unable to load full pass data. Please try again.': 'todo',
-    'Unable to load https scans. Please try again.': 'todo',
     'Unable to load mail summary. Please try again.': 'todo',
     'Unable to load organization(s). Please try again.': 'todo',
     'Unable to load organizations. Please try again.': 'todo',
-    'Unable to load ssl scans. Please try again.': 'todo',
     'Unable to load summary. Please try again.': 'todo',
     'Unable to load user(s). Please try again.': 'todo',
     'Unable to load verified domain(s). Please try again.': 'todo',
-    'Unable to load verified organizations. Please try again.': 'todo',
+    'Unable to load verified organization(s). Please try again.': 'todo',
     'Unable to load web summary. Please try again.': 'todo',
     'Unable to query affiliation(s). Please try again.': 'todo',
     'Unable to query domain(s). Please try again.': 'todo',
@@ -219,7 +218,6 @@
     'Unable to reset password. Please request a new email.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
     'Unable to select DMARC report(s) for this period and year.': 'todo',
-    'Unable to send TFA code, please try again.': 'todo',
     'Unable to send authentication email. Please try again.': 'todo',
     'Unable to send authentication text message. Please try again.': 'todo',
     'Unable to send org invite email. Please try again.': 'todo',
@@ -277,25 +275,25 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `HTTPS` connection.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `Organization` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `SPF` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `SSL` connection.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
-      'todo',
-    'You must provide a `first` or `last` value to properly paginate the `https` connection.':
-      'todo',
-    'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
-      'todo',
-    'You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection.':
       'todo',
     'You must provide a `period` value to access the `dmarcSummaries` connection.':
       'todo',
@@ -314,21 +312,21 @@
       'todo',
     '`{argSet}` on the `GuidanceTag` connection cannot be less than zero.':
       'todo',
+    '`{argSet}` on the `HTTPS` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `Organization` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `SPF` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `SSL` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `VerifiedDomain` connection cannot be less than zero.':
+      'todo',
+    '`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `affiliations` cannot be less than zero.': 'todo',
     '`{argSet}` on the `dmarcSummaries` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `domain` connection cannot be less than zero.': 'todo',
-    '`{argSet}` on the `https` connection cannot be less than zero.': 'todo',
-    '`{argSet}` on the `ssl` connection cannot be less than zero.': 'todo',
-    '`{argSet}` on the `verifiedOrganization` connection cannot be less than zero.':
-      'todo',
     fail: 'todo',
     pass: 'todo',
   },

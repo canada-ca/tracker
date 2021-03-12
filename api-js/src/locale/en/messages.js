@@ -28,6 +28,8 @@
       'No organization with the provided slug could be found.',
     'No verified domain with the provided domain could be found.':
       'No verified domain with the provided domain could be found.',
+    'No verified organization with the provided slug could be found.':
+      'No verified organization with the provided slug could be found.',
     'Organization has already been verified.':
       'Organization has already been verified.',
     'Organization name already in use, please choose another and try again.':
@@ -48,26 +50,26 @@
       'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported.':
       'Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `HTTPS` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `HTTPS` connection is not supported.',
     'Passing both `first` and `last` to paginate the `Organization` connection is not supported.':
       'Passing both `first` and `last` to paginate the `Organization` connection is not supported.',
     'Passing both `first` and `last` to paginate the `SPF` connection is not supported.':
       'Passing both `first` and `last` to paginate the `SPF` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `SSL` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `SSL` connection is not supported.',
     'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.':
       'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported.':
       'Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `VerifiedOrganization` connection is not supported.',
     'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
       'Passing both `first` and `last` to paginate the `affiliation` is not supported.',
     'Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported.':
       'Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported.',
     'Passing both `first` and `last` to paginate the `domain` connection is not supported.':
       'Passing both `first` and `last` to paginate the `domain` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `https` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `https` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `ssl` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `ssl` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported.',
     'Password does not meet requirements.':
       'Password does not meet requirements.',
     'Password does not requirements. Please try again.':
@@ -161,6 +163,13 @@
       ['argSet'],
       '` limit of 100 records.',
     ],
+    'Requesting `{amount}` records on the `VerifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `VerifiedOrganization` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
     'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.': [
       'Requesting `',
       ['amount'],
@@ -179,13 +188,6 @@
       'Requesting `',
       ['amount'],
       '` records on the `domain` connection exceeds the `',
-      ['argSet'],
-      '` limit of 100 records.',
-    ],
-    'Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.': [
-      'Requesting `',
-      ['amount'],
-      '` records on the `verifiedOrganization` connection exceeds the `',
       ['argSet'],
       '` limit of 100 records.',
     ],
@@ -210,6 +212,13 @@
       ['argSet'],
       '` limit of 100 records.',
     ],
+    'Requesting {amount} records on the `HTTPS` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `HTTPS` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
     'Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records.': [
       'Requesting ',
       ['amount'],
@@ -217,17 +226,10 @@
       ['argSet'],
       '` limit of 100 records.',
     ],
-    'Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records.': [
+    'Requesting {amount} records on the `SSL` connection exceeds the `{argSet}` limit of 100 records.': [
       'Requesting ',
       ['amount'],
-      ' records on the `https` connection exceeds the `',
-      ['argSet'],
-      '` limit of 100 records.',
-    ],
-    'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.': [
-      'Requesting ',
-      ['amount'],
-      ' records on the `ssl` connection exceeds the `',
+      ' records on the `SSL` connection exceeds the `',
       ['argSet'],
       '` limit of 100 records.',
     ],
@@ -264,8 +266,6 @@
       'Token value incorrect, please sign in again.',
     'Too many failed login attempts, please reset your password, and try again.':
       'Too many failed login attempts, please reset your password, and try again.<<<<<<< HEAD=======',
-    'Two factor code has been successfully sent, you will receive a text message shortly.':
-      'Two factor code has been successfully sent, you will receive a text message shortly.>>>>>>> update user error messages',
     'Two factor code is incorrect. Please try again.':
       'Two factor code is incorrect. Please try again.',
     'Two factor code length is incorrect. Please try again.':
@@ -298,22 +298,22 @@
       'Unable to find DMARC summary data. Please try again.',
     'Unable to find HTTPS guidance tag(s). Please try again.':
       'Unable to find HTTPS guidance tag(s). Please try again.',
+    'Unable to find HTTPS scan(s). Please try again.':
+      'Unable to find HTTPS scan(s). Please try again.',
     'Unable to find SPF guidance tag(s). Please try again.':
       'Unable to find SPF guidance tag(s). Please try again.',
     'Unable to find SPF scan(s). Please try again.':
       'Unable to find SPF scan(s). Please try again.',
     'Unable to find SSL guidance tag(s). Please try again.':
       'Unable to find SSL guidance tag(s). Please try again.',
-    'Unable to find https scan. Please try again.':
-      'Unable to find https scan. Please try again.',
-    'Unable to find ssl scan. Please try again.':
-      'Unable to find ssl scan. Please try again.',
+    'Unable to find SSL scan(s). Please try again.':
+      'Unable to find SSL scan(s). Please try again.',
     'Unable to find the requested domain.':
       'Unable to find the requested domain.',
     'Unable to find user affiliation(s). Please try again.':
       'Unable to find user affiliation(s). Please try again.',
-    'Unable to find verified organization. Please try again.':
-      'Unable to find verified organization. Please try again.',
+    'Unable to find verified organization(s). Please try again.':
+      'Unable to find verified organization(s). Please try again.',
     'Unable to invite user to unknown organization.':
       'Unable to invite user to unknown organization.',
     'Unable to invite user. Please try again.':
@@ -338,6 +338,8 @@
       'Unable to load DMARC summary data. Please try again.',
     'Unable to load HTTPS guidance tag(s). Please try again.':
       'Unable to load HTTPS guidance tag(s). Please try again.',
+    'Unable to load HTTPS scan(s). Please try again.':
+      'Unable to load HTTPS scan(s). Please try again.',
     'Unable to load SPF failure data. Please try again.':
       'Unable to load SPF failure data. Please try again.',
     'Unable to load SPF guidance tag(s). Please try again.':
@@ -346,6 +348,8 @@
       'Unable to load SPF scan(s). Please try again.',
     'Unable to load SSL guidance tag(s). Please try again.':
       'Unable to load SSL guidance tag(s). Please try again.',
+    'Unable to load SSL scan(s). Please try again.':
+      'Unable to load SSL scan(s). Please try again.',
     'Unable to load affiliation(s). Please try again.':
       'Unable to load affiliation(s). Please try again.',
     'Unable to load domain(s). Please try again.':
@@ -356,24 +360,20 @@
       'Unable to load domains. Please try again.',
     'Unable to load full pass data. Please try again.':
       'Unable to load full pass data. Please try again.',
-    'Unable to load https scans. Please try again.':
-      'Unable to load https scans. Please try again.',
     'Unable to load mail summary. Please try again.':
       'Unable to load mail summary. Please try again.',
     'Unable to load organization(s). Please try again.':
       'Unable to load organization(s). Please try again.',
     'Unable to load organizations. Please try again.':
       'Unable to load organizations. Please try again.',
-    'Unable to load ssl scans. Please try again.':
-      'Unable to load ssl scans. Please try again.',
     'Unable to load summary. Please try again.':
       'Unable to load summary. Please try again.',
     'Unable to load user(s). Please try again.':
       'Unable to load user(s). Please try again.',
     'Unable to load verified domain(s). Please try again.':
       'Unable to load verified domain(s). Please try again.',
-    'Unable to load verified organizations. Please try again.':
-      'Unable to load verified organizations. Please try again.',
+    'Unable to load verified organization(s). Please try again.':
+      'Unable to load verified organization(s). Please try again.',
     'Unable to load web summary. Please try again.':
       'Unable to load web summary. Please try again.',
     'Unable to query affiliation(s). Please try again.':
@@ -409,8 +409,6 @@
       'Unable to reset password. Please try again.',
     'Unable to select DMARC report(s) for this period and year.':
       'Unable to select DMARC report(s) for this period and year.',
-    'Unable to send TFA code, please try again.':
-      'Unable to send TFA code, please try again.',
     'Unable to send authentication email. Please try again.':
       'Unable to send authentication email. Please try again.',
     'Unable to send authentication text message. Please try again.':
@@ -493,26 +491,26 @@
       'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection.':
       'You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `HTTPS` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `HTTPS` connection.',
     'You must provide a `first` or `last` value to properly paginate the `Organization` connection.':
       'You must provide a `first` or `last` value to properly paginate the `Organization` connection.',
     'You must provide a `first` or `last` value to properly paginate the `SPF` connection.':
       'You must provide a `first` or `last` value to properly paginate the `SPF` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `SSL` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `SSL` connection.',
     'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.':
       'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection.':
       'You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `VerifiedOrganization` connection.',
     'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
       'You must provide a `first` or `last` value to properly paginate the `affiliation`.',
     'You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection.':
       'You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection.',
     'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
       'You must provide a `first` or `last` value to properly paginate the `domain` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `https` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `https` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `ssl` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection.',
     'You must provide a `period` value to access the `dmarcSummaries` connection.':
       'You must provide a `period` value to access the `dmarcSummaries` connection.',
     'You must provide a `year` value to access the `dmarcSummaries` connection.':
@@ -559,6 +557,11 @@
       ['argSet'],
       '` on the `GuidanceTag` connection cannot be less than zero.',
     ],
+    '`{argSet}` on the `HTTPS` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `HTTPS` connection cannot be less than zero.',
+    ],
     '`{argSet}` on the `Organization` connection cannot be less than zero.': [
       '`',
       ['argSet'],
@@ -569,6 +572,11 @@
       ['argSet'],
       '` on the `SPF` connection cannot be less than zero.',
     ],
+    '`{argSet}` on the `SSL` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `SSL` connection cannot be less than zero.',
+    ],
     '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.': [
       '`',
       ['argSet'],
@@ -578,6 +586,11 @@
       '`',
       ['argSet'],
       '` on the `VerifiedDomain` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `VerifiedOrganization` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `VerifiedOrganization` connection cannot be less than zero.',
     ],
     '`{argSet}` on the `affiliations` cannot be less than zero.': [
       '`',
@@ -593,21 +606,6 @@
       '`',
       ['argSet'],
       '` on the `domain` connection cannot be less than zero.',
-    ],
-    '`{argSet}` on the `https` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `https` connection cannot be less than zero.',
-    ],
-    '`{argSet}` on the `ssl` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `ssl` connection cannot be less than zero.',
-    ],
-    '`{argSet}` on the `verifiedOrganization` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `verifiedOrganization` connection cannot be less than zero.',
     ],
     fail: 'fail',
     pass: 'pass',

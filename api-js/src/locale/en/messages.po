@@ -11,7 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: src/user/mutations/send-phone-code.js:52
 #: src/user/mutations/update-user-profile.js:66
 #: src/user/mutations/verify-phone-number.js:39
 #: src/user/mutations/verify-phone-number.js:53
@@ -394,10 +393,6 @@ msgstr "Token value incorrect, please sign in again."
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "Too many failed login attempts, please reset your password, and try again.<<<<<<< HEAD======="
 
-#: src/user/mutations/send-phone-code.js:128
-msgid "Two factor code has been successfully sent, you will receive a text message shortly."
-msgstr "Two factor code has been successfully sent, you will receive a text message shortly.>>>>>>> update user error messages"
-
 #: src/user/mutations/verify-phone-number.js:78
 msgid "Two factor code is incorrect. Please try again."
 msgstr "Two factor code is incorrect. Please try again."
@@ -464,8 +459,8 @@ msgstr "Unable to find DKIM scan(s). Please try again."
 msgid "Unable to find DMARC guidance tag(s). Please try again."
 msgstr "Unable to find DMARC guidance tag(s). Please try again."
 
-#: src/email-scan/loaders/load-dmarc-by-key.js:18
-#: src/email-scan/loaders/load-dmarc-by-key.js:30
+#: src/email-scan/loaders/load-dmarc-by-key.js:19
+#: src/email-scan/loaders/load-dmarc-by-key.js:33
 msgid "Unable to find DMARC scan(s). Please try again."
 msgstr "Unable to find DMARC scan(s). Please try again."
 
@@ -773,17 +768,11 @@ msgstr "Unable to reset password. Please try again."
 msgid "Unable to select DMARC report(s) for this period and year."
 msgstr "Unable to select DMARC report(s) for this period and year."
 
-#: src/user/mutations/send-phone-code.js:66
-#: src/user/mutations/send-phone-code.js:85
-#: src/user/mutations/send-phone-code.js:115
-msgid "Unable to send TFA code, please try again."
-msgstr "Unable to send TFA code, please try again."
-
-#: src/notify/notify-send-authenticate-email.js:18
+#: src/notify/notify-send-authenticate-email.js:19
 msgid "Unable to send authentication email. Please try again."
 msgstr "Unable to send authentication email. Please try again."
 
-#: src/notify/notify-send-authenticate-text-msg.js:31
+#: src/notify/notify-send-authenticate-text-msg.js:32
 msgid "Unable to send authentication text message. Please try again."
 msgstr "Unable to send authentication text message. Please try again."
 
