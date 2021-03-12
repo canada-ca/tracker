@@ -2135,15 +2135,33 @@ type VerifyOrganizationPayload {
   clientMutationId: String
 }
 
-input verifyPhoneNumberInput {
-  # The two factor code that was received via text message.
-  twoFactorCode: Int!
+type verifyPhoneNumberPayload {
+  # `VerifyPhoneNumberUnion` returning either a `VerifyPhoneNumberResult`, or `VerifyPhoneNumberError` object.
+  result: VerifyPhoneNumberUnion
   clientMutationId: String
 }
 
-type verifyPhoneNumberPayload {
-  # The status of verifying the two factor authentication.
+# This union is used with the `verifyPhoneNumber` mutation, allowing for users to verify their phone number, and support any errors that may occur
+union VerifyPhoneNumberUnion = VerifyPhoneNumberError | VerifyPhoneNumberResult
+
+# This object is used to inform the user if any errors occurred while verifying their phone number.
+type VerifyPhoneNumberError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user that no errors were encountered while verifying their phone number.
+type VerifyPhoneNumberResult {
+  # Informs the user if their phone number was successfully verified.
   status: String
+}
+
+input verifyPhoneNumberInput {
+  # The two factor code that was received via text message.
+  twoFactorCode: Int!
   clientMutationId: String
 }
 

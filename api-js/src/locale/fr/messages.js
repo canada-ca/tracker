@@ -111,6 +111,8 @@
       'todo',
     'Two factor code has been successfully sent, you will receive a text message shortly.':
       'todo',
+    'Two factor code is incorrect. Please try again.': 'todo',
+    'Two factor code length is incorrect. Please try again.': 'todo',
     'Unable to authenticate. Please try again.': 'todo',
     'Unable to check permission. Please try again.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
