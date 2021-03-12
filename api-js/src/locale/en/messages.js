@@ -42,6 +42,8 @@
       'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.':
       'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported.',
     'Passing both `first` and `last` to paginate the `SPF` connection is not supported.':
       'Passing both `first` and `last` to paginate the `SPF` connection is not supported.',
     'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.':
@@ -52,8 +54,6 @@
       'Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported.',
     'Passing both `first` and `last` to paginate the `domain` connection is not supported.':
       'Passing both `first` and `last` to paginate the `domain` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `guidanceTag` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `guidanceTag` connection is not supported.',
     'Passing both `first` and `last` to paginate the `https` connection is not supported.':
       'Passing both `first` and `last` to paginate the `https` connection is not supported.',
     'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
@@ -118,6 +118,13 @@
       ['argSet'],
       '` limit of 100 records.',
     ],
+    'Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `GuidanceTag` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
     'Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
       'Requesting `',
       ['amount'],
@@ -143,13 +150,6 @@
       'Requesting `',
       ['amount'],
       '` records on the `domain` connection exceeds the `',
-      ['argSet'],
-      '` limit of 100 records.',
-    ],
-    'Requesting `{amount}` records on the `guidanceTag` connection exceeds the `{argSet}` limit of 100 records.': [
-      'Requesting `',
-      ['amount'],
-      '` records on the `guidanceTag` connection exceeds the `',
       ['argSet'],
       '` limit of 100 records.',
     ],
@@ -263,30 +263,30 @@
       'Unable to create organization. Please try again.',
     'Unable to dispatch one time scan. Please try again.':
       'Unable to dispatch one time scan. Please try again.',
+    'Unable to find DKIM guidance tag(s). Please try again.':
+      'Unable to find DKIM guidance tag(s). Please try again.',
     'Unable to find DKIM result(s). Please try again.':
       'Unable to find DKIM result(s). Please try again.',
     'Unable to find DKIM scan(s). Please try again.':
       'Unable to find DKIM scan(s). Please try again.',
+    'Unable to find DMARC guidance tag(s). Please try again.':
+      'Unable to find DMARC guidance tag(s). Please try again.',
     'Unable to find DMARC scan(s). Please try again.':
       'Unable to find DMARC scan(s). Please try again.',
     'Unable to find DMARC summary data. Please try again.':
       'Unable to find DMARC summary data. Please try again.',
+    'Unable to find HTTPS guidance tag(s). Please try again.':
+      'Unable to find HTTPS guidance tag(s). Please try again.',
+    'Unable to find SPF guidance tag(s). Please try again.':
+      'Unable to find SPF guidance tag(s). Please try again.',
     'Unable to find SPF scan(s). Please try again.':
       'Unable to find SPF scan(s). Please try again.',
-    'Unable to find dkim guidance tags. Please try again.':
-      'Unable to find dkim guidance tags. Please try again.',
-    'Unable to find dmarc guidance tags. Please try again.':
-      'Unable to find dmarc guidance tags. Please try again.',
-    'Unable to find https guidance tags. Please try again.':
-      'Unable to find https guidance tags. Please try again.',
+    'Unable to find SSL guidance tag(s). Please try again.':
+      'Unable to find SSL guidance tag(s). Please try again.',
     'Unable to find https scan. Please try again.':
       'Unable to find https scan. Please try again.',
     'Unable to find organization. Please try again.':
       'Unable to find organization. Please try again.',
-    'Unable to find spf guidance tags. Please try again.':
-      'Unable to find spf guidance tags. Please try again.',
-    'Unable to find ssl guidance tags. Please try again.':
-      'Unable to find ssl guidance tags. Please try again.',
     'Unable to find ssl scan. Please try again.':
       'Unable to find ssl scan. Please try again.',
     'Unable to find summary. Please try again.':
@@ -309,26 +309,32 @@
       'Unable to invite yourself to an org.',
     'Unable to load DKIM failure data. Please try again.':
       'Unable to load DKIM failure data. Please try again.',
+    'Unable to load DKIM guidance tag(s). Please try again.':
+      'Unable to load DKIM guidance tag(s). Please try again.',
     'Unable to load DKIM result(s). Please try again.':
       'Unable to load DKIM result(s). Please try again.',
     'Unable to load DKIM scan(s). Please try again.':
       'Unable to load DKIM scan(s). Please try again.',
     'Unable to load DMARC failure data. Please try again.':
       'Unable to load DMARC failure data. Please try again.',
+    'Unable to load DMARC guidance tag(s). Please try again.':
+      'Unable to load DMARC guidance tag(s). Please try again.',
     'Unable to load DMARC scan(s). Please try again.':
       'Unable to load DMARC scan(s). Please try again.',
     'Unable to load DMARC summary data. Please try again.':
       'Unable to load DMARC summary data. Please try again.',
+    'Unable to load HTTPS guidance tag(s). Please try again.':
+      'Unable to load HTTPS guidance tag(s). Please try again.',
     'Unable to load SPF failure data. Please try again.':
       'Unable to load SPF failure data. Please try again.',
+    'Unable to load SPF guidance tag(s). Please try again.':
+      'Unable to load SPF guidance tag(s). Please try again.',
     'Unable to load SPF scan(s). Please try again.':
       'Unable to load SPF scan(s). Please try again.',
+    'Unable to load SSL guidance tag(s). Please try again.':
+      'Unable to load SSL guidance tag(s). Please try again.',
     'Unable to load affiliation(s). Please try again.':
       'Unable to load affiliation(s). Please try again.',
-    'Unable to load dkim guidance tags. Please try again.':
-      'Unable to load dkim guidance tags. Please try again.',
-    'Unable to load dmarc guidance tags. Please try again.':
-      'Unable to load dmarc guidance tags. Please try again.',
     'Unable to load domain(s). Please try again.':
       'Unable to load domain(s). Please try again.',
     'Unable to load domain. Please try again.':
@@ -337,18 +343,12 @@
       'Unable to load domains. Please try again.',
     'Unable to load full pass data. Please try again.':
       'Unable to load full pass data. Please try again.',
-    'Unable to load https guidance tags. Please try again.':
-      'Unable to load https guidance tags. Please try again.',
     'Unable to load https scans. Please try again.':
       'Unable to load https scans. Please try again.',
     'Unable to load mail summary. Please try again.':
       'Unable to load mail summary. Please try again.',
     'Unable to load organizations. Please try again.':
       'Unable to load organizations. Please try again.',
-    'Unable to load spf guidance tags. Please try again.':
-      'Unable to load spf guidance tags. Please try again.',
-    'Unable to load ssl guidance tags. Please try again.':
-      'Unable to load ssl guidance tags. Please try again.',
     'Unable to load ssl scans. Please try again.':
       'Unable to load ssl scans. Please try again.',
     'Unable to load verified domains. Please try again.':
@@ -464,6 +464,8 @@
       'You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.':
       'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection.',
     'You must provide a `first` or `last` value to properly paginate the `SPF` connection.':
       'You must provide a `first` or `last` value to properly paginate the `SPF` connection.',
     'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.':
@@ -474,8 +476,6 @@
       'You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection.',
     'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
       'You must provide a `first` or `last` value to properly paginate the `domain` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `guidanceTag` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `guidanceTag` connection.',
     'You must provide a `first` or `last` value to properly paginate the `https` connection.':
       'You must provide a `first` or `last` value to properly paginate the `https` connection.',
     'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
@@ -527,6 +527,11 @@
       ['argSet'],
       '` on the `FullPassTable` connection cannot be less than zero.',
     ],
+    '`{argSet}` on the `GuidanceTag` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `GuidanceTag` connection cannot be less than zero.',
+    ],
     '`{argSet}` on the `SPF` connection cannot be less than zero.': [
       '`',
       ['argSet'],
@@ -551,11 +556,6 @@
       '`',
       ['argSet'],
       '` on the `domain` connection cannot be less than zero.',
-    ],
-    '`{argSet}` on the `guidanceTag` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `guidanceTag` connection cannot be less than zero.',
     ],
     '`{argSet}` on the `https` connection cannot be less than zero.': [
       '`',
