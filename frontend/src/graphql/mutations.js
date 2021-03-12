@@ -276,7 +276,15 @@ export const SEND_PHONE_CODE = `
 export const VERIFY_PHONE = `
   mutation VerifyPhoneNumber($twoFactorCode: Int!) {
     verifyPhoneNumber(input: { twoFactorCode: $twoFactorCode }) {
-      status
+      result {
+        ... on VerifyPhoneNumberResult {
+          status
+        }
+        ... on VerifyPhoneNumberError {
+          code
+          description
+        }
+      }
     }
   }
 `
