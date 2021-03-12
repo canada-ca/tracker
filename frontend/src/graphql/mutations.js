@@ -171,14 +171,14 @@ export const UPDATE_USER_PASSWORD = gql`
       }
     ) {
       result {
-      ... on UpdateUserPasswordResultType {
-        status
+        ... on UpdateUserPasswordResultType {
+          status
+        }
+        ... on UpdateUserPasswordError {
+          code
+          description
+        }
       }
-      ... on UpdateUserPasswordError {
-        code
-        description
-      }
-    }
     }
   }
 `
@@ -252,6 +252,30 @@ export const INVITE_USER_TO_ORG = gql`
 export const REQUEST_SCAN = gql`
   mutation RequestScan($domainUrl: DomainScalar) {
     requestScan(input: { domain: $domainUrl }) {
+      status
+    }
+  }
+`
+
+export const SEND_PHONE_CODE = `
+  mutation SendPhoneCode($phoneNumber: PhoneNumber!) {
+    sendPhoneCode(input: { phoneNumber: $phoneNumber }) {
+      result {
+        ... on SendPhoneCodeResult {
+          status
+        }
+        ... on SendPhoneCodeError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const VERIFY_PHONE = `
+  mutation VerifyPhoneNumber($twoFactorCode: Int!) {
+    verifyPhoneNumber(input: { twoFactorCode: $twoFactorCode }) {
       status
     }
   }
