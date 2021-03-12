@@ -1218,7 +1218,7 @@ describe('given the load https connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `https` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `HTTPS` connection.',
               ),
             )
           }
@@ -1249,7 +1249,7 @@ describe('given the load https connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `https` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `HTTPS` connection is not supported.',
               ),
             )
           }
@@ -1280,7 +1280,7 @@ describe('given the load https connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `https` connection cannot be less than zero.',
+                  '`first` on the `HTTPS` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1310,7 +1310,7 @@ describe('given the load https connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `https` connection cannot be less than zero.',
+                  '`last` on the `HTTPS` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1342,7 +1342,7 @@ describe('given the load https connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 101 records on the `https` connection exceeds the `first` limit of 100 records.',
+                  'Requesting 101 records on the `HTTPS` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -1372,7 +1372,7 @@ describe('given the load https connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 500 records on the `https` connection exceeds the `last` limit of 100 records.',
+                  'Requesting 500 records on the `HTTPS` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -1481,7 +1481,7 @@ describe('given the load https connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load https scans. Please try again.'),
+            new Error('Unable to load HTTPS scan(s). Please try again.'),
           )
         }
 
@@ -1517,7 +1517,7 @@ describe('given the load https connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load https scans. Please try again.'),
+            new Error('Unable to load HTTPS scan(s). Please try again.'),
           )
         }
 
