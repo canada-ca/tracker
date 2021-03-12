@@ -42,6 +42,8 @@
       'todo',
     'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.':
       'todo',
+    'Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported.':
+      'todo',
     'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported.':
@@ -51,8 +53,6 @@
     'Passing both `first` and `last` to paginate the `https` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `ssl` connection is not supported.':
-      'todo',
-    'Passing both `first` and `last` to paginate the `verifiedDomain` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported.':
       'todo',
@@ -107,13 +107,13 @@
       'todo',
     'Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
+    'Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.':
-      'todo',
-    'Requesting `{amount}` records on the `verifiedDomain` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -169,7 +169,6 @@
     'Unable to find ssl scan. Please try again.': 'todo',
     'Unable to find the requested domain.': 'todo',
     'Unable to find user affiliation(s). Please try again.': 'todo',
-    'Unable to find verified domain. Please try again.': 'todo',
     'Unable to find verified organization. Please try again.': 'todo',
     'Unable to invite user to unknown organization.': 'todo',
     'Unable to invite user. Please try again.': 'todo',
@@ -199,7 +198,7 @@
     'Unable to load ssl scans. Please try again.': 'todo',
     'Unable to load summary. Please try again.': 'todo',
     'Unable to load user(s). Please try again.': 'todo',
-    'Unable to load verified domains. Please try again.': 'todo',
+    'Unable to load verified domain(s). Please try again.': 'todo',
     'Unable to load verified organizations. Please try again.': 'todo',
     'Unable to load web summary. Please try again.': 'todo',
     'Unable to query affiliation(s). Please try again.': 'todo',
@@ -284,6 +283,8 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection.':
@@ -293,8 +294,6 @@
     'You must provide a `first` or `last` value to properly paginate the `https` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
-      'todo',
-    'You must provide a `first` or `last` value to properly paginate the `verifiedDomain` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `verifiedOrganization` connection.':
       'todo',
@@ -320,14 +319,14 @@
     '`{argSet}` on the `SPF` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.':
       'todo',
+    '`{argSet}` on the `VerifiedDomain` connection cannot be less than zero.':
+      'todo',
     '`{argSet}` on the `affiliations` cannot be less than zero.': 'todo',
     '`{argSet}` on the `dmarcSummaries` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `domain` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `https` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `ssl` connection cannot be less than zero.': 'todo',
-    '`{argSet}` on the `verifiedDomain` connection cannot be less than zero.':
-      'todo',
     '`{argSet}` on the `verifiedOrganization` connection cannot be less than zero.':
       'todo',
     fail: 'todo',

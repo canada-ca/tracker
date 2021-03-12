@@ -109,7 +109,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`verifiedDomain\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`VerifiedDomain\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -118,7 +118,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`verifiedDomain\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`VerifiedDomain\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -130,7 +130,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`verifiedDomain\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`VerifiedDomain\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -141,7 +141,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
       )
       throw new Error(
         i18n._(
-          t`Requesting \`${amount}\` records on the \`verifiedDomain\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting \`${amount}\` records on the \`VerifiedDomain\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -294,7 +294,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
       `Database error occurred while user was trying to gather domains in verifiedDomainLoaderConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load verified domains. Please try again.`),
+      i18n._(t`Unable to load verified domain(s). Please try again.`),
     )
   }
 
@@ -306,7 +306,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
       `Cursor error occurred while user was trying to gather domains in verifiedDomainLoaderConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load verified domains. Please try again.`),
+      i18n._(t`Unable to load verified domain(s). Please try again.`),
     )
   }
 

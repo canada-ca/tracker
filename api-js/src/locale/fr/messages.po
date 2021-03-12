@@ -135,6 +135,11 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
 msgstr "todo"
 
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:121
+#: src/verified-domains/loaders/load-verified-domain-connections.js:121
+msgid "Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported."
+msgstr "todo"
+
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:83
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:174
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
@@ -155,11 +160,6 @@ msgstr "todo"
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:176
 msgid "Passing both `first` and `last` to paginate the `ssl` connection is not supported."
-msgstr "todo"
-
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:121
-#: src/verified-domains/loaders/load-verified-domain-connections.js:121
-msgid "Passing both `first` and `last` to paginate the `verifiedDomain` connection is not supported."
 msgstr "todo"
 
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:175
@@ -299,6 +299,11 @@ msgstr "todo"
 msgid "Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:144
+#: src/verified-domains/loaders/load-verified-domain-connections.js:144
+msgid "Requesting `{amount}` records on the `VerifiedDomain` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "todo"
+
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:106
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:197
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
@@ -311,11 +316,6 @@ msgstr "todo"
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:154
 #: src/domain/loaders/load-domain-connections-by-user-id.js:162
 msgid "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "todo"
-
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:144
-#: src/verified-domains/loaders/load-verified-domain-connections.js:144
-msgid "Requesting `{amount}` records on the `verifiedDomain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:198
@@ -510,13 +510,6 @@ msgstr "todo"
 msgid "Unable to find user affiliation(s). Please try again."
 msgstr "todo"
 
-#: src/verified-domains/loaders/load-verified-domain-by-domain.js:23
-#: src/verified-domains/loaders/load-verified-domain-by-domain.js:37
-#: src/verified-domains/loaders/load-verified-domain-by-key.js:23
-#: src/verified-domains/loaders/load-verified-domain-by-key.js:37
-msgid "Unable to find verified domain. Please try again."
-msgstr "todo"
-
 #: src/verified-organizations/loaders/load-verified-organization-by-key.js:21
 #: src/verified-organizations/loaders/load-verified-organization-by-key.js:35
 #: src/verified-organizations/loaders/load-verified-organization-by-slug.js:21
@@ -627,8 +620,6 @@ msgid "Unable to load domain. Please try again."
 msgstr "todo"
 
 #: src/domain/queries/find-my-domains.js:48
-#: src/verified-domains/loaders/load-verified-domain-connections.js:302
-#: src/verified-domains/loaders/load-verified-domain-connections.js:312
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
@@ -679,9 +670,15 @@ msgstr "todo"
 msgid "Unable to load user(s). Please try again."
 msgstr "todo"
 
+#: src/verified-domains/loaders/load-verified-domain-by-domain.js:23
+#: src/verified-domains/loaders/load-verified-domain-by-domain.js:37
+#: src/verified-domains/loaders/load-verified-domain-by-key.js:23
+#: src/verified-domains/loaders/load-verified-domain-by-key.js:37
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:297
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:309
-msgid "Unable to load verified domains. Please try again."
+#: src/verified-domains/loaders/load-verified-domain-connections.js:303
+#: src/verified-domains/loaders/load-verified-domain-connections.js:315
+msgid "Unable to load verified domain(s). Please try again."
 msgstr "todo"
 
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:421
@@ -986,6 +983,11 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
 msgstr "todo"
 
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:112
+#: src/verified-domains/loaders/load-verified-domain-connections.js:112
+msgid "You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection."
+msgstr "todo"
+
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:74
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:165
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
@@ -1006,11 +1008,6 @@ msgstr "todo"
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:167
 msgid "You must provide a `first` or `last` value to properly paginate the `ssl` connection."
-msgstr "todo"
-
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:112
-#: src/verified-domains/loaders/load-verified-domain-connections.js:112
-msgid "You must provide a `first` or `last` value to properly paginate the `verifiedDomain` connection."
 msgstr "todo"
 
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:166
@@ -1100,6 +1097,11 @@ msgstr "todo"
 msgid "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
 msgstr "todo"
 
+#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:133
+#: src/verified-domains/loaders/load-verified-domain-connections.js:133
+msgid "`{argSet}` on the `VerifiedDomain` connection cannot be less than zero."
+msgstr "todo"
+
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:95
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:186
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
@@ -1120,11 +1122,6 @@ msgstr "todo"
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:188
 msgid "`{argSet}` on the `ssl` connection cannot be less than zero."
-msgstr "todo"
-
-#: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:133
-#: src/verified-domains/loaders/load-verified-domain-connections.js:133
-msgid "`{argSet}` on the `verifiedDomain` connection cannot be less than zero."
 msgstr "todo"
 
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:187
