@@ -108,7 +108,7 @@ export const dkimLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`dkim\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`DKIM\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -117,7 +117,7 @@ export const dkimLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`dkim\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`DKIM\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -129,7 +129,7 @@ export const dkimLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`dkim\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`DKIM\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -140,7 +140,7 @@ export const dkimLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`Requesting ${amount} records on the \`dkim\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting ${amount} records on the \`DKIM\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -153,7 +153,7 @@ export const dkimLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`Passing both \`first\` and \`last\` to paginate the \`dkim\` connection is not supported.`,
+          t`Passing both \`first\` and \`last\` to paginate the \`DKIM\` connection is not supported.`,
         ),
       )
     }
@@ -265,7 +265,7 @@ export const dkimLoaderConnectionsByDomainId = (
     console.error(
       `Database error occurred while user: ${userKey} was trying to get dkim information for ${domainId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load dkim scans. Please try again.`))
+    throw new Error(i18n._(t`Unable to load DKIM scan(s). Please try again.`))
   }
 
   let dkimScanInfo
@@ -275,7 +275,7 @@ export const dkimLoaderConnectionsByDomainId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to get dkim information for ${domainId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load dkim scans. Please try again.`))
+    throw new Error(i18n._(t`Unable to load DKIM scan(s). Please try again.`))
   }
 
   if (dkimScanInfo.dkimScans.length === 0) {

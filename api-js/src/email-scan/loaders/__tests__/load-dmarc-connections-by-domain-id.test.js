@@ -1119,7 +1119,7 @@ describe('when given the load dmarc connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `DMARC` connection.',
               ),
             )
           }
@@ -1150,7 +1150,7 @@ describe('when given the load dmarc connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `DMARC` connection is not supported.',
               ),
             )
           }
@@ -1181,7 +1181,7 @@ describe('when given the load dmarc connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `dmarc` connection cannot be less than zero.',
+                  '`first` on the `DMARC` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1211,7 +1211,7 @@ describe('when given the load dmarc connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `dmarc` connection cannot be less than zero.',
+                  '`last` on the `DMARC` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1243,7 +1243,7 @@ describe('when given the load dmarc connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 1000 records on the `dmarc` connection exceeds the `first` limit of 100 records.',
+                  'Requesting 1000 records on the `DMARC` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -1273,7 +1273,7 @@ describe('when given the load dmarc connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 200 records on the `dmarc` connection exceeds the `last` limit of 100 records.',
+                  'Requesting 200 records on the `DMARC` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -1380,7 +1380,7 @@ describe('when given the load dmarc connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load dmarc scans. Please try again.'),
+            new Error('Unable to load DMARC scan(s). Please try again.'),
           )
         }
 
@@ -1416,7 +1416,7 @@ describe('when given the load dmarc connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load dmarc scans. Please try again.'),
+            new Error('Unable to load DMARC scan(s). Please try again.'),
           )
         }
 

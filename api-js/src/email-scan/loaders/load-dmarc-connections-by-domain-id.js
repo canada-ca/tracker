@@ -132,7 +132,7 @@ export const dmarcLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`dmarc\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`DMARC\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -141,7 +141,7 @@ export const dmarcLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`dmarc\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`DMARC\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -154,7 +154,7 @@ export const dmarcLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`dmarc\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`DMARC\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -165,7 +165,7 @@ export const dmarcLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`Requesting ${amount} records on the \`dmarc\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting ${amount} records on the \`DMARC\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -305,7 +305,7 @@ export const dmarcLoaderConnectionsByDomainId = (
     console.error(
       `Database error occurred while user: ${userKey} was trying to get dmarc information for ${domainId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load dmarc scans. Please try again.`))
+    throw new Error(i18n._(t`Unable to load DMARC scan(s). Please try again.`))
   }
 
   let dmarcScanInfo
@@ -315,7 +315,7 @@ export const dmarcLoaderConnectionsByDomainId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to get dmarc information for ${domainId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load dmarc scans. Please try again.`))
+    throw new Error(i18n._(t`Unable to load DMARC scan(s). Please try again.`))
   }
 
   if (dmarcScanInfo.dmarcScans.length === 0) {

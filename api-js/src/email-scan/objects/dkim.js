@@ -35,11 +35,11 @@ export const dkimType = new GraphQLObjectType({
       args: {
         orderBy: {
           type: dkimResultOrder,
-          description: 'Ordering options for dkim result connections.',
+          description: 'Ordering options for DKIM result connections.',
         },
         ...connectionArgs,
       },
-      description: 'Individual scans results for each dkim selector.',
+      description: 'Individual scans results for each DKIM selector.',
       resolve: async (
         { _id },
         args,
@@ -67,7 +67,7 @@ export const dkimConnection = connectionDefinitions({
   connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
-      description: 'The total amount of dkim scans related to a given domain.',
+      description: 'The total amount of DKIM scans related to a given domain.',
       resolve: ({ totalCount }) => totalCount,
     },
   }),

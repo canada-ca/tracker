@@ -82,6 +82,19 @@ msgid "Organization name already in use, please choose another and try again."
 msgstr "Organization name already in use, please choose another and try again."
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:46
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:95
+msgid "Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported."
+
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:120
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:156
+msgid "Passing both `first` and `last` to paginate the `DKIM` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `DKIM` connection is not supported."
+
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:144
+msgid "Passing both `first` and `last` to paginate the `DMARC` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `DMARC` connection is not supported."
+
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:48
 msgid "Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported."
@@ -94,6 +107,10 @@ msgstr "Passing both `first` and `last` to paginate the `DmarcFailureTable` conn
 msgid "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
 
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:138
+msgid "Passing both `first` and `last` to paginate the `SPF` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `SPF` connection is not supported."
+
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:48
 msgid "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
@@ -103,22 +120,9 @@ msgstr "Passing both `first` and `last` to paginate the `SpfFailureTable` connec
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 msgstr "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:95
-msgid "Passing both `first` and `last` to paginate the `dkimResults` connection is not supported."
-msgstr "Passing both `first` and `last` to paginate the `dkimResults` connection is not supported."
-
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:120
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:156
-msgid "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
-msgstr "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
-
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:174
 msgid "Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported."
-
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:144
-msgid "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
-msgstr "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
 
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:131
 #: src/domain/loaders/load-domain-connections-by-user-id.js:139
@@ -141,10 +145,6 @@ msgstr "Passing both `first` and `last` to paginate the `https` connection is no
 #: src/organization/loaders/load-organization-connections-by-user-id.js:179
 msgid "Passing both `first` and `last` to paginate the `organization` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `organization` connection is not supported."
-
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:138
-msgid "Passing both `first` and `last` to paginate the `spf` connection is not supported."
-msgstr "Passing both `first` and `last` to paginate the `spf` connection is not supported."
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:176
 msgid "Passing both `first` and `last` to paginate the `ssl` connection is not supported."
@@ -297,24 +297,24 @@ msgid "Requesting `{amount}` records on the `verifiedOrganization` connection ex
 msgstr "Requesting `{amount}` records on the `verifiedOrganization` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:118
-msgid "Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records."
+msgid "Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:143
-msgid "Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records."
+msgid "Requesting {amount} records on the `DKIM` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting {amount} records on the `DKIM` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:168
-msgid "Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records."
+msgid "Requesting {amount} records on the `DMARC` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting {amount} records on the `DMARC` connection exceeds the `{argSet}` limit of 100 records."
+
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:161
+msgid "Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/web-scan/loaders/load-https-connections-by-domain-id.js:175
 msgid "Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records."
-
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:161
-msgid "Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records."
-msgstr "Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:199
 msgid "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
@@ -407,35 +407,40 @@ msgstr "Unable to create organization. Please try again."
 msgid "Unable to dispatch one time scan. Please try again."
 msgstr "Unable to dispatch one time scan. Please try again."
 
+#: src/email-scan/loaders/load-dkim-result-by-key.js:19
+#: src/email-scan/loaders/load-dkim-result-by-key.js:33
+msgid "Unable to find DKIM result(s). Please try again."
+msgstr "Unable to find DKIM result(s). Please try again."
+
+#: src/email-scan/loaders/load-dkim-by-key.js:18
+#: src/email-scan/loaders/load-dkim-by-key.js:30
+msgid "Unable to find DKIM scan(s). Please try again."
+msgstr "Unable to find DKIM scan(s). Please try again."
+
+#: src/email-scan/loaders/load-dmarc-by-key.js:18
+#: src/email-scan/loaders/load-dmarc-by-key.js:30
+msgid "Unable to find DMARC scan(s). Please try again."
+msgstr "Unable to find DMARC scan(s). Please try again."
+
 #: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:36
 #: src/dmarc-summaries/loaders/load-dmarc-summary-by-key.js:50
 msgid "Unable to find DMARC summary data. Please try again."
 msgstr "Unable to find DMARC summary data. Please try again."
+
+#: src/email-scan/loaders/load-spf-by-key.js:18
+#: src/email-scan/loaders/load-spf-by-key.js:30
+msgid "Unable to find SPF scan(s). Please try again."
+msgstr "Unable to find SPF scan(s). Please try again."
 
 #: src/guidance-tag/loaders/load-dkim-guidance-tags.js:18
 #: src/guidance-tag/loaders/load-dkim-guidance-tags.js:32
 msgid "Unable to find dkim guidance tags. Please try again."
 msgstr "Unable to find dkim guidance tags. Please try again."
 
-#: src/email-scan/loaders/load-dkim-result-by-key.js:18
-#: src/email-scan/loaders/load-dkim-result-by-key.js:30
-msgid "Unable to find dkim result. Please try again."
-msgstr "Unable to find dkim result. Please try again."
-
-#: src/email-scan/loaders/load-dkim-by-key.js:18
-#: src/email-scan/loaders/load-dkim-by-key.js:30
-msgid "Unable to find dkim scan. Please try again."
-msgstr "Unable to find dkim scan. Please try again."
-
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags.js:18
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags.js:32
 msgid "Unable to find dmarc guidance tags. Please try again."
 msgstr "Unable to find dmarc guidance tags. Please try again."
-
-#: src/email-scan/loaders/load-dmarc-by-key.js:18
-#: src/email-scan/loaders/load-dmarc-by-key.js:30
-msgid "Unable to find dmarc scan. Please try again."
-msgstr "Unable to find dmarc scan. Please try again."
 
 #: src/guidance-tag/loaders/load-https-guidance-tags.js:18
 #: src/guidance-tag/loaders/load-https-guidance-tags.js:32
@@ -458,11 +463,6 @@ msgstr "Unable to find organization. Please try again."
 #: src/guidance-tag/loaders/load-spf-guidance-tags.js:32
 msgid "Unable to find spf guidance tags. Please try again."
 msgstr "Unable to find spf guidance tags. Please try again."
-
-#: src/email-scan/loaders/load-spf-by-key.js:18
-#: src/email-scan/loaders/load-spf-by-key.js:30
-msgid "Unable to find spf scan. Please try again."
-msgstr "Unable to find spf scan. Please try again."
 
 #: src/guidance-tag/loaders/load-ssl-guidance-tags.js:18
 #: src/guidance-tag/loaders/load-ssl-guidance-tags.js:32
@@ -527,11 +527,26 @@ msgstr "Unable to invite yourself to an org."
 msgid "Unable to load DKIM failure data. Please try again."
 msgstr "Unable to load DKIM failure data. Please try again."
 
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:244
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:254
+msgid "Unable to load DKIM result(s). Please try again."
+msgstr "Unable to load DKIM result(s). Please try again."
+
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:268
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:278
+msgid "Unable to load DKIM scan(s). Please try again."
+msgstr "Unable to load DKIM scan(s). Please try again."
+
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:16
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:142
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:154
 msgid "Unable to load DMARC failure data. Please try again."
 msgstr "Unable to load DMARC failure data. Please try again."
+
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:308
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:318
+msgid "Unable to load DMARC scan(s). Please try again."
+msgstr "Unable to load DMARC scan(s). Please try again."
 
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:417
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:429
@@ -548,6 +563,11 @@ msgstr "Unable to load DMARC summary data. Please try again."
 msgid "Unable to load SPF failure data. Please try again."
 msgstr "Unable to load SPF failure data. Please try again."
 
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:294
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:304
+msgid "Unable to load SPF scan(s). Please try again."
+msgstr "Unable to load SPF scan(s). Please try again."
+
 #: src/affiliation/loaders/load-affiliation-connections-by-org-id.js:233
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:414
 msgid "Unable to load affiliation(s). Please try again."
@@ -558,25 +578,10 @@ msgstr "Unable to load affiliation(s). Please try again."
 msgid "Unable to load dkim guidance tags. Please try again."
 msgstr "Unable to load dkim guidance tags. Please try again."
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:244
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:254
-msgid "Unable to load dkim results. Please try again."
-msgstr "Unable to load dkim results. Please try again."
-
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:268
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:278
-msgid "Unable to load dkim scans. Please try again."
-msgstr "Unable to load dkim scans. Please try again."
-
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:242
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:254
 msgid "Unable to load dmarc guidance tags. Please try again."
 msgstr "Unable to load dmarc guidance tags. Please try again."
-
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:308
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:318
-msgid "Unable to load dmarc scans. Please try again."
-msgstr "Unable to load dmarc scans. Please try again."
 
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:313
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:323
@@ -628,11 +633,6 @@ msgstr "Unable to load organizations. Please try again."
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:254
 msgid "Unable to load spf guidance tags. Please try again."
 msgstr "Unable to load spf guidance tags. Please try again."
-
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:294
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:304
-msgid "Unable to load spf scans. Please try again."
-msgstr "Unable to load spf scans. Please try again."
 
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:242
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:254
@@ -890,6 +890,18 @@ msgstr "Username already in use."
 msgid "Username not available, please try another."
 msgstr "Username not available, please try another."
 
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:86
+msgid "You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection."
+
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:111
+msgid "You must provide a `first` or `last` value to properly paginate the `DKIM` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `DKIM` connection."
+
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:135
+msgid "You must provide a `first` or `last` value to properly paginate the `DMARC` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `DMARC` connection."
+
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:39
 msgid "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection."
@@ -902,6 +914,10 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Dma
 msgid "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
 
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:129
+msgid "You must provide a `first` or `last` value to properly paginate the `SPF` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `SPF` connection."
+
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:39
 msgid "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
@@ -911,21 +927,9 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Spf
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 msgstr "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:86
-msgid "You must provide a `first` or `last` value to properly paginate the `dkimResults` connection."
-msgstr "You must provide a `first` or `last` value to properly paginate the `dkimResults` connection."
-
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:111
-msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
-msgstr "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
-
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:165
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
-
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:135
-msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
-msgstr "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
 
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:122
 #: src/domain/loaders/load-domain-connections-by-user-id.js:130
@@ -948,10 +952,6 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `htt
 #: src/organization/loaders/load-organization-connections-by-user-id.js:170
 msgid "You must provide a `first` or `last` value to properly paginate the `organization` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `organization` connection."
-
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:129
-msgid "You must provide a `first` or `last` value to properly paginate the `spf` connection."
-msgstr "You must provide a `first` or `last` value to properly paginate the `spf` connection."
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:167
 msgid "You must provide a `first` or `last` value to properly paginate the `ssl` connection."
@@ -1004,6 +1004,18 @@ msgstr "You must provide a `year` value to access the `dmarcSummaries` connectio
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
 msgstr "`{argSet}` must be of type `number` not `{typeSet}`."
 
+#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:107
+msgid "`{argSet}` on the `DKIMResults` connection cannot be less than zero."
+msgstr "`{argSet}` on the `DKIMResults` connection cannot be less than zero."
+
+#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:132
+msgid "`{argSet}` on the `DKIM` connection cannot be less than zero."
+msgstr "`{argSet}` on the `DKIM` connection cannot be less than zero."
+
+#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:157
+msgid "`{argSet}` on the `DMARC` connection cannot be less than zero."
+msgstr "`{argSet}` on the `DMARC` connection cannot be less than zero."
+
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:60
 msgid "`{argSet}` on the `DkimFailureTable` connection cannot be less than zero."
 msgstr "`{argSet}` on the `DkimFailureTable` connection cannot be less than zero."
@@ -1016,6 +1028,10 @@ msgstr "`{argSet}` on the `DmarcFailureTable` connection cannot be less than zer
 msgid "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
 msgstr "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
 
+#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:150
+msgid "`{argSet}` on the `SPF` connection cannot be less than zero."
+msgstr "`{argSet}` on the `SPF` connection cannot be less than zero."
+
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:60
 msgid "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
 msgstr "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
@@ -1025,21 +1041,9 @@ msgstr "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
 msgstr "`{argSet}` on the `affiliations` cannot be less than zero."
 
-#: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:107
-msgid "`{argSet}` on the `dkimResults` connection cannot be less than zero."
-msgstr "`{argSet}` on the `dkimResults` connection cannot be less than zero."
-
-#: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:132
-msgid "`{argSet}` on the `dkim` connection cannot be less than zero."
-msgstr "`{argSet}` on the `dkim` connection cannot be less than zero."
-
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:186
 msgid "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
 msgstr "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
-
-#: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:157
-msgid "`{argSet}` on the `dmarc` connection cannot be less than zero."
-msgstr "`{argSet}` on the `dmarc` connection cannot be less than zero."
 
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:143
 #: src/domain/loaders/load-domain-connections-by-user-id.js:151
@@ -1062,10 +1066,6 @@ msgstr "`{argSet}` on the `https` connection cannot be less than zero."
 #: src/organization/loaders/load-organization-connections-by-user-id.js:191
 msgid "`{argSet}` on the `organization` connection cannot be less than zero."
 msgstr "`{argSet}` on the `organization` connection cannot be less than zero."
-
-#: src/email-scan/loaders/load-spf-connections-by-domain-id.js:150
-msgid "`{argSet}` on the `spf` connection cannot be less than zero."
-msgstr "`{argSet}` on the `spf` connection cannot be less than zero."
 
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:188
 msgid "`{argSet}` on the `ssl` connection cannot be less than zero."

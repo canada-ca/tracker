@@ -740,7 +740,7 @@ describe('when given the load dkim results connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.',
               ),
             )
           }
@@ -771,7 +771,7 @@ describe('when given the load dkim results connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported.',
               ),
             )
           }
@@ -802,7 +802,7 @@ describe('when given the load dkim results connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `dkimResults` connection cannot be less than zero.',
+                  '`first` on the `DKIMResults` connection cannot be less than zero.',
                 ),
               )
             }
@@ -832,7 +832,7 @@ describe('when given the load dkim results connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `dkimResults` connection cannot be less than zero.',
+                  '`last` on the `DKIMResults` connection cannot be less than zero.',
                 ),
               )
             }
@@ -864,7 +864,7 @@ describe('when given the load dkim results connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 1000 records on the `dkimResults` connection exceeds the `first` limit of 100 records.',
+                  'Requesting 1000 records on the `DKIMResults` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -894,7 +894,7 @@ describe('when given the load dkim results connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 500 records on the `dkimResults` connection exceeds the `last` limit of 100 records.',
+                  'Requesting 500 records on the `DKIMResults` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -1000,7 +1000,7 @@ describe('when given the load dkim results connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load dkim results. Please try again.'),
+            new Error('Unable to load DKIM result(s). Please try again.'),
           )
         }
 
@@ -1035,7 +1035,7 @@ describe('when given the load dkim results connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load dkim results. Please try again.'),
+            new Error('Unable to load DKIM result(s). Please try again.'),
           )
         }
 

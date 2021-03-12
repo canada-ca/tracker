@@ -30,24 +30,26 @@
       'Organization has already been verified.',
     'Organization name already in use, please choose another and try again.':
       'Organization name already in use, please choose another and try again.',
+    'Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `DKIM` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `DKIM` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `DMARC` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `DMARC` connection is not supported.',
     'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.':
       'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.':
       'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.':
       'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `SPF` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `SPF` connection is not supported.',
     'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.':
       'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
       'Passing both `first` and `last` to paginate the `affiliation` is not supported.',
-    'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `dkim` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `dkim` connection is not supported.',
     'Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported.':
       'Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.',
     'Passing both `first` and `last` to paginate the `domain` connection is not supported.':
       'Passing both `first` and `last` to paginate the `domain` connection is not supported.',
     'Passing both `first` and `last` to paginate the `guidanceTag` connection is not supported.':
@@ -56,8 +58,6 @@
       'Passing both `first` and `last` to paginate the `https` connection is not supported.',
     'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
       'Passing both `first` and `last` to paginate the `organization` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `spf` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `spf` connection is not supported.',
     'Passing both `first` and `last` to paginate the `ssl` connection is not supported.':
       'Passing both `first` and `last` to paginate the `ssl` connection is not supported.',
     'Passing both `first` and `last` to paginate the `verifiedDomain` connection is not supported.':
@@ -174,24 +174,31 @@
       ['argSet'],
       '` limit of 100 records.',
     ],
-    'Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records.': [
+    'Requesting {amount} records on the `DKIMResults` connection exceeds the `{argSet}` limit of 100 records.': [
       'Requesting ',
       ['amount'],
-      ' records on the `dkimResults` connection exceeds the `',
+      ' records on the `DKIMResults` connection exceeds the `',
       ['argSet'],
       '` limit of 100 records.',
     ],
-    'Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records.': [
+    'Requesting {amount} records on the `DKIM` connection exceeds the `{argSet}` limit of 100 records.': [
       'Requesting ',
       ['amount'],
-      ' records on the `dkim` connection exceeds the `',
+      ' records on the `DKIM` connection exceeds the `',
       ['argSet'],
       '` limit of 100 records.',
     ],
-    'Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records.': [
+    'Requesting {amount} records on the `DMARC` connection exceeds the `{argSet}` limit of 100 records.': [
       'Requesting ',
       ['amount'],
-      ' records on the `dmarc` connection exceeds the `',
+      ' records on the `DMARC` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
+    'Requesting {amount} records on the `SPF` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting ',
+      ['amount'],
+      ' records on the `SPF` connection exceeds the `',
       ['argSet'],
       '` limit of 100 records.',
     ],
@@ -199,13 +206,6 @@
       'Requesting ',
       ['amount'],
       ' records on the `https` connection exceeds the `',
-      ['argSet'],
-      '` limit of 100 records.',
-    ],
-    'Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records.': [
-      'Requesting ',
-      ['amount'],
-      ' records on the `spf` connection exceeds the `',
       ['argSet'],
       '` limit of 100 records.',
     ],
@@ -263,18 +263,20 @@
       'Unable to create organization. Please try again.',
     'Unable to dispatch one time scan. Please try again.':
       'Unable to dispatch one time scan. Please try again.',
+    'Unable to find DKIM result(s). Please try again.':
+      'Unable to find DKIM result(s). Please try again.',
+    'Unable to find DKIM scan(s). Please try again.':
+      'Unable to find DKIM scan(s). Please try again.',
+    'Unable to find DMARC scan(s). Please try again.':
+      'Unable to find DMARC scan(s). Please try again.',
     'Unable to find DMARC summary data. Please try again.':
       'Unable to find DMARC summary data. Please try again.',
+    'Unable to find SPF scan(s). Please try again.':
+      'Unable to find SPF scan(s). Please try again.',
     'Unable to find dkim guidance tags. Please try again.':
       'Unable to find dkim guidance tags. Please try again.',
-    'Unable to find dkim result. Please try again.':
-      'Unable to find dkim result. Please try again.',
-    'Unable to find dkim scan. Please try again.':
-      'Unable to find dkim scan. Please try again.',
     'Unable to find dmarc guidance tags. Please try again.':
       'Unable to find dmarc guidance tags. Please try again.',
-    'Unable to find dmarc scan. Please try again.':
-      'Unable to find dmarc scan. Please try again.',
     'Unable to find https guidance tags. Please try again.':
       'Unable to find https guidance tags. Please try again.',
     'Unable to find https scan. Please try again.':
@@ -283,8 +285,6 @@
       'Unable to find organization. Please try again.',
     'Unable to find spf guidance tags. Please try again.':
       'Unable to find spf guidance tags. Please try again.',
-    'Unable to find spf scan. Please try again.':
-      'Unable to find spf scan. Please try again.',
     'Unable to find ssl guidance tags. Please try again.':
       'Unable to find ssl guidance tags. Please try again.',
     'Unable to find ssl scan. Please try again.':
@@ -309,24 +309,26 @@
       'Unable to invite yourself to an org.',
     'Unable to load DKIM failure data. Please try again.':
       'Unable to load DKIM failure data. Please try again.',
+    'Unable to load DKIM result(s). Please try again.':
+      'Unable to load DKIM result(s). Please try again.',
+    'Unable to load DKIM scan(s). Please try again.':
+      'Unable to load DKIM scan(s). Please try again.',
     'Unable to load DMARC failure data. Please try again.':
       'Unable to load DMARC failure data. Please try again.',
+    'Unable to load DMARC scan(s). Please try again.':
+      'Unable to load DMARC scan(s). Please try again.',
     'Unable to load DMARC summary data. Please try again.':
       'Unable to load DMARC summary data. Please try again.',
     'Unable to load SPF failure data. Please try again.':
       'Unable to load SPF failure data. Please try again.',
+    'Unable to load SPF scan(s). Please try again.':
+      'Unable to load SPF scan(s). Please try again.',
     'Unable to load affiliation(s). Please try again.':
       'Unable to load affiliation(s). Please try again.',
     'Unable to load dkim guidance tags. Please try again.':
       'Unable to load dkim guidance tags. Please try again.',
-    'Unable to load dkim results. Please try again.':
-      'Unable to load dkim results. Please try again.',
-    'Unable to load dkim scans. Please try again.':
-      'Unable to load dkim scans. Please try again.',
     'Unable to load dmarc guidance tags. Please try again.':
       'Unable to load dmarc guidance tags. Please try again.',
-    'Unable to load dmarc scans. Please try again.':
-      'Unable to load dmarc scans. Please try again.',
     'Unable to load domain(s). Please try again.':
       'Unable to load domain(s). Please try again.',
     'Unable to load domain. Please try again.':
@@ -345,8 +347,6 @@
       'Unable to load organizations. Please try again.',
     'Unable to load spf guidance tags. Please try again.':
       'Unable to load spf guidance tags. Please try again.',
-    'Unable to load spf scans. Please try again.':
-      'Unable to load spf scans. Please try again.',
     'Unable to load ssl guidance tags. Please try again.':
       'Unable to load ssl guidance tags. Please try again.',
     'Unable to load ssl scans. Please try again.':
@@ -452,24 +452,26 @@
     'Username already in use.': 'Username already in use.',
     'Username not available, please try another.':
       'Username not available, please try another.',
+    'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `DKIM` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `DKIM` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `DMARC` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `DMARC` connection.',
     'You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection.':
       'You must provide a `first` or `last` value to properly paginate the `DkimFailureTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection.':
       'You must provide a `first` or `last` value to properly paginate the `DmarcFailureTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.':
       'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `SPF` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `SPF` connection.',
     'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.':
       'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
       'You must provide a `first` or `last` value to properly paginate the `affiliation`.',
-    'You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `dkim` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `dkim` connection.',
     'You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection.':
       'You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.',
     'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
       'You must provide a `first` or `last` value to properly paginate the `domain` connection.',
     'You must provide a `first` or `last` value to properly paginate the `guidanceTag` connection.':
@@ -478,8 +480,6 @@
       'You must provide a `first` or `last` value to properly paginate the `https` connection.',
     'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
       'You must provide a `first` or `last` value to properly paginate the `organization` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `spf` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `spf` connection.',
     'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
       'You must provide a `first` or `last` value to properly paginate the `ssl` connection.',
     'You must provide a `first` or `last` value to properly paginate the `verifiedDomain` connection.':
@@ -497,6 +497,21 @@
       ['typeSet'],
       '`.',
     ],
+    '`{argSet}` on the `DKIMResults` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `DKIMResults` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `DKIM` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `DKIM` connection cannot be less than zero.',
+    ],
+    '`{argSet}` on the `DMARC` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `DMARC` connection cannot be less than zero.',
+    ],
     '`{argSet}` on the `DkimFailureTable` connection cannot be less than zero.': [
       '`',
       ['argSet'],
@@ -512,6 +527,11 @@
       ['argSet'],
       '` on the `FullPassTable` connection cannot be less than zero.',
     ],
+    '`{argSet}` on the `SPF` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `SPF` connection cannot be less than zero.',
+    ],
     '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.': [
       '`',
       ['argSet'],
@@ -522,25 +542,10 @@
       ['argSet'],
       '` on the `affiliations` cannot be less than zero.',
     ],
-    '`{argSet}` on the `dkimResults` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `dkimResults` connection cannot be less than zero.',
-    ],
-    '`{argSet}` on the `dkim` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `dkim` connection cannot be less than zero.',
-    ],
     '`{argSet}` on the `dmarcSummaries` connection cannot be less than zero.': [
       '`',
       ['argSet'],
       '` on the `dmarcSummaries` connection cannot be less than zero.',
-    ],
-    '`{argSet}` on the `dmarc` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `dmarc` connection cannot be less than zero.',
     ],
     '`{argSet}` on the `domain` connection cannot be less than zero.': [
       '`',
@@ -561,11 +566,6 @@
       '`',
       ['argSet'],
       '` on the `organization` connection cannot be less than zero.',
-    ],
-    '`{argSet}` on the `spf` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `spf` connection cannot be less than zero.',
     ],
     '`{argSet}` on the `ssl` connection cannot be less than zero.': [
       '`',
