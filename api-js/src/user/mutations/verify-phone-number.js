@@ -1,6 +1,8 @@
-import { GraphQLNonNull, GraphQLInt, GraphQLString } from 'graphql'
+import { GraphQLNonNull, GraphQLInt } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
+
+import { verifyPhoneNumberUnion } from '../unions'
 
 export const verifyPhoneNumber = new mutationWithClientMutationId({
   name: 'verifyPhoneNumber',
@@ -12,12 +14,11 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
-      description: 'The status of verifying the two factor authentication.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+    result: {
+      type: verifyPhoneNumberUnion,
+      description:
+        '`VerifyPhoneNumberUnion` returning either a `VerifyPhoneNumberResult`, or `VerifyPhoneNumberError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -31,7 +32,11 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       console.warn(
         `User attempted to two factor authenticate, however the userKey is undefined.`,
       )
-      throw new Error(i18n._(t`Authentication error, please sign in again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Authentication error, please sign in again.`),
+      }
     }
 
     // Get User From DB
@@ -41,18 +46,24 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to two factor authenticate, however no account is associated with that id.`,
       )
-      throw new Error(
-        i18n._(t`Unable to two factor authenticate. Please try again.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Authentication error, please sign in again.`),
+      }
     }
 
     if (twoFactorCode.toString().length !== 6) {
       console.warn(
         `User: ${user._key} attempted to two factor authenticate, however the code they submitted does not have 6 digits.`,
       )
-      throw new Error(
-        i18n._(t`Unable to two factor authenticate. Please try again.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
+          t`Two factor code length is incorrect. Please try again.`,
+        ),
+      }
     }
 
     // Check that TFA codes match
@@ -60,9 +71,11 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} attempted to two factor authenticate, however the tfa codes do not match.`,
       )
-      throw new Error(
-        i18n._(t`Unable to two factor authenticate. Please try again.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Two factor code is incorrect. Please try again.`),
+      }
     }
 
     // Update phoneValidated to be true
@@ -87,6 +100,7 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
     )
 
     return {
+      _type: 'success',
       status: i18n._(
         t`Successfully verified phone number, and set TFA send method to text.`,
       ),
