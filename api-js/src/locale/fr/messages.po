@@ -368,8 +368,6 @@ msgstr "todo"
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "todo"
 
-#: src/notify/notify-send-authenticate-email.js:18
-#: src/notify/notify-send-authenticate-text-msg.js:31
 #: src/user/mutations/authenticate.js:58
 #: src/user/mutations/authenticate.js:72
 #: src/user/mutations/authenticate.js:90
@@ -737,6 +735,20 @@ msgstr "todo"
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:34
 #: src/dmarc-summaries/loaders/load-start-date-from-period.js:49
 msgid "Unable to select DMARC report(s) for this period and year."
+msgstr "todo"
+
+#: src/user/mutations/send-phone-code.js:65
+#: src/user/mutations/send-phone-code.js:84
+#: src/user/mutations/send-phone-code.js:114
+msgid "Unable to send TFA code, please try again."
+msgstr "todo"
+
+#: src/notify/notify-send-authenticate-email.js:18
+msgid "Unable to send authentication email. Please try again."
+msgstr "todo"
+
+#: src/notify/notify-send-authenticate-text-msg.js:31
+msgid "Unable to send authentication text message. Please try again."
 msgstr "todo"
 
 #: src/notify/notify-send-org-invite-create-account.js:31

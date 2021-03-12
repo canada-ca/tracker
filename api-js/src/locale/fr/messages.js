@@ -204,6 +204,8 @@
     'Unable to select dmarc reports for this period and year.': 'todo',
     'Unable to select DMARC report(s) for this period and year.': 'todo',
     'Unable to send TFA code, please try again.': 'todo',
+    'Unable to send authentication email. Please try again.': 'todo',
+    'Unable to send authentication text message. Please try again.': 'todo',
     'Unable to send org invite email. Please try again.': 'todo',
     'Unable to send password reset email. Please try again.': 'todo',
     'Unable to send two factor authentication message. Please try again.':

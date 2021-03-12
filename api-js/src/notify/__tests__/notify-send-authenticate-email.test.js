@@ -92,7 +92,7 @@ describe('given the sendAuthEmail function', () => {
           await mockedSendAuthEmail({ user })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to authenticate. Please try again.'),
+            new Error('Unable to send authentication email. Please try again.'),
           )
         }
 

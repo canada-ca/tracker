@@ -392,6 +392,10 @@
       'Unable to select DMARC report(s) for this period and year.',
     'Unable to send TFA code, please try again.':
       'Unable to send TFA code, please try again.',
+    'Unable to send authentication email. Please try again.':
+      'Unable to send authentication email. Please try again.',
+    'Unable to send authentication text message. Please try again.':
+      'Unable to send authentication text message. Please try again.',
     'Unable to send org invite email. Please try again.':
       'Unable to send org invite email. Please try again.',
     'Unable to send password reset email. Please try again.':

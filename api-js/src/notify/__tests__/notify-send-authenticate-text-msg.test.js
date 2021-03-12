@@ -122,7 +122,7 @@ describe('given the sendAuthTextMsg function', () => {
           await mockedSendAuthTextMsg({ user })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to authenticate. Please try again.'),
+            new Error('Unable to send authentication text message. Please try again.'),
           )
         }
 
