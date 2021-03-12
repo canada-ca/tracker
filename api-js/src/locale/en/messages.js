@@ -297,8 +297,6 @@
       'Unable to find https scan. Please try again.',
     'Unable to find ssl scan. Please try again.':
       'Unable to find ssl scan. Please try again.',
-    'Unable to find summary. Please try again.':
-      'Unable to find summary. Please try again.',
     'Unable to find the requested domain.':
       'Unable to find the requested domain.',
     'Unable to find user affiliation(s). Please try again.':
@@ -361,6 +359,8 @@
       'Unable to load organizations. Please try again.',
     'Unable to load ssl scans. Please try again.':
       'Unable to load ssl scans. Please try again.',
+    'Unable to load summary. Please try again.':
+      'Unable to load summary. Please try again.',
     'Unable to load verified domains. Please try again.':
       'Unable to load verified domains. Please try again.',
     'Unable to load verified organizations. Please try again.':

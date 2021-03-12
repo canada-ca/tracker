@@ -15,7 +15,7 @@ export const chartSummaryLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running chartSummaryLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find summary. Please try again.`))
+      throw new Error(i18n._(t`Unable to load summary. Please try again.`))
     }
 
     const summaryMap = {}
@@ -27,7 +27,7 @@ export const chartSummaryLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running chartSummaryLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find summary. Please try again.`))
+      throw new Error(i18n._(t`Unable to load summary. Please try again.`))
     }
 
     return keys.map((key) => summaryMap[key])

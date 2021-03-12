@@ -484,11 +484,6 @@ msgstr "todo"
 msgid "Unable to find ssl scan. Please try again."
 msgstr "todo"
 
-#: src/summaries/loaders/load-chart-summary-by-key.js:18
-#: src/summaries/loaders/load-chart-summary-by-key.js:30
-msgid "Unable to find summary. Please try again."
-msgstr "todo"
-
 #: src/domain/queries/find-domain-by-domain.js:37
 msgid "Unable to find the requested domain."
 msgstr "todo"
@@ -660,6 +655,11 @@ msgstr "todo"
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:368
 #: src/web-scan/loaders/load-ssl-connections-by-domain-id.js:378
 msgid "Unable to load ssl scans. Please try again."
+msgstr "todo"
+
+#: src/summaries/loaders/load-chart-summary-by-key.js:18
+#: src/summaries/loaders/load-chart-summary-by-key.js:30
+msgid "Unable to load summary. Please try again."
 msgstr "todo"
 
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:297
