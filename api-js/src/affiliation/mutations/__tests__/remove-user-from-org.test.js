@@ -587,7 +587,7 @@ describe('removing a user from an organization', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to remove user from organization. Please try again.',
+              'Unable to remove user from unknown organization.',
             ),
           ]
 
@@ -654,7 +654,7 @@ describe('removing a user from an organization', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to remove user from organization. Please try again.',
+              'Permission Denied: Please contact organization admin for help with removing users.',
             ),
           ]
 
@@ -721,7 +721,7 @@ describe('removing a user from an organization', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to remove user from organization. Please try again.',
+              'Unable to remove a user that already does not belong to this organization.',
             ),
           ]
 
@@ -788,7 +788,7 @@ describe('removing a user from an organization', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to remove user from organization. Please try again.',
+              'Permission Denied: Please contact organization admin for help with removing users.',
             ),
           ]
 
@@ -854,9 +854,7 @@ describe('removing a user from an organization', () => {
           )
 
           const error = [
-            new GraphQLError(
-              'Unable to remove user from organization. Please try again.',
-            ),
+            new GraphQLError('Unable to remove user from organization.'),
           ]
 
           expect(response.errors).toEqual(error)
@@ -923,7 +921,7 @@ describe('removing a user from an organization', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to remove user from organization. Please try again.',
+              'Unable to remove unknown user from organization.',
             ),
           ]
 
@@ -997,7 +995,7 @@ describe('removing a user from an organization', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to remove user from organization. Please try again.',
+              'Unable to remove user from this organization. Please try again.',
             ),
           ]
 

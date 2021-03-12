@@ -4,21 +4,22 @@ import { t } from '@lingui/macro'
 
 export const removeUserFromOrg = new mutationWithClientMutationId({
   name: 'RemoveUserFromOrg',
-  description: '',
+  description:
+    'This mutation allows admins or higher to remove users from any organizations they belong to.',
   inputFields: () => ({
     userId: {
       type: GraphQLNonNull(GraphQLID),
-      description: '',
+      description: 'The user id of the user to be removed.',
     },
     orgId: {
       type: GraphQLNonNull(GraphQLID),
-      description: '',
+      description: 'The organization that the user is to be removed from.',
     },
   }),
   outputFields: () => ({
     status: {
       type: GraphQLString,
-      description: '',
+      description: 'Informs the user if the user was removed successfully.',
       resolve: ({ status }) => status,
     },
   }),
@@ -49,7 +50,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrgKey}, however no org with that id could be found.`,
       )
       throw new Error(
-        i18n._(t`Unable to remove user from organization. Please try again.`),
+        i18n._(t`Unable to remove user from unknown organization.`),
       )
     }
 
@@ -59,9 +60,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrg._key}, however they do not have the permission to remove users.`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove user from organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove user from organization.`))
     }
 
     // Get requested user
@@ -71,7 +70,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrg._key}, however no user with that id could be found.`,
       )
       throw new Error(
-        i18n._(t`Unable to remove user from organization. Please try again.`),
+        i18n._(t`Unable to remove unknown user from organization.`),
       )
     }
 
@@ -88,7 +87,9 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         `Database error occurred when user: ${userKey} attempted to check the current permission of user: ${requestedUser._key} to see if they could be removed.`,
       )
       throw new Error(
-        i18n._(t`Unable to remove user from organization. Please try again.`),
+        i18n._(
+          t`Unable to remove user from this organization. Please try again.`,
+        ),
       )
     }
 
@@ -97,7 +98,9 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         `User: ${userKey} attempted to remove user: ${requestedUser._key}, but they do not have any affiliations to org: ${requestedOrg._key}.`,
       )
       throw new Error(
-        i18n._(t`Unable to remove user from organization. Please try again.`),
+        i18n._(
+          t`Unable to remove a user that already does not belong to this organization.`,
+        ),
       )
     }
 
@@ -167,7 +170,9 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         `User: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, but they do not have the right permission.`,
       )
       throw new Error(
-        i18n._(t`Unable to remove user from organization. Please try again.`),
+        i18n._(
+          t`Permission Denied: Please contact organization admin for help with removing users.`,
+        ),
       )
     }
   },

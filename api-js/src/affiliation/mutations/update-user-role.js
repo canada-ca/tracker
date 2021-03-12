@@ -7,8 +7,8 @@ import { RoleEnums } from '../../enums'
 export const updateUserRole = new mutationWithClientMutationId({
   name: 'UpdateUserRole',
   description: `This mutation allows super admins, and admins of the given organization to
-    update the permission level of a given user that already belongs to the
-    given organization.`,
+update the permission level of a given user that already belongs to the
+given organization.`,
   inputFields: () => ({
     userName: {
       type: GraphQLNonNull(GraphQLEmailAddress),
@@ -60,9 +60,7 @@ export const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update their own role in org: ${orgId}.`,
       )
-      throw new Error(
-        i18n._(t`Unable to update your own role. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to update your own role.`))
     }
 
     // Check to see if requested user exists
@@ -72,7 +70,7 @@ export const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update a user: ${userName} role in org: ${orgId}, however there is no user associated with that user name.`,
       )
-      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
+      throw new Error(i18n._(t`Unable to update unknown users role.`))
     }
 
     // Check to see if org exists
@@ -82,7 +80,9 @@ export const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${orgId}, however there is no org associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to update users role, in unknown organization.`),
+      )
     }
 
     // Check requesting users permission
@@ -92,7 +92,11 @@ export const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
       )
-      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
+      throw new Error(
+        i18n._(
+          t`Permission Denied: Please contact organization admin for help with user role changes.`,
+        ),
+      )
     }
 
     // Get users current permission level
@@ -116,7 +120,7 @@ export const updateUserRole = new mutationWithClientMutationId({
       )
       throw new Error(
         i18n._(
-          t`Unable to update users role. Please invite user to the organization.`,
+          t`Unable to update users role that does not belong to this org. Please invite user to the organization.`,
         ),
       )
     }
@@ -150,7 +154,9 @@ export const updateUserRole = new mutationWithClientMutationId({
           `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: admin.`,
         )
         throw new Error(
-          i18n._(t`Unable to update users role. Please try again.`),
+          i18n._(
+            t`Permission Denied: Please contact organization admin for help with updating users roles.`,
+          ),
         )
       }
 
@@ -169,7 +175,9 @@ export const updateUserRole = new mutationWithClientMutationId({
           `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: user.`,
         )
         throw new Error(
-          i18n._(t`Unable to update users role. Please try again.`),
+          i18n._(
+            t`Permission Denied: Please contact organization admin for help with updating users roles.`,
+          ),
         )
       }
 
@@ -182,7 +190,11 @@ export const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: ${role}.`,
       )
-      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
+      throw new Error(
+        i18n._(
+          t`Permission Denied: Please contact organization admin for help with updating users roles.`,
+        ),
+      )
     }
 
     try {

@@ -836,7 +836,7 @@ describe('given the load affiliations by org id function', () => {
             await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to query affiliations. Please try again.'),
+              new Error('Unable to query affiliation(s). Please try again.'),
             )
           }
 
@@ -870,7 +870,7 @@ describe('given the load affiliations by org id function', () => {
             await affiliationLoader({ orgId: org._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load affiliations. Please try again.'),
+              new Error('Unable to load affiliation(s). Please try again.'),
             )
           }
 

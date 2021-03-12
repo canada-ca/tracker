@@ -74,6 +74,14 @@
     'Password was successfully reset.': 'Password was successfully reset.',
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
+    'Permission Denied: Please contact organization admin for help with removing users.':
+      'Permission Denied: Please contact organization admin for help with removing users.',
+    'Permission Denied: Please contact organization admin for help with updating users roles.':
+      'Permission Denied: Please contact organization admin for help with updating users roles.',
+    'Permission Denied: Please contact organization admin for help with user invitations.':
+      'Permission Denied: Please contact organization admin for help with user invitations.',
+    'Permission Denied: Please contact organization admin for help with user role changes.':
+      'Permission Denied: Please contact organization admin for help with user role changes.',
     'Permission check error. Unable to request domain information.':
       'Permission check error. Unable to request domain information.',
     'Permission error, not an admin for this user.':
@@ -283,28 +291,32 @@
       'Unable to find verified domain. Please try again.',
     'Unable to find verified organization. Please try again.':
       'Unable to find verified organization. Please try again.',
+    'Unable to invite user to unknown organization.':
+      'Unable to invite user to unknown organization.',
     'Unable to invite user. Please try again.':
       'Unable to invite user. Please try again.',
-    'Unable to invite yourself to an org. Please try again.':
-      'Unable to invite yourself to an org. Please try again.',
-    'Unable to load affiliations. Please try again.':
-      'Unable to load affiliations. Please try again.',
-    'Unable to load dkim failures. Please try again.':
-      'Unable to load dkim failures. Please try again.',
+    'Unable to invite yourself to an org.':
+      'Unable to invite yourself to an org.',
+    'Unable to load affiliation(s). Please try again.':
+      'Unable to load affiliation(s). Please try again.',
+    'Unable to load dkim failure(s). Please try again.':
+      'Unable to load dkim failure(s). Please try again.',
     'Unable to load dkim guidance tags. Please try again.':
       'Unable to load dkim guidance tags. Please try again.',
     'Unable to load dkim results. Please try again.':
       'Unable to load dkim results. Please try again.',
     'Unable to load dkim scans. Please try again.':
       'Unable to load dkim scans. Please try again.',
-    'Unable to load dmarc failures. Please try again.':
-      'Unable to load dmarc failures. Please try again.',
+    'Unable to load dmarc failure(s). Please try again.':
+      'Unable to load dmarc failure(s). Please try again.',
     'Unable to load dmarc guidance tags. Please try again.':
       'Unable to load dmarc guidance tags. Please try again.',
     'Unable to load dmarc scans. Please try again.':
       'Unable to load dmarc scans. Please try again.',
     'Unable to load dmarc summaries. Please try again.':
       'Unable to load dmarc summaries. Please try again.',
+    'Unable to load dmarc summary(ies). Please try again.':
+      'Unable to load dmarc summary(ies). Please try again.',
     'Unable to load domains. Please try again.':
       'Unable to load domains. Please try again.',
     'Unable to load full passes. Please try again.':
@@ -333,18 +345,28 @@
       'Unable to load verified organizations. Please try again.',
     'Unable to load web summary. Please try again.':
       'Unable to load web summary. Please try again.',
-    'Unable to query affiliations. Please try again.':
-      'Unable to query affiliations. Please try again.',
+    'Unable to query affiliation(s). Please try again.':
+      'Unable to query affiliation(s). Please try again.',
     'Unable to query domains. Please try again.':
       'Unable to query domains. Please try again.',
     'Unable to query organizations. Please try again.':
       'Unable to query organizations. Please try again.',
+    'Unable to remove a user that already does not belong to this organization.':
+      'Unable to remove a user that already does not belong to this organization.',
     'Unable to remove domain. Please try again.':
       'Unable to remove domain. Please try again.',
     'Unable to remove organization. Please try again.':
       'Unable to remove organization. Please try again.',
+    'Unable to remove unknown user from organization.':
+      'Unable to remove unknown user from organization.',
+    'Unable to remove user from organization.':
+      'Unable to remove user from organization.',
     'Unable to remove user from organization. Please try again.':
       'Unable to remove user from organization. Please try again.',
+    'Unable to remove user from this organization. Please try again.':
+      'Unable to remove user from this organization. Please try again.',
+    'Unable to remove user from unknown organization.':
+      'Unable to remove user from unknown organization.',
     'Unable to request a on time scan on this domain.':
       'Unable to request a on time scan on this domain.',
     'Unable to reset password. Please try again.':
@@ -383,12 +405,15 @@
       'Unable to update password. Please try again.',
     'Unable to update profile. Please try again.':
       'Unable to update profile. Please try again.',
-    'Unable to update users role. Please invite user to the organization.':
-      'Unable to update users role. Please invite user to the organization.',
+    'Unable to update unknown users role.':
+      'Unable to update unknown users role.',
+    'Unable to update users role that does not belong to this org. Please invite user to the organization.':
+      'Unable to update users role that does not belong to this org. Please invite user to the organization.',
+    'Unable to update users role, in unknown organization.':
+      'Unable to update users role, in unknown organization.',
     'Unable to update users role. Please try again.':
       'Unable to update users role. Please try again.',
-    'Unable to update your own role. Please try again.':
-      'Unable to update your own role. Please try again.',
+    'Unable to update your own role.': 'Unable to update your own role.',
     'Unable to verify account. Please request a new email.':
       'Unable to verify account. Please request a new email.',
     'Unable to verify account. Please try again.':

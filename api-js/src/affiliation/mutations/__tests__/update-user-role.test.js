@@ -581,11 +581,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to update your own role. Please try again.',
-            ),
-          ]
+          const error = [new GraphQLError('Unable to update your own role.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -636,7 +632,7 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError('Unable to update unknown users role.'),
           ]
 
           expect(response.errors).toEqual(error)
@@ -688,7 +684,9 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError(
+              'Unable to update users role, in unknown organization.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -747,7 +745,9 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError(
+              'Permission Denied: Please contact organization admin for help with user role changes.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -832,7 +832,9 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError(
+              'Permission Denied: Please contact organization admin for help with user role changes.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -892,7 +894,7 @@ describe('update a users role', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to update users role. Please invite user to the organization.',
+              'Unable to update users role that does not belong to this org. Please invite user to the organization.',
             ),
           ]
 
@@ -963,7 +965,7 @@ describe('update a users role', () => {
 
               const error = [
                 new GraphQLError(
-                  'Unable to update users role. Please try again.',
+                  'Permission Denied: Please contact organization admin for help with updating users roles.',
                 ),
               ]
 
@@ -1034,7 +1036,7 @@ describe('update a users role', () => {
 
               const error = [
                 new GraphQLError(
-                  'Unable to update users role. Please try again.',
+                  'Permission Denied: Please contact organization admin for help with updating users roles.',
                 ),
               ]
 
@@ -1106,7 +1108,7 @@ describe('update a users role', () => {
 
             const error = [
               new GraphQLError(
-                'Unable to update users role. Please try again.',
+                'Permission Denied: Please contact organization admin for help with updating users roles.',
               ),
             ]
 
@@ -1175,7 +1177,7 @@ describe('update a users role', () => {
 
             const error = [
               new GraphQLError(
-                'Unable to update users role. Please try again.',
+                'Permission Denied: Please contact organization admin for help with updating users roles.',
               ),
             ]
 
