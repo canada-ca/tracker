@@ -16,7 +16,9 @@ export const orgLoaderBySlug = (query, language, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running orgLoaderBySlug: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find organization. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to load organization(s). Please try again.`),
+      )
     }
 
     const orgMap = {}
@@ -28,7 +30,9 @@ export const orgLoaderBySlug = (query, language, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running orgLoaderBySlug: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find organization. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to load organization(s). Please try again.`),
+      )
     }
 
     return slugs.map((slug) => orgMap[slug])

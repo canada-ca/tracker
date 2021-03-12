@@ -8,8 +8,6 @@
       'Authentication error. Please sign in.',
     'Cannot query affiliations on organization without admin permission or higher.':
       'Cannot query affiliations on organization without admin permission or higher.',
-    'Could not retrieve specified organization.':
-      'Could not retrieve specified organization.',
     'Error when retrieving dmarc report information. Please try again.':
       'Error when retrieving dmarc report information. Please try again.',
     'If an account with this username is found, a password reset link will be found in your inbox.':
@@ -30,6 +28,8 @@
       'Organization has already been verified.',
     'Organization name already in use, please choose another and try again.':
       'Organization name already in use, please choose another and try again.',
+    'Organization name already in use. Please try again with a different name.':
+      'Organization name already in use. Please try again with a different name.',
     'Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported.':
       'Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported.',
     'Passing both `first` and `last` to paginate the `DKIM` connection is not supported.':
@@ -44,6 +44,8 @@
       'Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported.':
       'Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `Organization` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `Organization` connection is not supported.',
     'Passing both `first` and `last` to paginate the `SPF` connection is not supported.':
       'Passing both `first` and `last` to paginate the `SPF` connection is not supported.',
     'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.':
@@ -56,8 +58,6 @@
       'Passing both `first` and `last` to paginate the `domain` connection is not supported.',
     'Passing both `first` and `last` to paginate the `https` connection is not supported.':
       'Passing both `first` and `last` to paginate the `https` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `organization` connection is not supported.',
     'Passing both `first` and `last` to paginate the `ssl` connection is not supported.':
       'Passing both `first` and `last` to paginate the `ssl` connection is not supported.',
     'Passing both `first` and `last` to paginate the `verifiedDomain` connection is not supported.':
@@ -70,10 +70,16 @@
     'Password was successfully reset.': 'Password was successfully reset.',
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
+    'Permission Denied: Could not retrieve specified organization.':
+      'Permission Denied: Could not retrieve specified organization.',
     'Permission Denied: Please contact organization admin for help with removing domain.':
       'Permission Denied: Please contact organization admin for help with removing domain.',
+    'Permission Denied: Please contact organization admin for help with removing organization.':
+      'Permission Denied: Please contact organization admin for help with removing organization.',
     'Permission Denied: Please contact organization admin for help with removing users.':
       'Permission Denied: Please contact organization admin for help with removing users.',
+    'Permission Denied: Please contact organization admin for help with updating organization.':
+      'Permission Denied: Please contact organization admin for help with updating organization.',
     'Permission Denied: Please contact organization admin for help with updating users roles.':
       'Permission Denied: Please contact organization admin for help with updating users roles.',
     'Permission Denied: Please contact organization admin for help with user invitations.':
@@ -90,6 +96,10 @@
       'Permission Denied: Please contact organization user for help with updating this domain.',
     'Permission Denied: Please contact super admin for help with removing domain.':
       'Permission Denied: Please contact super admin for help with removing domain.',
+    'Permission Denied: Please contact super admin for help with removing organization.':
+      'Permission Denied: Please contact super admin for help with removing organization.',
+    'Permission Denied: Please contact super admin for help with verifying this organization.':
+      'Permission Denied: Please contact super admin for help with verifying this organization.',
     'Permission check error. Unable to request domain information.':
       'Permission check error. Unable to request domain information.',
     'Permission error, not an admin for this user.':
@@ -125,6 +135,13 @@
       ['argSet'],
       '` limit of 100 records.',
     ],
+    'Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records.': [
+      'Requesting `',
+      ['amount'],
+      '` records on the `Organization` connection exceeds the `',
+      ['argSet'],
+      '` limit of 100 records.',
+    ],
     'Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
       'Requesting `',
       ['amount'],
@@ -150,13 +167,6 @@
       'Requesting `',
       ['amount'],
       '` records on the `domain` connection exceeds the `',
-      ['argSet'],
-      '` limit of 100 records.',
-    ],
-    'Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records.': [
-      'Requesting `',
-      ['amount'],
-      '` records on the `organization` connection exceeds the `',
       ['argSet'],
       '` limit of 100 records.',
     ],
@@ -285,8 +295,6 @@
       'Unable to find SSL guidance tag(s). Please try again.',
     'Unable to find https scan. Please try again.':
       'Unable to find https scan. Please try again.',
-    'Unable to find organization. Please try again.':
-      'Unable to find organization. Please try again.',
     'Unable to find ssl scan. Please try again.':
       'Unable to find ssl scan. Please try again.',
     'Unable to find summary. Please try again.':
@@ -347,6 +355,8 @@
       'Unable to load https scans. Please try again.',
     'Unable to load mail summary. Please try again.':
       'Unable to load mail summary. Please try again.',
+    'Unable to load organization(s). Please try again.':
+      'Unable to load organization(s). Please try again.',
     'Unable to load organizations. Please try again.':
       'Unable to load organizations. Please try again.',
     'Unable to load ssl scans. Please try again.':
@@ -361,8 +371,6 @@
       'Unable to query affiliation(s). Please try again.',
     'Unable to query domain(s). Please try again.':
       'Unable to query domain(s). Please try again.',
-    'Unable to query organizations. Please try again.':
-      'Unable to query organizations. Please try again.',
     'Unable to remove a user that already does not belong to this organization.':
       'Unable to remove a user that already does not belong to this organization.',
     'Unable to remove domain from unknown organization.':
@@ -372,6 +380,8 @@
     'Unable to remove organization. Please try again.':
       'Unable to remove organization. Please try again.',
     'Unable to remove unknown domain.': 'Unable to remove unknown domain.',
+    'Unable to remove unknown organization.':
+      'Unable to remove unknown organization.',
     'Unable to remove unknown user from organization.':
       'Unable to remove unknown user from organization.',
     'Unable to remove user from organization.':
@@ -386,8 +396,6 @@
       'Unable to request a on time scan on an unknown domain.',
     'Unable to reset password. Please try again.':
       'Unable to reset password. Please try again.',
-    'Unable to select dmarc reports for this period and year.':
-      'Unable to select dmarc reports for this period and year.',
     'Unable to select DMARC report(s) for this period and year.':
       'Unable to select DMARC report(s) for this period and year.',
     'Unable to send TFA code, please try again.':
@@ -417,7 +425,7 @@
     'Unable to update domain that does not belong to the given organization.':
       'Unable to update domain that does not belong to the given organization.',
     'Unable to update domain. Please try again.':
-      'Unable to update domain. Please try again.',
+      'Unable to update domain. Please try again.<<<<<<< HEAD',
     'Unable to update organization. Please try again.':
       'Unable to update organization. Please try again.',
     'Unable to update password, authentication error occurred, please sign in again.':
@@ -433,6 +441,8 @@
     'Unable to update profile. Please try again.':
       'Unable to update profile. Please try again.',
     'Unable to update unknown domain.': 'Unable to update unknown domain.',
+    'Unable to update unknown organization.':
+      'Unable to update unknown organization.',
     'Unable to update unknown users role.':
       'Unable to update unknown users role.',
     'Unable to update users role that does not belong to this org. Please invite user to the organization.':
@@ -450,6 +460,8 @@
       'Unable to verify if user is an admin, please try again.',
     'Unable to verify organization. Please try again.':
       'Unable to verify organization. Please try again.',
+    'Unable to verify unknown organization.':
+      'Unable to verify unknown organization.',
     'User could not be queried.': 'User could not be queried.',
     'User role was updated successfully.':
       'User role was updated successfully.',
@@ -470,6 +482,8 @@
       'You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection.',
     'You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection.':
       'You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `Organization` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `Organization` connection.',
     'You must provide a `first` or `last` value to properly paginate the `SPF` connection.':
       'You must provide a `first` or `last` value to properly paginate the `SPF` connection.',
     'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.':
@@ -482,8 +496,6 @@
       'You must provide a `first` or `last` value to properly paginate the `domain` connection.',
     'You must provide a `first` or `last` value to properly paginate the `https` connection.':
       'You must provide a `first` or `last` value to properly paginate the `https` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `organization` connection.',
     'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
       'You must provide a `first` or `last` value to properly paginate the `ssl` connection.',
     'You must provide a `first` or `last` value to properly paginate the `verifiedDomain` connection.':
@@ -536,6 +548,11 @@
       ['argSet'],
       '` on the `GuidanceTag` connection cannot be less than zero.',
     ],
+    '`{argSet}` on the `Organization` connection cannot be less than zero.': [
+      '`',
+      ['argSet'],
+      '` on the `Organization` connection cannot be less than zero.',
+    ],
     '`{argSet}` on the `SPF` connection cannot be less than zero.': [
       '`',
       ['argSet'],
@@ -565,11 +582,6 @@
       '`',
       ['argSet'],
       '` on the `https` connection cannot be less than zero.',
-    ],
-    '`{argSet}` on the `organization` connection cannot be less than zero.': [
-      '`',
-      ['argSet'],
-      '` on the `organization` connection cannot be less than zero.',
     ],
     '`{argSet}` on the `ssl` connection cannot be less than zero.': [
       '`',

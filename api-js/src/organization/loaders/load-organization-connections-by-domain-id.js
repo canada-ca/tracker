@@ -167,7 +167,7 @@ export const orgLoaderConnectionArgsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`organization\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`Organization\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -176,7 +176,7 @@ export const orgLoaderConnectionArgsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`organization\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`Organization\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -188,7 +188,7 @@ export const orgLoaderConnectionArgsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`organization\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`Organization\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -199,7 +199,7 @@ export const orgLoaderConnectionArgsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`Requesting \`${amount}\` records on the \`organization\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting \`${amount}\` records on the \`Organization\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -423,7 +423,9 @@ export const orgLoaderConnectionArgsByDomainId = (
     console.error(
       `Database error occurred while user: ${userKey} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load organization(s). Please try again.`),
+    )
   }
 
   let organizationInfo
@@ -433,7 +435,9 @@ export const orgLoaderConnectionArgsByDomainId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to gather orgs in orgLoaderConnectionArgsByDomainId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load organization(s). Please try again.`),
+    )
   }
 
   if (organizationInfo.organizations.length === 0) {

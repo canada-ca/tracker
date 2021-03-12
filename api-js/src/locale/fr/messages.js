@@ -5,7 +5,6 @@
     'Authentication error. Please sign in.': 'todo',
     'Cannot query affiliations on organization without admin permission or higher.':
       'todo',
-    'Could not retrieve specified organization.': 'todo',
     'Error when retrieving dmarc report information. Please try again.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
@@ -18,6 +17,9 @@
     'No verified domain with the provided domain could be found.': 'todo',
     'Organization has already been verified.': 'todo',
     'Organization name already in use, please choose another and try again.':
+      'todo',
+    'Organization name already in use. Please try again with a different name.':
+      'todo',
     'Passing both `first` and `last` to paginate the `DKIMResults` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `DKIM` connection is not supported.':
@@ -32,6 +34,8 @@
       'todo',
     'Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported.':
       'todo',
+    'Passing both `first` and `last` to paginate the `Organization` connection is not supported.':
+      'todo',
     'Passing both `first` and `last` to paginate the `SPF` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported.':
@@ -44,8 +48,6 @@
       'todo',
     'Passing both `first` and `last` to paginate the `https` connection is not supported.':
       'todo',
-    'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
-      'todo',
     'Passing both `first` and `last` to paginate the `ssl` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `verifiedDomain` connection is not supported.':
@@ -57,9 +59,14 @@
     'Password was successfully reset.': 'todo',
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
+    'Permission Denied: Could not retrieve specified organization.': 'todo',
     'Permission Denied: Please contact organization admin for help with removing domain.':
       'todo',
+    'Permission Denied: Please contact organization admin for help with removing organization.':
+      'todo',
     'Permission Denied: Please contact organization admin for help with removing users.':
+      'todo',
+    'Permission Denied: Please contact organization admin for help with updating organization.':
       'todo',
     'Permission Denied: Please contact organization admin for help with updating users roles.':
       'todo',
@@ -77,6 +84,10 @@
       'todo',
     'Permission Denied: Please contact super admin for help with removing domain.':
       'todo',
+    'Permission Denied: Please contact super admin for help with removing organization.':
+      'todo',
+    'Permission Denied: Please contact super admin for help with verifying this organization.':
+      'todo',
     'Permission check error. Unable to request domain information.': 'todo',
     'Permission error, not an admin for this user.': 'todo',
     'Phone number has been successfully set, you will receive a verification text message shortly.':
@@ -90,6 +101,8 @@
       'todo',
     'Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
+    'Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.':
@@ -97,8 +110,6 @@
     'Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.':
-      'todo',
-    'Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `verifiedDomain` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -149,7 +160,6 @@
     'Unable to find SPF scan(s). Please try again.': 'todo',
     'Unable to find SSL guidance tag(s). Please try again.': 'todo',
     'Unable to find https scan. Please try again.': 'todo',
-    'Unable to find organization. Please try again.': 'todo',
     'Unable to find ssl scan. Please try again.': 'todo',
     'Unable to find summary. Please try again.': 'todo',
     'Unable to find the requested domain.': 'todo',
@@ -180,6 +190,7 @@
     'Unable to load full pass data. Please try again.': 'todo',
     'Unable to load https scans. Please try again.': 'todo',
     'Unable to load mail summary. Please try again.': 'todo',
+    'Unable to load organization(s). Please try again.': 'todo',
     'Unable to load organizations. Please try again.': 'todo',
     'Unable to load ssl scans. Please try again.': 'todo',
     'Unable to load verified domains. Please try again.': 'todo',
@@ -187,13 +198,13 @@
     'Unable to load web summary. Please try again.': 'todo',
     'Unable to query affiliation(s). Please try again.': 'todo',
     'Unable to query domain(s). Please try again.': 'todo',
-    'Unable to query organizations. Please try again.': 'todo',
     'Unable to remove a user that already does not belong to this organization.':
       'todo',
     'Unable to remove domain from unknown organization.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
     'Unable to remove organization. Please try again.': 'todo',
     'Unable to remove unknown domain.': 'todo',
+    'Unable to remove unknown organization.': 'todo',
     'Unable to remove unknown user from organization.': 'todo',
     'Unable to remove user from organization.': 'todo',
     'Unable to remove user from organization. Please try again.': 'todo',
@@ -201,7 +212,6 @@
     'Unable to remove user from unknown organization.': 'todo',
     'Unable to request a on time scan on an unknown domain.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
-    'Unable to select dmarc reports for this period and year.': 'todo',
     'Unable to select DMARC report(s) for this period and year.': 'todo',
     'Unable to send TFA code, please try again.': 'todo',
     'Unable to send authentication email. Please try again.': 'todo',
@@ -218,7 +228,7 @@
     'Unable to update domain in an unknown org.': 'todo',
     'Unable to update domain that does not belong to the given organization.':
       'todo',
-    'Unable to update domain. Please try again.': 'todo',
+    'Unable to update domain. Please try again.': 'todo<<<<<<< HEAD',
     'Unable to update organization. Please try again.': 'todo',
     'Unable to update password, authentication error occurred, please sign in again.':
       'todo',
@@ -231,6 +241,7 @@
     'Unable to update password. Please try again.': 'todo',
     'Unable to update profile. Please try again.': 'todo',
     'Unable to update unknown domain.': 'todo',
+    'Unable to update unknown organization.': 'todo',
     'Unable to update unknown users role.': 'todo',
     'Unable to update users role that does not belong to this org. Please invite user to the organization.':
       'todo',
@@ -241,6 +252,7 @@
     'Unable to verify account. Please try again.': 'todo',
     'Unable to verify if user is an admin, please try again.': 'todo',
     'Unable to verify organization. Please try again.': 'todo',
+    'Unable to verify unknown organization.': 'todo',
     'User could not be queried.': 'todo',
     'User role was updated successfully.': 'todo',
     'Username already in use.': 'todo',
@@ -259,6 +271,8 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `Organization` connection.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `SPF` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection.':
@@ -270,8 +284,6 @@
     'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `https` connection.':
-      'todo',
-    'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
       'todo',
@@ -296,6 +308,8 @@
       'todo',
     '`{argSet}` on the `GuidanceTag` connection cannot be less than zero.':
       'todo',
+    '`{argSet}` on the `Organization` connection cannot be less than zero.':
+      'todo',
     '`{argSet}` on the `SPF` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `SpfFailureTable` connection cannot be less than zero.':
       'todo',
@@ -304,8 +318,6 @@
       'todo',
     '`{argSet}` on the `domain` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `https` connection cannot be less than zero.': 'todo',
-    '`{argSet}` on the `organization` connection cannot be less than zero.':
-      'todo',
     '`{argSet}` on the `ssl` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `verifiedDomain` connection cannot be less than zero.':
       'todo',

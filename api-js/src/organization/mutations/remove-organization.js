@@ -16,9 +16,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       type: GraphQLString,
       description:
         'Status string to inform the user if the organization was successfully removed.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+      resolve: ({ status }) => status,
     },
   }),
   mutateAndGetPayload: async (
@@ -48,9 +46,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove org: ${orgId}, but there is no org associated with that id.`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove unknown organization.`))
     }
 
     // Get users permission
@@ -62,7 +58,9 @@ export const removeOrganization = new mutationWithClientMutationId({
         `User: ${userKey} attempted to remove ${organization._key}, however the user is not a super admin.`,
       )
       throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
+        i18n._(
+          t`Permission Denied: Please contact super admin for help with removing organization.`,
+        ),
       )
     }
 
@@ -71,7 +69,9 @@ export const removeOrganization = new mutationWithClientMutationId({
         `User: ${userKey} attempted to remove ${organization._key}, however the user does not have permission to this organization.`,
       )
       throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
+        i18n._(
+          t`Permission Denied: Please contact organization admin for help with removing organization.`,
+        ),
       )
     }
 

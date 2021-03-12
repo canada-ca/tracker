@@ -2600,7 +2600,7 @@ describe('updating an organization', () => {
 
               const error = [
                 new GraphQLError(
-                  'Unable to update organization. Please try again.',
+                  'Permission Denied: Please contact organization admin for help with updating organization.',
                 ),
               ]
 
@@ -2658,7 +2658,7 @@ describe('updating an organization', () => {
 
               const error = [
                 new GraphQLError(
-                  'Unable to update organization. Please try again.',
+                  'Permission Denied: Please contact organization admin for help with updating organization.',
                 ),
               ]
 
@@ -2718,9 +2718,7 @@ describe('updating an organization', () => {
             )
 
             const error = [
-              new GraphQLError(
-                'Unable to update organization. Please try again.',
-              ),
+              new GraphQLError('Unable to update unknown organization.'),
             ]
 
             expect(response.errors).toEqual(error)
