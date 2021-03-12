@@ -530,7 +530,7 @@ describe('authenticate user account', () => {
                 result: {
                   code: 400,
                   description:
-                    'Unable to update password, passwords are required to be 12 characters or longer. Please try again.',
+                    'Unable to update password, passwords do not match requirements. Please try again.',
                 },
               },
             },

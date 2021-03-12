@@ -54,6 +54,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const preferredLang = cleanseInput(args.preferredLang)
     const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
 
+    // Replace with userRequired()
     // Make sure userKey is not undefined
     if (typeof userKey === 'undefined') {
       console.warn(

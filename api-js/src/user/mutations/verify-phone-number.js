@@ -28,6 +28,7 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
     // Cleanse Input
     const twoFactorCode = args.twoFactorCode
 
+    // Replace with userRequired()
     if (typeof userKey === 'undefined') {
       console.warn(
         `User attempted to two factor authenticate, however the userKey is undefined.`,

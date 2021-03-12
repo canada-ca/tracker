@@ -71,7 +71,7 @@ export const signUp = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Password is too short.`),
+        description: i18n._(t`Password does not meet requirements.`),
       }
     }
 

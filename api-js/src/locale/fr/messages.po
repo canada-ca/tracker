@@ -11,10 +11,10 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: src/user/mutations/set-phone-number.js:51
-#: src/user/mutations/update-user-profile.js:65
-#: src/user/mutations/verify-phone-number.js:38
-#: src/user/mutations/verify-phone-number.js:52
+#: src/user/mutations/send-phone-code.js:52
+#: src/user/mutations/update-user-profile.js:66
+#: src/user/mutations/verify-phone-number.js:39
+#: src/user/mutations/verify-phone-number.js:53
 msgid "Authentication error, please sign in again."
 msgstr "todo"
 
@@ -47,8 +47,16 @@ msgstr "todo"
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "todo"
 
-#: src/user/mutations/sign-in.js:58
-#: src/user/mutations/sign-in.js:175
+#: src/user/mutations/authenticate.js:108
+msgid "Incorrect TFA code. Please sign in again."
+msgstr "todo"
+
+#: src/user/mutations/reset-password.js:64
+msgid "Incorrect token value. Please request a new email."
+msgstr "todo"
+
+#: src/user/mutations/sign-in.js:59
+#: src/user/mutations/sign-in.js:176
 msgid "Incorrect username or password. Please try again."
 msgstr "todo"
 
@@ -56,7 +64,7 @@ msgstr "todo"
 msgid "Invalid token, please request a new one."
 msgstr "todo"
 
-#: src/user/mutations/reset-password.js:101
+#: src/user/mutations/reset-password.js:106
 msgid "New passwords do not match. Please try again."
 msgstr "todo"
 
@@ -77,7 +85,6 @@ msgstr "todo"
 msgid "Organization name already in use, please choose another and try again."
 msgstr "todo"
 
-#: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:46
 #: src/organization/mutations/create-organization.js:133
 msgid "Organization name already in use. Please try again with a different name."
 msgstr "todo"
@@ -160,19 +167,19 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported."
 msgstr "todo"
 
-#: src/user/mutations/reset-password.js:114
-msgid "Password is not strong enough. Please try again."
-msgstr "todo"
-
 #: src/user/mutations/sign-up.js:74
-msgid "Password is too short."
+msgid "Password does not meet requirements."
 msgstr "todo"
 
-#: src/user/mutations/reset-password.js:138
+#: src/user/mutations/reset-password.js:119
+msgid "Password does not requirements. Please try again."
+msgstr "todo"
+
+#: src/user/mutations/reset-password.js:143
 msgid "Password was successfully reset."
 msgstr "todo"
 
-#: src/user/mutations/update-user-password.js:140
+#: src/user/mutations/update-user-password.js:141
 msgid "Password was successfully updated."
 msgstr "todo"
 
@@ -253,13 +260,13 @@ msgstr "todo"
 #: src/auth/check-user-is-admin-for-user.js:60
 #: src/auth/check-user-is-admin-for-user.js:70
 msgid "Permission error, not an admin for this user."
-msgstr "todo"
+msgstr "todo<<<<<<< HEAD"
 
-#: src/user/mutations/set-phone-number.js:130
+#: src/user/mutations/set-phone-number.js:107
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "todo"
 
-#: src/user/mutations/update-user-profile.js:140
+#: src/user/mutations/update-user-profile.js:141
 msgid "Profile successfully updated."
 msgstr "todo"
 
@@ -344,7 +351,7 @@ msgstr "todo"
 msgid "Successfully dispatched one time scan."
 msgstr "todo"
 
-#: src/user/mutations/verify-account.js:102
+#: src/user/mutations/verify-account.js:121
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "todo"
 
@@ -372,26 +379,36 @@ msgstr "todo"
 msgid "Successfully verified organization: {0}."
 msgstr "todo"
 
-#: src/user/mutations/verify-phone-number.js:105
+#: src/user/mutations/verify-phone-number.js:106
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "todo"
 
-#: src/user/mutations/sign-in.js:72
-msgid "Too many failed login attempts, please reset your password, and try again."
+#: src/user/mutations/authenticate.js:58
+msgid "Token value incorrect, please sign in again."
 msgstr "todo"
 
-#: src/user/mutations/verify-phone-number.js:77
+#: src/user/mutations/sign-in.js:73
+msgid "Too many failed login attempts, please reset your password, and try again."
+msgstr "todo<<<<<<< HEAD======="
+
+#: src/user/mutations/send-phone-code.js:128
+msgid "Two factor code has been successfully sent, you will receive a text message shortly."
+msgstr "todo>>>>>>> update user error messages"
+
+#: src/user/mutations/verify-phone-number.js:78
 msgid "Two factor code is incorrect. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/verify-phone-number.js:64
+#: src/user/mutations/verify-phone-number.js:65
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/authenticate.js:58
-#: src/user/mutations/authenticate.js:72
-#: src/user/mutations/authenticate.js:90
-#: src/user/mutations/authenticate.js:107
+#: src/affiliation/mutations/invite-user-to-org.js:149
+msgid "Unable to add user to organization. Please try again."
+msgstr "todo"
+
+#: src/user/mutations/authenticate.js:73
+#: src/user/mutations/authenticate.js:91
 msgid "Unable to authenticate. Please try again."
 msgstr "todo"
 
@@ -491,13 +508,6 @@ msgstr "todo"
 #: src/affiliation/loaders/load-affiliation-by-key.js:21
 #: src/affiliation/loaders/load-affiliation-by-key.js:35
 msgid "Unable to find user affiliation(s). Please try again."
-msgstr "todo"
-
-#: src/user/loaders/load-user-by-key.js:18
-#: src/user/loaders/load-user-by-key.js:30
-#: src/user/loaders/load-user-by-username.js:18
-#: src/user/loaders/load-user-by-username.js:30
-msgid "Unable to find user. Please try again."
 msgstr "todo"
 
 #: src/verified-domains/loaders/load-verified-domain-by-domain.js:23
@@ -662,6 +672,13 @@ msgstr "todo"
 msgid "Unable to load summary. Please try again."
 msgstr "todo"
 
+#: src/user/loaders/load-user-by-key.js:18
+#: src/user/loaders/load-user-by-key.js:30
+#: src/user/loaders/load-user-by-username.js:18
+#: src/user/loaders/load-user-by-username.js:30
+msgid "Unable to load user(s). Please try again."
+msgstr "todo"
+
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:297
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:309
 msgid "Unable to load verified domains. Please try again."
@@ -742,10 +759,12 @@ msgstr "todo"
 msgid "Unable to request a on time scan on an unknown domain."
 msgstr "todo"
 
-#: src/user/mutations/reset-password.js:63
-#: src/user/mutations/reset-password.js:77
-#: src/user/mutations/reset-password.js:89
-#: src/user/mutations/reset-password.js:131
+#: src/user/mutations/reset-password.js:93
+msgid "Unable to reset password. Please request a new email."
+msgstr "todo"
+
+#: src/user/mutations/reset-password.js:80
+#: src/user/mutations/reset-password.js:136
 msgid "Unable to reset password. Please try again."
 msgstr "todo"
 
@@ -754,9 +773,9 @@ msgstr "todo"
 msgid "Unable to select DMARC report(s) for this period and year."
 msgstr "todo"
 
-#: src/user/mutations/send-phone-code.js:65
-#: src/user/mutations/send-phone-code.js:84
-#: src/user/mutations/send-phone-code.js:114
+#: src/user/mutations/send-phone-code.js:66
+#: src/user/mutations/send-phone-code.js:85
+#: src/user/mutations/send-phone-code.js:115
 msgid "Unable to send TFA code, please try again."
 msgstr "todo"
 
@@ -783,16 +802,15 @@ msgstr "todo"
 
 #: src/notify/notify-send-verification-email.js:30
 msgid "Unable to send verification email. Please try again."
-msgstr "todo"
+msgstr "todo<<<<<<< HEAD"
 
-#: src/user/mutations/set-phone-number.js:65
-#: src/user/mutations/set-phone-number.js:117
+#: src/user/mutations/set-phone-number.js:94
 msgid "Unable to set phone number, please try again."
 msgstr "todo"
 
-#: src/user/mutations/sign-in.js:88
-#: src/user/mutations/sign-in.js:107
-#: src/user/mutations/sign-in.js:166
+#: src/user/mutations/sign-in.js:89
+#: src/user/mutations/sign-in.js:108
+#: src/user/mutations/sign-in.js:167
 msgid "Unable to sign in, please try again."
 msgstr "todo"
 
@@ -801,7 +819,7 @@ msgstr "todo"
 msgid "Unable to sign up. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/verify-phone-number.js:94
+#: src/user/mutations/verify-phone-number.js:95
 msgid "Unable to two factor authenticate. Please try again."
 msgstr "todo"
 
@@ -817,47 +835,39 @@ msgstr "todo"
 #: src/domain/mutations/update-domain.js:161
 #: src/domain/mutations/update-domain.js:171
 msgid "Unable to update domain. Please try again."
-msgstr "todo"
+msgstr "todo<<<<<<< HEAD"
 
-<<<<<<< HEAD
-#: src/organization/mutations/update-organization.js:138
-#: src/organization/mutations/update-organization.js:150
 #: src/organization/mutations/update-organization.js:168
 #: src/organization/mutations/update-organization.js:197
 #: src/organization/mutations/update-organization.js:209
 #: src/organization/mutations/update-organization.js:263
 #: src/organization/mutations/update-organization.js:274
-=======
-#: src/organization/mutations/update-organization.js:167
-#: src/organization/mutations/update-organization.js:223
-#: src/organization/mutations/update-organization.js:234
->>>>>>> organization error messages updated
 msgid "Unable to update organization. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/update-user-password.js:59
-#: src/user/mutations/update-user-password.js:75
+#: src/user/mutations/update-user-password.js:60
+#: src/user/mutations/update-user-password.js:76
 msgid "Unable to update password, authentication error occurred, please sign in again."
 msgstr "todo"
 
-#: src/user/mutations/update-user-password.js:89
+#: src/user/mutations/update-user-password.js:90
 msgid "Unable to update password, current password does not match. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/update-user-password.js:103
+#: src/user/mutations/update-user-password.js:104
 msgid "Unable to update password, new passwords do not match. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/update-user-password.js:117
-msgid "Unable to update password, passwords are required to be 12 characters or longer. Please try again."
+#: src/user/mutations/update-user-password.js:118
+msgid "Unable to update password, passwords do not match requirements. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/update-user-password.js:134
+#: src/user/mutations/update-user-password.js:135
 msgid "Unable to update password. Please try again."
-msgstr "todo"
+msgstr "todo<<<<<<< HEAD"
 
-#: src/user/mutations/update-user-profile.js:79
-#: src/user/mutations/update-user-profile.js:131
+#: src/user/mutations/update-user-profile.js:80
+#: src/user/mutations/update-user-profile.js:132
 msgid "Unable to update profile. Please try again."
 msgstr "todo"
 
@@ -891,14 +901,14 @@ msgstr "todo"
 msgid "Unable to update your own role."
 msgstr "todo"
 
-#: src/user/mutations/verify-account.js:67
-#: src/user/mutations/verify-account.js:77
+#: src/user/mutations/verify-account.js:80
+#: src/user/mutations/verify-account.js:94
 msgid "Unable to verify account. Please request a new email."
 msgstr "todo"
 
-#: src/user/mutations/verify-account.js:42
-#: src/user/mutations/verify-account.js:52
-#: src/user/mutations/verify-account.js:93
+#: src/user/mutations/verify-account.js:46
+#: src/user/mutations/verify-account.js:61
+#: src/user/mutations/verify-account.js:111
 msgid "Unable to verify account. Please try again."
 msgstr "todo"
 
@@ -925,9 +935,9 @@ msgstr "todo"
 
 #: src/user/mutations/sign-up.js:100
 msgid "Username already in use."
-msgstr "todo"
+msgstr "todo<<<<<<< HEAD"
 
-#: src/user/mutations/update-user-profile.js:93
+#: src/user/mutations/update-user-profile.js:94
 msgid "Username not available, please try another."
 msgstr "todo"
 

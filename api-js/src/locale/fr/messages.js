@@ -10,6 +10,8 @@
       'todo',
     'If an account with this username is found, an email verification link will be found in your inbox.':
       'todo',
+    'Incorrect TFA code. Please sign in again.': 'todo',
+    'Incorrect token value. Please request a new email.': 'todo',
     'Incorrect username or password. Please try again.': 'todo',
     'Invalid token, please request a new one.': 'todo',
     'New passwords do not match. Please try again.': 'todo',
@@ -54,8 +56,8 @@
       'todo',
     'Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported.':
       'todo',
-    'Password is not strong enough. Please try again.': 'todo',
-    'Password is too short.': 'todo',
+    'Password does not meet requirements.': 'todo',
+    'Password does not requirements. Please try again.': 'todo',
     'Password was successfully reset.': 'todo',
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
@@ -89,7 +91,7 @@
     'Permission Denied: Please contact super admin for help with verifying this organization.':
       'todo',
     'Permission check error. Unable to request domain information.': 'todo',
-    'Permission error, not an admin for this user.': 'todo',
+    'Permission error, not an admin for this user.': 'todo<<<<<<< HEAD',
     'Phone number has been successfully set, you will receive a verification text message shortly.':
       'todo',
     'Profile successfully updated.': 'todo',
@@ -139,10 +141,14 @@
     'Successfully verified organization: {0}.': 'todo',
     'Successfully verified phone number, and set TFA send method to text.':
       'todo',
+    'Token value incorrect, please sign in again.': 'todo',
     'Too many failed login attempts, please reset your password, and try again.':
-      'todo',
+      'todo<<<<<<< HEAD=======',
+    'Two factor code has been successfully sent, you will receive a text message shortly.':
+      'todo>>>>>>> update user error messages',
     'Two factor code is incorrect. Please try again.': 'todo',
     'Two factor code length is incorrect. Please try again.': 'todo',
+    'Unable to add user to organization. Please try again.': 'todo',
     'Unable to authenticate. Please try again.': 'todo',
     'Unable to check permission. Please try again.': 'todo',
     'Unable to create domain in unknown organization.': 'todo',
@@ -163,7 +169,6 @@
     'Unable to find ssl scan. Please try again.': 'todo',
     'Unable to find the requested domain.': 'todo',
     'Unable to find user affiliation(s). Please try again.': 'todo',
-    'Unable to find user. Please try again.': 'todo',
     'Unable to find verified domain. Please try again.': 'todo',
     'Unable to find verified organization. Please try again.': 'todo',
     'Unable to invite user to unknown organization.': 'todo',
@@ -193,6 +198,7 @@
     'Unable to load organizations. Please try again.': 'todo',
     'Unable to load ssl scans. Please try again.': 'todo',
     'Unable to load summary. Please try again.': 'todo',
+    'Unable to load user(s). Please try again.': 'todo',
     'Unable to load verified domains. Please try again.': 'todo',
     'Unable to load verified organizations. Please try again.': 'todo',
     'Unable to load web summary. Please try again.': 'todo',
@@ -211,6 +217,7 @@
     'Unable to remove user from this organization. Please try again.': 'todo',
     'Unable to remove user from unknown organization.': 'todo',
     'Unable to request a on time scan on an unknown domain.': 'todo',
+    'Unable to reset password. Please request a new email.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
     'Unable to select DMARC report(s) for this period and year.': 'todo',
     'Unable to send TFA code, please try again.': 'todo',
@@ -220,7 +227,7 @@
     'Unable to send password reset email. Please try again.': 'todo',
     'Unable to send two factor authentication message. Please try again.':
       'todo',
-    'Unable to send verification email. Please try again.': 'todo',
+    'Unable to send verification email. Please try again.': 'todo<<<<<<< HEAD',
     'Unable to set phone number, please try again.': 'todo',
     'Unable to sign in, please try again.': 'todo',
     'Unable to sign up. Please try again.': 'todo',
@@ -236,9 +243,9 @@
       'todo',
     'Unable to update password, new passwords do not match. Please try again.':
       'todo',
-    'Unable to update password, passwords are required to be 12 characters or longer. Please try again.':
+    'Unable to update password, passwords do not match requirements. Please try again.':
       'todo',
-    'Unable to update password. Please try again.': 'todo',
+    'Unable to update password. Please try again.': 'todo<<<<<<< HEAD',
     'Unable to update profile. Please try again.': 'todo',
     'Unable to update unknown domain.': 'todo',
     'Unable to update unknown organization.': 'todo',
@@ -255,7 +262,7 @@
     'Unable to verify unknown organization.': 'todo',
     'User could not be queried.': 'todo',
     'User role was updated successfully.': 'todo',
-    'Username already in use.': 'todo',
+    'Username already in use.': 'todo<<<<<<< HEAD',
     'Username not available, please try another.': 'todo',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':
       'todo',

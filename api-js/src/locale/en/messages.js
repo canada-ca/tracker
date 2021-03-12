@@ -14,6 +14,10 @@
       'If an account with this username is found, a password reset link will be found in your inbox.',
     'If an account with this username is found, an email verification link will be found in your inbox.':
       'If an account with this username is found, an email verification link will be found in your inbox.',
+    'Incorrect TFA code. Please sign in again.':
+      'Incorrect TFA code. Please sign in again.',
+    'Incorrect token value. Please request a new email.':
+      'Incorrect token value. Please request a new email.',
     'Incorrect username or password. Please try again.':
       'Incorrect username or password. Please try again.',
     'Invalid token, please request a new one.':
@@ -64,9 +68,10 @@
       'Passing both `first` and `last` to paginate the `verifiedDomain` connection is not supported.',
     'Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported.':
       'Passing both `first` and `last` to paginate the `verifiedOrganization` connection is not supported.',
-    'Password is not strong enough. Please try again.':
-      'Password is not strong enough. Please try again.',
-    'Password is too short.': 'Password is too short.',
+    'Password does not meet requirements.':
+      'Password does not meet requirements.',
+    'Password does not requirements. Please try again.':
+      'Password does not requirements. Please try again.',
     'Password was successfully reset.': 'Password was successfully reset.',
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
@@ -255,12 +260,18 @@
     ],
     'Successfully verified phone number, and set TFA send method to text.':
       'Successfully verified phone number, and set TFA send method to text.',
+    'Token value incorrect, please sign in again.':
+      'Token value incorrect, please sign in again.',
     'Too many failed login attempts, please reset your password, and try again.':
-      'Too many failed login attempts, please reset your password, and try again.',
+      'Too many failed login attempts, please reset your password, and try again.<<<<<<< HEAD=======',
+    'Two factor code has been successfully sent, you will receive a text message shortly.':
+      'Two factor code has been successfully sent, you will receive a text message shortly.>>>>>>> update user error messages',
     'Two factor code is incorrect. Please try again.':
       'Two factor code is incorrect. Please try again.',
     'Two factor code length is incorrect. Please try again.':
       'Two factor code length is incorrect. Please try again.',
+    'Unable to add user to organization. Please try again.':
+      'Unable to add user to organization. Please try again.',
     'Unable to authenticate. Please try again.':
       'Unable to authenticate. Please try again.',
     'Unable to check permission. Please try again.':
@@ -301,8 +312,6 @@
       'Unable to find the requested domain.',
     'Unable to find user affiliation(s). Please try again.':
       'Unable to find user affiliation(s). Please try again.',
-    'Unable to find user. Please try again.':
-      'Unable to find user. Please try again.',
     'Unable to find verified domain. Please try again.':
       'Unable to find verified domain. Please try again.',
     'Unable to find verified organization. Please try again.':
@@ -361,6 +370,8 @@
       'Unable to load ssl scans. Please try again.',
     'Unable to load summary. Please try again.':
       'Unable to load summary. Please try again.',
+    'Unable to load user(s). Please try again.':
+      'Unable to load user(s). Please try again.',
     'Unable to load verified domains. Please try again.':
       'Unable to load verified domains. Please try again.',
     'Unable to load verified organizations. Please try again.':
@@ -394,6 +405,8 @@
       'Unable to remove user from unknown organization.',
     'Unable to request a on time scan on an unknown domain.':
       'Unable to request a on time scan on an unknown domain.',
+    'Unable to reset password. Please request a new email.':
+      'Unable to reset password. Please request a new email.',
     'Unable to reset password. Please try again.':
       'Unable to reset password. Please try again.',
     'Unable to select DMARC report(s) for this period and year.':
@@ -425,7 +438,7 @@
     'Unable to update domain that does not belong to the given organization.':
       'Unable to update domain that does not belong to the given organization.',
     'Unable to update domain. Please try again.':
-      'Unable to update domain. Please try again.<<<<<<< HEAD',
+      'Unable to update domain. Please try again.',
     'Unable to update organization. Please try again.':
       'Unable to update organization. Please try again.',
     'Unable to update password, authentication error occurred, please sign in again.':
@@ -434,10 +447,10 @@
       'Unable to update password, current password does not match. Please try again.',
     'Unable to update password, new passwords do not match. Please try again.':
       'Unable to update password, new passwords do not match. Please try again.',
-    'Unable to update password, passwords are required to be 12 characters or longer. Please try again.':
-      'Unable to update password, passwords are required to be 12 characters or longer. Please try again.',
+    'Unable to update password, passwords do not match requirements. Please try again.':
+      'Unable to update password, passwords do not match requirements. Please try again.',
     'Unable to update password. Please try again.':
-      'Unable to update password. Please try again.',
+      'Unable to update password. Please try again.<<<<<<< HEAD',
     'Unable to update profile. Please try again.':
       'Unable to update profile. Please try again.',
     'Unable to update unknown domain.': 'Unable to update unknown domain.',
@@ -465,7 +478,7 @@
     'User could not be queried.': 'User could not be queried.',
     'User role was updated successfully.':
       'User role was updated successfully.',
-    'Username already in use.': 'Username already in use.',
+    'Username already in use.': 'Username already in use.<<<<<<< HEAD',
     'Username not available, please try another.':
       'Username not available, please try another.',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':
