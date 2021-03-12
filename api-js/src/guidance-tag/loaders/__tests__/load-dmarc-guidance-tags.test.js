@@ -111,7 +111,9 @@ describe('given the dmarcGuidanceTagLoader function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find DMARC guidance tag(s). Please try again.'),
+            new Error(
+              'Unable to find DMARC guidance tag(s). Please try again.',
+            ),
           )
         }
 
@@ -134,7 +136,9 @@ describe('given the dmarcGuidanceTagLoader function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find DMARC guidance tag(s). Please try again.'),
+            new Error(
+              'Unable to find DMARC guidance tag(s). Please try again.',
+            ),
           )
         }
 

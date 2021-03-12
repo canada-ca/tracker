@@ -950,7 +950,9 @@ describe('when given the load https guidance tag connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load HTTPS guidance tag(s). Please try again.'),
+            new Error(
+              'Unable to load HTTPS guidance tag(s). Please try again.',
+            ),
           )
         }
 
@@ -986,7 +988,9 @@ describe('when given the load https guidance tag connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load HTTPS guidance tag(s). Please try again.'),
+            new Error(
+              'Unable to load HTTPS guidance tag(s). Please try again.',
+            ),
           )
         }
 

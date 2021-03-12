@@ -28,6 +28,8 @@ export const sendAuthTextMsg = ({ notifyClient, i18n }) => async ({ user }) => {
     console.error(
       `Error ocurred when sending authentication code via text for ${user._key}: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to send authentication text message. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to send authentication text message. Please try again.`),
+    )
   }
 }

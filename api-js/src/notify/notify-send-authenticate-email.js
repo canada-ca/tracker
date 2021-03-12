@@ -15,6 +15,8 @@ export const sendAuthEmail = ({ notifyClient, i18n }) => async ({ user }) => {
     console.error(
       `Error ocurred when sending authentication code via email for ${user._key}: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to send authentication email. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to send authentication email. Please try again.`),
+    )
   }
 }

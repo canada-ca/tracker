@@ -950,7 +950,9 @@ describe('when given the load dmarc guidance tag connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load DMARC guidance tag(s). Please try again.'),
+            new Error(
+              'Unable to load DMARC guidance tag(s). Please try again.',
+            ),
           )
         }
 
@@ -986,7 +988,9 @@ describe('when given the load dmarc guidance tag connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load DMARC guidance tag(s). Please try again.'),
+            new Error(
+              'Unable to load DMARC guidance tag(s). Please try again.',
+            ),
           )
         }
 

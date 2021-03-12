@@ -1366,9 +1366,7 @@ describe('removing a domain', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to remove unknown domain.'),
-          ]
+          const error = [new GraphQLError('Unable to remove unknown domain.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1423,7 +1421,9 @@ describe('removing a domain', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to remove domain from unknown organization.'),
+            new GraphQLError(
+              'Unable to remove domain from unknown organization.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -1520,7 +1520,9 @@ describe('removing a domain', () => {
             )
 
             const error = [
-              new GraphQLError('Permission Denied: Please contact super admin for help with removing domain.'),
+              new GraphQLError(
+                'Permission Denied: Please contact super admin for help with removing domain.',
+              ),
             ]
 
             expect(response.errors).toEqual(error)
@@ -1579,7 +1581,9 @@ describe('removing a domain', () => {
             )
 
             const error = [
-              new GraphQLError('Permission Denied: Please contact super admin for help with removing domain.'),
+              new GraphQLError(
+                'Permission Denied: Please contact super admin for help with removing domain.',
+              ),
             ]
 
             expect(response.errors).toEqual(error)
@@ -1631,7 +1635,9 @@ describe('removing a domain', () => {
             )
 
             const error = [
-              new GraphQLError('Permission Denied: Please contact super admin for help with removing domain.'),
+              new GraphQLError(
+                'Permission Denied: Please contact super admin for help with removing domain.',
+              ),
             ]
 
             expect(response.errors).toEqual(error)
@@ -1729,7 +1735,9 @@ describe('removing a domain', () => {
             )
 
             const error = [
-              new GraphQLError('Permission Denied: Please contact organization admin for help with removing domain.'),
+              new GraphQLError(
+                'Permission Denied: Please contact organization admin for help with removing domain.',
+              ),
             ]
 
             expect(response.errors).toEqual(error)
@@ -1781,7 +1789,9 @@ describe('removing a domain', () => {
             )
 
             const error = [
-              new GraphQLError('Permission Denied: Please contact organization admin for help with removing domain.'),
+              new GraphQLError(
+                'Permission Denied: Please contact organization admin for help with removing domain.',
+              ),
             ]
 
             expect(response.errors).toEqual(error)
