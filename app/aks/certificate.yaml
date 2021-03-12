@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  creationTimestamp: null
+  name: ingress-cert
+  namespace: istio-system
+spec:
+  commonName: tracker.canada.ca
+  dnsNames:
+  - tracker.canada.ca
+  - suivi.canada.ca
+  issuerRef:
+    kind: Issuer
+    name: letsencrypt-staging
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8 # ITSP.40.062 6.2 Signature Algorithms
+    size: 4096
+  secretName: tracker-credential
+status: {}
