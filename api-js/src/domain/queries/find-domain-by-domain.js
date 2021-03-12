@@ -34,9 +34,7 @@ export const findDomainByDomain = {
 
     if (typeof domain === 'undefined') {
       console.warn(`User ${user._key} could not retrieve domain.`)
-      throw new Error(
-        i18n._(t`No domain with the provided domain could be found.`),
-      )
+      throw new Error(i18n._(t`Unable to find the requested domain.`))
     }
 
     // Check user permission for domain access
@@ -44,7 +42,11 @@ export const findDomainByDomain = {
 
     if (!permitted) {
       console.warn(`User ${user._key} could not retrieve domain.`)
-      throw new Error(i18n._(t`Could not retrieve specified domain.`))
+      throw new Error(
+        i18n._(
+          t`Permission Denied: Please contact organization user for help with retrieving this domain.`,
+        ),
+      )
     }
 
     console.info(

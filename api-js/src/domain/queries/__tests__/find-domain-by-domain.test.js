@@ -95,7 +95,7 @@ describe('given findDomainByDomain query', () => {
   afterAll(async () => {
     await drop()
   })
-  
+
   describe('given successful domain retrieval', () => {
     beforeEach(async () => {
       await collections.affiliations.save({
@@ -238,9 +238,7 @@ describe('given findDomainByDomain query', () => {
             )
 
             const error = [
-              new GraphQLError(
-                `No domain with the provided domain could be found.`,
-              ),
+              new GraphQLError(`Unable to find the requested domain.`),
             ]
 
             expect(response.errors).toEqual(error)
@@ -331,7 +329,9 @@ describe('given findDomainByDomain query', () => {
             )
 
             const error = [
-              new GraphQLError(`Could not retrieve specified domain.`),
+              new GraphQLError(
+                `Permission Denied: Please contact organization user for help with retrieving this domain.`,
+              ),
             ]
 
             expect(response.errors).toEqual(error)

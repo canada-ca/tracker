@@ -5,7 +5,6 @@
     'Authentication error. Please sign in.': 'todo',
     'Cannot query affiliations on organization without admin permission or higher.':
       'todo',
-    'Could not retrieve specified domain.': 'todo',
     'Could not retrieve specified organization.': 'todo',
     'Error when retrieving dmarc report information. Please try again.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
@@ -15,7 +14,6 @@
     'Incorrect username or password. Please try again.': 'todo',
     'Invalid token, please request a new one.': 'todo',
     'New passwords do not match. Please try again.': 'todo',
-    'No domain with the provided domain could be found.': 'todo',
     'No organization with the provided slug could be found.': 'todo',
     'No verified domain with the provided domain could be found.': 'todo',
     'Organization has already been verified.': 'todo',
@@ -60,6 +58,8 @@
     'Password was successfully reset.': 'todo',
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
+    'Permission Denied: Please contact organization admin for help with removing domain.':
+      'todo',
     'Permission Denied: Please contact organization admin for help with removing users.':
       'todo',
     'Permission Denied: Please contact organization admin for help with updating users roles.':
@@ -67,6 +67,16 @@
     'Permission Denied: Please contact organization admin for help with user invitations.':
       'todo',
     'Permission Denied: Please contact organization admin for help with user role changes.':
+      'todo',
+    'Permission Denied: Please contact organization user for help with creating domain.':
+      'todo',
+    'Permission Denied: Please contact organization user for help with retrieving this domain.':
+      'todo',
+    'Permission Denied: Please contact organization user for help with scanning this domain.':
+      'todo',
+    'Permission Denied: Please contact organization user for help with updating this domain.':
+      'todo',
+    'Permission Denied: Please contact super admin for help with removing domain.':
       'todo',
     'Permission check error. Unable to request domain information.': 'todo',
     'Permission error, not an admin for this user.': 'todo',
@@ -125,6 +135,7 @@
     'Two factor code length is incorrect. Please try again.': 'todo',
     'Unable to authenticate. Please try again.': 'todo',
     'Unable to check permission. Please try again.': 'todo',
+    'Unable to create domain in unknown organization.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
     'Unable to dispatch one time scan. Please try again.': 'todo',
@@ -134,7 +145,6 @@
     'Unable to find dkim scan. Please try again.': 'todo',
     'Unable to find dmarc guidance tags. Please try again.': 'todo',
     'Unable to find dmarc scan. Please try again.': 'todo',
-    'Unable to find domain. Please try again.': 'todo',
     'Unable to find https guidance tags. Please try again.': 'todo',
     'Unable to find https scan. Please try again.': 'todo',
     'Unable to find organization. Please try again.': 'todo',
@@ -143,6 +153,7 @@
     'Unable to find ssl guidance tags. Please try again.': 'todo',
     'Unable to find ssl scan. Please try again.': 'todo',
     'Unable to find summary. Please try again.': 'todo',
+    'Unable to find the requested domain.': 'todo',
     'Unable to find user affiliation(s). Please try again.': 'todo',
     'Unable to find user. Please try again.': 'todo',
     'Unable to find verified domain. Please try again.': 'todo',
@@ -160,6 +171,8 @@
     'Unable to load dkim scans. Please try again.': 'todo',
     'Unable to load dmarc guidance tags. Please try again.': 'todo',
     'Unable to load dmarc scans. Please try again.': 'todo',
+    'Unable to load domain(s). Please try again.': 'todo',
+    'Unable to load domain. Please try again.': 'todo',
     'Unable to load domains. Please try again.': 'todo',
     'Unable to load full pass data. Please try again.': 'todo',
     'Unable to load https guidance tags. Please try again.': 'todo',
@@ -174,18 +187,20 @@
     'Unable to load verified organizations. Please try again.': 'todo',
     'Unable to load web summary. Please try again.': 'todo',
     'Unable to query affiliation(s). Please try again.': 'todo',
-    'Unable to query domains. Please try again.': 'todo',
+    'Unable to query domain(s). Please try again.': 'todo',
     'Unable to query organizations. Please try again.': 'todo',
     'Unable to remove a user that already does not belong to this organization.':
       'todo',
+    'Unable to remove domain from unknown organization.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
     'Unable to remove organization. Please try again.': 'todo',
+    'Unable to remove unknown domain.': 'todo',
     'Unable to remove unknown user from organization.': 'todo',
     'Unable to remove user from organization.': 'todo',
     'Unable to remove user from organization. Please try again.': 'todo',
     'Unable to remove user from this organization. Please try again.': 'todo',
     'Unable to remove user from unknown organization.': 'todo',
-    'Unable to request a on time scan on this domain.': 'todo',
+    'Unable to request a on time scan on an unknown domain.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
     'Unable to select dmarc reports for this period and year.': 'todo',
     'Unable to select DMARC report(s) for this period and year.': 'todo',
@@ -199,6 +214,9 @@
     'Unable to sign in, please try again.': 'todo',
     'Unable to sign up. Please try again.': 'todo',
     'Unable to two factor authenticate. Please try again.': 'todo',
+    'Unable to update domain in an unknown org.': 'todo',
+    'Unable to update domain that does not belong to the given organization.':
+      'todo',
     'Unable to update domain. Please try again.': 'todo',
     'Unable to update organization. Please try again.': 'todo',
     'Unable to update password, authentication error occurred, please sign in again.':
@@ -211,6 +229,7 @@
       'todo',
     'Unable to update password. Please try again.': 'todo',
     'Unable to update profile. Please try again.': 'todo',
+    'Unable to update unknown domain.': 'todo',
     'Unable to update unknown users role.': 'todo',
     'Unable to update users role that does not belong to this org. Please invite user to the organization.':
       'todo',

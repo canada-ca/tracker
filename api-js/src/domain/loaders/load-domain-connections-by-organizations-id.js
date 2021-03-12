@@ -310,7 +310,7 @@ export const domainLoaderConnectionsByOrgId = (
     console.error(
       `Database error occurred while user: ${userKey} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
+    throw new Error(i18n._(t`Unable to load domain(s). Please try again.`))
   }
 
   let domainsInfo
@@ -320,7 +320,7 @@ export const domainLoaderConnectionsByOrgId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
+    throw new Error(i18n._(t`Unable to load domain(s). Please try again.`))
   }
 
   if (domainsInfo.domains.length === 0) {

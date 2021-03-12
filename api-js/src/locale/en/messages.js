@@ -8,8 +8,6 @@
       'Authentication error. Please sign in.',
     'Cannot query affiliations on organization without admin permission or higher.':
       'Cannot query affiliations on organization without admin permission or higher.',
-    'Could not retrieve specified domain.':
-      'Could not retrieve specified domain.',
     'Could not retrieve specified organization.':
       'Could not retrieve specified organization.',
     'Error when retrieving dmarc report information. Please try again.':
@@ -24,8 +22,6 @@
       'Invalid token, please request a new one.',
     'New passwords do not match. Please try again.':
       'New passwords do not match. Please try again.',
-    'No domain with the provided domain could be found.':
-      'No domain with the provided domain could be found.',
     'No organization with the provided slug could be found.':
       'No organization with the provided slug could be found.',
     'No verified domain with the provided domain could be found.':
@@ -74,6 +70,8 @@
     'Password was successfully reset.': 'Password was successfully reset.',
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
+    'Permission Denied: Please contact organization admin for help with removing domain.':
+      'Permission Denied: Please contact organization admin for help with removing domain.',
     'Permission Denied: Please contact organization admin for help with removing users.':
       'Permission Denied: Please contact organization admin for help with removing users.',
     'Permission Denied: Please contact organization admin for help with updating users roles.':
@@ -82,6 +80,16 @@
       'Permission Denied: Please contact organization admin for help with user invitations.',
     'Permission Denied: Please contact organization admin for help with user role changes.':
       'Permission Denied: Please contact organization admin for help with user role changes.',
+    'Permission Denied: Please contact organization user for help with creating domain.':
+      'Permission Denied: Please contact organization user for help with creating domain.',
+    'Permission Denied: Please contact organization user for help with retrieving this domain.':
+      'Permission Denied: Please contact organization user for help with retrieving this domain.',
+    'Permission Denied: Please contact organization user for help with scanning this domain.':
+      'Permission Denied: Please contact organization user for help with scanning this domain.',
+    'Permission Denied: Please contact organization user for help with updating this domain.':
+      'Permission Denied: Please contact organization user for help with updating this domain.',
+    'Permission Denied: Please contact super admin for help with removing domain.':
+      'Permission Denied: Please contact super admin for help with removing domain.',
     'Permission check error. Unable to request domain information.':
       'Permission check error. Unable to request domain information.',
     'Permission error, not an admin for this user.':
@@ -247,6 +255,8 @@
       'Unable to authenticate. Please try again.',
     'Unable to check permission. Please try again.':
       'Unable to check permission. Please try again.',
+    'Unable to create domain in unknown organization.':
+      'Unable to create domain in unknown organization.',
     'Unable to create domain. Please try again.':
       'Unable to create domain. Please try again.',
     'Unable to create organization. Please try again.':
@@ -265,8 +275,6 @@
       'Unable to find dmarc guidance tags. Please try again.',
     'Unable to find dmarc scan. Please try again.':
       'Unable to find dmarc scan. Please try again.',
-    'Unable to find domain. Please try again.':
-      'Unable to find domain. Please try again.',
     'Unable to find https guidance tags. Please try again.':
       'Unable to find https guidance tags. Please try again.',
     'Unable to find https scan. Please try again.':
@@ -283,6 +291,8 @@
       'Unable to find ssl scan. Please try again.',
     'Unable to find summary. Please try again.':
       'Unable to find summary. Please try again.',
+    'Unable to find the requested domain.':
+      'Unable to find the requested domain.',
     'Unable to find user affiliation(s). Please try again.':
       'Unable to find user affiliation(s). Please try again.',
     'Unable to find user. Please try again.':
@@ -317,6 +327,10 @@
       'Unable to load dmarc guidance tags. Please try again.',
     'Unable to load dmarc scans. Please try again.':
       'Unable to load dmarc scans. Please try again.',
+    'Unable to load domain(s). Please try again.':
+      'Unable to load domain(s). Please try again.',
+    'Unable to load domain. Please try again.':
+      'Unable to load domain. Please try again.',
     'Unable to load domains. Please try again.':
       'Unable to load domains. Please try again.',
     'Unable to load full pass data. Please try again.':
@@ -345,16 +359,19 @@
       'Unable to load web summary. Please try again.',
     'Unable to query affiliation(s). Please try again.':
       'Unable to query affiliation(s). Please try again.',
-    'Unable to query domains. Please try again.':
-      'Unable to query domains. Please try again.',
+    'Unable to query domain(s). Please try again.':
+      'Unable to query domain(s). Please try again.',
     'Unable to query organizations. Please try again.':
       'Unable to query organizations. Please try again.',
     'Unable to remove a user that already does not belong to this organization.':
       'Unable to remove a user that already does not belong to this organization.',
+    'Unable to remove domain from unknown organization.':
+      'Unable to remove domain from unknown organization.',
     'Unable to remove domain. Please try again.':
       'Unable to remove domain. Please try again.',
     'Unable to remove organization. Please try again.':
       'Unable to remove organization. Please try again.',
+    'Unable to remove unknown domain.': 'Unable to remove unknown domain.',
     'Unable to remove unknown user from organization.':
       'Unable to remove unknown user from organization.',
     'Unable to remove user from organization.':
@@ -365,8 +382,8 @@
       'Unable to remove user from this organization. Please try again.',
     'Unable to remove user from unknown organization.':
       'Unable to remove user from unknown organization.',
-    'Unable to request a on time scan on this domain.':
-      'Unable to request a on time scan on this domain.',
+    'Unable to request a on time scan on an unknown domain.':
+      'Unable to request a on time scan on an unknown domain.',
     'Unable to reset password. Please try again.':
       'Unable to reset password. Please try again.',
     'Unable to select dmarc reports for this period and year.':
@@ -391,6 +408,10 @@
       'Unable to sign up. Please try again.',
     'Unable to two factor authenticate. Please try again.':
       'Unable to two factor authenticate. Please try again.',
+    'Unable to update domain in an unknown org.':
+      'Unable to update domain in an unknown org.',
+    'Unable to update domain that does not belong to the given organization.':
+      'Unable to update domain that does not belong to the given organization.',
     'Unable to update domain. Please try again.':
       'Unable to update domain. Please try again.',
     'Unable to update organization. Please try again.':
@@ -407,6 +428,7 @@
       'Unable to update password. Please try again.',
     'Unable to update profile. Please try again.':
       'Unable to update profile. Please try again.',
+    'Unable to update unknown domain.': 'Unable to update unknown domain.',
     'Unable to update unknown users role.':
       'Unable to update unknown users role.',
     'Unable to update users role that does not belong to this org. Please invite user to the organization.':

@@ -66,7 +66,9 @@ export const createDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to create a domain to an organization: ${orgId} that does not exist.`,
       )
-      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to create domain in unknown organization.`),
+      )
     }
 
     // Check to see if user belongs to org
@@ -80,7 +82,11 @@ export const createDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to create a domain in: ${org.slug}, however they do not have permission to do so.`,
       )
-      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+      throw new Error(
+        i18n._(
+          t`Permission Denied: Please contact organization user for help with creating domain.`,
+        ),
+      )
     }
 
     const insertDomain = {

@@ -15,7 +15,7 @@ export const domainLoaderByDomain = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running domainLoaderByDomain: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find domain. Please try again.`))
+      throw new Error(i18n._(t`Unable to load domain. Please try again.`))
     }
 
     const domainMap = {}
@@ -27,7 +27,7 @@ export const domainLoaderByDomain = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running domainLoaderByDomain: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find domain. Please try again.`))
+      throw new Error(i18n._(t`Unable to load domain. Please try again.`))
     }
 
     return domains.map((domain) => domainMap[domain])

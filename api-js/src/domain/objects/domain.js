@@ -123,7 +123,7 @@ export const domainType = new GraphQLObjectType({
             `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
           )
           throw new Error(
-            `Unable to retrieve dmarc report information for: ${domain}`,
+            `Unable to retrieve DMARC report information for: ${domain}`,
           )
         }
 
@@ -163,7 +163,7 @@ export const domainType = new GraphQLObjectType({
             `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
           )
           throw new Error(
-            `Unable to retrieve dmarc report information for: ${domain}`,
+            `Unable to retrieve DMARC report information for: ${domain}`,
           )
         }
 
