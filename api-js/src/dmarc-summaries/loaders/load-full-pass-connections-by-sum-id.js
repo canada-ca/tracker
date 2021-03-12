@@ -12,7 +12,7 @@ export const fullPassLoaderConnectionsBySumId = (
     console.warn(
       `SummaryId was undefined when user: ${userKey} attempted to load full passes in fullPassLoaderConnectionsBySumId.`,
     )
-    throw new Error(i18n._(t`Unable to load full passes. Please try again.`))
+    throw new Error(i18n._(t`Unable to load full pass data. Please try again.`))
   }
 
   let afterTemplate = aql``
@@ -136,7 +136,7 @@ export const fullPassLoaderConnectionsBySumId = (
     console.error(
       `Database error occurred while user: ${userKey} was trying to gather full passes in fullPassLoaderConnectionsBySumId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load full passes. Please try again.`))
+    throw new Error(i18n._(t`Unable to load full pass data. Please try again.`))
   }
 
   let fullPassInfo
@@ -146,7 +146,7 @@ export const fullPassLoaderConnectionsBySumId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to gather full passes in fullPassLoaderConnectionsBySumId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load full passes. Please try again.`))
+    throw new Error(i18n._(t`Unable to load full pass data. Please try again.`))
   }
 
   if (fullPassInfo.fullPasses.length === 0) {

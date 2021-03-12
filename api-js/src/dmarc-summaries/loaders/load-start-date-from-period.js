@@ -31,7 +31,7 @@ export const loadStartDateFromPeriod = (moment, userKey, i18n) => ({
         `User: ${userKey} attempted to load startDate that is out of range period: ${period}, year: ${year}`,
       )
       throw new Error(
-        i18n._(t`Unable to select dmarc reports for this period and year.`),
+        i18n._(t`Unable to select DMARC report(s) for this period and year.`),
       )
     }
 
@@ -46,7 +46,7 @@ export const loadStartDateFromPeriod = (moment, userKey, i18n) => ({
         `User: ${userKey} attempted to load startDate that is out of range period: ${period}, year: ${year}`,
       )
       throw new Error(
-        i18n._(t`Unable to select dmarc reports for this period and year.`),
+        i18n._(t`Unable to select DMARC report(s) for this period and year.`),
       )
     }
 

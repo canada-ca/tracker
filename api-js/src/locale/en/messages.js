@@ -253,6 +253,8 @@
       'Unable to create organization. Please try again.',
     'Unable to dispatch one time scan. Please try again.':
       'Unable to dispatch one time scan. Please try again.',
+    'Unable to find DMARC summary data. Please try again.':
+      'Unable to find DMARC summary data. Please try again.',
     'Unable to find dkim guidance tags. Please try again.':
       'Unable to find dkim guidance tags. Please try again.',
     'Unable to find dkim result. Please try again.':
@@ -263,8 +265,6 @@
       'Unable to find dmarc guidance tags. Please try again.',
     'Unable to find dmarc scan. Please try again.':
       'Unable to find dmarc scan. Please try again.',
-    'Unable to find dmarc summary. Please try again.':
-      'Unable to find dmarc summary. Please try again.',
     'Unable to find domain. Please try again.':
       'Unable to find domain. Please try again.',
     'Unable to find https guidance tags. Please try again.':
@@ -297,30 +297,30 @@
       'Unable to invite user. Please try again.',
     'Unable to invite yourself to an org.':
       'Unable to invite yourself to an org.',
+    'Unable to load DKIM failure data. Please try again.':
+      'Unable to load DKIM failure data. Please try again.',
+    'Unable to load DMARC failure data. Please try again.':
+      'Unable to load DMARC failure data. Please try again.',
+    'Unable to load DMARC summary data. Please try again.':
+      'Unable to load DMARC summary data. Please try again.',
+    'Unable to load SPF failure data. Please try again.':
+      'Unable to load SPF failure data. Please try again.',
     'Unable to load affiliation(s). Please try again.':
       'Unable to load affiliation(s). Please try again.',
-    'Unable to load dkim failure(s). Please try again.':
-      'Unable to load dkim failure(s). Please try again.',
     'Unable to load dkim guidance tags. Please try again.':
       'Unable to load dkim guidance tags. Please try again.',
     'Unable to load dkim results. Please try again.':
       'Unable to load dkim results. Please try again.',
     'Unable to load dkim scans. Please try again.':
       'Unable to load dkim scans. Please try again.',
-    'Unable to load dmarc failure(s). Please try again.':
-      'Unable to load dmarc failure(s). Please try again.',
     'Unable to load dmarc guidance tags. Please try again.':
       'Unable to load dmarc guidance tags. Please try again.',
     'Unable to load dmarc scans. Please try again.':
       'Unable to load dmarc scans. Please try again.',
-    'Unable to load dmarc summaries. Please try again.':
-      'Unable to load dmarc summaries. Please try again.',
-    'Unable to load dmarc summary(ies). Please try again.':
-      'Unable to load dmarc summary(ies). Please try again.',
     'Unable to load domains. Please try again.':
       'Unable to load domains. Please try again.',
-    'Unable to load full passes. Please try again.':
-      'Unable to load full passes. Please try again.',
+    'Unable to load full pass data. Please try again.':
+      'Unable to load full pass data. Please try again.',
     'Unable to load https guidance tags. Please try again.':
       'Unable to load https guidance tags. Please try again.',
     'Unable to load https scans. Please try again.':
@@ -329,8 +329,6 @@
       'Unable to load mail summary. Please try again.',
     'Unable to load organizations. Please try again.':
       'Unable to load organizations. Please try again.',
-    'Unable to load spf failures. Please try again.':
-      'Unable to load spf failures. Please try again.',
     'Unable to load spf guidance tags. Please try again.':
       'Unable to load spf guidance tags. Please try again.',
     'Unable to load spf scans. Please try again.':
@@ -373,6 +371,10 @@
       'Unable to reset password. Please try again.',
     'Unable to select dmarc reports for this period and year.':
       'Unable to select dmarc reports for this period and year.',
+    'Unable to select DMARC report(s) for this period and year.':
+      'Unable to select DMARC report(s) for this period and year.',
+    'Unable to send TFA code, please try again.':
+      'Unable to send TFA code, please try again.',
     'Unable to send org invite email. Please try again.':
       'Unable to send org invite email. Please try again.',
     'Unable to send password reset email. Please try again.':

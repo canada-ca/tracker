@@ -3043,7 +3043,9 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               })
             } catch (err) {
               expect(err).toEqual(
-                new Error('Unable to load dmarc summaries. Please try again.'),
+                new Error(
+                  'Unable to load DMARC summary data. Please try again.',
+                ),
               )
             }
 
@@ -3082,7 +3084,9 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               })
             } catch (err) {
               expect(err).toEqual(
-                new Error('Unable to load dmarc summaries. Please try again.'),
+                new Error(
+                  'Unable to load DMARC summary data. Please try again.',
+                ),
               )
             }
 

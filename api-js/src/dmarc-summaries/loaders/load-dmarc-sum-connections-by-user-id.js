@@ -414,7 +414,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
       `Database error occurred while user: ${userKey} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load dmarc summaries. Please try again.`),
+      i18n._(t`Unable to load DMARC summary data. Please try again.`),
     )
   }
 
@@ -426,7 +426,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
       `Cursor error occurred while user: ${userKey} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load dmarc summaries. Please try again.`),
+      i18n._(t`Unable to load DMARC summary data. Please try again.`),
     )
   }
 

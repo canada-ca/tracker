@@ -18,7 +18,7 @@ export const dmarcSummaryEdgeLoaderByDomainIdPeriod = (
       `Database error occurred when user: ${userKey} attempted to load dmarc summaries for domain: ${domainId}, period: ${startDate}, ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load dmarc summaries. Please try again.`),
+      i18n._(t`Unable to load DMARC summary data. Please try again.`),
     )
   }
 
@@ -30,7 +30,7 @@ export const dmarcSummaryEdgeLoaderByDomainIdPeriod = (
       `Cursor error occurred when user: ${userKey} attempted to load dmarc summaries for domain: ${domainId}, period: ${startDate}, ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load dmarc summaries. Please try again.`),
+      i18n._(t`Unable to load DMARC summary data. Please try again.`),
     )
   }
 

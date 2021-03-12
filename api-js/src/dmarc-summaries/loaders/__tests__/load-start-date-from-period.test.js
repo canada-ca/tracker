@@ -134,7 +134,7 @@ describe('given the loadStartDateFromPeriod', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Unable to select dmarc reports for this period and year.',
+                  'Unable to select DMARC report(s) for this period and year.',
                 ),
               )
             }
@@ -171,7 +171,7 @@ describe('given the loadStartDateFromPeriod', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Unable to select dmarc reports for this period and year.',
+                  'Unable to select DMARC report(s) for this period and year.',
                 ),
               )
             }
