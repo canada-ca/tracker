@@ -23,7 +23,7 @@ import { i18n } from '@lingui/core'
 import { SET_PHONE_NUMBER, VERIFY_PHONE_NUMBER } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
-import { object, string as yupString } from 'yup'
+import { object, number, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import PhoneNumberField from './PhoneNumberField'
@@ -213,11 +213,7 @@ function EditableUserPhoneNumber({ detailValue }) {
   const verifyPhoneModal = (
     <SlideIn in={isOpen}>
       {(styles) => (
-        <Modal
-          isOpen={true}
-          onClose={onClose}
-          initialFocusRef={verifyRef}
-        >
+        <Modal isOpen={true} onClose={onClose} initialFocusRef={verifyRef}>
           <ModalOverlay opacity={styles.opacity} />
           <ModalContent pb="4" {...styles}>
             <Formik
@@ -274,10 +270,15 @@ function EditableUserPhoneNumber({ detailValue }) {
 
   const modalContent = phoneCodeSent ? verifyPhoneModal : setPhoneModal
 
+  const PHONE_NUMBER_REGEX = /^\+[1-9]\d{10,15}$/
+
   const phoneValidationSchema = object().shape({
-    phoneNumber: number()
-      .required(fieldRequirements.phoneNumber.required.message)
-      .typeError(fieldRequirements.phoneNumber.typeError.message),
+    phoneNumber: yupString()
+      .required(i18n._(fieldRequirements.phoneNumber.required.message))
+      .matches(
+        PHONE_NUMBER_REGEX,
+        i18n._(fieldRequirements.phoneNumber.matches.message),
+      ),
   })
 
   const tfaValidationSchema = object().shape({
