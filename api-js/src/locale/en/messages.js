@@ -32,6 +32,8 @@
       'No verified domain with the provided domain could be found.',
     'Organization has already been verified.':
       'Organization has already been verified.',
+    'Organization name already in use, please choose another and try again.':
+      'Organization name already in use, please choose another and try again.',
     'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.':
       'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.':
