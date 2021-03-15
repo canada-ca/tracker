@@ -70,7 +70,7 @@ given organization.`,
       console.warn(
         `User: ${userKey} attempted to update a user: ${userName} role in org: ${orgId}, however there is no user associated with that user name.`,
       )
-      throw new Error(i18n._(t`Unable to update unknown user's role.`))
+      throw new Error(i18n._(t`Unable to update role: user unknown.`))
     }
 
     // Check to see if org exists
@@ -80,9 +80,7 @@ given organization.`,
       console.warn(
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${orgId}, however there is no org associated with that id.`,
       )
-      throw new Error(
-        i18n._(t`Unable to update user's role, in unknown organization.`),
-      )
+      throw new Error(i18n._(t`Unable to update role: organization unknown.`))
     }
 
     // Check requesting user's permission
@@ -111,7 +109,9 @@ given organization.`,
       console.error(
         `Database error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to update user's role. Please try again.`),
+      )
     }
 
     if (affiliationCursor.count < 1) {
@@ -119,9 +119,7 @@ given organization.`,
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however that user does not have an affiliation with that organization.`,
       )
       throw new Error(
-        i18n._(
-          t`Unable to update role of user that does not belong to this org. Please invite user to the organization.`,
-        ),
+        i18n._(t`Unable to update role: user does not belong to organization.`),
       )
     }
 
@@ -210,7 +208,9 @@ given organization.`,
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to update user's role. Please try again.`),
+      )
     }
 
     try {
@@ -219,7 +219,9 @@ given organization.`,
       console.warn(
         `Transaction commit error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to update user's role. Please try again.`),
+      )
     }
 
     console.info(

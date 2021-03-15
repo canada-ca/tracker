@@ -632,7 +632,7 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError(`Unable to update unknown user's role.`),
+            new GraphQLError(`Unable to update role: user unknown.`),
           ]
 
           expect(response.errors).toEqual(error)
@@ -684,9 +684,7 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError(
-              `Unable to update user's role, in unknown organization.`,
-            ),
+            new GraphQLError(`Unable to update role: organization unknown.`),
           ]
 
           expect(response.errors).toEqual(error)
@@ -894,7 +892,7 @@ describe('update a users role', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to update role of user that does not belong to this org. Please invite user to the organization.',
+              'Unable to update role: user does not belong to organization.',
             ),
           ]
 
