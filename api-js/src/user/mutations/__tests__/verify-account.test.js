@@ -41,14 +41,14 @@ describe('user send password reset email', () => {
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
   const mockedError = (output) => consoleOutput.push(output)
-  beforeEach(async () => {
+  beforeEach(() => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    await truncate()
   })
 
-  afterEach(() => {
+  afterEach(async () => {
+    await truncate()
     consoleOutput = []
   })
 
@@ -96,7 +96,15 @@ describe('user send password reset email', () => {
           `
             mutation {
               verifyAccount(input: { verifyTokenString: "${token}" }) {
-                status
+                result {
+                  ... on VerifyAccountResult {
+                    status
+                  }
+                  ... on VerifyAccountError {
+                    code
+                    description
+                  }
+                }
               }
             }
           `,
@@ -121,8 +129,10 @@ describe('user send password reset email', () => {
         const expectedResult = {
           data: {
             verifyAccount: {
-              status:
-                'Successfully email verified account, and set TFA send method to email.',
+              result: {
+                status:
+                  'Successfully email verified account, and set TFA send method to email.',
+              },
             },
           },
         }
@@ -153,7 +163,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -175,11 +193,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to verify account. Please try again.'),
-          ]
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description: 'Unable to verify account. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User attempted to verify their account, but the userKey is undefined.`,
           ])
@@ -195,7 +220,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -217,11 +250,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to verify account. Please try again.'),
-          ]
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description: 'Unable to verify account. Please try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to verify account, however no account is associated with this id.`,
           ])
@@ -254,7 +294,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -276,13 +324,19 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to verify account. Please request a new email.',
-            ),
-          ]
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to verify account. Please request a new email.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
           ])
@@ -315,7 +369,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -337,13 +399,19 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to verify account. Please request a new email.',
-            ),
-          ]
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to verify account. Please request a new email.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
           ])
@@ -376,7 +444,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -398,13 +474,19 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to verify account. Please request a new email.',
-            ),
-          ]
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to verify account. Please request a new email.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to verify their account, but the user id's do not match.`,
           ])
@@ -443,7 +525,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -517,7 +607,15 @@ describe('user send password reset email', () => {
           `
             mutation {
               verifyAccount(input: { verifyTokenString: "${token}" }) {
-                status
+                result {
+                  ... on VerifyAccountResult {
+                    status
+                  }
+                  ... on VerifyAccountError {
+                    code
+                    description
+                  }
+                }
               }
             }
           `,
@@ -542,7 +640,9 @@ describe('user send password reset email', () => {
         const expectedResult = {
           data: {
             verifyAccount: {
-              status: 'todo',
+              result: {
+                status: 'todo',
+              },
             },
           },
         }
@@ -573,7 +673,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -595,9 +703,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User attempted to verify their account, but the userKey is undefined.`,
           ])
@@ -613,7 +730,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -635,9 +760,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 1 attempted to verify account, however no account is associated with this id.`,
           ])
@@ -670,7 +804,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -692,9 +834,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
           ])
@@ -727,7 +878,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -749,9 +908,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
           ])
@@ -784,7 +952,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -806,9 +982,18 @@ describe('user send password reset email', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              verifyAccount: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to verify their account, but the user id's do not match.`,
           ])
@@ -847,7 +1032,15 @@ describe('user send password reset email', () => {
             `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
-                    status
+                    result {
+                      ... on VerifyAccountResult {
+                        status
+                      }
+                      ... on VerifyAccountError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
