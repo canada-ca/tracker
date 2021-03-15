@@ -133,7 +133,7 @@ function EditableUserPhoneNumber({ detailValue }) {
             isClosable: true,
             position: 'top-left',
           })
-          console.log('Incorrect setPhoneNumber.result typename.')
+          console.log('Incorrect verifyPhoneNumber.result typename.')
         }
       },
     },
