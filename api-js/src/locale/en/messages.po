@@ -11,9 +11,8 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: src/user/mutations/update-user-profile.js:66
-#: src/user/mutations/verify-phone-number.js:39
-#: src/user/mutations/verify-phone-number.js:53
+#: src/user/mutations/verify-phone-number.js:38
+#: src/user/mutations/verify-phone-number.js:52
 msgid "Authentication error, please sign in again."
 msgstr "Authentication error, please sign in again."
 
@@ -181,7 +180,7 @@ msgstr "Password does not requirements. Please try again."
 msgid "Password was successfully reset."
 msgstr "Password was successfully reset."
 
-#: src/user/mutations/update-user-password.js:141
+#: src/user/mutations/update-user-password.js:111
 msgid "Password was successfully updated."
 msgstr "Password was successfully updated."
 
@@ -268,7 +267,7 @@ msgstr "Permission error, not an admin for this user."
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Phone number has been successfully set, you will receive a verification text message shortly."
 
-#: src/user/mutations/update-user-profile.js:141
+#: src/user/mutations/update-user-profile.js:118
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -353,7 +352,7 @@ msgstr "Requesting {amount} records on the `SSL` connection exceeds the `{argSet
 msgid "Successfully dispatched one time scan."
 msgstr "Successfully dispatched one time scan."
 
-#: src/user/mutations/verify-account.js:121
+#: src/user/mutations/verify-account.js:120
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Successfully email verified account, and set TFA send method to email."
 
@@ -835,28 +834,22 @@ msgid "Unable to update organization. Please try again."
 msgstr "Unable to update organization. Please try again."
 
 #: src/user/mutations/update-user-password.js:60
-#: src/user/mutations/update-user-password.js:76
-msgid "Unable to update password, authentication error occurred, please sign in again."
-msgstr "Unable to update password, authentication error occurred, please sign in again."
-
-#: src/user/mutations/update-user-password.js:90
 msgid "Unable to update password, current password does not match. Please try again."
 msgstr "Unable to update password, current password does not match. Please try again."
 
-#: src/user/mutations/update-user-password.js:104
+#: src/user/mutations/update-user-password.js:74
 msgid "Unable to update password, new passwords do not match. Please try again."
 msgstr "Unable to update password, new passwords do not match. Please try again."
 
-#: src/user/mutations/update-user-password.js:118
-msgid "Unable to update password, passwords do not match requirements. Please try again."
-msgstr "Unable to update password, passwords do not match requirements. Please try again."
+#: src/user/mutations/update-user-password.js:88
+msgid "Unable to update password, passwords are required to be 12 characters or longer. Please try again."
+msgstr "Unable to update password, passwords are required to be 12 characters or longer. Please try again."
 
-#: src/user/mutations/update-user-password.js:135
+#: src/user/mutations/update-user-password.js:105
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:80
-#: src/user/mutations/update-user-profile.js:132
+#: src/user/mutations/update-user-profile.js:109
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
@@ -864,40 +857,30 @@ msgstr "Unable to update profile. Please try again."
 msgid "Unable to update role: organization unknown."
 msgstr "Unable to update role: organization unknown."
 
-#: src/affiliation/mutations/update-user-role.js:122
-msgid "Unable to update role: user does not belong to organization."
-msgstr "Unable to update role: user does not belong to organization."
+#: src/affiliation/mutations/update-user-role.js:75
+#: src/affiliation/mutations/update-user-role.js:85
+#: src/affiliation/mutations/update-user-role.js:95
+#: src/affiliation/mutations/update-user-role.js:110
+#: src/affiliation/mutations/update-user-role.js:153
+#: src/affiliation/mutations/update-user-role.js:172
+#: src/affiliation/mutations/update-user-role.js:185
+#: src/affiliation/mutations/update-user-role.js:201
+#: src/affiliation/mutations/update-user-role.js:210
+msgid "Unable to update users role. Please try again."
+msgstr "Unable to update users role. Please try again."
 
-#: src/affiliation/mutations/update-user-role.js:73
-msgid "Unable to update role: user unknown."
-msgstr "Unable to update role: user unknown."
+#: src/affiliation/mutations/update-user-role.js:64
+msgid "Unable to update your own role. Please try again."
+msgstr "Unable to update your own role. Please try again."
 
-#: src/domain/mutations/update-domain.js:74
-msgid "Unable to update unknown domain."
-msgstr "Unable to update unknown domain."
-
-#: src/organization/mutations/update-organization.js:137
-msgid "Unable to update unknown organization."
-msgstr "Unable to update unknown organization."
-
-#: src/affiliation/mutations/update-user-role.js:113
-#: src/affiliation/mutations/update-user-role.js:212
-#: src/affiliation/mutations/update-user-role.js:223
-msgid "Unable to update user's role. Please try again."
-msgstr "Unable to update user's role. Please try again."
-
-#: src/affiliation/mutations/update-user-role.js:63
-msgid "Unable to update your own role."
-msgstr "Unable to update your own role."
-
-#: src/user/mutations/verify-account.js:80
-#: src/user/mutations/verify-account.js:94
+#: src/user/mutations/verify-account.js:79
+#: src/user/mutations/verify-account.js:93
 msgid "Unable to verify account. Please request a new email."
 msgstr "Unable to verify account. Please request a new email."
 
 #: src/user/mutations/verify-account.js:46
-#: src/user/mutations/verify-account.js:61
-#: src/user/mutations/verify-account.js:111
+#: src/user/mutations/verify-account.js:60
+#: src/user/mutations/verify-account.js:110
 msgid "Unable to verify account. Please try again."
 msgstr "Unable to verify account. Please try again."
 
@@ -926,7 +909,7 @@ msgstr "User role was updated successfully."
 msgid "Username already in use."
 msgstr "Username already in use."
 
-#: src/user/mutations/update-user-profile.js:94
+#: src/user/mutations/update-user-profile.js:71
 msgid "Username not available, please try another."
 msgstr "Username not available, please try another."
 

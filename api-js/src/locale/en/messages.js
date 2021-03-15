@@ -437,8 +437,6 @@
       'Unable to update domain. Please try again.',
     'Unable to update organization. Please try again.':
       'Unable to update organization. Please try again.',
-    'Unable to update password, authentication error occurred, please sign in again.':
-      'Unable to update password, authentication error occurred, please sign in again.',
     'Unable to update password, current password does not match. Please try again.':
       'Unable to update password, current password does not match. Please try again.',
     'Unable to update password, new passwords do not match. Please try again.':
