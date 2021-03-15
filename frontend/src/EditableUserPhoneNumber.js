@@ -19,10 +19,11 @@ import {
 import WithPseudoBox from './withPseudoBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
-import { number, object } from 'yup'
+import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import PhoneNumberField from './PhoneNumberField'
@@ -91,10 +92,15 @@ function EditableUserPhoneNumber({ detailValue }) {
     },
   )
 
+  const PHONE_NUMBER_REGEX = /^\+[1-9]\d{10,15}$/
+
   const validationSchema = object().shape({
-    phoneNumber: number()
-      .required(fieldRequirements.phoneNumber.required.message)
-      .typeError(fieldRequirements.phoneNumber.typeError.message),
+    phoneNumber: yupString()
+      .required(i18n._(fieldRequirements.phoneNumber.required.message))
+      .matches(
+        PHONE_NUMBER_REGEX,
+        i18n._(fieldRequirements.phoneNumber.matches.message),
+      ),
   })
 
   return (
