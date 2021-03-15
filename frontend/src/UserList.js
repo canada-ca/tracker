@@ -12,6 +12,7 @@ import {
   Box,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import { UserCard } from './UserCard'
 import { number, string } from 'prop-types'
 import { useMutation } from '@apollo/client'
@@ -34,8 +35,8 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   const addUserValidationSchema = object().shape({
     userName: yupString()
-      .required(fieldRequirements.email.required.message)
-      .email(fieldRequirements.email.email.message),
+      .required(i18n._(fieldRequirements.email.required.message))
+      .email(i18n._(fieldRequirements.email.email.message)),
   })
 
   const {

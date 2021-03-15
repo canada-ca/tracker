@@ -3,6 +3,7 @@ import { string } from 'prop-types'
 import { Heading, Stack, Select, useToast } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import { Formik, Field } from 'formik'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
@@ -72,7 +73,7 @@ function EditableUserLanguage({ currentLang }) {
 
   const validationSchema = object().shape({
     lang: yupString()
-      .required(fieldRequirements.lang.required.message)
+      .required(i18n._(fieldRequirements.lang.required.message))
       .oneOf(fieldRequirements.lang.oneOf.types),
   })
 

@@ -18,6 +18,7 @@ import {
 import WithPseudoBox from './withPseudoBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import { UPDATE_USER_PASSWORD } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
@@ -93,16 +94,16 @@ function EditableUserPassword() {
 
   const validationSchema = object().shape({
     password: yupString()
-      .required(fieldRequirements.password.required.message)
+      .required(i18n._(fieldRequirements.password.required.message))
       .min(
         fieldRequirements.password.min.minLength,
-        fieldRequirements.password.min.message,
+        i18n._(fieldRequirements.password.min.message),
       ),
     confirmPassword: yupString()
-      .required(fieldRequirements.confirmPassword.required.message)
+      .required(i18n._(fieldRequirements.confirmPassword.required.message))
       .oneOf(
         fieldRequirements.confirmPassword.oneOf.types,
-        fieldRequirements.confirmPassword.oneOf.message,
+        i18n._(fieldRequirements.confirmPassword.oneOf.message),
       ),
     currentPassword: yupString().required(
       t`Please enter your current password.`,
