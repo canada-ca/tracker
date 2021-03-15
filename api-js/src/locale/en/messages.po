@@ -212,8 +212,8 @@ msgstr "Permission Denied: Please contact organization admin for help with updat
 #: src/affiliation/mutations/update-user-role.js:158
 #: src/affiliation/mutations/update-user-role.js:179
 #: src/affiliation/mutations/update-user-role.js:195
-msgid "Permission Denied: Please contact organization admin for help with updating users roles."
-msgstr "Permission Denied: Please contact organization admin for help with updating users roles."
+msgid "Permission Denied: Please contact organization admin for help with updating user's roles."
+msgstr "Permission Denied: Please contact organization admin for help with updating user's roles."
 
 #: src/affiliation/mutations/invite-user-to-org.js:91
 msgid "Permission Denied: Please contact organization admin for help with user invitations."
@@ -860,6 +860,10 @@ msgstr "Unable to update password. Please try again.<<<<<<< HEAD"
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
+#: src/affiliation/mutations/update-user-role.js:123
+msgid "Unable to update role of user that does not belong to this org. Please invite user to the organization."
+msgstr "Unable to update role of user that does not belong to this org. Please invite user to the organization."
+
 #: src/domain/mutations/update-domain.js:74
 msgid "Unable to update unknown domain."
 msgstr "Unable to update unknown domain."
@@ -869,22 +873,18 @@ msgid "Unable to update unknown organization."
 msgstr "Unable to update unknown organization."
 
 #: src/affiliation/mutations/update-user-role.js:73
-msgid "Unable to update unknown users role."
-msgstr "Unable to update unknown users role."
-
-#: src/affiliation/mutations/update-user-role.js:123
-msgid "Unable to update users role that does not belong to this org. Please invite user to the organization."
-msgstr "Unable to update users role that does not belong to this org. Please invite user to the organization."
+msgid "Unable to update unknown user's role."
+msgstr "Unable to update unknown user's role."
 
 #: src/affiliation/mutations/update-user-role.js:84
-msgid "Unable to update users role, in unknown organization."
-msgstr "Unable to update users role, in unknown organization."
+msgid "Unable to update user's role, in unknown organization."
+msgstr "Unable to update user's role, in unknown organization."
 
 #: src/affiliation/mutations/update-user-role.js:114
 #: src/affiliation/mutations/update-user-role.js:213
 #: src/affiliation/mutations/update-user-role.js:222
-msgid "Unable to update users role. Please try again."
-msgstr "Unable to update users role. Please try again."
+msgid "Unable to update user's role. Please try again."
+msgstr "Unable to update user's role. Please try again."
 
 #: src/affiliation/mutations/update-user-role.js:63
 msgid "Unable to update your own role."
