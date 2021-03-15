@@ -19,14 +19,13 @@ import {
 import WithPseudoBox from './withPseudoBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import { UPDATE_USER_PROFILE } from './graphql/mutations'
+import { SET_PHONE_NUMBER } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
 import { number, object } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import PhoneNumberField from './PhoneNumberField'
-import { UpdateUserProfilePhoneNumber } from './graphql/fragments'
 
 function EditableUserPhoneNumber({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -34,10 +33,8 @@ function EditableUserPhoneNumber({ detailValue }) {
   const toast = useToast()
   const initialFocusRef = useRef()
 
-  const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE({
-      UpdateUserProfileFields: UpdateUserProfilePhoneNumber,
-    }),
+  const [setPhoneNumber, { error: _setPhoneNumberError }] = useMutation(
+    SET_PHONE_NUMBER,
     {
       context: {
         headers: {
@@ -54,8 +51,8 @@ function EditableUserPhoneNumber({ detailValue }) {
           position: 'top-left',
         })
       },
-      onCompleted({ updateUserProfile }) {
-        if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
+      onCompleted({ setPhoneNumber }) {
+        if (setPhoneNumber.result.__typename === 'SetPhoneNumberResult') {
           toast({
             title: t`Changed User Phone Number`,
             description: t`You have successfully updated your phone number.`,
@@ -66,11 +63,11 @@ function EditableUserPhoneNumber({ detailValue }) {
           })
           onClose()
         } else if (
-          updateUserProfile.result.__typename === 'UpdateUserProfileError'
+          setPhoneNumber.result.__typename === 'SetPhoneNumberError'
         ) {
           toast({
             title: t`Unable to update to your phone number, please try again.`,
-            description: updateUserProfile.result.description,
+            description: setPhoneNumber.result.description,
             status: 'error',
             duration: 9000,
             isClosable: true,
@@ -79,13 +76,13 @@ function EditableUserPhoneNumber({ detailValue }) {
         } else {
           toast({
             title: t`Incorrect send method received.`,
-            description: t`Incorrect updateUserProfile.result typename.`,
+            description: t`Incorrect setPhoneNumber.result typename.`,
             status: 'error',
             duration: 9000,
             isClosable: true,
             position: 'top-left',
           })
-          console.log('Incorrect updateUserProfile.result typename.')
+          console.log('Incorrect setPhoneNumber.result typename.')
         }
       },
     },
@@ -138,7 +135,7 @@ function EditableUserPhoneNumber({ detailValue }) {
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
                   // Submit update detail mutation
-                  await updateUserProfile({
+                  await setPhoneNumber({
                     variables: {
                       phoneNumber: values.phoneNumber,
                     },
