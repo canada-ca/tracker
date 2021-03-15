@@ -2111,15 +2111,32 @@ type VerifiedOrganizationEdge {
   cursor: String!
 }
 
-input VerifyAccountInput {
-  # Token sent via email, and located in url.
-  verifyTokenString: String!
+type VerifyAccountPayload {
+  # `VerifyAccountUnion` returning either a `VerifyAccountResult`, or `VerifyAccountError` object.
+  result: VerifyAccountUnion
   clientMutationId: String
 }
 
-type VerifyAccountPayload {
-  # Informs user if account was successfully verified.
+# This union is used with the `verifyAccount` mutation, allowing for users to verify their account, and support any errors that may occur
+union VerifyAccountUnion = VerifyAccountError | VerifyAccountResult
+
+# This object is used to inform the user if any errors occurred while verifying their account.
+type VerifyAccountError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user that no errors were encountered while verifying their account.
+type VerifyAccountResult {
+  # Informs the user if their account was successfully verified.
   status: String
+}
+
+input VerifyAccountInput {
+  # Token sent via email, and located in url.
+  verifyTokenString: String!
   clientMutationId: String
 }
 
