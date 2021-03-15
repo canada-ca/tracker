@@ -257,14 +257,14 @@ export const REQUEST_SCAN = gql`
   }
 `
 
-export const SEND_PHONE_CODE = `
-  mutation SendPhoneCode($phoneNumber: PhoneNumber!) {
-    sendPhoneCode(input: { phoneNumber: $phoneNumber }) {
+export const SET_PHONE_NUMBER = `
+  mutation SetPhoneNumber($phoneNumber: PhoneNumber!) {
+    setPhoneNumber(input: { phoneNumber: $phoneNumber }) {
       result {
-        ... on SendPhoneCodeResult {
+        ... on SetPhoneNumberResult {
           status
         }
-        ... on SendPhoneCodeError {
+        ... on SetPhoneNumberError {
           code
           description
         }
