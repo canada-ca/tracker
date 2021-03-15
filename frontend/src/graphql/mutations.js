@@ -273,7 +273,7 @@ export const SET_PHONE_NUMBER = gql`
   }
 `
 
-export const VERIFY_PHONE = gql`
+export const VERIFY_PHONE_NUMBER = gql`
   mutation VerifyPhoneNumber($twoFactorCode: Int!) {
     verifyPhoneNumber(input: { twoFactorCode: $twoFactorCode }) {
       result {
