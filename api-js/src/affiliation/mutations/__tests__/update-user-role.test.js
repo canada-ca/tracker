@@ -963,7 +963,7 @@ describe('update a users role', () => {
 
               const error = [
                 new GraphQLError(
-                  `Permission Denied: Please contact organization admin for help with updating user's roles.`,
+                  `Permission Denied: Please contact organization admin for help with updating user roles.`,
                 ),
               ]
 
@@ -1034,7 +1034,7 @@ describe('update a users role', () => {
 
               const error = [
                 new GraphQLError(
-                  `Permission Denied: Please contact organization admin for help with updating user's roles.`,
+                  `Permission Denied: Please contact organization admin for help with updating user roles.`,
                 ),
               ]
 
@@ -1106,7 +1106,7 @@ describe('update a users role', () => {
 
             const error = [
               new GraphQLError(
-                `Permission Denied: Please contact organization admin for help with updating user's roles.`,
+                `Permission Denied: Please contact organization admin for help with updating user roles.`,
               ),
             ]
 
@@ -1175,7 +1175,7 @@ describe('update a users role', () => {
 
             const error = [
               new GraphQLError(
-                `Permission Denied: Please contact organization admin for help with updating user's roles.`,
+                `Permission Denied: Please contact organization admin for help with updating user roles.`,
               ),
             ]
 

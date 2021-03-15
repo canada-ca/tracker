@@ -153,7 +153,7 @@ given organization.`,
         )
         throw new Error(
           i18n._(
-            t`Permission Denied: Please contact organization admin for help with updating user's roles.`,
+            t`Permission Denied: Please contact organization admin for help with updating user roles.`,
           ),
         )
       }
@@ -174,7 +174,7 @@ given organization.`,
         )
         throw new Error(
           i18n._(
-            t`Permission Denied: Please contact organization admin for help with updating user's roles.`,
+            t`Permission Denied: Please contact organization admin for help with updating user roles.`,
           ),
         )
       }
@@ -190,7 +190,7 @@ given organization.`,
       )
       throw new Error(
         i18n._(
-          t`Permission Denied: Please contact organization admin for help with updating user's roles.`,
+          t`Permission Denied: Please contact organization admin for help with updating user roles.`,
         ),
       )
     }
