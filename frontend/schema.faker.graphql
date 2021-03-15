@@ -1015,8 +1015,8 @@ type Mutation {
   sendPasswordResetLink(
     input: SendPasswordResetLinkInput!
   ): SendPasswordResetLinkPayload
-  # This mutation is used for sending a text message with a random six digit code used to verify the user.
-  sendPhoneCode(input: sendPhoneCodeInput!): sendPhoneCodePayload
+  # This mutation is used for setting a new phone number for a user, and sending a code for verifying the new number.
+  setPhoneNumber(input: SetPhoneNumberInput!): SetPhoneNumberPayload
   # This mutation allows users to give their credentials and be taken to the authentication page to verify their account
   signIn(input: SignInInput!): SignInPayload
   # This mutation allows for new users to sign up for our sites services.
@@ -1484,35 +1484,35 @@ type SendPasswordResetLinkPayload {
   clientMutationId: String
 }
 
-# This object is used to inform the user if any errors occurred while sending a code to their phone.
-type SendPhoneCodeError {
+type SetPhoneNumberPayload {
+  # `SetPhoneNumberUnion` returning either a `SetPhoneNumberResult`, or `SetPhoneNumberError` object.
+  result: SetPhoneNumberUnion
+  clientMutationId: String
+}
+
+# This union is used with the `setPhoneNumber` mutation, allowing for users to send a verification code to their phone, and support any errors that may occur
+union SetPhoneNumberUnion = SetPhoneNumberError | SetPhoneNumberResult
+
+# This object is used to inform the user if any errors occurred while setting a new phone number.
+type SetPhoneNumberError {
   # Error code to inform user what the issue is related to.
   code: Int
+
   # Description of the issue that was encountered.
   description: String
 }
 
-input sendPhoneCodeInput {
-  # The phone number that the text message will be sent to.
-  phoneNumber: PhoneNumber!
-  clientMutationId: String
-}
-
-type sendPhoneCodePayload {
-  # `SendPhoneCodeUnion` returning either a `SendPhoneCodeResult`, or `SendPhoneCodeError` object.
-  result: SendPhoneCodeUnion
-  clientMutationId: String
-}
-
-# This object is used to inform the user that no errors were encountered while sending their phone code.
-type SendPhoneCodeResult {
+# This object is used to inform the user that no errors were encountered while setting a new phone number.
+type SetPhoneNumberResult {
   # Informs the user if their phone code was successfully sent.
   status: String
 }
 
-# This union is used with the `sendPhoneCode` mutation, allowing for users to send
-# a verification code to their phone, and support any errors that may occur
-union SendPhoneCodeUnion = SendPhoneCodeError | SendPhoneCodeResult
+input SetPhoneNumberInput {
+  # The phone number that the text message will be sent to.
+  phoneNumber: PhoneNumber!
+  clientMutationId: String
+}
 
 # This object is used for showing none personal user details,
 # and is used for limiting admins to the personal details of users.
@@ -1935,7 +1935,6 @@ union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
 type UpdateUserProfileError {
   # Error code to inform user what the issue is related to.
   code: Int
-
   # Description of the issue that was encountered.
   description: String
 }
@@ -1944,7 +1943,6 @@ type UpdateUserProfileError {
 type UpdateUserProfileResult {
   # Informs the user if the password reset was successful, and to redirect to sign in page.
   status: String
-
   # Return the newly updated user information.
   user: PersonalUser
 }
@@ -1952,16 +1950,10 @@ type UpdateUserProfileResult {
 input UpdateUserProfileInput {
   # The updated display name the user wishes to change to.
   displayName: String
-
   # The updated user name the user wishes to change to.
   userName: EmailAddress
-
   # The updated preferred language the user wishes to change to.
   preferredLang: LanguageEnums
-
-  # The updated phone number the user wishes to change to.
-  phoneNumber: PhoneNumber
-
   # The method in which the user wishes to have their TFA code sent via.
   tfaSendMethod: TFASendMethodEnum
   clientMutationId: String
