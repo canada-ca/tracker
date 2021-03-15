@@ -1935,7 +1935,6 @@ union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
 type UpdateUserProfileError {
   # Error code to inform user what the issue is related to.
   code: Int
-
   # Description of the issue that was encountered.
   description: String
 }
@@ -1944,7 +1943,6 @@ type UpdateUserProfileError {
 type UpdateUserProfileResult {
   # Informs the user if the password reset was successful, and to redirect to sign in page.
   status: String
-
   # Return the newly updated user information.
   user: PersonalUser
 }
@@ -1952,16 +1950,10 @@ type UpdateUserProfileResult {
 input UpdateUserProfileInput {
   # The updated display name the user wishes to change to.
   displayName: String
-
   # The updated user name the user wishes to change to.
   userName: EmailAddress
-
   # The updated preferred language the user wishes to change to.
   preferredLang: LanguageEnums
-
-  # The updated phone number the user wishes to change to.
-  phoneNumber: PhoneNumber
-
   # The method in which the user wishes to have their TFA code sent via.
   tfaSendMethod: TFASendMethodEnum
   clientMutationId: String
