@@ -1,9 +1,9 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
 
-export const sendPhoneCodeErrorType = new GraphQLObjectType({
-  name: 'SendPhoneCodeError',
+export const setPhoneNumberErrorType = new GraphQLObjectType({
+  name: 'SetPhoneNumberError',
   description:
-    'This object is used to inform the user if any errors occurred while sending a code to their phone.',
+    'This object is used to inform the user if any errors occurred while setting a new phone number.',
   fields: () => ({
     code: {
       type: GraphQLInt,

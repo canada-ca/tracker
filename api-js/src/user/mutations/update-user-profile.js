@@ -1,13 +1,10 @@
-import crypto from 'crypto'
 import { GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
-import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
+import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
 import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
 import { updateUserProfileUnion } from '../unions'
-
-const { CIPHER_KEY } = process.env
 
 export const updateUserProfile = new mutationWithClientMutationId({
   name: 'UpdateUserProfile',
@@ -26,10 +23,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
       type: LanguageEnums,
       description:
         'The updated preferred language the user wishes to change to.',
-    },
-    phoneNumber: {
-      type: GraphQLPhoneNumber,
-      description: 'The updated phone number the user wishes to change to.',
     },
     tfaSendMethod: {
       type: TfaSendMethodEnum,
@@ -59,7 +52,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const displayName = cleanseInput(args.displayName)
     const userName = cleanseInput(args.userName).toLowerCase()
     const preferredLang = cleanseInput(args.preferredLang)
-    const phoneNumber = cleanseInput(args.phoneNumber)
     const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
 
     // Make sure userKey is not undefined
@@ -103,40 +95,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
       }
     }
 
-    let updatedPhoneDetails, phoneValidated
-    if (user.phoneValidated && typeof phoneNumber !== 'undefined') {
-      const { iv, tag, phoneNumber: encryptedData } = user.phoneDetails
-      const decipher = crypto.createDecipheriv(
-        'aes-256-ccm',
-        String(CIPHER_KEY),
-        Buffer.from(iv, 'hex'),
-        { authTagLength: 16 },
-      )
-      decipher.setAuthTag(Buffer.from(tag, 'hex'))
-      let decrypted = decipher.update(encryptedData, 'hex', 'utf8')
-      decrypted += decipher.final('utf8')
-
-      if (decrypted !== phoneNumber) {
-        updatedPhoneDetails = {
-          iv: crypto.randomBytes(12).toString('hex'),
-        }
-        const cipher = crypto.createCipheriv(
-          'aes-256-ccm',
-          String(CIPHER_KEY),
-          Buffer.from(updatedPhoneDetails.iv, 'hex'),
-          { authTagLength: 16 },
-        )
-        let encrypted = cipher.update(phoneNumber, 'utf8', 'hex')
-        encrypted += cipher.final('hex')
-
-        updatedPhoneDetails.phoneNumber = encrypted
-        updatedPhoneDetails.tag = cipher.getAuthTag().toString('hex')
-      } else {
-        phoneValidated = true
-        updatedPhoneDetails = user.phoneDetails
-      }
-    }
-
     let tfaSendMethod
     if (subTfaSendMethod === 'phone' && user.phoneValidated) {
       tfaSendMethod = 'phone'
@@ -156,8 +114,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
       displayName: displayName || user.displayName,
       userName: userName || user.userName,
       preferredLang: preferredLang || user.preferredLang,
-      phoneDetails: updatedPhoneDetails,
-      phoneValidated: phoneValidated || user.phoneValidated,
       tfaSendMethod: tfaSendMethod,
     }
 

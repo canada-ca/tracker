@@ -11,10 +11,10 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: src/user/mutations/send-phone-code.js:51
-#: src/user/mutations/update-user-password.js:54
-#: src/user/mutations/update-user-profile.js:73
-#: src/user/mutations/verify-phone-number.js:34
+#: src/user/mutations/set-phone-number.js:51
+#: src/user/mutations/update-user-profile.js:65
+#: src/user/mutations/verify-phone-number.js:38
+#: src/user/mutations/verify-phone-number.js:52
 msgid "Authentication error, please sign in again."
 msgstr "Authentication error, please sign in again."
 
@@ -84,6 +84,10 @@ msgstr "No verified domain with the provided domain could be found."
 #: src/organization/mutations/verify-organization.js:68
 msgid "Organization has already been verified."
 msgstr "Organization has already been verified."
+
+#: src/organization/mutations/update-organization.js:178
+msgid "Organization name already in use, please choose another and try again."
+msgstr "Organization name already in use, please choose another and try again."
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:46
 msgid "Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported."
@@ -175,7 +179,7 @@ msgstr "Password is too short."
 msgid "Password was successfully reset."
 msgstr "Password was successfully reset."
 
-#: src/user/mutations/update-user-password.js:120
+#: src/user/mutations/update-user-password.js:140
 msgid "Password was successfully updated."
 msgstr "Password was successfully updated."
 
@@ -196,7 +200,11 @@ msgstr "Permission check error. Unable to request domain information."
 msgid "Permission error, not an admin for this user."
 msgstr "Permission error, not an admin for this user."
 
-#: src/user/mutations/update-user-profile.js:184
+#: src/user/mutations/set-phone-number.js:130
+msgid "Phone number has been successfully set, you will receive a verification text message shortly."
+msgstr "Phone number has been successfully set, you will receive a verification text message shortly."
+
+#: src/user/mutations/update-user-profile.js:140
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -309,7 +317,7 @@ msgstr "Successfully sent invitation to service, and organization email."
 msgid "Successfully verified organization: {0}."
 msgstr "Successfully verified organization: {0}."
 
-#: src/user/mutations/verify-phone-number.js:91
+#: src/user/mutations/verify-phone-number.js:105
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "Successfully verified phone number, and set TFA send method to text."
 
@@ -317,9 +325,13 @@ msgstr "Successfully verified phone number, and set TFA send method to text."
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "Too many failed login attempts, please reset your password, and try again."
 
-#: src/user/mutations/send-phone-code.js:127
-msgid "Two factor code has been successfully sent, you will receive a text message shortly."
-msgstr "Two factor code has been successfully sent, you will receive a text message shortly."
+#: src/user/mutations/verify-phone-number.js:77
+msgid "Two factor code is incorrect. Please try again."
+msgstr "Two factor code is incorrect. Please try again."
+
+#: src/user/mutations/verify-phone-number.js:64
+msgid "Two factor code length is incorrect. Please try again."
+msgstr "Two factor code length is incorrect. Please try again."
 
 #: src/notify/notify-send-authenticate-email.js:18
 #: src/notify/notify-send-authenticate-text-msg.js:31
@@ -665,12 +677,6 @@ msgstr "Unable to reset password. Please try again."
 msgid "Unable to select dmarc reports for this period and year."
 msgstr "Unable to select dmarc reports for this period and year."
 
-#: src/user/mutations/send-phone-code.js:65
-#: src/user/mutations/send-phone-code.js:84
-#: src/user/mutations/send-phone-code.js:114
-msgid "Unable to send TFA code, please try again."
-msgstr "Unable to send TFA code, please try again."
-
 #: src/notify/notify-send-org-invite-create-account.js:31
 #: src/notify/notify-send-org-invite-email.js:26
 msgid "Unable to send org invite email. Please try again."
@@ -688,6 +694,11 @@ msgstr "Unable to send two factor authentication message. Please try again."
 msgid "Unable to send verification email. Please try again."
 msgstr "Unable to send verification email. Please try again."
 
+#: src/user/mutations/set-phone-number.js:65
+#: src/user/mutations/set-phone-number.js:117
+msgid "Unable to set phone number, please try again."
+msgstr "Unable to set phone number, please try again."
+
 #: src/user/mutations/sign-in.js:88
 #: src/user/mutations/sign-in.js:107
 #: src/user/mutations/sign-in.js:166
@@ -699,10 +710,7 @@ msgstr "Unable to sign in, please try again."
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
-#: src/user/mutations/verify-phone-number.js:45
-#: src/user/mutations/verify-phone-number.js:54
-#: src/user/mutations/verify-phone-number.js:64
-#: src/user/mutations/verify-phone-number.js:81
+#: src/user/mutations/verify-phone-number.js:94
 msgid "Unable to two factor authenticate. Please try again."
 msgstr "Unable to two factor authenticate. Please try again."
 
@@ -718,31 +726,37 @@ msgstr "Unable to update domain. Please try again."
 
 #: src/organization/mutations/update-organization.js:138
 #: src/organization/mutations/update-organization.js:150
-#: src/organization/mutations/update-organization.js:167
-#: src/organization/mutations/update-organization.js:223
-#: src/organization/mutations/update-organization.js:234
+#: src/organization/mutations/update-organization.js:168
+#: src/organization/mutations/update-organization.js:197
+#: src/organization/mutations/update-organization.js:209
+#: src/organization/mutations/update-organization.js:263
+#: src/organization/mutations/update-organization.js:274
 msgid "Unable to update organization. Please try again."
 msgstr "Unable to update organization. Please try again."
 
-#: src/user/mutations/update-user-password.js:74
+#: src/user/mutations/update-user-password.js:59
+#: src/user/mutations/update-user-password.js:75
+msgid "Unable to update password, authentication error occurred, please sign in again."
+msgstr "Unable to update password, authentication error occurred, please sign in again."
+
+#: src/user/mutations/update-user-password.js:89
 msgid "Unable to update password, current password does not match. Please try again."
 msgstr "Unable to update password, current password does not match. Please try again."
 
-#: src/user/mutations/update-user-password.js:86
+#: src/user/mutations/update-user-password.js:103
 msgid "Unable to update password, new passwords do not match. Please try again."
 msgstr "Unable to update password, new passwords do not match. Please try again."
 
-#: src/user/mutations/update-user-password.js:98
+#: src/user/mutations/update-user-password.js:117
 msgid "Unable to update password, passwords are required to be 12 characters or longer. Please try again."
 msgstr "Unable to update password, passwords are required to be 12 characters or longer. Please try again."
 
-#: src/user/mutations/update-user-password.js:64
-#: src/user/mutations/update-user-password.js:115
+#: src/user/mutations/update-user-password.js:134
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:87
-#: src/user/mutations/update-user-profile.js:175
+#: src/user/mutations/update-user-profile.js:79
+#: src/user/mutations/update-user-profile.js:131
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
@@ -800,7 +814,7 @@ msgstr "User role was updated successfully."
 msgid "Username already in use."
 msgstr "Username already in use."
 
-#: src/user/mutations/update-user-profile.js:101
+#: src/user/mutations/update-user-profile.js:93
 msgid "Username not available, please try another."
 msgstr "Username not available, please try another."
 

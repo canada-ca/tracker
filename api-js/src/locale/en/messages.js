@@ -32,6 +32,8 @@
       'No verified domain with the provided domain could be found.',
     'Organization has already been verified.':
       'Organization has already been verified.',
+    'Organization name already in use, please choose another and try again.':
+      'Organization name already in use, please choose another and try again.',
     'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.':
       'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.',
     'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.':
@@ -76,6 +78,8 @@
       'Permission check error. Unable to request domain information.',
     'Permission error, not an admin for this user.':
       'Permission error, not an admin for this user.',
+    'Phone number has been successfully set, you will receive a verification text message shortly.':
+      'Phone number has been successfully set, you will receive a verification text message shortly.',
     'Profile successfully updated.': 'Profile successfully updated.',
     'Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records.': [
       'Requesting `',
@@ -227,8 +231,10 @@
       'Successfully verified phone number, and set TFA send method to text.',
     'Too many failed login attempts, please reset your password, and try again.':
       'Too many failed login attempts, please reset your password, and try again.',
-    'Two factor code has been successfully sent, you will receive a text message shortly.':
-      'Two factor code has been successfully sent, you will receive a text message shortly.',
+    'Two factor code is incorrect. Please try again.':
+      'Two factor code is incorrect. Please try again.',
+    'Two factor code length is incorrect. Please try again.':
+      'Two factor code length is incorrect. Please try again.',
     'Unable to authenticate. Please try again.':
       'Unable to authenticate. Please try again.',
     'Unable to check permission. Please try again.':
@@ -345,8 +351,6 @@
       'Unable to reset password. Please try again.',
     'Unable to select dmarc reports for this period and year.':
       'Unable to select dmarc reports for this period and year.',
-    'Unable to send TFA code, please try again.':
-      'Unable to send TFA code, please try again.',
     'Unable to send org invite email. Please try again.':
       'Unable to send org invite email. Please try again.',
     'Unable to send password reset email. Please try again.':
@@ -355,6 +359,8 @@
       'Unable to send two factor authentication message. Please try again.',
     'Unable to send verification email. Please try again.':
       'Unable to send verification email. Please try again.',
+    'Unable to set phone number, please try again.':
+      'Unable to set phone number, please try again.',
     'Unable to sign in, please try again.':
       'Unable to sign in, please try again.',
     'Unable to sign up. Please try again.':
