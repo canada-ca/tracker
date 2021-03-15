@@ -92,7 +92,7 @@
     'Permission Denied: Please contact super admin for help with verifying this organization.':
       'todo',
     'Permission check error. Unable to request domain information.': 'todo',
-    'Permission error, not an admin for this user.': 'todo<<<<<<< HEAD',
+    'Permission error, not an admin for this user.': 'todo',
     'Phone number has been successfully set, you will receive a verification text message shortly.':
       'todo',
     'Profile successfully updated.': 'todo',
@@ -144,7 +144,7 @@
       'todo',
     'Token value incorrect, please sign in again.': 'todo',
     'Too many failed login attempts, please reset your password, and try again.':
-      'todo<<<<<<< HEAD=======',
+      'todo',
     'Two factor code is incorrect. Please try again.': 'todo',
     'Two factor code length is incorrect. Please try again.': 'todo',
     'Unable to add user to organization. Please try again.': 'todo',
@@ -224,7 +224,7 @@
     'Unable to send password reset email. Please try again.': 'todo',
     'Unable to send two factor authentication message. Please try again.':
       'todo',
-    'Unable to send verification email. Please try again.': 'todo<<<<<<< HEAD',
+    'Unable to send verification email. Please try again.': 'todo',
     'Unable to set phone number, please try again.': 'todo',
     'Unable to sign in, please try again.': 'todo',
     'Unable to sign up. Please try again.': 'todo',
@@ -232,7 +232,7 @@
     'Unable to update domain in an unknown org.': 'todo',
     'Unable to update domain that does not belong to the given organization.':
       'todo',
-    'Unable to update domain. Please try again.': 'todo<<<<<<< HEAD',
+    'Unable to update domain. Please try again.': 'todo',
     'Unable to update organization. Please try again.': 'todo',
     'Unable to update password, authentication error occurred, please sign in again.':
       'todo',
@@ -242,7 +242,7 @@
       'todo',
     'Unable to update password, passwords do not match requirements. Please try again.':
       'todo',
-    'Unable to update password. Please try again.': 'todo<<<<<<< HEAD',
+    'Unable to update password. Please try again.': 'todo',
     'Unable to update profile. Please try again.': 'todo',
     'Unable to update role: organization unknown.': 'todo',
     'Unable to update role: user does not belong to organization.': 'todo',
@@ -258,7 +258,7 @@
     'Unable to verify unknown organization.': 'todo',
     'User could not be queried.': 'todo',
     'User role was updated successfully.': 'todo',
-    'Username already in use.': 'todo<<<<<<< HEAD',
+    'Username already in use.': 'todo',
     'Username not available, please try another.': 'todo',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':
       'todo',

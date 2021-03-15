@@ -265,7 +265,7 @@
     'Token value incorrect, please sign in again.':
       'Token value incorrect, please sign in again.',
     'Too many failed login attempts, please reset your password, and try again.':
-      'Too many failed login attempts, please reset your password, and try again.<<<<<<< HEAD=======',
+      'Too many failed login attempts, please reset your password, and try again.',
     'Two factor code is incorrect. Please try again.':
       'Two factor code is incorrect. Please try again.',
     'Two factor code length is incorrect. Please try again.':
@@ -446,7 +446,7 @@
     'Unable to update password, passwords do not match requirements. Please try again.':
       'Unable to update password, passwords do not match requirements. Please try again.',
     'Unable to update password. Please try again.':
-      'Unable to update password. Please try again.<<<<<<< HEAD',
+      'Unable to update password. Please try again.',
     'Unable to update profile. Please try again.':
       'Unable to update profile. Please try again.',
     'Unable to update role: organization unknown.':
@@ -474,7 +474,7 @@
     'User could not be queried.': 'User could not be queried.',
     'User role was updated successfully.':
       'User role was updated successfully.',
-    'Username already in use.': 'Username already in use.<<<<<<< HEAD',
+    'Username already in use.': 'Username already in use.',
     'Username not available, please try another.':
       'Username not available, please try another.',
     'You must provide a `first` or `last` value to properly paginate the `DKIMResults` connection.':

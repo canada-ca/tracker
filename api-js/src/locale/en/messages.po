@@ -391,7 +391,7 @@ msgstr "Token value incorrect, please sign in again."
 
 #: src/user/mutations/sign-in.js:73
 msgid "Too many failed login attempts, please reset your password, and try again."
-msgstr "Too many failed login attempts, please reset your password, and try again.<<<<<<< HEAD======="
+msgstr "Too many failed login attempts, please reset your password, and try again."
 
 #: src/user/mutations/verify-phone-number.js:78
 msgid "Two factor code is incorrect. Please try again."
@@ -853,7 +853,7 @@ msgstr "Unable to update password, passwords do not match requirements. Please t
 
 #: src/user/mutations/update-user-password.js:135
 msgid "Unable to update password. Please try again."
-msgstr "Unable to update password. Please try again.<<<<<<< HEAD"
+msgstr "Unable to update password. Please try again."
 
 #: src/user/mutations/update-user-profile.js:80
 #: src/user/mutations/update-user-profile.js:132
@@ -924,7 +924,7 @@ msgstr "User role was updated successfully."
 
 #: src/user/mutations/sign-up.js:100
 msgid "Username already in use."
-msgstr "Username already in use.<<<<<<< HEAD"
+msgstr "Username already in use."
 
 #: src/user/mutations/update-user-profile.js:94
 msgid "Username not available, please try another."
