@@ -87,8 +87,8 @@
       'Permission Denied: Please contact organization admin for help with removing users.',
     'Permission Denied: Please contact organization admin for help with updating organization.':
       'Permission Denied: Please contact organization admin for help with updating organization.',
-    'Permission Denied: Please contact organization admin for help with updating users roles.':
-      'Permission Denied: Please contact organization admin for help with updating users roles.',
+    "Permission Denied: Please contact organization admin for help with updating user's roles.":
+      "Permission Denied: Please contact organization admin for help with updating user's roles.",
     'Permission Denied: Please contact organization admin for help with user invitations.':
       'Permission Denied: Please contact organization admin for help with user invitations.',
     'Permission Denied: Please contact organization admin for help with user role changes.':
@@ -449,17 +449,17 @@
       'Unable to update password. Please try again.<<<<<<< HEAD',
     'Unable to update profile. Please try again.':
       'Unable to update profile. Please try again.',
+    'Unable to update role: organization unknown.':
+      'Unable to update role: organization unknown.',
+    'Unable to update role: user does not belong to organization.':
+      'Unable to update role: user does not belong to organization.',
+    'Unable to update role: user unknown.':
+      'Unable to update role: user unknown.',
     'Unable to update unknown domain.': 'Unable to update unknown domain.',
     'Unable to update unknown organization.':
       'Unable to update unknown organization.',
-    'Unable to update unknown users role.':
-      'Unable to update unknown users role.',
-    'Unable to update users role that does not belong to this org. Please invite user to the organization.':
-      'Unable to update users role that does not belong to this org. Please invite user to the organization.',
-    'Unable to update users role, in unknown organization.':
-      'Unable to update users role, in unknown organization.',
-    'Unable to update users role. Please try again.':
-      'Unable to update users role. Please try again.',
+    "Unable to update user's role. Please try again.":
+      "Unable to update user's role. Please try again.",
     'Unable to update your own role.': 'Unable to update your own role.',
     'Unable to verify account. Please request a new email.':
       'Unable to verify account. Please request a new email.',

@@ -71,7 +71,7 @@
       'todo',
     'Permission Denied: Please contact organization admin for help with updating organization.':
       'todo',
-    'Permission Denied: Please contact organization admin for help with updating users roles.':
+    "Permission Denied: Please contact organization admin for help with updating user's roles.":
       'todo',
     'Permission Denied: Please contact organization admin for help with user invitations.':
       'todo',
@@ -244,13 +244,12 @@
       'todo',
     'Unable to update password. Please try again.': 'todo<<<<<<< HEAD',
     'Unable to update profile. Please try again.': 'todo',
+    'Unable to update role: organization unknown.': 'todo',
+    'Unable to update role: user does not belong to organization.': 'todo',
+    'Unable to update role: user unknown.': 'todo',
     'Unable to update unknown domain.': 'todo',
     'Unable to update unknown organization.': 'todo',
-    'Unable to update unknown users role.': 'todo',
-    'Unable to update users role that does not belong to this org. Please invite user to the organization.':
-      'todo',
-    'Unable to update users role, in unknown organization.': 'todo',
-    'Unable to update users role. Please try again.': 'todo',
+    "Unable to update user's role. Please try again.": 'todo',
     'Unable to update your own role.': 'todo',
     'Unable to verify account. Please request a new email.': 'todo',
     'Unable to verify account. Please try again.': 'todo',
