@@ -34,6 +34,7 @@ function EditableUserPhoneNumber({ detailValue }) {
   const { currentUser } = useUserState()
   const toast = useToast()
   const initialFocusRef = useRef()
+  const verifyRef = useRef()
 
   const [phoneCodeSent, setPhoneCodeSent] = useState(false)
 
@@ -149,6 +150,7 @@ function EditableUserPhoneNumber({ detailValue }) {
           <ModalOverlay opacity={styles.opacity} />
           <ModalContent pb="4" {...styles}>
             <Formik
+              key="setPhoneNumberFormKey"
               validateOnBlur={false}
               initialValues={{
                 phoneNumber: '',
@@ -214,11 +216,12 @@ function EditableUserPhoneNumber({ detailValue }) {
         <Modal
           isOpen={true}
           onClose={onClose}
-          initialFocusRef={initialFocusRef}
+          initialFocusRef={verifyRef}
         >
           <ModalOverlay opacity={styles.opacity} />
           <ModalContent pb="4" {...styles}>
             <Formik
+              key="verifyPhoneNumberFormKey"
               validateOnBlur={false}
               initialValues={{
                 twoFactorCode: '',
@@ -245,7 +248,7 @@ function EditableUserPhoneNumber({ detailValue }) {
                         name="twoFactorCode"
                         mb="4"
                         sendMethod={'verifyPhone'}
-                        ref={initialFocusRef}
+                        ref={verifyRef}
                       />
                     </Stack>
                   </ModalBody>
