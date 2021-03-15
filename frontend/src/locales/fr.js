@@ -1,170 +1,639 @@
 /*eslint-disable*/ module.exports = {
-    messages: {
-        '*All data represented is mocked for demonstration purposes':
-          '*Toutes les donn\xE9es repr\xE9sent\xE9es sont simul\xE9es \xE0 des fins de d\xE9monstration',
-        'A server configured to use the wrong "envelope from" address.':
-          'Un serveur configur\xE9 pour utiliser la mauvaise adresse "envelope from".',
-        'A third party sender not using a custom return path.':
-          "Un exp\xE9diteur tiers n'utilisant pas une voie de retour personnalis\xE9e.",
-        'Account created.': 'Compte cr\xE9\xE9',
-        'Add a CNAME record to refer to a DKIM record maintained by a third party sender.':
-          'Ajouter un enregistrement CNAME pour faire r\xE9f\xE9rence \xE0 un enregistrement DKIM tenu par un exp\xE9diteur tiers.',
-        'Add a custom return path for athird party sender.':
-          "Ajoutez un chemin de retour personnalis\xE9 pour l'exp\xE9diteur tiers.",
-        'Add an "include" clause for a third party sender.':
-          'Ajouter une clause "inclure" pour un exp\xE9diteur tiers.',
-        'Adjust the policy portion of the DMARCrecord of the root domain or subdomain.':
-          "Ajustez la partie politique de l'enregistrement DMARC du domaine ou sous-domaine racine.",
-        Admin: 'Admin',
-        'An error occurred.': "Une erreur s'est produite.",
-        'Approved Certificate Use': 'Utilisation de certificats approuv\xE9s',
-        Back: 'Retour',
-        'Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure.':
-          "Les Canadiens s'attendent \xE0 ce que le gouvernement du Canada leur offre des services en ligne s\xE9curis\xE9s. Un nouvel avis de politique vise \xE0 assurer que les sites gouvernementaux soient conformes aux bonnes pratiques en mati\xE8re de s\xE9curit\xE9 Web. Voyez comment les sites gouvernementaux deviennent plus s\xE9curitaires.",
-        'Configure the server to sign outbound messages with DKIM.':
-          'Configurez le serveur pour signer les messages sortants avec DKIM.',
-        'Configure the server to use the correct domain for the "headerfrom" address.':
-          'Configurez le serveur pour qu\'il utilise le domaine correct pour l\'adresse "headerfrom".',
-        'Configure the server to use the same domain for the "envelope from" and "header from" addresses.':
-          'Configurez le serveur pour qu\'il utilise le m\xEAme domaine pour les adresses "envelope from" et "header from".',
-        'Configure the server to use the same domain for the DKIM header as for the "header from" address.':
-          "Configurez le serveur pour qu'il utilise le m\xEAme domaine pour l'en-t\xEAte DKIM que pour l'adresse \"header from\".",
-        'Confirm password': 'Confirmer le mot de passe',
-        'Create Account': 'Cr\xE9er un compte',
-        'Create User': 'Cr\xE9er un utilisateur',
-        'Create an account by entering an email and password.':
-          'Cr\xE9ez un compte en entrant un courriel et un mot de passe.',
-        'DKIM Check Failed': '\xC9chec du contr\xF4le DKIM',
-        'DKIM Domain Alignment Failed': "\xC9chec de l'alignement du domaine DKIM",
-        'DMARC Policy Applied': 'Politique de la DMARC appliqu\xE9e',
-        'Domain:': 'Domain:',
-        Domains: 'Domaines',
-        Email: 'Courriel',
-        'Email Configuration': 'Configuration du courriel',
-        'Email cannot be empty': 'Le courriel ne peut \xEAtre vide',
-        'Email security settings summary':
-          'R\xE9sum\xE9 des param\xE8tres de s\xE9curit\xE9 du courriel',
-        Enforced: 'Mise en \u0153uvre',
-        'Ensure the DKIM record for thedomain and selector is present andvalid.':
-          "Assurez-vous que l'enregistrement DKIM pour le domaine et le s\xE9lecteur est pr\xE9sent et valide.",
-        'Ensure the SPF record is present and valid.':
-          'Assurez-vous que le dossier du SPF est pr\xE9sent et valide.',
-        'Forgot your password?': 'Oubli\xE9 votre mot de passe?',
-        'Forwarding by an intermediate server.':
-          'Redirection par un serveur interm\xE9diaire.',
-        'Fully Implemented': 'Enti\xE8rement mis en \u0153uvre',
-        Guidance: 'Conseils',
-        'HSTS Preloaded': 'HSTS pr\xE9charg\xE9',
-        'Hide Guidance': 'Masquer les conseils',
-        Home: 'Accueil',
-        'Invalid email': 'Courriel non valide',
-        'Last scanned:': 'Dernier scan:',
-        'Loading...': 'Chargement...',
-        'Messages Subject to DMARC Policy':
-          'Messages soumis \xE0 la politique de la DMARC',
-        'Modify the SPF record to include the sending IP address.':
-          "Modifiez l'enregistrement SPF pour y inclure l'adresse IP d'envoi.",
-        'No Organizations': 'Aucune organisation',
-        'No domains scanned yet.': "Aucun domaine n'a encore \xE9t\xE9 scann\xE9.",
-        'No domains yet.': "Aucun domaine pour l'instant.",
-        'Not Enforced': 'Non appliqu\xE9',
-        'Not Implemented': 'Pas enti\xE8rement mis en \u0153uvre',
-        'Not scanned yet.': 'Pas encore scann\xE9.',
-        Organizations: 'Organisations',
-        'Page not found': 'Page non trouv\xE9e',
-        'Partially Implemented': 'Partiellement mis en \u0153uvre',
-        Password: 'Mot de passe',
-        'Password cannot be empty': 'Le mot de passe ne peut pas \xEAtre vide',
-        'Password confirmation cannot be empty':
-          'La confirmation du mot de passe ne peut pas \xEAtre vide',
-        'Password must be at least 12 characters long':
-          'Le mot de passe doit comporter au moins 12 caract\xE8res',
-        'Passwords must match': 'Les mots de passe doivent correspondre',
-        'Please choose your preferred language':
-          'Veuillez choisir votre langue pr\xE9f\xE9r\xE9e',
-        'Please see the SPF and DKIM causes sections.':
-          'Veuillez consulter les sections SPF et DKIM causes.',
-        'Please see the SPF and DKIM resolutions sections.':
-          'Veuillez consulter les sections des r\xE9solutions SPF et DKIM.',
-        'Possible Causes': 'Causes possibles',
-        'Possible Resolutions': 'R\xE9solutions possibles',
-        'Pre-Alpha': 'pr\xE9alpha',
-        Privacy: 'Confidentialit\xE9',
-        'Protocols & Ciphers': 'Protocoles et codes',
-        'Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages.':
-          'Les messages re\xE7us ont \xE9chou\xE9 \xE0 la fois au SPF et au DKIM, et donc \xE0 la DMARC. La politique du DMARC sp\xE9cifi\xE9e pour le domaine a \xE9t\xE9 appliqu\xE9e \xE0 ces messages.',
-        'Remove redundant SPF records.':
-          'Supprimer les enregistrements SPF redondants.',
-        'SPF Check Failed': 'Echec du contr\xF4le du SPF',
-        'SPF Domain Alignment Failed':
-          "\xC9chec de l'alignement des domaines du SPF",
-        'Scan this QR code with a 2FA app like Authy or Google Authenticator':
-          'Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator',
-        'Select Preferred Language':
-          'S\xE9lectionnez votre langue pr\xE9f\xE9r\xE9e',
-        'Show Guidance': 'Afficher les conseils',
-        'Show Less': 'Montrer moins',
-        'Show More': 'En savoir plus',
-        'Sign In': 'Se connecter',
-        'Sign In.': 'Se connecter.',
-        'Sign in with your username and password.':
-          "Connectez-vous avec votre nom d'utilisateur et votre mot de passe.",
-        'Skip to main content': 'Passer au contenu principal',
-        'Sorry, the page you were trying to view does not exist.':
-          "D\xE9sol\xE9, la page que vous essayiez de consulter n'existe pas.",
-        'Terms & conditions': 'Avis',
-        'The DMARC policy (i.e. none, quarantine, orreject) that was applied to messages which failured DMARC (i.e. failed both SPF and DKIM).':
-          "La politique du DMARC (none, quarentine ou reject) qui a \xE9t\xE9 appliqu\xE9e aux messages qui ont \xE9chou\xE9 au DMARC (c'est-\xE0-dire qui ont \xE9chou\xE9 \xE0 la fois au SPF et au DKIM).",
-        'The SPF record for the domain is missing or invalid.':
-          "L'enregistrement SPF pour le domaine est manquant ou invalide.",
-        'The message was modified by an intermediate server.':
-          'Le message a \xE9t\xE9 modifi\xE9 par un serveur interm\xE9diaire.',
-        'The message was not signed with DKIM.':
-          "Le message n'a pas \xE9t\xE9 sign\xE9 avec DKIM.",
-        'The policy applied is based on the DMARC record of the root domain or subdomain.':
-          "La politique appliqu\xE9e est bas\xE9e sur l'enregistrement DMARC du domaine ou sous-domaine racine.",
-        'The receiving server found that the domains used in the "envelope from" and "header from" email addresses did not match.':
-          'Le serveur de r\xE9ception a constat\xE9 que les domaines utilis\xE9s dans les adresses \xE9lectroniques "envelope from" et "header from" ne correspondaient pas.',
-        'The receiving server found that the domains usedin the DKIM header and the "header from" email address did not match.':
-          'Le serveur de r\xE9ception a constat\xE9 que les domaines utilis\xE9s dans l\'en-t\xEAte DKIM et l\'adresse \xE9lectronique "header from" ne correspondaient pas.',
-        'The receiving server found that the message had no DKIM signature, or that verification of the signature failed.':
-          "Le serveur destinataire a constat\xE9 que le message n'avait pas de signature DKIM, ou que la v\xE9rification de la signature avait \xE9chou\xE9.",
-        'The receiving server found that the sending IP address was not authorized to send mail on behalf of the domain.':
-          "Le serveur de r\xE9ception a constat\xE9 que l'adresse IP d'envoi n'\xE9tait pas autoris\xE9e \xE0 envoyer du courrier au nom du domaine.",
-        'The sending IP address is not included in the SPF record.':
-          "L'adresse IP d'envoi n'est pas incluse dans l'enregistrement SPF.",
-        'The server is configured to use a different domain for the DKIM header than for the "header from" address.':
-          'Le serveur est configur\xE9 pour utiliser un domaine diff\xE9rent pour l\'en-t\xEAte DKIM que pour l\'adresse "header from".',
-        'There are multiple SPF records.':
-          'Il existe de nombreux enregistrements SPF.',
-        'There is no DKIM record for the domain and/or selector used or the record is invalid.':
-          "Il n'y a pas d'enregistrement DKIM pour le domaine et/ou le s\xE9lecteur utilis\xE9 ou l'enregistrement n'est pas valide.",
-        'These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain.':
-          "Ces notes d'orientation ont \xE9t\xE9 con\xE7ues pour vous aider \xE0 r\xE9soudre les probl\xE8mes li\xE9s \xE0 l'\xE9chec de vos scanners DMARC. Veuillez lire chaque note et d\xE9terminer ce qui a provoqu\xE9 l'\xE9chec d'un scan DMARC sur votre domaine.",
-        'This service is being developed in the open':
-          'Ce service est d\xE9velopp\xE9 de fa\xE7on ouverte',
-        'Track Web Security Compliance':
-          'Suivre la conformit\xE9 de la s\xE9curit\xE9 du Web',
-        TwoFactor: 'Deux facteurs',
-        'Unable to create your account, please try again.':
-          'Impossible de cr\xE9er votre compte, veuillez r\xE9essayer',
-        'Unable to sign in to your account, please try again.':
-          'Impossible de vous connecter \xE0 votre compte, veuillez r\xE9essayer.',
-        'User List': 'Liste des utilisateurs',
-        'User Profile': "Profil de l'utilisateur",
-        'Web Configuration': 'Configuration Web',
-        'Web encryption settings summary':
-          'R\xE9sum\xE9 des param\xE8tres de cryptage du Web',
-        'Welcome, you are successfully signed in to your new account!':
-          'Veuillez choisir votre langue pr\xE9f\xE9r\xE9e',
-        'Welcome, you are successfully signed in!':
-          'Bienvenue, vous \xEAtes connect\xE9 avec succ\xE8s!',
-        'Your 2FA app will then have a valid code that you can use when you sign in.':
-          "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez.",
-        'back to organizations': 'back to organizations',
-        fail: '\xE9chouer',
-        'partial pass': 'passe partielle',
-        pass: 'passe',
-        '{0}': [['0']],
-      },
-    }
+  messages: {
+    '*All data represented is mocked for demonstration purposes':
+      '*Toutes les données représentées sont simulées à des fins de démonstration',
+    "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature":
+      "*Les barres de recherche ne recherchent pas activement les bases de données actuellement. Elles sont utilisées pour démontrer la fonction du bouton 'Ajouter'",
+    '3.2.2 Third Parties and DKIM': '3.2.2 Expéditeurs tiers et DKIM',
+    '404 - Page Not Found': '404 - Page non trouvée',
+    'A-all': 'A-all',
+    'A.2.3 Deploy Initial DMARC record':
+      'A.2.3 Déployer l’enregistrement DMARC initial',
+    'A.3.3 Deploy SPF for All Domains':
+      'A.3.3 Déployer le protocole SPF pour tous les domaines',
+    'A.3.4 Deploy DKIM for All Domains and Senders':
+      'A.3.4 Déployer le protocole DKIM pour tous les domaines et expéditeurs',
+    'A.3.5 Monitor DMARC Reports and Correct Misconfigurations':
+      'A.3.5 Surveiller les rapports DMARC et corriger les erreurs de configuration',
+    'A.4 Enforce': 'A.4 Appliquer',
+    'A.5 Maintain': 'A.5 Tenir les éléments à jour',
+    'A.5.3 Rotate DKIM Keys': 'A.5.3 Assurer la rotation des clés DKIM',
+    ADMIN: 'ADMIN',
+    'ALL-allow': 'ALL-allow',
+    'ALL-hardfail': 'ALL-hardfail',
+    'ALL-missing': 'ALL-missing',
+    'ALL-neutral': 'ALL-neutral',
+    'ALL-redirect': 'ALL-redirect',
+    'ALL-softfail': 'ALL-softfail',
+    'Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01':
+      "La liste de chiffrement acceptée contient le chiffrement 3DES à blocs de clés symétriques, tel qu'interdit par la DBO 18-01",
+    'Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01':
+      "La liste de chiffrement acceptée contient le chiffrement de flux RC4, tel qu'interdit par le BOD 18-01",
+    'Account Settings': 'Paramètres du compte',
+    'Account created.': 'Compte créé',
+    'Add Domain': 'Ajouter un domaine',
+    'Admin Portal': 'Portail Admin',
+    'Admin Profile': "Profil de l'administrateur",
+    'An email was sent with a link to reset your password':
+      'Un courriel a été envoyé avec un lien pour réinitialiser votre mot de passe',
+    'An error has occurred.': "Une erreur s'est produite.",
+    'An error occurred while updating your TFA send method.':
+      "Une erreur s'est produite lors de la mise à jour de votre méthode d'envoi de TFA.",
+    'An error occurred while updating your display name.':
+      "Une erreur s'est produite lors de la mise à jour de votre nom d'affichage.",
+    'An error occurred while updating your email address.':
+      "Une erreur s'est produite lors de la mise à jour de votre adresse électronique.",
+    'An error occurred while updating your language.':
+      "Une erreur s'est produite lors de la mise à jour de votre langue.",
+    'An error occurred while updating your password.':
+      "Une erreur s'est produite lors de la mise à jour de votre mot de passe.",
+    'An error occurred while updating your phone number.':
+      "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone.",
+    'An error occurred.': "Une erreur s'est produite.",
+    Apply: 'Appliquer',
+    April: 'Avril',
+    'As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.':
+      "Conformément à la section 3.6.1 du RFC, l'indicateur de test t=y signifie que les vérificateurs DOIVENT traiter les messages comme non signés (c'est-à-dire que DKIM n'est pas activé), donc cet indicateur ne doit pas être activé.",
+    August: 'Août',
+    'B.1.1 SPF Records': 'B.1.1 Enregistrements SPF',
+    'B.1.3 DNS Lookup Limit': 'B.1.3 Limite de recherches DNS',
+    'B.2.1 DKIM Records': 'B.2.1 Enregistrements DKIM',
+    'B.2.2 Cryptographic Considerations':
+      'B.2.2 Considérations cryptographiques',
+    'B.3.1 DMARC Records': 'B.3.1 Enregistrements DMARC',
+    Back: 'Retour',
+    'Based in:': 'Basé à:',
+    'CCCS added to Aggregate sender list':
+      'Le CCCS ajouté à la liste agrégée des expéditeurs',
+    'CCCS added to Forensic sender list':
+      'Le CCCS ajouté à la liste des expéditeurs de la police scientifique',
+    'CNAME-DMARC': 'CNAME-DMARC',
+    'Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure.':
+      "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre des services en ligne sécurisés. Un nouvel avis de politique vise à assurer que les sites gouvernementaux soient conformes aux bonnes pratiques en matière de sécurité Web. Voyez comment les sites gouvernementaux deviennent plus sécuritaires.",
+    'Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.':
+      'Le CCCS ajouté à la liste des expéditeurs de la police scientifique',
+    'Certificate chain signed using SHA-256/SHA-384/AEAD':
+      'Chaîne de certificats signée au moyen de SHA-256/SHA-384/AEAD',
+    'Change Password': 'Changer le mot de passe',
+    'Changed TFA Send Method': "Changement de la méthode d'envoi des TFA",
+    'Changed User Display Name':
+      "Changement du nom d'affichage de l'utilisateur",
+    'Changed User Email': "Changement d'adresse électronique de l'utilisateur",
+    'Changed User Language': "Changement de la langue de l'utilisateur",
+    'Changed User Password': "Modification du mot de passe de l'utilisateur",
+    'Changed User Phone Number':
+      "Changement du numéro de téléphone de l'utilisateur",
+    'Changes Required for ITPIN Compliance':
+      'Changements requis pour la mise en conformité ITPIN',
+    Close: 'Fermer',
+    'Code field must not be empty': 'Le champ de code ne doit pas être vide',
+    'Compliant TLS': 'TLS conformant',
+    Confirm: 'Confirmer',
+    'Confirm New Password:': 'Confirmer le nouveau mot de passe :',
+    'Confirm Password:': 'Confirmez le mot de passe :',
+    'Confirm password': 'Confirmer le mot de passe',
+    'Confirm removal of domain:': 'Confirmer la suppression du domaine :',
+    'Contact 3rd party': 'Contacter une tierce partie',
+    'Create Account': 'Créer un compte',
+    'Create an account by entering an email and password.':
+      'Créez un compte en entrant un courriel et un mot de passe.',
+    'Current Display Name:': "Nom de l'affichage actuel :",
+    'Current Domain URL:': 'URL du domaine actuel :',
+    'Current Email:': 'Courriel actuel :',
+    'Current Password:': 'Mot de passe actuel :',
+    'Current Phone Number:': 'Numéro de téléphone actuel:',
+    'DKIM Aligned': 'DKIM Aligné',
+    'DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365.':
+      "Les CNAME DKIM n'existent pas, mais MX pointe vers *.onmicrosoft.com et l'enregistrement SPF inclut O365.",
+    'DKIM Domains': 'Domaines DKIM',
+    'DKIM Failure Table': 'Tableau des échecs DKIM',
+    'DKIM Failures by IP Address': 'Défaillances DKIM par adresse IP',
+    'DKIM Flag t': 'DKIM Flag t',
+    'DKIM Results': 'Résultats DKIM',
+    'DKIM Selectors': 'Sélecteurs DKIM',
+    'DKIM TXT record invalid': 'Enregistrement DKIM TXT non valable',
+    'DKIM key does not use RSA': "La clé DKIM n'utilise pas le RSA",
+    'DKIM record missing but MX uses O365. Follow cloud-specific guidance':
+      'DKIM record missing but MX uses O365. Follow cloud-specific guidance',
+    'DKIM-GC': 'DKIM-GC',
+    'DKIM-invalid-crypto': 'DKIM-invalid-crypto',
+    'DKIM-missing': 'DKIM-missing',
+    'DKIM-missing-O365-misconfigured': 'DKIM-missing-O365-misconfigured',
+    'DKIM-missing-mx-O365': 'DKIM-missing-mx-O365',
+    'DKIM-value-invalid': 'DKIM-value-invalid',
+    'DMARC Failure Table': 'Tableau des échecs de la DMARC',
+    'DMARC Failures by IP Address': 'Défaillances du DMARC par adresse IP',
+    'DMARC Implementation Phase: {status}': [
+      'Phase de mise en œuvre de la DMARC: ',
+      ['status'],
+    ],
+    'DMARC Messages': 'Messages de la DMARC',
+    'DMARC Not Implemented': "La DMARC n'est pas mise en œuvre",
+    'DMARC Report': 'Rapport de la DMARC',
+    'DMARC fail': 'DMARC échoue',
+    'DMARC pass': 'Passe DMARC',
+    'DMARC-GC': 'DMARC-GC',
+    'DMARC-missing': 'DMARC-missing',
+    'DNS Host': 'Hôte DNS',
+    December: 'Décembre',
+    'Display Name': "Nom d'affichage",
+    'Display Name:': "Nom d'affichage :",
+    'Display name cannot be empty': "Le nom d'affichage ne peut pas être vide",
+    Disposition: 'Disposition',
+    Domain: 'Domaine',
+    'Domain List': 'Liste des domaines',
+    'Domain URL': 'URL du domaine',
+    'Domain URL:': 'URL du domaine:',
+    'Domain added': 'Domaine ajouté',
+    'Domain defaults to HTTPS, but eventually redirects to HTTP':
+      'Le domaine passe par défaut en HTTPS, mais finit par être redirigé vers HTTP',
+    'Domain does not default to HTTPS':
+      'Le domaine ne passe pas par défaut en HTTPS',
+    'Domain does not enforce HTTPS': "Le domaine n'applique pas le HTTPS",
+    'Domain not pre-loaded by HSTS': 'Domaine non préchargé par le HSTS',
+    'Domain not pre-loaded by HSTS, but is pre-load ready':
+      "Le domaine n'est pas préchargé par le HSTS, mais est prêt à être préchargé",
+    'Domain removed': 'Domaine supprimé',
+    'Domain removed from {orgSlug}': ['Domaine supprimé de ', ['orgSlug']],
+    'Domain updated': 'Domaine mis à jour',
+    'Domain url field must not be empty':
+      "Le champ de l'url du domaine ne doit pas être vide",
+    'Domain uses potentially-outsourced DMARC service':
+      'Le domaine utilise un service DMARC potentiellement externalisé',
+    'Domain:': 'Domaine:',
+    Domains: 'Domaines',
+    'Domains Table': 'Tableau des domaines',
+    Edit: 'Edit',
+    'Edit Display Name': "Modifier le nom d'affichage",
+    'Edit Domain Details': "Modifier les détails d'un domaine",
+    'Edit Email': "Modifier l'e-mail",
+    Email: 'Courriel',
+    'Email Configuration': 'Configuration du courriel',
+    'Email Scan Results': "Résultats de l'analyse des courriels",
+    'Email Sent': 'Courriel envoyé',
+    'Email Validated': 'Courriel validé',
+    'Email cannot be empty': 'Le courriel ne peut être vide',
+    'Email invitation sent to {addedUserName}':
+      'Invitation par courrier électronique envoyée à jim@hotmail.com',
+    'Email security settings summary':
+      'Résumé des paramètres de sécurité du courriel',
+    'Email:': 'Courrier électronique :',
+    'Enter and confirm your new password below:':
+      'Entrez et confirmez votre nouveau mot de passe ci-dessous :',
+    'Enter and confirm your new password.':
+      'Entrez et confirmez votre nouveau mot de passe.',
+    'Enter two factor code': 'Entrez le code à deux facteurs',
+    "Enter your user account's verified email address and we will send you a password reset link.":
+      "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+    'Envelope From': 'Enveloppe De',
+    Fail: 'Échec',
+    'Fail DKIM %': 'Échec DKIM %',
+    'Fail SPF %': 'Échec du SPF %',
+    February: 'Février',
+    'Follow implementation guide': 'Suivre le guide de mise en œuvre',
+    'For in-depth CCCS implementation guidance:':
+      'Pour des conseils approfondis sur la mise en œuvre du CCCS :',
+    'For technical implementation guidance:':
+      'Pour des conseils de mise en œuvre technique :',
+    'Forgot your password?': 'Oublié votre mot de passe?',
+    'Full Fail %': 'Échec total %',
+    'Full Pass %': 'Passage complet %',
+    'Fully Aligned Table': 'Tableau entièrement aligné',
+    'Fully Aligned by IP Address': 'Entièrement aligné par adresse IP',
+    'Go to page:': 'Aller à la page',
+    'Government of Canada domains subject to TBS guidelines':
+      'Les domaines du gouvernement du Canada sont soumis aux directives du SCT',
+    Guidance: 'Conseils',
+    'Guidance Tags': "Étiquettes d'orientation",
+    'Guidance:': 'Orientation :',
+    'HSTS Age:': 'Âge du HSTS:',
+    'HSTS Status:': 'Statut du HSTS:',
+    'HSTS-missing': 'HSTS-missing',
+    'HSTS-not-preloaded': 'HSTS-not-preloaded',
+    'HSTS-preload-ready': 'HSTS-preload-ready',
+    'HSTS-short-age': 'HSTS-short-age',
+    'HTTP Strict Transport Security (HSTS) not implemented':
+      'HTTP Strict Transport Security (HSTS) non mis en œuvre',
+    'HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year':
+      "L'âge maximum de la politique de sécurité stricte des transports HTTP (HSTS) est inférieur à un an",
+    'HTTPS certificate chain is invalid':
+      "La chaîne de certificats HTTPS n'est pas valable",
+    'HTTPS certificate is expired': 'Le certificat HTTPS est expiré',
+    'HTTPS certificate is self-signed': 'Le certificat HTTPS est auto-signé',
+    'HTTPS endpoint failed hostname validation':
+      "Le point terminal HTTPS a échoué dans la validation du nom d'hôte",
+    'HTTPS-GC': 'HTTPS-GC',
+    'HTTPS-bad-chain': 'HTTPS-bad-chain',
+    'HTTPS-bad-hostname': 'HTTPS-bad-hostname',
+    'HTTPS-certificate-expired': 'HTTPS-certificate-expired',
+    'HTTPS-certificate-self-signed': 'HTTPS-certificate-self-signed',
+    'HTTPS-downgraded': 'HTTPS-downgraded',
+    'HTTPS-missing': 'HTTPS-missing',
+    'HTTPS-moderately-enforced': 'HTTPS-moderately-enforced',
+    'HTTPS-not-enforced': 'HTTPS-not-enforced',
+    'HTTPS-weakly-enforced': 'HTTPS-weakly-enforced',
+    'Header From': 'En-tête De',
+    Home: 'Accueil',
+    'INCLUDE-limit': 'INCLUDE-limit',
+    'IT PIN': 'IT PIN',
+    'IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.':
+      'IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
+    'ITPIN Compliant': "Conforme à l'ITPIN",
+    'Implementation Status:': "État d'avancement de la mise en œuvre:",
+    'Incorrect authenticate.result typename.':
+      'Incorrect authenticate.result typename.',
+    'Incorrect resetPassword.result typename.':
+      'Incorrect resetPassword.result typename.',
+    'Incorrect send method received.': "Méthode d'envoi incorrecte reçue.",
+    'Incorrect signIn.result typename.':
+      "Nom d'utilisateur incorrect signIn.result.",
+    'Incorrect signUp.result typename.': 'Incorrect signUp.result typename.',
+    'Incorrect updateUserPassword.result typename.':
+      'Incorrect updateUserPassword.result typename.',
+    'Incorrect updateUserProfile.result typename.':
+      'Incorrect updateUserProfile.result typename.',
+    'Internet facing services': "Services d'accès à Internet",
+    'Internet facing services: {domainCount}': [
+      "Services d'accès à Internet: ",
+      ['domainCount'],
+    ],
+    'Invalid email': 'Courriel non valide',
+    'Invalid percent': 'Pourcentage non valable',
+    'Invalid public key': 'Clé publique invalide',
+    'Invite User': "Inviter l'utilisateur",
+    January: 'Janvier',
+    July: 'Juillet',
+    June: 'Juin',
+    'L-30-D': 'L-30-D',
+    'Language:': 'La langue:',
+    'Last 30 Days': 'Les 30 derniers jours',
+    'Last scanned:': 'Dernier scan:',
+    'Level of Enforcment:': "Niveau d'application:",
+    'Loading {children}...': ['Chargement ', ['children'], '...'],
+    'Loading...': 'Chargement...',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.':
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
+    'Maintain deployment': 'Maintenir le déploiement',
+    March: 'Mars',
+    May: 'Mai',
+    Menu: 'Menu',
+    'Missing from guide- need v1.1': 'Absent du guide - besoin v1.1',
+    'More than 10 lookups - Follow implementation guide':
+      'Plus de 10 consultations - Suivez le guide de mise en œuvre',
+    'New Display Name:': "Nouveau nom d'affichage :",
+    'New Domain Url': 'Nouvel Url de domaine',
+    'New Domain Url:': 'Nouvelle URL de domaine :',
+    'New Email Address:': 'Nouvelle adresse électronique :',
+    'New Password:': 'Nouveau mot de passe :',
+    'New Phone Number:': 'Nouveau numéro de téléphone:',
+    'New domain name cannot be empty':
+      'Un nouveau nom de domaine ne peut pas être vide',
+    Next: 'Suivant',
+    'No Domains': 'Aucun domaine',
+    'No Organizations': 'Aucune organisation',
+    'No RUAs defined': 'Pas de RUA définis',
+    'No RUFs defined': 'Pas de RUF définis',
+    'No Users': "Pas d'utilisateurs",
+    'No current phone number': 'Pas de numéro de téléphone actuel',
+    'No data for the DKIM Failures by IP Address table':
+      'Aucune donnée pour le tableau des défaillances DKIM par adresse IP',
+    'No data for the DMARC Failures by IP Address table':
+      'Pas de données pour le tableau des défaillances DMARC par adresse IP',
+    'No data for the DMARC summary table':
+      'Pas de données pour le tableau récapitulatif de la DMARC',
+    'No data for the DMARC yearly report graph':
+      'Pas de données pour le graphique du rapport annuel de la DMARC',
+    'No data for the Fully Aligned by IP Address table':
+      'Pas de données pour le tableau Entièrement aligné par adresse IP',
+    'No data for the SPF Failures by IP Address table':
+      'Aucune donnée pour le tableau des défaillances du SPF par adresse IP',
+    'No domains scanned yet.': "Aucun domaine n'a encore été scanné.",
+    'No scan data for this organization.':
+      "Aucune donnée d'analyse pour cette organisation.",
+    'No users in this organization':
+      'Aucun utilisateur dans cette organisation',
+    'Non-compliant TLS': 'TLS non conforme',
+    None: 'Aucune',
+    'Not scanned yet.': 'Pas encore scanné.',
+    November: 'Novembre',
+    October: 'Octobre',
+    'One or more ciphers in use are not compliant with guidelines':
+      'Un ou plusieurs chiffres utilisés ne sont pas conformes aux lignes directrices',
+    'Organization Details': "Détails de l'organisation",
+    'Organization Info': "Informations sur l'organisation",
+    'Organization:': 'Organisation:',
+    Organizations: 'Organisations',
+    'Owner has not configured Aggregate reporting.':
+      "Le propriétaire n'a pas configuré le rapport agrégé.",
+    'Owner has not configured Forensic reporting. Missing from guide- need v1.1':
+      "Le propriétaire n'a pas configuré le rapport médico-légal. Manque dans le guide - besoin v1.1",
+    P: 'P',
+    'P-1024': 'P-1024',
+    'P-2048': 'P-2048',
+    'P-4096': 'P-4096',
+    'P-invalid': 'P-invalid',
+    'P-missing': 'P-missing',
+    'P-none': 'P-none',
+    'P-quarantine': 'P-quarantine',
+    'P-reject': 'P-reject',
+    'P-sub1024': 'P-sub1024',
+    'P-update-recommended': 'P-update-recommended',
+    PCT: 'PCT',
+    'PCT should be 100, or not included, if p=none':
+      'PCT doit être de 100, ou non inclus, si p=none',
+    'PCT-0': 'PCT-0',
+    'PCT-100': 'PCT-100',
+    'PCT-invalid': 'PCT-invalid',
+    'PCT-none-exists': 'PCT-none-exists',
+    'PCT-xx': 'PCT-xx',
+    Page: 'Page',
+    'Page Size:': 'Taille de la page :',
+    'Page {0} of {1}': ['Page ', ['0'], ' de ', ['1']],
+    Pass: 'Passez',
+    'Pass Only DKIM': 'Passez seulement DKIM',
+    'Pass Only SPF': 'Passez seulement SPF',
+    'Pass/Fail Ratios by Domain': 'Ratios succès/échec par domaine',
+    Password: 'Mot de passe',
+    'Password Updated': 'Mot de passe mis à jour',
+    'Password cannot be empty': 'Le mot de passe ne peut pas être vide',
+    'Password confirmation cannot be empty':
+      'La confirmation du mot de passe ne peut pas être vide',
+    'Password must be at least 12 characters long':
+      'Le mot de passe doit comporter au moins 12 caractères',
+    'Password:': 'Mot de passe :',
+    'Passwords must match': 'Les mots de passe doivent correspondre',
+    'Phase:': 'Phase:',
+    Phone: 'Téléphone',
+    'Phone Number': 'Numéro de téléphone',
+    'Phone Number:': 'Numéro de téléphone:',
+    'Phone Validated': 'Téléphone validé',
+    'Phone number field must not be empty':
+      'Le champ du numéro de téléphone ne doit pas être vide',
+    'Phone number must be a valid phone number of the form +17895551234 (10-15 digits)':
+      'Le numéro de téléphone doit être un numéro de téléphone valide de la forme +17895551234 (10-15 chiffres)',
+    'Please choose your preferred language':
+      'Veuillez choisir votre langue préférée',
+    'Please enter your current password.':
+      'Veuillez entrer votre mot de passe actuel.',
+    'Please enter your two factor code below.':
+      'Veuillez entrer votre code à deux facteurs ci-dessous.',
+    'Policy applies to all of mailflow':
+      "La politique s'applique à l'ensemble du flux de courrier",
+    'Policy applies to no part of mailflow - irregular config':
+      "La politique ne s'applique à aucune partie du flux de courrier - configuration irrégulière",
+    'Policy applies to percentage of mailflow':
+      "La politique s'applique au pourcentage du flux de courrier",
+    'Pre-Alpha': 'préalpha',
+    'Preloaded Status:': 'Statut préchargé:',
+    Previous: 'Précédent',
+    Privacy: 'Confidentialité',
+    'Properly configured!': 'Bien configuré !',
+    'Public key RSA and key length 1024':
+      'Clé publique RSA et longueur de la clé 1024',
+    'Public key RSA and key length 2048':
+      'Clé publique RSA et longueur de la clé 2048',
+    'Public key RSA and key length 4096 or higher':
+      'Clé publique RSA et longueur de clé 4096 ou plus',
+    'Public key RSA and key length <1024':
+      'RSA à clé publique et longueur de clé <1024',
+    'Public key in use for longer than 1 year':
+      "Clé publique en usage depuis plus d'un an",
+    'QR Code': 'Code QR',
+    'RFC 4.6.4.  DNS Lookup Limits':
+      'RFC 4.6.4.  DNS Lookup Limits (en anglais seulement)',
+    'RFC 6.1.  redirect: Redirected Query':
+      'RFC 6.1.  redirect: Redirected Query (en anglais seulement)',
+    'RFC 6.3.  General Record Format':
+      'RFC 6.3.  General Record Format (en anglais seulement)',
+    'RFC 7.1.  Verifying External Destinations':
+      'RFC 7.1.  Verifying External Destinations (en anglais seulement)',
+    RUA: 'RUA',
+    'RUA-CCCS': 'RUA-CCCS',
+    'RUA-none': 'RUA-none',
+    RUF: 'RUF',
+    'RUF-CCCS': 'RUF-CCCS',
+    'RUF-none': 'RUF-none',
+    'Remove Domain': 'Supprimer un domaine',
+    'Request a domain to be scanned:': "Demander qu'un domaine soit scanné:",
+    'Result:': 'Résultat',
+    'Results for scans of email technologies (DMARC, SPF, DKIM).':
+      'Résultats des analyses des technologies du courrier électronique (DMARC, SPF, DKIM).',
+    'Results for scans of web technologies (SSL, HTTPS).':
+      'Résultats des analyses des technologies du web (SSL, HTTPS).',
+    'Role updated': 'Rôle mis à jour',
+    'Role:': 'Fonction:',
+    SP: 'SP',
+    'SP-missing': 'SP-missing',
+    'SP-none': 'SP-none',
+    'SP-quarantine': 'SP-quarantine',
+    'SP-reject': 'SP-reject',
+    'SPF Aligned': 'Alignement du SPF',
+    'SPF Domains': 'Domaine SPF',
+    'SPF Failure Table': 'Tableau des échecs du SPF',
+    'SPF Failures by IP Address': 'Défaillances du SPF par adresse IP',
+    'SPF Results': 'Résultats du SPF',
+    'SPF implemented in incorrect subdomain':
+      'SPF implémenté dans un sous-domaine incorrect',
+    'SPF-GC': 'SPF-GC',
+    'SPF-bad-path': 'SPF-bad-path',
+    'SPF-missing': 'SPF-missing',
+    'SSL-3des': 'SSL-3des',
+    'SSL-GC': 'SSL-GC',
+    'SSL-acceptable-certificate': 'SSL-acceptable-certificate',
+    'SSL-invalid-cipher': 'SSL-invalid-cipher',
+    'SSL-missing': 'SSL-missing',
+    'SSL-rc4': 'SSL-rc4',
+    SUPER_ADMIN: 'SUPER_ADMIN',
+    'Save Language': 'Sauvegarder la langue',
+    'Save TFA Method': 'Méthode Save TFA',
+    Scan: 'Scanner',
+    'Scan Domain': 'Domaine de balayage',
+    'Scan Request': 'Demande de numérisation',
+    'Scan of domain successfully requested':
+      'Scan du domaine demandé avec succès',
+    'Scan this QR code with a 2FA app like Authy or Google Authenticator':
+      'Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator',
+    Search: 'Recherchez',
+    'Search for a domain': 'Rechercher un domaine',
+    'Search for a user': 'Rechercher un utilisateur',
+    'Search for an organization': 'Rechercher une organisation',
+    'Search for any Government of Canada tracked domain:':
+      "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:",
+    'Search:': 'Recherche :',
+    'Select Preferred Language': 'Sélectionnez votre langue préférée',
+    'Select an organization': 'Sélectionnez une organisation',
+    'Select an organization to view admin options':
+      "Sélectionnez une organisation pour voir les options d'administration",
+    September: 'Septembre',
+    'Services: {domainCount}': ['Services: ', ['domainCount']],
+    'Show {pageSize}': ['Voir ', ['pageSize']],
+    'Showing data for period:': 'Affichage des données pour la période :',
+    'Sign In': 'Se connecter',
+    'Sign In.': 'Se connecter.',
+    'Sign Out': 'Déconnexion',
+    'Sign Out.': 'Déconnexion.',
+    'Sign in with your username and password.':
+      "Connectez-vous avec votre nom d'utilisateur et votre mot de passe.",
+    'Skip to main content': 'Passer au contenu principal',
+    'Source IP Address': 'Adresse IP source',
+    Submit: 'Soumettre',
+    Summary: 'Résumé',
+    'Summary Cards': 'Fiches de synthèse',
+    'Summary:': 'Résumé:',
+    'T-enabled': 'T-enabled',
+    TBD: 'TBD',
+    'TFA Method:': 'Méthode TFA:',
+    'TXT-DMARC-enabled': 'TXT-DMARC-enabled',
+    'TXT-DMARC-missing': 'TXT-DMARC-missing',
+    'Terms & conditions': 'Avis',
+    'Textual Representation': 'Représentation textuelle',
+    'The page you are looking for has moved or does not exist.':
+      "La page que vous recherchez a été déplacée ou n'existe pas.",
+    "The user's role has been successfully updated":
+      "Le rôle de l'utilisateur a été mis à jour avec succès",
+    'This component is currently unavailable. Try reloading the page.':
+      "Ce composant n'est pas disponible actuellement. Essayez de recharger la page.",
+    'This service is being developed in the open':
+      'Ce service est développé de façon ouverte',
+    'Total Messages': 'Total des messages',
+    'Total users': 'total des utilisateurs',
+    'Track Web Security Compliance':
+      'Suivre la conformité de la sécurité du Web',
+    'Tracker Logo': 'Logo du Tracker',
+    'Two Factor Authentication': 'Authentification à deux facteurs',
+    USER: 'UTILISATEUR',
+    'Unable to change user role, please try again.':
+      "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer.",
+    'Unable to create account, please try again.':
+      'Unable to create account, please try again.',
+    'Unable to create your account, please try again.':
+      'Impossible de créer votre compte, veuillez réessayer',
+    'Unable to request scan, please try again.':
+      'Impossible de demander un balayage, veuillez réessayer.',
+    'Unable to reset your password, please try again.':
+      'Unable to reset your password, please try again.',
+    'Unable to send password reset link to email.':
+      "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel.",
+    'Unable to sign in to your account, please try again.':
+      'Impossible de vous connecter à votre compte, veuillez réessayer.',
+    'Unable to update password': 'Impossible de mettre à jour le mot de passe',
+    'Unable to update to your TFA send method, please try again.':
+      'Unable to update to your TFA send method, please try again.',
+    'Unable to update to your display name, please try again.':
+      'Unable to update to your display name, please try again.',
+    'Unable to update to your phone number, please try again.':
+      'Unable to update to your phone number, please try again.',
+    'Unable to update to your preferred language, please try again.':
+      'Unable to update to your preferred language, please try again.',
+    'Unable to update to your username, please try again.':
+      'Unable to update to your username, please try again.',
+    'Unable to update your password, please try again.':
+      'Unable to update your password, please try again.',
+    'Use DKIM to validate outbound email sent from your custom domain':
+      'Utilisez DKIM pour valider le courrier électronique sortant envoyé depuis votre domaine personnalisé',
+    'User Affiliations': 'Affiliations des utilisateurs',
+    'User List': 'Liste des utilisateurs',
+    'User Profile': "Profil de l'utilisateur",
+    'User invited': 'Utilisateur invité',
+    Users: 'Utilisateurs',
+    'Uses redirect tag with All': 'Utilise la balise de redirection avec All',
+    'Verification TXT records for all 3rd party senders exist':
+      'Il existe des enregistrements TXT de vérification pour tous les expéditeurs tiers',
+    'Verification TXT records for some/all 3rd party senders missing':
+      'Vérification des enregistrements TXT pour certains/toutes les expéditeurs tiers manquants',
+    'Verification code must only contains numbers':
+      'Le code de vérification ne doit contenir que des chiffres',
+    'Vulnerability-ccs-injection': 'Vulnerability-ccs-injection',
+    'Vulnerability-heartbleed': 'Vulnerability-heartbleed',
+    'Vulnerable to Heartbleed bug': 'Vulnérable à la maladie du cœur',
+    'Vulnerable to OpenSSL CCS Injection':
+      "Vulnérable à l'injection de CCS OpenSSL",
+    "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker.":
+      "Nous avons envoyé un SMS à votre numéro de téléphone enregistré avec un code d'authentification pour vous connecter à Tracker.",
+    "We've sent you an email with an authentication code to sign into Tracker.":
+      "Nous vous avons envoyé un e-mail avec un code d'authentification pour vous connecter à Tracker.",
+    'Web Configuration': 'Configuration Web',
+    'Web Scan Results': "Résultats de l'analyse du Web",
+    'Web encryption settings summary':
+      'Résumé des paramètres de cryptage du Web',
+    'Welcome, Admin': "Bienvenue à l'administration",
+    'Welcome, you are successfully signed in to your new account!':
+      'Veuillez choisir votre langue préférée',
+    'Welcome, you are successfully signed in!':
+      'Bienvenue, vous êtes connecté avec succès!',
+    'Yearly DMARC Graph': 'Graphique annuel du DMARC',
+    'You do not have admin permissions in any organization':
+      "Vous n'avez pas d'autorisations administratives dans une organisation",
+    "You have not enabled Two Factor Authentication. To maximize your account's security, <0>please enable 2FA</0>.":
+      "Vous n'avez pas activé l'authentification à deux facteurs. Pour maximiser la sécurité de votre compte, <0>veuillez activer l'authentification à deux facteurs</0>.",
+    'You have successfully been signed out.':
+      'Vous avez été déconnecté avec succès.',
+    'You have successfully updated your TFA send method.':
+      "Vous avez mis à jour avec succès votre méthode d'envoi de TFA.",
+    'You have successfully updated your display name.':
+      "Vous avez réussi à mettre à jour votre nom d'affichage.",
+    'You have successfully updated your email.':
+      'Vous avez mis à jour votre courriel avec succès.',
+    'You have successfully updated your password.':
+      'Vous avez mis à jour votre mot de passe avec succès.',
+    'You have successfully updated your phone number.':
+      'Vous avez réussi à mettre à jour votre numéro de téléphone.',
+    'You have successfully updated your preferred language.':
+      'Vous avez réussi à mettre à jour votre langue préférée.',
+    'You may now sign in with your new password':
+      'Vous pouvez maintenant vous connecter avec votre nouveau mot de passe',
+    'Your 2FA app will then have a valid code that you can use when you sign in.':
+      "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez.",
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a322',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna33',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna34',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna35',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna4',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna5',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna53':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna53',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb13':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb13',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22',
+    'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31':
+      'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31',
+    'https://docs.microsoft.com/en-ca/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide':
+      'https://docs.microsoft.com/fr-ca/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide',
+    'https://tools.ietf.org/html/rfc6376#section-3.6.1':
+      'https://tools.ietf.org/html/rfc6376#section-3.6.1',
+    'https://tools.ietf.org/html/rfc7208#section-4.6.4':
+      'https://tools.ietf.org/html/rfc7208#section-4.6.4',
+    'https://tools.ietf.org/html/rfc7208#section-6.1':
+      'https://tools.ietf.org/html/rfc7208#section-6.1',
+    'https://tools.ietf.org/html/rfc7489#section-6.3':
+      'https://tools.ietf.org/html/rfc7489#section-6.3',
+    'https://tools.ietf.org/html/rfc7489#section-7.1':
+      'https://tools.ietf.org/html/rfc7489#section-7.1',
+    of: 'de',
+    'pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be none but mail agents may process messages based on Quarantine)':
+      'pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be none but mail agents may process messages based on Quarantine)',
+    '{0} was added to {orgSlug}': [['0'], ' a été ajouté à ', ['orgSlug']],
+    '{count} records...': [['count'], ' enregistrements...'],
+    '{editingDomainUrl} from {orgSlug} successfully updated to {0}': [
+      ['editingDomainUrl'],
+      ' de ',
+      ['orgSlug'],
+      ' mis à jour avec succès à ',
+      ['0'],
+    ],
+    '{orgName}': [['orgName']],
+  },
+}

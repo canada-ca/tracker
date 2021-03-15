@@ -19,6 +19,7 @@ import {
 import WithPseudoBox from './withPseudoBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import DisplayNameField from './DisplayNameField'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
@@ -93,7 +94,7 @@ function EditableUserDisplayName({ detailValue }) {
 
   const validationSchema = object().shape({
     displayName: yupString().required(
-      fieldRequirements.displayName.required.message,
+      i18n._(fieldRequirements.displayName.required.message),
     ),
   })
 

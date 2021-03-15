@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import {
   Stack,
   Text,
@@ -173,7 +174,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
 
   const updatedDomainValidationSchema = yupObject().shape({
     newDomainUrl: yupString().required(
-      fieldRequirements.domainUrl.required.message,
+      i18n._(fieldRequirements.domainUrl.required.message),
     ),
   })
 

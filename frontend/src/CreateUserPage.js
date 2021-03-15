@@ -10,6 +10,7 @@ import EmailField from './EmailField'
 import PasswordConfirmation from './PasswordConfirmation'
 import LanguageSelect from './LanguageSelect'
 import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import DisplayNameField from './DisplayNameField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
@@ -24,25 +25,25 @@ export default function CreateUserPage() {
 
   const validationSchema = object().shape({
     email: string()
-      .required(fieldRequirements.email.required.message)
-      .email(fieldRequirements.email.email.message),
+      .required(i18n._(fieldRequirements.email.required.message))
+      .email(i18n._(fieldRequirements.email.email.message)),
     displayName: string().required(
-      fieldRequirements.displayName.required.message,
+      i18n._(fieldRequirements.displayName.required.message),
     ),
     password: string()
-      .required(fieldRequirements.password.required.message)
+      .required(i18n._(fieldRequirements.password.required.message))
       .min(
         fieldRequirements.password.min.minLength,
-        fieldRequirements.password.min.message,
+        i18n._(fieldRequirements.password.min.message),
       ),
     confirmPassword: string()
-      .required(fieldRequirements.confirmPassword.required.message)
+      .required(i18n._(fieldRequirements.confirmPassword.required.message))
       .oneOf(
         fieldRequirements.confirmPassword.oneOf.types,
-        fieldRequirements.confirmPassword.oneOf.message,
+        i18n._(fieldRequirements.confirmPassword.oneOf.message),
       ),
     lang: string()
-      .required(fieldRequirements.lang.required.message)
+      .required(i18n._(fieldRequirements.lang.required.message))
       .oneOf(fieldRequirements.lang.oneOf.types),
   })
 

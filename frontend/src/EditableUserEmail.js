@@ -19,6 +19,7 @@ import {
 import WithPseudoBox from './withPseudoBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
@@ -91,8 +92,8 @@ function EditableUserEmail({ detailValue }) {
 
   const validationSchema = object().shape({
     email: yupString()
-      .required(fieldRequirements.email.required.message)
-      .email(fieldRequirements.email.email.message),
+      .required(i18n._(fieldRequirements.email.required.message))
+      .email(i18n._(fieldRequirements.email.email.message)),
   })
 
   return (
