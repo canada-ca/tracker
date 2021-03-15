@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { tokenize } from '../../../auth'
+import { tokenize, userRequired } from '../../../auth'
 import { userLoaderByUserName, userLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -149,6 +149,10 @@ describe('authenticate user account', () => {
             auth: {
               bcrypt,
               tokenize,
+              userRequired: userRequired({
+                userKey: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
             },
             validators: {
               cleanseInput,
@@ -232,130 +236,6 @@ describe('authenticate user account', () => {
       })
     })
     describe('given unsuccessful update of users password', () => {
-      describe('user id is undefined', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserPassword(
-                  input: {
-                    currentPassword: "testpassword123"
-                    updatedPassword: "newtestpassword123"
-                    updatedPasswordConfirm: "newtestpassword123"
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserPasswordResultType {
-                      status
-                    }
-                    ... on UpdateUserPasswordError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: undefined,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserPassword: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to update password, authentication error occurred, please sign in again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            'User attempted to update password, but the user id is undefined.',
-          ])
-        })
-      })
-      describe('user cannot be found in the database', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserPassword(
-                  input: {
-                    currentPassword: "testpassword123"
-                    updatedPassword: "newtestpassword123"
-                    updatedPasswordConfirm: "newtestpassword123"
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserPasswordResultType {
-                      status
-                    }
-                    ... on UpdateUserPasswordError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: 1,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserPassword: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to update password, authentication error occurred, please sign in again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 1 attempted to update their password, but no account is associated with that id.`,
-          ])
-        })
-      })
       describe('the current password does not match the password in the database', () => {
         it('returns an error message', async () => {
           const response = await graphql(
@@ -389,6 +269,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -451,6 +335,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -513,6 +401,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -582,6 +474,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -653,6 +549,10 @@ describe('authenticate user account', () => {
             auth: {
               bcrypt,
               tokenize,
+              userRequired: userRequired({
+                userKey: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
             },
             validators: {
               cleanseInput,
@@ -736,128 +636,6 @@ describe('authenticate user account', () => {
       })
     })
     describe('given unsuccessful update of users password', () => {
-      describe('user id is undefined', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserPassword(
-                  input: {
-                    currentPassword: "testpassword123"
-                    updatedPassword: "newtestpassword123"
-                    updatedPasswordConfirm: "newtestpassword123"
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserPasswordResultType {
-                      status
-                    }
-                    ... on UpdateUserPasswordError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: undefined,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserPassword: {
-                result: {
-                  code: 400,
-                  description: 'todo',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            'User attempted to update password, but the user id is undefined.',
-          ])
-        })
-      })
-      describe('user cannot be found in the database', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserPassword(
-                  input: {
-                    currentPassword: "testpassword123"
-                    updatedPassword: "newtestpassword123"
-                    updatedPasswordConfirm: "newtestpassword123"
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserPasswordResultType {
-                      status
-                    }
-                    ... on UpdateUserPasswordError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: 1,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserPassword: {
-                result: {
-                  code: 400,
-                  description: 'todo',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 1 attempted to update their password, but no account is associated with that id.`,
-          ])
-        })
-      })
       describe('the current password does not match the password in the database', () => {
         it('returns an error message', async () => {
           const response = await graphql(
@@ -891,6 +669,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -952,6 +734,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -1013,6 +799,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -1081,6 +871,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
