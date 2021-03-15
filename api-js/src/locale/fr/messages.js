@@ -19,6 +19,8 @@
     'No organization with the provided slug could be found.': 'todo',
     'No verified domain with the provided domain could be found.': 'todo',
     'Organization has already been verified.': 'todo',
+    'Organization name already in use, please choose another and try again.':
+      'todo',
     'Passing both `first` and `last` to paginate the `DkimFailureTable` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `DmarcFailureTable` connection is not supported.':
