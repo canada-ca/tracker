@@ -257,7 +257,7 @@ export const REQUEST_SCAN = gql`
   }
 `
 
-export const SET_PHONE_NUMBER = `
+export const SET_PHONE_NUMBER = gql`
   mutation SetPhoneNumber($phoneNumber: PhoneNumber!) {
     setPhoneNumber(input: { phoneNumber: $phoneNumber }) {
       result {
@@ -273,7 +273,7 @@ export const SET_PHONE_NUMBER = `
   }
 `
 
-export const VERIFY_PHONE = `
+export const VERIFY_PHONE = gql`
   mutation VerifyPhoneNumber($twoFactorCode: Int!) {
     verifyPhoneNumber(input: { twoFactorCode: $twoFactorCode }) {
       result {
