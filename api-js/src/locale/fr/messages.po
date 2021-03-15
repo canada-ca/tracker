@@ -212,7 +212,7 @@ msgstr "todo"
 #: src/affiliation/mutations/update-user-role.js:156
 #: src/affiliation/mutations/update-user-role.js:177
 #: src/affiliation/mutations/update-user-role.js:193
-msgid "Permission Denied: Please contact organization admin for help with updating user's roles."
+msgid "Permission Denied: Please contact organization admin for help with updating user roles."
 msgstr "todo"
 
 #: src/affiliation/mutations/invite-user-to-org.js:91

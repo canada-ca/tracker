@@ -71,7 +71,7 @@
       'todo',
     'Permission Denied: Please contact organization admin for help with updating organization.':
       'todo',
-    "Permission Denied: Please contact organization admin for help with updating user's roles.":
+    'Permission Denied: Please contact organization admin for help with updating user roles.':
       'todo',
     'Permission Denied: Please contact organization admin for help with user invitations.':
       'todo',

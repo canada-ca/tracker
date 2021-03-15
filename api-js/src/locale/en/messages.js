@@ -87,8 +87,8 @@
       'Permission Denied: Please contact organization admin for help with removing users.',
     'Permission Denied: Please contact organization admin for help with updating organization.':
       'Permission Denied: Please contact organization admin for help with updating organization.',
-    "Permission Denied: Please contact organization admin for help with updating user's roles.":
-      "Permission Denied: Please contact organization admin for help with updating user's roles.",
+    'Permission Denied: Please contact organization admin for help with updating user roles.':
+      'Permission Denied: Please contact organization admin for help with updating user roles.',
     'Permission Denied: Please contact organization admin for help with user invitations.':
       'Permission Denied: Please contact organization admin for help with user invitations.',
     'Permission Denied: Please contact organization admin for help with user role changes.':
