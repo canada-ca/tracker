@@ -61,7 +61,7 @@ function EditableUserPhoneNumber({ detailValue }) {
           setPhoneCodeSent(true)
         } else if (setPhoneNumber.result.__typename === 'SetPhoneNumberError') {
           toast({
-            title: t`Unable to update to your phone number, please try again.`,
+            title: t`Unable to update your phone number, please try again.`,
             description: setPhoneNumber.result.description,
             status: 'error',
             duration: 9000,
@@ -117,7 +117,7 @@ function EditableUserPhoneNumber({ detailValue }) {
           verifyPhoneNumber.result.__typename === 'VerifyPhoneNumberError'
         ) {
           toast({
-            title: t`Unable verify your phone number, please try again.`,
+            title: t`Unable to verify your phone number, please try again.`,
             description: verifyPhoneNumber.result.description,
             status: 'error',
             duration: 9000,

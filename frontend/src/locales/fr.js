@@ -49,6 +49,8 @@
       "Une erreur s'est produite lors de la mise à jour de votre mot de passe.",
     'An error occurred while updating your phone number.':
       "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone.",
+    'An error occurred while verifying your phone number.':
+      'An error occurred while verifying your phone number.',
     'An error occurred.': "Une erreur s'est produite.",
     Apply: 'Appliquer',
     April: 'Avril',
@@ -245,6 +247,8 @@
     'Incorrect resetPassword.result typename.':
       'Incorrect resetPassword.result typename.',
     'Incorrect send method received.': "Méthode d'envoi incorrecte reçue.",
+    'Incorrect setPhoneNumber.result typename.':
+      'Incorrect setPhoneNumber.result typename.',
     'Incorrect signIn.result typename.':
       "Nom d'utilisateur incorrect signIn.result.",
     'Incorrect signUp.result typename.': 'Incorrect signUp.result typename.',
@@ -252,6 +256,8 @@
       'Incorrect updateUserPassword.result typename.',
     'Incorrect updateUserProfile.result typename.':
       'Incorrect updateUserProfile.result typename.',
+    'Incorrect verifyPhoneNumber.result typename.':
+      "Une erreur s'est produite lors de la vérification de votre numéro de téléphone.",
     'Internet facing services': "Services d'accès à Internet",
     'Internet facing services: {domainCount}': [
       "Services d'accès à Internet: ",
@@ -528,7 +534,9 @@
     'Unable to update to your username, please try again.':
       'Unable to update to your username, please try again.',
     'Unable to update your password, please try again.':
-      'Unable to update your password, please try again.',
+      'Impossible de mettre à jour votre mot de passe, veuillez réessayer.',
+    'Unable to verify your phone number, please try again.':
+      'Impossible de vérifier votre numéro de téléphone, veuillez réessayer.',
     'Use DKIM to validate outbound email sent from your custom domain':
       'Utilisez DKIM pour valider le courrier électronique sortant envoyé depuis votre domaine personnalisé',
     'User Affiliations': 'Affiliations des utilisateurs',
@@ -543,11 +551,14 @@
       'Vérification des enregistrements TXT pour certains/toutes les expéditeurs tiers manquants',
     'Verification code must only contains numbers':
       'Le code de vérification ne doit contenir que des chiffres',
+    Verify: 'Vérifier',
     'Vulnerability-ccs-injection': 'Vulnerability-ccs-injection',
     'Vulnerability-heartbleed': 'Vulnerability-heartbleed',
     'Vulnerable to Heartbleed bug': 'Vulnérable à la maladie du cœur',
     'Vulnerable to OpenSSL CCS Injection':
       "Vulnérable à l'injection de CCS OpenSSL",
+    "We've sent an SMS to your new phone number with an authentication code to confirm this change.":
+      "Nous avons envoyé un SMS à votre nouveau numéro de téléphone avec un code d'authentification pour confirmer ce changement.",
     "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker.":
       "Nous avons envoyé un SMS à votre numéro de téléphone enregistré avec un code d'authentification pour vous connecter à Tracker.",
     "We've sent you an email with an authentication code to sign into Tracker.":
