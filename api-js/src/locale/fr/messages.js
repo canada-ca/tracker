@@ -60,6 +60,8 @@
     'Passwords do not match.': 'todo',
     'Permission check error. Unable to request domain information.': 'todo',
     'Permission error, not an admin for this user.': 'todo',
+    'Phone number has been successfully set, you will receive a verification text message shortly.':
+      'todo',
     'Profile successfully updated.': 'todo',
     'Requesting `{amount}` records on the `DkimFailureTable` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -108,8 +110,6 @@
     'Successfully verified phone number, and set TFA send method to text.':
       'todo',
     'Too many failed login attempts, please reset your password, and try again.':
-      'todo',
-    'Two factor code has been successfully sent, you will receive a text message shortly.':
       'todo',
     'Two factor code is incorrect. Please try again.': 'todo',
     'Two factor code length is incorrect. Please try again.': 'todo',
@@ -171,12 +171,12 @@
     'Unable to request a on time scan on this domain.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
     'Unable to select dmarc reports for this period and year.': 'todo',
-    'Unable to send TFA code, please try again.': 'todo',
     'Unable to send org invite email. Please try again.': 'todo',
     'Unable to send password reset email. Please try again.': 'todo',
     'Unable to send two factor authentication message. Please try again.':
       'todo',
     'Unable to send verification email. Please try again.': 'todo',
+    'Unable to set phone number, please try again.': 'todo',
     'Unable to sign in, please try again.': 'todo',
     'Unable to sign up. Please try again.': 'todo',
     'Unable to two factor authenticate. Please try again.': 'todo',
