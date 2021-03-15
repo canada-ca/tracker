@@ -10,7 +10,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { tokenize } from '../../../auth'
+import { tokenize, userRequired } from '../../../auth'
 import { userLoaderByUserName, userLoaderByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
@@ -114,6 +114,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -183,6 +187,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -250,6 +258,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -346,6 +358,10 @@ describe('authenticate user account', () => {
                   auth: {
                     bcrypt,
                     tokenize,
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -440,6 +456,10 @@ describe('authenticate user account', () => {
                   auth: {
                     bcrypt,
                     tokenize,
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -519,6 +539,10 @@ describe('authenticate user account', () => {
                   auth: {
                     bcrypt,
                     tokenize,
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -596,6 +620,10 @@ describe('authenticate user account', () => {
                   auth: {
                     bcrypt,
                     tokenize,
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -674,6 +702,10 @@ describe('authenticate user account', () => {
                 auth: {
                   bcrypt,
                   tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -707,134 +739,6 @@ describe('authenticate user account', () => {
       })
     })
     describe('given unsuccessful update of users profile', () => {
-      describe('user id is undefined', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserProfileResult {
-                      status
-                      user {
-                        id
-                      }
-                    }
-                    ... on UpdateUserProfileError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: undefined,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserProfile: {
-                result: {
-                  code: 400,
-                  description: 'Authentication error, please sign in again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            'User attempted to update their profile, but the user id is undefined.',
-          ])
-        })
-      })
-      describe('user cannot be found in the database', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserProfileResult {
-                      status
-                      user {
-                        id
-                      }
-                    }
-                    ... on UpdateUserProfileError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: 1,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserProfile: {
-                result: {
-                  code: 400,
-                  description: 'Unable to update profile. Please try again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 1 attempted to update their profile, but no account is associated with that id.`,
-          ])
-        })
-      })
       describe('user attempts to set email to one that is already in use', () => {
         beforeEach(async () => {
           await collections.users.save({
@@ -879,6 +783,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -957,6 +865,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -1033,6 +945,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -1102,6 +1018,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -1169,6 +1089,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -1265,6 +1189,10 @@ describe('authenticate user account', () => {
                   auth: {
                     bcrypt,
                     tokenize,
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -1359,6 +1287,10 @@ describe('authenticate user account', () => {
                   auth: {
                     bcrypt,
                     tokenize,
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -1438,6 +1370,10 @@ describe('authenticate user account', () => {
                   auth: {
                     bcrypt,
                     tokenize,
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -1515,6 +1451,10 @@ describe('authenticate user account', () => {
                   auth: {
                     bcrypt,
                     tokenize,
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -1593,6 +1533,10 @@ describe('authenticate user account', () => {
                 auth: {
                   bcrypt,
                   tokenize,
+                  userRequired: userRequired({
+                    userKey: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1626,134 +1570,6 @@ describe('authenticate user account', () => {
       })
     })
     describe('given unsuccessful update of users profile', () => {
-      describe('user id is undefined', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserProfileResult {
-                      status
-                      user {
-                        id
-                      }
-                    }
-                    ... on UpdateUserProfileError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: undefined,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserProfile: {
-                result: {
-                  code: 400,
-                  description: 'todo',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            'User attempted to update their profile, but the user id is undefined.',
-          ])
-        })
-      })
-      describe('user cannot be found in the database', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateUserProfile(
-                  input: {
-                    displayName: "John Smith"
-                    userName: "john.smith@istio.actually.works"
-                    preferredLang: ENGLISH
-                  }
-                ) {
-                  result {
-                    ... on UpdateUserProfileResult {
-                      status
-                      user {
-                        id
-                      }
-                    }
-                    ... on UpdateUserProfileError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              userKey: 1,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              updateUserProfile: {
-                result: {
-                  code: 400,
-                  description: 'todo',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 1 attempted to update their profile, but no account is associated with that id.`,
-          ])
-        })
-      })
       describe('user attempts to set email to one that is already in use', () => {
         beforeEach(async () => {
           await collections.users.save({
@@ -1798,6 +1614,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -1876,6 +1696,10 @@ describe('authenticate user account', () => {
               auth: {
                 bcrypt,
                 tokenize,
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,

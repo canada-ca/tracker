@@ -44,6 +44,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       i18n,
       query,
       userKey,
+      auth: { userRequired },
       loaders: { userLoaderByKey, userLoaderByUserName },
       validators: { cleanseInput },
     },
@@ -54,32 +55,8 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const preferredLang = cleanseInput(args.preferredLang)
     const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
 
-    // Replace with userRequired()
-    // Make sure userKey is not undefined
-    if (typeof userKey === 'undefined') {
-      console.warn(
-        `User attempted to update their profile, but the user id is undefined.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Authentication error, please sign in again.`),
-      }
-    }
-
     // Get user info from DB
-    const user = await userLoaderByKey.load(userKey)
-
-    if (typeof user === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to update their profile, but no account is associated with that id.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to update profile. Please try again.`),
-      }
-    }
+    const user = await userRequired()
 
     // Check to see if user name is already in use
     if (userName !== '') {
