@@ -1,3 +1,5 @@
 export * from './https'
+export * from './https-connection'
 export * from './ssl'
+export * from './ssl-connection'
 export * from './web-scan'
