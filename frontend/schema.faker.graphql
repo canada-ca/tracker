@@ -2166,6 +2166,8 @@ type VerifyPhoneNumberError {
 type VerifyPhoneNumberResult {
   # Informs the user if their phone number was successfully verified.
   status: String
+  # The user who verified their phone number.
+  user: PersonalUser
 }
 
 input verifyPhoneNumberInput {
