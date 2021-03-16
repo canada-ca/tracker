@@ -47,6 +47,8 @@
       'An error occurred while updating your password.',
     'An error occurred while updating your phone number.':
       'An error occurred while updating your phone number.',
+    'An error occurred while verifying your phone number.':
+      'An error occurred while verifying your phone number.',
     'An error occurred.': 'An error occurred.',
     Apply: 'Apply',
     April: 'April',
@@ -239,12 +241,16 @@
     'Incorrect resetPassword.result typename.':
       'Incorrect resetPassword.result typename.',
     'Incorrect send method received.': 'Incorrect send method received.',
+    'Incorrect setPhoneNumber.result typename.':
+      'Incorrect setPhoneNumber.result typename.',
     'Incorrect signIn.result typename.': 'Incorrect signIn.result typename.',
     'Incorrect signUp.result typename.': 'Incorrect signUp.result typename.',
     'Incorrect updateUserPassword.result typename.':
       'Incorrect updateUserPassword.result typename.',
     'Incorrect updateUserProfile.result typename.':
       'Incorrect updateUserProfile.result typename.',
+    'Incorrect verifyPhoneNumber.result typename.':
+      'Incorrect verifyPhoneNumber.result typename.',
     'Internet facing services': 'Internet facing services',
     'Internet facing services: {domainCount}': [
       'Internet facing services: ',
@@ -514,6 +520,8 @@
       'Unable to update to your username, please try again.',
     'Unable to update your password, please try again.':
       'Unable to update your password, please try again.',
+    'Unable to verify your phone number, please try again.':
+      'Unable to verify your phone number, please try again.',
     'Use DKIM to validate outbound email sent from your custom domain':
       'Use DKIM to validate outbound email sent from your custom domain',
     'User Affiliations': 'User Affiliations',
@@ -528,11 +536,14 @@
       'Verification TXT records for some/all 3rd party senders missing',
     'Verification code must only contains numbers':
       'Verification code must only contains numbers',
+    Verify: 'Verify',
     'Vulnerability-ccs-injection': 'Vulnerability-ccs-injection',
     'Vulnerability-heartbleed': 'Vulnerability-heartbleed',
     'Vulnerable to Heartbleed bug': 'Vulnerable to Heartbleed bug',
     'Vulnerable to OpenSSL CCS Injection':
       'Vulnerable to OpenSSL CCS Injection',
+    "We've sent an SMS to your new phone number with an authentication code to confirm this change.":
+      "We've sent an SMS to your new phone number with an authentication code to confirm this change.",
     "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker.":
       "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker.",
     "We've sent you an email with an authentication code to sign into Tracker.":
