@@ -47,6 +47,7 @@ export const verifyAccount = new mutationWithClientMutationId({
       }
     }
 
+    // Auth shouldn't be needed with this
     // Check if user exists
     const user = await userLoaderByKey.load(userKey)
 

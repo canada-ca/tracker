@@ -30,7 +30,9 @@ describe('given the updateUserProfileResultType object', () => {
       it('returns the resolved value', () => {
         const demoType = updateUserProfileResultType.getFields()
 
-        expect(demoType.user.resolve({ user: { id: '1' } })).toEqual({ id: '1' })
+        expect(demoType.user.resolve({ user: { id: '1' } })).toEqual({
+          id: '1',
+        })
       })
     })
   })

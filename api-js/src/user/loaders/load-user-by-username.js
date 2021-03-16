@@ -15,7 +15,7 @@ export const userLoaderByUserName = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running userLoaderByUserName: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find user. Please try again.`))
+      throw new Error(i18n._(t`Unable to load user(s). Please try again.`))
     }
 
     const userMap = {}
@@ -27,7 +27,7 @@ export const userLoaderByUserName = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running userLoaderByUserName: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find user. Please try again.`))
+      throw new Error(i18n._(t`Unable to load user(s). Please try again.`))
     }
 
     return userNames.map((userName) => userMap[userName])

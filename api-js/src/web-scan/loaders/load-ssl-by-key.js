@@ -14,7 +14,7 @@ export const sslLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running sslLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find ssl scan. Please try again.`))
+      throw new Error(i18n._(t`Unable to find SSL scan(s). Please try again.`))
     }
 
     const sslMap = {}
@@ -26,7 +26,7 @@ export const sslLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running sslLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find ssl scan. Please try again.`))
+      throw new Error(i18n._(t`Unable to find SSL scan(s). Please try again.`))
     }
 
     return keys.map((key) => sslMap[key])

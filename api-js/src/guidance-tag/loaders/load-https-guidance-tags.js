@@ -15,7 +15,7 @@ export const httpsGuidanceTagLoader = (query, userKey, i18n) =>
         `Database error occurred when user: ${userKey} running httpsGuidanceTagLoader: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find https guidance tags. Please try again.`),
+        i18n._(t`Unable to find HTTPS guidance tag(s). Please try again.`),
       )
     }
 
@@ -29,7 +29,7 @@ export const httpsGuidanceTagLoader = (query, userKey, i18n) =>
         `Cursor error occurred when user: ${userKey} running httpsGuidanceTagLoader: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find https guidance tags. Please try again.`),
+        i18n._(t`Unable to find HTTPS guidance tag(s). Please try again.`),
       )
     }
 

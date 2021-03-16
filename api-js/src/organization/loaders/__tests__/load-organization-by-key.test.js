@@ -171,7 +171,7 @@ describe('given a orgLoaderByKey dataloader', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find organization. Please try again.'),
+            new Error('Unable to load organization(s). Please try again.'),
           )
         }
 
@@ -194,7 +194,7 @@ describe('given a orgLoaderByKey dataloader', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find organization. Please try again.'),
+            new Error('Unable to load organization(s). Please try again.'),
           )
         }
 

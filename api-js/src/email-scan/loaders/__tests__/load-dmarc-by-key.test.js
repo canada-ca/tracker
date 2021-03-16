@@ -110,7 +110,7 @@ describe('given the dmarcLoaderByKey function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find dmarc scan. Please try again.'),
+            new Error('Unable to find DMARC scan(s). Please try again.'),
           )
         }
 
@@ -133,7 +133,7 @@ describe('given the dmarcLoaderByKey function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find dmarc scan. Please try again.'),
+            new Error('Unable to find DMARC scan(s). Please try again.'),
           )
         }
 

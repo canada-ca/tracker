@@ -1611,7 +1611,7 @@ describe('given the load ssl connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `ssl` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `SSL` connection.',
               ),
             )
           }
@@ -1643,7 +1643,7 @@ describe('given the load ssl connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `ssl` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `SSL` connection is not supported.',
               ),
             )
           }
@@ -1675,7 +1675,7 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `ssl` connection cannot be less than zero.',
+                  '`first` on the `SSL` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1706,7 +1706,7 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `ssl` connection cannot be less than zero.',
+                  '`last` on the `SSL` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1739,7 +1739,7 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 101 records on the `ssl` connection exceeds the `first` limit of 100 records.',
+                  'Requesting 101 records on the `SSL` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -1770,7 +1770,7 @@ describe('given the load ssl connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 500 records on the `ssl` connection exceeds the `last` limit of 100 records.',
+                  'Requesting 500 records on the `SSL` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -1880,7 +1880,7 @@ describe('given the load ssl connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load ssl scans. Please try again.'),
+            new Error('Unable to load SSL scan(s). Please try again.'),
           )
         }
 
@@ -1916,7 +1916,7 @@ describe('given the load ssl connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load ssl scans. Please try again.'),
+            new Error('Unable to load SSL scan(s). Please try again.'),
           )
         }
 

@@ -55,13 +55,14 @@ export const authenticate = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Unable to authenticate. Please try again.`),
+        description: i18n._(t`Token value incorrect, please sign in again.`),
       }
     }
 
     // Gather sign in user
     const user = await userLoaderByKey.load(tokenParameters.userKey)
 
+    // Replace with userRequired()
     if (typeof user === 'undefined') {
       console.warn(
         `User: ${tokenParameters.userKey} attempted to authenticate, no account is associated with this id.`,
@@ -104,7 +105,7 @@ export const authenticate = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`,
       )
-      throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+      throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
     }
   },
 })

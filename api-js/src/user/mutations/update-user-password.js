@@ -47,6 +47,7 @@ export const updateUserPassword = new mutationWithClientMutationId({
     const updatedPassword = cleanseInput(args.updatedPassword)
     const updatedPasswordConfirm = cleanseInput(args.updatedPasswordConfirm)
 
+    // Replace with userRequired()
     // Make sure user id is not undefined
     if (typeof userKey === 'undefined') {
       console.warn(
@@ -114,7 +115,7 @@ export const updateUserPassword = new mutationWithClientMutationId({
         _type: 'error',
         code: 400,
         description: i18n._(
-          t`Unable to update password, passwords are required to be 12 characters or longer. Please try again.`,
+          t`Unable to update password, passwords do not match requirements. Please try again.`,
         ),
       }
     }

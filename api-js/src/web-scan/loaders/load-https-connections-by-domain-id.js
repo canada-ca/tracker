@@ -140,7 +140,7 @@ export const httpsLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`https\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`HTTPS\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -149,7 +149,7 @@ export const httpsLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`https\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`HTTPS\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -161,7 +161,7 @@ export const httpsLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`https\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`HTTPS\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -172,7 +172,7 @@ export const httpsLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`Requesting ${amount} records on the \`https\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting ${amount} records on the \`HTTPS\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -317,7 +317,7 @@ export const httpsLoaderConnectionsByDomainId = (
     console.error(
       `Database error occurred while user: ${userKey} was trying to get https information for ${domainId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load https scans. Please try again.`))
+    throw new Error(i18n._(t`Unable to load HTTPS scan(s). Please try again.`))
   }
 
   let httpsScanInfo
@@ -327,7 +327,7 @@ export const httpsLoaderConnectionsByDomainId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to get https information for ${domainId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load https scans. Please try again.`))
+    throw new Error(i18n._(t`Unable to load HTTPS scan(s). Please try again.`))
   }
 
   if (httpsScanInfo.httpsScans.length === 0) {

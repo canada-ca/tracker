@@ -184,7 +184,7 @@ describe('given findOrganizationBySlugQuery', () => {
 
           const error = [
             new GraphQLError(
-              `No organization with the provided slug could be found.`,
+              `No verified organization with the provided slug could be found.`,
             ),
           ]
 

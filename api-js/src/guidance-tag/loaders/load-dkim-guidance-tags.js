@@ -15,7 +15,7 @@ export const dkimGuidanceTagLoader = (query, userKey, i18n) =>
         `Database error occurred when user: ${userKey} running dkimGuidanceTagLoader: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find dkim guidance tags. Please try again.`),
+        i18n._(t`Unable to find DKIM guidance tag(s). Please try again.`),
       )
     }
 
@@ -29,7 +29,7 @@ export const dkimGuidanceTagLoader = (query, userKey, i18n) =>
         `Cursor error occurred when user: ${userKey} running dkimGuidanceTagLoader: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find dkim guidance tags. Please try again.`),
+        i18n._(t`Unable to find DKIM guidance tag(s). Please try again.`),
       )
     }
 

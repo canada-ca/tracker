@@ -47,6 +47,7 @@ export const signIn = new mutationWithClientMutationId({
     // Gather user who just signed in
     let user = await userLoaderByUserName.load(userName)
 
+    // Replace with userRequired()
     if (typeof user === 'undefined') {
       console.warn(
         `User: ${userName} attempted to sign in, no account is associated with this email.`,

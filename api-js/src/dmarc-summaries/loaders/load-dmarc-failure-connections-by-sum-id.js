@@ -12,7 +12,9 @@ export const dmarcFailureLoaderConnectionsBySumId = (
     console.warn(
       `SummaryId was undefined when user: ${userKey} attempted to load dmarc failures in dmarcFailureLoaderConnectionsBySumId.`,
     )
-    throw new Error(i18n._(t`Unable to load dmarc failures. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load DMARC failure data. Please try again.`),
+    )
   }
 
   let afterTemplate = aql``
@@ -136,7 +138,9 @@ export const dmarcFailureLoaderConnectionsBySumId = (
     console.error(
       `Database error occurred while user: ${userKey} was trying to gather dmarc failures in dmarcFailureLoaderConnectionsBySumId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load dmarc failures. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load DMARC failure data. Please try again.`),
+    )
   }
 
   let dmarcFailureInfo
@@ -146,7 +150,9 @@ export const dmarcFailureLoaderConnectionsBySumId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to gather dmarc failures in dmarcFailureLoaderConnectionsBySumId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load dmarc failures. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load DMARC failure data. Please try again.`),
+    )
   }
 
   if (dmarcFailureInfo.dmarcFailures.length === 0) {

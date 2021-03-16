@@ -60,13 +60,16 @@ export const resetPassword = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Unable to reset password. Please try again.`),
+        description: i18n._(
+          t`Incorrect token value. Please request a new email.`,
+        ),
       }
     }
 
     // Check if user exists
     const user = await userLoaderByKey.load(tokenParameters.userKey)
 
+    // Replace with userRequired()
     if (typeof user === 'undefined') {
       console.warn(
         `A user attempted to reset the password for ${tokenParameters.userKey}, however there is no associated account.`,
@@ -86,7 +89,9 @@ export const resetPassword = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Unable to reset password. Please try again.`),
+        description: i18n._(
+          t`Unable to reset password. Please request a new email.`,
+        ),
       }
     }
 
@@ -111,7 +116,7 @@ export const resetPassword = new mutationWithClientMutationId({
         _type: 'error',
         code: 400,
         description: i18n._(
-          t`Password is not strong enough. Please try again.`,
+          t`Password does not requirements. Please try again.`,
         ),
       }
     }

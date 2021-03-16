@@ -110,7 +110,7 @@ describe('given the spfLoaderByKey function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find spf scan. Please try again.'),
+            new Error('Unable to find SPF scan(s). Please try again.'),
           )
         }
 
@@ -133,7 +133,7 @@ describe('given the spfLoaderByKey function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find spf scan. Please try again.'),
+            new Error('Unable to find SPF scan(s). Please try again.'),
           )
         }
 

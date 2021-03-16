@@ -581,11 +581,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to update your own role. Please try again.',
-            ),
-          ]
+          const error = [new GraphQLError('Unable to update your own role.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -636,7 +632,7 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError(`Unable to update role: user unknown.`),
           ]
 
           expect(response.errors).toEqual(error)
@@ -688,7 +684,7 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError(`Unable to update role: organization unknown.`),
           ]
 
           expect(response.errors).toEqual(error)
@@ -747,7 +743,9 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError(
+              'Permission Denied: Please contact organization admin for help with user role changes.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -832,7 +830,9 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError(
+              'Permission Denied: Please contact organization admin for help with user role changes.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -892,7 +892,7 @@ describe('update a users role', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to update users role. Please invite user to the organization.',
+              'Unable to update role: user does not belong to organization.',
             ),
           ]
 
@@ -963,7 +963,7 @@ describe('update a users role', () => {
 
               const error = [
                 new GraphQLError(
-                  'Unable to update users role. Please try again.',
+                  `Permission Denied: Please contact organization admin for help with updating user roles.`,
                 ),
               ]
 
@@ -1034,7 +1034,7 @@ describe('update a users role', () => {
 
               const error = [
                 new GraphQLError(
-                  'Unable to update users role. Please try again.',
+                  `Permission Denied: Please contact organization admin for help with updating user roles.`,
                 ),
               ]
 
@@ -1106,7 +1106,7 @@ describe('update a users role', () => {
 
             const error = [
               new GraphQLError(
-                'Unable to update users role. Please try again.',
+                `Permission Denied: Please contact organization admin for help with updating user roles.`,
               ),
             ]
 
@@ -1175,7 +1175,7 @@ describe('update a users role', () => {
 
             const error = [
               new GraphQLError(
-                'Unable to update users role. Please try again.',
+                `Permission Denied: Please contact organization admin for help with updating user roles.`,
               ),
             ]
 
@@ -1306,12 +1306,12 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError(`Unable to update user's role. Please try again.`),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred when user: ${user._key} attempted to update a users: ${secondaryUser._key} role, error: Error: Database error occurred.`,
+            `Database error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Database error occurred.`,
           ])
         })
       })
@@ -1427,12 +1427,12 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError(`Unable to update user's role. Please try again.`),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction step error occurred when user: ${user._key} attempted to update a users: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
+            `Transaction step error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
           ])
         })
       })
@@ -1492,12 +1492,12 @@ describe('update a users role', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update users role. Please try again.'),
+            new GraphQLError(`Unable to update user's role. Please try again.`),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction commit error occurred when user: ${user._key} attempted to update a users: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
+            `Transaction commit error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
           ])
         })
       })
@@ -2691,7 +2691,7 @@ describe('update a users role', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred when user: ${user._key} attempted to update a users: ${secondaryUser._key} role, error: Error: Database error occurred.`,
+            `Database error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Database error occurred.`,
           ])
         })
       })
@@ -2810,7 +2810,7 @@ describe('update a users role', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction step error occurred when user: ${user._key} attempted to update a users: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
+            `Transaction step error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
           ])
         })
       })
@@ -2873,7 +2873,7 @@ describe('update a users role', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Transaction commit error occurred when user: ${user._key} attempted to update a users: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
+            `Transaction commit error occurred when user: ${user._key} attempted to update a user's: ${secondaryUser._key} role, error: Error: Transaction error occurred.`,
           ])
         })
       })

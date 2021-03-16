@@ -583,7 +583,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load spf failures. Please try again.'),
+              new Error('Unable to load SPF failure data. Please try again.'),
             )
           }
 
@@ -616,7 +616,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load spf failures. Please try again.'),
+            new Error('Unable to load SPF failure data. Please try again.'),
           )
         }
 
@@ -651,7 +651,7 @@ describe('given the spfFailureLoaderConnectionsBySumId loader', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load spf failures. Please try again.'),
+            new Error('Unable to load SPF failure data. Please try again.'),
           )
         }
 

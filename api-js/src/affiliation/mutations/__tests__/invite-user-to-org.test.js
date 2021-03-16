@@ -1072,9 +1072,7 @@ describe('invite user to org', () => {
           )
 
           const error = [
-            new GraphQLError(
-              'Unable to invite yourself to an org. Please try again.',
-            ),
+            new GraphQLError('Unable to invite yourself to an org.'),
           ]
 
           expect(response.errors).toEqual(error)
@@ -1143,7 +1141,7 @@ describe('invite user to org', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
+            new GraphQLError('Unable to invite user to unknown organization.'),
           ]
 
           expect(response.errors).toEqual(error)
@@ -1237,7 +1235,9 @@ describe('invite user to org', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
+            new GraphQLError(
+              'Permission Denied: Please contact organization admin for help with user invitations.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -1335,7 +1335,9 @@ describe('invite user to org', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
+            new GraphQLError(
+              'Permission Denied: Please contact organization admin for help with user invitations.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -1433,7 +1435,9 @@ describe('invite user to org', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
+            new GraphQLError(
+              'Permission Denied: Please contact organization admin for help with user invitations.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -1551,7 +1555,9 @@ describe('invite user to org', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
+            new GraphQLError(
+              'Unable to add user to organization. Please try again.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)

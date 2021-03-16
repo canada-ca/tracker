@@ -15,7 +15,9 @@ export const dkimResultLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running dkimResultLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find dkim result. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to find DKIM result(s). Please try again.`),
+      )
     }
 
     const dkimResultMap = {}
@@ -27,7 +29,9 @@ export const dkimResultLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running dkimResultLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find dkim result. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to find DKIM result(s). Please try again.`),
+      )
     }
 
     return keys.map((key) => dkimResultMap[key])

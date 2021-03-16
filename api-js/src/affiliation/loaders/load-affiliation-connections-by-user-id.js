@@ -399,7 +399,9 @@ export const affiliationConnectionLoaderByUserId = (
     console.error(
       `Database error occurred while user: ${userKey} was trying to query affiliations in affiliationConnectionLoaderByUserId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to query affiliations. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to query affiliation(s). Please try again.`),
+    )
   }
 
   let filteredAffiliations
@@ -409,7 +411,7 @@ export const affiliationConnectionLoaderByUserId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to gather affiliations in affiliationConnectionLoaderByUserId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load affiliations. Please try again.`))
+    throw new Error(i18n._(t`Unable to load affiliation(s). Please try again.`))
   }
 
   if (filteredAffiliations.affiliations.length === 0) {

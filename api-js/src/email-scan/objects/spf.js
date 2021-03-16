@@ -157,7 +157,7 @@ export const spfConnection = connectionDefinitions({
   connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
-      description: 'The total amount of spf scans related to a given domain.',
+      description: 'The total amount of SPF scans related to a given domain.',
       resolve: ({ totalCount }) => totalCount,
     },
   }),

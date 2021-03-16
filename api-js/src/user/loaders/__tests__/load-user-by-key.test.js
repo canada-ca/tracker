@@ -131,7 +131,7 @@ describe('given a userLoaderByKey dataloader', () => {
           await loader.load(expectedUser._key)
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find user. Please try again.'),
+            new Error('Unable to load user(s). Please try again.'),
           )
         }
 
@@ -161,7 +161,7 @@ describe('given a userLoaderByKey dataloader', () => {
           await loader.load(expectedUser._key)
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find user. Please try again.'),
+            new Error('Unable to load user(s). Please try again.'),
           )
         }
 

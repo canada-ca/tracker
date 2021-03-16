@@ -17,7 +17,7 @@ export const dkimResultType = new GraphQLObjectType({
     id: globalIdField('dkimResult'),
     dkim: {
       type: dkimType,
-      description: 'The dkim scan information that this result belongs to.',
+      description: 'The DKIM scan information that this result belongs to.',
       resolve: async ({ dkimId }, _, { loaders: { dkimLoaderByKey } }) => {
         const dkimKey = dkimId.split('/')[1]
         const dkim = await dkimLoaderByKey.load(dkimKey)
@@ -137,7 +137,7 @@ export const dkimResultType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-  description: 'Individual scans results for the given dkim selector.',
+  description: 'Individual scans results for the given DKIM selector.',
 })
 
 export const dkimResultConnection = connectionDefinitions({
@@ -147,7 +147,7 @@ export const dkimResultConnection = connectionDefinitions({
     totalCount: {
       type: GraphQLInt,
       description:
-        'The total amount of dkim results related to a given domain.',
+        'The total amount of DKIM results related to a given domain.',
       resolve: ({ totalCount }) => totalCount,
     },
   }),

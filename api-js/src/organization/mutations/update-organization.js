@@ -134,9 +134,7 @@ export const updateOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update organization: ${orgKey}, however no organizations is associated with that id.`,
       )
-      throw new Error(
-        i18n._(t`Unable to update organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to update unknown organization.`))
     }
 
     // Check to see if user has permission
@@ -147,7 +145,9 @@ export const updateOrganization = new mutationWithClientMutationId({
         `User: ${userKey} attempted to update organization ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
       )
       throw new Error(
-        i18n._(t`Unable to update organization. Please try again.`),
+        i18n._(
+          t`Permission Denied: Please contact organization admin for help with updating organization.`,
+        ),
       )
     }
 

@@ -114,7 +114,7 @@ describe('given the httpsLoaderByKey function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find https scan. Please try again.'),
+            new Error('Unable to find HTTPS scan(s). Please try again.'),
           )
         }
         expect(consoleErrorOutput).toEqual([
@@ -136,7 +136,7 @@ describe('given the httpsLoaderByKey function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find https scan. Please try again.'),
+            new Error('Unable to load HTTPS scan(s). Please try again.'),
           )
         }
         expect(consoleErrorOutput).toEqual([

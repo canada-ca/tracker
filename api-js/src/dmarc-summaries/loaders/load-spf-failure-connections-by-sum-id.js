@@ -12,7 +12,9 @@ export const spfFailureLoaderConnectionsBySumId = (
     console.warn(
       `SummaryId was undefined when user: ${userKey} attempted to load spf failures in spfFailureLoaderConnectionsBySumId.`,
     )
-    throw new Error(i18n._(t`Unable to load spf failures. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load SPF failure data. Please try again.`),
+    )
   }
 
   let afterTemplate = aql``
@@ -136,7 +138,9 @@ export const spfFailureLoaderConnectionsBySumId = (
     console.error(
       `Database error occurred while user: ${userKey} was trying to gather spf failures in spfFailureLoaderConnectionsBySumId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load spf failures. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load SPF failure data. Please try again.`),
+    )
   }
 
   let spfFailureInfo
@@ -146,7 +150,9 @@ export const spfFailureLoaderConnectionsBySumId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to gather spf failures in spfFailureLoaderConnectionsBySumId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load spf failures. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load SPF failure data. Please try again.`),
+    )
   }
 
   if (spfFailureInfo.spfFailures.length === 0) {

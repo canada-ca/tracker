@@ -2081,7 +2081,7 @@ describe('given the load organization connections by user id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `organization` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `Organization` connection.',
               ),
             )
           }
@@ -2112,7 +2112,7 @@ describe('given the load organization connections by user id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `organization` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `Organization` connection is not supported.',
               ),
             )
           }
@@ -2143,7 +2143,7 @@ describe('given the load organization connections by user id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `organization` connection cannot be less than zero.',
+                  '`first` on the `Organization` connection cannot be less than zero.',
                 ),
               )
             }
@@ -2173,7 +2173,7 @@ describe('given the load organization connections by user id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `organization` connection cannot be less than zero.',
+                  '`last` on the `Organization` connection cannot be less than zero.',
                 ),
               )
             }
@@ -2205,7 +2205,7 @@ describe('given the load organization connections by user id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `101` records on the `organization` connection exceeds the `first` limit of 100 records.',
+                  'Requesting `101` records on the `Organization` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -2235,7 +2235,7 @@ describe('given the load organization connections by user id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `101` records on the `organization` connection exceeds the `last` limit of 100 records.',
+                  'Requesting `101` records on the `Organization` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -2347,7 +2347,7 @@ describe('given the load organization connections by user id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to query organizations. Please try again.'),
+              new Error('Unable to load organization(s). Please try again.'),
             )
           }
 
@@ -2384,7 +2384,7 @@ describe('given the load organization connections by user id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load organizations. Please try again.'),
+              new Error('Unable to load organization(s). Please try again.'),
             )
           }
 

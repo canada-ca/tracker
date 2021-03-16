@@ -38,16 +38,14 @@ const createValidationRules = (
   ]
 }
 
-export const Server = (
-  {
-    maxDepth,
-    complexityCost,
-    scalarCost,
-    objectCost,
-    listFactor,
-    context = {},
-  },
-) => {
+export const Server = ({
+  maxDepth,
+  complexityCost,
+  scalarCost,
+  objectCost,
+  listFactor,
+  context = {},
+}) => {
   const app = express()
 
   app.use('*', cors())

@@ -81,9 +81,7 @@ export const createOrganization = new mutationWithClientMutationId({
     organization: {
       type: organizationType,
       description: 'The newly created organization.',
-      resolve: async (payload) => {
-        return payload.organization
-      },
+      resolve: ({ organization }) => organization,
     },
   }),
   mutateAndGetPayload: async (
@@ -131,7 +129,9 @@ export const createOrganization = new mutationWithClientMutationId({
         `User: ${userKey} attempted to create an organization that already exists: ${slugEN}`,
       )
       throw new Error(
-        i18n._(t`Unable to create organization. Please try again.`),
+        i18n._(
+          t`Organization name already in use. Please try again with a different name.`,
+        ),
       )
     }
 

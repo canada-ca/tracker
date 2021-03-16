@@ -55,7 +55,7 @@ export const removeDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove ${domainId} however no domain is associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+      throw new Error(i18n._(t`Unable to remove unknown domain.`))
     }
 
     // Get Org from db
@@ -66,7 +66,9 @@ export const removeDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove ${domain.slug} in org: ${orgId} however there is no organization associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to remove domain from unknown organization.`),
+      )
     }
 
     // Get permission
@@ -77,14 +79,22 @@ export const removeDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove ${domain.slug} in ${org.slug} but does not have permission to remove a domain from a verified check org.`,
       )
-      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+      throw new Error(
+        i18n._(
+          t`Permission Denied: Please contact super admin for help with removing domain.`,
+        ),
+      )
     }
 
     if (permission !== 'super_admin' && permission !== 'admin') {
       console.warn(
         `User: ${userKey} attempted to remove ${domain.slug} in ${org.slug} however they do not have permission in that org.`,
       )
-      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+      throw new Error(
+        i18n._(
+          t`Permission Denied: Please contact organization admin for help with removing domain.`,
+        ),
+      )
     }
 
     // Check to see if more than one organization has a claim to this domain

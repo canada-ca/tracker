@@ -355,7 +355,8 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description: 'Unable to reset password. Please try again.',
+                  description:
+                    'Incorrect token value. Please request a new email.',
                 },
               },
             },
@@ -420,7 +421,8 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description: 'Unable to reset password. Please try again.',
+                  description:
+                    'Incorrect token value. Please request a new email.',
                 },
               },
             },
@@ -560,7 +562,8 @@ describe('reset users password', () => {
               resetPassword: {
                 result: {
                   code: 400,
-                  description: 'Unable to reset password. Please try again.',
+                  description:
+                    'Unable to reset password. Please request a new email.',
                 },
               },
             },
@@ -705,7 +708,7 @@ describe('reset users password', () => {
                 result: {
                   code: 400,
                   description:
-                    'Password is not strong enough. Please try again.',
+                    'Password does not requirements. Please try again.',
                 },
               },
             },

@@ -194,7 +194,7 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
           await loader.load('1234')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find dmarc summary. Please try again.'),
+            new Error('Unable to find DMARC summary data. Please try again.'),
           )
         }
         expect(consoleOutput).toEqual([
@@ -216,7 +216,7 @@ describe('given the dmarcSumLoaderByKey dataloader', () => {
           await loader.load('1234')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find dmarc summary. Please try again.'),
+            new Error('Unable to find DMARC summary data. Please try again.'),
           )
         }
 

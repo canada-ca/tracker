@@ -585,7 +585,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load dkim failures. Please try again.'),
+              new Error('Unable to load DKIM failure data. Please try again.'),
             )
           }
 
@@ -618,7 +618,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load dkim failures. Please try again.'),
+            new Error('Unable to load DKIM failure data. Please try again.'),
           )
         }
 
@@ -653,7 +653,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load dkim failures. Please try again.'),
+            new Error('Unable to load DKIM failure data. Please try again.'),
           )
         }
 

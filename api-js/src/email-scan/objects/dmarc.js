@@ -162,7 +162,7 @@ export const dmarcConnection = connectionDefinitions({
   connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,
-      description: 'The total amount of dmarc scans related to a given domain.',
+      description: 'The total amount of DMARC scans related to a given domain.',
       resolve: ({ totalCount }) => totalCount,
     },
   }),

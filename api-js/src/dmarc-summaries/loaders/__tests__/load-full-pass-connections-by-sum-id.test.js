@@ -581,7 +581,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load full passes. Please try again.'),
+              new Error('Unable to load full pass data. Please try again.'),
             )
           }
 
@@ -614,7 +614,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load full passes. Please try again.'),
+            new Error('Unable to load full pass data. Please try again.'),
           )
         }
 
@@ -649,7 +649,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load full passes. Please try again.'),
+            new Error('Unable to load full pass data. Please try again.'),
           )
         }
 

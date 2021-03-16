@@ -15,7 +15,7 @@ export const spfLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running spfLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find spf scan. Please try again.`))
+      throw new Error(i18n._(t`Unable to find SPF scan(s). Please try again.`))
     }
 
     const spfMap = {}
@@ -27,7 +27,7 @@ export const spfLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running spfLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find spf scan. Please try again.`))
+      throw new Error(i18n._(t`Unable to find SPF scan(s). Please try again.`))
     }
 
     return keys.map((key) => spfMap[key])

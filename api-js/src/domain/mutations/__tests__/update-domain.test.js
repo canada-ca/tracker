@@ -806,9 +806,7 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to update domain. Please try again.'),
-          ]
+          const error = [new GraphQLError('Unable to update unknown domain.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -877,7 +875,7 @@ describe('updating a domain', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update domain. Please try again.'),
+            new GraphQLError('Unable to update domain in an unknown org.'),
           ]
 
           expect(response.errors).toEqual(error)
@@ -1011,7 +1009,9 @@ describe('updating a domain', () => {
             )
 
             const error = [
-              new GraphQLError('Unable to update domain. Please try again.'),
+              new GraphQLError(
+                'Permission Denied: Please contact organization user for help with updating this domain.',
+              ),
             ]
 
             expect(response.errors).toEqual(error)
@@ -1083,7 +1083,9 @@ describe('updating a domain', () => {
             )
 
             const error = [
-              new GraphQLError('Unable to update domain. Please try again.'),
+              new GraphQLError(
+                'Permission Denied: Please contact organization user for help with updating this domain.',
+              ),
             ]
 
             expect(response.errors).toEqual(error)
@@ -1183,7 +1185,9 @@ describe('updating a domain', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to update domain. Please try again.'),
+            new GraphQLError(
+              'Unable to update domain that does not belong to the given organization.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)

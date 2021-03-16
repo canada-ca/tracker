@@ -500,7 +500,7 @@ describe('requesting a one time scan', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to request a on time scan on this domain.',
+              'Unable to request a on time scan on an unknown domain.',
             ),
           ]
 
@@ -586,7 +586,7 @@ describe('requesting a one time scan', () => {
 
             const error = [
               new GraphQLError(
-                'Unable to request a on time scan on this domain.',
+                'Permission Denied: Please contact organization user for help with scanning this domain.',
               ),
             ]
 
@@ -645,7 +645,7 @@ describe('requesting a one time scan', () => {
 
             const error = [
               new GraphQLError(
-                'Unable to request a on time scan on this domain.',
+                'Permission Denied: Please contact organization user for help with scanning this domain.',
               ),
             ]
 
