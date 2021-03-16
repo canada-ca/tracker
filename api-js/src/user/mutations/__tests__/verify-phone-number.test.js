@@ -8,6 +8,8 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { userLoaderByKey } from '../../loaders'
+import { userRequired } from '../../../auth'
+import { cleanseInput } from '../../../validators'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -98,6 +100,12 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
+            auth: {
+              userRequired: userRequired({
+                userKey: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
+            },
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
             },
@@ -143,6 +151,12 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
+            auth: {
+              userRequired: userRequired({
+                userKey: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
+            },
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
             },
@@ -163,100 +177,6 @@ describe('user send password reset email', () => {
       })
     })
     describe('unsuccessful verifying of phone number', () => {
-      describe('user id is undefined', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
-                  result {
-                    ... on VerifyPhoneNumberResult {
-                      status
-                    }
-                    ... on VerifyPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: undefined,
-              query,
-              loaders: {
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyPhoneNumber: {
-                result: {
-                  code: 400,
-                  description: 'Authentication error, please sign in again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User attempted to two factor authenticate, however the userKey is undefined.`,
-          ])
-        })
-      })
-      describe('the requesting user does not exist', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
-                  result {
-                    ... on VerifyPhoneNumberResult {
-                      status
-                    }
-                    ... on VerifyPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: 1,
-              query,
-              loaders: {
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyPhoneNumber: {
-                result: {
-                  code: 400,
-                  description: 'Authentication error, please sign in again.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 1 attempted to two factor authenticate, however no account is associated with that id.`,
-          ])
-        })
-      })
       describe('the two factor code is not 6 digits long', () => {
         it('returns an error message', async () => {
           const response = await graphql(
@@ -281,6 +201,12 @@ describe('user send password reset email', () => {
               i18n,
               userKey: user._key,
               query,
+              auth: {
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
               },
@@ -292,7 +218,8 @@ describe('user send password reset email', () => {
               verifyPhoneNumber: {
                 result: {
                   code: 400,
-                  description: 'Two factor code length is incorrect. Please try again.',
+                  description:
+                    'Two factor code length is incorrect. Please try again.',
                 },
               },
             },
@@ -328,6 +255,12 @@ describe('user send password reset email', () => {
               i18n,
               userKey: user._key,
               query,
+              auth: {
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
               },
@@ -339,7 +272,8 @@ describe('user send password reset email', () => {
               verifyPhoneNumber: {
                 result: {
                   code: 400,
-                  description: 'Two factor code is incorrect. Please try again.',
+                  description:
+                    'Two factor code is incorrect. Please try again.',
                 },
               },
             },
@@ -379,6 +313,12 @@ describe('user send password reset email', () => {
               i18n,
               userKey: user._key,
               query: mockedQuery,
+              auth: {
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
               },
@@ -438,6 +378,12 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
+            auth: {
+              userRequired: userRequired({
+                userKey: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
+            },
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
             },
@@ -482,6 +428,12 @@ describe('user send password reset email', () => {
             i18n,
             userKey: user._key,
             query,
+            auth: {
+              userRequired: userRequired({
+                userKey: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
+            },
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
             },
@@ -502,100 +454,6 @@ describe('user send password reset email', () => {
       })
     })
     describe('unsuccessful verifying of phone number', () => {
-      describe('user id is undefined', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
-                  result {
-                    ... on VerifyPhoneNumberResult {
-                      status
-                    }
-                    ... on VerifyPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: undefined,
-              query,
-              loaders: {
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyPhoneNumber: {
-                result: {
-                  code: 400,
-                  description: 'todo',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User attempted to two factor authenticate, however the userKey is undefined.`,
-          ])
-        })
-      })
-      describe('the requesting user does not exist', () => {
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
-                  result {
-                    ... on VerifyPhoneNumberResult {
-                      status
-                    }
-                    ... on VerifyPhoneNumberError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              userKey: 1,
-              query,
-              loaders: {
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              verifyPhoneNumber: {
-                result: {
-                  code: 400,
-                  description: 'todo',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 1 attempted to two factor authenticate, however no account is associated with that id.`,
-          ])
-        })
-      })
       describe('the two factor code is not 6 digits long', () => {
         it('returns an error message', async () => {
           const response = await graphql(
@@ -620,6 +478,12 @@ describe('user send password reset email', () => {
               i18n,
               userKey: user._key,
               query,
+              auth: {
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
               },
@@ -667,6 +531,12 @@ describe('user send password reset email', () => {
               i18n,
               userKey: user._key,
               query,
+              auth: {
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
               },
@@ -718,6 +588,12 @@ describe('user send password reset email', () => {
               i18n,
               userKey: user._key,
               query: mockedQuery,
+              auth: {
+                userRequired: userRequired({
+                  userKey: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
+              },
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
               },
