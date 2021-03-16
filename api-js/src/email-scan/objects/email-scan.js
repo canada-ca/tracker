@@ -3,9 +3,9 @@ import { connectionArgs } from 'graphql-relay'
 import { GraphQLDate } from 'graphql-scalars'
 
 import { dkimOrder, dmarcOrder, spfOrder } from '../inputs'
-import { dkimConnection } from './dkim'
-import { dmarcConnection } from './dmarc'
-import { spfConnection } from './spf'
+import { dkimConnection } from './dkim-connection'
+import { dmarcConnection } from './dmarc-connection'
+import { spfConnection } from './spf-connection'
 import { domainType } from '../../domain/objects'
 
 export const emailScanType = new GraphQLObjectType({
