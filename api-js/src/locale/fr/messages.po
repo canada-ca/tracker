@@ -11,11 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: src/user/mutations/verify-phone-number.js:38
-#: src/user/mutations/verify-phone-number.js:52
-msgid "Authentication error, please sign in again."
-msgstr "todo"
-
 #: src/auth/check-permission.js:19
 #: src/auth/check-permission.js:46
 msgid "Authentication error. Please sign in again."
@@ -380,7 +375,7 @@ msgstr "todo"
 msgid "Successfully verified organization: {0}."
 msgstr "todo"
 
-#: src/user/mutations/verify-phone-number.js:106
+#: src/user/mutations/verify-phone-number.js:83
 msgid "Successfully verified phone number, and set TFA send method to text."
 msgstr "todo"
 
@@ -392,11 +387,11 @@ msgstr "todo"
 msgid "Too many failed login attempts, please reset your password, and try again."
 msgstr "todo"
 
-#: src/user/mutations/verify-phone-number.js:78
+#: src/user/mutations/verify-phone-number.js:55
 msgid "Two factor code is incorrect. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/verify-phone-number.js:65
+#: src/user/mutations/verify-phone-number.js:42
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "todo"
 
@@ -807,7 +802,7 @@ msgstr "todo"
 msgid "Unable to sign up. Please try again."
 msgstr "todo"
 
-#: src/user/mutations/verify-phone-number.js:95
+#: src/user/mutations/verify-phone-number.js:72
 msgid "Unable to two factor authenticate. Please try again."
 msgstr "todo"
 

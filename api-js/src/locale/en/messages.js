@@ -1,7 +1,5 @@
 /*eslint-disable*/ module.exports = {
   messages: {
-    'Authentication error, please sign in again.':
-      'Authentication error, please sign in again.',
     'Authentication error. Please sign in again.':
       'Authentication error. Please sign in again.',
     'Authentication error. Please sign in.':
