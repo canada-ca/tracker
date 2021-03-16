@@ -347,7 +347,7 @@ msgstr "todo"
 msgid "Successfully dispatched one time scan."
 msgstr "todo"
 
-#: src/user/mutations/verify-account.js:120
+#: src/user/mutations/verify-account.js:121
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "todo"
 
@@ -837,7 +837,7 @@ msgid "Unable to update password, new passwords do not match. Please try again."
 msgstr "todo"
 
 #: src/user/mutations/update-user-password.js:88
-msgid "Unable to update password, passwords are required to be 12 characters or longer. Please try again."
+msgid "Unable to update password, passwords do not match requirements. Please try again."
 msgstr "todo"
 
 #: src/user/mutations/update-user-password.js:105
@@ -878,14 +878,14 @@ msgstr "todo"
 msgid "Unable to update your own role."
 msgstr "todo"
 
-#: src/user/mutations/verify-account.js:79
-#: src/user/mutations/verify-account.js:93
+#: src/user/mutations/verify-account.js:80
+#: src/user/mutations/verify-account.js:94
 msgid "Unable to verify account. Please request a new email."
 msgstr "todo"
 
 #: src/user/mutations/verify-account.js:46
-#: src/user/mutations/verify-account.js:60
-#: src/user/mutations/verify-account.js:110
+#: src/user/mutations/verify-account.js:61
+#: src/user/mutations/verify-account.js:111
 msgid "Unable to verify account. Please try again."
 msgstr "todo"
 
