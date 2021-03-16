@@ -9,7 +9,6 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { userLoaderByKey } from '../../loaders'
 import { userRequired } from '../../../auth'
-import { cleanseInput } from '../../../validators'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
