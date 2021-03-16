@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "arango-tools": "0.0.9",
+    "arango-tools": "0.2.3",
     "bcrypt": "^5.0.0",
     "dotenv-safe": "^8.2.0"
   },
