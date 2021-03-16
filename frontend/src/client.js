@@ -35,6 +35,16 @@ export function createCache() {
           fullPass: relayStylePagination(),
         },
       },
+      Domain: {
+        keyFields: ['domain'],
+        fields: {
+          findDomainByDomain: {
+            merge(existing, incoming) {
+              return { ...existing, ...incoming }
+            },
+          },
+        },
+      },
     },
   })
 }

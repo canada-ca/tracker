@@ -19,7 +19,7 @@ const i18n = setupI18n({
 })
 
 const categoryName = 'https'
-const categoryData = rawWebGuidancePageData.findDomainByDomain.web.https
+const categoryData = rawWebGuidancePageData.data.findDomainByDomain.web.https
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

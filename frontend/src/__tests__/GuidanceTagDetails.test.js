@@ -19,7 +19,7 @@ const i18n = setupI18n({
 })
 
 const guidanceTag =
-  rawEmailGuidancePageData.findDomainByDomain.email.dmarc.edges[0].node
+  rawEmailGuidancePageData.data.findDomainByDomain.email.dmarc.edges[0].node
     .negativeGuidanceTags.edges[0].node
 
 Object.defineProperty(window, 'matchMedia', {

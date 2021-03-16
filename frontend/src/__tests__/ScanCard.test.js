@@ -19,8 +19,8 @@ const i18n = setupI18n({
 })
 
 const scanType = 'web'
-const scanData = rawWebGuidancePageData.findDomainByDomain.web
-const webStatus = rawWebGuidancePageData.findDomainByDomain.status
+const scanData = rawWebGuidancePageData.data.findDomainByDomain.web
+const webStatus = rawWebGuidancePageData.data.findDomainByDomain.status
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

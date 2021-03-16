@@ -177,6 +177,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN_OLD = gql`
 export const GET_WEB_GUIDANCE_TAGS_OF_DOMAIN = gql`
   query FindDomainByDomain($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
+      id
       domain
       lastRan
       status {
@@ -190,11 +191,6 @@ export const GET_WEB_GUIDANCE_TAGS_OF_DOMAIN = gql`
             node {
               id
               timestamp
-              implementation
-              enforced
-              hsts
-              hstsAge
-              preloaded
               negativeGuidanceTags(first: 5) {
                 edges {
                   cursor
@@ -316,6 +312,7 @@ export const GET_WEB_GUIDANCE_TAGS_OF_DOMAIN = gql`
           }
         }
       }
+      __typename
     }
   }
 `
@@ -323,6 +320,7 @@ export const GET_WEB_GUIDANCE_TAGS_OF_DOMAIN = gql`
 export const GET_EMAIL_GUIDANCE_TAGS_OF_DOMAIN = gql`
   query FindDomainByDomain($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
+      id
       domain
       lastRan
       dmarcPhase
@@ -532,6 +530,7 @@ export const GET_EMAIL_GUIDANCE_TAGS_OF_DOMAIN = gql`
           }
         }
       }
+      __typename
     }
   }
 `

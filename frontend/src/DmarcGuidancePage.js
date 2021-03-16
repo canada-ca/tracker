@@ -60,7 +60,7 @@ export default function DmarcGuidancePage() {
   if (webError) return <ErrorFallbackMessage error={webError} />
   if (emailError) return <ErrorFallbackMessage error={emailError} />
 
-  const domainName = emailData.findDomainByDomain.domain
+  const domainName = webData.findDomainByDomain.domain
   const webScan = webData.findDomainByDomain.web
   const emailScan = emailData.findDomainByDomain.email
   const webStatus = webData.findDomainByDomain.status

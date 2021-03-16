@@ -52,21 +52,16 @@ const mocks = [
       query: GET_WEB_GUIDANCE_TAGS_OF_DOMAIN,
       variables: { domain: 'cse-cst.gc.ca' },
     },
-    result: {
-      data: rawWebGuidancePageData,
-    },
+    result: rawWebGuidancePageData,
   },
   {
     request: {
       query: GET_EMAIL_GUIDANCE_TAGS_OF_DOMAIN,
       variables: { domain: 'cse-cst.gc.ca' },
     },
-    result: {
-      data: rawEmailGuidancePageData,
-    },
+    result: rawEmailGuidancePageData,
   },
 ]
-
 describe('<DmarcGuidancePage />', () => {
   it('uses the a domainSlug param to fetch data', async () => {
     window.resizeTo(1024, 768)
@@ -76,11 +71,7 @@ describe('<DmarcGuidancePage />', () => {
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
-            <MockedProvider
-              addTypename={false}
-              mocks={mocks}
-              cache={createCache()}
-            >
+            <MockedProvider mocks={mocks} cache={createCache()}>
               <MemoryRouter
                 initialEntries={['/domains/cse-cst.gc.ca']}
                 initialIndex={0}

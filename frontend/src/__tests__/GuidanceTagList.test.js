@@ -19,7 +19,7 @@ const i18n = setupI18n({
 })
 
 const selectorNode =
-  rawEmailGuidancePageData.findDomainByDomain.email.dmarc.edges[0].node
+  rawEmailGuidancePageData.data.findDomainByDomain.email.dmarc.edges[0].node
 const negativeTags = selectorNode.negativeGuidanceTags.edges
 const neutralTags = selectorNode.neutralGuidanceTags.edges
 const positiveTags = selectorNode.positiveGuidanceTags.edges
@@ -55,9 +55,7 @@ describe('<GuidanceTagList />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() =>
-      getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),
-    )
+    await waitFor(() => getAllByText(/DKIM-GC/i))
   })
   it('renders neutral guidance tags', async () => {
     const { getAllByText } = render(
@@ -79,7 +77,7 @@ describe('<GuidanceTagList />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/IT PIN/i))
+    await waitFor(() => getAllByText(/3.2.2 Third Parties and DKIM/i))
   })
   it('renders positive guidance tags', async () => {
     const { getAllByText } = render(
