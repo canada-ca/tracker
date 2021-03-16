@@ -4,7 +4,7 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
-import { connectionDefinitions, globalIdField } from 'graphql-relay'
+import { globalIdField } from 'graphql-relay'
 
 export const dkimFailureTableType = new GraphQLObjectType({
   name: 'DkimFailureTable',
@@ -62,18 +62,6 @@ export const dkimFailureTableType = new GraphQLObjectType({
       type: GraphQLInt,
       description: 'Total messages from this sender.',
       resolve: ({ totalMessages }) => totalMessages,
-    },
-  }),
-})
-
-export const dkimFailureConnection = connectionDefinitions({
-  name: 'DkimFailureTable',
-  nodeType: dkimFailureTableType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of dkim failure the user has access to.',
-      resolve: ({ totalCount }) => totalCount,
     },
   }),
 })
