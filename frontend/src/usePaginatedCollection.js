@@ -12,6 +12,8 @@ export function usePaginatedCollection({
 }) {
   const [currentPage, setCurrentPage] = useState(1)
 
+  // set current page to first page when resettingVariables change
+  // ( when changing sorting type for example )
   useEffect(() => {
     setCurrentPage(1)
   }, [resettingVariables])
