@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "arango-tools": "0.2.3",
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "dotenv-safe": "^8.2.0"
   },
   "devDependencies": {

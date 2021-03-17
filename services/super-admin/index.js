@@ -5,7 +5,7 @@ require('dotenv-safe').config({
 
 const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
 
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const { ensure } = require('arango-tools')
 const { databaseOptions } = require('./database-options')
 

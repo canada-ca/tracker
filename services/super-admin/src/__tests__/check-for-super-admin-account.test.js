@@ -1,7 +1,7 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ensure, dbNameFromFile } = require('arango-tools')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const { databaseOptions } = require('../../database-options')
 
 const {
@@ -44,7 +44,11 @@ describe('given the checkForSuperAdminAccount function', () => {
   describe('given a successful check', () => {
     let user
     beforeEach(async () => {
-      const userDBInfo = await createSuperAdminAccount({ collections, transaction, bcrypt })
+      const userDBInfo = await createSuperAdminAccount({
+        collections,
+        transaction,
+        bcrypt,
+      })
       const userCursor = await query`
         FOR user IN users
           FILTER user._key == ${userDBInfo._key}

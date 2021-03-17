@@ -26,7 +26,7 @@ const {
 } = process.env
 
 const { ensure, dbNameFromFile } = require('arango-tools')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 const {
   createSuperAdminAccount,
