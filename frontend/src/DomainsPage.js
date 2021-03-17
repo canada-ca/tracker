@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { number } from 'prop-types'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -19,6 +19,7 @@ import {
   InputLeftElement,
   Icon,
   Text,
+  Select,
 } from '@chakra-ui/core'
 import {
   REVERSE_PAGINATED_DOMAINS as BACKWARD,
@@ -34,6 +35,12 @@ import { LoadingMessage } from './LoadingMessage'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
+  const [orderDirection, setOrderDirection] = useState('ASC')
+
+  const orderBy = { field: 'DOMAIN', direction: orderDirection }
+
+  const resettingVariables = `${orderBy.field}${orderBy.direction}`
+
   const {
     loading,
     error,
@@ -48,6 +55,8 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
     relayRoot: 'findMyDomains',
+    variables: { orderBy },
+    resettingVariables: resettingVariables,
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -87,6 +96,24 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                 </InputLeftElement>
                 <Input type="text" placeholder={t`Search for a domain`} />
               </InputGroup>
+
+              {nodes.length > 0 && (
+                <Stack isInline ml="auto" align="center" width="fit-content">
+                  <Text fontWeight="bold">
+                    <Trans>Order by:</Trans>
+                  </Text>
+                  <Select
+                    width="fit-content"
+                    value={orderDirection}
+                    onChange={(e) => {
+                      setOrderDirection(e.target.value)
+                    }}
+                  >
+                    <option value="ASC">Domain Ascending</option>
+                    <option value="DESC">Domain Descending</option>
+                  </Select>
+                </Stack>
+              )}
 
               <ListOf
                 elements={nodes}
