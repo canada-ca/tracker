@@ -6,17 +6,20 @@ require('dotenv-safe').config({
 const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
 
 const bcrypt = require('bcrypt')
-const { ArangoTools } = require('arango-tools')
-const { makeMigrations } = require('./migrations')
+const { ensure } = require('arango-tools')
+const { databaseOptions } = require('./database-options')
 
 const { superAdminService } = require('./src')
 
 ;(async () => {
   // Generate Database information
-  const { migrate } = await ArangoTools({ rootPass, url })
-  const { query, collections, transaction } = await migrate(
-    makeMigrations({ databaseName, rootPass }),
-  )
+  const { query, collections, transaction } = await ensure({
+    type: 'database',
+    name: databaseName,
+    url,
+    rootPassword: rootPass,
+    options: databaseOptions({ rootPass }),
+  })
 
   await superAdminService({ query, collections, transaction, bcrypt })
 })()
