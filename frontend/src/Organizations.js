@@ -14,7 +14,6 @@ import {
   Select,
   Stack,
   Text,
-  Switch,
 } from '@chakra-ui/core'
 import {
   PAGINATED_ORGANIZATIONS as FORWARD,
@@ -84,42 +83,33 @@ export default function Organisations({ orgsPerPage = 10 }) {
           </Text>
           <Select
             aria-label="Sort by"
-            w="10%"
+            w="fit-content"
             size="md"
             variant="filled"
             onChange={(e) => {
-              setOrderField(e.target.value)
+              setOrderField(e.target.value.field)
+              setOrderDirection(e.target.value.direction)
             }}
           >
-            <option key="NAME" value="NAME">
-              Name
+            <option key="NAME_ASC" value={{field: "NAME", direction: "ASC"}}>
+              Name Ascending
             </option>
-            <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">
-              Domains
+            <option key="NAME_DESC" value={{field: "NAME", direction: "DESC"}}>
+              Name Descending
             </option>
-            <option key="ACRONYM" value="ACRONYM">
-              Acronym
+            <option key="DOMAIN_COUNT_ASC" value={{field: "DOMAIN_COUNT", direction: "ASC"}}>
+              Domains Ascending
+            </option>
+            <option key="DOMAIN_COUNT_DESC" value={{field: "DOMAIN_COUNT", direction: "DESC"}}>
+              Domains Descending
+            </option>
+            <option key="ACRONYM_ASC" value={{field: "ACRONYM", direction: "ASC"}} >
+              Acronym Ascending
+            </option>
+            <option key="ACRONYM_DESC" value={{field: "ACRONYM", direction: "DESC"}} >
+              Acronym Descending
             </option>
           </Select>
-          <Text
-            fontSize="lg"
-            fontWeight="bold"
-            textAlign="center"
-            mt={2}
-            ml={2}
-          >
-            <Trans>↑ ↓</Trans>
-          </Text>
-          <Switch
-            size="lg"
-            mt={2}
-            aria-label="Toggle sort direction"
-            onChange={() => {
-              orderDirection === 'ASC'
-                ? setOrderDirection('DESC')
-                : setOrderDirection('ASC')
-            }}
-          />
         </Stack>
         <ListOf
           elements={nodes}
