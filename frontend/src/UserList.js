@@ -99,15 +99,36 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           position: 'top-left',
         })
       },
-      onCompleted() {
-        toast({
-          title: t`User invited`,
-          description: t`Email invitation sent to ${addedUserName}`,
-          status: 'info',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
+      onCompleted({ addUser }) {
+        if (addUser.result.__typename === 'InviteUserToOrgResult') {
+          toast({
+            title: t`User invited`,
+            description: t`Email invitation sent to ${addedUserName}`,
+            status: 'info',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else if (addUser.result.typename === 'InviteUserToOrgError') {
+          toast({
+            title: t`Unable to invite user.`,
+            description: addUser.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect addUser.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect addUser.result typename.')
+        }
       },
     },
   )
