@@ -1,5 +1,5 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
-import { connectionDefinitions, globalIdField } from 'graphql-relay'
+import { globalIdField } from 'graphql-relay'
 
 export const dmarcFailureTableType = new GraphQLObjectType({
   name: 'DmarcFailureTable',
@@ -52,18 +52,6 @@ export const dmarcFailureTableType = new GraphQLObjectType({
       type: GraphQLInt,
       description: 'Total messages from this sender.',
       resolve: ({ totalMessages }) => totalMessages,
-    },
-  }),
-})
-
-export const dmarcFailureConnection = connectionDefinitions({
-  name: 'DmarcFailureTable',
-  nodeType: dmarcFailureTableType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of dmarc failures the user has access to.',
-      resolve: ({ totalCount }) => totalCount,
     },
   }),
 })

@@ -1,5 +1,5 @@
 import { GraphQLInt } from 'graphql'
-import { domainConnection } from '../../index'
+import { domainConnection } from '../domain-connection'
 
 describe('given the domain connection object', () => {
   describe('testing its field definitions', () => {

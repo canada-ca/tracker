@@ -5,11 +5,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
+import { connectionArgs, globalIdField } from 'graphql-relay'
 
 import { organizationSummaryType } from './organization-summary'
 import { nodeInterface } from '../../node'
@@ -144,16 +140,4 @@ export const organizationType = new GraphQLObjectType({
   interfaces: [nodeInterface],
   description:
     'Organization object containing information for a given Organization.',
-})
-
-export const organizationConnection = connectionDefinitions({
-  name: 'Organization',
-  nodeType: organizationType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of organizations the user has access to.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

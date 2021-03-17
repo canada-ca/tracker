@@ -1,5 +1,5 @@
 import { GraphQLInt } from 'graphql'
-import { affiliationConnection } from '../affiliation'
+import { affiliationConnection } from '../affiliation-connection'
 
 describe('given the affiliation connection object', () => {
   describe('testing its field definitions', () => {

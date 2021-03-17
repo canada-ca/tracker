@@ -1,12 +1,8 @@
-import { GraphQLInt, GraphQLObjectType } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
+import { GraphQLObjectType } from 'graphql'
+import { connectionArgs, globalIdField } from 'graphql-relay'
 import { GraphQLDate } from 'graphql-scalars'
 
-import { dkimResultConnection } from './dkim-result'
+import { dkimResultConnection } from './dkim-result-connection'
 import { dkimResultOrder } from '../inputs'
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
@@ -59,16 +55,4 @@ organization that owns the signing domain to claim some
 responsibility for a message by associating the domain with the
 message.  This can be an author's organization, an operational relay,
 or one of their agents.`,
-})
-
-export const dkimConnection = connectionDefinitions({
-  name: 'DKIM',
-  nodeType: dkimType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of DKIM scans related to a given domain.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })
