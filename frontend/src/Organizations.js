@@ -14,6 +14,7 @@ import {
   Select,
   Stack,
   Text,
+  Switch,
 } from '@chakra-ui/core'
 import {
   PAGINATED_ORGANIZATIONS as FORWARD,
@@ -90,22 +91,35 @@ export default function Organisations({ orgsPerPage = 10 }) {
               setOrderField(e.target.value)
             }}
           >
-            <option key="NAME" value="NAME">Name</option>
-            <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">Domains</option>
-            <option key="ACRONYM" value="ACRONYM">Acronym</option>
+            <option key="NAME" value="NAME">
+              Name
+            </option>
+            <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">
+              Domains
+            </option>
+            <option key="ACRONYM" value="ACRONYM">
+              Acronym
+            </option>
           </Select>
-          <Select
-            aria-label="Sort order"
-            w="10%"
-            size="md"
-            variant="filled"
-            onChange={(e) => {
-              setOrderDirection(e.target.value)
-            }}
+          <Text
+            fontSize="lg"
+            fontWeight="bold"
+            textAlign="center"
+            mt={2}
+            ml={2}
           >
-            <option key="ASC" value="ASC">Asc.</option>
-            <option key="DESC" value="DESC">Desc.</option>
-          </Select>
+            <Trans>↑ ↓</Trans>
+          </Text>
+          <Switch
+            size="lg"
+            mt={2}
+            aria-label="Toggle sort direction"
+            onChange={() => {
+              orderDirection === 'ASC'
+                ? setOrderDirection('DESC')
+                : setOrderDirection('ASC')
+            }}
+          />
         </Stack>
         <ListOf
           elements={nodes}
