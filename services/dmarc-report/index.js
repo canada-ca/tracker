@@ -3,8 +3,8 @@ require('dotenv-safe').config({
   example: '.env.example',
 })
 
-const { ArangoTools } = require('arango-tools')
-const { makeMigrations } = require('./migrations')
+const { ensure } = require('arango-tools')
+const { databaseOptions } = require('./database-options')
 const fetch = require('isomorphic-fetch')
 const { CosmosClient } = require('@azure/cosmos')
 const moment = require('moment')
@@ -41,10 +41,13 @@ const {
 
 ;(async () => {
   // Generate Database information
-  const { migrate } = await ArangoTools({ rootPass, url })
-  const { query, collections } = await migrate(
-    makeMigrations({ databaseName, rootPass }),
-  )
+  const { query, collections } = await ensure({
+    type: 'database',
+    name: databaseName,
+    url,
+    rootPassword: rootPass,
+    options: databaseOptions({ rootPass }),
+  })
 
   const client = new CosmosClient(AZURE_CONN_STRING)
   const { database } = await client.databases.createIfNotExists({
