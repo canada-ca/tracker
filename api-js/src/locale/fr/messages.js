@@ -1,6 +1,5 @@
 /*eslint-disable*/ module.exports = {
   messages: {
-    'Authentication error, please sign in again.': 'todo',
     'Authentication error. Please sign in again.': 'todo',
     'Authentication error. Please sign in.': 'todo',
     'Cannot query affiliations on organization without admin permission or higher.':
@@ -234,8 +233,6 @@
       'todo',
     'Unable to update domain. Please try again.': 'todo',
     'Unable to update organization. Please try again.': 'todo',
-    'Unable to update password, authentication error occurred, please sign in again.':
-      'todo',
     'Unable to update password, current password does not match. Please try again.':
       'todo',
     'Unable to update password, new passwords do not match. Please try again.':

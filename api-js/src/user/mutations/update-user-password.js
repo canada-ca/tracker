@@ -36,9 +36,7 @@ export const updateUserPassword = new mutationWithClientMutationId({
     {
       i18n,
       query,
-      userKey,
-      auth: { bcrypt },
-      loaders: { userLoaderByKey },
+      auth: { bcrypt, userRequired },
       validators: { cleanseInput },
     },
   ) => {
@@ -47,36 +45,8 @@ export const updateUserPassword = new mutationWithClientMutationId({
     const updatedPassword = cleanseInput(args.updatedPassword)
     const updatedPasswordConfirm = cleanseInput(args.updatedPasswordConfirm)
 
-    // Replace with userRequired()
-    // Make sure user id is not undefined
-    if (typeof userKey === 'undefined') {
-      console.warn(
-        `User attempted to update password, but the user id is undefined.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(
-          t`Unable to update password, authentication error occurred, please sign in again.`,
-        ),
-      }
-    }
-
     // Get user from db
-    const user = await userLoaderByKey.load(userKey)
-
-    if (typeof user === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to update their password, but no account is associated with that id.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(
-          t`Unable to update password, authentication error occurred, please sign in again.`,
-        ),
-      }
-    }
+    const user = await userRequired()
 
     // Check to see if current passwords match
     if (!bcrypt.compareSync(currentPassword, user.password)) {

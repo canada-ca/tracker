@@ -23,36 +23,13 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { i18n, query, userKey, loaders: { userLoaderByKey } },
+    { i18n, query, auth: { userRequired } },
   ) => {
     // Cleanse Input
     const twoFactorCode = args.twoFactorCode
 
-    // Replace with userRequired()
-    if (typeof userKey === 'undefined') {
-      console.warn(
-        `User attempted to two factor authenticate, however the userKey is undefined.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Authentication error, please sign in again.`),
-      }
-    }
-
     // Get User From DB
-    const user = await userLoaderByKey.load(userKey)
-
-    if (typeof user === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to two factor authenticate, however no account is associated with that id.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Authentication error, please sign in again.`),
-      }
-    }
+    const user = await userRequired()
 
     if (twoFactorCode.toString().length !== 6) {
       console.warn(
