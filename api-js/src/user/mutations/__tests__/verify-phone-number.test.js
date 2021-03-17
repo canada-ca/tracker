@@ -85,6 +85,9 @@ describe('user send password reset email', () => {
                 result {
                   ... on VerifyPhoneNumberResult {
                     status
+                    user {
+                      displayName
+                    }
                   }
                   ... on VerifyPhoneNumberError {
                     code
@@ -115,6 +118,9 @@ describe('user send password reset email', () => {
           data: {
             verifyPhoneNumber: {
               result: {
+                user: {
+                  displayName: 'Test Account',
+                },
                 status:
                   'Successfully verified phone number, and set TFA send method to text.',
               },
@@ -136,6 +142,9 @@ describe('user send password reset email', () => {
                 result {
                   ... on VerifyPhoneNumberResult {
                     status
+                    user {
+                      displayName
+                    }
                   }
                   ... on VerifyPhoneNumberError {
                     code
@@ -186,6 +195,9 @@ describe('user send password reset email', () => {
                   result {
                     ... on VerifyPhoneNumberResult {
                       status
+                      user {
+                        displayName
+                      }
                     }
                     ... on VerifyPhoneNumberError {
                       code
@@ -240,6 +252,9 @@ describe('user send password reset email', () => {
                   result {
                     ... on VerifyPhoneNumberResult {
                       status
+                      user {
+                        displayName
+                      }
                     }
                     ... on VerifyPhoneNumberError {
                       code
@@ -298,6 +313,9 @@ describe('user send password reset email', () => {
                   result {
                     ... on VerifyPhoneNumberResult {
                       status
+                      user {
+                        displayName
+                      }
                     }
                     ... on VerifyPhoneNumberError {
                       code
@@ -363,6 +381,9 @@ describe('user send password reset email', () => {
                 result {
                   ... on VerifyPhoneNumberResult {
                     status
+                    user {
+                      displayName
+                    }
                   }
                   ... on VerifyPhoneNumberError {
                     code
@@ -393,6 +414,9 @@ describe('user send password reset email', () => {
           data: {
             verifyPhoneNumber: {
               result: {
+                user: {
+                  displayName: 'Test Account',
+                },
                 status: 'todo',
               },
             },
@@ -413,6 +437,9 @@ describe('user send password reset email', () => {
                 result {
                   ... on VerifyPhoneNumberResult {
                     status
+                    user {
+                      displayName
+                    }
                   }
                   ... on VerifyPhoneNumberError {
                     code
@@ -463,6 +490,9 @@ describe('user send password reset email', () => {
                   result {
                     ... on VerifyPhoneNumberResult {
                       status
+                      user {
+                        displayName
+                      }
                     }
                     ... on VerifyPhoneNumberError {
                       code
@@ -516,6 +546,9 @@ describe('user send password reset email', () => {
                   result {
                     ... on VerifyPhoneNumberResult {
                       status
+                      user {
+                        displayName
+                      }
                     }
                     ... on VerifyPhoneNumberError {
                       code
@@ -573,6 +606,9 @@ describe('user send password reset email', () => {
                   result {
                     ... on VerifyPhoneNumberResult {
                       status
+                      user {
+                        displayName
+                      }
                     }
                     ... on VerifyPhoneNumberError {
                       code

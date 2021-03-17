@@ -23,7 +23,13 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { i18n, query, auth: { userRequired } },
+    {
+      i18n,
+      userKey,
+      query,
+      auth: { userRequired },
+      loaders: { userLoaderByKey },
+    },
   ) => {
     // Cleanse Input
     const twoFactorCode = args.twoFactorCode
@@ -77,8 +83,12 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       `User: ${user._key} successfully two factor authenticated their account.`,
     )
 
+    await userLoaderByKey.clear(userKey)
+    const updatedUser = await userLoaderByKey.load(userKey)
+
     return {
       _type: 'success',
+      user: updatedUser,
       status: i18n._(
         t`Successfully verified phone number, and set TFA send method to text.`,
       ),
