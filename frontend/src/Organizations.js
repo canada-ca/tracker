@@ -114,7 +114,6 @@ export default function Organisations({ orgsPerPage = 10 }) {
               fontSize="md"
               fontWeight="bold"
               textAlign="center"
-              mt={2}
             >
               <Trans>Sort by: </Trans>
             </Text>
