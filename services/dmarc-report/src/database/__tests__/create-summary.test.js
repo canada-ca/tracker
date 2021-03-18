@@ -1,18 +1,21 @@
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { ensure, dbNameFromFile } = require('arango-tools')
 
 const { createSummary } = require('../create-summary')
-const { makeMigrations } = require('../../../migrations')
+const { databaseOptions } = require('../../../database-options')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the createSummary function', () => {
-  let query, drop, truncate, migrate
+  let query, drop, truncate
 
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   afterEach(async () => {

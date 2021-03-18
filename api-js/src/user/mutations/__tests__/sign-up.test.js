@@ -292,7 +292,7 @@ describe('user sign up', () => {
               signUp: {
                 result: {
                   code: 400,
-                  description: 'Password is too short.',
+                  description: 'Password does not meet requirements.',
                 },
               },
             },

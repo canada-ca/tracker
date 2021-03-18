@@ -1,9 +1,5 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
+import { GraphQLObjectType, GraphQLString } from 'graphql'
+import { connectionArgs, globalIdField } from 'graphql-relay'
 import { GraphQLJSON } from 'graphql-scalars'
 
 import { dkimType } from './dkim'
@@ -17,7 +13,7 @@ export const dkimResultType = new GraphQLObjectType({
     id: globalIdField('dkimResult'),
     dkim: {
       type: dkimType,
-      description: 'The dkim scan information that this result belongs to.',
+      description: 'The DKIM scan information that this result belongs to.',
       resolve: async ({ dkimId }, _, { loaders: { dkimLoaderByKey } }) => {
         const dkimKey = dkimId.split('/')[1]
         const dkim = await dkimLoaderByKey.load(dkimKey)
@@ -137,18 +133,5 @@ export const dkimResultType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-  description: 'Individual scans results for the given dkim selector.',
-})
-
-export const dkimResultConnection = connectionDefinitions({
-  name: 'DKIMResult',
-  nodeType: dkimResultType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description:
-        'The total amount of dkim results related to a given domain.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
+  description: 'Individual scans results for the given DKIM selector.',
 })

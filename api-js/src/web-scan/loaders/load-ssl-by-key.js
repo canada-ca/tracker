@@ -6,6 +6,7 @@ export const sslLoaderByKey = (query, userKey, i18n) =>
     let cursor
     try {
       cursor = await query`
+        WITH ssl
         FOR sslScan IN ssl
           FILTER sslScan._key IN ${keys}
           RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
@@ -14,7 +15,7 @@ export const sslLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running sslLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find ssl scan. Please try again.`))
+      throw new Error(i18n._(t`Unable to find SSL scan(s). Please try again.`))
     }
 
     const sslMap = {}
@@ -26,7 +27,7 @@ export const sslLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running sslLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find ssl scan. Please try again.`))
+      throw new Error(i18n._(t`Unable to find SSL scan(s). Please try again.`))
     }
 
     return keys.map((key) => sslMap[key])

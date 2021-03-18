@@ -4,9 +4,7 @@ import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
 import {
-  Button,
   Heading,
-  Stack,
   Box,
   Divider,
   InputGroup,
@@ -24,6 +22,7 @@ import { usePaginatedCollection } from './usePaginatedCollection'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
 export default function Organisations({ orgsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -92,23 +91,13 @@ export default function Organisations({ orgsPerPage = 10 }) {
           )}
         </ListOf>
 
-        <Stack isInline align="center" mb="4">
-          <Button
-            onClick={previous}
-            isDisabled={!hasPreviousPage}
-            aria-label="Previous page"
-          >
-            <Trans>Previous</Trans>
-          </Button>
-
-          <Button
-            onClick={next}
-            isDisabled={!hasNextPage}
-            aria-label="Next page"
-          >
-            <Trans>Next</Trans>
-          </Button>
-        </Stack>
+        <RelayPaginationControls
+          onlyPagination={true}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+        />
       </ErrorBoundary>
     </Layout>
   )

@@ -164,7 +164,7 @@ export const sslLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`ssl\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`SSL\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -173,7 +173,7 @@ export const sslLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`ssl\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`SSL\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -185,7 +185,7 @@ export const sslLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`ssl\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`SSL\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -196,7 +196,7 @@ export const sslLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`Requesting ${amount} records on the \`ssl\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting ${amount} records on the \`SSL\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -321,51 +321,52 @@ export const sslLoaderConnectionsByDomainId = (
   let requestedSslInfo
   try {
     requestedSslInfo = await query`
-    LET sslKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSSL RETURN v._key)
+      WITH domains, domainsSSL, ssl
+      LET sslKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSSL RETURN v._key)
 
-    LET retrievedSsl = (
-      FOR sslScan IN ssl
-        FILTER sslScan._key IN sslKeys
-        ${afterTemplate}
-        ${beforeTemplate}
-        ${startDateTemplate}
-        ${endDateTemplate}
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
-    )
+      LET retrievedSsl = (
+        FOR sslScan IN ssl
+          FILTER sslScan._key IN sslKeys
+          ${afterTemplate}
+          ${beforeTemplate}
+          ${startDateTemplate}
+          ${endDateTemplate}
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR sslScan IN ssl
-        FILTER sslScan._key IN sslKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} sslScan._key ${sortString} LIMIT 1
-        RETURN sslScan
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR sslScan IN ssl
-        FILTER sslScan._key IN sslKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} sslScan._key ${sortString} LIMIT 1
-        RETURN sslScan
-    ) > 0 ? true : false)
+      LET hasNextPage = (LENGTH(
+        FOR sslScan IN ssl
+          FILTER sslScan._key IN sslKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} sslScan._key ${sortString} LIMIT 1
+          RETURN sslScan
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR sslScan IN ssl
+          FILTER sslScan._key IN sslKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} sslScan._key ${sortString} LIMIT 1
+          RETURN sslScan
+      ) > 0 ? true : false)
 
-    RETURN { 
-      "sslScans": retrievedSsl,
-      "totalCount": LENGTH(sslKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedSsl)._key, 
-      "endKey": LAST(retrievedSsl)._key 
-    }
+      RETURN { 
+        "sslScans": retrievedSsl,
+        "totalCount": LENGTH(sslKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedSsl)._key, 
+        "endKey": LAST(retrievedSsl)._key 
+      }
     `
   } catch (err) {
     console.error(
       `Database error occurred while user: ${userKey} was trying to get ssl information for ${domainId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load ssl scans. Please try again.`))
+    throw new Error(i18n._(t`Unable to load SSL scan(s). Please try again.`))
   }
 
   let sslScansInfo
@@ -375,7 +376,7 @@ export const sslLoaderConnectionsByDomainId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to get ssl information for ${domainId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load ssl scans. Please try again.`))
+    throw new Error(i18n._(t`Unable to load SSL scan(s). Please try again.`))
   }
 
   if (sslScansInfo.sslScans.length === 0) {

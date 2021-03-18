@@ -1125,7 +1125,9 @@ describe('create a domain', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to create domain. Please try again.'),
+            new GraphQLError(
+              'Unable to create domain in unknown organization.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -1197,7 +1199,9 @@ describe('create a domain', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to create domain. Please try again.'),
+            new GraphQLError(
+              'Permission Denied: Please contact organization user for help with creating domain.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)

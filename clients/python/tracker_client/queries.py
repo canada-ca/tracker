@@ -1,4 +1,4 @@
-""" This module contains the gql documents used by client.py to query the Tracker API
+""" This module contains the gql documents used to query the Tracker API
 
 :var DocumentNode SIGN_IN_MUTATION: sign in and get authentication token
 :var DocumentNode GET_DOMAIN: get scalar fields of a domain
@@ -26,8 +26,37 @@ SIGNIN_MUTATION = gql(
     mutation SignIn($creds: SignInInput!) {
         signIn (input: $creds) {
             result {
+                ... on TFASignInResult {
+                    sendMethod
+                    authenticateToken
+                }
                 ... on AuthResult {
                     authToken
+                }
+                ... on SignInError{
+                    code
+                    description
+                }
+            }
+        }
+    }
+    """
+)
+
+# Finish sign in by completing TFA
+# :param dict creds: a dict with a authentication code and token
+# Mutation variables should look like {"authInput": {"authenticationCode": auth_code, "authenticateToken": token}}
+TFA_AUTH = gql(
+    """
+    mutation Authenticate($authInput: AuthenticateInput!) {
+        authenticate(input: $authInput) {
+            result {
+                ... on AuthResult {
+                    authToken
+                }
+                ... on AuthenticateError {
+                    code
+                    description
                 }
             }
         }
@@ -265,19 +294,21 @@ SUMMARY_BY_SLUG = gql(
 
 # Get all scan results for a domain
 # :param str domain: url to get scan results
-# Query variables should look like {"domain": ${domain_url} }
+# :param int first: number of results to get
+# Query variables should look like {"domain": ${domain_url}, "first": ${some_int} }
 # Returns many fields, guidance tags are likely to be of most interest
 # Pagination details (edges and nodes) are stripped during formatting of response
 ALL_RESULTS = gql(
     """
-    query GetAllResults($domain: DomainScalar!) {
+    query GetAllResults($domain: DomainScalar!, $first: Int!) {
         findDomainByDomain(domain: $domain) {
             domain
             lastRan
             web {
-                https(first: 100) {
+                https(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
+                            timestamp
                             implementation
                             enforced
                             hsts
@@ -337,9 +368,19 @@ ALL_RESULTS = gql(
                         }
                     }
                 }
-                ssl(first: 100) {
+                ssl(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
+                            timestamp
+                            strongCiphers
+                            strongCurves
+                            acceptableCiphers
+                            acceptableCurves
+                            weakCiphers
+                            weakCurves
+                            ccsInjectionVulnerable
+                            heartbleedVulnerable
+                            supportsEcdhKeyExchange
                             positiveGuidanceTags(first: 100) {
                                 edges {
                                     node {
@@ -396,13 +437,16 @@ ALL_RESULTS = gql(
                 }
             }
             email {
-                dkim(first: 100) {
+                dkim(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
+                            timestamp
                             results(first: 100) {
                                 edges {
                                     node {
                                         selector
+                                        record
+                                        keyLength
                                         positiveGuidanceTags(first: 100) {
                                             edges {
                                                 node {
@@ -460,9 +504,10 @@ ALL_RESULTS = gql(
                         }
                     }
                 }
-                dmarc(first: 100) {
+                dmarc(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
+                            timestamp
                             record
                             pPolicy
                             spPolicy
@@ -521,9 +566,10 @@ ALL_RESULTS = gql(
                         }
                     }
                 }
-                spf(first: 100) {
+                spf(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
+                            timestamp
                             lookups
                             record
                             spfDefault
@@ -589,19 +635,21 @@ ALL_RESULTS = gql(
 
 # Get web scan results for a domain
 # :param str domain: url to get scan results
-# Query variables should look like {"domain": ${domain_url} }
+# :param int first: number of results to get
+# Query variables should look like {"domain": ${domain_url}, "first": ${some_int} }
 # Returns many fields, guidance tags are likely to be of most interest
 # Pagination details (edges and nodes) are stripped during formatting of response
 WEB_RESULTS = gql(
     """
-    query GetWebResults($domain: DomainScalar!) {
+    query GetWebResults($domain: DomainScalar!, $first: Int!) {
         findDomainByDomain(domain: $domain) {
             domain
             lastRan
             web {
-                https(first: 100) {
+                https(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
+                            timestamp
                             implementation
                             enforced
                             hsts
@@ -661,9 +709,19 @@ WEB_RESULTS = gql(
                         }
                     }
                 }
-                ssl(first: 100) {
+                ssl(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
+                            timestamp
+                            strongCiphers
+                            strongCurves
+                            acceptableCiphers
+                            acceptableCurves
+                            weakCiphers
+                            weakCurves
+                            ccsInjectionVulnerable
+                            heartbleedVulnerable
+                            supportsEcdhKeyExchange
                             positiveGuidanceTags(first: 100) {
                                 edges {
                                     node {
@@ -731,18 +789,21 @@ WEB_RESULTS = gql(
 # Pagination details (edges and nodes) are stripped during formatting of response
 EMAIL_RESULTS = gql(
     """
-    query GetEmailResults($domain: DomainScalar!) {
+    query GetEmailResults($domain: DomainScalar!, $first: Int!) {
         findDomainByDomain(domain: $domain) {
             domain
             lastRan
             email {
-                dkim(first: 100) {
+                dkim(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
+                            timestamp
                             results(first: 100) {
                                 edges {
                                     node {
                                         selector
+                                        record
+                                        keyLength
                                         positiveGuidanceTags(first: 100) {
                                             edges {
                                                 node {
@@ -800,9 +861,10 @@ EMAIL_RESULTS = gql(
                         }
                     }
                 }
-                dmarc(first: 100) {
+                dmarc(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
+                            timestamp
                             record
                             pPolicy
                             spPolicy
@@ -861,9 +923,10 @@ EMAIL_RESULTS = gql(
                         }
                     }
                 }
-                spf(first: 100) {
+                spf(first: $first, orderBy: { field: TIMESTAMP, direction: DESC }) {
                     edges {
                         node {
+                            timestamp
                             lookups
                             record
                             spfDefault

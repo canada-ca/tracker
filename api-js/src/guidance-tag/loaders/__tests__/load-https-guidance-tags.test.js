@@ -111,7 +111,9 @@ describe('given the httpsGuidanceTagLoader function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find https guidance tags. Please try again.'),
+            new Error(
+              'Unable to find HTTPS guidance tag(s). Please try again.',
+            ),
           )
         }
 
@@ -134,7 +136,9 @@ describe('given the httpsGuidanceTagLoader function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find https guidance tags. Please try again.'),
+            new Error(
+              'Unable to find HTTPS guidance tag(s). Please try again.',
+            ),
           )
         }
 

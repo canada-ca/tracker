@@ -6,6 +6,7 @@ export const httpsLoaderByKey = (query, userKey, i18n) =>
     let cursor
     try {
       cursor = await query`
+        WITH https
         FOR httpsScan IN https
           FILTER httpsScan._key IN ${keys}
           RETURN MERGE({ id: httpsScan._key, _type: "https" }, httpsScan)
@@ -14,7 +15,9 @@ export const httpsLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running httpsLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find https scan. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to find HTTPS scan(s). Please try again.`),
+      )
     }
 
     const httpsMap = {}
@@ -26,7 +29,9 @@ export const httpsLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running httpsLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find https scan. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to load HTTPS scan(s). Please try again.`),
+      )
     }
 
     return keys.map((key) => httpsMap[key])

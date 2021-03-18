@@ -2,6 +2,8 @@ import { GraphQLNonNull, GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
+import { verifyAccountUnion } from '../unions'
+
 export const verifyAccount = new mutationWithClientMutationId({
   name: 'VerifyAccount',
   description:
@@ -13,12 +15,11 @@ export const verifyAccount = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
-      description: 'Informs user if account was successfully verified.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+    result: {
+      type: verifyAccountUnion,
+      description:
+        '`VerifyAccountUnion` returning either a `VerifyAccountResult`, or `VerifyAccountError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -39,9 +40,14 @@ export const verifyAccount = new mutationWithClientMutationId({
       console.warn(
         `User attempted to verify their account, but the userKey is undefined.`,
       )
-      throw new Error(i18n._(t`Unable to verify account. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to verify account. Please try again.`),
+      }
     }
 
+    // Auth shouldn't be needed with this
     // Check if user exists
     const user = await userLoaderByKey.load(userKey)
 
@@ -49,7 +55,11 @@ export const verifyAccount = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to verify account, however no account is associated with this id.`,
       )
-      throw new Error(i18n._(t`Unable to verify account. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to verify account. Please try again.`),
+      }
     }
 
     // Get info from token
@@ -63,9 +73,13 @@ export const verifyAccount = new mutationWithClientMutationId({
       console.warn(
         `When validating account user: ${user._key} attempted to verify account, but userKey is not located in the token parameters.`,
       )
-      throw new Error(
-        i18n._(t`Unable to verify account. Please request a new email.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
+          t`Unable to verify account. Please request a new email.`,
+        ),
+      }
     }
 
     // Make sure user ids match
@@ -73,9 +87,13 @@ export const verifyAccount = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} attempted to verify their account, but the user id's do not match.`,
       )
-      throw new Error(
-        i18n._(t`Unable to verify account. Please request a new email.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
+          t`Unable to verify account. Please request a new email.`,
+        ),
+      }
     }
 
     // Verify users account
@@ -98,6 +116,7 @@ export const verifyAccount = new mutationWithClientMutationId({
     )
 
     return {
+      _type: 'success',
       status: i18n._(
         t`Successfully email verified account, and set TFA send method to email.`,
       ),

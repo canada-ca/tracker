@@ -508,7 +508,7 @@ describe('given the domain object', () => {
             ),
           ).rejects.toEqual(
             new Error(
-              'Unable to retrieve dmarc report information for: test1.gc.ca',
+              'Unable to retrieve DMARC report information for: test1.gc.ca',
             ),
           )
 
@@ -606,7 +606,7 @@ describe('given the domain object', () => {
             ),
           ).rejects.toEqual(
             new Error(
-              'Unable to retrieve dmarc report information for: test1.gc.ca',
+              'Unable to retrieve DMARC report information for: test1.gc.ca',
             ),
           )
           expect(consoleOutput).toEqual([

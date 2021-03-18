@@ -3,6 +3,7 @@ import { string } from 'prop-types'
 import { Heading, Stack, Select, useToast } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import { Formik, Field } from 'formik'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
@@ -10,13 +11,14 @@ import { useUserState } from './UserState'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
+import { UpdateUserProfileLanguage } from './graphql/fragments'
 
 function EditableUserLanguage({ currentLang }) {
   const { currentUser } = useUserState()
   const toast = useToast()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE,
+    UPDATE_USER_PROFILE({ UpdateUserProfileFields: UpdateUserProfileLanguage }),
     {
       context: {
         headers: {
@@ -33,22 +35,45 @@ function EditableUserLanguage({ currentLang }) {
           position: 'top-left',
         })
       },
-      onCompleted() {
-        toast({
-          title: t`Changed User Language`,
-          description: t`You have successfully updated your preferred language.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
+      onCompleted({ updateUserProfile }) {
+        if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
+          toast({
+            title: t`Changed User Language`,
+            description: t`You have successfully updated your preferred language.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else if (
+          updateUserProfile.result.__typename === 'UpdateUserProfileError'
+        ) {
+          toast({
+            title: t`Unable to update to your preferred language, please try again.`,
+            description: updateUserProfile.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect updateUserProfile.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect updateUserProfile.result typename.')
+        }
       },
     },
   )
 
   const validationSchema = object().shape({
     lang: yupString()
-      .required(fieldRequirements.lang.required.message)
+      .required(i18n._(fieldRequirements.lang.required.message))
       .oneOf(fieldRequirements.lang.oneOf.types),
   })
 

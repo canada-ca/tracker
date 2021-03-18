@@ -259,58 +259,60 @@ export const domainLoaderConnectionsByOrgId = (
   let requestedDomainInfo
   try {
     requestedDomainInfo = await query`
-    LET domainKeys = UNIQUE(FLATTEN(
-      LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
-      LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
-      LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
-      LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
-      ${ownershipOrgsOnly}
-      LET orgKeys = INTERSECTION(keys, claimKeys)
-        RETURN claimKeys
-    ))
-    
-    LET retrievedDomains = (
-      FOR domain IN domains
-        FILTER domain._key IN domainKeys
-        ${afterTemplate}
-        ${beforeTemplate}
+      WITH affiliations, domains, organizations, users 
 
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
-    )
-    
-    LET hasNextPage = (LENGTH(
-      FOR domain IN domains
-        FILTER domain._key IN domainKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} domain._key ${sortString} LIMIT 1
-        RETURN domain
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR domain IN domains
-        FILTER domain._key IN domainKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} domain._key ${sortString} LIMIT 1
-        RETURN domain
-    ) > 0 ? true : false)
-    
-    RETURN { 
-      "domains": retrievedDomains,
-      "totalCount": LENGTH(domainKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedDomains)._key, 
-      "endKey": LAST(retrievedDomains)._key 
-    }
+      LET domainKeys = UNIQUE(FLATTEN(
+        LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
+        LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
+        LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
+        LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
+        ${ownershipOrgsOnly}
+        LET orgKeys = INTERSECTION(keys, claimKeys)
+          RETURN claimKeys
+      ))
+      
+      LET retrievedDomains = (
+        FOR domain IN domains
+          FILTER domain._key IN domainKeys
+          ${afterTemplate}
+          ${beforeTemplate}
+
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
+      )
+      
+      LET hasNextPage = (LENGTH(
+        FOR domain IN domains
+          FILTER domain._key IN domainKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} domain._key ${sortString} LIMIT 1
+          RETURN domain
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR domain IN domains
+          FILTER domain._key IN domainKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} domain._key ${sortString} LIMIT 1
+          RETURN domain
+      ) > 0 ? true : false)
+      
+      RETURN { 
+        "domains": retrievedDomains,
+        "totalCount": LENGTH(domainKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedDomains)._key, 
+        "endKey": LAST(retrievedDomains)._key 
+      }
     `
   } catch (err) {
     console.error(
       `Database error occurred while user: ${userKey} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
+    throw new Error(i18n._(t`Unable to load domain(s). Please try again.`))
   }
 
   let domainsInfo
@@ -320,7 +322,7 @@ export const domainLoaderConnectionsByOrgId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
+    throw new Error(i18n._(t`Unable to load domain(s). Please try again.`))
   }
 
   if (domainsInfo.domains.length === 0) {

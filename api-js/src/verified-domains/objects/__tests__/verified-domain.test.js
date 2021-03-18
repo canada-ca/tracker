@@ -1,7 +1,7 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
-import { GraphQLDateTime } from 'graphql-scalars'
+import { GraphQLDate } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
@@ -31,7 +31,7 @@ describe('given the verified domains object', () => {
       const demoType = verifiedDomainType.getFields()
 
       expect(demoType).toHaveProperty('lastRan')
-      expect(demoType.lastRan.type).toMatchObject(GraphQLDateTime)
+      expect(demoType.lastRan.type).toMatchObject(GraphQLDate)
     })
     it('has a status field', () => {
       const demoType = verifiedDomainType.getFields()

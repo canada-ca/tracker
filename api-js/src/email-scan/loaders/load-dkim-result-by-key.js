@@ -7,6 +7,7 @@ export const dkimResultLoaderByKey = (query, userKey, i18n) =>
 
     try {
       cursor = await query`
+        WITH dkimResults
         FOR dkimResult IN dkimResults
           FILTER dkimResult._key IN ${keys}
           RETURN MERGE({ id: dkimResult._key, _type: "dkimResult" }, dkimResult)
@@ -15,7 +16,9 @@ export const dkimResultLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running dkimResultLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find dkim result. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to find DKIM result(s). Please try again.`),
+      )
     }
 
     const dkimResultMap = {}
@@ -27,7 +30,9 @@ export const dkimResultLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running dkimResultLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find dkim result. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to find DKIM result(s). Please try again.`),
+      )
     }
 
     return keys.map((key) => dkimResultMap[key])

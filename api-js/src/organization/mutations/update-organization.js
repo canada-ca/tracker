@@ -134,9 +134,7 @@ export const updateOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update organization: ${orgKey}, however no organizations is associated with that id.`,
       )
-      throw new Error(
-        i18n._(t`Unable to update organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to update unknown organization.`))
     }
 
     // Check to see if user has permission
@@ -147,11 +145,43 @@ export const updateOrganization = new mutationWithClientMutationId({
         `User: ${userKey} attempted to update organization ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
       )
       throw new Error(
-        i18n._(t`Unable to update organization. Please try again.`),
+        i18n._(
+          t`Permission Denied: Please contact organization admin for help with updating organization.`,
+        ),
       )
     }
 
-    // Get all org details
+    // Check to see if any orgs already have the name in use
+    if (nameEN !== '' || nameFR !== '') {
+      let orgNameCheckCursor
+      try {
+        orgNameCheckCursor = await query`
+          FOR org IN organizations
+            FILTER (org.orgDetails.en.name == ${nameEN}) OR (org.orgDetails.fr.name == ${nameFR})
+            RETURN org
+        `
+      } catch (err) {
+        console.error(
+          `Database error occurred during name check when user: ${userKey} attempted to update org: ${currentOrg._key}, ${err}`,
+        )
+        throw new Error(
+          i18n._(t`Unable to update organization. Please try again.`),
+        )
+      }
+
+      if (orgNameCheckCursor.count > 0) {
+        console.error(
+          `User: ${userKey} attempted to change the name of org: ${currentOrg._key} however it is already in use.`,
+        )
+        throw new Error(
+          i18n._(
+            t`Organization name already in use, please choose another and try again.`,
+          ),
+        )
+      }
+    }
+
+    // Get all org details for comparison
     let orgCursor
     try {
       orgCursor = await query`
@@ -168,7 +198,17 @@ export const updateOrganization = new mutationWithClientMutationId({
       )
     }
 
-    const compareOrg = await orgCursor.next()
+    let compareOrg
+    try {
+      compareOrg = await orgCursor.next()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred while retrieving org: ${orgKey} for update, err: ${err}`,
+      )
+      throw new Error(
+        i18n._(t`Unable to update organization. Please try again.`),
+      )
+    }
 
     const updatedOrgDetails = {
       orgDetails: {

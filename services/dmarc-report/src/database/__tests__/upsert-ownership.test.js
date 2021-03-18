@@ -5,8 +5,8 @@ require('dotenv-safe').config({
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { makeMigrations } = require('../../../migrations')
+const { ensure, dbNameFromFile } = require('arango-tools')
+const { databaseOptions } = require('../../../database-options')
 
 const { upsertOwnership } = require('..')
 
@@ -16,7 +16,7 @@ describe('given the upsertOwnership function', () => {
   const mockedError = (output) => consoleErrorOutput.push(output)
   const mockedInfo = (output) => consoleInfoOutput.push(output)
 
-  let query, drop, truncate, migrate, collections
+  let query, drop, truncate, collections
 
   beforeEach(async () => {
     console.error = mockedError
@@ -25,10 +25,13 @@ describe('given the upsertOwnership function', () => {
     consoleInfoOutput.length = 0
 
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
 
     await truncate()
   })

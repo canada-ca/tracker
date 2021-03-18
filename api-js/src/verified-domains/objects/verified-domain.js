@@ -1,10 +1,6 @@
-import { GraphQLInt, GraphQLObjectType } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
-import { GraphQLDateTime } from 'graphql-scalars'
+import { GraphQLObjectType } from 'graphql'
+import { connectionArgs, globalIdField } from 'graphql-relay'
+import { GraphQLDate } from 'graphql-scalars'
 
 import { domainStatus } from '../../domain/objects'
 import { Domain } from '../../scalars'
@@ -22,7 +18,7 @@ export const verifiedDomainType = new GraphQLObjectType({
       resolve: ({ domain }) => domain,
     },
     lastRan: {
-      type: GraphQLDateTime,
+      type: GraphQLDate,
       description: 'The last time that a scan was ran on this domain.',
       resolve: ({ lastRan }) => lastRan,
     },
@@ -57,16 +53,4 @@ export const verifiedDomainType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',
-})
-
-export const verifiedDomainConnection = connectionDefinitions({
-  name: 'VerifiedDomain',
-  nodeType: verifiedDomainType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of verified domains.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

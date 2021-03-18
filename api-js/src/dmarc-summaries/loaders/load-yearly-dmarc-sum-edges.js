@@ -6,6 +6,7 @@ export const dmarcYearlySumEdgeLoader = (query, userKey, i18n) => async ({
   let dmarcSummaryEdgeCursor
   try {
     dmarcSummaryEdgeCursor = await query`
+      WITH dmarcSummaries, domains, domainsToDmarcSummaries
       FOR edge IN domainsToDmarcSummaries
         FILTER edge.startDate != "thirtyDays"
         FILTER edge._from == ${domainId}
@@ -16,7 +17,7 @@ export const dmarcYearlySumEdgeLoader = (query, userKey, i18n) => async ({
       `Database error occurred when user: ${userKey} attempted to load yearly dmarc summaries for domain: ${domainId}, ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load dmarc summaries. Please try again.`),
+      i18n._(t`Unable to load DMARC summary data. Please try again.`),
     )
   }
 
@@ -28,7 +29,7 @@ export const dmarcYearlySumEdgeLoader = (query, userKey, i18n) => async ({
       `Cursor error occurred when user: ${userKey} attempted to load yearly dmarc summaries for domain: ${domainId}, ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load dmarc summaries. Please try again.`),
+      i18n._(t`Unable to load DMARC summary data. Please try again.`),
     )
   }
 

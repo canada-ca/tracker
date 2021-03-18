@@ -126,7 +126,7 @@ export const spfLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`spf\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`SPF\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -135,7 +135,7 @@ export const spfLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`spf\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`SPF\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -147,7 +147,7 @@ export const spfLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`spf\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`SPF\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -158,7 +158,7 @@ export const spfLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`Requesting ${amount} records on the \`spf\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting ${amount} records on the \`SPF\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -247,51 +247,52 @@ export const spfLoaderConnectionsByDomainId = (
   let spfScanInfoCursor
   try {
     spfScanInfoCursor = await query`
-    LET spfKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF RETURN v._key)
+      WITH domains, domainsSPF, spf
+      LET spfKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF RETURN v._key)
 
-    LET retrievedSpfScans = (
-      FOR spfScan IN spf
-        FILTER spfScan._key IN spfKeys
-        ${afterTemplate}
-        ${beforeTemplate}
-        ${startDateTemplate}
-        ${endDateTemplate}
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
-    )
+      LET retrievedSpfScans = (
+        FOR spfScan IN spf
+          FILTER spfScan._key IN spfKeys
+          ${afterTemplate}
+          ${beforeTemplate}
+          ${startDateTemplate}
+          ${endDateTemplate}
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR spfScan IN spf
-        FILTER spfScan._key IN spfKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
-        RETURN spfScan
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR spfScan IN spf
-        FILTER spfScan._key IN spfKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
-        RETURN spfScan
-    ) > 0 ? true : false)
+      LET hasNextPage = (LENGTH(
+        FOR spfScan IN spf
+          FILTER spfScan._key IN spfKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
+          RETURN spfScan
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR spfScan IN spf
+          FILTER spfScan._key IN spfKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
+          RETURN spfScan
+      ) > 0 ? true : false)
 
-    RETURN { 
-      "spfScans": retrievedSpfScans,
-      "totalCount": LENGTH(spfKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedSpfScans)._key, 
-      "endKey": LAST(retrievedSpfScans)._key 
-    }
+      RETURN { 
+        "spfScans": retrievedSpfScans,
+        "totalCount": LENGTH(spfKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedSpfScans)._key, 
+        "endKey": LAST(retrievedSpfScans)._key 
+      }
     `
   } catch (err) {
     console.error(
       `Database error occurred while user: ${userKey} was trying to get spf information for ${domainId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load spf scans. Please try again.`))
+    throw new Error(i18n._(t`Unable to load SPF scan(s). Please try again.`))
   }
 
   let spfScanInfo
@@ -301,7 +302,7 @@ export const spfLoaderConnectionsByDomainId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to get spf information for ${domainId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load spf scans. Please try again.`))
+    throw new Error(i18n._(t`Unable to load SPF scan(s). Please try again.`))
   }
 
   if (spfScanInfo.spfScans.length === 0) {

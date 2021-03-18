@@ -120,7 +120,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find summary. Please try again.'),
+            new Error('Unable to load summary. Please try again.'),
           )
         }
 
@@ -143,7 +143,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find summary. Please try again.'),
+            new Error('Unable to load summary. Please try again.'),
           )
         }
 

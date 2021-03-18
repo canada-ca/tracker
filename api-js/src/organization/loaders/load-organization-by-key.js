@@ -7,9 +7,10 @@ export const orgLoaderByKey = (query, language, userKey, i18n) =>
 
     try {
       cursor = await query`
+        WITH domains, claims, organizations
         FOR org IN organizations
           FILTER org._key IN ${ids}
-          LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
           RETURN MERGE(
             {
               _id: org._id,
@@ -18,7 +19,7 @@ export const orgLoaderByKey = (query, language, userKey, i18n) =>
               _type: "organization",
               id: org._key,
               verified: org.verified,
-              domainCount: COUNT(domains),
+              domainCount: COUNT(orgDomains),
               summaries: org.summaries
             }, 
             TRANSLATE(${language}, org.orgDetails)
@@ -28,7 +29,9 @@ export const orgLoaderByKey = (query, language, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running orgLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find organization. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to load organization(s). Please try again.`),
+      )
     }
 
     const orgMap = {}
@@ -40,7 +43,9 @@ export const orgLoaderByKey = (query, language, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} during orgLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find organization. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to load organization(s). Please try again.`),
+      )
     }
 
     return ids.map((id) => orgMap[id])

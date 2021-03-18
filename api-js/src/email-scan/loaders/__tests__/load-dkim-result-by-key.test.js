@@ -111,7 +111,7 @@ describe('given the dkimResultLoaderByKey function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find dkim result. Please try again.'),
+            new Error('Unable to find DKIM result(s). Please try again.'),
           )
         }
 
@@ -134,7 +134,7 @@ describe('given the dkimResultLoaderByKey function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find dkim result. Please try again.'),
+            new Error('Unable to find DKIM result(s). Please try again.'),
           )
         }
 

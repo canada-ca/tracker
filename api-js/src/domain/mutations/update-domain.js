@@ -71,7 +71,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId}, however there is no domain associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+      throw new Error(i18n._(t`Unable to update unknown domain.`))
     }
 
     // Check to see if org exists
@@ -81,7 +81,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however there is no org associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+      throw new Error(i18n._(t`Unable to update domain in an unknown org.`))
     }
 
     // Check permission
@@ -95,7 +95,11 @@ export const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however they do not have permission in that org.`,
       )
-      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+      throw new Error(
+        i18n._(
+          t`Permission Denied: Please contact organization user for help with updating this domain.`,
+        ),
+      )
     }
 
     // Check to see if org has a claim to this domain
@@ -117,7 +121,11 @@ export const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however that org has no claims to that domain.`,
       )
-      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+      throw new Error(
+        i18n._(
+          t`Unable to update domain that does not belong to the given organization.`,
+        ),
+      )
     }
 
     // Generate list of collections names

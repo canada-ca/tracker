@@ -267,6 +267,7 @@ export const domainLoaderConnectionsByUserId = (
   let domainKeysQuery
   if (isSuperAdmin) {
     domainKeysQuery = aql`
+      WITH domains, organizations, users
       LET domainKeys = UNIQUE(FLATTEN(
         LET keys = []
         LET orgIds = (FOR org IN organizations RETURN org._id)
@@ -277,6 +278,7 @@ export const domainLoaderConnectionsByUserId = (
     `
   } else {
     domainKeysQuery = aql`
+      WITH affiliations, domains, organizations, users
       LET domainKeys = UNIQUE(FLATTEN(
         LET keys = []
         LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
@@ -290,50 +292,50 @@ export const domainLoaderConnectionsByUserId = (
   let requestedDomainInfo
   try {
     requestedDomainInfo = await query`
-    ${domainKeysQuery}
-    
-    LET retrievedDomains = (
-      FOR domain IN domains
-        FILTER domain._key IN domainKeys
-        ${afterTemplate}
-        ${beforeTemplate}
+      ${domainKeysQuery}
+      
+      LET retrievedDomains = (
+        FOR domain IN domains
+          FILTER domain._key IN domainKeys
+          ${afterTemplate}
+          ${beforeTemplate}
 
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
-    )
-    
-    LET hasNextPage = (LENGTH(
-      FOR domain IN domains
-        FILTER domain._key IN domainKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} domain._key ${sortString} LIMIT 1
-        RETURN domain
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR domain IN domains
-        FILTER domain._key IN domainKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} domain._key ${sortString} LIMIT 1
-        RETURN domain
-    ) > 0 ? true : false)
-    
-    RETURN { 
-      "domains": retrievedDomains,
-      "totalCount": LENGTH(domainKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedDomains)._key, 
-      "endKey": LAST(retrievedDomains)._key 
-    }
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
+      )
+      
+      LET hasNextPage = (LENGTH(
+        FOR domain IN domains
+          FILTER domain._key IN domainKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} domain._key ${sortString} LIMIT 1
+          RETURN domain
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR domain IN domains
+          FILTER domain._key IN domainKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} domain._key ${sortString} LIMIT 1
+          RETURN domain
+      ) > 0 ? true : false)
+      
+      RETURN { 
+        "domains": retrievedDomains,
+        "totalCount": LENGTH(domainKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedDomains)._key, 
+        "endKey": LAST(retrievedDomains)._key 
+      }
     `
   } catch (err) {
     console.error(
       `Database error occurred while user: ${userKey} was trying to query domains in loadDomainsByUser, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to query domains. Please try again.`))
+    throw new Error(i18n._(t`Unable to query domain(s). Please try again.`))
   }
 
   let domainsInfo
@@ -343,7 +345,7 @@ export const domainLoaderConnectionsByUserId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to gather domains in loadDomainsByUser, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
+    throw new Error(i18n._(t`Unable to load domain(s). Please try again.`))
   }
 
   if (domainsInfo.domains.length === 0) {

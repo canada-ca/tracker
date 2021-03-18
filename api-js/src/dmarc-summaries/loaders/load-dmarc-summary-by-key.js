@@ -7,6 +7,7 @@ export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
 
     try {
       cursor = await query`
+        WITH dmarcSummaries, domains, domainsToDmarcSummaries
         FOR summary IN dmarcSummaries
           FILTER summary._key IN ${keys}
 
@@ -33,7 +34,7 @@ export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
         `Database error occurred when user: ${userKey} running dmarcSumLoaderByKey: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find dmarc summary. Please try again.`),
+        i18n._(t`Unable to find DMARC summary data. Please try again.`),
       )
     }
 
@@ -47,7 +48,7 @@ export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
         `Cursor error occurred when user: ${userKey} running dmarcSumLoaderByKey: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find dmarc summary. Please try again.`),
+        i18n._(t`Unable to find DMARC summary data. Please try again.`),
       )
     }
 

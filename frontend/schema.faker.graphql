@@ -169,7 +169,7 @@ type CreateOrganizationPayload {
 # A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
 # `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO
 # 8601 standard for representation of dates and times using the Gregorian calendar.
-scalar DateTime
+scalar Date
 
 # Object that contains the various senders and details for each category.
 type DetailTables {
@@ -214,7 +214,7 @@ type DKIM implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time when the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: Date @fake(type: pastDate)
   # Individual scans results for each dkim selector.
   results(
     after: String
@@ -383,7 +383,9 @@ type DMARC implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time when the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: Date @fake(type: pastDate)
+  # DMARC phase found during scan.
+  dmarcPhase: Int @examples(values: [1, 2, 3, 4])
   # DMARC record retrieved during scan.
   record: String @examples(
     values: [
@@ -713,9 +715,9 @@ type EmailScan {
   # DomainKeys Identified Mail (DKIM) Signatures scan results.
   dkim(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: Date
     # End date for date filter.
-    endDate: DateTime
+    endDate: Date
     after: String
     first: Int
     before: String
@@ -724,9 +726,9 @@ type EmailScan {
   # Domain-based Message Authentication, Reporting, and Conformance (DMARC) scan results.
   dmarc(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: Date
     # End date for date filter.
-    endDate: DateTime
+    endDate: Date
     after: String
     first: Int
     before: String
@@ -735,9 +737,9 @@ type EmailScan {
   # Sender Policy Framework (SPF) scan results.
   spf(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: Date
     # End date for date filter.
-    endDate: DateTime
+    endDate: Date
     after: String
     first: Int
     before: String
@@ -872,7 +874,7 @@ type HTTPS implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: Date @fake(type: pastDate)
   # State of the HTTPS implementation on the server and any issues therein.
   implementation: String @examples(values: ["Valid HTTPS", "Downgrades HTTPS", "Bad Chain", "Bad Hostname"])
   # Degree to which HTTPS is enforced on the server based on behaviour.
@@ -947,6 +949,29 @@ type HTTPSEdge {
   cursor: String!
 }
 
+type InviteUserToOrgPayload {
+  # `InviteUserToOrgUnion` returning either a `InviteUserToOrgResult`, or `InviteUserToOrgError` object.
+  result: InviteUserToOrgUnion
+  clientMutationId: String
+}
+
+# This union is used with the `InviteUserToOrg` mutation, allowing for users to invite user to their org, and support any errors that may occur
+union InviteUserToOrgUnion = InviteUserToOrgError | InviteUserToOrgResult
+
+# This object is used to inform the user if any errors occurred while inviting a user to an org.
+type InviteUserToOrgError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user of the invitation status.
+type InviteUserToOrgResult {
+  # Informs the user if the invite or invite email was successfully sent.
+  status: String
+}
+
 input InviteUserToOrgInput {
   # Users email that you would like to invite to your org.
   userName: EmailAddress!
@@ -956,12 +981,6 @@ input InviteUserToOrgInput {
   orgId: ID!
   # The language in which the email will be sent in.
   preferredLang: LanguageEnums!
-  clientMutationId: String
-}
-
-type InviteUserToOrgPayload {
-  # Informs the user if the invite or invite email was successfully sent.
-  status: String
   clientMutationId: String
 }
 
@@ -1015,8 +1034,8 @@ type Mutation {
   sendPasswordResetLink(
     input: SendPasswordResetLinkInput!
   ): SendPasswordResetLinkPayload
-  # This mutation is used for sending a text message with a random six digit code used to verify the user.
-  sendPhoneCode(input: sendPhoneCodeInput!): sendPhoneCodePayload
+  # This mutation is used for setting a new phone number for a user, and sending a code for verifying the new number.
+  setPhoneNumber(input: SetPhoneNumberInput!): SetPhoneNumberPayload
   # This mutation allows users to give their credentials and be taken to the authentication page to verify their account
   signIn(input: SignInInput!): SignInPayload
   # This mutation allows for new users to sign up for our sites services.
@@ -1484,35 +1503,35 @@ type SendPasswordResetLinkPayload {
   clientMutationId: String
 }
 
-# This object is used to inform the user if any errors occurred while sending a code to their phone.
-type SendPhoneCodeError {
+type SetPhoneNumberPayload {
+  # `SetPhoneNumberUnion` returning either a `SetPhoneNumberResult`, or `SetPhoneNumberError` object.
+  result: SetPhoneNumberUnion
+  clientMutationId: String
+}
+
+# This union is used with the `setPhoneNumber` mutation, allowing for users to send a verification code to their phone, and support any errors that may occur
+union SetPhoneNumberUnion = SetPhoneNumberError | SetPhoneNumberResult
+
+# This object is used to inform the user if any errors occurred while setting a new phone number.
+type SetPhoneNumberError {
   # Error code to inform user what the issue is related to.
   code: Int
+
   # Description of the issue that was encountered.
   description: String
 }
 
-input sendPhoneCodeInput {
-  # The phone number that the text message will be sent to.
-  phoneNumber: PhoneNumber!
-  clientMutationId: String
-}
-
-type sendPhoneCodePayload {
-  # `SendPhoneCodeUnion` returning either a `SendPhoneCodeResult`, or `SendPhoneCodeError` object.
-  result: SendPhoneCodeUnion
-  clientMutationId: String
-}
-
-# This object is used to inform the user that no errors were encountered while sending their phone code.
-type SendPhoneCodeResult {
+# This object is used to inform the user that no errors were encountered while setting a new phone number.
+type SetPhoneNumberResult {
   # Informs the user if their phone code was successfully sent.
   status: String
 }
 
-# This union is used with the `sendPhoneCode` mutation, allowing for users to send
-# a verification code to their phone, and support any errors that may occur
-union SendPhoneCodeUnion = SendPhoneCodeError | SendPhoneCodeResult
+input SetPhoneNumberInput {
+  # The phone number that the text message will be sent to.
+  phoneNumber: PhoneNumber!
+  clientMutationId: String
+}
 
 # This object is used for showing none personal user details,
 # and is used for limiting admins to the personal details of users.
@@ -1598,7 +1617,7 @@ type SPF implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: Date @fake(type: pastDate)
   # The amount of DNS lookups.
   lookups: Int @examples(values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   # SPF record retrieved during the scan of the given domain.
@@ -1726,7 +1745,7 @@ type SSL implements Node {
   # The domain the scan was ran on.
   domain: Domain
   # The time when the scan was initiated.
-  timestamp: String @fake(type: pastDate)
+  timestamp: Date @fake(type: pastDate)
   # Raw scan result.
   rawJson: JSON
   # Guidance tags found during scan.
@@ -1886,6 +1905,14 @@ type UpdateOrganizationPayload {
   clientMutationId: String
 }
 
+# This object is used to inform the user if any errors occurred while updating their password.
+type UpdateUserPasswordError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input UpdateUserPasswordInput {
   # The users current password to verify it is the current user.
   currentPassword: String!
@@ -1897,9 +1924,46 @@ input UpdateUserPasswordInput {
 }
 
 type UpdateUserPasswordPayload {
-  # The status if the user profile update was successful.
-  status: String
+  # `UpdateUserPasswordUnion` returning either a `UpdateUserPasswordResultType`, or `UpdateUserPasswordError` object.
+  result: UpdateUserPasswordUnion
   clientMutationId: String
+}
+
+# This object is used to inform the user that no errors were encountered while updating their password.
+type UpdateUserPasswordResultType {
+  # Informs the user if their password was successfully updated.
+  status: String
+}
+
+# This union is used with the `updateUserPassword` mutation, allowing for users to
+# update their password, and support any errors that may occur
+union UpdateUserPasswordUnion =
+    UpdateUserPasswordError
+  | UpdateUserPasswordResultType
+
+type UpdateUserProfilePayload {
+  # `UpdateUserProfileUnion` returning either a `UpdateUserProfileResult`, or `UpdateUserProfileError` object.
+  result: UpdateUserProfileUnion
+  clientMutationId: String
+}
+
+# This union is used with the `updateUserProfile` mutation, allowing for users to update their profile, and support any errors that may occur
+union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
+
+# This object is used to inform the user if any errors occurred while updating their profile.
+type UpdateUserProfileError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user that no errors were encountered while resetting their password.
+type UpdateUserProfileResult {
+  # Informs the user if the password reset was successful, and to redirect to sign in page.
+  status: String
+  # Return the newly updated user information.
+  user: PersonalUser
 }
 
 input UpdateUserProfileInput {
@@ -1909,16 +1973,8 @@ input UpdateUserProfileInput {
   userName: EmailAddress
   # The updated preferred language the user wishes to change to.
   preferredLang: LanguageEnums
-  # The updated phone number the user wishes to change to.
-  phoneNumber: PhoneNumber
   # The method in which the user wishes to have their TFA code sent via.
   tfaSendMethod: TFASendMethodEnum
-  clientMutationId: String
-}
-
-type UpdateUserProfilePayload {
-  # The status if the user profile update was successful.
-  status: String
   clientMutationId: String
 }
 
@@ -1970,7 +2026,7 @@ type VerifiedDomain implements Node {
     ]
   )
   # The last time that a scan was ran on this domain.
-  lastRan: DateTime @fake(type: recentDate)
+  lastRan: Date @fake(type: recentDate)
   # The organization that this domain belongs to.
   organizations(
     after: String
@@ -2066,15 +2122,32 @@ type VerifiedOrganizationEdge {
   cursor: String!
 }
 
-input VerifyAccountInput {
-  # Token sent via email, and located in url.
-  verifyTokenString: String!
+type VerifyAccountPayload {
+  # `VerifyAccountUnion` returning either a `VerifyAccountResult`, or `VerifyAccountError` object.
+  result: VerifyAccountUnion
   clientMutationId: String
 }
 
-type VerifyAccountPayload {
-  # Informs user if account was successfully verified.
+# This union is used with the `verifyAccount` mutation, allowing for users to verify their account, and support any errors that may occur
+union VerifyAccountUnion = VerifyAccountError | VerifyAccountResult
+
+# This object is used to inform the user if any errors occurred while verifying their account.
+type VerifyAccountError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user that no errors were encountered while verifying their account.
+type VerifyAccountResult {
+  # Informs the user if their account was successfully verified.
   status: String
+}
+
+input VerifyAccountInput {
+  # Token sent via email, and located in url.
+  verifyTokenString: String!
   clientMutationId: String
 }
 
@@ -2090,15 +2163,35 @@ type VerifyOrganizationPayload {
   clientMutationId: String
 }
 
-input verifyPhoneNumberInput {
-  # The two factor code that was received via text message.
-  twoFactorCode: Int!
+type verifyPhoneNumberPayload {
+  # `VerifyPhoneNumberUnion` returning either a `VerifyPhoneNumberResult`, or `VerifyPhoneNumberError` object.
+  result: VerifyPhoneNumberUnion
   clientMutationId: String
 }
 
-type verifyPhoneNumberPayload {
-  # The status of verifying the two factor authentication.
+# This union is used with the `verifyPhoneNumber` mutation, allowing for users to verify their phone number, and support any errors that may occur
+union VerifyPhoneNumberUnion = VerifyPhoneNumberError | VerifyPhoneNumberResult
+
+# This object is used to inform the user if any errors occurred while verifying their phone number.
+type VerifyPhoneNumberError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user that no errors were encountered while verifying their phone number.
+type VerifyPhoneNumberResult {
+  # Informs the user if their phone number was successfully verified.
   status: String
+  # The user who verified their phone number.
+  user: PersonalUser
+}
+
+input verifyPhoneNumberInput {
+  # The two factor code that was received via text message.
+  twoFactorCode: Int!
   clientMutationId: String
 }
 
@@ -2109,9 +2202,9 @@ type WebScan {
   # Hyper Text Transfer Protocol Secure scan results.
   https(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: Date
     # End date for date filter.
-    endDate: DateTime
+    endDate: Date
     after: String
     first: Int
     before: String
@@ -2120,9 +2213,9 @@ type WebScan {
   # Secure Socket Layer scan results.
   ssl(
     # Start date for date filter.
-    starDate: DateTime
+    startDate: Date
     # End date for date filter.
-    endDate: DateTime
+    endDate: Date
     after: String
     first: Int
     before: String

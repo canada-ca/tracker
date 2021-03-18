@@ -1,10 +1,6 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
-import { GraphQLJSON } from 'graphql-scalars'
+import { connectionArgs, globalIdField } from 'graphql-relay'
+import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
@@ -26,9 +22,9 @@ export const spfType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLString,
+      type: GraphQLDate,
       description: `The time the scan was initiated.`,
-      resolve: ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => new Date(timestamp),
     },
     lookups: {
       type: GraphQLInt,
@@ -149,16 +145,4 @@ the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
 protocol is where ADministrative Management Domains (ADMDs) can explicitly
 authorize the hosts that are allowed to use their domain names, and a
 receiving host can check such authorization.`,
-})
-
-export const spfConnection = connectionDefinitions({
-  name: 'SPF',
-  nodeType: spfType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of spf scans related to a given domain.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

@@ -1,12 +1,8 @@
-import { GraphQLInt, GraphQLObjectType } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
-import { GraphQLDateTime } from 'graphql-scalars'
+import { GraphQLObjectType } from 'graphql'
+import { connectionArgs, globalIdField } from 'graphql-relay'
+import { GraphQLDate } from 'graphql-scalars'
 
-import { dkimResultConnection } from './dkim-result'
+import { dkimResultConnection } from './dkim-result-connection'
 import { dkimResultOrder } from '../inputs'
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
@@ -26,7 +22,7 @@ export const dkimType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDateTime,
+      type: GraphQLDate,
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => new Date(timestamp),
     },
@@ -35,11 +31,11 @@ export const dkimType = new GraphQLObjectType({
       args: {
         orderBy: {
           type: dkimResultOrder,
-          description: 'Ordering options for dkim result connections.',
+          description: 'Ordering options for DKIM result connections.',
         },
         ...connectionArgs,
       },
-      description: 'Individual scans results for each dkim selector.',
+      description: 'Individual scans results for each DKIM selector.',
       resolve: async (
         { _id },
         args,
@@ -59,16 +55,4 @@ organization that owns the signing domain to claim some
 responsibility for a message by associating the domain with the
 message.  This can be an author's organization, an operational relay,
 or one of their agents.`,
-})
-
-export const dkimConnection = connectionDefinitions({
-  name: 'DKIM',
-  nodeType: dkimType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of dkim scans related to a given domain.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

@@ -14,7 +14,7 @@ import { affiliationConnectionLoaderByUserId } from '../../../affiliation/loader
 import { cleanseInput } from '../../../validators'
 import { affiliationConnection } from '../../../affiliation/objects'
 import { userPersonalType } from '../index'
-import { LanguageEnums } from '../../../enums'
+import { LanguageEnums, TfaSendMethodEnum } from '../../../enums'
 
 const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
 
@@ -61,6 +61,12 @@ describe('given the user object', () => {
 
       expect(demoType).toHaveProperty('emailValidated')
       expect(demoType.emailValidated.type).toMatchObject(GraphQLBoolean)
+    })
+    it('has a tfaSendMethod field', () => {
+      const demoType = userPersonalType.getFields()
+
+      expect(demoType).toHaveProperty('tfaSendMethod')
+      expect(demoType.tfaSendMethod.type).toMatchObject(TfaSendMethodEnum)
     })
     it('has an affiliations field', () => {
       const demoType = userPersonalType.getFields()
@@ -244,6 +250,15 @@ describe('given the user object', () => {
         expect(
           demoType.emailValidated.resolve({ emailValidated: true }),
         ).toEqual(true)
+      })
+    })
+    describe('testing the tfaSendMethod field', () => {
+      it('returns the resolved value', () => {
+        const demoType = userPersonalType.getFields()
+
+        expect(
+          demoType.tfaSendMethod.resolve({ tfaSendMethod: 'phone' }),
+        ).toEqual('phone')
       })
     })
     describe('testing the affiliations field', () => {

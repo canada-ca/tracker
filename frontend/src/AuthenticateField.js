@@ -35,6 +35,11 @@ const AuthenticateField = WithPseudoBox(function AuthenticateField({
         We've sent an SMS to your registered phone number with an authentication
         code to sign into Tracker.
       </Trans>
+    ) : sendMethod.toLowerCase() === 'verifyphone' ? (
+      <Trans>
+        We've sent an SMS to your new phone number with an authentication code
+        to confirm this change.
+      </Trans>
     ) : (
       ''
     )

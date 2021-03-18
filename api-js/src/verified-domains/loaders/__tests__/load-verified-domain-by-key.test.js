@@ -144,7 +144,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
           await loader.load(expectedDomain._key)
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find verified domain. Please try again.'),
+            new Error('Unable to load verified domain(s). Please try again.'),
           )
         }
 
@@ -174,7 +174,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
           await loader.load(expectedDomain._key)
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find verified domain. Please try again.'),
+            new Error('Unable to load verified domain(s). Please try again.'),
           )
         }
 

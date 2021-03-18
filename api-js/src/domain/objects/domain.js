@@ -1,16 +1,10 @@
 import {
-  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql'
-
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
+import { connectionArgs, globalIdField } from 'graphql-relay'
 
 import { domainStatus } from './domain-status'
 import { PeriodEnums } from '../../enums'
@@ -123,7 +117,7 @@ export const domainType = new GraphQLObjectType({
             `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
           )
           throw new Error(
-            `Unable to retrieve dmarc report information for: ${domain}`,
+            `Unable to retrieve DMARC report information for: ${domain}`,
           )
         }
 
@@ -163,7 +157,7 @@ export const domainType = new GraphQLObjectType({
             `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
           )
           throw new Error(
-            `Unable to retrieve dmarc report information for: ${domain}`,
+            `Unable to retrieve DMARC report information for: ${domain}`,
           )
         }
 
@@ -183,16 +177,4 @@ export const domainType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',
-})
-
-export const domainConnection = connectionDefinitions({
-  name: 'Domain',
-  nodeType: domainType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of domains the user has access to.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

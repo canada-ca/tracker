@@ -667,7 +667,7 @@ describe('when given the load ssl guidance tag connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `guidanceTag` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `GuidanceTag` connection.',
               ),
             )
           }
@@ -699,7 +699,7 @@ describe('when given the load ssl guidance tag connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `guidanceTag` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `GuidanceTag` connection is not supported.',
               ),
             )
           }
@@ -731,7 +731,7 @@ describe('when given the load ssl guidance tag connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `guidanceTag` connection cannot be less than zero.',
+                  '`first` on the `GuidanceTag` connection cannot be less than zero.',
                 ),
               )
             }
@@ -762,7 +762,7 @@ describe('when given the load ssl guidance tag connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `guidanceTag` connection cannot be less than zero.',
+                  '`last` on the `GuidanceTag` connection cannot be less than zero.',
                 ),
               )
             }
@@ -795,7 +795,7 @@ describe('when given the load ssl guidance tag connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `1000` records on the `guidanceTag` connection exceeds the `first` limit of 100 records.',
+                  'Requesting `1000` records on the `GuidanceTag` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -826,7 +826,7 @@ describe('when given the load ssl guidance tag connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting `500` records on the `guidanceTag` connection exceeds the `last` limit of 100 records.',
+                  'Requesting `500` records on the `GuidanceTag` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -937,7 +937,7 @@ describe('when given the load ssl guidance tag connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load ssl guidance tags. Please try again.'),
+            new Error('Unable to load SSL guidance tag(s). Please try again.'),
           )
         }
 
@@ -973,7 +973,7 @@ describe('when given the load ssl guidance tag connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load ssl guidance tags. Please try again.'),
+            new Error('Unable to load SSL guidance tag(s). Please try again.'),
           )
         }
 

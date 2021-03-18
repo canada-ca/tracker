@@ -58,7 +58,7 @@ export const requestScan = new mutationWithClientMutationId({
         `User: ${userKey} attempted to step a one time scan on: ${requestedDomain} however domain cannot be found.`,
       )
       throw new Error(
-        i18n._(t`Unable to request a on time scan on this domain.`),
+        i18n._(t`Unable to request a on time scan on an unknown domain.`),
       )
     }
 
@@ -70,7 +70,9 @@ export const requestScan = new mutationWithClientMutationId({
         `User: ${userKey} attempted to step a one time scan on: ${domain.domain} however they do not have permission to do so.`,
       )
       throw new Error(
-        i18n._(t`Unable to request a on time scan on this domain.`),
+        i18n._(
+          t`Permission Denied: Please contact organization user for help with scanning this domain.`,
+        ),
       )
     }
 

@@ -4,11 +4,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
+import { connectionArgs, globalIdField } from 'graphql-relay'
 
 import { verifiedDomainOrder } from '../../verified-domains/inputs'
 import { verifiedDomainConnection } from '../../verified-domains/objects'
@@ -102,16 +98,4 @@ export const verifiedOrganizationType = new GraphQLObjectType({
   interfaces: [nodeInterface],
   description:
     'Verified Organization object containing information for a given Organization.',
-})
-
-export const verifiedOrganizationConnection = connectionDefinitions({
-  name: 'VerifiedOrganization',
-  nodeType: verifiedOrganizationType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of verified organizations.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

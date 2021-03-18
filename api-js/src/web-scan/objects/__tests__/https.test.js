@@ -1,7 +1,7 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
-import { GraphQLDateTime, GraphQLJSON } from 'graphql-scalars'
+import { GraphQLDate, GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
@@ -31,7 +31,7 @@ describe('given the https gql object', () => {
       const demoType = httpsType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDate)
     })
     it('has a implementation field', () => {
       const demoType = httpsType.getFields()

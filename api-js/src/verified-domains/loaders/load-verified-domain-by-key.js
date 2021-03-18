@@ -7,20 +7,21 @@ export const verifiedDomainLoaderByKey = (query, i18n) =>
 
     try {
       cursor = await query`
-        FOR domain IN domains
-          FILTER domain._key IN ${keys}
-          LET verifiedDomain = (LENGTH(
-            FOR v, e IN INBOUND domain._id claims FILTER v.verified == true RETURN v._key
-          ) > 0 ? true : false)
-          FILTER verifiedDomain == true
-          RETURN MERGE(domain, { id: domain._key, _type: "verifiedDomain" })
+          WITH domains
+          FOR domain IN domains
+            FILTER domain._key IN ${keys}
+            LET verifiedDomain = (LENGTH(
+              FOR v, e IN INBOUND domain._id claims FILTER v.verified == true RETURN v._key
+            ) > 0 ? true : false)
+            FILTER verifiedDomain == true
+            RETURN MERGE(domain, { id: domain._key, _type: "verifiedDomain" })
       `
     } catch (err) {
       console.error(
         `Database error occurred when running verifiedDomainLoaderByKey: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find verified domain. Please try again.`),
+        i18n._(t`Unable to load verified domain(s). Please try again.`),
       )
     }
 
@@ -34,7 +35,7 @@ export const verifiedDomainLoaderByKey = (query, i18n) =>
         `Cursor error occurred during verifiedDomainLoaderByKey: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find verified domain. Please try again.`),
+        i18n._(t`Unable to load verified domain(s). Please try again.`),
       )
     }
 

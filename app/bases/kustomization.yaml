@@ -30,3 +30,4 @@ resources:
 - certificate.yaml
 - arangodb-operator.yaml
 - arangodb-deployment.yaml
+- issuers.yaml

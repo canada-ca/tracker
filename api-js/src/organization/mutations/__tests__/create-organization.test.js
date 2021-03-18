@@ -363,7 +363,7 @@ describe('create an organization', () => {
 
           const error = [
             new GraphQLError(
-              'Unable to create organization. Please try again.',
+              'Organization name already in use. Please try again with a different name.',
             ),
           ]
 

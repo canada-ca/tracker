@@ -174,51 +174,54 @@ export const affiliationConnectionLoaderByOrgId = (
   let filteredAffiliationCursor
   try {
     filteredAffiliationCursor = await query`
-    LET affiliationKeys = (FOR v, e IN 1..1 ANY ${orgId} affiliations RETURN e._key)
-    
-    LET retrievedAffiliations = (
-      FOR affiliation IN affiliations
-        FILTER affiliation._key IN affiliationKeys
-        LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
-        LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-        ${afterTemplate}
-        ${beforeTemplate}
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
-    )
+      WITH affiliations, organizations, users
+      LET affiliationKeys = (FOR v, e IN 1..1 ANY ${orgId} affiliations RETURN e._key)
+      
+      LET retrievedAffiliations = (
+        FOR affiliation IN affiliations
+          FILTER affiliation._key IN affiliationKeys
+          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+          ${afterTemplate}
+          ${beforeTemplate}
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR affiliation IN affiliations
-        FILTER affiliation._key IN affiliationKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} affiliation._key ${sortString} LIMIT 1
-        RETURN affiliation
-    ) > 0 ? true : false)
+      LET hasNextPage = (LENGTH(
+        FOR affiliation IN affiliations
+          FILTER affiliation._key IN affiliationKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} affiliation._key ${sortString} LIMIT 1
+          RETURN affiliation
+      ) > 0 ? true : false)
 
-    LET hasPreviousPage = (LENGTH(
-      FOR affiliation IN affiliations
-        FILTER affiliation._key IN affiliationKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} affiliation._key ${sortString} LIMIT 1
-        RETURN affiliation
-    ) > 0 ? true : false)
+      LET hasPreviousPage = (LENGTH(
+        FOR affiliation IN affiliations
+          FILTER affiliation._key IN affiliationKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} affiliation._key ${sortString} LIMIT 1
+          RETURN affiliation
+      ) > 0 ? true : false)
 
-    RETURN {
-      "affiliations": retrievedAffiliations,
-      "totalCount": LENGTH(affiliationKeys),
-      "hasNextPage": hasNextPage,
-      "hasPreviousPage": hasPreviousPage,
-      "startKey": FIRST(retrievedAffiliations)._key,
-      "endKey": LAST(retrievedAffiliations)._key
-    }
+      RETURN {
+        "affiliations": retrievedAffiliations,
+        "totalCount": LENGTH(affiliationKeys),
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "startKey": FIRST(retrievedAffiliations)._key,
+        "endKey": LAST(retrievedAffiliations)._key
+      }
     `
   } catch (err) {
     console.error(
       `Database error occurred while user: ${userKey} was trying to query affiliations in affiliationConnectionLoaderByOrgId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to query affiliations. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to query affiliation(s). Please try again.`),
+    )
   }
 
   let filteredAffiliations
@@ -228,7 +231,7 @@ export const affiliationConnectionLoaderByOrgId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to gather affiliations in affiliationConnectionLoaderByOrgId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load affiliations. Please try again.`))
+    throw new Error(i18n._(t`Unable to load affiliation(s). Please try again.`))
   }
 
   if (filteredAffiliations.affiliations.length === 0) {

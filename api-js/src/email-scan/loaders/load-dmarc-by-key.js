@@ -7,6 +7,7 @@ export const dmarcLoaderByKey = (query, userKey, i18n) =>
 
     try {
       cursor = await query`
+        WITH dmarc
         FOR dmarcScan IN dmarc
           FILTER dmarcScan._key IN ${keys}
           RETURN MERGE({ id: dmarcScan._key, _type: "dmarc" }, dmarcScan)
@@ -15,7 +16,9 @@ export const dmarcLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running dmarcLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find dmarc scan. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to find DMARC scan(s). Please try again.`),
+      )
     }
 
     const dmarcMap = {}
@@ -27,7 +30,9 @@ export const dmarcLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running dmarcLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find dmarc scan. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to find DMARC scan(s). Please try again.`),
+      )
     }
     return keys.map((key) => dmarcMap[key])
   })

@@ -1,4 +1,7 @@
-import { resetPasswordErrorType, resetPasswordResultType } from '../../objects/index'
+import {
+  resetPasswordErrorType,
+  resetPasswordResultType,
+} from '../../objects/index'
 import { resetPasswordUnion } from '../reset-password-union'
 
 describe('given the resetPasswordUnion', () => {

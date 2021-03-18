@@ -232,7 +232,7 @@ describe('authenticate user account', () => {
               authenticate: {
                 result: {
                   code: 400,
-                  description: 'Unable to authenticate. Please try again.',
+                  description: 'Token value incorrect, please sign in again.',
                 },
               },
             },
@@ -303,7 +303,7 @@ describe('authenticate user account', () => {
               authenticate: {
                 result: {
                   code: 400,
-                  description: 'Unable to authenticate. Please try again.',
+                  description: 'Token value incorrect, please sign in again.',
                 },
               },
             },
@@ -458,7 +458,7 @@ describe('authenticate user account', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to authenticate. Please try again.'),
+            new GraphQLError('Incorrect TFA code. Please sign in again.'),
           ]
 
           expect(response.errors).toEqual(error)

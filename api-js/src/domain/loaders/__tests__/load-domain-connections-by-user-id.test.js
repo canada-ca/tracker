@@ -2170,7 +2170,7 @@ describe('given the load domain connections by user id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to query domains. Please try again.'),
+              new Error('Unable to query domain(s). Please try again.'),
             )
           }
 
@@ -2206,7 +2206,7 @@ describe('given the load domain connections by user id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load domains. Please try again.'),
+              new Error('Unable to load domain(s). Please try again.'),
             )
           }
 

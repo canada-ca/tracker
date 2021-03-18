@@ -180,7 +180,15 @@ describe('invite user to org', () => {
                           preferredLang: ENGLISH
                         }
                       ) {
-                        status
+                        result {
+                          ... on InviteUserToOrgResult {
+                            status
+                          }
+                          ... on InviteUserToOrgError {
+                            code
+                            description
+                          }
+                        }
                       }
                     }
                   `,
@@ -218,8 +226,10 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
+                    result: {
+                      status:
+                        'Successfully invited user to organization, and sent notification email.',
+                    },
                   },
                 },
               }
@@ -264,7 +274,15 @@ describe('invite user to org', () => {
                         preferredLang: ENGLISH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -302,8 +320,10 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
+                    result: {
+                      status:
+                        'Successfully invited user to organization, and sent notification email.',
+                    },
                   },
                 },
               }
@@ -348,7 +368,15 @@ describe('invite user to org', () => {
                         preferredLang: ENGLISH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -386,8 +414,10 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
+                    result: {
+                      status:
+                        'Successfully invited user to organization, and sent notification email.',
+                    },
                   },
                 },
               }
@@ -419,7 +449,15 @@ describe('invite user to org', () => {
                         preferredLang: ENGLISH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -459,8 +497,10 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
+                    result: {
+                      status:
+                        'Successfully sent invitation to service, and organization email.',
+                    },
                   },
                 },
               }
@@ -503,7 +543,15 @@ describe('invite user to org', () => {
                         preferredLang: ENGLISH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -543,8 +591,10 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
+                    result: {
+                      status:
+                        'Successfully sent invitation to service, and organization email.',
+                    },
                   },
                 },
               }
@@ -588,7 +638,15 @@ describe('invite user to org', () => {
                         preferredLang: ENGLISH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -628,8 +686,10 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
+                    result: {
+                      status:
+                        'Successfully sent invitation to service, and organization email.',
+                    },
                   },
                 },
               }
@@ -698,7 +758,15 @@ describe('invite user to org', () => {
                         preferredLang: ENGLISH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -736,8 +804,10 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
+                    result: {
+                      status:
+                        'Successfully invited user to organization, and sent notification email.',
+                    },
                   },
                 },
               }
@@ -782,7 +852,15 @@ describe('invite user to org', () => {
                         preferredLang: ENGLISH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -820,8 +898,10 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
+                    result: {
+                      status:
+                        'Successfully invited user to organization, and sent notification email.',
+                    },
                   },
                 },
               }
@@ -854,7 +934,15 @@ describe('invite user to org', () => {
                         preferredLang: ENGLISH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -894,8 +982,10 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
+                    result: {
+                      status:
+                        'Successfully sent invitation to service, and organization email.',
+                    },
                   },
                 },
               }
@@ -939,7 +1029,15 @@ describe('invite user to org', () => {
                         preferredLang: ENGLISH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -979,8 +1077,10 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
+                    result: {
+                      status:
+                        'Successfully sent invitation to service, and organization email.',
+                    },
                   },
                 },
               }
@@ -1037,7 +1137,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1071,13 +1179,18 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to invite yourself to an org. Please try again.',
-            ),
-          ]
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 400,
+                  description: 'Unable to invite yourself to an org.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to invite themselves to 1.`,
           ])
@@ -1108,7 +1221,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1142,11 +1263,18 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
-          ]
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 400,
+                  description: 'Unable to invite user to unknown organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to invite user: test@email.gc.ca to 1 however there is no org associated with that id.`,
           ])
@@ -1202,7 +1330,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1236,11 +1372,19 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
-          ]
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 403,
+                  description:
+                    'Permission Denied: Please contact organization admin for help with user invitations.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: user but does not have permission to do so.`,
           ])
@@ -1300,7 +1444,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1334,11 +1486,19 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
-          ]
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 403,
+                  description:
+                    'Permission Denied: Please contact organization admin for help with user invitations.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: user but does not have permission to do so.`,
           ])
@@ -1398,7 +1558,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1432,11 +1600,19 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
-          ]
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 403,
+                  description:
+                    'Permission Denied: Please contact organization admin for help with user invitations.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: super_admin but does not have permission to do so.`,
           ])
@@ -1516,7 +1692,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1551,7 +1735,9 @@ describe('invite user to org', () => {
           )
 
           const error = [
-            new GraphQLError('Unable to invite user. Please try again.'),
+            new GraphQLError(
+              'Unable to add user to organization. Please try again.',
+            ),
           ]
 
           expect(response.errors).toEqual(error)
@@ -1585,7 +1771,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1719,7 +1913,15 @@ describe('invite user to org', () => {
                         preferredLang: FRENCH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -1757,7 +1959,9 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -1802,7 +2006,15 @@ describe('invite user to org', () => {
                         preferredLang: FRENCH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -1840,7 +2052,9 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -1885,7 +2099,15 @@ describe('invite user to org', () => {
                         preferredLang: FRENCH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -1923,7 +2145,9 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -1956,7 +2180,15 @@ describe('invite user to org', () => {
                         preferredLang: FRENCH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -1996,7 +2228,9 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2037,7 +2271,15 @@ describe('invite user to org', () => {
                         preferredLang: FRENCH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2077,7 +2319,9 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2118,7 +2362,15 @@ describe('invite user to org', () => {
                         preferredLang: FRENCH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2158,7 +2410,9 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2224,7 +2478,15 @@ describe('invite user to org', () => {
                         preferredLang: FRENCH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2262,7 +2524,9 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2307,7 +2571,15 @@ describe('invite user to org', () => {
                         preferredLang: FRENCH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2345,7 +2617,9 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2378,7 +2652,15 @@ describe('invite user to org', () => {
                         preferredLang: FRENCH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2418,7 +2700,9 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2459,7 +2743,15 @@ describe('invite user to org', () => {
                         preferredLang: FRENCH
                       }
                     ) {
-                      status
+                      result {
+                        ... on InviteUserToOrgResult {
+                          status
+                        }
+                        ... on InviteUserToOrgError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2499,7 +2791,9 @@ describe('invite user to org', () => {
               const expectedResponse = {
                 data: {
                   inviteUserToOrg: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -2553,7 +2847,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2587,9 +2889,18 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to invite themselves to 1.`,
           ])
@@ -2620,7 +2931,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2654,9 +2973,18 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to invite user: test@email.gc.ca to 1 however there is no org associated with that id.`,
           ])
@@ -2716,7 +3044,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2750,9 +3086,18 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 403,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: user but does not have permission to do so.`,
           ])
@@ -2812,7 +3157,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2846,9 +3199,18 @@ describe('invite user to org', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              inviteUserToOrg: {
+                result: {
+                  code: 403,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to invite user: test@email.gc.ca to org: ${org._key} with role: super_admin but does not have permission to do so.`,
           ])
@@ -2928,7 +3290,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2995,7 +3365,15 @@ describe('invite user to org', () => {
                     preferredLang: FRENCH
                   }
                 ) {
-                  status
+                  result {
+                    ... on InviteUserToOrgResult {
+                      status
+                    }
+                    ... on InviteUserToOrgError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,

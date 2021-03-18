@@ -1078,7 +1078,7 @@ describe('given the load domain connection using org id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                `You must provide a \`first\` or \`last\` value to properly paginate the \`verifiedDomain\` connection.`,
+                'You must provide a `first` or `last` value to properly paginate the `VerifiedDomain` connection.',
               ),
             )
           }
@@ -1107,7 +1107,7 @@ describe('given the load domain connection using org id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                `Passing both \`first\` and \`last\` to paginate the \`verifiedDomain\` connection is not supported.`,
+                'Passing both `first` and `last` to paginate the `VerifiedDomain` connection is not supported.',
               ),
             )
           }
@@ -1136,7 +1136,7 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `\`first\` on the \`verifiedDomain\` connection cannot be less than zero.`,
+                  '`first` on the `VerifiedDomain` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1164,7 +1164,7 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `\`last\` on the \`verifiedDomain\` connection cannot be less than zero.`,
+                  '`last` on the `VerifiedDomain` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1194,7 +1194,7 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `Requesting \`1000\` records on the \`verifiedDomain\` connection exceeds the \`first\` limit of 100 records.`,
+                  'Requesting `1000` records on the `VerifiedDomain` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -1222,7 +1222,7 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `Requesting \`1000\` records on the \`verifiedDomain\` connection exceeds the \`last\` limit of 100 records.`,
+                  'Requesting `1000` records on the `VerifiedDomain` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -1322,7 +1322,7 @@ describe('given the load domain connection using org id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load domains. Please try again.'),
+              new Error('Unable to load verified domain(s). Please try again.'),
             )
           }
 
@@ -1358,7 +1358,7 @@ describe('given the load domain connection using org id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load domains. Please try again.'),
+              new Error('Unable to load verified domain(s). Please try again.'),
             )
           }
 

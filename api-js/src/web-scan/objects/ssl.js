@@ -1,16 +1,11 @@
 import {
   GraphQLBoolean,
-  GraphQLInt,
   GraphQLList,
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
-import { GraphQLJSON } from 'graphql-scalars'
+import { connectionArgs, globalIdField } from 'graphql-relay'
+import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
@@ -78,9 +73,9 @@ export const sslType = new GraphQLObjectType({
         supportsEcdhKeyExchange,
     },
     timestamp: {
-      type: GraphQLString,
+      type: GraphQLDate,
       description: `The time when the scan was initiated.`,
-      resolve: ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => new Date(timestamp),
     },
     weakCiphers: {
       type: GraphQLList(GraphQLString),
@@ -187,16 +182,4 @@ export const sslType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: `Secure Socket Layer scan results.`,
-})
-
-export const sslConnection = connectionDefinitions({
-  name: 'SSL',
-  nodeType: sslType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of https scans for a given domain.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

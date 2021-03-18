@@ -1,5 +1,5 @@
 import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql'
-import { connectionDefinitions, globalIdField } from 'graphql-relay'
+import { globalIdField } from 'graphql-relay'
 
 export const fullPassTableType = new GraphQLObjectType({
   name: 'FullPassTable',
@@ -46,18 +46,6 @@ export const fullPassTableType = new GraphQLObjectType({
       type: GraphQLInt,
       description: 'Total messages from this sender.',
       resolve: ({ totalMessages }) => totalMessages,
-    },
-  }),
-})
-
-export const fullPassConnection = connectionDefinitions({
-  name: 'FullPassTable',
-  nodeType: fullPassTableType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of full passes the user has access to.',
-      resolve: ({ totalCount }) => totalCount,
     },
   }),
 })

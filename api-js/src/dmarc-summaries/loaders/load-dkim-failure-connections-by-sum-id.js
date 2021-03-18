@@ -12,7 +12,9 @@ export const dkimFailureLoaderConnectionsBySumId = (
     console.warn(
       `SummaryId was undefined when user: ${userKey} attempted to load dkim failures in dkimFailureLoaderConnectionsBySumId.`,
     )
-    throw new Error(i18n._(t`Unable to load dkim failures. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load DKIM failure data. Please try again.`),
+    )
   }
 
   let afterTemplate = aql``
@@ -95,6 +97,8 @@ export const dkimFailureLoaderConnectionsBySumId = (
   let requestedDkimFailureInfo
   try {
     requestedDkimFailureInfo = await query`
+      WITH dmarcSummaries
+
       LET dkimFailures = FLATTEN(
         FOR summary IN dmarcSummaries
           FILTER summary._id == ${summaryId}
@@ -136,7 +140,9 @@ export const dkimFailureLoaderConnectionsBySumId = (
     console.error(
       `Database error occurred while user: ${userKey} was trying to gather dkim failures in dkimFailureLoaderConnectionsBySumId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load dkim failures. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load DKIM failure data. Please try again.`),
+    )
   }
 
   let dkimFailureInfo
@@ -146,7 +152,9 @@ export const dkimFailureLoaderConnectionsBySumId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to gather dkim failures in dkimFailureLoaderConnectionsBySumId, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load dkim failures. Please try again.`))
+    throw new Error(
+      i18n._(t`Unable to load DKIM failure data. Please try again.`),
+    )
   }
 
   if (dkimFailureInfo.dkimFailures.length === 0) {

@@ -111,7 +111,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find dkim guidance tags. Please try again.'),
+            new Error('Unable to find DKIM guidance tag(s). Please try again.'),
           )
         }
 
@@ -134,7 +134,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to find dkim guidance tags. Please try again.'),
+            new Error('Unable to find DKIM guidance tag(s). Please try again.'),
           )
         }
 

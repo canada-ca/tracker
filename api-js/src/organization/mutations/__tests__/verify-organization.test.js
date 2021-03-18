@@ -465,9 +465,7 @@ describe('removing an organization', () => {
           )
 
           const error = [
-            new GraphQLError(
-              'Unable to verify organization. Please try again.',
-            ),
+            new GraphQLError('Unable to verify unknown organization.'),
           ]
 
           expect(response.errors).toEqual(error)
@@ -558,7 +556,7 @@ describe('removing an organization', () => {
 
             const error = [
               new GraphQLError(
-                'Unable to verify organization. Please try again.',
+                'Permission Denied: Please contact super admin for help with verifying this organization.',
               ),
             ]
 
@@ -649,7 +647,7 @@ describe('removing an organization', () => {
 
             const error = [
               new GraphQLError(
-                'Unable to verify organization. Please try again.',
+                'Permission Denied: Please contact super admin for help with verifying this organization.',
               ),
             ]
 

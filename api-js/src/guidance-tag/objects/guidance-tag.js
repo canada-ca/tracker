@@ -1,10 +1,5 @@
-import {
-  GraphQLInt,
-  GraphQLList,
-  GraphQLObjectType,
-  GraphQLString,
-} from 'graphql'
-import { connectionDefinitions, globalIdField } from 'graphql-relay'
+import { GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
+import { globalIdField } from 'graphql-relay'
 
 import { refLinksType } from './ref-links'
 import { nodeInterface } from '../../node'
@@ -43,16 +38,4 @@ export const guidanceTagType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-})
-
-export const guidanceTagConnection = connectionDefinitions({
-  name: 'GuidanceTag',
-  nodeType: guidanceTagType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of guidance tags for a given scan type.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

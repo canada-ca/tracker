@@ -1017,7 +1017,7 @@ describe('when given the load spf connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'You must provide a `first` or `last` value to properly paginate the `spf` connection.',
+                'You must provide a `first` or `last` value to properly paginate the `SPF` connection.',
               ),
             )
           }
@@ -1048,7 +1048,7 @@ describe('when given the load spf connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Passing both `first` and `last` to paginate the `spf` connection is not supported.',
+                'Passing both `first` and `last` to paginate the `SPF` connection is not supported.',
               ),
             )
           }
@@ -1079,7 +1079,7 @@ describe('when given the load spf connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`first` on the `spf` connection cannot be less than zero.',
+                  '`first` on the `SPF` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1109,7 +1109,7 @@ describe('when given the load spf connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  '`last` on the `spf` connection cannot be less than zero.',
+                  '`last` on the `SPF` connection cannot be less than zero.',
                 ),
               )
             }
@@ -1141,7 +1141,7 @@ describe('when given the load spf connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 1000 records on the `spf` connection exceeds the `first` limit of 100 records.',
+                  'Requesting 1000 records on the `SPF` connection exceeds the `first` limit of 100 records.',
                 ),
               )
             }
@@ -1171,7 +1171,7 @@ describe('when given the load spf connection function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Requesting 500 records on the `spf` connection exceeds the `last` limit of 100 records.',
+                  'Requesting 500 records on the `SPF` connection exceeds the `last` limit of 100 records.',
                 ),
               )
             }
@@ -1278,7 +1278,7 @@ describe('when given the load spf connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load spf scans. Please try again.'),
+            new Error('Unable to load SPF scan(s). Please try again.'),
           )
         }
 
@@ -1314,7 +1314,7 @@ describe('when given the load spf connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load spf scans. Please try again.'),
+            new Error('Unable to load SPF scan(s). Please try again.'),
           )
         }
 

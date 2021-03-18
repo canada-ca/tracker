@@ -7,6 +7,7 @@ export const domainLoaderByKey = (query, userKey, i18n) =>
 
     try {
       cursor = await query`
+        WITH domains
         FOR domain IN domains
           FILTER domain._key IN ${ids}
           RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
@@ -15,7 +16,7 @@ export const domainLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Database error occurred when user: ${userKey} running domainLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find domain. Please try again.`))
+      throw new Error(i18n._(t`Unable to load domain. Please try again.`))
     }
 
     const domainMap = {}
@@ -27,7 +28,7 @@ export const domainLoaderByKey = (query, userKey, i18n) =>
       console.error(
         `Cursor error occurred when user: ${userKey} running domainLoaderByKey: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to find domain. Please try again.`))
+      throw new Error(i18n._(t`Unable to load domain. Please try again.`))
     }
 
     return ids.map((id) => domainMap[id])

@@ -1,10 +1,6 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
-import { GraphQLJSON } from 'graphql-scalars'
+import { connectionArgs, globalIdField } from 'graphql-relay'
+import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
@@ -26,9 +22,9 @@ export const dmarcType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLString,
+      type: GraphQLDate,
       description: `The time when the scan was initiated.`,
-      resolve: ({ timestamp }) => timestamp,
+      resolve: ({ timestamp }) => new Date(timestamp),
     },
     record: {
       type: GraphQLString,
@@ -154,16 +150,4 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
 organization can express domain-level policies and preferences for
 message validation, disposition, and reporting, that a mail-receiving
 organization can use to improve mail handling.`,
-})
-
-export const dmarcConnection = connectionDefinitions({
-  name: 'DMARC',
-  nodeType: dmarcType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of dmarc scans related to a given domain.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

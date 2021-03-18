@@ -1,10 +1,6 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
-import { GraphQLDateTime, GraphQLJSON } from 'graphql-scalars'
+import { GraphQLObjectType, GraphQLString } from 'graphql'
+import { connectionArgs, globalIdField } from 'graphql-relay'
+import { GraphQLDate, GraphQLJSON } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
@@ -26,7 +22,7 @@ export const httpsType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDateTime,
+      type: GraphQLDate,
       description: `The time the scan was initiated.`,
       resolve: ({ timestamp }) => new Date(timestamp),
     },
@@ -153,16 +149,4 @@ export const httpsType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: `Hyper Text Transfer Protocol Secure scan results.`,
-})
-
-export const httpsConnection = connectionDefinitions({
-  name: 'HTTPS',
-  nodeType: httpsType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of https scans for a given domain.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

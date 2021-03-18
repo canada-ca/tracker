@@ -537,6 +537,57 @@ export const ADMIN_PANEL = gql`
   }
 `
 
+export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
+  query PaginatedOrgAffiliations($orgSlug: Slug!, $first: Int, $after: String) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
+      affiliations(first: $first, after: $after) {
+        edges {
+          node {
+            id
+            permission
+            user {
+              userName
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        totalCount
+      }
+    }
+  }
+`
+
+export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
+  query PaginatedOrgDomains($orgSlug: Slug!, $first: Int, $after: String) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+      id
+      name
+      domains(first: $first, after: $after) {
+        edges {
+          node {
+            id
+            domain
+            lastRan
+          }
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        totalCount
+      }
+    }
+  }
+`
+
 export const ORG_DETAILS_PAGE = gql`
   query OrgDetails($slug: Slug!) {
     organization: findOrganizationBySlug(orgSlug: $slug) {

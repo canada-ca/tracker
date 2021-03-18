@@ -576,7 +576,7 @@ describe('given the dmarcFailureLoaderConnectionsBySumId loader', () => {
             await connectionLoader({ ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load dmarc failures. Please try again.'),
+              new Error('Unable to load DMARC failure data. Please try again.'),
             )
           }
 
@@ -609,7 +609,7 @@ describe('given the dmarcFailureLoaderConnectionsBySumId loader', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load dmarc failures. Please try again.'),
+            new Error('Unable to load DMARC failure data. Please try again.'),
           )
         }
 
@@ -644,7 +644,7 @@ describe('given the dmarcFailureLoaderConnectionsBySumId loader', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error('Unable to load dmarc failures. Please try again.'),
+            new Error('Unable to load DMARC failure data. Please try again.'),
           )
         }
 

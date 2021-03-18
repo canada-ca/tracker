@@ -83,7 +83,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`dkimResults\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`DKIMResults\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -92,7 +92,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`dkimResults\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`DKIMResults\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -104,7 +104,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`dkimResults\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`DKIMResults\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -115,7 +115,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
       )
       throw new Error(
         i18n._(
-          t`Requesting ${amount} records on the \`dkimResults\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting ${amount} records on the \`DKIMResults\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -198,50 +198,51 @@ export const dkimResultsLoaderConnectionByDkimId = (
   let dkimResultsCursor
   try {
     dkimResultsCursor = await query`
-    LET dkimResultKeys = (FOR v, e IN 1 OUTBOUND ${dkimId} dkimToDkimResults RETURN v._key)
+      WITH dkim, dkimResults, dkimToDkimResults
+      LET dkimResultKeys = (FOR v, e IN 1 OUTBOUND ${dkimId} dkimToDkimResults RETURN v._key)
 
-    LET retrievedDkimResults = (
-      FOR dkimResult IN dkimResults
-        FILTER dkimResult._key IN dkimResultKeys
-        ${afterTemplate}
-        ${beforeTemplate}
+      LET retrievedDkimResults = (
+        FOR dkimResult IN dkimResults
+          FILTER dkimResult._key IN dkimResultKeys
+          ${afterTemplate}
+          ${beforeTemplate}
 
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: dkimResult._key, _type: "dkimResult" }, dkimResult)
-    )
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: dkimResult._key, _type: "dkimResult" }, dkimResult)
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR dkimResult IN dkimResults
-        FILTER dkimResult._key IN dkimResultKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
-        RETURN dkimResult
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR dkimResult IN dkimResults
-        FILTER dkimResult._key IN dkimResultKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
-        RETURN dkimResult
-    ) > 0 ? true : false)
+      LET hasNextPage = (LENGTH(
+        FOR dkimResult IN dkimResults
+          FILTER dkimResult._key IN dkimResultKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
+          RETURN dkimResult
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR dkimResult IN dkimResults
+          FILTER dkimResult._key IN dkimResultKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
+          RETURN dkimResult
+      ) > 0 ? true : false)
 
-    RETURN { 
-      "dkimResults": retrievedDkimResults,
-      "totalCount": LENGTH(dkimResultKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedDkimResults)._key, 
-      "endKey": LAST(retrievedDkimResults)._key 
-    }
+      RETURN { 
+        "dkimResults": retrievedDkimResults,
+        "totalCount": LENGTH(dkimResultKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedDkimResults)._key, 
+        "endKey": LAST(retrievedDkimResults)._key 
+      }
     `
   } catch (err) {
     console.error(
       `Database error occurred while user: ${userKey} was trying to get dkim result information for ${dkimId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load dkim results. Please try again.`))
+    throw new Error(i18n._(t`Unable to load DKIM result(s). Please try again.`))
   }
 
   let dkimResultsInfo
@@ -251,7 +252,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
     console.error(
       `Cursor error occurred while user: ${userKey} was trying to get dkim result information for ${dkimId}, error: ${err}`,
     )
-    throw new Error(i18n._(t`Unable to load dkim results. Please try again.`))
+    throw new Error(i18n._(t`Unable to load DKIM result(s). Please try again.`))
   }
 
   if (dkimResultsInfo.dkimResults.length === 0) {

@@ -19,6 +19,7 @@ import {
 import WithPseudoBox from './withPseudoBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
@@ -26,6 +27,7 @@ import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EmailField from './EmailField'
 import { TrackerButton } from './TrackerButton'
+import { UpdateUserProfileUserName } from './graphql/fragments'
 
 function EditableUserEmail({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -34,7 +36,7 @@ function EditableUserEmail({ detailValue }) {
   const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE,
+    UPDATE_USER_PROFILE({ UpdateUserProfileFields: UpdateUserProfileUserName }),
     {
       context: {
         headers: {
@@ -51,24 +53,47 @@ function EditableUserEmail({ detailValue }) {
           position: 'top-left',
         })
       },
-      onCompleted() {
-        toast({
-          title: t`Changed User Email`,
-          description: t`You have successfully updated your email.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        onClose()
+      onCompleted({ updateUserProfile }) {
+        if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
+          toast({
+            title: t`Changed User Email`,
+            description: t`You have successfully updated your email.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          onClose()
+        } else if (
+          updateUserProfile.result.__typename === 'UpdateUserProfileError'
+        ) {
+          toast({
+            title: t`Unable to update to your username, please try again.`,
+            description: updateUserProfile.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect updateUserProfile.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect updateUserProfile.result typename.')
+        }
       },
     },
   )
 
   const validationSchema = object().shape({
     email: yupString()
-      .required(fieldRequirements.email.required.message)
-      .email(fieldRequirements.email.email.message),
+      .required(i18n._(fieldRequirements.email.required.message))
+      .email(i18n._(fieldRequirements.email.email.message)),
   })
 
   return (

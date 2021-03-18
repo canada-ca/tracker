@@ -83,7 +83,7 @@ export const dkimGuidanceTagConnectionsLoader = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`guidanceTag\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`GuidanceTag\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -92,7 +92,7 @@ export const dkimGuidanceTagConnectionsLoader = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`guidanceTag\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`GuidanceTag\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -104,7 +104,7 @@ export const dkimGuidanceTagConnectionsLoader = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`guidanceTag\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`GuidanceTag\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -115,7 +115,7 @@ export const dkimGuidanceTagConnectionsLoader = (
       )
       throw new Error(
         i18n._(
-          t`Requesting \`${amount}\` records on the \`guidanceTag\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting \`${amount}\` records on the \`GuidanceTag\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -198,6 +198,7 @@ export const dkimGuidanceTagConnectionsLoader = (
   let dkimGuidanceTagInfoCursor
   try {
     dkimGuidanceTagInfoCursor = await query`
+      WITH dkimGuidanceTags
       LET retrievedDkimGuidanceTags = (
         FOR tag IN dkimGuidanceTags
           FILTER tag._key IN ${dkimGuidanceTags}
@@ -239,7 +240,7 @@ export const dkimGuidanceTagConnectionsLoader = (
       `Database error occurred while user: ${userKey} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load dkim guidance tags. Please try again.`),
+      i18n._(t`Unable to load DKIM guidance tag(s). Please try again.`),
     )
   }
 
@@ -251,7 +252,7 @@ export const dkimGuidanceTagConnectionsLoader = (
       `Cursor error occurred while user: ${userKey} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load dkim guidance tags. Please try again.`),
+      i18n._(t`Unable to load DKIM guidance tag(s). Please try again.`),
     )
   }
 

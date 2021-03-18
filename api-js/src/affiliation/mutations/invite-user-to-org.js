@@ -1,14 +1,16 @@
-import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql'
+import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
+
+import { inviteUserToOrgUnion } from '../unions'
 import { LanguageEnums, RoleEnums } from '../../enums'
 
 export const inviteUserToOrg = new mutationWithClientMutationId({
   name: 'InviteUserToOrg',
   description: `This mutation allows admins and higher to invite users to any of their
-    organizations, if the invited user does not have an account, they will be
-    able to sign-up and be assigned to that organization in one mutation.`,
+organizations, if the invited user does not have an account, they will be
+able to sign-up and be assigned to that organization in one mutation.`,
   inputFields: () => ({
     userName: {
       type: GraphQLNonNull(GraphQLEmailAddress),
@@ -28,13 +30,11 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
+    result: {
+      type: inviteUserToOrgUnion,
       description:
-        'Informs the user if the invite or invite email was successfully sent.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+        '`InviteUserToOrgUnion` returning either a `InviteUserToOrgResult`, or `InviteUserToOrgError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -64,9 +64,11 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to invite themselves to ${orgId}.`,
       )
-      throw new Error(
-        i18n._(t`Unable to invite yourself to an org. Please try again.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to invite yourself to an org.`),
+      }
     }
 
     // Check to see if requested org exists
@@ -76,7 +78,11 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to invite user: ${userName} to ${orgId} however there is no org associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to invite user. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to invite user to unknown organization.`),
+      }
     }
 
     // Check to see requesting users permission to the org is
@@ -90,7 +96,13 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to invite user: ${userName} to org: ${org._key} with role: ${requestedRole} but does not have permission to do so.`,
       )
-      throw new Error(i18n._(t`Unable to invite user. Please try again.`))
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(
+          t`Permission Denied: Please contact organization admin for help with user invitations.`,
+        ),
+      }
     }
 
     // Check to see if requested user exists
@@ -116,6 +128,7 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
       )
 
       return {
+        _type: 'regular',
         status: i18n._(
           t`Successfully sent invitation to service, and organization email.`,
         ),
@@ -145,7 +158,9 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
         console.error(
           `Transaction step error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
         )
-        throw new Error(i18n._(t`Unable to invite user. Please try again.`))
+        throw new Error(
+          i18n._(t`Unable to add user to organization. Please try again.`),
+        )
       }
 
       await sendOrgInviteEmail({
@@ -168,6 +183,7 @@ export const inviteUserToOrg = new mutationWithClientMutationId({
       )
 
       return {
+        _type: 'regular',
         status: i18n._(
           t`Successfully invited user to organization, and sent notification email.`,
         ),

@@ -71,7 +71,7 @@ export const verifiedOrgLoaderConnectionsByDomainId = (
         orgField = aql`org.summaries.web.total`
       } else if (orderBy.field === 'domain-count') {
         documentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND DOCUMENT(organizations, ${afterId})._id claims RETURN e._to)`
-        orgField = aql`COUNT(domains)`
+        orgField = aql`COUNT(orgDomains)`
       }
 
       afterTemplate = aql`
@@ -145,7 +145,7 @@ export const verifiedOrgLoaderConnectionsByDomainId = (
         orgField = aql`org.summaries.web.total`
       } else if (orderBy.field === 'domain-count') {
         documentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND DOCUMENT(organizations, ${beforeId})._id claims RETURN e._to)`
-        orgField = aql`COUNT(domains)`
+        orgField = aql`COUNT(orgDomains)`
       }
 
       beforeTemplate = aql`
@@ -163,7 +163,7 @@ export const verifiedOrgLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`verifiedOrganization\` connection.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`VerifiedOrganization\` connection.`,
       ),
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
@@ -172,7 +172,7 @@ export const verifiedOrgLoaderConnectionsByDomainId = (
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`verifiedOrganization\` connection is not supported.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`VerifiedOrganization\` connection is not supported.`,
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
@@ -184,7 +184,7 @@ export const verifiedOrgLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`\`${argSet}\` on the \`verifiedOrganization\` connection cannot be less than zero.`,
+          t`\`${argSet}\` on the \`VerifiedOrganization\` connection cannot be less than zero.`,
         ),
       )
     } else if (first > 100 || last > 100) {
@@ -195,7 +195,7 @@ export const verifiedOrgLoaderConnectionsByDomainId = (
       )
       throw new Error(
         i18n._(
-          t`Requesting \`${amount}\` records on the \`verifiedOrganization\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+          t`Requesting \`${amount}\` records on the \`VerifiedOrganization\` connection exceeds the \`${argSet}\` limit of 100 records.`,
         ),
       )
     } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
@@ -357,68 +357,69 @@ export const verifiedOrgLoaderConnectionsByDomainId = (
   let organizationInfoCursor
   try {
     organizationInfoCursor = await query`
-    LET verifiedOrgs = FLATTEN(
-      FOR v, e IN INBOUND ${domainId} claims FILTER v.verified == true RETURN v._key
-    )
-  
-    LET retrievedOrgs = (
-      FOR org IN organizations
-        FILTER org._key IN verifiedOrgs
-        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        ${afterTemplate} 
-        ${beforeTemplate}
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE(
-          { 
-            _id: org._id,
-            _key: org._key,
-            id: org._key,
-            _rev: org._rev,
-            _type: "verifiedOrganization",
-            verified: org.verified,
-            domainCount: COUNT(domains),
-            summaries: org.summaries 
-          },
-          TRANSLATE(${language}, org.orgDetails)
-        )
-    )
+      WITH claims, domains, organizations
+      LET verifiedOrgs = FLATTEN(
+        FOR v, e IN INBOUND ${domainId} claims FILTER v.verified == true RETURN v._key
+      )
+    
+      LET retrievedOrgs = (
+        FOR org IN organizations
+          FILTER org._key IN verifiedOrgs
+          LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          ${afterTemplate} 
+          ${beforeTemplate}
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE(
+            { 
+              _id: org._id,
+              _key: org._key,
+              id: org._key,
+              _rev: org._rev,
+              _type: "verifiedOrganization",
+              verified: org.verified,
+              domainCount: COUNT(orgDomains),
+              summaries: org.summaries 
+            },
+            TRANSLATE(${language}, org.orgDetails)
+          )
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR org IN organizations
-        FILTER org._key IN verifiedOrgs
-        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        ${hasNextPageFilter}
-        SORT ${sortByField} org._key ${sortString} LIMIT 1
-        RETURN org
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR org IN organizations
-        FILTER org._key IN verifiedOrgs
-        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} org._key ${sortString} LIMIT 1
-        RETURN org
-    ) > 0 ? true : false)
-    
-    RETURN { 
-      "verifiedOrgs": verifiedOrgs,
-      "organizations": retrievedOrgs,
-      "totalCount": LENGTH(verifiedOrgs),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedOrgs)._key, 
-      "endKey": LAST(retrievedOrgs)._key 
-    }
+      LET hasNextPage = (LENGTH(
+        FOR org IN organizations
+          FILTER org._key IN verifiedOrgs
+          LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          ${hasNextPageFilter}
+          SORT ${sortByField} org._key ${sortString} LIMIT 1
+          RETURN org
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR org IN organizations
+          FILTER org._key IN verifiedOrgs
+          LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} org._key ${sortString} LIMIT 1
+          RETURN org
+      ) > 0 ? true : false)
+      
+      RETURN { 
+        "verifiedOrgs": verifiedOrgs,
+        "organizations": retrievedOrgs,
+        "totalCount": LENGTH(verifiedOrgs),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedOrgs)._key, 
+        "endKey": LAST(retrievedOrgs)._key 
+      }
     `
   } catch (err) {
     console.error(
       `Database error occurred while user was trying to gather orgs in verifiedOrgLoaderConnectionsByDomainId, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load verified organizations. Please try again.`),
+      i18n._(t`Unable to load verified organization(s). Please try again.`),
     )
   }
 
@@ -430,7 +431,7 @@ export const verifiedOrgLoaderConnectionsByDomainId = (
       `Cursor error occurred while user was trying to gather orgs in verifiedOrgLoaderConnectionsByDomainId, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load verified organizations. Please try again.`),
+      i18n._(t`Unable to load verified organization(s). Please try again.`),
     )
   }
 

@@ -12,9 +12,9 @@ import {
   Box,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
-import { PaginationButtons } from './PaginationButtons'
+import { i18n } from '@lingui/core'
 import { UserCard } from './UserCard'
-import { string, shape } from 'prop-types'
+import { number, string } from 'prop-types'
 import { useMutation } from '@apollo/client'
 import { INVITE_USER_TO_ORG, UPDATE_USER_ROLE } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
@@ -24,35 +24,44 @@ import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
 import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { usePaginatedCollection } from './usePaginatedCollection'
+import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from './graphql/queries'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
-export default function UserList({ permission, userListData, orgId }) {
-  let users = []
-  if (userListData && userListData.edges) {
-    users = userListData.edges
-  }
-
-  const [userList] = useState(users)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [usersPerPage] = useState(4)
+export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
   const toast = useToast()
   const { currentUser } = useUserState()
   const [addedUserName, setAddedUserName] = useState()
 
   const addUserValidationSchema = object().shape({
     userName: yupString()
-      .required(fieldRequirements.email.required.message)
-      .email(fieldRequirements.email.email.message),
+      .required(i18n._(fieldRequirements.email.required.message))
+      .email(i18n._(fieldRequirements.email.email.message)),
   })
 
-  // Get current users
-  const indexOfLastUser = currentPage * usersPerPage
-  const indexOfFirstUser = indexOfLastUser - usersPerPage
-  const currentUsers = userList.slice(indexOfFirstUser, indexOfLastUser)
+  const {
+    loading,
+    error,
+    nodes,
+    next,
+    previous,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    fetchHeaders: { authorization: currentUser.jwt },
+    recordsPerPage: usersPerPage,
+    variables: { orgSlug },
+    relayRoot: 'findOrganizationBySlug.affiliations',
+  })
 
-  const [updateUserRole, { loading, error }] = useMutation(UPDATE_USER_ROLE, {
-    onError(error) {
+  const [
+    updateUserRole,
+    { loading: _updateLoading, error: _updateError },
+  ] = useMutation(UPDATE_USER_ROLE, {
+    onError(updateError) {
       toast({
-        title: error.message,
+        title: updateError.message,
         description: t`Unable to change user role, please try again.`,
         status: 'error',
         duration: 9000,
@@ -90,15 +99,38 @@ export default function UserList({ permission, userListData, orgId }) {
           position: 'top-left',
         })
       },
-      onCompleted() {
-        toast({
-          title: t`User invited`,
-          description: t`Email invitation sent to ${addedUserName}`,
-          status: 'info',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
+      onCompleted({ inviteUserToOrg }) {
+        if (inviteUserToOrg.result.__typename === 'InviteUserToOrgResult') {
+          toast({
+            title: t`User invited`,
+            description: t`Email invitation sent to ${addedUserName}`,
+            status: 'info',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else if (
+          inviteUserToOrg.result.__typename === 'InviteUserToOrgError'
+        ) {
+          toast({
+            title: t`Unable to invite user.`,
+            description: inviteUserToOrg.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect inviteUserToOrg.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect inviteUserToOrg.result typename.')
+        }
       },
     },
   )
@@ -110,9 +142,6 @@ export default function UserList({ permission, userListData, orgId }) {
       </LoadingMessage>
     )
   if (error) return <ErrorFallbackMessage error={error} />
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   // TODO: Add mutation to this
   // const removeUser = (user) => {
@@ -232,15 +261,15 @@ export default function UserList({ permission, userListData, orgId }) {
         )}
       </Formik>
 
-      {userList.length === 0 ? (
+      {nodes.length === 0 ? (
         <Text fontSize="2xl" fontWeight="bold" textAlign="center">
           <Trans>No users in this organization</Trans>
         </Text>
       ) : (
-        currentUsers.map(({ node }, index) => {
+        nodes.map((node) => {
           let userRole = node.permission
           return (
-            <Box key={`${node.user.userName}:${index}`}>
+            <Box key={`${node.user.userName}:${node.id}`}>
               <Stack isInline align="center">
                 {/* TODO: IMPLEMENT USER REMOVAL (NEEDS API SUPPORT NOV-23-2020 */}
                 {/* <TrackerButton */}
@@ -290,29 +319,20 @@ export default function UserList({ permission, userListData, orgId }) {
           )
         })
       )}
-
-      {userList.length > 0 && (
-        <PaginationButtons
-          perPage={usersPerPage}
-          total={userList.length}
-          paginate={paginate}
-          currentPage={currentPage}
-        />
-      )}
+      <RelayPaginationControls
+        onlyPagination={true}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+      />
     </Stack>
   )
 }
 
 UserList.propTypes = {
-  userListData: shape({
-    userId: string,
-    permission: string,
-    user: shape({
-      userName: string,
-      displayName: string,
-    }),
-  }),
-  orgName: string,
-  orgId: string,
+  orgSlug: string,
   permission: string,
+  usersPerPage: number,
+  orgId: string.isRequired,
 }

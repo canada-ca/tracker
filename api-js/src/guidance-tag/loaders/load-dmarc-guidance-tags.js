@@ -6,6 +6,7 @@ export const dmarcGuidanceTagLoader = (query, userKey, i18n) =>
     let cursor
     try {
       cursor = await query`
+        WITH dmarcGuidanceTags
         FOR tag IN dmarcGuidanceTags
           FILTER tag._key IN ${tags}
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })
@@ -15,7 +16,7 @@ export const dmarcGuidanceTagLoader = (query, userKey, i18n) =>
         `Database error occurred when user: ${userKey} running dmarcGuidanceTagLoader: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find dmarc guidance tags. Please try again.`),
+        i18n._(t`Unable to find DMARC guidance tag(s). Please try again.`),
       )
     }
 
@@ -29,7 +30,7 @@ export const dmarcGuidanceTagLoader = (query, userKey, i18n) =>
         `Cursor error occurred when user: ${userKey} running dmarcGuidanceTagLoader: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to find dmarc guidance tags. Please try again.`),
+        i18n._(t`Unable to find DMARC guidance tag(s). Please try again.`),
       )
     }
 

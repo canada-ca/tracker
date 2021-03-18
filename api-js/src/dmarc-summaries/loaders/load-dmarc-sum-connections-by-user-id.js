@@ -324,6 +324,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
   let domainIdQueries
   if (isSuperAdmin) {
     domainIdQueries = aql`
+      WITH dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership
       LET domainIds = UNIQUE(FLATTEN(
         LET ids = []
         LET orgIds = (FOR org IN organizations RETURN org._id)
@@ -334,6 +335,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
     `
   } else {
     domainIdQueries = aql`
+      WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users
       LET domainIds = UNIQUE(FLATTEN(
         LET ids = []
         LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
@@ -414,7 +416,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
       `Database error occurred while user: ${userKey} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load dmarc summaries. Please try again.`),
+      i18n._(t`Unable to load DMARC summary data. Please try again.`),
     )
   }
 
@@ -426,7 +428,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
       `Cursor error occurred while user: ${userKey} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: ${err}`,
     )
     throw new Error(
-      i18n._(t`Unable to load dmarc summaries. Please try again.`),
+      i18n._(t`Unable to load DMARC summary data. Please try again.`),
     )
   }
 

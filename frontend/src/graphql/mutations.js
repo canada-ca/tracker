@@ -126,12 +126,11 @@ export const UPDATE_USER_ROLE = gql`
   }
 `
 
-export const UPDATE_USER_PROFILE = gql`
+export const UPDATE_USER_PROFILE = ({ UpdateUserProfileFields }) => gql`
   mutation UpdateUserProfile(
     $displayName: String
     $userName: EmailAddress
     $preferredLang: LanguageEnums
-    $phoneNumber: PhoneNumber
     $tfaSendMethod: TFASendMethodEnum
   ) {
     updateUserProfile(
@@ -139,13 +138,21 @@ export const UPDATE_USER_PROFILE = gql`
         displayName: $displayName
         userName: $userName
         preferredLang: $preferredLang
-        phoneNumber: $phoneNumber
         tfaSendMethod: $tfaSendMethod
       }
     ) {
-      status
+      result {
+        ... on UpdateUserProfileResult {
+          ...UpdateUserProfileFields
+        }
+        ... on UpdateUserProfileError {
+          code
+          description
+        }
+      }
     }
   }
+  ${UpdateUserProfileFields.fragments.requiredFields}
 `
 
 export const UPDATE_USER_PASSWORD = gql`
@@ -161,7 +168,15 @@ export const UPDATE_USER_PASSWORD = gql`
         updatedPasswordConfirm: $updatedPasswordConfirm
       }
     ) {
-      status
+      result {
+        ... on UpdateUserPasswordResultType {
+          status
+        }
+        ... on UpdateUserPasswordError {
+          code
+          description
+        }
+      }
     }
   }
 `
@@ -227,7 +242,15 @@ export const INVITE_USER_TO_ORG = gql`
         preferredLang: $preferredLang
       }
     ) {
-      status
+      result {
+        ... on InviteUserToOrgResult {
+          status
+        }
+        ... on InviteUserToOrgError {
+          code
+          description
+        }
+      }
     }
   }
 `
@@ -236,6 +259,38 @@ export const REQUEST_SCAN = gql`
   mutation RequestScan($domainUrl: DomainScalar) {
     requestScan(input: { domain: $domainUrl }) {
       status
+    }
+  }
+`
+
+export const SET_PHONE_NUMBER = gql`
+  mutation SetPhoneNumber($phoneNumber: PhoneNumber!) {
+    setPhoneNumber(input: { phoneNumber: $phoneNumber }) {
+      result {
+        ... on SetPhoneNumberResult {
+          status
+        }
+        ... on SetPhoneNumberError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const VERIFY_PHONE_NUMBER = gql`
+  mutation VerifyPhoneNumber($twoFactorCode: Int!) {
+    verifyPhoneNumber(input: { twoFactorCode: $twoFactorCode }) {
+      result {
+        ... on VerifyPhoneNumberResult {
+          status
+        }
+        ... on VerifyPhoneNumberError {
+          code
+          description
+        }
+      }
     }
   }
 `

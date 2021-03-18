@@ -236,7 +236,9 @@ describe('given findOrganizationBySlugQuery', () => {
           )
 
           const error = [
-            new GraphQLError(`Could not retrieve specified organization.`),
+            new GraphQLError(
+              `Permission Denied: Could not retrieve specified organization.`,
+            ),
           ]
 
           expect(response.errors).toEqual(error)

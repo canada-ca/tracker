@@ -43,9 +43,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to verify organization: ${orgKey}, however no organizations is associated with that id.`,
       )
-      throw new Error(
-        i18n._(t`Unable to verify organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to verify unknown organization.`))
     }
 
     // Check to see if use has permission
@@ -56,7 +54,9 @@ export const verifyOrganization = new mutationWithClientMutationId({
         `User: ${userKey} attempted to verify organization: ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
       )
       throw new Error(
-        i18n._(t`Unable to verify organization. Please try again.`),
+        i18n._(
+          t`Permission Denied: Please contact super admin for help with verifying this organization.`,
+        ),
       )
     }
 

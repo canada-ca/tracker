@@ -366,7 +366,7 @@ describe('given the findMyDmarcSummaries query', () => {
           )
           const error = [
             new GraphQLError(
-              `Unable to load dmarc summaries. Please try again.`,
+              `Unable to load DMARC summary data. Please try again.`,
             ),
           ]
 

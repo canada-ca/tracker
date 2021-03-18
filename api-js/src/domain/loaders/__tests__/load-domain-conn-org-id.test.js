@@ -2258,7 +2258,7 @@ describe('given the load domain connection using org id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load domains. Please try again.'),
+              new Error('Unable to load domain(s). Please try again.'),
             )
           }
 
@@ -2295,7 +2295,7 @@ describe('given the load domain connection using org id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error('Unable to load domains. Please try again.'),
+              new Error('Unable to load domain(s). Please try again.'),
             )
           }
 

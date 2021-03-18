@@ -46,7 +46,11 @@ export const findOrganizationBySlug = {
 
     if (!['super_admin', 'admin', 'user'].includes(permission)) {
       console.warn(`User ${user._key} could not retrieve organization.`)
-      throw new Error(i18n._(t`Could not retrieve specified organization.`))
+      throw new Error(
+        i18n._(
+          t`Permission Denied: Could not retrieve specified organization.`,
+        ),
+      )
     }
 
     console.info(

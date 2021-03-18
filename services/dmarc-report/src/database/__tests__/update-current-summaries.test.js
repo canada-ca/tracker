@@ -1,6 +1,6 @@
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { ensure, dbNameFromFile } = require('arango-tools')
 
-const { makeMigrations } = require('../../../migrations')
+const { databaseOptions } = require('../../../database-options')
 const { arrayEquals } = require('../../array-equals')
 const { updateCurrentSummaries } = require('../index')
 const { loadCurrentDates } = require('../../loaders')
@@ -8,15 +8,18 @@ const { loadCurrentDates } = require('../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the updateCurrentSummaries function', () => {
-  let query, drop, truncate, migrate, collections
+  let query, drop, truncate, collections
 
   const infoConsole = []
   const mockedInfo = (output) => infoConsole.push(output)
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     console.info = mockedInfo
   })
 
