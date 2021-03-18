@@ -5,10 +5,7 @@ import { Router, Route, Switch, MemoryRouter } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import Organizations from '../Organizations'
-import {
-  PAGINATED_ORGANIZATIONS,
-  REVERSE_PAGINATED_ORGANIZATIONS,
-} from '../graphql/queries'
+import { PAGINATED_ORGANIZATIONS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
@@ -357,42 +354,6 @@ describe('<Organisations />', () => {
                     endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                     hasPreviousPage: true,
                     startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                    __typename: 'PageInfo',
-                  },
-                  __typename: 'OrganizationsConnection',
-                },
-              },
-            },
-          },
-          {
-            request: {
-              query: REVERSE_PAGINATED_ORGANIZATIONS,
-              variables: { last: 1, before: 'YXJyYXljb25uZWN0aW9uOjA=' },
-            },
-            result: {
-              data: {
-                findMyOrganizations: {
-                  edges: [
-                    {
-                      cursor: 'Y3Vyc29yOnYyOpHOAAfgfQ==',
-                      node: {
-                        id: 'T3JnYW5pemF0aW9uczoyCg==',
-                        acronym: 'ORG1',
-                        name: 'organization one',
-                        slug: 'organization-one',
-                        domainCount: 5,
-                        verified: false,
-                        summaries,
-                        __typename: 'Organizations',
-                      },
-                      __typename: 'OrganizationsEdge',
-                    },
-                  ],
-                  pageInfo: {
-                    hasNextPage: true,
-                    endCursor: 'Y3Vyc29yOnYyOpHOAAfgfQ==',
-                    hasPreviousPage: false,
-                    startCursor: 'Y3Vyc29yOnYyOpHOAAfgfQ==',
                     __typename: 'PageInfo',
                   },
                   __typename: 'OrganizationsConnection',

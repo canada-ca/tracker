@@ -4,10 +4,7 @@ import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { UserStateProvider } from '../UserState'
-import {
-  REVERSE_PAGINATED_ORG_DOMAINS,
-  PAGINATED_ORG_DOMAINS,
-} from '../graphql/queries'
+import { PAGINATED_ORG_DOMAINS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { OrganizationDomains } from '../OrganizationDomains'
