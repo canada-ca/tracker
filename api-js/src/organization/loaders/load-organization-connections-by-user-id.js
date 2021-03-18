@@ -374,58 +374,58 @@ export const orgLoaderConnectionsByUserId = (
   let organizationInfoCursor
   try {
     organizationInfoCursor = await query`
-    ${orgKeysQuery}
+      ${orgKeysQuery}
 
-    LET retrievedOrgs = (
-      FOR org IN organizations
+      LET retrievedOrgs = (
+        FOR org IN organizations
+            FILTER org._key IN orgKeys
+            LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+            ${afterTemplate}
+            ${beforeTemplate}
+            SORT
+            ${sortByField}
+            ${limitTemplate}
+            RETURN MERGE(
+              { 
+                _id: org._id,
+                _key: org._key,
+                _rev: org._rev,
+                _type: "organization",
+                id: org._key,
+                verified: org.verified,
+                domainCount: COUNT(orgDomains),
+                summaries: org.summaries 
+              }, 
+              TRANSLATE(${language}, org.orgDetails)
+            )
+      )
+
+      LET hasNextPage = (LENGTH(
+        FOR org IN organizations
           FILTER org._key IN orgKeys
-          LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-          ${afterTemplate}
-          ${beforeTemplate}
-          SORT
-          ${sortByField}
-          ${limitTemplate}
-          RETURN MERGE(
-            { 
-              _id: org._id,
-              _key: org._key,
-              _rev: org._rev,
-              _type: "organization",
-              id: org._key,
-              verified: org.verified,
-              domainCount: COUNT(orgDomains),
-              summaries: org.summaries 
-            }, 
-            TRANSLATE(${language}, org.orgDetails)
-          )
-    )
-
-    LET hasNextPage = (LENGTH(
-      FOR org IN organizations
-        FILTER org._key IN orgKeys
-        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        ${hasNextPageFilter}
-        SORT ${sortByField} org._key ${sortString} LIMIT 1
-        RETURN org
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR org IN organizations
-        FILTER org._key IN orgKeys
-        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} org._key ${sortString} LIMIT 1
-        RETURN org
-    ) > 0 ? true : false)
-    
-    RETURN { 
-      "organizations": retrievedOrgs,
-      "totalCount": LENGTH(orgKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedOrgs)._key, 
-      "endKey": LAST(retrievedOrgs)._key 
-    }
+          LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          ${hasNextPageFilter}
+          SORT ${sortByField} org._key ${sortString} LIMIT 1
+          RETURN org
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR org IN organizations
+          FILTER org._key IN orgKeys
+          LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} org._key ${sortString} LIMIT 1
+          RETURN org
+      ) > 0 ? true : false)
+      
+      RETURN { 
+        "organizations": retrievedOrgs,
+        "totalCount": LENGTH(orgKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedOrgs)._key, 
+        "endKey": LAST(retrievedOrgs)._key 
+      }
     `
   } catch (err) {
     console.error(

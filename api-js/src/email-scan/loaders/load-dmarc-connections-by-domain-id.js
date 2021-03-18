@@ -260,47 +260,46 @@ export const dmarcLoaderConnectionsByDomainId = (
   let dmarcScanInfoCursor
   try {
     dmarcScanInfoCursor = await query`
-    WITH dmarc, domains, domainsDMARC
-    LET dmarcKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsDMARC RETURN v._key)
+      WITH dmarc, domains, domainsDMARC
+      LET dmarcKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsDMARC RETURN v._key)
 
-    LET retrievedDmarcScans = (
-      FOR dmarcScan IN dmarc
-        FILTER dmarcScan._key IN dmarcKeys
-        ${afterTemplate}
-        ${beforeTemplate}
-        ${startDateTemplate}
-        ${endDateTemplate}
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: dmarcScan._key, _type: "dmarc" }, dmarcScan)
-    )
+      LET retrievedDmarcScans = (
+        FOR dmarcScan IN dmarc
+          FILTER dmarcScan._key IN dmarcKeys
+          ${afterTemplate}
+          ${beforeTemplate}
+          ${startDateTemplate}
+          ${endDateTemplate}
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: dmarcScan._key, _type: "dmarc" }, dmarcScan)
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR dmarcScan IN dmarc
-        FILTER dmarcScan._key IN dmarcKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} dmarcScan._key ${sortString} LIMIT 1
-        RETURN dmarcScan
-    ) > 0 ? true : false)
+      LET hasNextPage = (LENGTH(
+        FOR dmarcScan IN dmarc
+          FILTER dmarcScan._key IN dmarcKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} dmarcScan._key ${sortString} LIMIT 1
+          RETURN dmarcScan
+      ) > 0 ? true : false)
 
-    LET hasPreviousPage = (LENGTH(
-      FOR dmarcScan IN dmarc
-        FILTER dmarcScan._key IN dmarcKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} dmarcScan._key ${sortString} LIMIT 1
-        RETURN dmarcScan
-    ) > 0 ? true : false)
+      LET hasPreviousPage = (LENGTH(
+        FOR dmarcScan IN dmarc
+          FILTER dmarcScan._key IN dmarcKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} dmarcScan._key ${sortString} LIMIT 1
+          RETURN dmarcScan
+      ) > 0 ? true : false)
 
-    RETURN { 
-      "dmarcScans": retrievedDmarcScans,
-      "totalCount": LENGTH(dmarcKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedDmarcScans)._key, 
-      "endKey": LAST(retrievedDmarcScans)._key 
-    }
-
+      RETURN { 
+        "dmarcScans": retrievedDmarcScans,
+        "totalCount": LENGTH(dmarcKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedDmarcScans)._key, 
+        "endKey": LAST(retrievedDmarcScans)._key 
+      }
     `
   } catch (err) {
     console.error(
