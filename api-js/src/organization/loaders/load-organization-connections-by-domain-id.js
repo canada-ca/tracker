@@ -76,7 +76,7 @@ export const orgLoaderConnectionArgsByDomainId = (
         orgField = aql`org.summaries.web.total`
       } else if (orderBy.field === 'domain-count') {
         documentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND DOCUMENT(organizations, ${afterId})._id claims RETURN e._to)`
-        orgField = aql`COUNT(domains)`
+        orgField = aql`COUNT(orgDomains)`
       }
 
       afterTemplate = aql`
@@ -149,7 +149,7 @@ export const orgLoaderConnectionArgsByDomainId = (
         orgField = aql`org.summaries.web.total`
       } else if (orderBy.field === 'domain-count') {
         documentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND DOCUMENT(organizations, ${beforeId})._id claims RETURN e._to)`
-        orgField = aql`COUNT(domains)`
+        orgField = aql`COUNT(orgDomains)`
       }
 
       beforeTemplate = aql`
@@ -361,6 +361,8 @@ export const orgLoaderConnectionArgsByDomainId = (
   let organizationInfoCursor
   try {
     organizationInfoCursor = await query`
+    WITH affiliations, claims, domains, organizations, users
+
     LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
     LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
     LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
@@ -371,7 +373,7 @@ export const orgLoaderConnectionArgsByDomainId = (
     LET retrievedOrgs = (
       FOR org IN organizations
         FILTER org._key IN orgKeys
-        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+        LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
         ${afterTemplate} 
         ${beforeTemplate}
         SORT
@@ -385,7 +387,7 @@ export const orgLoaderConnectionArgsByDomainId = (
             _type: "organization",
             id: org._key,
             verified: org.verified,
-            domainCount: COUNT(domains),
+            domainCount: COUNT(orgDomains),
             summaries: org.summaries 
           }, 
           TRANSLATE(${language}, org.orgDetails)

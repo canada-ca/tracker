@@ -76,7 +76,7 @@ export const orgLoaderConnectionsByUserId = (
         orgField = aql`org.summaries.web.total`
       } else if (orderBy.field === 'domain-count') {
         documentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND DOCUMENT(organizations, ${afterId})._id claims RETURN e._to)`
-        orgField = aql`COUNT(domains)`
+        orgField = aql`COUNT(orgDomains)`
       }
 
       afterTemplate = aql`
@@ -149,7 +149,7 @@ export const orgLoaderConnectionsByUserId = (
         orgField = aql`org.summaries.web.total`
       } else if (orderBy.field === 'domain-count') {
         documentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND DOCUMENT(organizations, ${beforeId})._id claims RETURN e._to)`
-        orgField = aql`COUNT(domains)`
+        orgField = aql`COUNT(orgDomains)`
       }
 
       beforeTemplate = aql`
@@ -360,9 +360,15 @@ export const orgLoaderConnectionsByUserId = (
 
   let orgKeysQuery
   if (isSuperAdmin) {
-    orgKeysQuery = aql`LET orgKeys = (FOR org IN organizations RETURN org._key)`
+    orgKeysQuery = aql`
+      WITH claims, domains, organizations
+      LET orgKeys = (FOR org IN organizations RETURN org._key)
+    `
   } else {
-    orgKeysQuery = aql`LET orgKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)`
+    orgKeysQuery = aql`
+      WITH affiliations, claims, domains, organizations, users
+      LET orgKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
+    `
   }
 
   let organizationInfoCursor
@@ -373,7 +379,7 @@ export const orgLoaderConnectionsByUserId = (
     LET retrievedOrgs = (
       FOR org IN organizations
           FILTER org._key IN orgKeys
-          LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
           ${afterTemplate}
           ${beforeTemplate}
           SORT
@@ -387,7 +393,7 @@ export const orgLoaderConnectionsByUserId = (
               _type: "organization",
               id: org._key,
               verified: org.verified,
-              domainCount: COUNT(domains),
+              domainCount: COUNT(orgDomains),
               summaries: org.summaries 
             }, 
             TRANSLATE(${language}, org.orgDetails)
