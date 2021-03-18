@@ -242,7 +242,15 @@ export const INVITE_USER_TO_ORG = gql`
         preferredLang: $preferredLang
       }
     ) {
-      status
+      result {
+        ... on InviteUserToOrgResult {
+          status
+        }
+        ... on InviteUserToOrgError {
+          code
+          description
+        }
+      }
     }
   }
 `

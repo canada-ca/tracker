@@ -1,7 +1,9 @@
-import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql'
+import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
+
+import { inviteUserToOrgUnion } from '../unions'
 import { LanguageEnums, RoleEnums } from '../../enums'
 
 export const inviteUserToOrg = new mutationWithClientMutationId({
@@ -28,11 +30,11 @@ able to sign-up and be assigned to that organization in one mutation.`,
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
+    result: {
+      type: inviteUserToOrgUnion,
       description:
-        'Informs the user if the invite or invite email was successfully sent.',
-      resolve: ({ status }) => status,
+        '`InviteUserToOrgUnion` returning either a `InviteUserToOrgResult`, or `InviteUserToOrgError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -62,7 +64,11 @@ able to sign-up and be assigned to that organization in one mutation.`,
       console.warn(
         `User: ${userKey} attempted to invite themselves to ${orgId}.`,
       )
-      throw new Error(i18n._(t`Unable to invite yourself to an org.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to invite yourself to an org.`),
+      }
     }
 
     // Check to see if requested org exists
@@ -72,7 +78,11 @@ able to sign-up and be assigned to that organization in one mutation.`,
       console.warn(
         `User: ${userKey} attempted to invite user: ${userName} to ${orgId} however there is no org associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to invite user to unknown organization.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to invite user to unknown organization.`),
+      }
     }
 
     // Check to see requesting users permission to the org is
@@ -86,11 +96,13 @@ able to sign-up and be assigned to that organization in one mutation.`,
       console.warn(
         `User: ${userKey} attempted to invite user: ${userName} to org: ${org._key} with role: ${requestedRole} but does not have permission to do so.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(
           t`Permission Denied: Please contact organization admin for help with user invitations.`,
         ),
-      )
+      }
     }
 
     // Check to see if requested user exists
@@ -116,6 +128,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       )
 
       return {
+        _type: 'regular',
         status: i18n._(
           t`Successfully sent invitation to service, and organization email.`,
         ),
@@ -170,6 +183,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       )
 
       return {
+        _type: 'regular',
         status: i18n._(
           t`Successfully invited user to organization, and sent notification email.`,
         ),

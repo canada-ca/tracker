@@ -209,7 +209,7 @@ msgstr "todo"
 msgid "Permission Denied: Please contact organization admin for help with updating user roles."
 msgstr "todo"
 
-#: src/affiliation/mutations/invite-user-to-org.js:91
+#: src/affiliation/mutations/invite-user-to-org.js:103
 msgid "Permission Denied: Please contact organization admin for help with user invitations."
 msgstr "todo"
 
@@ -351,7 +351,7 @@ msgstr "todo"
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "todo"
 
-#: src/affiliation/mutations/invite-user-to-org.js:174
+#: src/affiliation/mutations/invite-user-to-org.js:188
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "todo"
 
@@ -367,7 +367,7 @@ msgstr "todo"
 msgid "Successfully removed user from organization."
 msgstr "todo"
 
-#: src/affiliation/mutations/invite-user-to-org.js:120
+#: src/affiliation/mutations/invite-user-to-org.js:133
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "todo"
 
@@ -395,7 +395,7 @@ msgstr "todo"
 msgid "Two factor code length is incorrect. Please try again."
 msgstr "todo"
 
-#: src/affiliation/mutations/invite-user-to-org.js:149
+#: src/affiliation/mutations/invite-user-to-org.js:162
 msgid "Unable to add user to organization. Please try again."
 msgstr "todo"
 
@@ -508,15 +508,15 @@ msgstr "todo"
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "todo"
 
-#: src/affiliation/mutations/invite-user-to-org.js:75
+#: src/affiliation/mutations/invite-user-to-org.js:84
 msgid "Unable to invite user to unknown organization."
 msgstr "todo"
 
-#: src/affiliation/mutations/invite-user-to-org.js:165
+#: src/affiliation/mutations/invite-user-to-org.js:178
 msgid "Unable to invite user. Please try again."
 msgstr "todo"
 
-#: src/affiliation/mutations/invite-user-to-org.js:65
+#: src/affiliation/mutations/invite-user-to-org.js:70
 msgid "Unable to invite yourself to an org."
 msgstr "todo"
 
