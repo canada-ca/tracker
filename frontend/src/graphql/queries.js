@@ -125,56 +125,7 @@ export const ORGANIZATION_BY_SLUG = gql`
   }
 `
 
-export const GET_GUIDANCE_TAGS_OF_DOMAIN_OLD = gql`
-  query FindDomainBySlug($urlSlug: Slug!) {
-    findDomainBySlug(urlSlug: $urlSlug) {
-      url
-      slug
-      lastRan
-      organization {
-        name
-      }
-      web {
-        edges {
-          cursor
-          node {
-            id
-            timestamp
-            domain
-            https {
-              httpsGuidanceTags
-            }
-            ssl {
-              sslGuidanceTags
-            }
-          }
-        }
-      }
-      email {
-        edges {
-          node {
-            timestamp
-            domain
-            dmarc {
-              dmarcGuidanceTags
-            }
-            spf {
-              spfGuidanceTags
-            }
-            dkim {
-              selectors {
-                selector
-                dkimGuidanceTags
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-export const GET_WEB_GUIDANCE_TAGS_OF_DOMAIN = gql`
+export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
   query FindDomainByDomain($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
       id
@@ -184,6 +135,7 @@ export const GET_WEB_GUIDANCE_TAGS_OF_DOMAIN = gql`
         https
         ssl
       }
+      dmarcPhase
       web {
         https(first: 10) {
           edges {
@@ -312,18 +264,6 @@ export const GET_WEB_GUIDANCE_TAGS_OF_DOMAIN = gql`
           }
         }
       }
-      __typename
-    }
-  }
-`
-
-export const GET_EMAIL_GUIDANCE_TAGS_OF_DOMAIN = gql`
-  query FindDomainByDomain($domain: DomainScalar!) {
-    findDomainByDomain(domain: $domain) {
-      id
-      domain
-      lastRan
-      dmarcPhase
       email {
         dkim(first: 10) {
           edges {
@@ -530,7 +470,6 @@ export const GET_EMAIL_GUIDANCE_TAGS_OF_DOMAIN = gql`
           }
         }
       }
-      __typename
     }
   }
 `

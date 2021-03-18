@@ -5,7 +5,7 @@ import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { rawEmailGuidancePageData } from '../fixtures/dmarcGuidancePageData'
+import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 import { GuidanceTagList } from '../GuidanceTagList'
 
 const i18n = setupI18n({
@@ -19,7 +19,7 @@ const i18n = setupI18n({
 })
 
 const selectorNode =
-  rawEmailGuidancePageData.data.findDomainByDomain.email.dmarc.edges[0].node
+  rawDmarcGuidancePageData.findDomainByDomain.email.dmarc.edges[0].node
 const negativeTags = selectorNode.negativeGuidanceTags.edges
 const neutralTags = selectorNode.neutralGuidanceTags.edges
 const positiveTags = selectorNode.positiveGuidanceTags.edges

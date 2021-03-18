@@ -6,7 +6,7 @@ import ScanCategoryDetails from '../ScanCategoryDetails'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { rawWebGuidancePageData } from '../fixtures/dmarcGuidancePageData'
+import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -19,7 +19,7 @@ const i18n = setupI18n({
 })
 
 const categoryName = 'https'
-const categoryData = rawWebGuidancePageData.data.findDomainByDomain.web.https
+const categoryData = rawDmarcGuidancePageData.findDomainByDomain.web.https
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
