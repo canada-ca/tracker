@@ -1,8 +1,8 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const bcrypt = require('bcrypt')
-const { makeMigrations } = require('../../migrations')
+const { ensure, dbNameFromFile } = require('arango-tools')
+const bcrypt = require('bcryptjs')
+const { databaseOptions } = require('../../database-options')
 
 const {
   checkForSuperAdminAccount,
@@ -15,14 +15,17 @@ describe('given the checkForSuperAdminAccount function', () => {
   const mockedError = (output) => consoleErrorOutput.push(output)
   const mockedInfo = (output) => consoleInfoOutput.push(output)
 
-  let query, drop, truncate, migrate, collections, transaction
+  let query, drop, truncate, collections, transaction
 
   beforeAll(async () => {
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {
@@ -41,7 +44,11 @@ describe('given the checkForSuperAdminAccount function', () => {
   describe('given a successful check', () => {
     let user
     beforeEach(async () => {
-      const userDBInfo = await createSuperAdminAccount({ collections, transaction, bcrypt })
+      const userDBInfo = await createSuperAdminAccount({
+        collections,
+        transaction,
+        bcrypt,
+      })
       const userCursor = await query`
         FOR user IN users
           FILTER user._key == ${userDBInfo._key}
