@@ -1,10 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Box, Button, Divider, Stack, Text } from '@chakra-ui/core'
-import {
-  REVERSE_PAGINATED_ORG_DOMAINS as BACKWARD,
-  PAGINATED_ORG_DOMAINS as FORWARD,
-} from './graphql/queries'
+import { PAGINATED_ORG_DOMAINS as FORWARD } from './graphql/queries'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
@@ -26,7 +23,6 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     variables: { slug: orgSlug },
     recordsPerPage: domainsPerPage,

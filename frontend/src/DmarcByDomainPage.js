@@ -1,9 +1,6 @@
 import React, { useState } from 'react'
 import { useUserState } from './UserState'
-import {
-  PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD,
-  REVERSE_PAGINATED_DMARC_REPORT_SUMMARY_TABLE as BACKWARD,
-} from './graphql/queries'
+import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from './graphql/queries'
 import { Box, Heading, Select, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
@@ -37,7 +34,6 @@ export default function DmarcByDomainPage() {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: selectedTableDisplayLimit,
     variables: {
