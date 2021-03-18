@@ -97,6 +97,7 @@ export const spfFailureLoaderConnectionsBySumId = (
   let requestedSpfFailureInfo
   try {
     requestedSpfFailureInfo = await query`
+      WITH dmarcSummaries
       LET spfFailures = FLATTEN(
         FOR summary IN dmarcSummaries
           FILTER summary._id == ${summaryId}

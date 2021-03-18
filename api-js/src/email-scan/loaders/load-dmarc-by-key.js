@@ -7,6 +7,7 @@ export const dmarcLoaderByKey = (query, userKey, i18n) =>
 
     try {
       cursor = await query`
+        WITH dmarc
         FOR dmarcScan IN dmarc
           FILTER dmarcScan._key IN ${keys}
           RETURN MERGE({ id: dmarcScan._key, _type: "dmarc" }, dmarcScan)

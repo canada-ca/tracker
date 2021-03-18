@@ -198,6 +198,7 @@ export const dkimGuidanceTagConnectionsLoader = (
   let dkimGuidanceTagInfoCursor
   try {
     dkimGuidanceTagInfoCursor = await query`
+      WITH dkimGuidanceTags
       LET retrievedDkimGuidanceTags = (
         FOR tag IN dkimGuidanceTags
           FILTER tag._key IN ${dkimGuidanceTags}

@@ -97,6 +97,8 @@ export const dmarcFailureLoaderConnectionsBySumId = (
   let requestedDmarcFailureInfo
   try {
     requestedDmarcFailureInfo = await query`
+      WITH dmarcSummaries
+      
       LET dmarcFailures = FLATTEN(
         FOR summary IN dmarcSummaries
           FILTER summary._id == ${summaryId}

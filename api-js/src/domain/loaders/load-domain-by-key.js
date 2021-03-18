@@ -7,6 +7,7 @@ export const domainLoaderByKey = (query, userKey, i18n) =>
 
     try {
       cursor = await query`
+        WITH domains
         FOR domain IN domains
           FILTER domain._key IN ${ids}
           RETURN MERGE({ id: domain._key, _type: "domain" }, domain)

@@ -88,6 +88,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       await Promise.all([
         trx.step(async () => {
           await query`
+            WITH claims, dkim, domains, domainsDKIM, organizations
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
               LET dkimEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsDKIM RETURN { edgeKey: e._key, dkimId: e._to })
@@ -98,6 +99,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         }),
         trx.step(async () => {
           await query`
+            WITH claims, dmarc, domains, domainsDMARC, organizations
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
               LET dmarcEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsDMARC RETURN { edgeKey: e._key, dmarcId: e._to })
@@ -108,6 +110,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         }),
         trx.step(async () => {
           await query`
+            WITH claims, domains, domainsSPF, organizations, spf
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
               LET spfEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsSPF RETURN { edgeKey: e._key, spfId: e._to })
@@ -118,6 +121,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         }),
         trx.step(async () => {
           await query`
+            WITH claims, domains, domainsHTTPS, https, organizations
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
               LET httpsEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsHTTPS RETURN { edgeKey: e._key, httpsId: e._to })
@@ -128,6 +132,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         }),
         trx.step(async () => {
           await query`
+            WITH claims, domains, domainsSSL, organizations, ssl
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             FOR domainEdge in domainEdges
               LET sslEdges = (FOR v, e IN 1..1 ANY domainEdge.domainId domainsSSL RETURN { edgeKey: e._key, sslId: e._to})
@@ -150,6 +155,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       await Promise.all([
         trx.step(async () => {
           await query`
+            WITH claims, domains, organizations
             LET domainEdges = (FOR v, e IN 1..1 ANY ${organization._id} claims RETURN { edgeKey: e._key, domainId: e._to })
             LET removeDomainEdges = (FOR domainEdge in domainEdges REMOVE domainEdge.edgeKey IN claims)
             LET removeDomain = (FOR domainEdge in domainEdges LET key = PARSE_IDENTIFIER(domainEdge.domainId).key REMOVE key IN domains)
@@ -158,6 +164,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         }),
         trx.step(async () => {
           await query`
+            WITH affiliations, organizations, users
             LET userEdges = (FOR v, e IN 1..1 ANY ${organization._id} affiliations RETURN { edgeKey: e._key, userKey: e._to })
             LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
             RETURN true

@@ -6,6 +6,7 @@ export const sslLoaderByKey = (query, userKey, i18n) =>
     let cursor
     try {
       cursor = await query`
+        WITH ssl
         FOR sslScan IN ssl
           FILTER sslScan._key IN ${keys}
           RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)

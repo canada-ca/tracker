@@ -6,6 +6,7 @@ export const httpsLoaderByKey = (query, userKey, i18n) =>
     let cursor
     try {
       cursor = await query`
+        WITH https
         FOR httpsScan IN https
           FILTER httpsScan._key IN ${keys}
           RETURN MERGE({ id: httpsScan._key, _type: "https" }, httpsScan)
