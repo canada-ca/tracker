@@ -51,12 +51,43 @@ export default function Organisations({ orgsPerPage = 10 }) {
 
   if (error) return <ErrorFallbackMessage error={error} />
 
-  if (loading)
-    return (
+  // Set the list contents only to loading message when loading
+  // Prevents select active option from resetting when loading
+  let orgList
+  if (loading) {
+    orgList = (
       <LoadingMessage>
         <Trans>Organizations</Trans>
       </LoadingMessage>
     )
+  } else {
+    orgList = (
+      <ListOf
+        elements={nodes}
+        ifEmpty={() => <Trans>No Organizations</Trans>}
+        mb="4"
+      >
+        {({ name, slug, acronym, domainCount, verified, summaries }, index) => (
+          <ErrorBoundary
+            key={`${slug}:${index}`}
+            FallbackComponent={ErrorFallbackMessage}
+          >
+            <Box>
+              <OrganizationCard
+                slug={slug}
+                name={name}
+                acronym={acronym}
+                domainCount={domainCount}
+                verified={verified}
+                summaries={summaries}
+              />
+              <Divider borderColor="gray.900" />
+            </Box>
+          </ErrorBoundary>
+        )}
+      </ListOf>
+    )
+  }
 
   return (
     <Layout>
@@ -87,7 +118,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
             size="md"
             variant="filled"
             onChange={(e) => {
-              const value = e.target.value.split(" ")
+              const value = e.target.value.split(' ')
               setOrderField(value[0])
               setOrderDirection(value[1])
             }}
@@ -130,34 +161,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
             </option>
           </Select>
         </Stack>
-        <ListOf
-          elements={nodes}
-          ifEmpty={() => <Trans>No Organizations</Trans>}
-          mb="4"
-        >
-          {(
-            { name, slug, acronym, domainCount, verified, summaries },
-            index,
-          ) => (
-            <ErrorBoundary
-              key={`${slug}:${index}`}
-              FallbackComponent={ErrorFallbackMessage}
-            >
-              <Box>
-                <OrganizationCard
-                  slug={slug}
-                  name={name}
-                  acronym={acronym}
-                  domainCount={domainCount}
-                  verified={verified}
-                  summaries={summaries}
-                />
-                <Divider borderColor="gray.900" />
-              </Box>
-            </ErrorBoundary>
-          )}
-        </ListOf>
-
+        {orgList}
         <RelayPaginationControls
           onlyPagination={true}
           hasNextPage={hasNextPage}
