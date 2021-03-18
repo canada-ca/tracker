@@ -87,27 +87,46 @@ export default function Organisations({ orgsPerPage = 10 }) {
             size="md"
             variant="filled"
             onChange={(e) => {
-              setOrderField(e.target.value.field)
-              setOrderDirection(e.target.value.direction)
+              const value = e.target.value.split(" ")
+              setOrderField(value[0])
+              setOrderDirection(value[1])
             }}
           >
-            <option key="NAME_ASC" value={{field: "NAME", direction: "ASC"}}>
-              Name Ascending
-            </option>
-            <option key="NAME_DESC" value={{field: "NAME", direction: "DESC"}}>
-              Name Descending
-            </option>
-            <option key="DOMAIN_COUNT_ASC" value={{field: "DOMAIN_COUNT", direction: "ASC"}}>
-              Domains Ascending
-            </option>
-            <option key="DOMAIN_COUNT_DESC" value={{field: "DOMAIN_COUNT", direction: "DESC"}}>
-              Domains Descending
-            </option>
-            <option key="ACRONYM_ASC" value={{field: "ACRONYM", direction: "ASC"}} >
+            <option key="ACRONYM_ASC" value="ACRONYM ASC">
               Acronym Ascending
             </option>
-            <option key="ACRONYM_DESC" value={{field: "ACRONYM", direction: "DESC"}} >
+            <option key="ACRONYM_DESC" value="ACRONYM DESC">
               Acronym Descending
+            </option>
+            <option key="DOMAIN_COUNT_ASC" value="DOMAIN_COUNT ASC">
+              Domains Ascending
+            </option>
+            <option key="DOMAIN_COUNT_DESC" value="DOMAIN_COUNT DESC">
+              Domains Descending
+            </option>
+            <option key="NAME_ASC" value="NAME ASC">
+              Name Ascending
+            </option>
+            <option key="NAME_DESC" value="NAME DESC">
+              Name Descending
+            </option>
+            <option key="PROVINCE_ASC" value="PROVINCE ASC">
+              Province Ascending
+            </option>
+            <option key="PROVINCE_DESC" value="PROVINCE DESC">
+              Province Descending
+            </option>
+            <option key="SECTOR_ASC" value="SECTOR ASC">
+              Sector Ascending
+            </option>
+            <option key="SECTOR_DESC" value="SECTOR DESC">
+              Sector Descending
+            </option>
+            <option key="VERIFIED_ASC" value="VERIFIED ASC">
+              Verified Ascending
+            </option>
+            <option key="VERIFIED_DESC" value="VERIFIED DESC">
+              Verified Descending
             </option>
           </Select>
         </Stack>
