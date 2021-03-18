@@ -6,6 +6,7 @@ export const sslGuidanceTagLoader = (query, userKey, i18n) =>
     let cursor
     try {
       cursor = await query`
+        WITH sslGuidanceTags
         FOR tag IN sslGuidanceTags
           FILTER tag._key IN ${tags}
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })

@@ -198,6 +198,7 @@ export const spfGuidanceTagConnectionsLoader = (
   let spfGuidanceTagInfoCursor
   try {
     spfGuidanceTagInfoCursor = await query`
+      WITH spfGuidanceTags
       LET retrievedSpfGuidanceTags = (
         FOR tag IN spfGuidanceTags
           FILTER tag._key IN ${spfGuidanceTags}
