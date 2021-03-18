@@ -198,6 +198,7 @@ export const dkimResultsLoaderConnectionByDkimId = (
   let dkimResultsCursor
   try {
     dkimResultsCursor = await query`
+    WITH dkim, dkimResults, dkimToDkimResults
     LET dkimResultKeys = (FOR v, e IN 1 OUTBOUND ${dkimId} dkimToDkimResults RETURN v._key)
 
     LET retrievedDkimResults = (

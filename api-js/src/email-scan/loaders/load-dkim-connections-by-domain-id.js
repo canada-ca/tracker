@@ -220,6 +220,7 @@ export const dkimLoaderConnectionsByDomainId = (
   let requestedDkimInfo
   try {
     requestedDkimInfo = await query`
+    WITH dkim, domains, domainsDKIM
     LET dkimKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsDKIM RETURN v._key)
     
     LET retrievedDkim = (

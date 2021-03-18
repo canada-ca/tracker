@@ -7,6 +7,7 @@ export const dkimResultLoaderByKey = (query, userKey, i18n) =>
 
     try {
       cursor = await query`
+        WITH dkimResults
         FOR dkimResult IN dkimResults
           FILTER dkimResult._key IN ${keys}
           RETURN MERGE({ id: dkimResult._key, _type: "dkimResult" }, dkimResult)

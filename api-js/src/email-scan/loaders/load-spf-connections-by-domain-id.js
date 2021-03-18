@@ -247,6 +247,7 @@ export const spfLoaderConnectionsByDomainId = (
   let spfScanInfoCursor
   try {
     spfScanInfoCursor = await query`
+    WITH domains, domainsSPF, spf
     LET spfKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF RETURN v._key)
 
     LET retrievedSpfScans = (
