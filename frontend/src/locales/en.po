@@ -65,8 +65,8 @@ msgstr "A.5 Maintain"
 msgid "A.5.3 Rotate DKIM Keys"
 msgstr "A.5.3 Rotate DKIM Keys"
 
-#: src/UserList.js:221
-#: src/UserList.js:279
+#: src/UserList.js:244
+#: src/UserList.js:302
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -112,7 +112,7 @@ msgstr "Account Settings"
 msgid "Account created."
 msgstr "Account created."
 
-#: src/Organizations.js:134
+#: src/Organizations.js:133
 msgid "Acronym"
 msgstr "Acronym"
 
@@ -170,11 +170,11 @@ msgstr "An error occurred while verifying your phone number."
 #: src/AdminDomains.js:212
 #: src/TwoFactorAuthenticatePage.js:34
 #: src/UserList.js:94
-#: src/UserList.js:163
+#: src/UserList.js:186
 msgid "An error occurred."
 msgstr "An error occurred."
 
-#: src/UserList.js:292
+#: src/UserList.js:315
 msgid "Apply"
 msgstr "Apply"
 
@@ -561,7 +561,7 @@ msgstr "Domain:"
 #: src/DomainsPage.js:65
 #: src/OrganizationDetails.js:88
 #: src/OrganizationDomains.js:41
-#: src/Organizations.js:137
+#: src/Organizations.js:136
 msgid "Domains"
 msgstr "Domains"
 
@@ -616,7 +616,7 @@ msgstr "Email Validated"
 msgid "Email cannot be empty"
 msgstr "Email cannot be empty"
 
-#: src/UserList.js:105
+#: src/UserList.js:106
 msgid "Email invitation sent to {addedUserName}"
 msgstr "Email invitation sent to {addedUserName}"
 
@@ -867,6 +867,10 @@ msgstr "Implementation Status:"
 msgid "Incorrect authenticate.result typename."
 msgstr "Incorrect authenticate.result typename."
 
+#: src/UserList.js:126
+msgid "Incorrect inviteUserToOrg.result typename."
+msgstr "Incorrect inviteUserToOrg.result typename."
+
 #: src/ResetPasswordPage.js:61
 msgid "Incorrect resetPassword.result typename."
 msgstr "Incorrect resetPassword.result typename."
@@ -882,6 +886,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/ResetPasswordPage.js:60
 #: src/SignInPage.js:98
 #: src/TwoFactorAuthenticatePage.js:80
+#: src/UserList.js:125
 msgid "Incorrect send method received."
 msgstr "Incorrect send method received."
 
@@ -933,7 +938,7 @@ msgstr "Invalid percent"
 msgid "Invalid public key"
 msgstr "Invalid public key"
 
-#: src/UserList.js:235
+#: src/UserList.js:258
 msgid "Invite User"
 msgstr "Invite User"
 
@@ -1067,7 +1072,7 @@ msgstr "Missing from guide- need v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "More than 10 lookups - Follow implementation guide"
 
-#: src/Organizations.js:131
+#: src/Organizations.js:130
 msgid "Name"
 msgstr "Name"
 
@@ -1164,7 +1169,7 @@ msgstr "No domains scanned yet."
 msgid "No scan data for this organization."
 msgstr "No scan data for this organization."
 
-#: src/UserList.js:243
+#: src/UserList.js:266
 msgid "No users in this organization"
 msgstr "No users in this organization"
 
@@ -1439,7 +1444,7 @@ msgstr "Privacy"
 msgid "Properly configured!"
 msgstr "Properly configured!"
 
-#: src/Organizations.js:140
+#: src/Organizations.js:139
 msgid "Province"
 msgstr "Province"
 
@@ -1531,7 +1536,7 @@ msgstr "Results for scans of web technologies (SSL, HTTPS)."
 msgid "Role updated"
 msgstr "Role updated"
 
-#: src/UserList.js:263
+#: src/UserList.js:286
 msgid "Role:"
 msgstr "Role:"
 
@@ -1618,7 +1623,7 @@ msgstr "SSL-missing"
 msgid "SSL-rc4"
 msgstr "SSL-rc4"
 
-#: src/UserList.js:283
+#: src/UserList.js:306
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
@@ -1659,7 +1664,7 @@ msgstr "Search"
 msgid "Search for a domain"
 msgstr "Search for a domain"
 
-#: src/UserList.js:208
+#: src/UserList.js:231
 msgid "Search for a user"
 msgstr "Search for a user"
 
@@ -1675,7 +1680,7 @@ msgstr "Search for any Government of Canada tracked domain:"
 msgid "Search:"
 msgstr "Search:"
 
-#: src/Organizations.js:143
+#: src/Organizations.js:142
 msgid "Sector"
 msgstr "Sector"
 
@@ -1737,7 +1742,7 @@ msgstr "Sign in with your username and password."
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
-#: src/Organizations.js:119
+#: src/Organizations.js:118
 msgid "Sort by:"
 msgstr "Sort by:"
 
@@ -1828,8 +1833,8 @@ msgstr "Tracker Logo"
 msgid "Two Factor Authentication"
 msgstr "Two Factor Authentication"
 
-#: src/UserList.js:220
-#: src/UserList.js:276
+#: src/UserList.js:243
+#: src/UserList.js:299
 msgid "USER"
 msgstr "USER"
 
@@ -1844,6 +1849,10 @@ msgstr "Unable to create account, please try again."
 #: src/CreateUserPage.js:54
 msgid "Unable to create your account, please try again."
 msgstr "Unable to create your account, please try again."
+
+#: src/UserList.js:116
+msgid "Unable to invite user."
+msgstr "Unable to invite user."
 
 #: src/ScanDomain.js:32
 msgid "Unable to request scan, please try again."
@@ -1877,8 +1886,8 @@ msgid "Unable to update to your display name, please try again."
 msgstr "Unable to update to your display name, please try again."
 
 #: src/EditableUserPhoneNumber.js:64
-msgid "Unable to update to your phone number, please try again."
-msgstr "Unable to update to your phone number, please try again."
+#~ msgid "Unable to update to your phone number, please try again."
+#~ msgstr "Unable to update to your phone number, please try again."
 
 #: src/EditableUserLanguage.js:52
 msgid "Unable to update to your preferred language, please try again."
@@ -1891,6 +1900,10 @@ msgstr "Unable to update to your username, please try again."
 #: src/EditableUserPassword.js:73
 msgid "Unable to update your password, please try again."
 msgstr "Unable to update your password, please try again."
+
+#: src/EditableUserPhoneNumber.js:64
+msgid "Unable to update your phone number, please try again."
+msgstr "Unable to update your phone number, please try again."
 
 #: src/EditableUserPhoneNumber.js:120
 msgid "Unable to verify your phone number, please try again."
@@ -1905,8 +1918,8 @@ msgstr "Use DKIM to validate outbound email sent from your custom domain"
 msgid "User Affiliations"
 msgstr "User Affiliations"
 
-#: src/UserList.js:118
-#: src/UserList.js:174
+#: src/UserList.js:141
+#: src/UserList.js:197
 msgid "User List"
 msgstr "User List"
 
@@ -1915,7 +1928,7 @@ msgstr "User List"
 #~ msgid "User Profile"
 #~ msgstr "User Profile"
 
-#: src/UserList.js:104
+#: src/UserList.js:105
 msgid "User invited"
 msgstr "User invited"
 
@@ -1939,7 +1952,7 @@ msgstr "Verification TXT records for some/all 3rd party senders missing"
 msgid "Verification code must only contains numbers"
 msgstr "Verification code must only contains numbers"
 
-#: src/Organizations.js:146
+#: src/Organizations.js:145
 msgid "Verified"
 msgstr "Verified"
 

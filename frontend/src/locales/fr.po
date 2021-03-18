@@ -65,8 +65,8 @@ msgstr "A.5 Tenir les éléments à jour"
 msgid "A.5.3 Rotate DKIM Keys"
 msgstr "A.5.3 Assurer la rotation des clés DKIM"
 
-#: src/UserList.js:221
-#: src/UserList.js:279
+#: src/UserList.js:244
+#: src/UserList.js:302
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -112,7 +112,7 @@ msgstr "Paramètres du compte"
 msgid "Account created."
 msgstr "Compte créé"
 
-#: src/Organizations.js:134
+#: src/Organizations.js:133
 msgid "Acronym"
 msgstr "Acronyme"
 
@@ -170,11 +170,11 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/AdminDomains.js:212
 #: src/TwoFactorAuthenticatePage.js:34
 #: src/UserList.js:94
-#: src/UserList.js:163
+#: src/UserList.js:186
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
-#: src/UserList.js:292
+#: src/UserList.js:315
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -557,7 +557,7 @@ msgstr "Domaine:"
 #: src/DomainsPage.js:65
 #: src/OrganizationDetails.js:88
 #: src/OrganizationDomains.js:41
-#: src/Organizations.js:137
+#: src/Organizations.js:136
 msgid "Domains"
 msgstr "Domaines"
 
@@ -612,7 +612,7 @@ msgstr "Courriel validé"
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
-#: src/UserList.js:105
+#: src/UserList.js:106
 msgid "Email invitation sent to {addedUserName}"
 msgstr "Invitation par courrier électronique envoyée à jim@hotmail.com"
 
@@ -859,6 +859,10 @@ msgstr "État d'avancement de la mise en œuvre:"
 msgid "Incorrect authenticate.result typename."
 msgstr ""
 
+#: src/UserList.js:126
+msgid "Incorrect inviteUserToOrg.result typename."
+msgstr ""
+
 #: src/ResetPasswordPage.js:61
 msgid "Incorrect resetPassword.result typename."
 msgstr ""
@@ -874,6 +878,7 @@ msgstr ""
 #: src/ResetPasswordPage.js:60
 #: src/SignInPage.js:98
 #: src/TwoFactorAuthenticatePage.js:80
+#: src/UserList.js:125
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
 
@@ -925,7 +930,7 @@ msgstr "Pourcentage non valable"
 msgid "Invalid public key"
 msgstr "Clé publique invalide"
 
-#: src/UserList.js:235
+#: src/UserList.js:258
 msgid "Invite User"
 msgstr "Inviter l'utilisateur"
 
@@ -1059,7 +1064,7 @@ msgstr "Absent du guide - besoin v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 
-#: src/Organizations.js:131
+#: src/Organizations.js:130
 msgid "Name"
 msgstr "Nom"
 
@@ -1156,7 +1161,7 @@ msgstr "Aucun domaine n'a encore été scanné."
 msgid "No scan data for this organization."
 msgstr "Aucune donnée d'analyse pour cette organisation."
 
-#: src/UserList.js:243
+#: src/UserList.js:266
 msgid "No users in this organization"
 msgstr "Aucun utilisateur dans cette organisation"
 
@@ -1431,7 +1436,7 @@ msgstr "Confidentialité"
 msgid "Properly configured!"
 msgstr "Bien configuré !"
 
-#: src/Organizations.js:140
+#: src/Organizations.js:139
 msgid "Province"
 msgstr "Province"
 
@@ -1523,7 +1528,7 @@ msgstr "Résultats des analyses des technologies du web (SSL, HTTPS)."
 msgid "Role updated"
 msgstr "Rôle mis à jour"
 
-#: src/UserList.js:263
+#: src/UserList.js:286
 msgid "Role:"
 msgstr "Fonction:"
 
@@ -1610,7 +1615,7 @@ msgstr ""
 msgid "SSL-rc4"
 msgstr ""
 
-#: src/UserList.js:283
+#: src/UserList.js:306
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
@@ -1651,7 +1656,7 @@ msgstr "Recherchez"
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
-#: src/UserList.js:208
+#: src/UserList.js:231
 msgid "Search for a user"
 msgstr "Rechercher un utilisateur"
 
@@ -1667,7 +1672,7 @@ msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
 msgid "Search:"
 msgstr "Recherche :"
 
-#: src/Organizations.js:143
+#: src/Organizations.js:142
 msgid "Sector"
 msgstr "Secteur"
 
@@ -1729,7 +1734,7 @@ msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
-#: src/Organizations.js:119
+#: src/Organizations.js:118
 msgid "Sort by:"
 msgstr "Trier par:"
 
@@ -1820,8 +1825,8 @@ msgstr "Logo du Tracker"
 msgid "Two Factor Authentication"
 msgstr "Authentification à deux facteurs"
 
-#: src/UserList.js:220
-#: src/UserList.js:276
+#: src/UserList.js:243
+#: src/UserList.js:299
 msgid "USER"
 msgstr "UTILISATEUR"
 
@@ -1836,6 +1841,10 @@ msgstr ""
 #: src/CreateUserPage.js:54
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
+
+#: src/UserList.js:116
+msgid "Unable to invite user."
+msgstr ""
 
 #: src/ScanDomain.js:32
 msgid "Unable to request scan, please try again."
@@ -1862,27 +1871,31 @@ msgstr "Impossible de mettre à jour le mot de passe"
 
 #: src/EditableUserTFAMethod.js:63
 msgid "Unable to update to your TFA send method, please try again."
-msgstr ""
+msgstr "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réessayer."
 
 #: src/EditableUserDisplayName.js:73
 msgid "Unable to update to your display name, please try again."
-msgstr ""
+msgstr "Impossible de mettre à jour votre nom d'affichage, veuillez réessayer."
 
 #: src/EditableUserPhoneNumber.js:64
-msgid "Unable to update to your phone number, please try again."
-msgstr ""
+#~ msgid "Unable to update to your phone number, please try again."
+#~ msgstr "Impossible de mettre à jour votre numéro de téléphone, veuillez réessayer."
 
 #: src/EditableUserLanguage.js:52
 msgid "Unable to update to your preferred language, please try again."
-msgstr ""
+msgstr "Impossible de mettre à jour votre langue préférée, veuillez réessayer."
 
 #: src/EditableUserEmail.js:71
 msgid "Unable to update to your username, please try again."
-msgstr ""
+msgstr "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessayer."
 
 #: src/EditableUserPassword.js:73
 msgid "Unable to update your password, please try again."
 msgstr "Impossible de mettre à jour votre mot de passe, veuillez réessayer."
+
+#: src/EditableUserPhoneNumber.js:64
+msgid "Unable to update your phone number, please try again."
+msgstr "Impossible de mettre à jour votre numéro de téléphone, veuillez réessayer."
 
 #: src/EditableUserPhoneNumber.js:120
 msgid "Unable to verify your phone number, please try again."
@@ -1897,8 +1910,8 @@ msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé dep
 msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 
-#: src/UserList.js:118
-#: src/UserList.js:174
+#: src/UserList.js:141
+#: src/UserList.js:197
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
@@ -1907,7 +1920,7 @@ msgstr "Liste des utilisateurs"
 #~ msgid "User Profile"
 #~ msgstr "Profil de l'utilisateur"
 
-#: src/UserList.js:104
+#: src/UserList.js:105
 msgid "User invited"
 msgstr "Utilisateur invité"
 
@@ -1931,7 +1944,7 @@ msgstr "Vérification des enregistrements TXT pour certains/toutes les expédite
 msgid "Verification code must only contains numbers"
 msgstr "Le code de vérification ne doit contenir que des chiffres"
 
-#: src/Organizations.js:146
+#: src/Organizations.js:145
 msgid "Verified"
 msgstr "Vérifié"
 

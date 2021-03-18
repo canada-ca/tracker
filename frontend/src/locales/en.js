@@ -239,6 +239,8 @@
     'Implementation Status:': 'Implementation Status:',
     'Incorrect authenticate.result typename.':
       'Incorrect authenticate.result typename.',
+    'Incorrect inviteUserToOrg.result typename.':
+      'Incorrect inviteUserToOrg.result typename.',
     'Incorrect resetPassword.result typename.':
       'Incorrect resetPassword.result typename.',
     'Incorrect send method received.': 'Incorrect send method received.',
@@ -504,6 +506,7 @@
       'Unable to create account, please try again.',
     'Unable to create your account, please try again.':
       'Unable to create your account, please try again.',
+    'Unable to invite user.': 'Unable to invite user.',
     'Unable to request scan, please try again.':
       'Unable to request scan, please try again.',
     'Unable to reset your password, please try again.':
@@ -525,6 +528,8 @@
       'Unable to update to your username, please try again.',
     'Unable to update your password, please try again.':
       'Unable to update your password, please try again.',
+    'Unable to update your phone number, please try again.':
+      'Unable to update your phone number, please try again.',
     'Unable to verify your phone number, please try again.':
       'Unable to verify your phone number, please try again.',
     'Use DKIM to validate outbound email sent from your custom domain':
@@ -541,6 +546,7 @@
       'Verification TXT records for some/all 3rd party senders missing',
     'Verification code must only contains numbers':
       'Verification code must only contains numbers',
+    Verified: 'Verified',
     Verify: 'Verify',
     'Vulnerability-ccs-injection': 'Vulnerability-ccs-injection',
     'Vulnerability-heartbleed': 'Vulnerability-heartbleed',
