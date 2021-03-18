@@ -259,6 +259,8 @@ export const domainLoaderConnectionsByOrgId = (
   let requestedDomainInfo
   try {
     requestedDomainInfo = await query`
+    WITH affiliations, domains, organizations, users 
+
     LET domainKeys = UNIQUE(FLATTEN(
       LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
       LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)

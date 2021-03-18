@@ -267,6 +267,7 @@ export const domainLoaderConnectionsByUserId = (
   let domainKeysQuery
   if (isSuperAdmin) {
     domainKeysQuery = aql`
+      WITH domains, organizations, users
       LET domainKeys = UNIQUE(FLATTEN(
         LET keys = []
         LET orgIds = (FOR org IN organizations RETURN org._id)
@@ -277,6 +278,7 @@ export const domainLoaderConnectionsByUserId = (
     `
   } else {
     domainKeysQuery = aql`
+      WITH affiliations, domains, organizations, users
       LET domainKeys = UNIQUE(FLATTEN(
         LET keys = []
         LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
