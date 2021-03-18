@@ -103,13 +103,13 @@ export default function Organisations({ orgsPerPage = 10 }) {
           direction={{ base: 'column', md: 'row' }}
           alignItems={{ base: 'stretch', md: 'center' }}
         >
-          <InputGroup mb="8px" flexGrow={1}>
+          <InputGroup mb={{ base: "8px", md: "0" }} flexGrow={1}>
             <InputLeftElement>
               <Icon name="search" color="gray.300" />
             </InputLeftElement>
             <Input type="text" placeholder={t`Search for an organization`} />
           </InputGroup>
-          <Stack isInline w="25%" align="center" ml={{ md: '10%' }}>
+          <Stack isInline align="center" ml={{ md: '10%' }}>
             <Text
               fontSize="md"
               fontWeight="bold"
@@ -128,22 +128,22 @@ export default function Organisations({ orgsPerPage = 10 }) {
               }}
             >
               <option key="NAME" value="NAME">
-                Name
+                {t`Name`}
               </option>
               <option key="ACRONYM" value="ACRONYM">
-                Acronym
+                {t`Acronym`}
               </option>
               <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">
-                Domains
+                {t`Domains`}
               </option>
               <option key="PROVINCE" value="PROVINCE">
-                Province
+                {t`Province`}
               </option>
               <option key="SECTOR" value="SECTOR">
-                Sector
+                {t`Sector`}
               </option>
               <option key="VERIFIED" value="VERIFIED">
-                Verified
+                {t`Verified`}
               </option>
             </Select>
             <IconButton
