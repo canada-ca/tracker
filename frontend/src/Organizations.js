@@ -7,14 +7,15 @@ import {
   Heading,
   Box,
   Divider,
+  Flex,
+  Icon,
+  IconButton,
+  Input,
   InputGroup,
   InputLeftElement,
-  Icon,
-  Input,
   Select,
   Stack,
   Text,
-  IconButton,
 } from '@chakra-ui/core'
 import {
   PAGINATED_ORGANIZATIONS as FORWARD,
@@ -98,52 +99,65 @@ export default function Organisations({ orgsPerPage = 10 }) {
         <Trans>Organizations</Trans>
       </Heading>
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-        <Stack isInline spacing={3}>
-          <InputGroup width="57%" mb="8px" flexGrow={1}>
+        <Flex
+          direction={{ base: 'column', md: 'row' }}
+          alignItems={{ base: 'stretch', md: 'center' }}
+        >
+          <InputGroup mb="8px" flexGrow={1}>
             <InputLeftElement>
               <Icon name="search" color="gray.300" />
             </InputLeftElement>
             <Input type="text" placeholder={t`Search for an organization`} />
           </InputGroup>
-          <Text
-            fontSize="md"
-            fontWeight="bold"
-            textAlign="center"
-            ml="10%"
-            mt={2}
-            isTruncated
-          >
-            <Trans>Sort by: </Trans>
-          </Text>
-          <Select
-            aria-label="Sort by"
-            w="10%"
-            size="md"
-            variant="filled"
-            onChange={(e) => {
-              setOrderField(e.target.value)
-            }}
-          >
-            <option key="NAME" value="NAME">
-              Name
-            </option>
-            <option key="ACRONYM" value="ACRONYM">
-              Acronym
-            </option>
-            <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">
-              Domains
-            </option>
-          </Select>
-          <IconButton
-            icon={orderIconName}
-            color="primary"
-            onClick={() => {
-              const newOrderDirection =
-                orderDirection === 'ASC' ? 'DESC' : 'ASC'
-              setOrderDirection(newOrderDirection)
-            }}
-          />
-        </Stack>
+          <Stack isInline w="25%" align="center" ml={{ md: '10%' }}>
+            <Text
+              fontSize="md"
+              fontWeight="bold"
+              textAlign="center"
+              mt={2}
+            >
+              <Trans>Sort by: </Trans>
+            </Text>
+            <Select
+              aria-label="Sort by field"
+              w="fit-content"
+              size="md"
+              variant="filled"
+              onChange={(e) => {
+                setOrderField(e.target.value)
+              }}
+            >
+              <option key="NAME" value="NAME">
+                Name
+              </option>
+              <option key="ACRONYM" value="ACRONYM">
+                Acronym
+              </option>
+              <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">
+                Domains
+              </option>
+              <option key="PROVINCE" value="PROVINCE">
+                Province
+              </option>
+              <option key="SECTOR" value="SECTOR">
+                Sector
+              </option>
+              <option key="VERIFIED" value="VERIFIED">
+                Verified
+              </option>
+            </Select>
+            <IconButton
+              aria-label="Toggle sort direction"
+              icon={orderIconName}
+              color="primary"
+              onClick={() => {
+                const newOrderDirection =
+                  orderDirection === 'ASC' ? 'DESC' : 'ASC'
+                setOrderDirection(newOrderDirection)
+              }}
+            />
+          </Stack>
+        </Flex>
         {orgList}
         <RelayPaginationControls
           onlyPagination={true}
