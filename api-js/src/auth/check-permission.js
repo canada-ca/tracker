@@ -8,6 +8,7 @@ export const checkPermission = ({ i18n, userKey, query }) => async ({
   // Check for super admin
   try {
     cursor = await query`
+      WITH affiliations, organizations, users
       FOR v, e IN 1 INBOUND ${userKeyString} affiliations
         FILTER e.permission == "super_admin"
         RETURN e.permission
@@ -35,10 +36,11 @@ export const checkPermission = ({ i18n, userKey, query }) => async ({
     // Check for other permission level
     try {
       cursor = await query`
-      FOR v, e IN 1 INBOUND ${userKeyString} affiliations
-        FILTER e._from == ${orgId}
-        RETURN e.permission
-    `
+        WITH affiliations, organizations, users
+        FOR v, e IN 1 INBOUND ${userKeyString} affiliations
+          FILTER e._from == ${orgId}
+          RETURN e.permission
+      `
     } catch (err) {
       console.error(
         `Database error occurred when checking ${userKeyString}'s permission: ${err}`,
