@@ -14,6 +14,7 @@ import {
   Select,
   Stack,
   Text,
+  Switch,
 } from '@chakra-ui/core'
 import {
   PAGINATED_ORGANIZATIONS as FORWARD,
@@ -114,52 +115,35 @@ export default function Organisations({ orgsPerPage = 10 }) {
           </Text>
           <Select
             aria-label="Sort by"
-            w="fit-content"
+            w="10%"
             size="md"
             variant="filled"
             onChange={(e) => {
-              const value = e.target.value.split(' ')
-              setOrderField(value[0])
-              setOrderDirection(value[1])
+              setOrderField(e.target.value)
             }}
           >
-            <option key="ACRONYM_ASC" value="ACRONYM ASC">
-              Acronym Ascending
+            <option key="NAME" value="NAME">
+              Name
             </option>
-            <option key="ACRONYM_DESC" value="ACRONYM DESC">
-              Acronym Descending
+            <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">
+              Domains
             </option>
-            <option key="DOMAIN_COUNT_ASC" value="DOMAIN_COUNT ASC">
-              Domains Ascending
-            </option>
-            <option key="DOMAIN_COUNT_DESC" value="DOMAIN_COUNT DESC">
-              Domains Descending
-            </option>
-            <option key="NAME_ASC" value="NAME ASC">
-              Name Ascending
-            </option>
-            <option key="NAME_DESC" value="NAME DESC">
-              Name Descending
-            </option>
-            <option key="PROVINCE_ASC" value="PROVINCE ASC">
-              Province Ascending
-            </option>
-            <option key="PROVINCE_DESC" value="PROVINCE DESC">
-              Province Descending
-            </option>
-            <option key="SECTOR_ASC" value="SECTOR ASC">
-              Sector Ascending
-            </option>
-            <option key="SECTOR_DESC" value="SECTOR DESC">
-              Sector Descending
-            </option>
-            <option key="VERIFIED_ASC" value="VERIFIED ASC">
-              Verified Ascending
-            </option>
-            <option key="VERIFIED_DESC" value="VERIFIED DESC">
-              Verified Descending
+            <option key="ACRONYM" value="ACRONYM">
+              Acronym
             </option>
           </Select>
+          <Icon name="arrow-up" mt="12px" />
+          <Switch
+            size="lg"
+            mt={2}
+            aria-label="Toggle sort direction"
+            onChange={() => {
+              orderDirection === 'ASC'
+                ? setOrderDirection('DESC')
+                : setOrderDirection('ASC')
+            }}
+          />
+          <Icon name="arrow-down" mt="12px" />
         </Stack>
         {orgList}
         <RelayPaginationControls
