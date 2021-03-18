@@ -1,10 +1,10 @@
 import { GraphQLObjectType } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
-import { dkimFailureConnection } from './dkim-failure-table'
-import { dmarcFailureConnection } from './dmarc-failure-table'
-import { fullPassConnection } from './full-pass-table'
-import { spfFailureConnection } from './spf-failure-table'
+import { dkimFailureConnection } from './dkim-failure-table-connection'
+import { dmarcFailureConnection } from './dmarc-failure-table-connection'
+import { fullPassConnection } from './full-pass-table-connection'
+import { spfFailureConnection } from './spf-failure-table-connection'
 
 export const detailTablesType = new GraphQLObjectType({
   name: 'DetailTables',

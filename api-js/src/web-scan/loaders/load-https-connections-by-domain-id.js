@@ -273,45 +273,46 @@ export const httpsLoaderConnectionsByDomainId = (
   let requestedHttpsInfo
   try {
     requestedHttpsInfo = await query`
-    LET httpsKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsHTTPS RETURN v._key)
+      WITH domains, domainsHTTPS, https
+      LET httpsKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsHTTPS RETURN v._key)
 
-    LET retrievedHttps = (
-      FOR httpsScan IN https
-        FILTER httpsScan._key IN httpsKeys
-        ${afterTemplate}
-        ${beforeTemplate}
-        ${startDateTemplate}
-        ${endDateTemplate}
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: httpsScan._key, _type: "https" }, httpsScan)
-    )
+      LET retrievedHttps = (
+        FOR httpsScan IN https
+          FILTER httpsScan._key IN httpsKeys
+          ${afterTemplate}
+          ${beforeTemplate}
+          ${startDateTemplate}
+          ${endDateTemplate}
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: httpsScan._key, _type: "https" }, httpsScan)
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR httpsScan IN https
-        FILTER httpsScan._key IN httpsKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} httpsScan._key ${sortString} LIMIT 1
-        RETURN httpsScan
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR httpsScan IN https
-        FILTER httpsScan._key IN httpsKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} httpsScan._key ${sortString} LIMIT 1
-        RETURN httpsScan
-    ) > 0 ? true : false)
+      LET hasNextPage = (LENGTH(
+        FOR httpsScan IN https
+          FILTER httpsScan._key IN httpsKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} httpsScan._key ${sortString} LIMIT 1
+          RETURN httpsScan
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR httpsScan IN https
+          FILTER httpsScan._key IN httpsKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} httpsScan._key ${sortString} LIMIT 1
+          RETURN httpsScan
+      ) > 0 ? true : false)
 
-    RETURN { 
-      "httpsScans": retrievedHttps,
-      "totalCount": LENGTH(httpsKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedHttps)._key, 
-      "endKey": LAST(retrievedHttps)._key 
-    }
+      RETURN { 
+        "httpsScans": retrievedHttps,
+        "totalCount": LENGTH(httpsKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedHttps)._key, 
+        "endKey": LAST(retrievedHttps)._key 
+      }
     `
   } catch (err) {
     console.error(

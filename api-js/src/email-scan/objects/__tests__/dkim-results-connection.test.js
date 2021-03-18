@@ -1,5 +1,5 @@
 import { GraphQLInt } from 'graphql'
-import { dkimResultConnection } from '../dkim-result'
+import { dkimResultConnection } from '../dkim-result-connection'
 
 describe('given the dkim result connection object', () => {
   describe('testing its field definitions', () => {

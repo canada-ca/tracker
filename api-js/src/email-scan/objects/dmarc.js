@@ -1,9 +1,5 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
+import { connectionArgs, globalIdField } from 'graphql-relay'
 import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
@@ -154,16 +150,4 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
 organization can express domain-level policies and preferences for
 message validation, disposition, and reporting, that a mail-receiving
 organization can use to improve mail handling.`,
-})
-
-export const dmarcConnection = connectionDefinitions({
-  name: 'DMARC',
-  nodeType: dmarcType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of DMARC scans related to a given domain.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

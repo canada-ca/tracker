@@ -1,7 +1,7 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { makeMigrations } = require('../../migrations')
+const { ensure, dbNameFromFile } = require('arango-tools')
+const { databaseOptions } = require('../../database-options')
 
 const { checkForSuperAdminOrg, createSuperAdminOrg } = require('../database')
 
@@ -11,14 +11,17 @@ describe('given the checkForSuperAdminOrg function', () => {
   const mockedError = (output) => consoleErrorOutput.push(output)
   const mockedInfo = (output) => consoleInfoOutput.push(output)
 
-  let query, drop, truncate, migrate, collections, transaction
+  let query, drop, truncate, collections, transaction
 
   beforeAll(async () => {
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {

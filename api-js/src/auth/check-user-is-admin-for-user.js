@@ -8,6 +8,7 @@ export const checkUserIsAdminForUser = ({ i18n, userKey, query }) => async ({
 
   try {
     cursor = await query`
+      WITH affiliations, organizations, users
       FOR v, e IN 1 INBOUND ${requestingUserId} affiliations
         FILTER e.permission == "super_admin"
         RETURN e.permission
@@ -34,6 +35,7 @@ export const checkUserIsAdminForUser = ({ i18n, userKey, query }) => async ({
   } else {
     try {
       cursor = await query`
+        WITH affiliations, organizations, users
         LET requestingUserOrgKeys = (
           FOR v, e IN 1 INBOUND ${requestingUserId} affiliations
             FILTER e.permission == "admin"

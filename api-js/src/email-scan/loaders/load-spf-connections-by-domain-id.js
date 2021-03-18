@@ -247,45 +247,46 @@ export const spfLoaderConnectionsByDomainId = (
   let spfScanInfoCursor
   try {
     spfScanInfoCursor = await query`
-    LET spfKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF RETURN v._key)
+      WITH domains, domainsSPF, spf
+      LET spfKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF RETURN v._key)
 
-    LET retrievedSpfScans = (
-      FOR spfScan IN spf
-        FILTER spfScan._key IN spfKeys
-        ${afterTemplate}
-        ${beforeTemplate}
-        ${startDateTemplate}
-        ${endDateTemplate}
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
-    )
+      LET retrievedSpfScans = (
+        FOR spfScan IN spf
+          FILTER spfScan._key IN spfKeys
+          ${afterTemplate}
+          ${beforeTemplate}
+          ${startDateTemplate}
+          ${endDateTemplate}
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: spfScan._key, _type: "spf" }, spfScan)
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR spfScan IN spf
-        FILTER spfScan._key IN spfKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
-        RETURN spfScan
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR spfScan IN spf
-        FILTER spfScan._key IN spfKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
-        RETURN spfScan
-    ) > 0 ? true : false)
+      LET hasNextPage = (LENGTH(
+        FOR spfScan IN spf
+          FILTER spfScan._key IN spfKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
+          RETURN spfScan
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR spfScan IN spf
+          FILTER spfScan._key IN spfKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} spfScan._key ${sortString} LIMIT 1
+          RETURN spfScan
+      ) > 0 ? true : false)
 
-    RETURN { 
-      "spfScans": retrievedSpfScans,
-      "totalCount": LENGTH(spfKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedSpfScans)._key, 
-      "endKey": LAST(retrievedSpfScans)._key 
-    }
+      RETURN { 
+        "spfScans": retrievedSpfScans,
+        "totalCount": LENGTH(spfKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedSpfScans)._key, 
+        "endKey": LAST(retrievedSpfScans)._key 
+      }
     `
   } catch (err) {
     console.error(

@@ -947,6 +947,29 @@ type HTTPSEdge {
   cursor: String!
 }
 
+type InviteUserToOrgPayload {
+  # `InviteUserToOrgUnion` returning either a `InviteUserToOrgResult`, or `InviteUserToOrgError` object.
+  result: InviteUserToOrgUnion
+  clientMutationId: String
+}
+
+# This union is used with the `InviteUserToOrg` mutation, allowing for users to invite user to their org, and support any errors that may occur
+union InviteUserToOrgUnion = InviteUserToOrgError | InviteUserToOrgResult
+
+# This object is used to inform the user if any errors occurred while inviting a user to an org.
+type InviteUserToOrgError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user of the invitation status.
+type InviteUserToOrgResult {
+  # Informs the user if the invite or invite email was successfully sent.
+  status: String
+}
+
 input InviteUserToOrgInput {
   # Users email that you would like to invite to your org.
   userName: EmailAddress!
@@ -956,12 +979,6 @@ input InviteUserToOrgInput {
   orgId: ID!
   # The language in which the email will be sent in.
   preferredLang: LanguageEnums!
-  clientMutationId: String
-}
-
-type InviteUserToOrgPayload {
-  # Informs the user if the invite or invite email was successfully sent.
-  status: String
   clientMutationId: String
 }
 
@@ -2167,6 +2184,8 @@ type VerifyPhoneNumberError {
 type VerifyPhoneNumberResult {
   # Informs the user if their phone number was successfully verified.
   status: String
+  # The user who verified their phone number.
+  user: PersonalUser
 }
 
 input verifyPhoneNumberInput {

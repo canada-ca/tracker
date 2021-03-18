@@ -8,7 +8,8 @@ import { cleanseInput } from '../../../validators'
 import { domainLoaderByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
 import { dkimResultsLoaderConnectionByDkimId } from '../../loaders'
-import { dkimType, dkimResultConnection } from '../index'
+import { dkimType } from '../dkim'
+import { dkimResultConnection } from '../dkim-result-connection'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

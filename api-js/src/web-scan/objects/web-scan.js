@@ -4,8 +4,8 @@ import { GraphQLDate } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { httpsOrder, sslOrder } from '../inputs'
-import { httpsConnection } from './https'
-import { sslConnection } from './ssl'
+import { httpsConnection } from './https-connection'
+import { sslConnection } from './ssl-connection'
 
 export const webScanType = new GraphQLObjectType({
   name: 'WebScan',

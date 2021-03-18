@@ -95,6 +95,7 @@ export const fullPassLoaderConnectionsBySumId = (
   let requestedFullPassInfo
   try {
     requestedFullPassInfo = await query`
+      WITH dmarcSummaries
       LET fullPasses = FLATTEN(
         FOR summary IN dmarcSummaries
           FILTER summary._id == ${summaryId}

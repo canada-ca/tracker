@@ -4,7 +4,7 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
-import { connectionDefinitions, globalIdField } from 'graphql-relay'
+import { globalIdField } from 'graphql-relay'
 
 export const spfFailureTableType = new GraphQLObjectType({
   name: 'SpfFailureTable',
@@ -57,18 +57,6 @@ export const spfFailureTableType = new GraphQLObjectType({
       type: GraphQLInt,
       description: 'Total messages from this sender.',
       resolve: ({ totalMessages }) => totalMessages,
-    },
-  }),
-})
-
-export const spfFailureConnection = connectionDefinitions({
-  name: 'SpfFailureTable',
-  nodeType: spfFailureTableType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of spf failures the user has access to.',
-      resolve: ({ totalCount }) => totalCount,
     },
   }),
 })

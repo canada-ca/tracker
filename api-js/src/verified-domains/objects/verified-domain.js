@@ -1,9 +1,5 @@
-import { GraphQLInt, GraphQLObjectType } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
+import { GraphQLObjectType } from 'graphql'
+import { connectionArgs, globalIdField } from 'graphql-relay'
 import { GraphQLDate } from 'graphql-scalars'
 
 import { domainStatus } from '../../domain/objects'
@@ -57,16 +53,4 @@ export const verifiedDomainType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',
-})
-
-export const verifiedDomainConnection = connectionDefinitions({
-  name: 'VerifiedDomain',
-  nodeType: verifiedDomainType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of verified domains.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

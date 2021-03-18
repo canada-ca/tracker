@@ -1,5 +1,5 @@
-import { GraphQLInt, GraphQLObjectType } from 'graphql'
-import { connectionDefinitions, globalIdField } from 'graphql-relay'
+import { GraphQLObjectType } from 'graphql'
+import { globalIdField } from 'graphql-relay'
 
 import { RoleEnums } from '../../enums'
 import { organizationType } from '../../organization/objects'
@@ -39,16 +39,4 @@ export const affiliationType = new GraphQLObjectType({
   interfaces: [nodeInterface],
   description:
     'User Affiliations containing the permission level for the given organization, the users information, and the organizations information.',
-})
-
-export const affiliationConnection = connectionDefinitions({
-  name: 'Affiliation',
-  nodeType: affiliationType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of affiliations the user has access to.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

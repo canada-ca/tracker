@@ -198,6 +198,7 @@ export const httpsGuidanceTagConnectionsLoader = (
   let httpsGuidanceTagInfoCursor
   try {
     httpsGuidanceTagInfoCursor = await query`
+      WITH httpsGuidanceTags
       LET retrievedHttpsGuidanceTags = (
         FOR tag IN httpsGuidanceTags
           FILTER tag._key IN ${httpsGuidanceTags}

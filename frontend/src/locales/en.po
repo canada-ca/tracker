@@ -156,9 +156,13 @@ msgstr "An error occurred while updating your language."
 msgid "An error occurred while updating your password."
 msgstr "An error occurred while updating your password."
 
-#: src/EditableUserPhoneNumber.js:50
+#: src/EditableUserPhoneNumber.js:51
 msgid "An error occurred while updating your phone number."
 msgstr "An error occurred while updating your phone number."
+
+#: src/EditableUserPhoneNumber.js:96
+msgid "An error occurred while verifying your phone number."
+msgstr "An error occurred while verifying your phone number."
 
 #: src/AdminDomains.js:91
 #: src/AdminDomains.js:123
@@ -265,7 +269,7 @@ msgstr "Changed User Language"
 msgid "Changed User Password"
 msgstr "Changed User Password"
 
-#: src/EditableUserPhoneNumber.js:61
+#: src/EditableUserPhoneNumber.js:107
 msgid "Changed User Phone Number"
 msgstr "Changed User Phone Number"
 
@@ -290,7 +294,8 @@ msgstr "Compliant TLS"
 #: src/EditableUserDisplayName.js:177
 #: src/EditableUserEmail.js:175
 #: src/EditableUserPassword.js:198
-#: src/EditableUserPhoneNumber.js:187
+#: src/EditableUserPhoneNumber.js:201
+#: src/EditableUserPhoneNumber.js:259
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -339,7 +344,7 @@ msgstr "Current Email:"
 msgid "Current Password:"
 msgstr "Current Password:"
 
-#: src/EditableUserPhoneNumber.js:165
+#: src/EditableUserPhoneNumber.js:179
 msgid "Current Phone Number:"
 msgstr "Current Phone Number:"
 
@@ -567,8 +572,8 @@ msgstr "Domains Table"
 #: src/EditableUserDisplayName.js:117
 #: src/EditableUserEmail.js:115
 #: src/EditableUserPassword.js:129
-#: src/EditableUserPhoneNumber.js:126
-#: src/EditableUserPhoneNumber.js:157
+#: src/EditableUserPhoneNumber.js:171
+#: src/EditableUserPhoneNumber.js:310
 msgid "Edit"
 msgstr "Edit"
 
@@ -632,7 +637,7 @@ msgstr "Enter and confirm your new password below:"
 msgid "Enter and confirm your new password."
 msgstr "Enter and confirm your new password."
 
-#: src/AuthenticateField.js:58
+#: src/AuthenticateField.js:63
 msgid "Enter two factor code"
 msgstr "Enter two factor code"
 
@@ -871,13 +876,18 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/EditableUserEmail.js:80
 #: src/EditableUserLanguage.js:61
 #: src/EditableUserPassword.js:82
-#: src/EditableUserPhoneNumber.js:82
+#: src/EditableUserPhoneNumber.js:73
+#: src/EditableUserPhoneNumber.js:129
 #: src/EditableUserTFAMethod.js:72
 #: src/ResetPasswordPage.js:60
 #: src/SignInPage.js:98
 #: src/TwoFactorAuthenticatePage.js:80
 msgid "Incorrect send method received."
 msgstr "Incorrect send method received."
+
+#: src/EditableUserPhoneNumber.js:74
+msgid "Incorrect setPhoneNumber.result typename."
+msgstr "Incorrect setPhoneNumber.result typename."
 
 #: src/SignInPage.js:99
 msgid "Incorrect signIn.result typename."
@@ -894,10 +904,13 @@ msgstr "Incorrect updateUserPassword.result typename."
 #: src/EditableUserDisplayName.js:83
 #: src/EditableUserEmail.js:81
 #: src/EditableUserLanguage.js:62
-#: src/EditableUserPhoneNumber.js:83
 #: src/EditableUserTFAMethod.js:73
 msgid "Incorrect updateUserProfile.result typename."
 msgstr "Incorrect updateUserProfile.result typename."
+
+#: src/EditableUserPhoneNumber.js:130
+msgid "Incorrect verifyPhoneNumber.result typename."
+msgstr "Incorrect verifyPhoneNumber.result typename."
 
 #: src/OrganizationSummary.js:30
 msgid "Internet facing services"
@@ -1078,7 +1091,7 @@ msgstr "New Email Address:"
 msgid "New Password:"
 msgstr "New Password:"
 
-#: src/EditableUserPhoneNumber.js:174
+#: src/EditableUserPhoneNumber.js:188
 msgid "New Phone Number:"
 msgstr "New Phone Number:"
 
@@ -1115,7 +1128,7 @@ msgstr "No RUFs defined"
 msgid "No Users"
 msgstr "No Users"
 
-#: src/EditableUserPhoneNumber.js:117
+#: src/EditableUserPhoneNumber.js:301
 msgid "No current phone number"
 msgstr "No current phone number"
 
@@ -1361,7 +1374,7 @@ msgstr "Phone"
 msgid "Phone Number"
 msgstr "Phone Number"
 
-#: src/EditableUserPhoneNumber.js:109
+#: src/EditableUserPhoneNumber.js:293
 #: src/PhoneNumberField.js:26
 msgid "Phone Number:"
 msgstr "Phone Number:"
@@ -1386,7 +1399,7 @@ msgstr "Please choose your preferred language"
 msgid "Please enter your current password."
 msgstr "Please enter your current password."
 
-#: src/AuthenticateField.js:47
+#: src/AuthenticateField.js:52
 msgid "Please enter your two factor code below."
 msgstr "Please enter your two factor code below."
 
@@ -1863,7 +1876,7 @@ msgstr "Unable to update to your TFA send method, please try again."
 msgid "Unable to update to your display name, please try again."
 msgstr "Unable to update to your display name, please try again."
 
-#: src/EditableUserPhoneNumber.js:73
+#: src/EditableUserPhoneNumber.js:64
 msgid "Unable to update to your phone number, please try again."
 msgstr "Unable to update to your phone number, please try again."
 
@@ -1878,6 +1891,10 @@ msgstr "Unable to update to your username, please try again."
 #: src/EditableUserPassword.js:73
 msgid "Unable to update your password, please try again."
 msgstr "Unable to update your password, please try again."
+
+#: src/EditableUserPhoneNumber.js:120
+msgid "Unable to verify your phone number, please try again."
+msgstr "Unable to verify your phone number, please try again."
 
 #: src/guidanceTagConstants.js:82
 msgid "Use DKIM to validate outbound email sent from your custom domain"
@@ -1926,6 +1943,10 @@ msgstr "Verification code must only contains numbers"
 msgid "Verified"
 msgstr "Verified"
 
+#: src/EditableUserPhoneNumber.js:238
+msgid "Verify"
+msgstr "Verify"
+
 #: src/guidanceTagConstants.js:471
 msgid "Vulnerability-ccs-injection"
 msgstr "Vulnerability-ccs-injection"
@@ -1941,6 +1962,10 @@ msgstr "Vulnerable to Heartbleed bug"
 #: src/guidanceTagConstants.js:472
 msgid "Vulnerable to OpenSSL CCS Injection"
 msgstr "Vulnerable to OpenSSL CCS Injection"
+
+#: src/AuthenticateField.js:39
+msgid "We've sent an SMS to your new phone number with an authentication code to confirm this change."
+msgstr "We've sent an SMS to your new phone number with an authentication code to confirm this change."
 
 #: src/AuthenticateField.js:34
 msgid "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker."
@@ -2009,7 +2034,7 @@ msgstr "You have successfully updated your email."
 msgid "You have successfully updated your password."
 msgstr "You have successfully updated your password."
 
-#: src/EditableUserPhoneNumber.js:62
+#: src/EditableUserPhoneNumber.js:108
 msgid "You have successfully updated your phone number."
 msgstr "You have successfully updated your phone number."
 

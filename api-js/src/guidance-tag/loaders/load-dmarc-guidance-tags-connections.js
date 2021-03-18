@@ -198,6 +198,7 @@ export const dmarcGuidanceTagConnectionsLoader = (
   let dmarcGuidanceTagInfoCursor
   try {
     dmarcGuidanceTagInfoCursor = await query`
+      WITH dmarcGuidanceTags
       LET retrievedDmarcGuidanceTags = (
         FOR tag IN dmarcGuidanceTags
           FILTER tag._key IN ${dmarcGuidanceTags}

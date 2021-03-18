@@ -1,15 +1,10 @@
 import {
   GraphQLBoolean,
-  GraphQLInt,
   GraphQLList,
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql'
-import {
-  connectionArgs,
-  connectionDefinitions,
-  globalIdField,
-} from 'graphql-relay'
+import { connectionArgs, globalIdField } from 'graphql-relay'
 import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
@@ -187,16 +182,4 @@ export const sslType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: `Secure Socket Layer scan results.`,
-})
-
-export const sslConnection = connectionDefinitions({
-  name: 'SSL',
-  nodeType: sslType,
-  connectionFields: () => ({
-    totalCount: {
-      type: GraphQLInt,
-      description: 'The total amount of https scans for a given domain.',
-      resolve: ({ totalCount }) => totalCount,
-    },
-  }),
 })

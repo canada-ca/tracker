@@ -23,36 +23,19 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { i18n, query, userKey, loaders: { userLoaderByKey } },
+    {
+      i18n,
+      userKey,
+      query,
+      auth: { userRequired },
+      loaders: { userLoaderByKey },
+    },
   ) => {
     // Cleanse Input
     const twoFactorCode = args.twoFactorCode
 
-    // Replace with userRequired()
-    if (typeof userKey === 'undefined') {
-      console.warn(
-        `User attempted to two factor authenticate, however the userKey is undefined.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Authentication error, please sign in again.`),
-      }
-    }
-
     // Get User From DB
-    const user = await userLoaderByKey.load(userKey)
-
-    if (typeof user === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to two factor authenticate, however no account is associated with that id.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Authentication error, please sign in again.`),
-      }
-    }
+    const user = await userRequired()
 
     if (twoFactorCode.toString().length !== 6) {
       console.warn(
@@ -100,8 +83,12 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       `User: ${user._key} successfully two factor authenticated their account.`,
     )
 
+    await userLoaderByKey.clear(userKey)
+    const updatedUser = await userLoaderByKey.load(userKey)
+
     return {
       _type: 'success',
+      user: updatedUser,
       status: i18n._(
         t`Successfully verified phone number, and set TFA send method to text.`,
       ),
