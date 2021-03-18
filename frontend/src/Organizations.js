@@ -14,7 +14,7 @@ import {
   Select,
   Stack,
   Text,
-  Switch,
+  IconButton,
 } from '@chakra-ui/core'
 import {
   PAGINATED_ORGANIZATIONS as FORWARD,
@@ -32,6 +32,8 @@ export default function Organisations({ orgsPerPage = 10 }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('NAME')
   const { currentUser } = useUserState()
+
+  const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
 
   const {
     loading,
@@ -97,7 +99,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
       </Heading>
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <Stack isInline spacing={3}>
-          <InputGroup width="57%" mb="8px">
+          <InputGroup width="57%" mb="8px" flexGrow={1}>
             <InputLeftElement>
               <Icon name="search" color="gray.300" />
             </InputLeftElement>
@@ -107,7 +109,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
             fontSize="md"
             fontWeight="bold"
             textAlign="center"
-            ml="8%"
+            ml="10%"
             mt={2}
             isTruncated
           >
@@ -125,25 +127,22 @@ export default function Organisations({ orgsPerPage = 10 }) {
             <option key="NAME" value="NAME">
               Name
             </option>
-            <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">
-              Domains
-            </option>
             <option key="ACRONYM" value="ACRONYM">
               Acronym
             </option>
+            <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">
+              Domains
+            </option>
           </Select>
-          <Icon name="arrow-up" mt="12px" />
-          <Switch
-            size="lg"
-            mt={2}
-            aria-label="Toggle sort direction"
-            onChange={() => {
-              orderDirection === 'ASC'
-                ? setOrderDirection('DESC')
-                : setOrderDirection('ASC')
+          <IconButton
+            icon={orderIconName}
+            color="primary"
+            onClick={() => {
+              const newOrderDirection =
+                orderDirection === 'ASC' ? 'DESC' : 'ASC'
+              setOrderDirection(newOrderDirection)
             }}
           />
-          <Icon name="arrow-down" mt="12px" />
         </Stack>
         {orgList}
         <RelayPaginationControls
