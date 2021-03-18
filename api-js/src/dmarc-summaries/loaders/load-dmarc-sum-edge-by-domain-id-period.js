@@ -8,6 +8,7 @@ export const dmarcSummaryEdgeLoaderByDomainIdPeriod = (
   let summaryEdgeCursor
   try {
     summaryEdgeCursor = await query`
+      WITH dmarcSummaries, domains, domainsToDmarcSummaries
       FOR edge IN domainsToDmarcSummaries
         FILTER edge.startDate == ${startDate}
         FILTER edge._from == ${domainId}

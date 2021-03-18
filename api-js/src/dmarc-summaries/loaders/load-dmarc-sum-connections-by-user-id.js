@@ -324,6 +324,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
   let domainIdQueries
   if (isSuperAdmin) {
     domainIdQueries = aql`
+      WITH dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership
       LET domainIds = UNIQUE(FLATTEN(
         LET ids = []
         LET orgIds = (FOR org IN organizations RETURN org._id)
@@ -334,6 +335,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
     `
   } else {
     domainIdQueries = aql`
+      WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users
       LET domainIds = UNIQUE(FLATTEN(
         LET ids = []
         LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
