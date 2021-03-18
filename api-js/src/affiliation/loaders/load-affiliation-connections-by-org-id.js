@@ -174,6 +174,7 @@ export const affiliationConnectionLoaderByOrgId = (
   let filteredAffiliationCursor
   try {
     filteredAffiliationCursor = await query`
+    WITH affiliations, organizations, users
     LET affiliationKeys = (FOR v, e IN 1..1 ANY ${orgId} affiliations RETURN e._key)
     
     LET retrievedAffiliations = (
