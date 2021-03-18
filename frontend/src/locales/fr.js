@@ -31,6 +31,7 @@
       "La liste de chiffrement acceptée contient le chiffrement de flux RC4, tel qu'interdit par le BOD 18-01",
     'Account Settings': 'Paramètres du compte',
     'Account created.': 'Compte créé',
+    Acronym: 'Acronyme',
     'Add Domain': 'Ajouter un domaine',
     'Admin Portal': 'Portail Admin',
     'Admin Profile': "Profil de l'administrateur",
@@ -280,6 +281,7 @@
     'Missing from guide- need v1.1': 'Absent du guide - besoin v1.1',
     'More than 10 lookups - Follow implementation guide':
       'Plus de 10 consultations - Suivez le guide de mise en œuvre',
+    Name: 'Nom',
     'New Display Name:': "Nouveau nom d'affichage :",
     'New Domain Url': 'Nouvel Url de domaine',
     'New Domain Url:': 'Nouvelle URL de domaine :',
@@ -388,6 +390,7 @@
     Previous: 'Précédent',
     Privacy: 'Confidentialité',
     'Properly configured!': 'Bien configuré !',
+    Province: 'Province',
     'Public key RSA and key length 1024':
       'Clé publique RSA et longueur de la clé 1024',
     'Public key RSA and key length 2048':
@@ -460,6 +463,7 @@
     'Search for any Government of Canada tracked domain:':
       "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:",
     'Search:': 'Recherche :',
+    Sector: 'Secteur',
     'Select Preferred Language': 'Sélectionnez votre langue préférée',
     'Select an organization': 'Sélectionnez une organisation',
     'Select an organization to view admin options':
@@ -475,6 +479,7 @@
     'Sign in with your username and password.':
       "Connectez-vous avec votre nom d'utilisateur et votre mot de passe.",
     'Skip to main content': 'Passer au contenu principal',
+    'Sort by:': 'Trier par:',
     'Source IP Address': 'Adresse IP source',
     Submit: 'Soumettre',
     Summary: 'Résumé',
@@ -543,6 +548,7 @@
       'Vérification des enregistrements TXT pour certains/toutes les expéditeurs tiers manquants',
     'Verification code must only contains numbers':
       'Le code de vérification ne doit contenir que des chiffres',
+    Verified: 'Vérifié',
     'Vulnerability-ccs-injection': 'Vulnerability-ccs-injection',
     'Vulnerability-heartbleed': 'Vulnerability-heartbleed',
     'Vulnerable to Heartbleed bug': 'Vulnérable à la maladie du cœur',

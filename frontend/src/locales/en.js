@@ -29,6 +29,7 @@
       'Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01',
     'Account Settings': 'Account Settings',
     'Account created.': 'Account created.',
+    Acronym: 'Acronym',
     'Add Domain': 'Add Domain',
     'Admin Portal': 'Admin Portal',
     'Admin Profile': 'Admin Profile',
@@ -273,6 +274,7 @@
     'Missing from guide- need v1.1': 'Missing from guide- need v1.1',
     'More than 10 lookups - Follow implementation guide':
       'More than 10 lookups - Follow implementation guide',
+    Name: 'Name',
     'New Display Name:': 'New Display Name:',
     'New Domain Url': 'New Domain Url',
     'New Domain Url:': 'New Domain Url:',
@@ -378,6 +380,7 @@
     Previous: 'Previous',
     Privacy: 'Privacy',
     'Properly configured!': 'Properly configured!',
+    Province: 'Province',
     'Public key RSA and key length 1024': 'Public key RSA and key length 1024',
     'Public key RSA and key length 2048': 'Public key RSA and key length 2048',
     'Public key RSA and key length 4096 or higher':
@@ -446,6 +449,7 @@
     'Search for any Government of Canada tracked domain:':
       'Search for any Government of Canada tracked domain:',
     'Search:': 'Search:',
+    Sector: 'Sector',
     'Select Preferred Language': 'Select Preferred Language',
     'Select an organization': 'Select an organization',
     'Select an organization to view admin options':
@@ -461,6 +465,7 @@
     'Sign in with your username and password.':
       'Sign in with your username and password.',
     'Skip to main content': 'Skip to main content',
+    'Sort by:': 'Sort by:',
     'Source IP Address': 'Source IP Address',
     Submit: 'Submit',
     Summary: 'Summary',
@@ -528,6 +533,7 @@
       'Verification TXT records for some/all 3rd party senders missing',
     'Verification code must only contains numbers':
       'Verification code must only contains numbers',
+    Verified: 'Verified',
     'Vulnerability-ccs-injection': 'Vulnerability-ccs-injection',
     'Vulnerability-heartbleed': 'Vulnerability-heartbleed',
     'Vulnerable to Heartbleed bug': 'Vulnerable to Heartbleed bug',
