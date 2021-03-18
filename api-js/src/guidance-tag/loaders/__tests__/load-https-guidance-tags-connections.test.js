@@ -76,57 +76,6 @@ describe('when given the load https guidance tag connection function', () => {
   })
 
   describe('given a successful load', () => {
-    describe('using no cursor', () => {
-      it('returns multiple https results', async () => {
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
-
-        const httpsGuidanceTags = ['https1', 'https2']
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const httpsTags = await connectionLoader({
-          httpsGuidanceTags,
-          ...connectionArgs,
-        })
-
-        const httpsTagLoader = httpsGuidanceTagLoader(query)
-        const expectedHttpsTags = await httpsTagLoader.loadMany(
-          httpsGuidanceTags,
-        )
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
-              node: {
-                ...expectedHttpsTags[0],
-              },
-            },
-            {
-              cursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
-              node: {
-                ...expectedHttpsTags[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedHttpsTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedHttpsTags[1]._key),
-          },
-        }
-
-        expect(httpsTags).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns https result(s) after a given node id', async () => {
         const connectionLoader = httpsGuidanceTagConnectionsLoader(

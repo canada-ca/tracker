@@ -73,55 +73,6 @@ describe('when given the load ssl guidance tag connection function', () => {
   })
 
   describe('given a successful load', () => {
-    describe('using no cursor', () => {
-      it('returns multiple ssl results', async () => {
-        const connectionLoader = sslGuidanceTagConnectionsLoader(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
-
-        const sslGuidanceTags = ['ssl1', 'ssl2']
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const sslTags = await connectionLoader({
-          sslGuidanceTags,
-          ...connectionArgs,
-        })
-
-        const sslTagLoader = sslGuidanceTagLoader(query)
-        const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('guidanceTags', expectedSslTags[0]._key),
-              node: {
-                ...expectedSslTags[0],
-              },
-            },
-            {
-              cursor: toGlobalId('guidanceTags', expectedSslTags[1]._key),
-              node: {
-                ...expectedSslTags[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedSslTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedSslTags[1]._key),
-          },
-        }
-
-        expect(sslTags).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns ssl result(s) after a given node id', async () => {
         const connectionLoader = sslGuidanceTagConnectionsLoader(
