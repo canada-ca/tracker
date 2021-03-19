@@ -45,7 +45,10 @@ const mocks = [
     result: {
       data: {
         updateUserRole: {
-          status: 'string',
+          result: {
+            status: 'string',
+            __typename: 'UpdateUserRoleResult',
+          },
         },
       },
     },
