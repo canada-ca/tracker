@@ -18,7 +18,7 @@ export const Authorization = {
 export const UpdateUserProfileDisplayName = {
   fragments: {
     requiredFields: gql`
-      fragment UpdateUserProfileFields on UpdateUserProfileResult {
+      fragment UpdateUserProfileDisplayName on UpdateUserProfileResult {
         status
         user {
           id
@@ -32,7 +32,7 @@ export const UpdateUserProfileDisplayName = {
 export const UpdateUserProfileUserName = {
   fragments: {
     requiredFields: gql`
-      fragment UpdateUserProfileFields on UpdateUserProfileResult {
+      fragment UpdateUserProfileUserName on UpdateUserProfileResult {
         status
         user {
           id
@@ -46,7 +46,7 @@ export const UpdateUserProfileUserName = {
 export const UpdateUserProfileLanguage = {
   fragments: {
     requiredFields: gql`
-      fragment UpdateUserProfileFields on UpdateUserProfileResult {
+      fragment UpdateUserProfileLanguage on UpdateUserProfileResult {
         status
         user {
           id
@@ -60,7 +60,7 @@ export const UpdateUserProfileLanguage = {
 export const UpdateUserProfileTfaSendMethod = {
   fragments: {
     requiredFields: gql`
-      fragment UpdateUserProfileFields on UpdateUserProfileResult {
+      fragment UpdateUserProfileTfaSendMethod on UpdateUserProfileResult {
         status
         user {
           id
