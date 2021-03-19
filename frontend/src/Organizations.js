@@ -42,6 +42,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
     nodes,
     next,
     previous,
+    resetToFirstPage,
     hasNextPage,
     hasPreviousPage,
   } = usePaginatedCollection({
@@ -103,18 +104,14 @@ export default function Organisations({ orgsPerPage = 10 }) {
           direction={{ base: 'column', md: 'row' }}
           alignItems={{ base: 'stretch', md: 'center' }}
         >
-          <InputGroup mb={{ base: "8px", md: "0" }} flexGrow={1}>
+          <InputGroup mb={{ base: '8px', md: '0' }} flexGrow={1}>
             <InputLeftElement>
               <Icon name="search" color="gray.300" />
             </InputLeftElement>
             <Input type="text" placeholder={t`Search for an organization`} />
           </InputGroup>
           <Stack isInline align="center" ml={{ md: '10%' }}>
-            <Text
-              fontSize="md"
-              fontWeight="bold"
-              textAlign="center"
-            >
+            <Text fontSize="md" fontWeight="bold" textAlign="center">
               <Trans>Sort by: </Trans>
             </Text>
             <Select
@@ -124,6 +121,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
               variant="filled"
               onChange={(e) => {
                 setOrderField(e.target.value)
+                resetToFirstPage()
               }}
             >
               <option key="NAME" value="NAME">
@@ -153,6 +151,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
                 const newOrderDirection =
                   orderDirection === 'ASC' ? 'DESC' : 'ASC'
                 setOrderDirection(newOrderDirection)
+                resetToFirstPage()
               }}
             />
           </Stack>
