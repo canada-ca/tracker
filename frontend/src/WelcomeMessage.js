@@ -12,15 +12,16 @@ export function WelcomeMessage() {
             fontSize={['5xl', '3xl', '3xl', '4xl', '5xl']}
             fontWeight="semibold"
           >
-            <Trans>Track Web Security Compliance</Trans>
+            <Trans>Track Digital Security</Trans>
           </Text>
           <Divider borderColor="accent" borderWidth="2" w="20%" />
           <Text fontSize={['xl', 'sm', 'sm', 'lg', 'xl']}>
             <Trans>
               Canadians rely on the Government of Canada to provide secure
-              digital services. A new policy notice guides government websites
-              to adopt good web security practices. Track how government sites
-              are becoming more secure.
+              digital services. The Policy on Service and Digital guides
+              government online services to adopt good security practices for
+              email and web services. Track how government sites are becoming
+              more secure.
             </Trans>
           </Text>
         </Stack>
