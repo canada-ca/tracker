@@ -61,10 +61,10 @@ describe('given the createSuperAdminAffiliation function', () => {
     })
   })
   describe('given an unsuccessful creation', () => {
-    describe('transaction run error occurs', () => {
+    describe('transaction step error occurs', () => {
       it('throws an error', async () => {
         const mockedTransaction = jest.fn().mockReturnValueOnce({
-          run() {
+          step() {
             throw new Error('Database error occurred.')
           },
           commit() {
@@ -89,7 +89,7 @@ describe('given the createSuperAdminAffiliation function', () => {
         } catch (err) {
           expect(err).toEqual(
             new Error(
-              'Transaction run error occurred while creating new super admin affiliation: Error: Database error occurred.',
+              'Transaction step error occurred while creating new super admin affiliation: Error: Database error occurred.',
             ),
           )
         }
@@ -98,7 +98,7 @@ describe('given the createSuperAdminAffiliation function', () => {
     describe('transaction commit error occurs', () => {
       it('throws an error', async () => {
         const mockedTransaction = jest.fn().mockReturnValueOnce({
-          run() {
+          step() {
             return 'string'
           },
           commit() {
