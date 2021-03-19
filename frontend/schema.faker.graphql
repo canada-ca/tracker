@@ -1996,6 +1996,29 @@ input UpdateUserProfileInput {
   clientMutationId: String
 }
 
+type UpdateUserRolePayload {
+  # `UpdateUserRoleUnion` returning either a `UpdateUserRoleResult`, or `UpdateUserRoleError` object.
+  result: UpdateUserRoleUnion
+  clientMutationId: String
+}
+
+# This union is used with the `UpdateUserRole` mutation, allowing for users to update a users role in an org, and support any errors that may occur
+union UpdateUserRoleUnion = UpdateUserRoleError | UpdateUserRoleResult
+
+# This object is used to inform the user if any errors occurred while updating a users role in an org.
+type UpdateUserRoleError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user of the status of the role update.
+type UpdateUserRoleResult {
+  # Informs the user if the user was successfully removed.
+  status: String
+}
+
 input UpdateUserRoleInput {
   # The username of the user you wish to update their role to.
   userName: EmailAddress!
@@ -2003,12 +2026,6 @@ input UpdateUserRoleInput {
   orgId: ID!
   # The role that the admin wants to give to the selected user.
   role: RoleEnums!
-  clientMutationId: String
-}
-
-type UpdateUserRolePayload {
-  # Informs the user if the user role update was successful.
-  status: String
   clientMutationId: String
 }
 
