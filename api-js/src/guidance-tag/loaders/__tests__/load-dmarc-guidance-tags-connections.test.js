@@ -76,57 +76,6 @@ describe('when given the load dmarc guidance tag connection function', () => {
   })
 
   describe('given a successful load', () => {
-    describe('using no cursor', () => {
-      it('returns multiple dmarc results', async () => {
-        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
-
-        const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const dmarcTags = await connectionLoader({
-          dmarcGuidanceTags,
-          ...connectionArgs,
-        })
-
-        const dmarcTagLoader = dmarcGuidanceTagLoader(query)
-        const expectedDmarcTags = await dmarcTagLoader.loadMany(
-          dmarcGuidanceTags,
-        )
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
-              node: {
-                ...expectedDmarcTags[0],
-              },
-            },
-            {
-              cursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
-              node: {
-                ...expectedDmarcTags[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedDmarcTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedDmarcTags[1]._key),
-          },
-        }
-
-        expect(dmarcTags).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns dmarc result(s) after a given node id', async () => {
         const connectionLoader = dmarcGuidanceTagConnectionsLoader(

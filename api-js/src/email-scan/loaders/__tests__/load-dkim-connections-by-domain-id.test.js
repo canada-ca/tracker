@@ -87,63 +87,7 @@ describe('when given the load dkim connection function', () => {
         _from: domain._id,
       })
     })
-    describe('using no cursor', () => {
-      it('returns multiple dkim scans', async () => {
-        const connectionLoader = dkimLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
 
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const dkimScans = await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
-        })
-
-        const dkimLoader = dkimLoaderByKey(query)
-        const expectedDkimScans = await dkimLoader.loadMany([
-          dkimScan1._key,
-          dkimScan2._key,
-        ])
-
-        expectedDkimScans[0].id = expectedDkimScans[0]._key
-        expectedDkimScans[1].id = expectedDkimScans[1]._key
-
-        expectedDkimScans[0].domainId = domain._id
-        expectedDkimScans[1].domainId = domain._id
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('dkim', expectedDkimScans[0]._key),
-              node: {
-                ...expectedDkimScans[0],
-              },
-            },
-            {
-              cursor: toGlobalId('dkim', expectedDkimScans[1]._key),
-              node: {
-                ...expectedDkimScans[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('dkim', expectedDkimScans[0]._key),
-            endCursor: toGlobalId('dkim', expectedDkimScans[1]._key),
-          },
-        }
-
-        expect(dkimScans).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns dkim scan(s) after a given node id', async () => {
         const connectionLoader = dkimLoaderConnectionsByDomainId(

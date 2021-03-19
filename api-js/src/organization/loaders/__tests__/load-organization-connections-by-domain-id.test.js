@@ -183,57 +183,6 @@ describe('given the load organizations connection function', () => {
       })
     })
     describe('given a successful load', () => {
-      describe('using no cursor', () => {
-        it('returns an organization', async () => {
-          const connectionLoader = orgLoaderConnectionArgsByDomainId(
-            query,
-            'en',
-            user._key,
-            cleanseInput,
-            i18n,
-          )
-
-          const connectionArgs = {
-            first: 5,
-          }
-          const orgs = await connectionLoader({
-            domainId: domain._id,
-            ...connectionArgs,
-          })
-
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-
-          expectedOrgs[0].id = expectedOrgs[0]._key
-          expectedOrgs[1].id = expectedOrgs[1]._key
-
-          const expectedStructure = {
-            edges: [
-              {
-                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
-                node: {
-                  ...expectedOrgs[0],
-                },
-              },
-              {
-                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
-                node: {
-                  ...expectedOrgs[1],
-                },
-              },
-            ],
-            totalCount: 2,
-            pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: false,
-              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
-            },
-          }
-
-          expect(orgs).toEqual(expectedStructure)
-        })
-      })
       describe('using after cursor', () => {
         it('returns an organization', async () => {
           const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -2386,57 +2335,6 @@ describe('given the load organizations connection function', () => {
       })
     })
     describe('given a successful load', () => {
-      describe('using no cursor', () => {
-        it('returns an organization', async () => {
-          const connectionLoader = orgLoaderConnectionArgsByDomainId(
-            query,
-            'fr',
-            user._key,
-            cleanseInput,
-            i18n,
-          )
-
-          const connectionArgs = {
-            first: 5,
-          }
-          const orgs = await connectionLoader({
-            domainId: domain._id,
-            ...connectionArgs,
-          })
-
-          const orgLoader = orgLoaderByKey(query, 'fr')
-          const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-
-          expectedOrgs[0].id = expectedOrgs[0]._key
-          expectedOrgs[1].id = expectedOrgs[1]._key
-
-          const expectedStructure = {
-            edges: [
-              {
-                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
-                node: {
-                  ...expectedOrgs[0],
-                },
-              },
-              {
-                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
-                node: {
-                  ...expectedOrgs[1],
-                },
-              },
-            ],
-            totalCount: 2,
-            pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: false,
-              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
-            },
-          }
-
-          expect(orgs).toEqual(expectedStructure)
-        })
-      })
       describe('using after cursor', () => {
         it('returns an organization', async () => {
           const connectionLoader = orgLoaderConnectionArgsByDomainId(

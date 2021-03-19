@@ -86,63 +86,7 @@ describe('given the load ssl connection function', () => {
         _from: domain._id,
       })
     })
-    describe('using no cursor', () => {
-      it('returns multiple ssl scans', async () => {
-        const connectionLoader = sslLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
 
-        const sslLoader = sslLoaderByKey(query, i18n)
-        const expectedSslScans = await sslLoader.loadMany([
-          sslScan1._key,
-          sslScan2._key,
-        ])
-
-        expectedSslScans[0].id = expectedSslScans[0]._key
-        expectedSslScans[0].domainId = domain._id
-
-        expectedSslScans[1].id = expectedSslScans[1]._key
-        expectedSslScans[1].domainId = domain._id
-
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const sslScans = await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
-        })
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('ssl', expectedSslScans[0]._key),
-              node: {
-                ...expectedSslScans[0],
-              },
-            },
-            {
-              cursor: toGlobalId('ssl', expectedSslScans[1]._key),
-              node: {
-                ...expectedSslScans[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('ssl', expectedSslScans[0]._key),
-            endCursor: toGlobalId('ssl', expectedSslScans[1]._key),
-          },
-        }
-
-        expect(sslScans).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns ssl scan(s) after a given node id', async () => {
         const connectionLoader = sslLoaderConnectionsByDomainId(

@@ -86,63 +86,7 @@ describe('given the load https connection function', () => {
         _from: domain._id,
       })
     })
-    describe('using no cursor', () => {
-      it('returns multiple https scans', async () => {
-        const connectionLoader = httpsLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
 
-        const httpsLoader = httpsLoaderByKey(query, i18n)
-        const expectedHttpsScans = await httpsLoader.loadMany([
-          httpsScan1._key,
-          httpsScan2._key,
-        ])
-
-        expectedHttpsScans[0].id = expectedHttpsScans[0]._key
-        expectedHttpsScans[0].domainId = domain._id
-
-        expectedHttpsScans[1].id = expectedHttpsScans[1]._key
-        expectedHttpsScans[1].domainId = domain._id
-
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const httpsScans = await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
-        })
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('https', expectedHttpsScans[0]._key),
-              node: {
-                ...expectedHttpsScans[0],
-              },
-            },
-            {
-              cursor: toGlobalId('https', expectedHttpsScans[1]._key),
-              node: {
-                ...expectedHttpsScans[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
-            endCursor: toGlobalId('https', expectedHttpsScans[1]._key),
-          },
-        }
-
-        expect(httpsScans).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns https scan(s) after a given node id', async () => {
         const connectionLoader = httpsLoaderConnectionsByDomainId(
