@@ -8,7 +8,7 @@ import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { Flex, Link, CSSReset, useToast, Box } from '@chakra-ui/core'
+import { Flex, Link, CSSReset, useToast } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 // import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
@@ -190,6 +190,7 @@ export default function App() {
             </Switch>
           </Suspense>
         </Main>
+        <FloatingMenu />
         <Footer>
           <Link
             href={
@@ -211,8 +212,6 @@ export default function App() {
             <Trans>Terms & conditions</Trans>
           </Link>
         </Footer>
-        <FloatingMenu />
-        <Box h="40px" />
       </Flex>
     </>
   )
