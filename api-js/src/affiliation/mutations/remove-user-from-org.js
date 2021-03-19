@@ -1,6 +1,8 @@
-import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql'
+import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
+
+import { removeUserFromOrgUnion } from '../unions'
 
 export const removeUserFromOrg = new mutationWithClientMutationId({
   name: 'RemoveUserFromOrg',
@@ -17,10 +19,11 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
-      description: 'Informs the user if the user was removed successfully.',
-      resolve: ({ status }) => status,
+    result: {
+      type: removeUserFromOrgUnion,
+      description:
+        '`RemoveUserFromOrgUnion` returning either a `RemoveUserFromOrgResult`, or `RemoveUserFromOrgError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -49,9 +52,13 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrgKey}, however no org with that id could be found.`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove user from unknown organization.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
+          t`Unable to remove user from unknown organization.`,
+        ),
+      }
     }
 
     // Check requesting users permission
@@ -60,7 +67,11 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrg._key}, however they do not have the permission to remove users.`,
       )
-      throw new Error(i18n._(t`Unable to remove user from organization.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to remove user from organization.`),
+      }
     }
 
     // Get requested user
@@ -69,9 +80,13 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrg._key}, however no user with that id could be found.`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove unknown user from organization.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
+          t`Unable to remove unknown user from organization.`,
+        ),
+      }
     }
 
     // Get requested users current permission level
@@ -97,11 +112,13 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUser._key}, but they do not have any affiliations to org: ${requestedOrg._key}.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
           t`Unable to remove a user that already does not belong to this organization.`,
         ),
-      )
+      }
     }
 
     const affiliation = await affiliationCursor.next()
@@ -163,17 +180,20 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       )
 
       return {
+        _type: 'regular',
         status: i18n._(t`Successfully removed user from organization.`),
       }
     } else {
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, but they do not have the right permission.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
           t`Permission Denied: Please contact organization admin for help with removing users.`,
         ),
-      )
+      }
     }
   },
 })
