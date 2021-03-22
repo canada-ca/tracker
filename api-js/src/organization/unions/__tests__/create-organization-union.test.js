@@ -18,7 +18,7 @@ describe('given the createOrganizationUnion', () => {
     describe('testing the organizationType', () => {
       it('returns the correct type', () => {
         const obj = {
-          _type: 'domain',
+          _type: 'organization',
           domain: {},
         }
 
