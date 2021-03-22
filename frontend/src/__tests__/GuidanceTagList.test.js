@@ -24,7 +24,7 @@ const negativeTags = selectorNode.negativeGuidanceTags.edges
 const neutralTags = selectorNode.neutralGuidanceTags.edges
 const positiveTags = selectorNode.positiveGuidanceTags.edges
 const selector = selectorNode.selector
-const categoryName = 'dkim'
+const categoryName = 'dmarc'
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -55,7 +55,7 @@ describe('<GuidanceTagList />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/DKIM-GC/i))
+    await waitFor(() => getAllByText(/DKIM-missing/i))
   })
   it('renders neutral guidance tags', async () => {
     const { getAllByText } = render(
@@ -77,7 +77,9 @@ describe('<GuidanceTagList />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/3.2.2 Third Parties and DKIM/i))
+    await waitFor(() =>
+      getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),
+    )
   })
   it('renders positive guidance tags', async () => {
     const { getAllByText } = render(
@@ -99,6 +101,8 @@ describe('<GuidanceTagList />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/3.2.2 Third Parties and DKIM/i))
+    await waitFor(() =>
+      getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),
+    )
   })
 })

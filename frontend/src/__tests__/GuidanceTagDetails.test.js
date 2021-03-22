@@ -45,8 +45,6 @@ describe('<GuidanceTagDetails />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() =>
-      getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),
-    )
+    await waitFor(() => getAllByText(/DKIM-missing/i))
   })
 })
