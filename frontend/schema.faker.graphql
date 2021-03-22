@@ -112,6 +112,25 @@ type CategoryTotals {
   fail: Int @examples(values: [8694, 5896, 5436, 9345, 2345])
 }
 
+type CreateDomainPayload {
+  # `CreateDomainUnion` returning either a `Domain`, or `CreateDomainError` object.
+  result: CreateDomainUnion
+  clientMutationId: String
+}
+
+# This union is used with the `CreateDomain` mutation,
+# allowing for users to create a domain and add it to their org,
+# and support any errors that may occur
+union CreateDomainUnion = CreateDomainError | Domain
+
+# This object is used to inform the user if any errors occurred while creating a domain.
+type CreateDomainError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input CreateDomainInput {
   # The global id of the organization you wish to assign this domain to.
   orgId: ID!
@@ -119,12 +138,6 @@ input CreateDomainInput {
   domain: DomainScalar!
   # DKIM selector strings corresponding to this domain.
   selectors: [Selector]
-  clientMutationId: String
-}
-
-type CreateDomainPayload {
-  # The newly created domain.
-  domain: Domain
   clientMutationId: String
 }
 
