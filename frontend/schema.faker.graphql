@@ -141,6 +141,24 @@ input CreateDomainInput {
   clientMutationId: String
 }
 
+type CreateOrganizationPayload {
+  # `CreateOrganizationUnion` returning either an `Organization`, or `OrganizationError` object.
+  result: CreateOrganizationUnion
+  clientMutationId: String
+}
+
+# This union is used with the `CreateOrganization` mutation,
+# allowing for users to create an organization, and support any errors that may occur
+union CreateOrganizationUnion = OrganizationError | Organization
+
+# This object is used to inform the user if any errors occurred while using an organization mutation.
+type OrganizationError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input CreateOrganizationInput {
   # The English acronym of the organization.
   acronymEN: Acronym!
@@ -170,12 +188,6 @@ input CreateOrganizationInput {
   cityEN: String!
   # The French translation of the city the organization resides in.
   cityFR: String!
-  clientMutationId: String
-}
-
-type CreateOrganizationPayload {
-  # The newly created organization.
-  organization: Organization
   clientMutationId: String
 }
 
