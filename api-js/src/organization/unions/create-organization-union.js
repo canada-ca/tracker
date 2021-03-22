@@ -7,7 +7,7 @@ export const createOrganizationUnion = new GraphQLUnionType({
 allowing for users to create an organization, and support any errors that may occur`,
   types: [organizationErrorType, organizationType],
   resolveType({ _type }) {
-    if (_type === 'domain') {
+    if (_type === 'organization') {
       return organizationType
     } else {
       return organizationErrorType
