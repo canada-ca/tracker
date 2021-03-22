@@ -948,16 +948,16 @@ type HTTPSEdge {
 }
 
 type InviteUserToOrgPayload {
-  # `InviteUserToOrgUnion` returning either a `InviteUserToOrgResult`, or `InviteUserToOrgError` object.
+  # `InviteUserToOrgUnion` returning either a `InviteUserToOrgResult`, or `AffiliationError` object.
   result: InviteUserToOrgUnion
   clientMutationId: String
 }
 
 # This union is used with the `InviteUserToOrg` mutation, allowing for users to invite user to their org, and support any errors that may occur
-union InviteUserToOrgUnion = InviteUserToOrgError | InviteUserToOrgResult
+union InviteUserToOrgUnion = AffiliationError | InviteUserToOrgResult
 
 # This object is used to inform the user if any errors occurred while inviting a user to an org.
-type InviteUserToOrgError {
+type AffiliationError {
   # Error code to inform user what the issue is related to.
   code: Int
   # Description of the issue that was encountered.
@@ -1406,21 +1406,13 @@ type RemoveOrganizationPayload {
 }
 
 type RemoveUserFromOrgPayload {
-  # `RemoveUserFromOrgUnion` returning either a `RemoveUserFromOrgResult`, or `RemoveUserFromOrgError` object.
+  # `RemoveUserFromOrgUnion` returning either a `RemoveUserFromOrgResult`, or `AffiliationError` object.
   result: RemoveUserFromOrgUnion
   clientMutationId: String
 }
 
 # This union is used with the `RemoveUserFromOrg` mutation, allowing for users to remove a user from their org, and support any errors that may occur
-union RemoveUserFromOrgUnion = RemoveUserFromOrgError | RemoveUserFromOrgResult
-
-# This object is used to inform the user if any errors occurred while removing a user from an org.
-type RemoveUserFromOrgError {
-  # Error code to inform user what the issue is related to.
-  code: Int
-  # Description of the issue that was encountered.
-  description: String
-}
+union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
 
 # This object is used to inform the user of the removal status.
 type RemoveUserFromOrgResult {
@@ -1997,21 +1989,13 @@ input UpdateUserProfileInput {
 }
 
 type UpdateUserRolePayload {
-  # `UpdateUserRoleUnion` returning either a `UpdateUserRoleResult`, or `UpdateUserRoleError` object.
+  # `UpdateUserRoleUnion` returning either a `UpdateUserRoleResult`, or `AffiliationError` object.
   result: UpdateUserRoleUnion
   clientMutationId: String
 }
 
 # This union is used with the `UpdateUserRole` mutation, allowing for users to update a users role in an org, and support any errors that may occur
-union UpdateUserRoleUnion = UpdateUserRoleError | UpdateUserRoleResult
-
-# This object is used to inform the user if any errors occurred while updating a users role in an org.
-type UpdateUserRoleError {
-  # Error code to inform user what the issue is related to.
-  code: Int
-  # Description of the issue that was encountered.
-  description: String
-}
+union UpdateUserRoleUnion = AffiliationError | UpdateUserRoleResult
 
 # This object is used to inform the user of the status of the role update.
 type UpdateUserRoleResult {
