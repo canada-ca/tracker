@@ -190,8 +190,14 @@ export const CREATE_DOMAIN = gql`
     createDomain(
       input: { orgId: $orgId, domain: $domain, selectors: $selectors }
     ) {
-      domain {
-        domain
+      result {
+        ... on Domain {
+          domain
+        }
+        ... on CreateDomainError {
+          code
+          description
+        }
       }
     }
   }
