@@ -1,7 +1,4 @@
-import {
-  updateUserRoleErrorType,
-  updateUserRoleResultType,
-} from '../../objects'
+import { affiliationError, updateUserRoleResultType } from '../../objects'
 import { updateUserRoleUnion } from '../update-user-role-union'
 
 describe('given the updateUserRoleUnion', () => {
@@ -11,10 +8,10 @@ describe('given the updateUserRoleUnion', () => {
 
       expect(demoType).toContain(updateUserRoleResultType)
     })
-    it('contains updateUserRoleErrorType', () => {
+    it('contains affiliationError', () => {
       const demoType = updateUserRoleUnion.getTypes()
 
-      expect(demoType).toContain(updateUserRoleErrorType)
+      expect(demoType).toContain(affiliationError)
     })
   })
   describe('testing the field selection', () => {
@@ -30,7 +27,7 @@ describe('given the updateUserRoleUnion', () => {
         )
       })
     })
-    describe('testing the updateUserRoleErrorType', () => {
+    describe('testing the affiliationError', () => {
       it('returns the correct type', () => {
         const obj = {
           _type: 'error',
@@ -40,7 +37,7 @@ describe('given the updateUserRoleUnion', () => {
         }
 
         expect(updateUserRoleUnion.resolveType(obj)).toMatchObject(
-          updateUserRoleErrorType,
+          affiliationError,
         )
       })
     })

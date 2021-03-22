@@ -1,7 +1,4 @@
-import {
-  removeUserFromOrgErrorType,
-  removeUserFromOrgResultType,
-} from '../../objects'
+import { affiliationError, removeUserFromOrgResultType } from '../../objects'
 import { removeUserFromOrgUnion } from '../remove-user-from-org-union'
 
 describe('given the removeUserFromOrgUnion', () => {
@@ -11,10 +8,10 @@ describe('given the removeUserFromOrgUnion', () => {
 
       expect(demoType).toContain(removeUserFromOrgResultType)
     })
-    it('contains removeUserFromOrgErrorType', () => {
+    it('contains affiliationError', () => {
       const demoType = removeUserFromOrgUnion.getTypes()
 
-      expect(demoType).toContain(removeUserFromOrgErrorType)
+      expect(demoType).toContain(affiliationError)
     })
   })
   describe('testing the field selection', () => {
@@ -30,7 +27,7 @@ describe('given the removeUserFromOrgUnion', () => {
         )
       })
     })
-    describe('testing the removeUserFromOrgErrorType', () => {
+    describe('testing the affiliationError', () => {
       it('returns the correct type', () => {
         const obj = {
           _type: 'error',
@@ -40,7 +37,7 @@ describe('given the removeUserFromOrgUnion', () => {
         }
 
         expect(removeUserFromOrgUnion.resolveType(obj)).toMatchObject(
-          removeUserFromOrgErrorType,
+          affiliationError,
         )
       })
     })
