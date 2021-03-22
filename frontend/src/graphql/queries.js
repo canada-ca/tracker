@@ -137,7 +137,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
       }
       dmarcPhase
       web {
-        https(first: 10) {
+        https(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
@@ -200,7 +200,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        ssl(first: 10) {
+        ssl(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
@@ -265,7 +265,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
         }
       }
       email {
-        dkim(first: 10) {
+        dkim(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
@@ -336,7 +336,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        dmarc(first: 10) {
+        dmarc(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
@@ -403,7 +403,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        spf(first: 10) {
+        spf(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
