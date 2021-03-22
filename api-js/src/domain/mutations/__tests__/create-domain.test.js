@@ -169,7 +169,7 @@ describe('create a domain', () => {
                         }
                       }
                     }
-                    ... on CreateDomainError {
+                    ... on DomainError {
                       code
                       description
                     }
@@ -317,7 +317,7 @@ describe('create a domain', () => {
                         }
                       }
                     }
-                    ... on CreateDomainError {
+                    ... on DomainError {
                       code
                       description
                     }
@@ -442,7 +442,7 @@ describe('create a domain', () => {
                       }
                     }
                   }
-                  ... on CreateDomainError {
+                  ... on DomainError {
                     code
                     description
                   }
@@ -566,7 +566,7 @@ describe('create a domain', () => {
                       }
                     }
                   }
-                  ... on CreateDomainError {
+                  ... on DomainError {
                     code
                     description
                   }
@@ -725,7 +725,7 @@ describe('create a domain', () => {
                       }
                     }
                   }
-                  ... on CreateDomainError {
+                  ... on DomainError {
                     code
                     description
                   }
@@ -858,7 +858,7 @@ describe('create a domain', () => {
                       }
                     }
                   }
-                  ... on CreateDomainError {
+                  ... on DomainError {
                     code
                     description
                   }
@@ -991,7 +991,7 @@ describe('create a domain', () => {
                       }
                     }
                   }
-                  ... on CreateDomainError {
+                  ... on DomainError {
                     code
                     description
                   }
@@ -1138,7 +1138,7 @@ describe('create a domain', () => {
                         }
                       }
                     }
-                    ... on CreateDomainError {
+                    ... on DomainError {
                       code
                       description
                     }
@@ -1231,7 +1231,7 @@ describe('create a domain', () => {
                         }
                       }
                     }
-                    ... on CreateDomainError {
+                    ... on DomainError {
                       code
                       description
                     }
@@ -1338,7 +1338,7 @@ describe('create a domain', () => {
                         }
                       }
                     }
-                    ... on CreateDomainError {
+                    ... on DomainError {
                       code
                       description
                     }
@@ -1443,7 +1443,7 @@ describe('create a domain', () => {
                           }
                         }
                       }
-                      ... on CreateDomainError {
+                      ... on DomainError {
                         code
                         description
                       }
@@ -1551,7 +1551,7 @@ describe('create a domain', () => {
                             }
                           }
                         }
-                        ... on CreateDomainError {
+                        ... on DomainError {
                           code
                           description
                         }
@@ -1650,7 +1650,7 @@ describe('create a domain', () => {
                             }
                           }
                         }
-                        ... on CreateDomainError {
+                        ... on DomainError {
                           code
                           description
                         }
@@ -1756,7 +1756,7 @@ describe('create a domain', () => {
                             }
                           }
                         }
-                        ... on CreateDomainError {
+                        ... on DomainError {
                           code
                           description
                         }
@@ -1855,7 +1855,7 @@ describe('create a domain', () => {
                             }
                           }
                         }
-                        ... on CreateDomainError {
+                        ... on DomainError {
                           code
                           description
                         }
@@ -1965,7 +1965,7 @@ describe('create a domain', () => {
                             }
                           }
                         }
-                        ... on CreateDomainError {
+                        ... on DomainError {
                           code
                           description
                         }
@@ -2070,7 +2070,7 @@ describe('create a domain', () => {
                         }
                       }
                     }
-                    ... on CreateDomainError {
+                    ... on DomainError {
                       code
                       description
                     }
@@ -2162,7 +2162,7 @@ describe('create a domain', () => {
                         }
                       }
                     }
-                    ... on CreateDomainError {
+                    ... on DomainError {
                       code
                       description
                     }
@@ -2268,7 +2268,7 @@ describe('create a domain', () => {
                         }
                       }
                     }
-                    ... on CreateDomainError {
+                    ... on DomainError {
                       code
                       description
                     }
@@ -2372,7 +2372,7 @@ describe('create a domain', () => {
                           }
                         }
                       }
-                      ... on CreateDomainError {
+                      ... on DomainError {
                         code
                         description
                       }
@@ -2478,7 +2478,7 @@ describe('create a domain', () => {
                             }
                           }
                         }
-                        ... on CreateDomainError {
+                        ... on DomainError {
                           code
                           description
                         }
@@ -2575,7 +2575,7 @@ describe('create a domain', () => {
                             }
                           }
                         }
-                        ... on CreateDomainError {
+                        ... on DomainError {
                           code
                           description
                         }
@@ -2679,7 +2679,7 @@ describe('create a domain', () => {
                             }
                           }
                         }
-                        ... on CreateDomainError {
+                        ... on DomainError {
                           code
                           description
                         }
@@ -2776,7 +2776,7 @@ describe('create a domain', () => {
                             }
                           }
                         }
-                        ... on CreateDomainError {
+                        ... on DomainError {
                           code
                           description
                         }
@@ -2884,7 +2884,7 @@ describe('create a domain', () => {
                             }
                           }
                         }
-                        ... on CreateDomainError {
+                        ... on DomainError {
                           code
                           description
                         }

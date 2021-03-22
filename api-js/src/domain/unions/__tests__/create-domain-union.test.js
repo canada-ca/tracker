@@ -1,4 +1,4 @@
-import { createDomainErrorType, domainType } from '../../objects/index'
+import { domainErrorType, domainType } from '../../objects/index'
 import { createDomainUnion } from '../create-domain-union'
 
 describe('given the createDomainUnion', () => {
@@ -8,10 +8,10 @@ describe('given the createDomainUnion', () => {
 
       expect(demoType).toContain(domainType)
     })
-    it('contains createDomainErrorType', () => {
+    it('contains domainErrorType', () => {
       const demoType = createDomainUnion.getTypes()
 
-      expect(demoType).toContain(createDomainErrorType)
+      expect(demoType).toContain(domainErrorType)
     })
   })
   describe('testing the field selection', () => {
@@ -25,7 +25,7 @@ describe('given the createDomainUnion', () => {
         expect(createDomainUnion.resolveType(obj)).toMatchObject(domainType)
       })
     })
-    describe('testing the createDomainErrorType', () => {
+    describe('testing the domainErrorType', () => {
       it('returns the correct type', () => {
         const obj = {
           _type: 'error',
@@ -35,7 +35,7 @@ describe('given the createDomainUnion', () => {
         }
 
         expect(createDomainUnion.resolveType(obj)).toMatchObject(
-          createDomainErrorType,
+          domainErrorType,
         )
       })
     })
