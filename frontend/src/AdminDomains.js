@@ -107,7 +107,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           position: 'top-left',
         })
         setDomainSearch('')
-      } else if (createDomain.result.__typename === 'CreateDomainError') {
+      } else if (createDomain.result.__typename === 'DomainError') {
         toast({
           title: t`Unable to create new domain.`,
           description: createDomain.result.description,

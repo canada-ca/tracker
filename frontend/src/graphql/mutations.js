@@ -194,7 +194,7 @@ export const CREATE_DOMAIN = gql`
         ... on Domain {
           domain
         }
-        ... on CreateDomainError {
+        ... on DomainError {
           code
           description
         }

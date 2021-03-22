@@ -113,7 +113,7 @@ type CategoryTotals {
 }
 
 type CreateDomainPayload {
-  # `CreateDomainUnion` returning either a `Domain`, or `CreateDomainError` object.
+  # `CreateDomainUnion` returning either a `Domain`, or `DomainError` object.
   result: CreateDomainUnion
   clientMutationId: String
 }
@@ -121,10 +121,10 @@ type CreateDomainPayload {
 # This union is used with the `CreateDomain` mutation,
 # allowing for users to create a domain and add it to their org,
 # and support any errors that may occur
-union CreateDomainUnion = CreateDomainError | Domain
+union CreateDomainUnion = DomainError | Domain
 
 # This object is used to inform the user if any errors occurred while creating a domain.
-type CreateDomainError {
+type DomainError {
   # Error code to inform user what the issue is related to.
   code: Int
   # Description of the issue that was encountered.
