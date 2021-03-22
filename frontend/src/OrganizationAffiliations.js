@@ -44,38 +44,40 @@ export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
     )
 
   return (
-    <Box>
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => (
-          <Text fontSize="xl" fontWeight="bold">
-            <Trans>No Users</Trans>
-          </Text>
-        )}
-        mb="4"
-      >
-        {({ permission, user }, index) => (
-          <ErrorBoundary
-            FallbackComponent={ErrorFallbackMessage}
-            key={`${user.id}:${index}`}
-          >
-            <UserCard
-              userName={user.userName}
-              role={permission}
-              tfa={user.tfaValidated}
-            />
-            <Divider borderColor="gray.900" />
-          </ErrorBoundary>
-        )}
-      </ListOf>
-      <RelayPaginationControls
-        onlyPagination={true}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        next={next}
-        previous={previous}
-      />
-    </Box>
+    <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+      <Box>
+        <ListOf
+          elements={nodes}
+          ifEmpty={() => (
+            <Text fontSize="xl" fontWeight="bold">
+              <Trans>No Users</Trans>
+            </Text>
+          )}
+          mb="4"
+        >
+          {({ permission, user }, index) => (
+            <ErrorBoundary
+              FallbackComponent={ErrorFallbackMessage}
+              key={`${user.id}:${index}`}
+            >
+              <UserCard
+                userName={user.userName}
+                role={permission}
+                tfa={user.tfaValidated}
+              />
+              <Divider borderColor="gray.900" />
+            </ErrorBoundary>
+          )}
+        </ListOf>
+        <RelayPaginationControls
+          onlyPagination={true}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+        />
+      </Box>
+    </ErrorBoundary>
   )
 }
 
