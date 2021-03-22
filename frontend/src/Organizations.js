@@ -102,6 +102,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
         <Flex
           direction={{ base: 'column', md: 'row' }}
           alignItems={{ base: 'stretch', md: 'center' }}
+          mb={{ base: '4', md: '8' }}
         >
           <InputGroup mb={{ base: '8px', md: '0' }} flexGrow={1}>
             <InputLeftElement>
