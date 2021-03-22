@@ -1,9 +1,9 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
 
-export const updateUserRoleErrorType = new GraphQLObjectType({
-  name: 'UpdateUserRoleError',
+export const affiliationError = new GraphQLObjectType({
+  name: 'AffiliationError',
   description:
-    'This object is used to inform the user if any errors occurred while updating a users role in an org.',
+    'This object is used to inform the user if any errors occurred while executing affiliation mutations.',
   fields: () => ({
     code: {
       type: GraphQLInt,
