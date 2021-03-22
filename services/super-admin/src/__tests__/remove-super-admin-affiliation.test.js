@@ -62,7 +62,7 @@ describe('given the removeSuperAdminAffiliation function', () => {
     describe('database error occurs', () => {
       it('throws an error', async () => {
         const mockedTransaction = jest.fn().mockReturnValueOnce({
-          run() {
+          step() {
             throw new Error('Database error occurred.')
           },
           commit() {
@@ -79,7 +79,7 @@ describe('given the removeSuperAdminAffiliation function', () => {
         } catch (err) {
           expect(err).toEqual(
             new Error(
-              'Transaction run error occurred well removing super admin affiliation: Error: Database error occurred.',
+              'Transaction step error occurred well removing super admin affiliation: Error: Database error occurred.',
             ),
           )
         }
@@ -88,7 +88,7 @@ describe('given the removeSuperAdminAffiliation function', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const mockedTransaction = jest.fn().mockReturnValueOnce({
-          run() {
+          step() {
             return 'string'
           },
           commit() {

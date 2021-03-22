@@ -29,7 +29,7 @@ const createSuperAdminOrg = async ({ collections, transaction }) => {
 
   let org
   try {
-    await trx.run(async () => {
+    await trx.step(async () => {
       org = await collections.organizations.save({
         verified: false,
         orgDetails: {
@@ -58,7 +58,7 @@ const createSuperAdminOrg = async ({ collections, transaction }) => {
     })
   } catch (err) {
     throw new Error(
-      `Transaction run error occurred while creating new super admin org: ${err}`,
+      `Transaction step error occurred while creating new super admin org: ${err}`,
     )
   }
 
