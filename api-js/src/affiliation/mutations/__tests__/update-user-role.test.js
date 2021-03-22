@@ -180,7 +180,15 @@ describe('update a users role', () => {
                       role: SUPER_ADMIN
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -215,7 +223,9 @@ describe('update a users role', () => {
               const expectedResponse = {
                 data: {
                   updateUserRole: {
-                    status: 'User role was updated successfully.',
+                    result: {
+                      status: 'User role was updated successfully.',
+                    },
                   },
                 },
               }
@@ -239,7 +249,15 @@ describe('update a users role', () => {
                       role: USER
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -274,7 +292,9 @@ describe('update a users role', () => {
               const expectedResponse = {
                 data: {
                   updateUserRole: {
-                    status: 'User role was updated successfully.',
+                    result: {
+                      status: 'User role was updated successfully.',
+                    },
                   },
                 },
               }
@@ -307,7 +327,15 @@ describe('update a users role', () => {
                       role: SUPER_ADMIN
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -342,7 +370,9 @@ describe('update a users role', () => {
               const expectedResponse = {
                 data: {
                   updateUserRole: {
-                    status: 'User role was updated successfully.',
+                    result: {
+                      status: 'User role was updated successfully.',
+                    },
                   },
                 },
               }
@@ -366,7 +396,15 @@ describe('update a users role', () => {
                       role: ADMIN
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -401,7 +439,9 @@ describe('update a users role', () => {
               const expectedResponse = {
                 data: {
                   updateUserRole: {
-                    status: 'User role was updated successfully.',
+                    result: {
+                      status: 'User role was updated successfully.',
+                    },
                   },
                 },
               }
@@ -443,7 +483,15 @@ describe('update a users role', () => {
                       role: ADMIN
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -478,7 +526,9 @@ describe('update a users role', () => {
               const expectedResponse = {
                 data: {
                   updateUserRole: {
-                    status: 'User role was updated successfully.',
+                    result: {
+                      status: 'User role was updated successfully.',
+                    },
                   },
                 },
               }
@@ -552,7 +602,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -581,9 +639,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [new GraphQLError('Unable to update your own role.')]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'Unable to update your own role.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their own role in org: ${org._key}.`,
           ])
@@ -602,7 +669,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -631,11 +706,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(`Unable to update role: user unknown.`),
-          ]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'Unable to update role: user unknown.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update a user: random@email.ca role in org: ${org._key}, however there is no user associated with that user name.`,
           ])
@@ -654,7 +736,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -683,11 +773,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(`Unable to update role: organization unknown.`),
-          ]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'Unable to update role: organization unknown.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: 1, however there is no org associated with that id.`,
           ])
@@ -713,7 +810,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -742,13 +847,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Permission Denied: Please contact organization admin for help with user role changes.',
-            ),
-          ]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'Permission Denied: Please contact organization admin for help with user role changes.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however they do not have permission to do so.`,
           ])
@@ -800,7 +910,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -829,13 +947,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Permission Denied: Please contact organization admin for help with user role changes.',
-            ),
-          ]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'Permission Denied: Please contact organization admin for help with user role changes.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however they do not have permission to do so.`,
           ])
@@ -861,7 +984,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -890,13 +1021,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to update role: user does not belong to organization.',
-            ),
-          ]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'Unable to update role: user does not belong to organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however that user does not have an affiliation with that organization.`,
           ])
@@ -929,7 +1065,15 @@ describe('update a users role', () => {
                       role: ADMIN
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -961,13 +1105,18 @@ describe('update a users role', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  `Permission Denied: Please contact organization admin for help with updating user roles.`,
-                ),
-              ]
+              const error = {
+                data: {
+                  updateUserRole: {
+                    result: {
+                      code: 400,
+                      description: 'Permission Denied: Please contact organization admin for help with updating user roles.',
+                    },
+                  },
+                },
+              }
 
-              expect(response.errors).toEqual(error)
+              expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: admin.`,
               ])
@@ -1000,7 +1149,15 @@ describe('update a users role', () => {
                       role: USER
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -1032,13 +1189,18 @@ describe('update a users role', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  `Permission Denied: Please contact organization admin for help with updating user roles.`,
-                ),
-              ]
+              const error = {
+                data: {
+                  updateUserRole: {
+                    result: {
+                      code: 400,
+                      description: 'Permission Denied: Please contact organization admin for help with updating user roles.',
+                    },
+                  },
+                },
+              }
 
-              expect(response.errors).toEqual(error)
+              expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: user.`,
               ])
@@ -1072,7 +1234,15 @@ describe('update a users role', () => {
                     role: USER
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on UpdateUserRoleError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
               `,
@@ -1104,13 +1274,18 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                `Permission Denied: Please contact organization admin for help with updating user roles.`,
-              ),
-            ]
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description: 'Permission Denied: Please contact organization admin for help with updating user roles.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: user.`,
             ])
@@ -1141,7 +1316,15 @@ describe('update a users role', () => {
                     role: USER
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on UpdateUserRoleError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
               `,
@@ -1173,13 +1356,18 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                `Permission Denied: Please contact organization admin for help with updating user roles.`,
-              ),
-            ]
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description: 'Permission Denied: Please contact organization admin for help with updating user roles.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to lower user: ${secondaryUser._key} from admin to: user.`,
             ])
@@ -1276,7 +1464,15 @@ describe('update a users role', () => {
                   role: USER
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -1397,7 +1593,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -1462,7 +1666,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -1594,7 +1806,15 @@ describe('update a users role', () => {
                       role: SUPER_ADMIN
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -1629,7 +1849,9 @@ describe('update a users role', () => {
               const expectedResponse = {
                 data: {
                   updateUserRole: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -1653,7 +1875,15 @@ describe('update a users role', () => {
                       role: USER
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -1688,7 +1918,9 @@ describe('update a users role', () => {
               const expectedResponse = {
                 data: {
                   updateUserRole: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -1721,7 +1953,15 @@ describe('update a users role', () => {
                       role: SUPER_ADMIN
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -1756,7 +1996,9 @@ describe('update a users role', () => {
               const expectedResponse = {
                 data: {
                   updateUserRole: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -1780,7 +2022,15 @@ describe('update a users role', () => {
                       role: ADMIN
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -1815,7 +2065,9 @@ describe('update a users role', () => {
               const expectedResponse = {
                 data: {
                   updateUserRole: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -1857,7 +2109,15 @@ describe('update a users role', () => {
                       role: ADMIN
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -1892,7 +2152,9 @@ describe('update a users role', () => {
               const expectedResponse = {
                 data: {
                   updateUserRole: {
-                    status: 'todo',
+                    result: {
+                      status: 'todo',
+                    },
                   },
                 },
               }
@@ -1966,7 +2228,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -1995,9 +2265,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update their own role in org: ${org._key}.`,
           ])
@@ -2016,7 +2295,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -2045,9 +2332,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update a user: random@email.ca role in org: ${org._key}, however there is no user associated with that user name.`,
           ])
@@ -2066,7 +2362,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -2095,9 +2399,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: 1, however there is no org associated with that id.`,
           ])
@@ -2123,7 +2436,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -2152,9 +2473,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however they do not have permission to do so.`,
           ])
@@ -2206,7 +2536,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -2235,9 +2573,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however they do not have permission to do so.`,
           ])
@@ -2263,7 +2610,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -2292,9 +2647,18 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateUserRole: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update a user: ${secondaryUser._key} role in org: treasury-board-secretariat, however that user does not have an affiliation with that organization.`,
           ])
@@ -2327,7 +2691,15 @@ describe('update a users role', () => {
                       role: ADMIN
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -2359,9 +2731,18 @@ describe('update a users role', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
+              const error = {
+                data: {
+                  updateUserRole: {
+                    result: {
+                      code: 400,
+                      description: 'todo',
+                    },
+                  },
+                },
+              }
 
-              expect(response.errors).toEqual(error)
+              expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: admin.`,
               ])
@@ -2394,7 +2775,15 @@ describe('update a users role', () => {
                       role: USER
                     }
                   ) {
-                    status
+                    result {
+                      ... on UpdateUserRoleResult {
+                        status
+                      }
+                      ... on UpdateUserRoleError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
                 `,
@@ -2426,9 +2815,18 @@ describe('update a users role', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
+              const error = {
+                data: {
+                  updateUserRole: {
+                    result: {
+                      code: 400,
+                      description: 'todo',
+                    },
+                  },
+                },
+              }
 
-              expect(response.errors).toEqual(error)
+              expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: user.`,
               ])
@@ -2462,7 +2860,15 @@ describe('update a users role', () => {
                     role: USER
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on UpdateUserRoleError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
               `,
@@ -2494,9 +2900,18 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to lower user: ${secondaryUser._key} from super_admin to: user.`,
             ])
@@ -2527,7 +2942,15 @@ describe('update a users role', () => {
                     role: USER
                   }
                 ) {
-                  status
+                  result {
+                    ... on UpdateUserRoleResult {
+                      status
+                    }
+                    ... on UpdateUserRoleError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
               `,
@@ -2559,9 +2982,18 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                updateUserRole: {
+                  result: {
+                    code: 400,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to lower user: ${secondaryUser._key} from admin to: user.`,
             ])
@@ -2658,7 +3090,15 @@ describe('update a users role', () => {
                   role: USER
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -2777,7 +3217,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,
@@ -2840,7 +3288,15 @@ describe('update a users role', () => {
                   role: ADMIN
                 }
               ) {
-                status
+                result {
+                  ... on UpdateUserRoleResult {
+                    status
+                  }
+                  ... on UpdateUserRoleError {
+                    code
+                    description
+                  }
+                }
               }
             }
             `,

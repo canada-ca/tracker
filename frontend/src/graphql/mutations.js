@@ -121,7 +121,15 @@ export const UPDATE_USER_ROLE = gql`
     $role: RoleEnums!
   ) {
     updateUserRole(input: { userName: $userName, orgId: $orgId, role: $role }) {
-      status
+      result {
+        ... on UpdateUserRoleResult {
+          status
+        }
+        ... on UpdateUserRoleError {
+          code
+          description
+        }
+      }
     }
   }
 `
