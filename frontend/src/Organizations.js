@@ -42,6 +42,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
     nodes,
     next,
     previous,
+    resetToFirstPage,
     hasNextPage,
     hasPreviousPage,
   } = usePaginatedCollection({
@@ -121,6 +122,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
               variant="filled"
               onChange={(e) => {
                 setOrderField(e.target.value)
+                resetToFirstPage()
               }}
             >
               <option key="NAME" value="NAME">
@@ -144,6 +146,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
                 const newOrderDirection =
                   orderDirection === 'ASC' ? 'DESC' : 'ASC'
                 setOrderDirection(newOrderDirection)
+                resetToFirstPage()
               }}
             />
           </Stack>
