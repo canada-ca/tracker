@@ -112,7 +112,7 @@ msgstr "Paramètres du compte"
 msgid "Account created."
 msgstr "Compte créé"
 
-#: src/Organizations.js:133
+#: src/Organizations.js:130
 msgid "Acronym"
 msgstr "Acronyme"
 
@@ -557,7 +557,7 @@ msgstr "Domaine:"
 #: src/DomainsPage.js:65
 #: src/OrganizationDetails.js:88
 #: src/OrganizationDomains.js:41
-#: src/Organizations.js:136
+#: src/Organizations.js:133
 msgid "Domains"
 msgstr "Domaines"
 
@@ -1064,7 +1064,7 @@ msgstr "Absent du guide - besoin v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 
-#: src/Organizations.js:130
+#: src/Organizations.js:127
 msgid "Name"
 msgstr "Nom"
 
@@ -1436,10 +1436,6 @@ msgstr "Confidentialité"
 msgid "Properly configured!"
 msgstr "Bien configuré !"
 
-#: src/Organizations.js:139
-msgid "Province"
-msgstr "Province"
-
 #: src/guidanceTagConstants.js:378
 msgid "Public key RSA and key length 1024"
 msgstr "Clé publique RSA et longueur de la clé 1024"
@@ -1660,7 +1656,7 @@ msgstr "Rechercher un domaine"
 msgid "Search for a user"
 msgstr "Rechercher un utilisateur"
 
-#: src/Organizations.js:110
+#: src/Organizations.js:111
 msgid "Search for an organization"
 msgstr "Rechercher une organisation"
 
@@ -1671,10 +1667,6 @@ msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
 #: src/ReactTableGlobalFilter.js:29
 msgid "Search:"
 msgstr "Recherche :"
-
-#: src/Organizations.js:142
-msgid "Sector"
-msgstr "Secteur"
 
 #: src/LanguageSelect.js:23
 msgid "Select Preferred Language"
@@ -1734,7 +1726,7 @@ msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
-#: src/Organizations.js:118
+#: src/Organizations.js:115
 msgid "Sort by:"
 msgstr "Trier par:"
 
@@ -1944,7 +1936,7 @@ msgstr "Vérification des enregistrements TXT pour certains/toutes les expédite
 msgid "Verification code must only contains numbers"
 msgstr "Le code de vérification ne doit contenir que des chiffres"
 
-#: src/Organizations.js:145
+#: src/Organizations.js:136
 msgid "Verified"
 msgstr "Vérifié"
 

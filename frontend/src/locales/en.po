@@ -112,7 +112,7 @@ msgstr "Account Settings"
 msgid "Account created."
 msgstr "Account created."
 
-#: src/Organizations.js:133
+#: src/Organizations.js:130
 msgid "Acronym"
 msgstr "Acronym"
 
@@ -561,7 +561,7 @@ msgstr "Domain:"
 #: src/DomainsPage.js:65
 #: src/OrganizationDetails.js:88
 #: src/OrganizationDomains.js:41
-#: src/Organizations.js:136
+#: src/Organizations.js:133
 msgid "Domains"
 msgstr "Domains"
 
@@ -1072,7 +1072,7 @@ msgstr "Missing from guide- need v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "More than 10 lookups - Follow implementation guide"
 
-#: src/Organizations.js:130
+#: src/Organizations.js:127
 msgid "Name"
 msgstr "Name"
 
@@ -1444,10 +1444,6 @@ msgstr "Privacy"
 msgid "Properly configured!"
 msgstr "Properly configured!"
 
-#: src/Organizations.js:139
-msgid "Province"
-msgstr "Province"
-
 #: src/guidanceTagConstants.js:378
 msgid "Public key RSA and key length 1024"
 msgstr "Public key RSA and key length 1024"
@@ -1668,7 +1664,7 @@ msgstr "Search for a domain"
 msgid "Search for a user"
 msgstr "Search for a user"
 
-#: src/Organizations.js:110
+#: src/Organizations.js:111
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
@@ -1679,10 +1675,6 @@ msgstr "Search for any Government of Canada tracked domain:"
 #: src/ReactTableGlobalFilter.js:29
 msgid "Search:"
 msgstr "Search:"
-
-#: src/Organizations.js:142
-msgid "Sector"
-msgstr "Sector"
 
 #: src/LanguageSelect.js:23
 msgid "Select Preferred Language"
@@ -1742,7 +1734,7 @@ msgstr "Sign in with your username and password."
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
-#: src/Organizations.js:118
+#: src/Organizations.js:115
 msgid "Sort by:"
 msgstr "Sort by:"
 
@@ -1952,7 +1944,7 @@ msgstr "Verification TXT records for some/all 3rd party senders missing"
 msgid "Verification code must only contains numbers"
 msgstr "Verification code must only contains numbers"
 
-#: src/Organizations.js:145
+#: src/Organizations.js:136
 msgid "Verified"
 msgstr "Verified"
 

@@ -388,7 +388,6 @@
     Previous: 'Previous',
     Privacy: 'Privacy',
     'Properly configured!': 'Properly configured!',
-    Province: 'Province',
     'Public key RSA and key length 1024': 'Public key RSA and key length 1024',
     'Public key RSA and key length 2048': 'Public key RSA and key length 2048',
     'Public key RSA and key length 4096 or higher':
@@ -457,7 +456,6 @@
     'Search for any Government of Canada tracked domain:':
       'Search for any Government of Canada tracked domain:',
     'Search:': 'Search:',
-    Sector: 'Sector',
     'Select Preferred Language': 'Select Preferred Language',
     'Select an organization': 'Select an organization',
     'Select an organization to view admin options':
