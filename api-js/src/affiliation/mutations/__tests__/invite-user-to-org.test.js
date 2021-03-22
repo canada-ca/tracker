@@ -184,7 +184,7 @@ describe('invite user to org', () => {
                           ... on InviteUserToOrgResult {
                             status
                           }
-                          ... on InviteUserToOrgError {
+                          ... on AffiliationError {
                             code
                             description
                           }
@@ -278,7 +278,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -372,7 +372,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -453,7 +453,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -547,7 +547,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -642,7 +642,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -762,7 +762,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -856,7 +856,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -938,7 +938,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -1033,7 +1033,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -1141,7 +1141,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1225,7 +1225,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1334,7 +1334,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1448,7 +1448,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1562,7 +1562,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1696,7 +1696,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1775,7 +1775,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1917,7 +1917,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -2010,7 +2010,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -2103,7 +2103,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -2184,7 +2184,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -2275,7 +2275,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -2366,7 +2366,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -2482,7 +2482,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -2575,7 +2575,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -2656,7 +2656,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -2747,7 +2747,7 @@ describe('invite user to org', () => {
                         ... on InviteUserToOrgResult {
                           status
                         }
-                        ... on InviteUserToOrgError {
+                        ... on AffiliationError {
                           code
                           description
                         }
@@ -2851,7 +2851,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -2935,7 +2935,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -3048,7 +3048,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -3161,7 +3161,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -3294,7 +3294,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -3369,7 +3369,7 @@ describe('invite user to org', () => {
                     ... on InviteUserToOrgResult {
                       status
                     }
-                    ... on InviteUserToOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }

@@ -203,7 +203,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -268,7 +268,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -336,7 +336,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -401,7 +401,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -476,7 +476,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -541,7 +541,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -612,7 +612,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -692,7 +692,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -772,7 +772,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -852,7 +852,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -932,7 +932,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1013,7 +1013,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1100,7 +1100,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1185,7 +1185,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1258,7 +1258,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1354,7 +1354,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -1419,7 +1419,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -1487,7 +1487,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -1552,7 +1552,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -1627,7 +1627,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -1692,7 +1692,7 @@ describe('removing a user from an organization', () => {
                       ... on RemoveUserFromOrgResult {
                         status
                       }
-                      ... on RemoveUserFromOrgError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -1763,7 +1763,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1843,7 +1843,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1923,7 +1923,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -2003,7 +2003,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -2083,7 +2083,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -2164,7 +2164,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -2251,7 +2251,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -2332,7 +2332,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -2401,7 +2401,7 @@ describe('removing a user from an organization', () => {
                     ... on RemoveUserFromOrgResult {
                       status
                     }
-                    ... on RemoveUserFromOrgError {
+                    ... on AffiliationError {
                       code
                       description
                     }
