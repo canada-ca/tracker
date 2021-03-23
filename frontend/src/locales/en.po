@@ -13,18 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/DomainsPage.js:131
-#: src/LandingPage.js:53
-#: src/OrganizationDetails.js:170
-#: src/OrganizationSummary.js:42
-#: src/Organizations.js:108
-#~ msgid "*All data represented is mocked for demonstration purposes"
-#~ msgstr "*All data represented is mocked for demonstration purposes"
-
-#: src/AdminPage.js:108
-#~ msgid "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
-#~ msgstr "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
-
 #: src/guidanceTagConstants.js:5
 msgid "3.2.2 Third Parties and DKIM"
 msgstr "3.2.2 Third Parties and DKIM"
@@ -233,8 +221,8 @@ msgid "CNAME-DMARC"
 msgstr "CNAME-DMARC"
 
 #: src/WelcomeMessage.js:19
-msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
-msgstr "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
+msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure."
+msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure."
 
 #: src/guidanceTagConstants.js:493
 msgid "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance."
@@ -444,10 +432,6 @@ msgstr "DMARC Not Implemented"
 #: src/DomainCard.js:165
 msgid "DMARC Report"
 msgstr "DMARC Report"
-
-#: src/DomainCard.js:165
-#~ msgid "DMARC Report <0/>"
-#~ msgstr "DMARC Report <0/>"
 
 #: src/SummaryGroup.js:44
 msgid "DMARC fail"
@@ -737,10 +721,6 @@ msgstr "Guidance Tags"
 #: src/GuidanceTagDetails.js:74
 msgid "Guidance:"
 msgstr "Guidance:"
-
-#: src/DmarcReportPage.js:614
-#~ msgid "Guidance<0/>"
-#~ msgstr "Guidance<0/>"
 
 #: src/PolicyComplianceDetails.js:36
 msgid "HSTS Age:"
@@ -1201,10 +1181,6 @@ msgstr "One or more ciphers in use are not compliant with guidelines"
 msgid "Organization Details"
 msgstr "Organization Details"
 
-#: src/AdminPanel.js:41
-#~ msgid "Organization Info"
-#~ msgstr "Organization Info"
-
 #: src/AdminPage.js:91
 msgid "Organization:"
 msgstr "Organization:"
@@ -1366,10 +1342,6 @@ msgstr "Password:"
 msgid "Passwords must match"
 msgstr "Passwords must match"
 
-#: src/PolicyComplianceDetails.js:57
-#~ msgid "Phase:"
-#~ msgstr "Phase:"
-
 #: src/EditableUserTFAMethod.js:137
 msgid "Phone"
 msgstr "Phone"
@@ -1434,7 +1406,7 @@ msgstr "Preloaded Status:"
 msgid "Previous"
 msgstr "Previous"
 
-#: src/App.js:201
+#: src/App.js:202
 #: src/FloatingMenu.js:175
 msgid "Privacy"
 msgstr "Privacy"
@@ -1754,14 +1726,6 @@ msgstr "Submit"
 msgid "Summary"
 msgstr "Summary"
 
-#: src/LandingPage.js:35
-msgid "Summary Cards"
-msgstr "Summary Cards"
-
-#: src/GuidanceTagDetails.js:101
-#~ msgid "Summary:"
-#~ msgstr "Summary:"
-
 #: src/guidanceTagConstants.js:419
 msgid "T-enabled"
 msgstr "T-enabled"
@@ -1782,7 +1746,7 @@ msgstr "TXT-DMARC-enabled"
 msgid "TXT-DMARC-missing"
 msgstr "TXT-DMARC-missing"
 
-#: src/App.js:211
+#: src/App.js:212
 #: src/FloatingMenu.js:185
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
@@ -1817,8 +1781,8 @@ msgid "Total users"
 msgstr "Total users"
 
 #: src/WelcomeMessage.js:15
-msgid "Track Web Security Compliance"
-msgstr "Track Web Security Compliance"
+msgid "Track Digital Security"
+msgstr "Track Digital Security"
 
 #: src/TopBanner.js:36
 msgid "Tracker Logo"

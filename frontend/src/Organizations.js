@@ -17,10 +17,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core'
-import {
-  PAGINATED_ORGANIZATIONS as FORWARD,
-  REVERSE_PAGINATED_ORGANIZATIONS as BACKWARD,
-} from './graphql/queries'
+import { PAGINATED_ORGANIZATIONS as FORWARD } from './graphql/queries'
 import { useUserState } from './UserState'
 import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
@@ -47,7 +44,6 @@ export default function Organisations({ orgsPerPage = 10 }) {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     variables: { field: orderField, direction: orderDirection },
     recordsPerPage: orgsPerPage,

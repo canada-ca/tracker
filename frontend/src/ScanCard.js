@@ -43,25 +43,11 @@ function ScanCard({ scanType, scanData, status }) {
     } else if (scanType === 'email') {
       return (
         <Box pb="1">
-          {status === 'not implemented' ? (
-            <Stack isInline align="center" px="2">
-              <Icon name="warning" color="weak" size="icons.md" />
-              <Text fontWeight="bold" fontSize="2xl">
-                <Trans>DMARC Not Implemented</Trans>
-              </Text>
-            </Stack>
-          ) : (
-            <Stack isInline align="center" px="2">
-              <Icon
-                name={parseInt(status, 10) > 2 ? 'warning-2' : 'check-circle'}
-                color={parseInt(status, 10) > 2 ? 'moderate' : 'strong'}
-                size="icons.md"
-              />
-              <Text fontWeight="bold" fontSize="2xl">
-                <Trans>DMARC Implementation Phase: {status}</Trans>
-              </Text>
-            </Stack>
-          )}
+          <Stack isInline align="center" px="2">
+            <Text fontWeight="bold" fontSize="2xl">
+              <Trans>DMARC Implementation Phase: {status}</Trans>
+            </Text>
+          </Stack>
         </Box>
       )
     } else {

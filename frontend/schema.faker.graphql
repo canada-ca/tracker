@@ -612,6 +612,8 @@ type Domain implements Node {
   )
   # The last time that a scan was ran on this domain.
   lastRan: String @fake(type: recentDate)
+  # DMARC phase found during scan.
+  dmarcPhase: Int @examples(values: [1, 2, 3, 4])
   # Domain Keys Identified Mail (DKIM) selector strings associated with domain.
   selectors: [Selector] @listLength(min: 0, max: 2)
   # The domains scan status, based on the latest scan data.
@@ -1406,14 +1408,34 @@ type RemoveOrganizationPayload {
   clientMutationId: String
 }
 
-input RemoveUserFromOrgInput {
-  userId: ID!
-  orgId: ID!
+type RemoveUserFromOrgPayload {
+  # `RemoveUserFromOrgUnion` returning either a `RemoveUserFromOrgResult`, or `RemoveUserFromOrgError` object.
+  result: RemoveUserFromOrgUnion
   clientMutationId: String
 }
 
-type RemoveUserFromOrgPayload {
+# This union is used with the `RemoveUserFromOrg` mutation, allowing for users to remove a user from their org, and support any errors that may occur
+union RemoveUserFromOrgUnion = RemoveUserFromOrgError | RemoveUserFromOrgResult
+
+# This object is used to inform the user if any errors occurred while removing a user from an org.
+type RemoveUserFromOrgError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user of the removal status.
+type RemoveUserFromOrgResult {
+  # Informs the user if the user was successfully removed.
   status: String
+}
+
+input RemoveUserFromOrgInput {
+  # The user id of the user to be removed.
+  userId: ID!
+  # The organization that the user is to be removed from.
+  orgId: ID!
   clientMutationId: String
 }
 
@@ -1977,6 +1999,29 @@ input UpdateUserProfileInput {
   clientMutationId: String
 }
 
+type UpdateUserRolePayload {
+  # `UpdateUserRoleUnion` returning either a `UpdateUserRoleResult`, or `UpdateUserRoleError` object.
+  result: UpdateUserRoleUnion
+  clientMutationId: String
+}
+
+# This union is used with the `UpdateUserRole` mutation, allowing for users to update a users role in an org, and support any errors that may occur
+union UpdateUserRoleUnion = UpdateUserRoleError | UpdateUserRoleResult
+
+# This object is used to inform the user if any errors occurred while updating a users role in an org.
+type UpdateUserRoleError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user of the status of the role update.
+type UpdateUserRoleResult {
+  # Informs the user if the user was successfully removed.
+  status: String
+}
+
 input UpdateUserRoleInput {
   # The username of the user you wish to update their role to.
   userName: EmailAddress!
@@ -1984,12 +2029,6 @@ input UpdateUserRoleInput {
   orgId: ID!
   # The role that the admin wants to give to the selected user.
   role: RoleEnums!
-  clientMutationId: String
-}
-
-type UpdateUserRolePayload {
-  # Informs the user if the user role update was successful.
-  status: String
   clientMutationId: String
 }
 

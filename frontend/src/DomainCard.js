@@ -18,8 +18,10 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
     let statusIcon
     if (status === 'PASS') {
       statusIcon = <Icon name="check-circle" color="strong" size="icons.sm" />
-    } else {
+    } else if (status === 'FAIL') {
       statusIcon = <Icon name="warning" color="weak" size="icons.sm" />
+    } else {
+      statusIcon = <Icon name="info" color="info" size="icons.sm" />
     }
     return statusIcon
   }

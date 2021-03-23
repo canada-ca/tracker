@@ -87,63 +87,7 @@ describe('when given the load spf connection function', () => {
         _from: domain._id,
       })
     })
-    describe('using no cursor', () => {
-      it('returns multiple spf scans', async () => {
-        const connectionLoader = spfLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
 
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const spfScans = await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
-        })
-
-        const spfLoader = spfLoaderByKey(query)
-        const expectedSpfScans = await spfLoader.loadMany([
-          spfScan1._key,
-          spfScan2._key,
-        ])
-
-        expectedSpfScans[0].id = expectedSpfScans[0]._key
-        expectedSpfScans[1].id = expectedSpfScans[1]._key
-
-        expectedSpfScans[0].domainId = domain._id
-        expectedSpfScans[1].domainId = domain._id
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('spf', expectedSpfScans[0]._key),
-              node: {
-                ...expectedSpfScans[0],
-              },
-            },
-            {
-              cursor: toGlobalId('spf', expectedSpfScans[1]._key),
-              node: {
-                ...expectedSpfScans[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('spf', expectedSpfScans[0]._key),
-            endCursor: toGlobalId('spf', expectedSpfScans[1]._key),
-          },
-        }
-
-        expect(spfScans).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns spf scan(s) after a given node id', async () => {
         const connectionLoader = spfLoaderConnectionsByDomainId(

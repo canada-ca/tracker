@@ -1,8 +1,10 @@
-import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql'
+import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
+
 import { RoleEnums } from '../../enums'
+import { updateUserRoleUnion } from '../unions'
 
 export const updateUserRole = new mutationWithClientMutationId({
   name: 'UpdateUserRole',
@@ -26,12 +28,11 @@ given organization.`,
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
-      description: 'Informs the user if the user role update was successful.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+    result: {
+      type: updateUserRoleUnion,
+      description:
+        '`UpdateUserRoleUnion` returning either a `UpdateUserRoleResult`, or `UpdateUserRoleError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -60,7 +61,11 @@ given organization.`,
       console.warn(
         `User: ${userKey} attempted to update their own role in org: ${orgId}.`,
       )
-      throw new Error(i18n._(t`Unable to update your own role.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to update your own role.`),
+      }
     }
 
     // Check to see if requested user exists
@@ -70,7 +75,11 @@ given organization.`,
       console.warn(
         `User: ${userKey} attempted to update a user: ${userName} role in org: ${orgId}, however there is no user associated with that user name.`,
       )
-      throw new Error(i18n._(t`Unable to update role: user unknown.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to update role: user unknown.`),
+      }
     }
 
     // Check to see if org exists
@@ -80,7 +89,11 @@ given organization.`,
       console.warn(
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${orgId}, however there is no org associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to update role: organization unknown.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to update role: organization unknown.`),
+      }
     }
 
     // Check requesting user's permission
@@ -90,11 +103,13 @@ given organization.`,
       console.warn(
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
           t`Permission Denied: Please contact organization admin for help with user role changes.`,
         ),
-      )
+      }
     }
 
     // Get user's current permission level
@@ -118,9 +133,13 @@ given organization.`,
       console.warn(
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however that user does not have an affiliation with that organization.`,
       )
-      throw new Error(
-        i18n._(t`Unable to update role: user does not belong to organization.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
+          t`Unable to update role: user does not belong to organization.`,
+        ),
+      }
     }
 
     const affiliation = await affiliationCursor.next()
@@ -151,11 +170,13 @@ given organization.`,
         console.warn(
           `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: admin.`,
         )
-        throw new Error(
-          i18n._(
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(
             t`Permission Denied: Please contact organization admin for help with updating user roles.`,
           ),
-        )
+        }
       }
 
       edge = {
@@ -172,11 +193,13 @@ given organization.`,
         console.warn(
           `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: user.`,
         )
-        throw new Error(
-          i18n._(
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(
             t`Permission Denied: Please contact organization admin for help with updating user roles.`,
           ),
-        )
+        }
       }
 
       edge = {
@@ -188,11 +211,13 @@ given organization.`,
       console.warn(
         `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: ${role}.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
           t`Permission Denied: Please contact organization admin for help with updating user roles.`,
         ),
-      )
+      }
     }
 
     try {
@@ -229,6 +254,7 @@ given organization.`,
     )
 
     return {
+      _type: 'regular',
       status: i18n._(t`User role was updated successfully.`),
     }
   },

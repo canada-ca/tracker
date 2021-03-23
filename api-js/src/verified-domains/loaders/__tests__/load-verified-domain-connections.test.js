@@ -96,56 +96,6 @@ describe('given the load domain connection using org id function', () => {
   })
 
   describe('given a successful load', () => {
-    describe('using no cursor', () => {
-      it('returns multiple domains', async () => {
-        const connectionLoader = verifiedDomainLoaderConnections(
-          query,
-          cleanseInput,
-        )
-
-        const connectionArgs = {
-          first: 10,
-        }
-        const domains = await connectionLoader({
-          ...connectionArgs,
-        })
-
-        const domainLoader = verifiedDomainLoaderByKey(query)
-        const expectedDomains = await domainLoader.loadMany([
-          domain._key,
-          domainTwo._key,
-        ])
-
-        expectedDomains[0].id = expectedDomains[0]._key
-        expectedDomains[1].id = expectedDomains[1]._key
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
-              node: {
-                ...expectedDomains[0],
-              },
-            },
-            {
-              cursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
-              node: {
-                ...expectedDomains[1],
-              },
-            },
-          ],
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('verifiedDomains', expectedDomains[0]._key),
-            endCursor: toGlobalId('verifiedDomains', expectedDomains[1]._key),
-          },
-          totalCount: 2,
-        }
-
-        expect(domains).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns a domain', async () => {
         const connectionLoader = verifiedDomainLoaderConnections(

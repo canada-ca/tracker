@@ -51,48 +51,6 @@ export const PAGINATED_ORGANIZATIONS = gql`
   }
 `
 
-export const REVERSE_PAGINATED_ORGANIZATIONS = gql`
-  query PaginatedOrganizations($before: String, $last: Int) {
-    pagination: findMyOrganizations(before: $before, last: $last) {
-      edges {
-        cursor
-        node {
-          id
-          acronym
-          name
-          slug
-          domainCount
-          verified
-          summaries {
-            mail {
-              total
-              categories {
-                name
-                count
-                percentage
-              }
-            }
-            web {
-              total
-              categories {
-                name
-                count
-                percentage
-              }
-            }
-          }
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-        hasPreviousPage
-        startCursor
-      }
-    }
-  }
-`
-
 export const WEB_AND_EMAIL_SUMMARIES = gql`
   query LandingPageSummaries {
     webSummary {
@@ -134,78 +92,61 @@ export const ORGANIZATION_BY_SLUG = gql`
   }
 `
 
-export const GET_GUIDANCE_TAGS_OF_DOMAIN_OLD = gql`
-  query FindDomainBySlug($urlSlug: Slug!) {
-    findDomainBySlug(urlSlug: $urlSlug) {
-      url
-      slug
-      lastRan
-      organization {
-        name
-      }
-      web {
-        edges {
-          cursor
-          node {
-            id
-            timestamp
-            domain
-            https {
-              httpsGuidanceTags
-            }
-            ssl {
-              sslGuidanceTags
-            }
-          }
-        }
-      }
-      email {
-        edges {
-          node {
-            timestamp
-            domain
-            dmarc {
-              dmarcGuidanceTags
-            }
-            spf {
-              spfGuidanceTags
-            }
-            dkim {
-              selectors {
-                selector
-                dkimGuidanceTags
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
   query FindDomainByDomain($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
+      id
       domain
       lastRan
-      dmarcPhase
       status {
         https
         ssl
       }
+      dmarcPhase
       web {
-        https(first: 10) {
+        https(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
               id
               timestamp
-              implementation
-              enforced
-              hsts
-              hstsAge
-              preloaded
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -226,13 +167,49 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        ssl(first: 10) {
+        ssl(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
               id
               timestamp
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -255,7 +232,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
         }
       }
       email {
-        dkim(first: 10) {
+        dkim(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
@@ -266,7 +243,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                   cursor
                   node {
                     selector
-                    guidanceTags(first: 5) {
+                    negativeGuidanceTags(first: 5) {
+                      edges {
+                        cursor
+                        node {
+                          tagId
+                          tagName
+                          guidance
+                          refLinks {
+                            description
+                            refLink
+                          }
+                          refLinksTech {
+                            description
+                            refLink
+                          }
+                        }
+                      }
+                    }
+                    neutralGuidanceTags(first: 5) {
+                      edges {
+                        cursor
+                        node {
+                          tagId
+                          tagName
+                          guidance
+                          refLinks {
+                            description
+                            refLink
+                          }
+                          refLinksTech {
+                            description
+                            refLink
+                          }
+                        }
+                      }
+                    }
+                    positiveGuidanceTags(first: 5) {
                       edges {
                         cursor
                         node {
@@ -290,7 +303,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        dmarc(first: 10) {
+        dmarc(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
@@ -300,7 +313,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
               pPolicy
               spPolicy
               pct
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -321,7 +370,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        spf(first: 10) {
+        spf(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
@@ -330,7 +379,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
               lookups
               record
               spfDefault
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -536,67 +621,11 @@ export const PAGINATED_ORG_DOMAINS = gql`
   }
 `
 
-export const REVERSE_PAGINATED_ORG_DOMAINS = gql`
-  query OrgDomainsPrev($slug: Slug!, $last: Int, $before: String) {
-    pagination: findOrganizationBySlug(orgSlug: $slug) {
-      domains(last: $last, before: $before) {
-        pageInfo {
-          hasNextPage
-          endCursor
-          hasPreviousPage
-          startCursor
-        }
-        edges {
-          cursor
-          node {
-            id
-            domain
-            lastRan
-            status {
-              dkim
-              dmarc
-              https
-              spf
-              ssl
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const PAGINATED_ORG_AFFILIATIONS = gql`
   query OrgUsersNext($slug: Slug!, $first: Int, $after: String) {
     findOrganizationBySlug(orgSlug: $slug) {
       id
       affiliations(first: $first, after: $after) {
-        pageInfo {
-          hasNextPage
-          endCursor
-          hasPreviousPage
-          startCursor
-        }
-        totalCount
-        edges {
-          cursor
-          node {
-            permission
-            user {
-              id
-              userName
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-export const REVERSE_PAGINATED_ORG_AFFILIATIONS = gql`
-  query OrgUsersPrev($slug: Slug!, $last: Int, $before: String) {
-    pagination: findOrganizationBySlug(orgSlug: $slug) {
-      affiliations(last: $last, before: $before) {
         pageInfo {
           hasNextPage
           endCursor
@@ -640,39 +669,6 @@ export const PAGINATED_DOMAINS = gql`
         __typename
       }
       pageInfo {
-        hasNextPage
-        endCursor
-        hasPreviousPage
-        startCursor
-        __typename
-      }
-      __typename
-    }
-  }
-`
-
-export const REVERSE_PAGINATED_DOMAINS = gql`
-  query PaginatedDomains($last: Int, $before: String) {
-    pagination: findMyDomains(last: $last, before: $before) {
-      edges {
-        cursor
-        node {
-          id
-          domain
-          lastRan
-          status {
-            dkim
-            dmarc
-            https
-            spf
-            ssl
-          }
-          __typename
-        }
-        __typename
-      }
-      pageInfo {
-        hasNextPage
         hasNextPage
         endCursor
         hasPreviousPage
@@ -862,51 +858,6 @@ export const PAGINATED_DKIM_FAILURE_REPORT = gql`
   }
 `
 
-export const REVERSE_PAGINATED_DKIM_FAILURE_REPORT = gql`
-  query ReversePaginatedDkimFailureReport(
-    $domain: DomainScalar!
-    $month: PeriodEnums!
-    $year: Year!
-    $before: String
-    $last: Int
-  ) {
-    findDomainByDomain(domain: $domain) {
-      id
-      dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain {
-          domain
-        }
-        month
-        year
-        detailTables {
-          dkimFailure(before: $before, last: $last) {
-            edges {
-              node {
-                dkimAligned
-                dkimDomains
-                dkimResults
-                dkimSelectors
-                dnsHost
-                envelopeFrom
-                guidance
-                headerFrom
-                sourceIpAddress
-                totalMessages
-              }
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-              hasPreviousPage
-              startCursor
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const PAGINATED_DMARC_FAILURE_REPORT = gql`
   query PaginatedDmarcFailureReport(
     $domain: DomainScalar!
@@ -925,50 +876,6 @@ export const PAGINATED_DMARC_FAILURE_REPORT = gql`
         year
         detailTables {
           dmarcFailure(after: $after, first: $first) {
-            edges {
-              node {
-                dkimDomains
-                dkimSelectors
-                disposition
-                dnsHost
-                envelopeFrom
-                headerFrom
-                sourceIpAddress
-                spfDomains
-                totalMessages
-              }
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-              hasPreviousPage
-              startCursor
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-export const REVERSE_PAGINATED_DMARC_FAILURE_REPORT = gql`
-  query ReversePaginatedDmarcFailureReport(
-    $domain: DomainScalar!
-    $month: PeriodEnums!
-    $year: Year!
-    $before: String
-    $last: Int
-  ) {
-    findDomainByDomain(domain: $domain) {
-      id
-      dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain {
-          domain
-        }
-        month
-        year
-        detailTables {
-          dmarcFailure(before: $before, last: $last) {
             edges {
               node {
                 dkimDomains
@@ -1039,50 +946,6 @@ export const PAGINATED_SPF_FAILURE_REPORT = gql`
   }
 `
 
-export const REVERSE_PAGINATED_SPF_FAILURE_REPORT = gql`
-  query ReversePaginatedSpfFailureReport(
-    $domain: DomainScalar!
-    $month: PeriodEnums!
-    $year: Year!
-    $before: String
-    $last: Int
-  ) {
-    findDomainByDomain(domain: $domain) {
-      id
-      dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain {
-          domain
-        }
-        month
-        year
-        detailTables {
-          spfFailure(before: $before, last: $last) {
-            edges {
-              node {
-                dnsHost
-                envelopeFrom
-                guidance
-                headerFrom
-                sourceIpAddress
-                spfAligned
-                spfDomains
-                spfResults
-                totalMessages
-              }
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-              hasPreviousPage
-              startCursor
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const PAGINATED_FULL_PASS_REPORT = gql`
   query PaginatedFullPassReport(
     $domain: DomainScalar!
@@ -1103,49 +966,6 @@ export const PAGINATED_FULL_PASS_REPORT = gql`
           fullPass(after: $after, first: $first) {
             edges {
               cursor
-              node {
-                sourceIpAddress
-                envelopeFrom
-                dkimDomains
-                dkimSelectors
-                dnsHost
-                headerFrom
-                spfDomains
-                totalMessages
-              }
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-              hasPreviousPage
-              startCursor
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-export const REVERSE_PAGINATED_FULL_PASS_REPORT = gql`
-  query ReversePaginatedFullPassReport(
-    $domain: DomainScalar!
-    $month: PeriodEnums!
-    $year: Year!
-    $before: String
-    $last: Int
-  ) {
-    findDomainByDomain(domain: $domain) {
-      id
-      dmarcSummaryByPeriod(month: $month, year: $year) {
-        domain {
-          domain
-        }
-        month
-        year
-        detailTables {
-          fullPass(before: $before, last: $last) {
-            edges {
               node {
                 sourceIpAddress
                 envelopeFrom
@@ -1450,41 +1270,6 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
           dmarcSummaryByPeriod(month: $month, year: $year) {
             month
             year
-            domain {
-              domain
-            }
-            categoryPercentages {
-              failPercentage
-              fullPassPercentage
-              passDkimOnlyPercentage
-              passSpfOnlyPercentage
-              totalMessages
-            }
-          }
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-        hasPreviousPage
-        startCursor
-      }
-    }
-  }
-`
-
-export const REVERSE_PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
-  query FindMyDomains(
-    $month: PeriodEnums!
-    $year: Year!
-    $before: String
-    $last: Int
-  ) {
-    findMyDomains(before: $before, last: $last) {
-      edges {
-        node {
-          domain
-          dmarcSummaryByPeriod(month: $month, year: $year) {
             domain {
               domain
             }

@@ -69,15 +69,36 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         position: 'top-left',
       })
     },
-    onCompleted() {
-      toast({
-        title: t`Role updated`,
-        description: t`The user's role has been successfully updated`,
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
+    onCompleted({ updateUserRole }) {
+      if (updateUserRole.result.__typename === 'UpdateUserRoleResult') {
+        toast({
+          title: t`Role updated`,
+          description: t`The user's role has been successfully updated`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else if (updateUserRole.result.__typename === 'UpdateUserRoleError') {
+        toast({
+          title: t`Unable to update user role.`,
+          description: updateUserRole.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect updateUserRole.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect updateUserRole.result typename.')
+      }
     },
   })
 

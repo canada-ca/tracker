@@ -73,55 +73,6 @@ describe('when given the load spf guidance tag connection function', () => {
   })
 
   describe('given a successful load', () => {
-    describe('using no cursor', () => {
-      it('returns multiple spf results', async () => {
-        const connectionLoader = spfGuidanceTagConnectionsLoader(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
-
-        const spfGuidanceTags = ['spf1', 'spf2']
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const spfTags = await connectionLoader({
-          spfGuidanceTags,
-          ...connectionArgs,
-        })
-
-        const spfTagLoader = spfGuidanceTagLoader(query)
-        const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('guidanceTags', expectedSpfTags[0]._key),
-              node: {
-                ...expectedSpfTags[0],
-              },
-            },
-            {
-              cursor: toGlobalId('guidanceTags', expectedSpfTags[1]._key),
-              node: {
-                ...expectedSpfTags[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedSpfTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedSpfTags[1]._key),
-          },
-        }
-
-        expect(spfTags).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns spf result(s) after a given node id', async () => {
         const connectionLoader = spfGuidanceTagConnectionsLoader(

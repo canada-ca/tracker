@@ -21,7 +21,7 @@ const createSuperAdminAccount = async ({
 
   let user
   try {
-    await trx.run(async () => {
+    await trx.step(async () => {
       user = await collections.users.save({
         displayName: SA_USER_DISPLAY_NAME,
         userName: SA_USER_USERNAME,
@@ -35,7 +35,7 @@ const createSuperAdminAccount = async ({
     })
   } catch (err) {
     throw new Error(
-      `Transaction run error occurred while creating new super admin account: ${err}`,
+      `Transaction step error occurred while creating new super admin account: ${err}`,
     )
   }
 
