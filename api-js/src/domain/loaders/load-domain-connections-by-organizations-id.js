@@ -266,44 +266,22 @@ export const domainLoaderConnectionsByOrgId = (
   }
 
   let domainQuery = aql``
+  let loopString = aql`FOR domain IN domains`
+  let totalCount = aql`LENGTH(domainKeys)`
   if (typeof search !== 'undefined') {
     search = cleanseInput(search)
     domainQuery = aql`
-      LET tokenArr = TOKENS(${search}, "::delimiter_en")
-      LET retrievedDomains = (
+      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
+      LET searchedDomains = (
         FOR token IN tokenArr
           FOR domain IN domainSearch
-            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "::delimiter_en")
+            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
             FILTER domain._key IN domainKeys
-            ${afterTemplate}
-            ${beforeTemplate}
-            SORT
-            ${sortByField}
-            ${limitTemplate}
             RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
       )
-      LET domainsFound = LENGTH(
-        FOR token IN tokenArr
-          FOR domain IN domainSearch
-              SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "::delimiter_en")
-              FILTER domain._key IN domainKeys
-              RETURN 1
-      )
     `
-  } else {
-    domainQuery = aql`
-      LET retrievedDomains = (
-        FOR domain IN domains
-          FILTER domain._key IN domainKeys
-          ${afterTemplate}
-          ${beforeTemplate}
-          SORT
-          ${sortByField}
-          ${limitTemplate}
-          RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
-      )
-      LET domainsFound = LENGTH(domainKeys)
-    `
+    loopString = aql`FOR domain IN searchedDomains`
+    totalCount = aql`LENGTH(searchedDomains)`
   }
 
   let requestedDomainInfo
@@ -322,9 +300,20 @@ export const domainLoaderConnectionsByOrgId = (
     ))
     
     ${domainQuery}
+
+    LET retrievedDomains = (
+      ${loopString}
+        FILTER domain._key IN domainKeys
+        ${afterTemplate}
+        ${beforeTemplate}
+        SORT
+        ${sortByField}
+        ${limitTemplate}
+        RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
+    )
     
     LET hasNextPage = (LENGTH(
-      FOR domain IN domains
+      ${loopString}
         FILTER domain._key IN domainKeys
         ${hasNextPageFilter}
         SORT ${sortByField} domain._key ${sortString} LIMIT 1
@@ -332,7 +321,7 @@ export const domainLoaderConnectionsByOrgId = (
     ) > 0 ? true : false)
     
     LET hasPreviousPage = (LENGTH(
-      FOR domain IN domains
+      ${loopString}
         FILTER domain._key IN domainKeys
         ${hasPreviousPageFilter}
         SORT ${sortByField} domain._key ${sortString} LIMIT 1
@@ -341,7 +330,7 @@ export const domainLoaderConnectionsByOrgId = (
     
     RETURN { 
       "domains": retrievedDomains,
-      "totalCount": domainsFound,
+      "totalCount": ${totalCount},
       "hasNextPage": hasNextPage, 
       "hasPreviousPage": hasPreviousPage, 
       "startKey": FIRST(retrievedDomains)._key, 
