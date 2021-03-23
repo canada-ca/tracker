@@ -32,6 +32,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
   const {
     loading,
+    isLoadingMore,
     error,
     nodes,
     next,
@@ -110,6 +111,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                 hasPreviousPage={hasPreviousPage}
                 next={next}
                 previous={previous}
+                isDisabled={isLoadingMore}
               />
             </ErrorBoundary>
           </TabPanel>
