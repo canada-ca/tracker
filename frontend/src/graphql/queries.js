@@ -626,37 +626,6 @@ export const PAGINATED_ORG_DOMAINS = gql`
   }
 `
 
-export const PAGINATED_ORG_DOMAINS = gql`
-  query OrgDomainsNext($slug: Slug!, $first: Int, $after: String) {
-    findOrganizationBySlug(orgSlug: $slug) {
-      id
-      domains(first: $first, after: $after) {
-        pageInfo {
-          hasNextPage
-          endCursor
-          hasPreviousPage
-          startCursor
-        }
-        edges {
-          cursor
-          node {
-            id
-            domain
-            lastRan
-            status {
-              dkim
-              dmarc
-              https
-              spf
-              ssl
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const PAGINATED_ORG_AFFILIATIONS = gql`
   query OrgUsersNext($slug: Slug!, $first: Int, $after: String) {
     findOrganizationBySlug(orgSlug: $slug) {
