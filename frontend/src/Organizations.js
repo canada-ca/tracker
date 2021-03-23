@@ -132,7 +132,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
                 {t`Acronym`}
               </option>
               <option key="DOMAIN_COUNT" value="DOMAIN_COUNT">
-                {t`Domains`}
+                {t`Services`}
               </option>
               <option key="VERIFIED" value="VERIFIED">
                 {t`Verified`}

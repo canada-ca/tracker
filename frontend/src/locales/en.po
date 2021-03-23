@@ -112,7 +112,7 @@ msgstr "Account Settings"
 msgid "Account created."
 msgstr "Account created."
 
-#: src/Organizations.js:130
+#: src/Organizations.js:132
 msgid "Acronym"
 msgstr "Acronym"
 
@@ -561,7 +561,6 @@ msgstr "Domain:"
 #: src/DomainsPage.js:65
 #: src/OrganizationDetails.js:88
 #: src/OrganizationDomains.js:41
-#: src/Organizations.js:133
 msgid "Domains"
 msgstr "Domains"
 
@@ -1072,7 +1071,7 @@ msgstr "Missing from guide- need v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "More than 10 lookups - Follow implementation guide"
 
-#: src/Organizations.js:127
+#: src/Organizations.js:129
 msgid "Name"
 msgstr "Name"
 
@@ -1117,7 +1116,7 @@ msgstr "Next"
 msgid "No Domains"
 msgstr "No Domains"
 
-#: src/Organizations.js:71
+#: src/Organizations.js:72
 msgid "No Organizations"
 msgstr "No Organizations"
 
@@ -1211,8 +1210,8 @@ msgid "Organization:"
 msgstr "Organization:"
 
 #: src/App.js:65
-#: src/Organizations.js:64
-#: src/Organizations.js:99
+#: src/Organizations.js:65
+#: src/Organizations.js:100
 msgid "Organizations"
 msgstr "Organizations"
 
@@ -1664,7 +1663,7 @@ msgstr "Search for a domain"
 msgid "Search for a user"
 msgstr "Search for a user"
 
-#: src/Organizations.js:111
+#: src/Organizations.js:112
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
@@ -1691,6 +1690,10 @@ msgstr "Select an organization to view admin options"
 #: src/months.js:12
 msgid "September"
 msgstr "September"
+
+#: src/Organizations.js:135
+msgid "Services"
+msgstr "Services"
 
 #: src/OrganizationCard.js:93
 msgid "Services: {domainCount}"
@@ -1734,7 +1737,7 @@ msgstr "Sign in with your username and password."
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
-#: src/Organizations.js:115
+#: src/Organizations.js:116
 msgid "Sort by:"
 msgstr "Sort by:"
 
@@ -1944,7 +1947,7 @@ msgstr "Verification TXT records for some/all 3rd party senders missing"
 msgid "Verification code must only contains numbers"
 msgstr "Verification code must only contains numbers"
 
-#: src/Organizations.js:136
+#: src/Organizations.js:138
 msgid "Verified"
 msgstr "Verified"
 

@@ -475,6 +475,7 @@
     'Select an organization to view admin options':
       "Sélectionnez une organisation pour voir les options d'administration",
     September: 'Septembre',
+    Services: 'Services',
     'Services: {domainCount}': ['Services: ', ['domainCount']],
     'Show {pageSize}': ['Voir ', ['pageSize']],
     'Showing data for period:': 'Affichage des données pour la période :',

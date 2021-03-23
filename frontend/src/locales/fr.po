@@ -112,7 +112,7 @@ msgstr "Paramètres du compte"
 msgid "Account created."
 msgstr "Compte créé"
 
-#: src/Organizations.js:130
+#: src/Organizations.js:132
 msgid "Acronym"
 msgstr "Acronyme"
 
@@ -557,7 +557,6 @@ msgstr "Domaine:"
 #: src/DomainsPage.js:65
 #: src/OrganizationDetails.js:88
 #: src/OrganizationDomains.js:41
-#: src/Organizations.js:133
 msgid "Domains"
 msgstr "Domaines"
 
@@ -1064,7 +1063,7 @@ msgstr "Absent du guide - besoin v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 
-#: src/Organizations.js:127
+#: src/Organizations.js:129
 msgid "Name"
 msgstr "Nom"
 
@@ -1109,7 +1108,7 @@ msgstr "Suivant"
 msgid "No Domains"
 msgstr "Aucun domaine"
 
-#: src/Organizations.js:71
+#: src/Organizations.js:72
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
@@ -1203,8 +1202,8 @@ msgid "Organization:"
 msgstr "Organisation:"
 
 #: src/App.js:65
-#: src/Organizations.js:64
-#: src/Organizations.js:99
+#: src/Organizations.js:65
+#: src/Organizations.js:100
 msgid "Organizations"
 msgstr "Organisations"
 
@@ -1656,7 +1655,7 @@ msgstr "Rechercher un domaine"
 msgid "Search for a user"
 msgstr "Rechercher un utilisateur"
 
-#: src/Organizations.js:111
+#: src/Organizations.js:112
 msgid "Search for an organization"
 msgstr "Rechercher une organisation"
 
@@ -1683,6 +1682,10 @@ msgstr "Sélectionnez une organisation pour voir les options d'administration"
 #: src/months.js:12
 msgid "September"
 msgstr "Septembre"
+
+#: src/Organizations.js:135
+msgid "Services"
+msgstr "Services"
 
 #: src/OrganizationCard.js:93
 msgid "Services: {domainCount}"
@@ -1726,7 +1729,7 @@ msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
-#: src/Organizations.js:115
+#: src/Organizations.js:116
 msgid "Sort by:"
 msgstr "Trier par:"
 
@@ -1936,7 +1939,7 @@ msgstr "Vérification des enregistrements TXT pour certains/toutes les expédite
 msgid "Verification code must only contains numbers"
 msgstr "Le code de vérification ne doit contenir que des chiffres"
 
-#: src/Organizations.js:136
+#: src/Organizations.js:138
 msgid "Verified"
 msgstr "Vérifié"
 
