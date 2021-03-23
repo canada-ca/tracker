@@ -100,6 +100,10 @@ msgstr "Account Settings"
 msgid "Account created."
 msgstr "Account created."
 
+#: src/Organizations.js:132
+msgid "Acronym"
+msgstr "Acronym"
+
 #: src/AdminDomains.js:232
 msgid "Add Domain"
 msgstr "Add Domain"
@@ -1047,6 +1051,10 @@ msgstr "Missing from guide- need v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "More than 10 lookups - Follow implementation guide"
 
+#: src/Organizations.js:129
+msgid "Name"
+msgstr "Name"
+
 #: src/EditableUserDisplayName.js:164
 msgid "New Display Name:"
 msgstr "New Display Name:"
@@ -1088,7 +1096,7 @@ msgstr "Next"
 msgid "No Domains"
 msgstr "No Domains"
 
-#: src/Organizations.js:68
+#: src/Organizations.js:72
 msgid "No Organizations"
 msgstr "No Organizations"
 
@@ -1178,8 +1186,8 @@ msgid "Organization:"
 msgstr "Organization:"
 
 #: src/App.js:65
-#: src/Organizations.js:50
-#: src/Organizations.js:57
+#: src/Organizations.js:65
+#: src/Organizations.js:100
 msgid "Organizations"
 msgstr "Organizations"
 
@@ -1627,7 +1635,7 @@ msgstr "Search for a domain"
 msgid "Search for a user"
 msgstr "Search for a user"
 
-#: src/Organizations.js:64
+#: src/Organizations.js:112
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
@@ -1654,6 +1662,10 @@ msgstr "Select an organization to view admin options"
 #: src/months.js:12
 msgid "September"
 msgstr "September"
+
+#: src/Organizations.js:135
+msgid "Services"
+msgstr "Services"
 
 #: src/OrganizationCard.js:93
 msgid "Services: {domainCount}"
@@ -1696,6 +1708,10 @@ msgstr "Sign in with your username and password."
 #: src/App.js:50
 msgid "Skip to main content"
 msgstr "Skip to main content"
+
+#: src/Organizations.js:116
+msgid "Sort by:"
+msgstr "Sort by:"
 
 #: src/DmarcReportPage.js:262
 msgid "Source IP Address"
@@ -1828,6 +1844,10 @@ msgstr "Unable to update to your TFA send method, please try again."
 msgid "Unable to update to your display name, please try again."
 msgstr "Unable to update to your display name, please try again."
 
+#: src/EditableUserPhoneNumber.js:64
+#~ msgid "Unable to update to your phone number, please try again."
+#~ msgstr "Unable to update to your phone number, please try again."
+
 #: src/EditableUserLanguage.js:52
 msgid "Unable to update to your preferred language, please try again."
 msgstr "Unable to update to your preferred language, please try again."
@@ -1862,6 +1882,11 @@ msgstr "User Affiliations"
 msgid "User List"
 msgstr "User List"
 
+#: src/App.js:83
+#: src/UserPage.js:35
+#~ msgid "User Profile"
+#~ msgstr "User Profile"
+
 #: src/UserList.js:105
 msgid "User invited"
 msgstr "User invited"
@@ -1885,6 +1910,10 @@ msgstr "Verification TXT records for some/all 3rd party senders missing"
 #: src/fieldRequirements.js:26
 msgid "Verification code must only contains numbers"
 msgstr "Verification code must only contains numbers"
+
+#: src/Organizations.js:138
+msgid "Verified"
+msgstr "Verified"
 
 #: src/EditableUserPhoneNumber.js:238
 msgid "Verify"

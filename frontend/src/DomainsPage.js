@@ -18,10 +18,7 @@ import {
   Icon,
   Text,
 } from '@chakra-ui/core'
-import {
-  REVERSE_PAGINATED_DOMAINS as BACKWARD,
-  PAGINATED_DOMAINS as FORWARD,
-} from './graphql/queries'
+import { PAGINATED_DOMAINS as FORWARD } from './graphql/queries'
 import { useUserState } from './UserState'
 import { DomainCard } from './DomainCard'
 import { ScanDomain } from './ScanDomain'
@@ -43,7 +40,6 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
     relayRoot: 'findMyDomains',
