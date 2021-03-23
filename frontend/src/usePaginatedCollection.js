@@ -16,6 +16,7 @@ export function usePaginatedCollection({
     context: {
       headers: fetchHeaders,
     },
+    notifyOnNetworkStatusChange: true,
   })
 
   let currentEdges = []
