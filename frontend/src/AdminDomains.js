@@ -65,6 +65,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
 
   const {
     loading,
+    isLoadingMore,
     error,
     nodes,
     next,
@@ -283,6 +284,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         hasPreviousPage={hasPreviousPage}
         next={next}
         previous={previous}
+        isDisabled={isLoadingMore}
       />
 
       <SlideIn in={updateIsOpen}>
