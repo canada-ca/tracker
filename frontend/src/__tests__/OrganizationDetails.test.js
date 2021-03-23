@@ -7,7 +7,6 @@ import { UserStateProvider } from '../UserState'
 import {
   ORG_DETAILS_PAGE,
   PAGINATED_DOMAINS,
-  REVERSE_PAGINATED_DOMAINS,
   WEB_AND_EMAIL_SUMMARIES,
 } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'

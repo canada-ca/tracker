@@ -3,10 +3,7 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
-import {
-  PAGINATED_DOMAINS,
-  REVERSE_PAGINATED_DOMAINS,
-} from '../graphql/queries'
+import { PAGINATED_DOMAINS } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'

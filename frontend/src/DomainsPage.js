@@ -4,8 +4,6 @@ import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
 import {
-  Stack,
-  Button,
   Box,
   Divider,
   Heading,
@@ -20,10 +18,7 @@ import {
   Icon,
   Text,
 } from '@chakra-ui/core'
-import {
-  REVERSE_PAGINATED_DOMAINS as BACKWARD,
-  PAGINATED_DOMAINS as FORWARD,
-} from './graphql/queries'
+import { PAGINATED_DOMAINS as FORWARD } from './graphql/queries'
 import { useUserState } from './UserState'
 import { DomainCard } from './DomainCard'
 import { ScanDomain } from './ScanDomain'
@@ -31,6 +26,7 @@ import { usePaginatedCollection } from './usePaginatedCollection'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -44,7 +40,6 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
     relayRoot: 'findMyDomains',
@@ -109,24 +104,13 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                   </ErrorBoundary>
                 )}
               </ListOf>
-
-              <Stack isInline align="center" mb="4">
-                <Button
-                  onClick={previous}
-                  isDisabled={!hasPreviousPage}
-                  aria-label="Previous page"
-                >
-                  <Trans>Previous</Trans>
-                </Button>
-
-                <Button
-                  onClick={next}
-                  isDisabled={!hasNextPage}
-                  aria-label="Next page"
-                >
-                  <Trans>Next</Trans>
-                </Button>
-              </Stack>
+              <RelayPaginationControls
+                onlyPagination={true}
+                hasNextPage={hasNextPage}
+                hasPreviousPage={hasPreviousPage}
+                next={next}
+                previous={previous}
+              />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>

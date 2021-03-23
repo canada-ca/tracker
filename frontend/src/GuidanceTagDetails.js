@@ -1,9 +1,9 @@
 import React from 'react'
-import { object } from 'prop-types'
+import { object, string } from 'prop-types'
 import { Box, Icon, Link, Stack, Text } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 
-export function GuidanceTagDetails({ guidanceTag }) {
+export function GuidanceTagDetails({ guidanceTag, tagType }) {
   const cccsGuidance =
     guidanceTag.refLinks[0]?.description !== null &&
     guidanceTag.refLinks.length !== 0 ? (
@@ -56,14 +56,22 @@ export function GuidanceTagDetails({ guidanceTag }) {
 
   const smallDevice = window.matchMedia('(max-width: 500px)').matches
 
-  const warningIcon = <Icon name="warning" color="weak" />
+  const negativeIcon = <Icon name="warning" color="weak" />
+  const neutralIcon = <Icon name="info" color="info" />
+  const positiveIcon = <Icon name="check-circle" color="strong" />
+
+  const tagIcon = () => {
+    if (tagType === 'negative') return negativeIcon
+    else if (tagType === 'neutral') return neutralIcon
+    else if (tagType === 'positive') return positiveIcon
+  }
 
   return (
     <Stack isInline align="center" px="2" pt={['2', '0']}>
-      {!smallDevice && warningIcon}
+      {!smallDevice && tagIcon()}
       <Box>
         <Stack isInline align="center">
-          {smallDevice && warningIcon}
+          {smallDevice && tagIcon()}
           <Text fontWeight="bold">
             <Trans>Result:</Trans>
           </Text>
@@ -84,4 +92,5 @@ export function GuidanceTagDetails({ guidanceTag }) {
 
 GuidanceTagDetails.propTypes = {
   guidanceTag: object,
+  tagType: string,
 }

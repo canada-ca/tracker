@@ -62,6 +62,9 @@ export function usePaginatedCollection({
     previous: () => {
       setCurrentPage(currentPage > 2 ? currentPage - 1 : 1)
     },
+    resetToFirstPage: () => {
+      setCurrentPage(1)
+    },
     hasPreviousPage: currentPage > 1,
     hasNextPage: currentPageInfo?.hasNextPage || currentPage < totalPages,
   }

@@ -1,10 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Box, Divider, Text } from '@chakra-ui/core'
-import {
-  REVERSE_PAGINATED_ORG_AFFILIATIONS as BACKWARD,
-  PAGINATED_ORG_AFFILIATIONS as FORWARD,
-} from './graphql/queries'
+import { PAGINATED_ORG_AFFILIATIONS as FORWARD } from './graphql/queries'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
@@ -27,7 +24,6 @@ export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     variables: { slug: orgSlug },
     recordsPerPage: usersPerPage,
