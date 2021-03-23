@@ -125,78 +125,61 @@ export const ORGANIZATION_BY_SLUG = gql`
   }
 `
 
-export const GET_GUIDANCE_TAGS_OF_DOMAIN_OLD = gql`
-  query FindDomainBySlug($urlSlug: Slug!) {
-    findDomainBySlug(urlSlug: $urlSlug) {
-      url
-      slug
-      lastRan
-      organization {
-        name
-      }
-      web {
-        edges {
-          cursor
-          node {
-            id
-            timestamp
-            domain
-            https {
-              httpsGuidanceTags
-            }
-            ssl {
-              sslGuidanceTags
-            }
-          }
-        }
-      }
-      email {
-        edges {
-          node {
-            timestamp
-            domain
-            dmarc {
-              dmarcGuidanceTags
-            }
-            spf {
-              spfGuidanceTags
-            }
-            dkim {
-              selectors {
-                selector
-                dkimGuidanceTags
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
   query FindDomainByDomain($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
+      id
       domain
       lastRan
-      dmarcPhase
       status {
         https
         ssl
       }
+      dmarcPhase
       web {
-        https(first: 10) {
+        https(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
               id
               timestamp
-              implementation
-              enforced
-              hsts
-              hstsAge
-              preloaded
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -217,13 +200,49 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        ssl(first: 10) {
+        ssl(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
               id
               timestamp
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -246,7 +265,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
         }
       }
       email {
-        dkim(first: 10) {
+        dkim(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
@@ -257,7 +276,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                   cursor
                   node {
                     selector
-                    guidanceTags(first: 5) {
+                    negativeGuidanceTags(first: 5) {
+                      edges {
+                        cursor
+                        node {
+                          tagId
+                          tagName
+                          guidance
+                          refLinks {
+                            description
+                            refLink
+                          }
+                          refLinksTech {
+                            description
+                            refLink
+                          }
+                        }
+                      }
+                    }
+                    neutralGuidanceTags(first: 5) {
+                      edges {
+                        cursor
+                        node {
+                          tagId
+                          tagName
+                          guidance
+                          refLinks {
+                            description
+                            refLink
+                          }
+                          refLinksTech {
+                            description
+                            refLink
+                          }
+                        }
+                      }
+                    }
+                    positiveGuidanceTags(first: 5) {
                       edges {
                         cursor
                         node {
@@ -281,7 +336,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        dmarc(first: 10) {
+        dmarc(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
@@ -291,7 +346,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
               pPolicy
               spPolicy
               pct
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {
@@ -312,7 +403,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
             }
           }
         }
-        spf(first: 10) {
+        spf(first: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
           edges {
             cursor
             node {
@@ -321,7 +412,43 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
               lookups
               record
               spfDefault
-              guidanceTags(first: 5) {
+              negativeGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              neutralGuidanceTags(first: 5) {
+                edges {
+                  cursor
+                  node {
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                }
+              }
+              positiveGuidanceTags(first: 5) {
                 edges {
                   cursor
                   node {

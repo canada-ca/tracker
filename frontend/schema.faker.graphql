@@ -612,6 +612,8 @@ type Domain implements Node {
   )
   # The last time that a scan was ran on this domain.
   lastRan: String @fake(type: recentDate)
+  # DMARC phase found during scan.
+  dmarcPhase: Int @examples(values: [1, 2, 3, 4])
   # Domain Keys Identified Mail (DKIM) selector strings associated with domain.
   selectors: [Selector] @listLength(min: 0, max: 2)
   # The domains scan status, based on the latest scan data.
