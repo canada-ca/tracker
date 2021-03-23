@@ -9,8 +9,8 @@ import { ListOf } from './ListOf'
 import { useUserState } from './UserState'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { number, string } from 'prop-types'
+import { RelayPaginationControls } from './RelayPaginationControls'
 import { UserCard } from './UserCard'
-import { RelayPaginationControls} from './RelayPaginationControls'
 
 export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
   const { currentUser } = useUserState()
@@ -41,39 +41,41 @@ export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
     )
 
   return (
-    <Box>
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => (
-          <Text fontSize="xl" fontWeight="bold">
-            <Trans>No Users</Trans>
-          </Text>
-        )}
-        mb="4"
-      >
-        {({ permission, user }, index) => (
-          <ErrorBoundary
-            FallbackComponent={ErrorFallbackMessage}
-            key={`${user.id}:${index}`}
-          >
-            <UserCard
-              userName={user.userName}
-              role={permission}
-              tfa={user.tfaValidated}
-            />
-            <Divider borderColor="gray.900" />
-          </ErrorBoundary>
-        )}
-      </ListOf>
-      <RelayPaginationControls
-        onlyPagination={true}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        next={next}
-        previous={previous}
-        isDisabled={isLoadingMore}
-      />
-    </Box>
+    <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+      <Box>
+        <ListOf
+          elements={nodes}
+          ifEmpty={() => (
+            <Text fontSize="xl" fontWeight="bold">
+              <Trans>No Users</Trans>
+            </Text>
+          )}
+          mb="4"
+        >
+          {({ permission, user }, index) => (
+            <ErrorBoundary
+              FallbackComponent={ErrorFallbackMessage}
+              key={`${user.id}:${index}`}
+            >
+              <UserCard
+                userName={user.userName}
+                role={permission}
+                tfa={user.tfaValidated}
+              />
+              <Divider borderColor="gray.900" />
+            </ErrorBoundary>
+          )}
+        </ListOf>
+        <RelayPaginationControls
+          onlyPagination={true}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isDisabled={isLoadingMore}
+        />
+      </Box>
+    </ErrorBoundary>
   )
 }
 
