@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Box, Button, Divider, Stack, Text } from '@chakra-ui/core'
+import { Box, Divider, Text } from '@chakra-ui/core'
 import {
   REVERSE_PAGINATED_ORG_DOMAINS as BACKWARD,
   PAGINATED_ORG_DOMAINS as FORWARD,
@@ -13,6 +13,7 @@ import { ListOf } from './ListOf'
 import { useUserState } from './UserState'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { number, string } from 'prop-types'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
 export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
   const { currentUser } = useUserState()
@@ -65,19 +66,13 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
           </ErrorBoundary>
         )}
       </ListOf>
-      <Stack isInline align="center" mb="4">
-        <Button
-          onClick={previous}
-          isDisabled={!hasPreviousPage}
-          aria-label="Previous page"
-        >
-          <Trans>Previous</Trans>
-        </Button>
-
-        <Button onClick={next} isDisabled={!hasNextPage} aria-label="Next page">
-          <Trans>Next</Trans>
-        </Button>
-      </Stack>
+      <RelayPaginationControls
+        onlyPagination={true}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+      />
     </Box>
   )
 }
