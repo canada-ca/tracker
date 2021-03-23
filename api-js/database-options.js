@@ -105,13 +105,18 @@ export const databaseOptions = ({ rootPass }) => [
     name: 'domainsToDmarcSummaries',
   },
   {
+    type: 'delimiteranalyzer',
+    name: 'space-delimiter-analyzer',
+    delimiter: ' ',
+  },
+  {
     type: 'searchview',
     name: 'domainSearch',
     options: {
       links: {
         domains: {
           fields: {
-            domain: { analyzers: ['::delimiter_en'] },
+            domain: { analyzers: ['space-delimiter-analyzer'] },
           },
         },
       },
