@@ -35,6 +35,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
 
   const {
     loading,
+    isLoadingMore,
     error,
     nodes,
     next,
@@ -154,6 +155,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
           hasPreviousPage={hasPreviousPage}
           next={next}
           previous={previous}
+          isDisabled={isLoadingMore}
         />
       </ErrorBoundary>
     </Layout>
