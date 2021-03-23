@@ -338,6 +338,7 @@ function DmarcReportTable({ ...props }) {
       setSelectedDisplayLimit={setSelectedDisplayLimit}
       displayLimitOptions={paginationConfig.displayLimitOptions}
       gotoPage={gotoPage}
+      isDisabled={paginationConfig.isLoadingMore}
       mt="10px"
     />
   )
@@ -435,6 +436,7 @@ DmarcReportTable.propTypes = {
     next: func,
     hasNextPage: bool,
     displayLimitOptions: array,
+    isLoadingMore: bool,
   }),
   selectedDisplayLimit: number,
   setSelectedDisplayLimit: func,
