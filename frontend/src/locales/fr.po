@@ -100,6 +100,10 @@ msgstr "Paramètres du compte"
 msgid "Account created."
 msgstr "Compte créé"
 
+#: src/Organizations.js:132
+msgid "Acronym"
+msgstr "Acronyme"
+
 #: src/AdminDomains.js:232
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
@@ -146,7 +150,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 
 #: src/EditableUserPhoneNumber.js:96
 msgid "An error occurred while verifying your phone number."
-msgstr ""
+msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone."
 
 #: src/AdminDomains.js:91
 #: src/AdminDomains.js:123
@@ -1047,6 +1051,10 @@ msgstr "Absent du guide - besoin v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 
+#: src/Organizations.js:129
+msgid "Name"
+msgstr "Nom"
+
 #: src/EditableUserDisplayName.js:164
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage :"
@@ -1088,7 +1096,7 @@ msgstr "Suivant"
 msgid "No Domains"
 msgstr "Aucun domaine"
 
-#: src/Organizations.js:68
+#: src/Organizations.js:72
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
@@ -1178,8 +1186,8 @@ msgid "Organization:"
 msgstr "Organisation:"
 
 #: src/App.js:65
-#: src/Organizations.js:50
-#: src/Organizations.js:57
+#: src/Organizations.js:65
+#: src/Organizations.js:100
 msgid "Organizations"
 msgstr "Organisations"
 
@@ -1627,7 +1635,7 @@ msgstr "Rechercher un domaine"
 msgid "Search for a user"
 msgstr "Rechercher un utilisateur"
 
-#: src/Organizations.js:64
+#: src/Organizations.js:112
 msgid "Search for an organization"
 msgstr "Rechercher une organisation"
 
@@ -1654,6 +1662,10 @@ msgstr "Sélectionnez une organisation pour voir les options d'administration"
 #: src/months.js:12
 msgid "September"
 msgstr "Septembre"
+
+#: src/Organizations.js:135
+msgid "Services"
+msgstr "Services"
 
 #: src/OrganizationCard.js:93
 msgid "Services: {domainCount}"
@@ -1696,6 +1708,10 @@ msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 #: src/App.js:50
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
+
+#: src/Organizations.js:116
+msgid "Sort by:"
+msgstr "Trier par:"
 
 #: src/DmarcReportPage.js:262
 msgid "Source IP Address"
@@ -1822,19 +1838,23 @@ msgstr "Impossible de mettre à jour le mot de passe"
 
 #: src/EditableUserTFAMethod.js:63
 msgid "Unable to update to your TFA send method, please try again."
-msgstr ""
+msgstr "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réessayer."
 
 #: src/EditableUserDisplayName.js:73
 msgid "Unable to update to your display name, please try again."
-msgstr ""
+msgstr "Impossible de mettre à jour votre nom d'affichage, veuillez réessayer."
+
+#: src/EditableUserPhoneNumber.js:64
+#~ msgid "Unable to update to your phone number, please try again."
+#~ msgstr "Impossible de mettre à jour votre numéro de téléphone, veuillez réessayer."
 
 #: src/EditableUserLanguage.js:52
 msgid "Unable to update to your preferred language, please try again."
-msgstr ""
+msgstr "Impossible de mettre à jour votre langue préférée, veuillez réessayer."
 
 #: src/EditableUserEmail.js:71
 msgid "Unable to update to your username, please try again."
-msgstr ""
+msgstr "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessayer."
 
 #: src/EditableUserPassword.js:73
 msgid "Unable to update your password, please try again."
@@ -1842,7 +1862,7 @@ msgstr "Impossible de mettre à jour votre mot de passe, veuillez réessayer."
 
 #: src/EditableUserPhoneNumber.js:64
 msgid "Unable to update your phone number, please try again."
-msgstr ""
+msgstr "Impossible de mettre à jour votre numéro de téléphone, veuillez réessayer."
 
 #: src/EditableUserPhoneNumber.js:120
 msgid "Unable to verify your phone number, please try again."
@@ -1861,6 +1881,11 @@ msgstr "Affiliations des utilisateurs"
 #: src/UserList.js:197
 msgid "User List"
 msgstr "Liste des utilisateurs"
+
+#: src/App.js:83
+#: src/UserPage.js:35
+#~ msgid "User Profile"
+#~ msgstr "Profil de l'utilisateur"
 
 #: src/UserList.js:105
 msgid "User invited"
@@ -1885,6 +1910,10 @@ msgstr "Vérification des enregistrements TXT pour certains/toutes les expédite
 #: src/fieldRequirements.js:26
 msgid "Verification code must only contains numbers"
 msgstr "Le code de vérification ne doit contenir que des chiffres"
+
+#: src/Organizations.js:138
+msgid "Verified"
+msgstr "Vérifié"
 
 #: src/EditableUserPhoneNumber.js:238
 msgid "Verify"
