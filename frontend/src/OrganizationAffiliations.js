@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Box, Button, Divider, Stack, Text } from '@chakra-ui/core'
+import { Box, Divider, Text } from '@chakra-ui/core'
 import { PAGINATED_ORG_AFFILIATIONS as FORWARD } from './graphql/queries'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -10,11 +10,13 @@ import { useUserState } from './UserState'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { number, string } from 'prop-types'
 import { UserCard } from './UserCard'
+import { RelayPaginationControls} from './RelayPaginationControls'
 
 export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
   const { currentUser } = useUserState()
   const {
     loading,
+    isLoadingMore,
     error,
     nodes,
     next,
@@ -63,19 +65,14 @@ export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
           </ErrorBoundary>
         )}
       </ListOf>
-      <Stack isInline align="center" mb="4">
-        <Button
-          onClick={previous}
-          isDisabled={!hasPreviousPage}
-          aria-label="Previous page"
-        >
-          <Trans>Previous</Trans>
-        </Button>
-
-        <Button onClick={next} isDisabled={!hasNextPage} aria-label="Next page">
-          <Trans>Next</Trans>
-        </Button>
-      </Stack>
+      <RelayPaginationControls
+        onlyPagination={true}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+        isDisabled={isLoadingMore}
+      />
     </Box>
   )
 }
