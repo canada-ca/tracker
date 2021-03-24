@@ -338,7 +338,7 @@ function DmarcReportTable({ ...props }) {
       setSelectedDisplayLimit={setSelectedDisplayLimit}
       displayLimitOptions={paginationConfig.displayLimitOptions}
       gotoPage={gotoPage}
-      isDisabled={paginationConfig.isLoadingMore}
+      isLoadingMore={paginationConfig.isLoadingMore}
       mt="10px"
     />
   )

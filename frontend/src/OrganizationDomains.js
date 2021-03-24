@@ -69,7 +69,7 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
         hasPreviousPage={hasPreviousPage}
         next={next}
         previous={previous}
-        isDisabled={isLoadingMore}
+        isLoadingMore={isLoadingMore}
       />
     </Box>
   )

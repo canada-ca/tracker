@@ -111,7 +111,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                 hasPreviousPage={hasPreviousPage}
                 next={next}
                 previous={previous}
-                isDisabled={isLoadingMore}
+                isLoadingMore={isLoadingMore}
               />
             </ErrorBoundary>
           </TabPanel>

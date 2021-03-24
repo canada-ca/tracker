@@ -284,7 +284,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         hasPreviousPage={hasPreviousPage}
         next={next}
         previous={previous}
-        isDisabled={isLoadingMore}
+        isLoadingMore={isLoadingMore}
       />
 
       <SlideIn in={updateIsOpen}>

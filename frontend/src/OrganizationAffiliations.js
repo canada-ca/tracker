@@ -72,7 +72,7 @@ export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
           hasPreviousPage={hasPreviousPage}
           next={next}
           previous={previous}
-          isDisabled={isLoadingMore}
+          isLoadingMore={isLoadingMore}
         />
       </Box>
     </ErrorBoundary>

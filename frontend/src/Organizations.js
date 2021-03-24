@@ -155,7 +155,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
           hasPreviousPage={hasPreviousPage}
           next={next}
           previous={previous}
-          isDisabled={isLoadingMore}
+          isLoadingMore={isLoadingMore}
         />
       </ErrorBoundary>
     </Layout>
