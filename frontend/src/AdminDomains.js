@@ -96,16 +96,37 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         position: 'top-left',
       })
     },
-    onCompleted(mutationReturnData) {
-      toast({
-        title: t`Domain added`,
-        description: t`${mutationReturnData.createDomain.domain.domain} was added to ${orgSlug}`,
-        status: 'info',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-      setDomainSearch('')
+    onCompleted({ createDomain }) {
+      if (createDomain.result.__typename === 'Domain') {
+        toast({
+          title: t`Domain added`,
+          description: t`${createDomain.domain.domain} was added to ${orgSlug}`,
+          status: 'info',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        setDomainSearch('')
+      } else if (createDomain.result.__typename === 'DomainError') {
+        toast({
+          title: t`Unable to create new domain.`,
+          description: createDomain.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect createDomain.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect createDomain.result typename.')
+      }
     },
   })
 
