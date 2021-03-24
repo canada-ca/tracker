@@ -16,6 +16,7 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
   const { currentUser } = useUserState()
   const {
     loading,
+    isLoadingMore,
     error,
     nodes,
     next,
@@ -68,6 +69,7 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
         hasPreviousPage={hasPreviousPage}
         next={next}
         previous={previous}
+        isLoadingMore={isLoadingMore}
       />
     </Box>
   )

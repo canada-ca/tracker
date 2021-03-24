@@ -26,6 +26,7 @@ export default function DmarcByDomainPage() {
 
   const {
     loading,
+    isLoadingMore,
     error,
     nodes,
     next,
@@ -137,6 +138,7 @@ export default function DmarcByDomainPage() {
       next: next,
       hasNextPage: hasNextPage,
       displayLimitOptions: displayLimitOptions,
+      isLoadingMore: isLoadingMore,
     }
 
     tableDisplay = (

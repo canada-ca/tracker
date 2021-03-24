@@ -41,6 +41,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   const {
     loading,
+    isLoadingMore,
     error,
     nodes,
     next,
@@ -346,6 +347,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         hasPreviousPage={hasPreviousPage}
         next={next}
         previous={previous}
+        isLoadingMore={isLoadingMore}
       />
     </Stack>
   )
