@@ -79,7 +79,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           isClosable: true,
           position: 'top-left',
         })
-      } else if (updateUserRole.result.__typename === 'UpdateUserRoleError') {
+      } else if (updateUserRole.result.__typename === 'AffiliationError') {
         toast({
           title: t`Unable to update user role.`,
           description: updateUserRole.result.description,
@@ -131,7 +131,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             position: 'top-left',
           })
         } else if (
-          inviteUserToOrg.result.__typename === 'InviteUserToOrgError'
+          inviteUserToOrg.result.__typename === 'AffiliationError'
         ) {
           toast({
             title: t`Unable to invite user.`,

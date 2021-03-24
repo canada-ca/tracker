@@ -184,7 +184,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -253,7 +253,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -331,7 +331,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -400,7 +400,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -487,7 +487,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -606,7 +606,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -673,7 +673,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -740,7 +740,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -814,7 +814,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -914,7 +914,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -988,7 +988,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -1069,7 +1069,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -1153,7 +1153,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -1238,7 +1238,7 @@ describe('update a users role', () => {
                     ... on UpdateUserRoleResult {
                       status
                     }
-                    ... on UpdateUserRoleError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1320,7 +1320,7 @@ describe('update a users role', () => {
                     ... on UpdateUserRoleResult {
                       status
                     }
-                    ... on UpdateUserRoleError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -1468,7 +1468,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -1597,7 +1597,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -1670,7 +1670,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -1810,7 +1810,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -1879,7 +1879,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -1957,7 +1957,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -2026,7 +2026,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -2113,7 +2113,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -2232,7 +2232,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -2299,7 +2299,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -2366,7 +2366,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -2440,7 +2440,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -2540,7 +2540,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -2614,7 +2614,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -2695,7 +2695,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -2779,7 +2779,7 @@ describe('update a users role', () => {
                       ... on UpdateUserRoleResult {
                         status
                       }
-                      ... on UpdateUserRoleError {
+                      ... on AffiliationError {
                         code
                         description
                       }
@@ -2864,7 +2864,7 @@ describe('update a users role', () => {
                     ... on UpdateUserRoleResult {
                       status
                     }
-                    ... on UpdateUserRoleError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -2946,7 +2946,7 @@ describe('update a users role', () => {
                     ... on UpdateUserRoleResult {
                       status
                     }
-                    ... on UpdateUserRoleError {
+                    ... on AffiliationError {
                       code
                       description
                     }
@@ -3094,7 +3094,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -3221,7 +3221,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }
@@ -3292,7 +3292,7 @@ describe('update a users role', () => {
                   ... on UpdateUserRoleResult {
                     status
                   }
-                  ... on UpdateUserRoleError {
+                  ... on AffiliationError {
                     code
                     description
                   }

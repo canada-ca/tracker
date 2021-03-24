@@ -1,5 +1,5 @@
 import {
-  inviteUserToOrgError,
+  affiliationError,
   inviteUserToOrgResultType,
 } from '../../objects/index'
 import { inviteUserToOrgUnion } from '../invite-user-to-org-union'
@@ -11,10 +11,10 @@ describe('given the inviteUserToOrgUnion', () => {
 
       expect(demoType).toContain(inviteUserToOrgResultType)
     })
-    it('contains inviteUserToOrgError', () => {
+    it('contains affiliationError', () => {
       const demoType = inviteUserToOrgUnion.getTypes()
 
-      expect(demoType).toContain(inviteUserToOrgError)
+      expect(demoType).toContain(affiliationError)
     })
   })
   describe('testing the field selection', () => {
@@ -30,7 +30,7 @@ describe('given the inviteUserToOrgUnion', () => {
         )
       })
     })
-    describe('testing the inviteUserToOrgError', () => {
+    describe('testing the affiliationError', () => {
       it('returns the correct type', () => {
         const obj = {
           _type: 'error',
@@ -40,7 +40,7 @@ describe('given the inviteUserToOrgUnion', () => {
         }
 
         expect(inviteUserToOrgUnion.resolveType(obj)).toMatchObject(
-          inviteUserToOrgError,
+          affiliationError,
         )
       })
     })

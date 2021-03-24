@@ -125,7 +125,7 @@ export const UPDATE_USER_ROLE = gql`
         ... on UpdateUserRoleResult {
           status
         }
-        ... on UpdateUserRoleError {
+        ... on AffiliationError {
           code
           description
         }
@@ -260,7 +260,7 @@ export const INVITE_USER_TO_ORG = gql`
         ... on InviteUserToOrgResult {
           status
         }
-        ... on InviteUserToOrgError {
+        ... on AffiliationError {
           code
           description
         }
