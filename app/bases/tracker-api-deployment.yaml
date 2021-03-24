@@ -19,7 +19,7 @@ spec:
         app: tracker-api
     spec:
       containers:
-      - image: gcr.io/track-compliance/api-js:master-ee4e910-1616579945 # {"$imagepolicy": "flux-system:api"}
+      - image: gcr.io/track-compliance/api-js:master-86bd5e3-1616580351 # {"$imagepolicy": "flux-system:api"}
         name: api
         ports:
         - containerPort: 4000
