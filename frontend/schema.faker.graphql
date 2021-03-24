@@ -224,6 +224,21 @@ type DKIM implements Node {
   ): DKIMResultConnection
 }
 
+# Ordering options for DKIM connections.
+input DKIMOrder {
+  # The field to order DKIM scans by.
+  field: DKIMOrderField!
+
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which DKIM connections can be ordered.
+enum DKIMOrderField {
+  # Order DKIM edges by timestamp.
+  TIMESTAMP
+}
+
 # A connection to a list of items.
 type DKIMConnection {
   # Information to aid in pagination.
@@ -442,6 +457,33 @@ type DMARC implements Node {
     before: String
     last: Int
   ): GuidanceTagConnection
+}
+
+# Ordering options for DMARC connections.
+input DMARCOrder {
+  # The field to order DMARC scans by.
+  field: DmarcOrderField!
+
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which dmarc connections can be ordered.
+enum DmarcOrderField {
+  # Order dmarc summaries by timestamp.
+  TIMESTAMP
+
+  # Order dmarc summaries by record.
+  RECORD
+
+  # Order dmarc summaries by p policy.
+  P_POLICY
+
+  # Order dmarc summaries by sp policy.
+  SP_POLICY
+
+  # Order dmarc summaries by percentage.
+  PCT
 }
 
 # A connection to a list of items.
@@ -722,6 +764,7 @@ type EmailScan {
     first: Int
     before: String
     last: Int
+    orderBy: DKIMOrder
   ): DKIMConnection
   # Domain-based Message Authentication, Reporting, and Conformance (DMARC) scan results.
   dmarc(
@@ -733,6 +776,7 @@ type EmailScan {
     first: Int
     before: String
     last: Int
+    orderBy: DMARCOrder
   ): DMARCConnection
   # Sender Policy Framework (SPF) scan results.
   spf(
@@ -744,6 +788,7 @@ type EmailScan {
     first: Int
     before: String
     last: Int
+    orderBy: SPFOrder
   ): SPFConnection
 }
 
@@ -926,6 +971,36 @@ type HTTPS implements Node {
     before: String
     last: Int
   ): GuidanceTagConnection
+}
+
+# Ordering options for HTTPS connections.
+input HTTPSOrder {
+  # The field to order HTTPS edges by.
+  field: HTTPSOrderField!
+
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which HTTPS connections can be ordered.
+enum HTTPSOrderField {
+  # Order HTTPS edges by timestamp.
+  TIMESTAMP
+
+  # Order HTTPS edges by implementation.
+  IMPLEMENTATION
+
+  # Order HTTPS edges by enforced.
+  ENFORCED
+
+  # Order HTTPS edges by hsts.
+  HSTS
+
+  # Order HTTPS edges by hsts age.
+  HSTS_AGE
+
+  # Order HTTPS edges by preloaded.
+  PRELOADED
 }
 
 # A connection to a list of items.
@@ -1692,6 +1767,30 @@ type SPF implements Node {
   ): GuidanceTagConnection
 }
 
+# Ordering options for SPF connections.
+input SPFOrder {
+  # The field to order SPF scans by.
+  field: SPFOrderField!
+
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which SPF connections can be ordered.
+enum SPFOrderField {
+  # Order SPF edges by timestamp.
+  TIMESTAMP
+
+  # Order SPF edges by lookups.
+  LOOKUPS
+
+  # Order SPF edges by record.
+  RECORD
+
+  # Order SPF edges by spf-default.
+  SPF_DEFAULT
+}
+
 # A connection to a list of items.
 type SPFConnection {
   # Information to aid in pagination.
@@ -1807,6 +1906,48 @@ type SSL implements Node {
     before: String
     last: Int
   ): GuidanceTagConnection
+}
+
+# Ordering options for SSL connections.
+input SSLOrder {
+  # The field to order SSL edges by.
+  field: SSLOrderField!
+
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which SSL connections can be ordered.
+enum SSLOrderField {
+  # Order SSL edges by their acceptable ciphers.
+  ACCEPTABLE_CIPHERS
+
+  # Order SSL edges by their acceptable curves.
+  ACCEPTABLE_CURVES
+
+  # Order SSL edges by ccs-injection-vulnerable.
+  CCS_INJECTION_VULNERABLE
+
+  # Order SSL edges by heart-bleed-vulnerable.
+  HEARTBLEED_VULNERABLE
+
+  # Order SSL edges by their strong ciphers.
+  STRONG_CIPHERS
+
+  # Order SSL edges by their strong curves.
+  STRONG_CURVES
+
+  # Order SSL edges by supports-ecdh-key-exchange.
+  SUPPORTS_ECDH_KEY_EXCHANGE
+
+  # Order SSL edges by timestamp.
+  TIMESTAMP
+
+  # Order SSL edges by their weak ciphers.
+  WEAK_CIPHERS
+
+  # Order SSL edges by their weak curves.
+  WEAK_CURVES
 }
 
 # A connection to a list of items.
@@ -2246,6 +2387,7 @@ type WebScan {
     first: Int
     before: String
     last: Int
+    orderBy: HTTPSOrder
   ): HTTPSConnection
   # Secure Socket Layer scan results.
   ssl(
@@ -2257,6 +2399,7 @@ type WebScan {
     first: Int
     before: String
     last: Int
+    orderBy: SSLOrder
   ): SSLConnection
 }
 
