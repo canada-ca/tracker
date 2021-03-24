@@ -45,7 +45,7 @@ function ScanCard({ scanType, scanData, status }) {
         <Box pb="1">
           <Stack isInline align="center" px="2">
             <Text fontWeight="bold" fontSize="2xl">
-              <Trans>DMARC Implementation Phase: {status}</Trans>
+              <Trans>DMARC Implementation Phase: {status.toUpperCase()}</Trans>
             </Text>
           </Stack>
         </Box>
