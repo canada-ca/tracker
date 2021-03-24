@@ -3,7 +3,7 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { Acronym } from '../../scalars'
-import { organizationType } from '../objects'
+import { createOrganizationUnion } from '../unions'
 
 export const createOrganization = new mutationWithClientMutationId({
   name: 'CreateOrganization',
@@ -78,10 +78,11 @@ export const createOrganization = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    organization: {
-      type: organizationType,
-      description: 'The newly created organization.',
-      resolve: ({ organization }) => organization,
+    result: {
+      type: createOrganizationUnion,
+      description:
+        '`CreateOrganizationUnion` returning either an `Organization`, or `OrganizationError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -128,11 +129,13 @@ export const createOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to create an organization that already exists: ${slugEN}`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
           t`Organization name already in use. Please try again with a different name.`,
         ),
-      )
+      }
     }
 
     // Create new organization
@@ -174,10 +177,22 @@ export const createOrganization = new mutationWithClientMutationId({
     let cursor
     try {
       cursor = await trx.step(
-        async () =>
-          await query`
-            INSERT ${organizationDetails} INTO organizations 
-            RETURN MERGE({ _id: NEW._id, _key: NEW._key, _rev: NEW._rev, verified: NEW.verified }, TRANSLATE(${request.language}, NEW.orgDetails))
+        () =>
+          query`
+            INSERT ${organizationDetails} INTO organizations
+            RETURN MERGE(
+              {
+                _id: NEW._id,
+                _key: NEW._key,
+                _rev: NEW._rev,
+                _type: "organization",
+                id: NEW._key,
+                verified: NEW.verified,
+                domainCount: 0,
+                summaries: NEW.summaries
+              },
+              TRANSLATE(${request.language}, NEW.orgDetails)
+            )
           `,
       )
     } catch (err) {
@@ -192,8 +207,8 @@ export const createOrganization = new mutationWithClientMutationId({
 
     try {
       await trx.step(
-        async () =>
-          await query`
+        () =>
+          query`
             INSERT {
               _from: ${organization._id},
               _to: ${user._id},
@@ -225,11 +240,6 @@ export const createOrganization = new mutationWithClientMutationId({
       `User: ${userKey} successfully created a new organization: ${slugEN}`,
     )
 
-    return {
-      organization: {
-        id: organization._key,
-        ...organization,
-      },
-    }
+    return organization
   },
 })
