@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { indexes } from './indexes'
 
@@ -7,16 +7,9 @@ export function usePaginatedCollection({
   fetchForward,
   fetchHeaders = {},
   variables,
-  resettingVariables,
   relayRoot,
 }) {
   const [currentPage, setCurrentPage] = useState(1)
-
-  // set current page to first page when resettingVariables change
-  // ( when changing sorting type for example )
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [resettingVariables])
 
   const { loading, error, data, fetchMore } = useQuery(fetchForward, {
     variables: { first: recordsPerPage, ...variables },
@@ -25,7 +18,7 @@ export function usePaginatedCollection({
     },
   })
 
-  const[isLoadingMore, setIsLoadingMore] = useState(false)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   let currentEdges = []
   let currentPageInfo = {}
