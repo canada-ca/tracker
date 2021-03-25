@@ -976,8 +976,12 @@ msgid "Last 30 Days"
 msgstr "Les 30 derniers jours"
 
 #: src/DomainsPage.js:131
-msgid "Last Ran"
-msgstr "Dernier Ran"
+#~ msgid "Last Ran"
+#~ msgstr "Dernier Ran"
+
+#: src/DomainsPage.js:131
+msgid "Last Scanned"
+msgstr "Dernière numérisation"
 
 #: src/Domain.js:39
 #: src/DomainCard.js:55
