@@ -10,6 +10,7 @@ export const checkDomainPermission = ({ i18n, query, userKey }) => async ({
   let superAdminAffiliationCursor
   try {
     superAdminAffiliationCursor = await query`
+      WITH affiliations, organizations, users
       FOR v, e IN 1..1 ANY ${userKeyString} affiliations 
         FILTER e.permission == 'super_admin' 
         RETURN e.from
@@ -30,6 +31,7 @@ export const checkDomainPermission = ({ i18n, query, userKey }) => async ({
   // Retrieve user affiliations and affiliated organizations owning provided domain
   try {
     userAffiliatedClaims = await query`
+      WITH affiliations, claims, domains, organizations, users
       LET userAffiliations = (FOR v, e IN 1..1 ANY ${userKeyString} affiliations RETURN e._from)
       LET domainClaims = (FOR v, e IN 1..1 ANY ${domainId} claims RETURN e._from)
       LET affiliatedClaims = INTERSECTION(userAffiliations, domainClaims)

@@ -1,8 +1,8 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { ensure, dbNameFromFile } = require('arango-tools')
 
-const { makeMigrations } = require('../../migrations')
+const { databaseOptions } = require('../../database-options')
 const { removeSuperAdminAffiliation } = require('../database')
 
 describe('given the removeSuperAdminAffiliation function', () => {
@@ -11,14 +11,17 @@ describe('given the removeSuperAdminAffiliation function', () => {
   const mockedError = (output) => consoleErrorOutput.push(output)
   const mockedInfo = (output) => consoleInfoOutput.push(output)
 
-  let query, drop, truncate, migrate, collections, transaction
+  let query, drop, truncate, collections, transaction
 
   beforeAll(async () => {
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {
@@ -59,7 +62,7 @@ describe('given the removeSuperAdminAffiliation function', () => {
     describe('database error occurs', () => {
       it('throws an error', async () => {
         const mockedTransaction = jest.fn().mockReturnValueOnce({
-          run() {
+          step() {
             throw new Error('Database error occurred.')
           },
           commit() {
@@ -76,7 +79,7 @@ describe('given the removeSuperAdminAffiliation function', () => {
         } catch (err) {
           expect(err).toEqual(
             new Error(
-              'Transaction run error occurred well removing super admin affiliation: Error: Database error occurred.',
+              'Transaction step error occurred well removing super admin affiliation: Error: Database error occurred.',
             ),
           )
         }
@@ -85,7 +88,7 @@ describe('given the removeSuperAdminAffiliation function', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const mockedTransaction = jest.fn().mockReturnValueOnce({
-          run() {
+          step() {
             return 'string'
           },
           commit() {

@@ -6,6 +6,7 @@ export const dmarcYearlySumEdgeLoader = (query, userKey, i18n) => async ({
   let dmarcSummaryEdgeCursor
   try {
     dmarcSummaryEdgeCursor = await query`
+      WITH dmarcSummaries, domains, domainsToDmarcSummaries
       FOR edge IN domainsToDmarcSummaries
         FILTER edge.startDate != "thirtyDays"
         FILTER edge._from == ${domainId}

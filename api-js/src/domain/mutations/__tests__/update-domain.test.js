@@ -115,11 +115,13 @@ describe('updating a domain', () => {
                   domain: "test.canada.ca"
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
                 }
               }
             }
@@ -152,7 +154,7 @@ describe('updating a domain', () => {
           const expectedResponse = {
             data: {
               updateDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
@@ -184,11 +186,13 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
                 }
               }
             }
@@ -221,7 +225,7 @@ describe('updating a domain', () => {
           const expectedResponse = {
             data: {
               updateDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
@@ -254,11 +258,13 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
                 }
               }
             }
@@ -291,7 +297,7 @@ describe('updating a domain', () => {
           const expectedResponse = {
             data: {
               updateDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
@@ -329,11 +335,13 @@ describe('updating a domain', () => {
                   domain: "test.canada.ca"
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
                 }
               }
             }
@@ -366,7 +374,7 @@ describe('updating a domain', () => {
           const expectedResponse = {
             data: {
               updateDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
@@ -398,11 +406,13 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
                 }
               }
             }
@@ -435,7 +445,7 @@ describe('updating a domain', () => {
           const expectedResponse = {
             data: {
               updateDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
@@ -468,11 +478,13 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
                 }
               }
             }
@@ -505,7 +517,7 @@ describe('updating a domain', () => {
           const expectedResponse = {
             data: {
               updateDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
@@ -543,11 +555,13 @@ describe('updating a domain', () => {
                   domain: "test.canada.ca"
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
                 }
               }
             }
@@ -580,7 +594,7 @@ describe('updating a domain', () => {
           const expectedResponse = {
             data: {
               updateDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
@@ -612,11 +626,13 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
                 }
               }
             }
@@ -649,7 +665,7 @@ describe('updating a domain', () => {
           const expectedResponse = {
             data: {
               updateDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
@@ -682,11 +698,13 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
                 }
               }
             }
@@ -719,7 +737,7 @@ describe('updating a domain', () => {
           const expectedResponse = {
             data: {
               updateDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
@@ -771,11 +789,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -806,9 +830,18 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('Unable to update unknown domain.')]
+          const error = {
+            data: {
+              updateDomain: {
+                result: {
+                  code: 400,
+                  description: 'Unable to update unknown domain.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update domain: 1, however there is no domain associated with that id.`,
           ])
@@ -839,11 +872,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -874,11 +913,18 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to update domain in an unknown org.'),
-          ]
+          const error = {
+            data: {
+              updateDomain: {
+                result: {
+                  code: 400,
+                  description: 'Unable to update domain in an unknown org.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update domain: ${domain._key} for org: 1, however there is no org associated with that id.`,
           ])
@@ -970,11 +1016,17 @@ describe('updating a domain', () => {
                     ]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                    }
+                    ... on DomainError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1008,13 +1060,19 @@ describe('updating a domain', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact organization user for help with updating this domain.',
-              ),
-            ]
+            const error = {
+              data: {
+                updateDomain: {
+                  result: {
+                    code: 403,
+                    description:
+                      'Permission Denied: Please contact organization user for help with updating this domain.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to update domain: ${domain._key} for org: ${org._key}, however they do not have permission in that org.`,
             ])
@@ -1044,11 +1102,17 @@ describe('updating a domain', () => {
                     ]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                    }
+                    ... on DomainError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1082,13 +1146,19 @@ describe('updating a domain', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact organization user for help with updating this domain.',
-              ),
-            ]
+            const error = {
+              data: {
+                updateDomain: {
+                  result: {
+                    code: 403,
+                    description:
+                      'Permission Denied: Please contact organization user for help with updating this domain.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to update domain: ${domain._key} for org: ${org._key}, however they do not have permission in that org.`,
             ])
@@ -1149,11 +1219,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -1184,13 +1260,19 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to update domain that does not belong to the given organization.',
-            ),
-          ]
+          const error = {
+            data: {
+              updateDomain: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to update domain that does not belong to the given organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update domain: ${domain._key} for org: ${org._key}, however that org has no claims to that domain.`,
           ])
@@ -1237,22 +1319,8 @@ describe('updating a domain', () => {
       })
       describe('while checking for edge connections', () => {
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
           const mockedQuery = jest
             .fn()
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
-              },
-            })
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
-              },
-            })
             .mockRejectedValue(new Error('Database error occurred.'))
 
           const response = await graphql(
@@ -1270,11 +1338,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -1289,11 +1363,11 @@ describe('updating a domain', () => {
               auth: {
                 checkPermission: checkPermission({
                   userKey: user._key,
-                  query: mockedQuery,
+                  query,
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoader,
+                  userLoaderByKey: userLoaderByKey(query),
                 }),
               },
               validators: {
@@ -1301,9 +1375,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -1363,10 +1437,6 @@ describe('updating a domain', () => {
       })
       describe('when running domain upsert', () => {
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
           const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               throw new Error('Transaction error occurred.')
@@ -1388,11 +1458,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -1416,9 +1492,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -1435,10 +1511,6 @@ describe('updating a domain', () => {
       })
       describe('when committing transaction', () => {
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
           const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               return undefined
@@ -1463,11 +1535,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -1491,9 +1569,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -1541,11 +1619,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -1576,9 +1660,18 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateDomain: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update domain: 1, however there is no domain associated with that id.`,
           ])
@@ -1609,11 +1702,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -1644,9 +1743,18 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateDomain: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update domain: ${domain._key} for org: 1, however there is no org associated with that id.`,
           ])
@@ -1738,11 +1846,17 @@ describe('updating a domain', () => {
                     ]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                    }
+                    ... on DomainError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1776,9 +1890,18 @@ describe('updating a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                updateDomain: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to update domain: ${domain._key} for org: ${org._key}, however they do not have permission in that org.`,
             ])
@@ -1808,11 +1931,17 @@ describe('updating a domain', () => {
                     ]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                    }
+                    ... on DomainError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1846,9 +1975,18 @@ describe('updating a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                updateDomain: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to update domain: ${domain._key} for org: ${org._key}, however they do not have permission in that org.`,
             ])
@@ -1909,11 +2047,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -1944,9 +2088,18 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateDomain: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to update domain: ${domain._key} for org: ${org._key}, however that org has no claims to that domain.`,
           ])
@@ -1993,22 +2146,8 @@ describe('updating a domain', () => {
       })
       describe('while checking for edge connections', () => {
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
           const mockedQuery = jest
             .fn()
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
-              },
-            })
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
-              },
-            })
             .mockRejectedValue(new Error('Database error occurred.'))
 
           const response = await graphql(
@@ -2026,11 +2165,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -2045,11 +2190,11 @@ describe('updating a domain', () => {
               auth: {
                 checkPermission: checkPermission({
                   userKey: user._key,
-                  query: mockedQuery,
+                  query: query,
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoader,
+                  userLoaderByKey: userLoaderByKey(query),
                 }),
               },
               validators: {
@@ -2057,9 +2202,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -2117,10 +2262,6 @@ describe('updating a domain', () => {
       })
       describe('when running domain upsert', () => {
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
           const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               throw new Error('Transaction error occurred.')
@@ -2142,11 +2283,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -2170,9 +2317,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -2187,10 +2334,6 @@ describe('updating a domain', () => {
       })
       describe('when committing transaction', () => {
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderByKey(query)
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
           const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               return undefined
@@ -2215,11 +2358,17 @@ describe('updating a domain', () => {
                   ]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                  }
+                  ... on DomainError {
+                    code
+                    description
+                  }
                 }
               }
             }
@@ -2243,9 +2392,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoader,
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )

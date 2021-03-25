@@ -12,6 +12,7 @@ export function RelayPaginationControls({
   setSelectedDisplayLimit,
   displayLimitOptions,
   onlyPagination,
+  isLoadingMore,
   ...props
 }) {
   let displayLimitControls = ''
@@ -31,6 +32,7 @@ export function RelayPaginationControls({
         </Text>
 
         <Select
+          isDisabled={isLoadingMore}
           value={selectedDisplayLimit}
           onChange={(e) => setSelectedDisplayLimit(parseInt(e.target.value))}
           width="fit-content"
@@ -47,6 +49,7 @@ export function RelayPaginationControls({
         id="previousPageBtn"
         onClick={previous}
         isDisabled={!hasPreviousPage}
+        isLoading={isLoadingMore}
         aria-label="Previous page"
       >
         <Trans>Previous</Trans>
@@ -56,6 +59,7 @@ export function RelayPaginationControls({
         id="nextPageBtn"
         onClick={next}
         isDisabled={!hasNextPage}
+        isLoading={isLoadingMore}
         aria-label="Next page"
       >
         <Trans>Next</Trans>
@@ -75,4 +79,5 @@ RelayPaginationControls.propTypes = {
   setSelectedDisplayLimit: func,
   displayLimitOptions: array,
   onlyPagination: bool,
+  isLoadingMore: bool,
 }

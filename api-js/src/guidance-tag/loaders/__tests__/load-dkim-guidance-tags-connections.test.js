@@ -76,55 +76,6 @@ describe('when given the load dkim guidance tag connection function', () => {
   })
 
   describe('given a successful load', () => {
-    describe('using no cursor', () => {
-      it('returns multiple dkim results', async () => {
-        const connectionLoader = dkimGuidanceTagConnectionsLoader(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
-
-        const dkimGuidanceTags = ['dkim1', 'dkim2']
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const dkimTags = await connectionLoader({
-          dkimGuidanceTags,
-          ...connectionArgs,
-        })
-
-        const dkimTagLoader = dkimGuidanceTagLoader(query)
-        const expectedDkimTags = await dkimTagLoader.loadMany(dkimGuidanceTags)
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
-              node: {
-                ...expectedDkimTags[0],
-              },
-            },
-            {
-              cursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
-              node: {
-                ...expectedDkimTags[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('guidanceTags', expectedDkimTags[0]._key),
-            endCursor: toGlobalId('guidanceTags', expectedDkimTags[1]._key),
-          },
-        }
-
-        expect(dkimTags).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns dkim result(s) after a given node id', async () => {
         const connectionLoader = dkimGuidanceTagConnectionsLoader(

@@ -31,6 +31,7 @@
       "La liste de chiffrement acceptée contient le chiffrement de flux RC4, tel qu'interdit par le BOD 18-01",
     'Account Settings': 'Paramètres du compte',
     'Account created.': 'Compte créé',
+    Acronym: 'Acronyme',
     'Add Domain': 'Ajouter un domaine',
     'Admin Portal': 'Portail Admin',
     'Admin Profile': "Profil de l'administrateur",
@@ -50,7 +51,7 @@
     'An error occurred while updating your phone number.':
       "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone.",
     'An error occurred while verifying your phone number.':
-      'An error occurred while verifying your phone number.',
+      "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone.",
     'An error occurred.': "Une erreur s'est produite.",
     Apply: 'Appliquer',
     April: 'Avril',
@@ -244,6 +245,8 @@
     'Implementation Status:': "État d'avancement de la mise en œuvre:",
     'Incorrect authenticate.result typename.':
       'Incorrect authenticate.result typename.',
+    'Incorrect inviteUserToOrg.result typename.':
+      'Incorrect inviteUserToOrg.result typename.',
     'Incorrect resetPassword.result typename.':
       'Incorrect resetPassword.result typename.',
     'Incorrect send method received.': "Méthode d'envoi incorrecte reçue.",
@@ -286,6 +289,7 @@
     'Missing from guide- need v1.1': 'Absent du guide - besoin v1.1',
     'More than 10 lookups - Follow implementation guide':
       'Plus de 10 consultations - Suivez le guide de mise en œuvre',
+    Name: 'Nom',
     'New Display Name:': "Nouveau nom d'affichage :",
     'New Domain Url': 'Nouvel Url de domaine',
     'New Domain Url:': 'Nouvelle URL de domaine :',
@@ -471,6 +475,7 @@
     'Select an organization to view admin options':
       "Sélectionnez une organisation pour voir les options d'administration",
     September: 'Septembre',
+    Services: 'Services',
     'Services: {domainCount}': ['Services: ', ['domainCount']],
     'Show {pageSize}': ['Voir ', ['pageSize']],
     'Showing data for period:': 'Affichage des données pour la période :',
@@ -481,6 +486,7 @@
     'Sign in with your username and password.':
       "Connectez-vous avec votre nom d'utilisateur et votre mot de passe.",
     'Skip to main content': 'Passer au contenu principal',
+    'Sort by:': 'Trier par:',
     'Source IP Address': 'Adresse IP source',
     Submit: 'Soumettre',
     Summary: 'Résumé',
@@ -514,6 +520,7 @@
       'Unable to create account, please try again.',
     'Unable to create your account, please try again.':
       'Impossible de créer votre compte, veuillez réessayer',
+    'Unable to invite user.': 'Unable to invite user.',
     'Unable to request scan, please try again.':
       'Impossible de demander un balayage, veuillez réessayer.',
     'Unable to reset your password, please try again.':
@@ -524,17 +531,19 @@
       'Impossible de vous connecter à votre compte, veuillez réessayer.',
     'Unable to update password': 'Impossible de mettre à jour le mot de passe',
     'Unable to update to your TFA send method, please try again.':
-      'Unable to update to your TFA send method, please try again.',
+      "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réessayer.",
     'Unable to update to your display name, please try again.':
-      'Unable to update to your display name, please try again.',
+      "Impossible de mettre à jour votre nom d'affichage, veuillez réessayer.",
     'Unable to update to your phone number, please try again.':
-      'Unable to update to your phone number, please try again.',
+      'Impossible de mettre à jour votre numéro de téléphone, veuillez réessayer.',
     'Unable to update to your preferred language, please try again.':
-      'Unable to update to your preferred language, please try again.',
+      'Impossible de mettre à jour votre langue préférée, veuillez réessayer.',
     'Unable to update to your username, please try again.':
-      'Unable to update to your username, please try again.',
+      "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessayer.",
     'Unable to update your password, please try again.':
       'Impossible de mettre à jour votre mot de passe, veuillez réessayer.',
+    'Unable to update your phone number, please try again.':
+      'Impossible de mettre à jour votre numéro de téléphone, veuillez réessayer.',
     'Unable to verify your phone number, please try again.':
       'Impossible de vérifier votre numéro de téléphone, veuillez réessayer.',
     'Use DKIM to validate outbound email sent from your custom domain':
@@ -551,6 +560,7 @@
       'Vérification des enregistrements TXT pour certains/toutes les expéditeurs tiers manquants',
     'Verification code must only contains numbers':
       'Le code de vérification ne doit contenir que des chiffres',
+    Verified: 'Vérifié',
     Verify: 'Vérifier',
     'Vulnerability-ccs-injection': 'Vulnerability-ccs-injection',
     'Vulnerability-heartbleed': 'Vulnerability-heartbleed',

@@ -87,63 +87,6 @@ describe('when given the load dkim results connection function', () => {
       })
     })
 
-    describe('using no cursor', () => {
-      it('returns multiple dkim results', async () => {
-        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
-
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const dkimResults = await connectionLoader({
-          dkimId: dkimScan._id,
-          ...connectionArgs,
-        })
-
-        const dkimResultLoader = dkimResultLoaderByKey(query)
-        const expectedDkimResults = await dkimResultLoader.loadMany([
-          dkimResult1._key,
-          dkimResult2._key,
-        ])
-
-        expectedDkimResults[0].id = expectedDkimResults[0]._key
-        expectedDkimResults[1].id = expectedDkimResults[1]._key
-
-        expectedDkimResults[0].dkimId = dkimScan._id
-        expectedDkimResults[1].dkimId = dkimScan._id
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('dkimResult', expectedDkimResults[0]._key),
-              node: {
-                ...expectedDkimResults[0],
-              },
-            },
-            {
-              cursor: toGlobalId('dkimResult', expectedDkimResults[1]._key),
-              node: {
-                ...expectedDkimResults[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('dkimResult', expectedDkimResults[0]._key),
-            endCursor: toGlobalId('dkimResult', expectedDkimResults[1]._key),
-          },
-        }
-
-        expect(dkimResults).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns dkim result(s) after a given node id', async () => {
         const connectionLoader = dkimResultsLoaderConnectionByDkimId(

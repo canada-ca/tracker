@@ -1,2 +1,6 @@
 export * from './affiliation'
 export * from './affiliation-connection'
+export * from './affiliation-error'
+export * from './invite-user-to-org-result'
+export * from './remove-user-from-org-result'
+export * from './update-user-role-result'

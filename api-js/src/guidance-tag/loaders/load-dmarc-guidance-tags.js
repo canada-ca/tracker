@@ -6,6 +6,7 @@ export const dmarcGuidanceTagLoader = (query, userKey, i18n) =>
     let cursor
     try {
       cursor = await query`
+        WITH dmarcGuidanceTags
         FOR tag IN dmarcGuidanceTags
           FILTER tag._key IN ${tags}
           RETURN MERGE(tag, { tagId: tag._key, id: tag._key, _type: "guidanceTag" })

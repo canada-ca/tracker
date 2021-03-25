@@ -199,7 +199,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -233,7 +241,9 @@ describe('removing a user from an organization', () => {
             const expectedResponse = {
               data: {
                 removeUserFromOrg: {
-                  status: 'Successfully removed user from organization.',
+                  result: {
+                    status: 'Successfully removed user from organization.',
+                  },
                 },
               },
             }
@@ -254,7 +264,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -314,7 +332,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -348,7 +374,9 @@ describe('removing a user from an organization', () => {
             const expectedResponse = {
               data: {
                 removeUserFromOrg: {
-                  status: 'Successfully removed user from organization.',
+                  result: {
+                    status: 'Successfully removed user from organization.',
+                  },
                 },
               },
             }
@@ -369,7 +397,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -436,7 +472,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -470,7 +514,9 @@ describe('removing a user from an organization', () => {
             const expectedResponse = {
               data: {
                 removeUserFromOrg: {
-                  status: 'Successfully removed user from organization.',
+                  result: {
+                    status: 'Successfully removed user from organization.',
+                  },
                 },
               },
             }
@@ -491,7 +537,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -554,7 +608,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -585,13 +647,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove user from unknown organization.',
-            ),
-          ]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'Unable to remove user from unknown organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, however no org with that id could be found.`,
           ])
@@ -621,7 +688,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -652,13 +727,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Permission Denied: Please contact organization admin for help with removing users.',
-            ),
-          ]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'Permission Denied: Please contact organization admin for help with removing users.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, but they do not have the right permission.`,
           ])
@@ -688,7 +768,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -719,13 +807,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove a user that already does not belong to this organization.',
-            ),
-          ]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'Unable to remove a user that already does not belong to this organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key}, but they do not have any affiliations to org: ${orgOne._key}.`,
           ])
@@ -755,7 +848,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -786,13 +887,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Permission Denied: Please contact organization admin for help with removing users.',
-            ),
-          ]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'Permission Denied: Please contact organization admin for help with removing users.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, but they do not have the right permission.`,
           ])
@@ -822,7 +928,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -853,11 +967,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to remove user from organization.'),
-          ]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'Unable to remove user from organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, however they do not have the permission to remove users.`,
           ])
@@ -888,7 +1009,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -919,13 +1048,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove unknown user from organization.',
-            ),
-          ]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'Unable to remove unknown user from organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, however no user with that id could be found.`,
           ])
@@ -962,7 +1096,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1039,7 +1181,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1104,7 +1254,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1192,7 +1350,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1226,7 +1392,9 @@ describe('removing a user from an organization', () => {
             const expectedResponse = {
               data: {
                 removeUserFromOrg: {
-                  status: 'todo',
+                  result: {
+                    status: 'todo',
+                  },
                 },
               },
             }
@@ -1247,7 +1415,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1307,7 +1483,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1341,7 +1525,9 @@ describe('removing a user from an organization', () => {
             const expectedResponse = {
               data: {
                 removeUserFromOrg: {
-                  status: 'todo',
+                  result: {
+                    status: 'todo',
+                  },
                 },
               },
             }
@@ -1362,7 +1548,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1429,7 +1623,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1463,7 +1665,9 @@ describe('removing a user from an organization', () => {
             const expectedResponse = {
               data: {
                 removeUserFromOrg: {
-                  status: 'todo',
+                  result: {
+                    status: 'todo',
+                  },
                 },
               },
             }
@@ -1484,7 +1688,15 @@ describe('removing a user from an organization', () => {
                       orgId: "${toGlobalId('organizations', orgOne._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on RemoveUserFromOrgResult {
+                        status
+                      }
+                      ... on AffiliationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1547,7 +1759,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1578,9 +1798,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, however no org with that id could be found.`,
           ])
@@ -1610,7 +1839,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1641,9 +1878,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, but they do not have the right permission.`,
           ])
@@ -1673,7 +1919,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1704,9 +1958,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key}, but they do not have any affiliations to org: ${orgOne._key}.`,
           ])
@@ -1736,7 +1999,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1767,9 +2038,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, but they do not have the right permission.`,
           ])
@@ -1799,7 +2079,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1830,9 +2118,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, however they do not have the permission to remove users.`,
           ])
@@ -1863,7 +2160,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1894,9 +2199,18 @@ describe('removing a user from an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              removeUserFromOrg: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} attempted to remove user: ${user._key} from org: ${orgOne._key}, however no user with that id could be found.`,
           ])
@@ -1933,7 +2247,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2006,7 +2328,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -2067,7 +2397,15 @@ describe('removing a user from an organization', () => {
                     orgId: "${toGlobalId('organizations', orgOne._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on RemoveUserFromOrgResult {
+                      status
+                    }
+                    ... on AffiliationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,

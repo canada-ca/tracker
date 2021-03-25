@@ -6,6 +6,7 @@ export const checkSuperAdmin = ({ i18n, userKey, query }) => async () => {
   // Check for super admin
   try {
     cursor = await query`
+      WITH affiliations, organizations, users
       FOR v, e IN 1 INBOUND ${userKeyString} affiliations
         FILTER e.permission == "super_admin"
         RETURN e.permission

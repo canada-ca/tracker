@@ -1,10 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Box, Button, Divider, Stack, Text } from '@chakra-ui/core'
-import {
-  REVERSE_PAGINATED_ORG_DOMAINS as BACKWARD,
-  PAGINATED_ORG_DOMAINS as FORWARD,
-} from './graphql/queries'
+import { Box, Divider, Text } from '@chakra-ui/core'
+import { PAGINATED_ORG_DOMAINS as FORWARD } from './graphql/queries'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
@@ -13,11 +10,13 @@ import { ListOf } from './ListOf'
 import { useUserState } from './UserState'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { number, string } from 'prop-types'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
 export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
   const { currentUser } = useUserState()
   const {
     loading,
+    isLoadingMore,
     error,
     nodes,
     next,
@@ -26,7 +25,6 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
     hasPreviousPage,
   } = usePaginatedCollection({
     fetchForward: FORWARD,
-    fetchBackward: BACKWARD,
     fetchHeaders: { authorization: currentUser.jwt },
     variables: { slug: orgSlug },
     recordsPerPage: domainsPerPage,
@@ -65,19 +63,14 @@ export function OrganizationDomains({ domainsPerPage = 10, orgSlug }) {
           </ErrorBoundary>
         )}
       </ListOf>
-      <Stack isInline align="center" mb="4">
-        <Button
-          onClick={previous}
-          isDisabled={!hasPreviousPage}
-          aria-label="Previous page"
-        >
-          <Trans>Previous</Trans>
-        </Button>
-
-        <Button onClick={next} isDisabled={!hasNextPage} aria-label="Next page">
-          <Trans>Next</Trans>
-        </Button>
-      </Stack>
+      <RelayPaginationControls
+        onlyPagination={true}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+        isLoadingMore={isLoadingMore}
+      />
     </Box>
   )
 }

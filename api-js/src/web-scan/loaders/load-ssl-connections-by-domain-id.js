@@ -321,45 +321,46 @@ export const sslLoaderConnectionsByDomainId = (
   let requestedSslInfo
   try {
     requestedSslInfo = await query`
-    LET sslKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSSL RETURN v._key)
+      WITH domains, domainsSSL, ssl
+      LET sslKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsSSL RETURN v._key)
 
-    LET retrievedSsl = (
-      FOR sslScan IN ssl
-        FILTER sslScan._key IN sslKeys
-        ${afterTemplate}
-        ${beforeTemplate}
-        ${startDateTemplate}
-        ${endDateTemplate}
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
-    )
+      LET retrievedSsl = (
+        FOR sslScan IN ssl
+          FILTER sslScan._key IN sslKeys
+          ${afterTemplate}
+          ${beforeTemplate}
+          ${startDateTemplate}
+          ${endDateTemplate}
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: sslScan._key, _type: "ssl" }, sslScan)
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR sslScan IN ssl
-        FILTER sslScan._key IN sslKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} sslScan._key ${sortString} LIMIT 1
-        RETURN sslScan
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR sslScan IN ssl
-        FILTER sslScan._key IN sslKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} sslScan._key ${sortString} LIMIT 1
-        RETURN sslScan
-    ) > 0 ? true : false)
+      LET hasNextPage = (LENGTH(
+        FOR sslScan IN ssl
+          FILTER sslScan._key IN sslKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} sslScan._key ${sortString} LIMIT 1
+          RETURN sslScan
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR sslScan IN ssl
+          FILTER sslScan._key IN sslKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} sslScan._key ${sortString} LIMIT 1
+          RETURN sslScan
+      ) > 0 ? true : false)
 
-    RETURN { 
-      "sslScans": retrievedSsl,
-      "totalCount": LENGTH(sslKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedSsl)._key, 
-      "endKey": LAST(retrievedSsl)._key 
-    }
+      RETURN { 
+        "sslScans": retrievedSsl,
+        "totalCount": LENGTH(sslKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedSsl)._key, 
+        "endKey": LAST(retrievedSsl)._key 
+      }
     `
   } catch (err) {
     console.error(

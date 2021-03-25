@@ -7,7 +7,6 @@ import { UserStateProvider } from '../UserState'
 import {
   ORG_DETAILS_PAGE,
   PAGINATED_DOMAINS,
-  REVERSE_PAGINATED_DOMAINS,
   WEB_AND_EMAIL_SUMMARIES,
 } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
@@ -102,6 +101,13 @@ describe('<OrganizationDetails />', () => {
 
                 affiliations: {
                   totalCount: 5,
+                  edges: [
+                    {
+                      node: {
+                        id: 'ABCDEF38924712398',
+                      },
+                    },
+                  ],
                 },
               },
             },
@@ -121,10 +127,10 @@ describe('<OrganizationDetails />', () => {
             >
               <MockedProvider mocks={mocks} addTypename={false}>
                 <MemoryRouter
-                  initialEntries={['/organization/tbs-sct-gc-ca']}
+                  initialEntries={['/organizations/tbs-sct-gc-ca']}
                   initialIndex={0}
                 >
-                  <Route path="/organization/:orgSlug">
+                  <Route path="/organizations/:orgSlug">
                     <OrganizationDetails />
                   </Route>
                 </MemoryRouter>

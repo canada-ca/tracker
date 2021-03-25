@@ -276,6 +276,8 @@
       'Unable to check permission. Please try again.',
     'Unable to create domain in unknown organization.':
       'Unable to create domain in unknown organization.',
+    'Unable to create domain, organization has already claimed it.':
+      'Unable to create domain, organization has already claimed it.',
     'Unable to create domain. Please try again.':
       'Unable to create domain. Please try again.',
     'Unable to create organization. Please try again.':

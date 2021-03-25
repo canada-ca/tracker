@@ -1,20 +1,23 @@
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { ensure, dbNameFromFile } = require('arango-tools')
 
 const { loadSummaryCountByDomain } = require('../load-summary-count-by-domain')
-const { makeMigrations } = require('../../../migrations')
+const { databaseOptions } = require('../../../database-options')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the loadSummaryCountByDomain function', () => {
-  let query, drop, truncate, migrate, collections
+  let query, drop, truncate, collections
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
 
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
     console.info = mockedInfo
   })
 

@@ -1,4 +1,4 @@
-FROM node:13-alpine
+FROM node:alpine
 
 ENV NODE_ENV production
 
@@ -6,7 +6,7 @@ WORKDIR /app
 COPY src ./src
 COPY index.js ./index.js
 COPY package* ./
-COPY migrations.js ./
+COPY database-options.js ./
 RUN npm ci
 
 USER node

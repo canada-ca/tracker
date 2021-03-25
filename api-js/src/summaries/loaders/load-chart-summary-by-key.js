@@ -7,6 +7,7 @@ export const chartSummaryLoaderByKey = (query, userKey, i18n) =>
 
     try {
       cursor = await query`
+        WITH chartSummaries
         FOR summary IN chartSummaries
           FILTER summary._key IN ${keys}
           RETURN MERGE({ id: summary._key }, summary)

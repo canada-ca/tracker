@@ -121,7 +121,15 @@ export const UPDATE_USER_ROLE = gql`
     $role: RoleEnums!
   ) {
     updateUserRole(input: { userName: $userName, orgId: $orgId, role: $role }) {
-      status
+      result {
+        ... on UpdateUserRoleResult {
+          status
+        }
+        ... on AffiliationError {
+          code
+          description
+        }
+      }
     }
   }
 `
@@ -190,8 +198,14 @@ export const CREATE_DOMAIN = gql`
     createDomain(
       input: { orgId: $orgId, domain: $domain, selectors: $selectors }
     ) {
-      domain {
-        domain
+      result {
+        ... on Domain {
+          domain
+        }
+        ... on DomainError {
+          code
+          description
+        }
       }
     }
   }
@@ -220,8 +234,14 @@ export const UPDATE_DOMAIN = gql`
         selectors: $selectors
       }
     ) {
-      domain {
-        domain
+      result {
+        ... on Domain {
+          domain
+        }
+        ... on DomainError {
+          code
+          description
+        }
       }
     }
   }
@@ -242,7 +262,15 @@ export const INVITE_USER_TO_ORG = gql`
         preferredLang: $preferredLang
       }
     ) {
-      status
+      result {
+        ... on InviteUserToOrgResult {
+          status
+        }
+        ... on AffiliationError {
+          code
+          description
+        }
+      }
     }
   }
 `

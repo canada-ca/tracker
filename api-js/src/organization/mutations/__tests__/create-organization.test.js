@@ -80,17 +80,19 @@ describe('create an organization', () => {
                   cityFR: "Ottawa"
                 }
               ) {
-                organization {
-                  id
-                  acronym
-                  slug
-                  name
-                  zone
-                  sector
-                  country
-                  province
-                  city
-                  verified
+                result {
+                  ... on Organization {
+                    id
+                    acronym
+                    slug
+                    name
+                    zone
+                    sector
+                    country
+                    province
+                    city
+                    verified
+                  }
                 }
               }
             }
@@ -132,7 +134,7 @@ describe('create an organization', () => {
         const expectedResponse = {
           data: {
             createOrganization: {
-              organization: {
+              result: {
                 id: `${toGlobalId('organizations', org._key)}`,
                 acronym: org.acronym,
                 slug: org.slug,
@@ -178,17 +180,19 @@ describe('create an organization', () => {
                   cityFR: "Ottawa"
                 }
               ) {
-                organization {
-                  id
-                  acronym
-                  slug
-                  name
-                  zone
-                  sector
-                  country
-                  province
-                  city
-                  verified
+                result {
+                  ... on Organization {
+                    id
+                    acronym
+                    slug
+                    name
+                    zone
+                    sector
+                    country
+                    province
+                    city
+                    verified
+                  }
                 }
               }
             }
@@ -230,7 +234,7 @@ describe('create an organization', () => {
         const expectedResponse = {
           data: {
             createOrganization: {
-              organization: {
+              result: {
                 id: `${toGlobalId('organizations', org._key)}`,
                 acronym: org.acronym,
                 slug: org.slug,
@@ -320,16 +324,23 @@ describe('create an organization', () => {
                     cityFR: "Ottawa"
                   }
                 ) {
-                  organization {
-                    id
-                    acronym
-                    slug
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      id
+                      acronym
+                      slug
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                      verified
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -361,13 +372,19 @@ describe('create an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Organization name already in use. Please try again with a different name.',
-            ),
-          ]
+          const error = {
+            data: {
+              createOrganization: {
+                result: {
+                  code: 400,
+                  description:
+                    'Organization name already in use. Please try again with a different name.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to create an organization that already exists: treasury-board-of-canada-secretariat`,
           ])
@@ -405,16 +422,23 @@ describe('create an organization', () => {
                       cityFR: "Ottawa"
                     }
                   ) {
-                    organization {
-                      id
-                      acronym
-                      slug
-                      name
-                      zone
-                      sector
-                      country
-                      province
-                      city
+                    result {
+                      ... on Organization {
+                        id
+                        acronym
+                        slug
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                        verified
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -494,16 +518,23 @@ describe('create an organization', () => {
                       cityFR: "Ottawa"
                     }
                   ) {
-                    organization {
-                      id
-                      acronym
-                      slug
-                      name
-                      zone
-                      sector
-                      country
-                      province
-                      city
+                    result {
+                      ... on Organization {
+                        id
+                        acronym
+                        slug
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                        verified
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -587,16 +618,23 @@ describe('create an organization', () => {
                       cityFR: "Ottawa"
                     }
                   ) {
-                    organization {
-                      id
-                      acronym
-                      slug
-                      name
-                      zone
-                      sector
-                      country
-                      province
-                      city
+                    result {
+                      ... on Organization {
+                        id
+                        acronym
+                        slug
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                        verified
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -707,16 +745,23 @@ describe('create an organization', () => {
                     cityFR: "Ottawa"
                   }
                 ) {
-                  organization {
-                    id
-                    acronym
-                    slug
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      id
+                      acronym
+                      slug
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                      verified
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -748,9 +793,18 @@ describe('create an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              createOrganization: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to create an organization that already exists: treasury-board-of-canada-secretariat`,
           ])
@@ -788,16 +842,23 @@ describe('create an organization', () => {
                       cityFR: "Ottawa"
                     }
                   ) {
-                    organization {
-                      id
-                      acronym
-                      slug
-                      name
-                      zone
-                      sector
-                      country
-                      province
-                      city
+                    result {
+                      ... on Organization {
+                        id
+                        acronym
+                        slug
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                        verified
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -873,16 +934,23 @@ describe('create an organization', () => {
                       cityFR: "Ottawa"
                     }
                   ) {
-                    organization {
-                      id
-                      acronym
-                      slug
-                      name
-                      zone
-                      sector
-                      country
-                      province
-                      city
+                    result {
+                      ... on Organization {
+                        id
+                        acronym
+                        slug
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                        verified
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -962,16 +1030,23 @@ describe('create an organization', () => {
                       cityFR: "Ottawa"
                     }
                   ) {
-                    organization {
-                      id
-                      acronym
-                      slug
-                      name
-                      zone
-                      sector
-                      country
-                      province
-                      city
+                    result {
+                      ... on Organization {
+                        id
+                        acronym
+                        slug
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                        verified
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }

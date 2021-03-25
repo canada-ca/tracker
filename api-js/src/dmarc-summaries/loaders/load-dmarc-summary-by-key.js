@@ -7,6 +7,7 @@ export const dmarcSumLoaderByKey = (query, userKey, i18n) =>
 
     try {
       cursor = await query`
+        WITH dmarcSummaries, domains, domainsToDmarcSummaries
         FOR summary IN dmarcSummaries
           FILTER summary._key IN ${keys}
 

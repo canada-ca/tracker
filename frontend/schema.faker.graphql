@@ -112,6 +112,25 @@ type CategoryTotals {
   fail: Int @examples(values: [8694, 5896, 5436, 9345, 2345])
 }
 
+type CreateDomainPayload {
+  # `CreateDomainUnion` returning either a `Domain`, or `DomainError` object.
+  result: CreateDomainUnion
+  clientMutationId: String
+}
+
+# This union is used with the `CreateDomain` mutation,
+# allowing for users to create a domain and add it to their org,
+# and support any errors that may occur
+union CreateDomainUnion = DomainError | Domain
+
+# This object is used to inform the user if any errors occurred while creating a domain.
+type DomainError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
 input CreateDomainInput {
   # The global id of the organization you wish to assign this domain to.
   orgId: ID!
@@ -122,10 +141,22 @@ input CreateDomainInput {
   clientMutationId: String
 }
 
-type CreateDomainPayload {
-  # The newly created domain.
-  domain: Domain
+type CreateOrganizationPayload {
+  # `CreateOrganizationUnion` returning either an `Organization`, or `OrganizationError` object.
+  result: CreateOrganizationUnion
   clientMutationId: String
+}
+
+# This union is used with the `CreateOrganization` mutation,
+# allowing for users to create an organization, and support any errors that may occur
+union CreateOrganizationUnion = OrganizationError | Organization
+
+# This object is used to inform the user if any errors occurred while using an organization mutation.
+type OrganizationError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
 }
 
 input CreateOrganizationInput {
@@ -157,12 +188,6 @@ input CreateOrganizationInput {
   cityEN: String!
   # The French translation of the city the organization resides in.
   cityFR: String!
-  clientMutationId: String
-}
-
-type CreateOrganizationPayload {
-  # The newly created organization.
-  organization: Organization
   clientMutationId: String
 }
 
@@ -612,6 +637,8 @@ type Domain implements Node {
   )
   # The last time that a scan was ran on this domain.
   lastRan: String @fake(type: recentDate)
+  # DMARC phase found during scan.
+  dmarcPhase: Int @examples(values: [1, 2, 3, 4])
   # Domain Keys Identified Mail (DKIM) selector strings associated with domain.
   selectors: [Selector] @listLength(min: 0, max: 2)
   # The domains scan status, based on the latest scan data.
@@ -947,6 +974,29 @@ type HTTPSEdge {
   cursor: String!
 }
 
+type InviteUserToOrgPayload {
+  # `InviteUserToOrgUnion` returning either a `InviteUserToOrgResult`, or `AffiliationError` object.
+  result: InviteUserToOrgUnion
+  clientMutationId: String
+}
+
+# This union is used with the `InviteUserToOrg` mutation, allowing for users to invite user to their org, and support any errors that may occur
+union InviteUserToOrgUnion = AffiliationError | InviteUserToOrgResult
+
+# This object is used to inform the user if any errors occurred while inviting a user to an org.
+type AffiliationError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user of the invitation status.
+type InviteUserToOrgResult {
+  # Informs the user if the invite or invite email was successfully sent.
+  status: String
+}
+
 input InviteUserToOrgInput {
   # Users email that you would like to invite to your org.
   userName: EmailAddress!
@@ -956,12 +1006,6 @@ input InviteUserToOrgInput {
   orgId: ID!
   # The language in which the email will be sent in.
   preferredLang: LanguageEnums!
-  clientMutationId: String
-}
-
-type InviteUserToOrgPayload {
-  # Informs the user if the invite or invite email was successfully sent.
-  status: String
   clientMutationId: String
 }
 
@@ -1288,6 +1332,7 @@ type Query {
   ): DomainConnection
   # Select organizations a user has access to.
   findMyOrganizations(
+    orderBy: OrganizationOrder
     after: String
     first: Int
     before: String
@@ -1389,14 +1434,26 @@ type RemoveOrganizationPayload {
   clientMutationId: String
 }
 
-input RemoveUserFromOrgInput {
-  userId: ID!
-  orgId: ID!
+type RemoveUserFromOrgPayload {
+  # `RemoveUserFromOrgUnion` returning either a `RemoveUserFromOrgResult`, or `AffiliationError` object.
+  result: RemoveUserFromOrgUnion
   clientMutationId: String
 }
 
-type RemoveUserFromOrgPayload {
+# This union is used with the `RemoveUserFromOrg` mutation, allowing for users to remove a user from their org, and support any errors that may occur
+union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
+
+# This object is used to inform the user of the removal status.
+type RemoveUserFromOrgResult {
+  # Informs the user if the user was successfully removed.
   status: String
+}
+
+input RemoveUserFromOrgInput {
+  # The user id of the user to be removed.
+  userId: ID!
+  # The organization that the user is to be removed from.
+  orgId: ID!
   clientMutationId: String
 }
 
@@ -1829,6 +1886,17 @@ type TFASignInResult {
   sendMethod: String @examples(values: ["PHONE", "EMAIL"])
 }
 
+type UpdateDomainPayload {
+  # `UpdateDomainUnion` returning either a `Domain`, or `DomainError` object.
+  result: UpdateDomainUnion
+  clientMutationId: String
+}
+
+# This union is used with the `UpdateDomain` mutation,
+# allowing for users to update a domain belonging to their org,
+# and support any errors that may occur
+union UpdateDomainUnion = DomainError | Domain
+
 input UpdateDomainInput {
   # The global id of the domain that is being updated.
   domainId: ID!
@@ -1838,12 +1906,6 @@ input UpdateDomainInput {
   domain: DomainScalar
   # The updated DKIM selector strings corresponding to this domain.
   selectors: [Selector]
-  clientMutationId: String
-}
-
-type UpdateDomainPayload {
-  # The updated domain.
-  domain: Domain
   clientMutationId: String
 }
 
@@ -1960,6 +2022,21 @@ input UpdateUserProfileInput {
   clientMutationId: String
 }
 
+type UpdateUserRolePayload {
+  # `UpdateUserRoleUnion` returning either a `UpdateUserRoleResult`, or `AffiliationError` object.
+  result: UpdateUserRoleUnion
+  clientMutationId: String
+}
+
+# This union is used with the `UpdateUserRole` mutation, allowing for users to update a users role in an org, and support any errors that may occur
+union UpdateUserRoleUnion = AffiliationError | UpdateUserRoleResult
+
+# This object is used to inform the user of the status of the role update.
+type UpdateUserRoleResult {
+  # Informs the user if the user was successfully removed.
+  status: String
+}
+
 input UpdateUserRoleInput {
   # The username of the user you wish to update their role to.
   userName: EmailAddress!
@@ -1967,12 +2044,6 @@ input UpdateUserRoleInput {
   orgId: ID!
   # The role that the admin wants to give to the selected user.
   role: RoleEnums!
-  clientMutationId: String
-}
-
-type UpdateUserRolePayload {
-  # Informs the user if the user role update was successful.
-  status: String
   clientMutationId: String
 }
 

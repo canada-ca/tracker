@@ -147,25 +147,31 @@ describe('create a domain', () => {
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    status {
-                      dkim
-                      dmarc
-                      https
-                      spf
-                      ssl
-                    }
-                    organizations (first: 5) {
-                      edges{ 
-                        node {
-                          id
-                          name
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      status {
+                        dkim
+                        dmarc
+                        https
+                        spf
+                        ssl
+                      }
+                      organizations(first: 5) {
+                        edges {
+                          node {
+                            id
+                            name
+                          }
                         }
                       }
+                    }
+                    ... on DomainError {
+                      code
+                      description
                     }
                   }
                 }
@@ -207,11 +213,10 @@ describe('create a domain', () => {
               RETURN domain
           `
           const domain = await domainCursor.next()
-
           const expectedResponse = {
             data: {
               createDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
@@ -290,25 +295,31 @@ describe('create a domain', () => {
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    status {
-                      dkim
-                      dmarc
-                      https
-                      spf
-                      ssl
-                    }
-                    organizations (first: 5) {
-                      edges{ 
-                        node {
-                          id
-                          name
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      status {
+                        dkim
+                        dmarc
+                        https
+                        spf
+                        ssl
+                      }
+                      organizations(first: 5) {
+                        edges {
+                          node {
+                            id
+                            name
+                          }
                         }
                       }
+                    }
+                    ... on DomainError {
+                      code
+                      description
                     }
                   }
                 }
@@ -354,7 +365,7 @@ describe('create a domain', () => {
           const expectedResponse = {
             data: {
               createDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
@@ -409,25 +420,31 @@ describe('create a domain', () => {
                   selectors: ["selector1._domainkey", "selector2._domainkey"]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
-                  status {
-                    dkim
-                    dmarc
-                    https
-                    spf
-                    ssl
-                  }
-                  organizations (first: 5) {
-                    edges{ 
-                      node {
-                        id
-                        name
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    status {
+                      dkim
+                      dmarc
+                      https
+                      spf
+                      ssl
+                    }
+                    organizations(first: 5) {
+                      edges {
+                        node {
+                          id
+                          name
+                        }
                       }
                     }
+                  }
+                  ... on DomainError {
+                    code
+                    description
                   }
                 }
               }
@@ -473,7 +490,7 @@ describe('create a domain', () => {
         const expectedResponse = {
           data: {
             createDomain: {
-              domain: {
+              result: {
                 id: toGlobalId('domains', domain._key),
                 domain: 'test.gc.ca',
                 lastRan: null,
@@ -527,25 +544,31 @@ describe('create a domain', () => {
                   selectors: ["selector1._domainkey", "selector2._domainkey"]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
-                  status {
-                    dkim
-                    dmarc
-                    https
-                    spf
-                    ssl
-                  }
-                  organizations (first: 5) {
-                    edges{ 
-                      node {
-                        id
-                        name
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    status {
+                      dkim
+                      dmarc
+                      https
+                      spf
+                      ssl
+                    }
+                    organizations(first: 5) {
+                      edges {
+                        node {
+                          id
+                          name
+                        }
                       }
                     }
+                  }
+                  ... on DomainError {
+                    code
+                    description
                   }
                 }
               }
@@ -591,7 +614,7 @@ describe('create a domain', () => {
         const expectedResponse = {
           data: {
             createDomain: {
-              domain: {
+              result: {
                 id: toGlobalId('domains', domain._key),
                 domain: 'test.gc.ca',
                 lastRan: null,
@@ -680,25 +703,31 @@ describe('create a domain', () => {
                   domain: "test.gc.ca"
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
-                  status {
-                    dkim
-                    dmarc
-                    https
-                    spf
-                    ssl
-                  }
-                  organizations (first: 5) {
-                    edges{ 
-                      node {
-                        id
-                        name
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    status {
+                      dkim
+                      dmarc
+                      https
+                      spf
+                      ssl
+                    }
+                    organizations(first: 5) {
+                      edges {
+                        node {
+                          id
+                          name
+                        }
                       }
                     }
+                  }
+                  ... on DomainError {
+                    code
+                    description
                   }
                 }
               }
@@ -744,7 +773,7 @@ describe('create a domain', () => {
           const expectedResponse = {
             data: {
               createDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
@@ -807,25 +836,31 @@ describe('create a domain', () => {
                   selectors: ["selector1._domainkey", "selector2._domainkey"]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
-                  status {
-                    dkim
-                    dmarc
-                    https
-                    spf
-                    ssl
-                  }
-                  organizations (first: 5) {
-                    edges{ 
-                      node {
-                        id
-                        name
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    status {
+                      dkim
+                      dmarc
+                      https
+                      spf
+                      ssl
+                    }
+                    organizations(first: 5) {
+                      edges {
+                        node {
+                          id
+                          name
+                        }
                       }
                     }
+                  }
+                  ... on DomainError {
+                    code
+                    description
                   }
                 }
               }
@@ -871,7 +906,7 @@ describe('create a domain', () => {
           const expectedResponse = {
             data: {
               createDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
@@ -934,25 +969,31 @@ describe('create a domain', () => {
                   selectors: ["selector3._domainkey", "selector4._domainkey"]
                 }
               ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
-                  status {
-                    dkim
-                    dmarc
-                    https
-                    spf
-                    ssl
-                  }
-                  organizations (first: 5) {
-                    edges{ 
-                      node {
-                        id
-                        name
+                result {
+                  ... on Domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    status {
+                      dkim
+                      dmarc
+                      https
+                      spf
+                      ssl
+                    }
+                    organizations(first: 5) {
+                      edges {
+                        node {
+                          id
+                          name
+                        }
                       }
                     }
+                  }
+                  ... on DomainError {
+                    code
+                    description
                   }
                 }
               }
@@ -998,7 +1039,7 @@ describe('create a domain', () => {
           const expectedResponse = {
             data: {
               createDomain: {
-                domain: {
+                result: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
@@ -1075,18 +1116,31 @@ describe('create a domain', () => {
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    organizations(first: 5) {
-                      edges {
-                        node {
-                          id
-                          name
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      status {
+                        dkim
+                        dmarc
+                        https
+                        spf
+                        ssl
+                      }
+                      organizations(first: 5) {
+                        edges {
+                          node {
+                            id
+                            name
+                          }
                         }
                       }
+                    }
+                    ... on DomainError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1124,13 +1178,19 @@ describe('create a domain', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to create domain in unknown organization.',
-            ),
-          ]
+          const error = {
+            data: {
+              createDomain: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to create domain in unknown organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to create a domain to an organization: 1 that does not exist.`,
           ])
@@ -1149,18 +1209,31 @@ describe('create a domain', () => {
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    organizations (first: 5) {
-                      edges{ 
-                        node {
-                          id
-                          name
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      status {
+                        dkim
+                        dmarc
+                        https
+                        spf
+                        ssl
+                      }
+                      organizations(first: 5) {
+                        edges {
+                          node {
+                            id
+                            name
+                          }
                         }
                       }
+                    }
+                    ... on DomainError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1198,13 +1271,19 @@ describe('create a domain', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Permission Denied: Please contact organization user for help with creating domain.',
-            ),
-          ]
+          const error = {
+            data: {
+              createDomain: {
+                result: {
+                  code: 400,
+                  description:
+                    'Permission Denied: Please contact organization user for help with creating domain.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to create a domain in: treasury-board-secretariat, however they do not have permission to do so.`,
           ])
@@ -1237,18 +1316,31 @@ describe('create a domain', () => {
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    organizations (first: 5) {
-                      edges{ 
-                        node {
-                          id
-                          name
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      status {
+                        dkim
+                        dmarc
+                        https
+                        spf
+                        ssl
+                      }
+                      organizations(first: 5) {
+                        edges {
+                          node {
+                            id
+                            name
+                          }
                         }
                       }
+                    }
+                    ... on DomainError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1286,11 +1378,19 @@ describe('create a domain', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to create domain. Please try again.'),
-          ]
+          const error = {
+            data: {
+              createDomain: {
+                result: {
+                  code: 400,
+                  description:
+                    'Unable to create domain, organization has already claimed it.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to create a domain for: treasury-board-secretariat, however that org already has that domain claimed.`,
           ])
@@ -1306,28 +1406,8 @@ describe('create a domain', () => {
             })
           })
           it('returns an error message', async () => {
-            const domainLoader = domainLoaderByDomain(query)
-            const orgIdLoader = orgLoaderByKey(query, 'en')
-            const userKeyLoader = userLoaderByKey(query)
-            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
-              query,
-              'en',
-              user._key,
-              cleanseInput,
-            )
-
             const mockedQuery = jest
               .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'user'
-                },
-              })
-              .mockReturnValueOnce({
-                next() {
-                  return 'user'
-                },
-              })
               .mockRejectedValue(new Error('Database error occurred.'))
 
             const response = await graphql(
@@ -1341,18 +1421,31 @@ describe('create a domain', () => {
                       selectors: ["selector1._domainkey", "selector2._domainkey"]
                     }
                   ) {
-                    domain {
-                      id
-                      domain
-                      lastRan
-                      selectors
-                      organizations (first: 5) {
-                        edges{ 
-                          node {
-                            id
-                            name
+                    result {
+                      ... on Domain {
+                        id
+                        domain
+                        lastRan
+                        selectors
+                        status {
+                          dkim
+                          dmarc
+                          https
+                          spf
+                          ssl
+                        }
+                        organizations(first: 5) {
+                          edges {
+                            node {
+                              id
+                              name
+                            }
                           }
                         }
+                      }
+                      ... on DomainError {
+                        code
+                        description
                       }
                     }
                   }
@@ -1371,18 +1464,23 @@ describe('create a domain', () => {
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query: mockedQuery,
+                    query: query,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userKeyLoader,
+                    userLoaderByKey: userLoaderByKey(query),
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoader,
-                  orgLoaderByKey: orgIdLoader,
-                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                  userLoaderByKey: userKeyLoader,
+                  domainLoaderByDomain: domainLoaderByDomain(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    query,
+                    'en',
+                    user._key,
+                    cleanseInput,
+                  ),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -1398,7 +1496,422 @@ describe('create a domain', () => {
             ])
           })
         })
-        describe('when committing transaction to database', () => {
+      })
+      describe('transaction step error occurs', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
+        })
+        describe('when creating a new domain', () => {
+          describe('when inserting new domain', () => {
+            it('returns an error message', async () => {
+              const mockedStep = jest
+                .fn()
+                .mockRejectedValue(
+                  new Error('Transaction Step Error Occurred.'),
+                )
+
+              const mockedTransaction = jest
+                .fn()
+                .mockReturnValue({ step: mockedStep })
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    createDomain(
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        domain: "test.gc.ca"
+                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      }
+                    ) {
+                      result {
+                        ... on Domain {
+                          id
+                          domain
+                          lastRan
+                          selectors
+                          status {
+                            dkim
+                            dmarc
+                            https
+                            spf
+                            ssl
+                          }
+                          organizations(first: 5) {
+                            edges {
+                              node {
+                                id
+                                name
+                              }
+                            }
+                          }
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                  },
+                  query: query,
+                  collections,
+                  transaction: mockedTransaction,
+                  userKey: user._key,
+                  auth: {
+                    checkPermission: checkPermission({
+                      userKey: user._key,
+                      query: query,
+                    }),
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
+                  loaders: {
+                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                      query,
+                      'en',
+                      user._key,
+                      cleanseInput,
+                    ),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                  validators: { cleanseInput, slugify },
+                },
+              )
+
+              const error = [
+                new GraphQLError('Unable to create domain. Please try again.'),
+              ]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `Transaction step error occurred for user: ${user._key} when inserting new domain: Error: Transaction Step Error Occurred.`,
+              ])
+            })
+          })
+          describe('when inserting new edge', () => {
+            it('returns an error message', async () => {
+              const mockedStep = jest
+                .fn()
+                .mockReturnValueOnce({})
+                .mockRejectedValue(
+                  new Error('Transaction Step Error Occurred.'),
+                )
+
+              const mockedTransaction = jest
+                .fn()
+                .mockReturnValue({ step: mockedStep })
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    createDomain(
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        domain: "test.gc.ca"
+                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      }
+                    ) {
+                      result {
+                        ... on Domain {
+                          id
+                          domain
+                          lastRan
+                          selectors
+                          status {
+                            dkim
+                            dmarc
+                            https
+                            spf
+                            ssl
+                          }
+                          organizations(first: 5) {
+                            edges {
+                              node {
+                                id
+                                name
+                              }
+                            }
+                          }
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                  },
+                  query: query,
+                  collections,
+                  transaction: mockedTransaction,
+                  userKey: user._key,
+                  auth: {
+                    checkPermission: checkPermission({
+                      userKey: user._key,
+                      query: query,
+                    }),
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
+                  loaders: {
+                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                      query,
+                      'en',
+                      user._key,
+                      cleanseInput,
+                    ),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                  validators: { cleanseInput, slugify },
+                },
+              )
+
+              const error = [
+                new GraphQLError('Unable to create domain. Please try again.'),
+              ]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `Transaction step error occurred for user: ${user._key} when inserting new domain edge: Error: Transaction Step Error Occurred.`,
+              ])
+            })
+          })
+        })
+        describe('when domain already exists', () => {
+          beforeEach(async () => {
+            await collections.domains.save({
+              domain: 'test.gc.ca',
+              selectors: [],
+            })
+          })
+          describe('when upserting domain', () => {
+            it('returns an error message', async () => {
+              const mockedStep = jest
+                .fn()
+                .mockRejectedValue(
+                  new Error('Transaction Step Error Occurred.'),
+                )
+
+              const mockedTransaction = jest
+                .fn()
+                .mockReturnValue({ step: mockedStep })
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    createDomain(
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        domain: "test.gc.ca"
+                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      }
+                    ) {
+                      result {
+                        ... on Domain {
+                          id
+                          domain
+                          lastRan
+                          selectors
+                          status {
+                            dkim
+                            dmarc
+                            https
+                            spf
+                            ssl
+                          }
+                          organizations(first: 5) {
+                            edges {
+                              node {
+                                id
+                                name
+                              }
+                            }
+                          }
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                  },
+                  query: query,
+                  collections,
+                  transaction: mockedTransaction,
+                  userKey: user._key,
+                  auth: {
+                    checkPermission: checkPermission({
+                      userKey: user._key,
+                      query: query,
+                    }),
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
+                  loaders: {
+                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                      query,
+                      'en',
+                      user._key,
+                      cleanseInput,
+                    ),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                  validators: { cleanseInput, slugify },
+                },
+              )
+
+              const error = [
+                new GraphQLError('Unable to create domain. Please try again.'),
+              ]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `Transaction step error occurred for user: ${user._key} when inserting domain selectors: Error: Transaction Step Error Occurred.`,
+              ])
+            })
+          })
+          describe('when inserting edge to new org', () => {
+            it('returns an error message', async () => {
+              const mockedStep = jest
+                .fn()
+                .mockReturnValueOnce({})
+                .mockRejectedValue(
+                  new Error('Transaction Step Error Occurred.'),
+                )
+
+              const mockedTransaction = jest
+                .fn()
+                .mockReturnValue({ step: mockedStep })
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    createDomain(
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        domain: "test.gc.ca"
+                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      }
+                    ) {
+                      result {
+                        ... on Domain {
+                          id
+                          domain
+                          lastRan
+                          selectors
+                          status {
+                            dkim
+                            dmarc
+                            https
+                            spf
+                            ssl
+                          }
+                          organizations(first: 5) {
+                            edges {
+                              node {
+                                id
+                                name
+                              }
+                            }
+                          }
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                  },
+                  query: query,
+                  collections,
+                  transaction: mockedTransaction,
+                  userKey: user._key,
+                  auth: {
+                    checkPermission: checkPermission({
+                      userKey: user._key,
+                      query: query,
+                    }),
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
+                  loaders: {
+                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                      query,
+                      'en',
+                      user._key,
+                      cleanseInput,
+                    ),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                  validators: { cleanseInput, slugify },
+                },
+              )
+
+              const error = [
+                new GraphQLError('Unable to create domain. Please try again.'),
+              ]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `Transaction step error occurred for user: ${user._key} when inserting domain edge: Error: Transaction Step Error Occurred.`,
+              ])
+            })
+          })
+        })
+      })
+      describe('transaction commit error occurs', () => {
+        describe('when committing transaction', () => {
           beforeEach(async () => {
             await collections.affiliations.save({
               _from: org._id,
@@ -1407,67 +1920,73 @@ describe('create a domain', () => {
             })
           })
           it('returns an error message', async () => {
-            const domainLoader = domainLoaderByDomain(query)
-            const orgIdLoader = orgLoaderByKey(query, 'en')
-            const userKeyLoader = userLoaderByKey(query)
-            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
-              query,
-              'en',
-              user._key,
-              cleanseInput,
-            )
+            const mockedStep = jest.fn().mockReturnValueOnce({})
 
-            const mockedTransaction = jest.fn().mockReturnValueOnce({
-              step() {
-                return 'user'
-              },
-              commit() {
-                throw new Error('Database error occurred.')
-              },
-            })
+            const mockedCommit = jest
+              .fn()
+              .mockRejectedValue(
+                new Error('Transaction Commit Error Occurred.'),
+              )
+
+            const mockedTransaction = jest
+              .fn()
+              .mockReturnValue({ step: mockedStep, commit: mockedCommit })
 
             const response = await graphql(
               schema,
               `
-                mutation {
-                  createDomain(
-                    input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
-                      domain: "test.gc.ca"
-                      selectors: ["selector1._domainkey", "selector2._domainkey"]
-                    }
-                  ) {
-                    domain {
-                      id
-                      domain
-                      lastRan
-                      selectors
-                      organizations (first: 5) {
-                        edges{ 
-                          node {
-                            id
-                            name
+                  mutation {
+                    createDomain(
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        domain: "test.gc.ca"
+                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      }
+                    ) {
+                      result {
+                        ... on Domain {
+                          id
+                          domain
+                          lastRan
+                          selectors
+                          status {
+                            dkim
+                            dmarc
+                            https
+                            spf
+                            ssl
                           }
+                          organizations(first: 5) {
+                            edges {
+                              node {
+                                id
+                                name
+                              }
+                            }
+                          }
+                        }
+                        ... on DomainError {
+                          code
+                          description
                         }
                       }
                     }
                   }
-                }
-              `,
+                `,
               null,
               {
                 i18n,
                 request: {
                   language: 'en',
                 },
-                query,
+                query: query,
                 collections,
                 transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query,
+                    query: query,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
@@ -1475,10 +1994,15 @@ describe('create a domain', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoader,
-                  orgLoaderByKey: orgIdLoader,
-                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                  userLoaderByKey: userKeyLoader,
+                  domainLoaderByDomain: domainLoaderByDomain(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    query,
+                    'en',
+                    user._key,
+                    cleanseInput,
+                  ),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -1490,7 +2014,7 @@ describe('create a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while committing create domain transaction: Error: Database error occurred.`,
+              `Transaction commit error occurred while user: ${user._key} was creating domain: Error: Transaction Commit Error Occurred.`,
             ])
           })
         })
@@ -1524,18 +2048,31 @@ describe('create a domain', () => {
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    organizations(first: 5) {
-                      edges {
-                        node {
-                          id
-                          name
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      status {
+                        dkim
+                        dmarc
+                        https
+                        spf
+                        ssl
+                      }
+                      organizations(first: 5) {
+                        edges {
+                          node {
+                            id
+                            name
+                          }
                         }
                       }
+                    }
+                    ... on DomainError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1573,9 +2110,18 @@ describe('create a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              createDomain: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to create a domain to an organization: 1 that does not exist.`,
           ])
@@ -1594,18 +2140,31 @@ describe('create a domain', () => {
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    organizations (first: 5) {
-                      edges{ 
-                        node {
-                          id
-                          name
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      status {
+                        dkim
+                        dmarc
+                        https
+                        spf
+                        ssl
+                      }
+                      organizations(first: 5) {
+                        edges {
+                          node {
+                            id
+                            name
+                          }
                         }
                       }
+                    }
+                    ... on DomainError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1643,9 +2202,18 @@ describe('create a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              createDomain: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to create a domain in: treasury-board-secretariat, however they do not have permission to do so.`,
           ])
@@ -1678,18 +2246,31 @@ describe('create a domain', () => {
                     selectors: ["selector1._domainkey", "selector2._domainkey"]
                   }
                 ) {
-                  domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    organizations (first: 5) {
-                      edges{ 
-                        node {
-                          id
-                          name
+                  result {
+                    ... on Domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      status {
+                        dkim
+                        dmarc
+                        https
+                        spf
+                        ssl
+                      }
+                      organizations(first: 5) {
+                        edges {
+                          node {
+                            id
+                            name
+                          }
                         }
                       }
+                    }
+                    ... on DomainError {
+                      code
+                      description
                     }
                   }
                 }
@@ -1727,9 +2308,18 @@ describe('create a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              createDomain: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to create a domain for: treasury-board-secretariat, however that org already has that domain claimed.`,
           ])
@@ -1745,28 +2335,8 @@ describe('create a domain', () => {
             })
           })
           it('returns an error message', async () => {
-            const domainLoader = domainLoaderByDomain(query)
-            const orgIdLoader = orgLoaderByKey(query, 'en')
-            const userKeyLoader = userLoaderByKey(query)
-            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
-              query,
-              'en',
-              user._key,
-              cleanseInput,
-            )
-
             const mockedQuery = jest
               .fn()
-              .mockReturnValueOnce({
-                next() {
-                  return 'user'
-                },
-              })
-              .mockReturnValueOnce({
-                next() {
-                  return 'user'
-                },
-              })
               .mockRejectedValue(new Error('Database error occurred.'))
 
             const response = await graphql(
@@ -1780,18 +2350,31 @@ describe('create a domain', () => {
                       selectors: ["selector1._domainkey", "selector2._domainkey"]
                     }
                   ) {
-                    domain {
-                      id
-                      domain
-                      lastRan
-                      selectors
-                      organizations (first: 5) {
-                        edges{ 
-                          node {
-                            id
-                            name
+                    result {
+                      ... on Domain {
+                        id
+                        domain
+                        lastRan
+                        selectors
+                        status {
+                          dkim
+                          dmarc
+                          https
+                          spf
+                          ssl
+                        }
+                        organizations(first: 5) {
+                          edges {
+                            node {
+                              id
+                              name
+                            }
                           }
                         }
+                      }
+                      ... on DomainError {
+                        code
+                        description
                       }
                     }
                   }
@@ -1801,7 +2384,7 @@ describe('create a domain', () => {
               {
                 i18n,
                 request: {
-                  language: 'en',
+                  language: 'fr',
                 },
                 query: mockedQuery,
                 collections,
@@ -1810,18 +2393,23 @@ describe('create a domain', () => {
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query: mockedQuery,
+                    query: query,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userKeyLoader,
+                    userLoaderByKey: userLoaderByKey(query),
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoader,
-                  orgLoaderByKey: orgIdLoader,
-                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                  userLoaderByKey: userKeyLoader,
+                  domainLoaderByDomain: domainLoaderByDomain(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    query,
+                    'fr',
+                    user._key,
+                    cleanseInput,
+                  ),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -1835,7 +2423,414 @@ describe('create a domain', () => {
             ])
           })
         })
-        describe('when committing transaction to database', () => {
+      })
+      describe('transaction step error occurs', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
+        })
+        describe('when creating a new domain', () => {
+          describe('when inserting new domain', () => {
+            it('returns an error message', async () => {
+              const mockedStep = jest
+                .fn()
+                .mockRejectedValue(
+                  new Error('Transaction Step Error Occurred.'),
+                )
+
+              const mockedTransaction = jest
+                .fn()
+                .mockReturnValue({ step: mockedStep })
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    createDomain(
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        domain: "test.gc.ca"
+                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      }
+                    ) {
+                      result {
+                        ... on Domain {
+                          id
+                          domain
+                          lastRan
+                          selectors
+                          status {
+                            dkim
+                            dmarc
+                            https
+                            spf
+                            ssl
+                          }
+                          organizations(first: 5) {
+                            edges {
+                              node {
+                                id
+                                name
+                              }
+                            }
+                          }
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                  },
+                  query: query,
+                  collections,
+                  transaction: mockedTransaction,
+                  userKey: user._key,
+                  auth: {
+                    checkPermission: checkPermission({
+                      userKey: user._key,
+                      query: query,
+                    }),
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
+                  loaders: {
+                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                      query,
+                      'fr',
+                      user._key,
+                      cleanseInput,
+                    ),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                  validators: { cleanseInput, slugify },
+                },
+              )
+
+              const error = [new GraphQLError('todo')]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `Transaction step error occurred for user: ${user._key} when inserting new domain: Error: Transaction Step Error Occurred.`,
+              ])
+            })
+          })
+          describe('when inserting new edge', () => {
+            it('returns an error message', async () => {
+              const mockedStep = jest
+                .fn()
+                .mockReturnValueOnce({})
+                .mockRejectedValue(
+                  new Error('Transaction Step Error Occurred.'),
+                )
+
+              const mockedTransaction = jest
+                .fn()
+                .mockReturnValue({ step: mockedStep })
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    createDomain(
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        domain: "test.gc.ca"
+                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      }
+                    ) {
+                      result {
+                        ... on Domain {
+                          id
+                          domain
+                          lastRan
+                          selectors
+                          status {
+                            dkim
+                            dmarc
+                            https
+                            spf
+                            ssl
+                          }
+                          organizations(first: 5) {
+                            edges {
+                              node {
+                                id
+                                name
+                              }
+                            }
+                          }
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                  },
+                  query: query,
+                  collections,
+                  transaction: mockedTransaction,
+                  userKey: user._key,
+                  auth: {
+                    checkPermission: checkPermission({
+                      userKey: user._key,
+                      query: query,
+                    }),
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
+                  loaders: {
+                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                      query,
+                      'fr',
+                      user._key,
+                      cleanseInput,
+                    ),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                  validators: { cleanseInput, slugify },
+                },
+              )
+
+              const error = [new GraphQLError('todo')]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `Transaction step error occurred for user: ${user._key} when inserting new domain edge: Error: Transaction Step Error Occurred.`,
+              ])
+            })
+          })
+        })
+        describe('when domain already exists', () => {
+          beforeEach(async () => {
+            await collections.domains.save({
+              domain: 'test.gc.ca',
+              selectors: [],
+            })
+          })
+          describe('when upserting domain', () => {
+            it('returns an error message', async () => {
+              const mockedStep = jest
+                .fn()
+                .mockRejectedValue(
+                  new Error('Transaction Step Error Occurred.'),
+                )
+
+              const mockedTransaction = jest
+                .fn()
+                .mockReturnValue({ step: mockedStep })
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    createDomain(
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        domain: "test.gc.ca"
+                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      }
+                    ) {
+                      result {
+                        ... on Domain {
+                          id
+                          domain
+                          lastRan
+                          selectors
+                          status {
+                            dkim
+                            dmarc
+                            https
+                            spf
+                            ssl
+                          }
+                          organizations(first: 5) {
+                            edges {
+                              node {
+                                id
+                                name
+                              }
+                            }
+                          }
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                  },
+                  query: query,
+                  collections,
+                  transaction: mockedTransaction,
+                  userKey: user._key,
+                  auth: {
+                    checkPermission: checkPermission({
+                      userKey: user._key,
+                      query: query,
+                    }),
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
+                  loaders: {
+                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                      query,
+                      'fr',
+                      user._key,
+                      cleanseInput,
+                    ),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                  validators: { cleanseInput, slugify },
+                },
+              )
+
+              const error = [new GraphQLError('todo')]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `Transaction step error occurred for user: ${user._key} when inserting domain selectors: Error: Transaction Step Error Occurred.`,
+              ])
+            })
+          })
+          describe('when inserting edge to new org', () => {
+            it('returns an error message', async () => {
+              const mockedStep = jest
+                .fn()
+                .mockReturnValueOnce({})
+                .mockRejectedValue(
+                  new Error('Transaction Step Error Occurred.'),
+                )
+
+              const mockedTransaction = jest
+                .fn()
+                .mockReturnValue({ step: mockedStep })
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    createDomain(
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        domain: "test.gc.ca"
+                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      }
+                    ) {
+                      result {
+                        ... on Domain {
+                          id
+                          domain
+                          lastRan
+                          selectors
+                          status {
+                            dkim
+                            dmarc
+                            https
+                            spf
+                            ssl
+                          }
+                          organizations(first: 5) {
+                            edges {
+                              node {
+                                id
+                                name
+                              }
+                            }
+                          }
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                  },
+                  query: query,
+                  collections,
+                  transaction: mockedTransaction,
+                  userKey: user._key,
+                  auth: {
+                    checkPermission: checkPermission({
+                      userKey: user._key,
+                      query: query,
+                    }),
+                    userRequired: userRequired({
+                      userKey: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
+                  },
+                  loaders: {
+                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                      query,
+                      'fr',
+                      user._key,
+                      cleanseInput,
+                    ),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                  validators: { cleanseInput, slugify },
+                },
+              )
+
+              const error = [new GraphQLError('todo')]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `Transaction step error occurred for user: ${user._key} when inserting domain edge: Error: Transaction Step Error Occurred.`,
+              ])
+            })
+          })
+        })
+      })
+      describe('transaction commit error occurs', () => {
+        describe('when committing transaction', () => {
           beforeEach(async () => {
             await collections.affiliations.save({
               _from: org._id,
@@ -1844,67 +2839,73 @@ describe('create a domain', () => {
             })
           })
           it('returns an error message', async () => {
-            const domainLoader = domainLoaderByDomain(query)
-            const orgIdLoader = orgLoaderByKey(query, 'en')
-            const userKeyLoader = userLoaderByKey(query)
-            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
-              query,
-              'en',
-              user._key,
-              cleanseInput,
-            )
+            const mockedStep = jest.fn().mockReturnValueOnce({})
 
-            const mockedTransaction = jest.fn().mockReturnValueOnce({
-              step() {
-                return 'user'
-              },
-              commit() {
-                throw new Error('Database error occurred.')
-              },
-            })
+            const mockedCommit = jest
+              .fn()
+              .mockRejectedValue(
+                new Error('Transaction Commit Error Occurred.'),
+              )
+
+            const mockedTransaction = jest
+              .fn()
+              .mockReturnValue({ step: mockedStep, commit: mockedCommit })
 
             const response = await graphql(
               schema,
               `
-                mutation {
-                  createDomain(
-                    input: {
-                      orgId: "${toGlobalId('organizations', org._key)}"
-                      domain: "test.gc.ca"
-                      selectors: ["selector1._domainkey", "selector2._domainkey"]
-                    }
-                  ) {
-                    domain {
-                      id
-                      domain
-                      lastRan
-                      selectors
-                      organizations (first: 5) {
-                        edges{ 
-                          node {
-                            id
-                            name
+                  mutation {
+                    createDomain(
+                      input: {
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        domain: "test.gc.ca"
+                        selectors: ["selector1._domainkey", "selector2._domainkey"]
+                      }
+                    ) {
+                      result {
+                        ... on Domain {
+                          id
+                          domain
+                          lastRan
+                          selectors
+                          status {
+                            dkim
+                            dmarc
+                            https
+                            spf
+                            ssl
                           }
+                          organizations(first: 5) {
+                            edges {
+                              node {
+                                id
+                                name
+                              }
+                            }
+                          }
+                        }
+                        ... on DomainError {
+                          code
+                          description
                         }
                       }
                     }
                   }
-                }
-              `,
+                `,
               null,
               {
                 i18n,
                 request: {
-                  language: 'en',
+                  language: 'fr',
                 },
-                query,
+                query: query,
                 collections,
                 transaction: mockedTransaction,
                 userKey: user._key,
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query,
+                    query: query,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
@@ -1912,10 +2913,15 @@ describe('create a domain', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoader,
-                  orgLoaderByKey: orgIdLoader,
-                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                  userLoaderByKey: userKeyLoader,
+                  domainLoaderByDomain: domainLoaderByDomain(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    query,
+                    'fr',
+                    user._key,
+                    cleanseInput,
+                  ),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -1925,7 +2931,7 @@ describe('create a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while committing create domain transaction: Error: Database error occurred.`,
+              `Transaction commit error occurred while user: ${user._key} was creating domain: Error: Transaction Commit Error Occurred.`,
             ])
           })
         })

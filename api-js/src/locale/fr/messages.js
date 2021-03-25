@@ -150,6 +150,7 @@
     'Unable to authenticate. Please try again.': 'todo',
     'Unable to check permission. Please try again.': 'todo',
     'Unable to create domain in unknown organization.': 'todo',
+    'Unable to create domain, organization has already claimed it.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
     'Unable to dispatch one time scan. Please try again.': 'todo',

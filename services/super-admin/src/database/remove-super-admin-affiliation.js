@@ -13,7 +13,7 @@ const removeSuperAdminAffiliation = async ({
   const trx = await transaction(collectionStrings)
 
   try {
-    await trx.run(async () => {
+    await trx.step(async () => {
       await query`
         FOR affiliation IN affiliations
           FILTER affiliation.defaultSA == true
@@ -23,7 +23,7 @@ const removeSuperAdminAffiliation = async ({
     })
   } catch (err) {
     throw new Error(
-      `Transaction run error occurred well removing super admin affiliation: ${err}`,
+      `Transaction step error occurred well removing super admin affiliation: ${err}`,
     )
   }
 

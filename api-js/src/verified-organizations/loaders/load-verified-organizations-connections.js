@@ -73,7 +73,7 @@ export const verifiedOrgLoaderConnections = (
         orgField = aql`org.summaries.web.total`
       } else if (orderBy.field === 'domain-count') {
         documentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND DOCUMENT(organizations, ${afterId})._id claims RETURN e._to)`
-        orgField = aql`COUNT(domains)`
+        orgField = aql`COUNT(orgDomains)`
       }
 
       afterTemplate = aql`
@@ -146,7 +146,7 @@ export const verifiedOrgLoaderConnections = (
         orgField = aql`org.summaries.web.total`
       } else if (orderBy.field === 'domain-count') {
         documentField = aql`COUNT(FOR v, e IN 1..1 OUTBOUND DOCUMENT(organizations, ${beforeId})._id claims RETURN e._to)`
-        orgField = aql`COUNT(domains)`
+        orgField = aql`COUNT(orgDomains)`
       }
 
       beforeTemplate = aql`
@@ -358,62 +358,63 @@ export const verifiedOrgLoaderConnections = (
   let organizationInfoCursor
   try {
     organizationInfoCursor = await query`
-    LET verifiedOrgs = FLATTEN(
-      FOR org IN organizations
-        FILTER org.verified == true
-        RETURN org._key
-    )
+      WITH claims, domains, organizations
+      LET verifiedOrgs = FLATTEN(
+        FOR org IN organizations
+          FILTER org.verified == true
+          RETURN org._key
+      )
 
-    LET retrievedOrgs = (
-      FOR org IN organizations
-        FILTER org._key IN verifiedOrgs
-        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        ${afterTemplate} 
-        ${beforeTemplate}
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE(
-          {
-            _id: org._id,
-            _key: org._key,
-            id: org._key,
-            _rev: org._rev,
-            _type: "verifiedOrganization",
-            verified: org.verified,
-            domainCount: COUNT(domains),
-            summaries: org.summaries 
-          }, 
-          TRANSLATE(${language}, org.orgDetails)
-        )
-    )
+      LET retrievedOrgs = (
+        FOR org IN organizations
+          FILTER org._key IN verifiedOrgs
+          LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          ${afterTemplate} 
+          ${beforeTemplate}
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE(
+            {
+              _id: org._id,
+              _key: org._key,
+              id: org._key,
+              _rev: org._rev,
+              _type: "verifiedOrganization",
+              verified: org.verified,
+              domainCount: COUNT(orgDomains),
+              summaries: org.summaries 
+            }, 
+            TRANSLATE(${language}, org.orgDetails)
+          )
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR org IN organizations
-        FILTER org._key IN verifiedOrgs
-        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        ${hasNextPageFilter}
-        SORT ${sortByField} org._key ${sortString} LIMIT 1
-        RETURN org
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR org IN organizations
-        FILTER org._key IN verifiedOrgs
-        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} org._key ${sortString} LIMIT 1
-        RETURN org
-    ) > 0 ? true : false)
-    
-    RETURN { 
-      "organizations": retrievedOrgs,
-      "totalCount": LENGTH(verifiedOrgs),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedOrgs)._key, 
-      "endKey": LAST(retrievedOrgs)._key 
-    }
+      LET hasNextPage = (LENGTH(
+        FOR org IN organizations
+          FILTER org._key IN verifiedOrgs
+          LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          ${hasNextPageFilter}
+          SORT ${sortByField} org._key ${sortString} LIMIT 1
+          RETURN org
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR org IN organizations
+          FILTER org._key IN verifiedOrgs
+          LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} org._key ${sortString} LIMIT 1
+          RETURN org
+      ) > 0 ? true : false)
+      
+      RETURN { 
+        "organizations": retrievedOrgs,
+        "totalCount": LENGTH(verifiedOrgs),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedOrgs)._key, 
+        "endKey": LAST(retrievedOrgs)._key 
+      }
     `
   } catch (err) {
     console.error(

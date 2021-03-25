@@ -111,58 +111,6 @@ describe('given the load domain connection using org id function', () => {
   })
 
   describe('given a successful load', () => {
-    describe('using no cursor', () => {
-      it('returns multiple domains', async () => {
-        const connectionLoader = domainLoaderConnectionsByOrgId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {
-          first: 10,
-        }
-        const domains = await connectionLoader({
-          orgId: org._id,
-          ...connectionArgs,
-        })
-
-        const domainLoader = domainLoaderByKey(query)
-        const expectedDomains = await domainLoader.loadMany([
-          domain._key,
-          domainTwo._key,
-        ])
-
-        expectedDomains[0].id = expectedDomains[0]._key
-        expectedDomains[1].id = expectedDomains[1]._key
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('domains', expectedDomains[0]._key),
-              node: {
-                ...expectedDomains[0],
-              },
-            },
-            {
-              cursor: toGlobalId('domains', expectedDomains[1]._key),
-              node: {
-                ...expectedDomains[1],
-              },
-            },
-          ],
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('domains', expectedDomains[0]._key),
-            endCursor: toGlobalId('domains', expectedDomains[1]._key),
-          },
-          totalCount: 2,
-        }
-
-        expect(domains).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns a domain', async () => {
         const connectionLoader = domainLoaderConnectionsByOrgId(

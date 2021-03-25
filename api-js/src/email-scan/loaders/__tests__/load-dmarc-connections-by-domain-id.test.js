@@ -87,63 +87,7 @@ describe('when given the load dmarc connection function', () => {
         _from: domain._id,
       })
     })
-    describe('using no cursor', () => {
-      it('returns multiple dmarc scans', async () => {
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
 
-        const connectionArgs = {
-          first: 5,
-        }
-
-        const dmarcScans = await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
-        })
-
-        const dkimLoader = dmarcLoaderByKey(query)
-        const expectedDmarcScans = await dkimLoader.loadMany([
-          dmarcScan1._key,
-          dmarcScan2._key,
-        ])
-
-        expectedDmarcScans[0].id = expectedDmarcScans[0]._key
-        expectedDmarcScans[1].id = expectedDmarcScans[1]._key
-
-        expectedDmarcScans[0].domainId = domain._id
-        expectedDmarcScans[1].domainId = domain._id
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
-              node: {
-                ...expectedDmarcScans[0],
-              },
-            },
-            {
-              cursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
-              node: {
-                ...expectedDmarcScans[1],
-              },
-            },
-          ],
-          totalCount: 2,
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
-            endCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
-          },
-        }
-
-        expect(dmarcScans).toEqual(expectedStructure)
-      })
-    })
     describe('using after cursor', () => {
       it('returns dmarc scan(s) after a given node id', async () => {
         const connectionLoader = dmarcLoaderConnectionsByDomainId(

@@ -29,6 +29,7 @@
       'Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01',
     'Account Settings': 'Account Settings',
     'Account created.': 'Account created.',
+    Acronym: 'Acronym',
     'Add Domain': 'Add Domain',
     'Admin Portal': 'Admin Portal',
     'Admin Profile': 'Admin Profile',
@@ -238,6 +239,8 @@
     'Implementation Status:': 'Implementation Status:',
     'Incorrect authenticate.result typename.':
       'Incorrect authenticate.result typename.',
+    'Incorrect inviteUserToOrg.result typename.':
+      'Incorrect inviteUserToOrg.result typename.',
     'Incorrect resetPassword.result typename.':
       'Incorrect resetPassword.result typename.',
     'Incorrect send method received.': 'Incorrect send method received.',
@@ -279,6 +282,7 @@
     'Missing from guide- need v1.1': 'Missing from guide- need v1.1',
     'More than 10 lookups - Follow implementation guide':
       'More than 10 lookups - Follow implementation guide',
+    Name: 'Name',
     'New Display Name:': 'New Display Name:',
     'New Domain Url': 'New Domain Url',
     'New Domain Url:': 'New Domain Url:',
@@ -457,6 +461,7 @@
     'Select an organization to view admin options':
       'Select an organization to view admin options',
     September: 'September',
+    Services: 'Services',
     'Services: {domainCount}': ['Services: ', ['domainCount']],
     'Show {pageSize}': ['Show ', ['pageSize']],
     'Showing data for period:': 'Showing data for period:',
@@ -467,6 +472,7 @@
     'Sign in with your username and password.':
       'Sign in with your username and password.',
     'Skip to main content': 'Skip to main content',
+    'Sort by:': 'Sort by:',
     'Source IP Address': 'Source IP Address',
     Submit: 'Submit',
     Summary: 'Summary',
@@ -499,6 +505,7 @@
       'Unable to create account, please try again.',
     'Unable to create your account, please try again.':
       'Unable to create your account, please try again.',
+    'Unable to invite user.': 'Unable to invite user.',
     'Unable to request scan, please try again.':
       'Unable to request scan, please try again.',
     'Unable to reset your password, please try again.':
@@ -520,6 +527,8 @@
       'Unable to update to your username, please try again.',
     'Unable to update your password, please try again.':
       'Unable to update your password, please try again.',
+    'Unable to update your phone number, please try again.':
+      'Unable to update your phone number, please try again.',
     'Unable to verify your phone number, please try again.':
       'Unable to verify your phone number, please try again.',
     'Use DKIM to validate outbound email sent from your custom domain':
@@ -536,6 +545,7 @@
       'Verification TXT records for some/all 3rd party senders missing',
     'Verification code must only contains numbers':
       'Verification code must only contains numbers',
+    Verified: 'Verified',
     Verify: 'Verify',
     'Vulnerability-ccs-injection': 'Vulnerability-ccs-injection',
     'Vulnerability-heartbleed': 'Vulnerability-heartbleed',

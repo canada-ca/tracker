@@ -1,9 +1,9 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-const bcrypt = require('bcrypt')
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const bcrypt = require('bcryptjs')
+const { ensure, dbNameFromFile } = require('arango-tools')
 
-const { makeMigrations } = require('../../migrations')
+const { databaseOptions } = require('../../database-options')
 const { createSuperAdminAccount } = require('../database')
 
 describe('given the createSuperAdminAccount function', () => {
@@ -12,14 +12,17 @@ describe('given the createSuperAdminAccount function', () => {
   const mockedError = (output) => consoleErrorOutput.push(output)
   const mockedInfo = (output) => consoleInfoOutput.push(output)
 
-  let query, drop, truncate, migrate, collections, transaction
+  let query, drop, truncate, collections, transaction
 
   beforeAll(async () => {
     // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   beforeEach(async () => {
@@ -37,7 +40,11 @@ describe('given the createSuperAdminAccount function', () => {
 
   describe('given a successful creation', () => {
     it('returns the super admin', async () => {
-      const superAdminAccount = await createSuperAdminAccount({ collections, transaction, bcrypt })
+      const superAdminAccount = await createSuperAdminAccount({
+        collections,
+        transaction,
+        bcrypt,
+      })
 
       const userCursor = await query`
         FOR user IN users
@@ -49,10 +56,10 @@ describe('given the createSuperAdminAccount function', () => {
     })
   })
   describe('given an unsuccessful creation', () => {
-    describe('transaction run error occurs', () => {
+    describe('transaction step error occurs', () => {
       it('throws an error', async () => {
         const mockedTransaction = jest.fn().mockReturnValueOnce({
-          run() {
+          step() {
             throw new Error('Database error occurred.')
           },
           commit() {
@@ -69,7 +76,7 @@ describe('given the createSuperAdminAccount function', () => {
         } catch (err) {
           expect(err).toEqual(
             new Error(
-              'Transaction run error occurred while creating new super admin account: Error: Database error occurred.',
+              'Transaction step error occurred while creating new super admin account: Error: Database error occurred.',
             ),
           )
         }
@@ -78,7 +85,7 @@ describe('given the createSuperAdminAccount function', () => {
     describe('transaction commit error occurs', () => {
       it('throws an error', async () => {
         const mockedTransaction = jest.fn().mockReturnValueOnce({
-          run() {
+          step() {
             return 'string'
           },
           commit() {

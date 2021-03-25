@@ -249,6 +249,7 @@ export const verifiedDomainLoaderConnections = (
   let requestedDomainInfo
   try {
     requestedDomainInfo = await query`
+    WITH claims, domains, organizations
     LET verifiedOrgs = (FOR org IN organizations FILTER org.verified == true RETURN org._id)
 
     LET domainIds = UNIQUE(FLATTEN(

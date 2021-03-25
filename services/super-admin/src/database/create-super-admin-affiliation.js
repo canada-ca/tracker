@@ -15,7 +15,7 @@ const createSuperAdminAffiliation = async ({
 
   let affiliation
   try {
-    await trx.run(async () => {
+    await trx.step(async () => {
       affiliation = await collections.affiliations.save({
         _from: org._id,
         _to: admin._id,
@@ -25,7 +25,7 @@ const createSuperAdminAffiliation = async ({
     })
   } catch (err) {
     throw new Error(
-      `Transaction run error occurred while creating new super admin affiliation: ${err}`,
+      `Transaction step error occurred while creating new super admin affiliation: ${err}`,
     )
   }
 

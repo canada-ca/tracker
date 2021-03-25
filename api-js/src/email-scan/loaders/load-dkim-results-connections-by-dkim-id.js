@@ -198,44 +198,45 @@ export const dkimResultsLoaderConnectionByDkimId = (
   let dkimResultsCursor
   try {
     dkimResultsCursor = await query`
-    LET dkimResultKeys = (FOR v, e IN 1 OUTBOUND ${dkimId} dkimToDkimResults RETURN v._key)
+      WITH dkim, dkimResults, dkimToDkimResults
+      LET dkimResultKeys = (FOR v, e IN 1 OUTBOUND ${dkimId} dkimToDkimResults RETURN v._key)
 
-    LET retrievedDkimResults = (
-      FOR dkimResult IN dkimResults
-        FILTER dkimResult._key IN dkimResultKeys
-        ${afterTemplate}
-        ${beforeTemplate}
+      LET retrievedDkimResults = (
+        FOR dkimResult IN dkimResults
+          FILTER dkimResult._key IN dkimResultKeys
+          ${afterTemplate}
+          ${beforeTemplate}
 
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: dkimResult._key, _type: "dkimResult" }, dkimResult)
-    )
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: dkimResult._key, _type: "dkimResult" }, dkimResult)
+      )
 
-    LET hasNextPage = (LENGTH(
-      FOR dkimResult IN dkimResults
-        FILTER dkimResult._key IN dkimResultKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
-        RETURN dkimResult
-    ) > 0 ? true : false)
-    
-    LET hasPreviousPage = (LENGTH(
-      FOR dkimResult IN dkimResults
-        FILTER dkimResult._key IN dkimResultKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
-        RETURN dkimResult
-    ) > 0 ? true : false)
+      LET hasNextPage = (LENGTH(
+        FOR dkimResult IN dkimResults
+          FILTER dkimResult._key IN dkimResultKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
+          RETURN dkimResult
+      ) > 0 ? true : false)
+      
+      LET hasPreviousPage = (LENGTH(
+        FOR dkimResult IN dkimResults
+          FILTER dkimResult._key IN dkimResultKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} dkimResult._key ${sortString} LIMIT 1
+          RETURN dkimResult
+      ) > 0 ? true : false)
 
-    RETURN { 
-      "dkimResults": retrievedDkimResults,
-      "totalCount": LENGTH(dkimResultKeys),
-      "hasNextPage": hasNextPage, 
-      "hasPreviousPage": hasPreviousPage, 
-      "startKey": FIRST(retrievedDkimResults)._key, 
-      "endKey": LAST(retrievedDkimResults)._key 
-    }
+      RETURN { 
+        "dkimResults": retrievedDkimResults,
+        "totalCount": LENGTH(dkimResultKeys),
+        "hasNextPage": hasNextPage, 
+        "hasPreviousPage": hasPreviousPage, 
+        "startKey": FIRST(retrievedDkimResults)._key, 
+        "endKey": LAST(retrievedDkimResults)._key 
+      }
     `
   } catch (err) {
     console.error(

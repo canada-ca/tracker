@@ -13,18 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/DomainsPage.js:131
-#: src/LandingPage.js:53
-#: src/OrganizationDetails.js:170
-#: src/OrganizationSummary.js:42
-#: src/Organizations.js:108
-#~ msgid "*All data represented is mocked for demonstration purposes"
-#~ msgstr "*All data represented is mocked for demonstration purposes"
-
-#: src/AdminPage.js:108
-#~ msgid "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
-#~ msgstr "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
-
 #: src/guidanceTagConstants.js:5
 msgid "3.2.2 Third Parties and DKIM"
 msgstr "3.2.2 Third Parties and DKIM"
@@ -65,8 +53,8 @@ msgstr "A.5 Maintain"
 msgid "A.5.3 Rotate DKIM Keys"
 msgstr "A.5.3 Rotate DKIM Keys"
 
-#: src/UserList.js:221
-#: src/UserList.js:279
+#: src/UserList.js:244
+#: src/UserList.js:302
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -111,6 +99,10 @@ msgstr "Account Settings"
 #: src/CreateUserPage.js:74
 msgid "Account created."
 msgstr "Account created."
+
+#: src/Organizations.js:132
+msgid "Acronym"
+msgstr "Acronym"
 
 #: src/AdminDomains.js:232
 msgid "Add Domain"
@@ -166,11 +158,11 @@ msgstr "An error occurred while verifying your phone number."
 #: src/AdminDomains.js:212
 #: src/TwoFactorAuthenticatePage.js:34
 #: src/UserList.js:94
-#: src/UserList.js:163
+#: src/UserList.js:186
 msgid "An error occurred."
 msgstr "An error occurred."
 
-#: src/UserList.js:292
+#: src/UserList.js:315
 msgid "Apply"
 msgstr "Apply"
 
@@ -229,8 +221,8 @@ msgid "CNAME-DMARC"
 msgstr "CNAME-DMARC"
 
 #: src/WelcomeMessage.js:19
-msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
-msgstr "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
+msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure."
+msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure."
 
 #: src/guidanceTagConstants.js:493
 msgid "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance."
@@ -441,10 +433,6 @@ msgstr "DMARC Not Implemented"
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
-#: src/DomainCard.js:165
-#~ msgid "DMARC Report <0/>"
-#~ msgstr "DMARC Report <0/>"
-
 #: src/SummaryGroup.js:44
 msgid "DMARC fail"
 msgstr "DMARC fail"
@@ -611,7 +599,7 @@ msgstr "Email Validated"
 msgid "Email cannot be empty"
 msgstr "Email cannot be empty"
 
-#: src/UserList.js:105
+#: src/UserList.js:106
 msgid "Email invitation sent to {addedUserName}"
 msgstr "Email invitation sent to {addedUserName}"
 
@@ -733,10 +721,6 @@ msgstr "Guidance Tags"
 #: src/GuidanceTagDetails.js:74
 msgid "Guidance:"
 msgstr "Guidance:"
-
-#: src/DmarcReportPage.js:614
-#~ msgid "Guidance<0/>"
-#~ msgstr "Guidance<0/>"
 
 #: src/PolicyComplianceDetails.js:36
 msgid "HSTS Age:"
@@ -862,6 +846,10 @@ msgstr "Implementation Status:"
 msgid "Incorrect authenticate.result typename."
 msgstr "Incorrect authenticate.result typename."
 
+#: src/UserList.js:126
+msgid "Incorrect inviteUserToOrg.result typename."
+msgstr "Incorrect inviteUserToOrg.result typename."
+
 #: src/ResetPasswordPage.js:61
 msgid "Incorrect resetPassword.result typename."
 msgstr "Incorrect resetPassword.result typename."
@@ -877,6 +865,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/ResetPasswordPage.js:60
 #: src/SignInPage.js:98
 #: src/TwoFactorAuthenticatePage.js:80
+#: src/UserList.js:125
 msgid "Incorrect send method received."
 msgstr "Incorrect send method received."
 
@@ -928,7 +917,7 @@ msgstr "Invalid percent"
 msgid "Invalid public key"
 msgstr "Invalid public key"
 
-#: src/UserList.js:235
+#: src/UserList.js:258
 msgid "Invite User"
 msgstr "Invite User"
 
@@ -1062,6 +1051,10 @@ msgstr "Missing from guide- need v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "More than 10 lookups - Follow implementation guide"
 
+#: src/Organizations.js:129
+msgid "Name"
+msgstr "Name"
+
 #: src/EditableUserDisplayName.js:164
 msgid "New Display Name:"
 msgstr "New Display Name:"
@@ -1103,7 +1096,7 @@ msgstr "Next"
 msgid "No Domains"
 msgstr "No Domains"
 
-#: src/Organizations.js:68
+#: src/Organizations.js:72
 msgid "No Organizations"
 msgstr "No Organizations"
 
@@ -1155,7 +1148,7 @@ msgstr "No domains scanned yet."
 msgid "No scan data for this organization."
 msgstr "No scan data for this organization."
 
-#: src/UserList.js:243
+#: src/UserList.js:266
 msgid "No users in this organization"
 msgstr "No users in this organization"
 
@@ -1188,17 +1181,13 @@ msgstr "One or more ciphers in use are not compliant with guidelines"
 msgid "Organization Details"
 msgstr "Organization Details"
 
-#: src/AdminPanel.js:41
-#~ msgid "Organization Info"
-#~ msgstr "Organization Info"
-
 #: src/AdminPage.js:91
 msgid "Organization:"
 msgstr "Organization:"
 
 #: src/App.js:65
-#: src/Organizations.js:50
-#: src/Organizations.js:57
+#: src/Organizations.js:65
+#: src/Organizations.js:100
 msgid "Organizations"
 msgstr "Organizations"
 
@@ -1353,10 +1342,6 @@ msgstr "Password:"
 msgid "Passwords must match"
 msgstr "Passwords must match"
 
-#: src/PolicyComplianceDetails.js:57
-#~ msgid "Phase:"
-#~ msgstr "Phase:"
-
 #: src/EditableUserTFAMethod.js:137
 msgid "Phone"
 msgstr "Phone"
@@ -1421,7 +1406,7 @@ msgstr "Preloaded Status:"
 msgid "Previous"
 msgstr "Previous"
 
-#: src/App.js:201
+#: src/App.js:202
 #: src/FloatingMenu.js:175
 msgid "Privacy"
 msgstr "Privacy"
@@ -1518,7 +1503,7 @@ msgstr "Results for scans of web technologies (SSL, HTTPS)."
 msgid "Role updated"
 msgstr "Role updated"
 
-#: src/UserList.js:263
+#: src/UserList.js:286
 msgid "Role:"
 msgstr "Role:"
 
@@ -1605,7 +1590,7 @@ msgstr "SSL-missing"
 msgid "SSL-rc4"
 msgstr "SSL-rc4"
 
-#: src/UserList.js:283
+#: src/UserList.js:306
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
@@ -1646,11 +1631,11 @@ msgstr "Search"
 msgid "Search for a domain"
 msgstr "Search for a domain"
 
-#: src/UserList.js:208
+#: src/UserList.js:231
 msgid "Search for a user"
 msgstr "Search for a user"
 
-#: src/Organizations.js:64
+#: src/Organizations.js:112
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
@@ -1677,6 +1662,10 @@ msgstr "Select an organization to view admin options"
 #: src/months.js:12
 msgid "September"
 msgstr "September"
+
+#: src/Organizations.js:135
+msgid "Services"
+msgstr "Services"
 
 #: src/OrganizationCard.js:93
 msgid "Services: {domainCount}"
@@ -1720,6 +1709,10 @@ msgstr "Sign in with your username and password."
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
+#: src/Organizations.js:116
+msgid "Sort by:"
+msgstr "Sort by:"
+
 #: src/DmarcReportPage.js:262
 msgid "Source IP Address"
 msgstr "Source IP Address"
@@ -1732,14 +1725,6 @@ msgstr "Submit"
 #: src/OrganizationDetails.js:85
 msgid "Summary"
 msgstr "Summary"
-
-#: src/LandingPage.js:35
-msgid "Summary Cards"
-msgstr "Summary Cards"
-
-#: src/GuidanceTagDetails.js:101
-#~ msgid "Summary:"
-#~ msgstr "Summary:"
 
 #: src/guidanceTagConstants.js:419
 msgid "T-enabled"
@@ -1761,7 +1746,7 @@ msgstr "TXT-DMARC-enabled"
 msgid "TXT-DMARC-missing"
 msgstr "TXT-DMARC-missing"
 
-#: src/App.js:211
+#: src/App.js:212
 #: src/FloatingMenu.js:185
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
@@ -1796,8 +1781,8 @@ msgid "Total users"
 msgstr "Total users"
 
 #: src/WelcomeMessage.js:15
-msgid "Track Web Security Compliance"
-msgstr "Track Web Security Compliance"
+msgid "Track Digital Security"
+msgstr "Track Digital Security"
 
 #: src/TopBanner.js:36
 msgid "Tracker Logo"
@@ -1807,8 +1792,8 @@ msgstr "Tracker Logo"
 msgid "Two Factor Authentication"
 msgstr "Two Factor Authentication"
 
-#: src/UserList.js:220
-#: src/UserList.js:276
+#: src/UserList.js:243
+#: src/UserList.js:299
 msgid "USER"
 msgstr "USER"
 
@@ -1823,6 +1808,10 @@ msgstr "Unable to create account, please try again."
 #: src/CreateUserPage.js:54
 msgid "Unable to create your account, please try again."
 msgstr "Unable to create your account, please try again."
+
+#: src/UserList.js:116
+msgid "Unable to invite user."
+msgstr "Unable to invite user."
 
 #: src/ScanDomain.js:32
 msgid "Unable to request scan, please try again."
@@ -1856,8 +1845,8 @@ msgid "Unable to update to your display name, please try again."
 msgstr "Unable to update to your display name, please try again."
 
 #: src/EditableUserPhoneNumber.js:64
-msgid "Unable to update to your phone number, please try again."
-msgstr "Unable to update to your phone number, please try again."
+#~ msgid "Unable to update to your phone number, please try again."
+#~ msgstr "Unable to update to your phone number, please try again."
 
 #: src/EditableUserLanguage.js:52
 msgid "Unable to update to your preferred language, please try again."
@@ -1870,6 +1859,10 @@ msgstr "Unable to update to your username, please try again."
 #: src/EditableUserPassword.js:73
 msgid "Unable to update your password, please try again."
 msgstr "Unable to update your password, please try again."
+
+#: src/EditableUserPhoneNumber.js:64
+msgid "Unable to update your phone number, please try again."
+msgstr "Unable to update your phone number, please try again."
 
 #: src/EditableUserPhoneNumber.js:120
 msgid "Unable to verify your phone number, please try again."
@@ -1884,8 +1877,8 @@ msgstr "Use DKIM to validate outbound email sent from your custom domain"
 msgid "User Affiliations"
 msgstr "User Affiliations"
 
-#: src/UserList.js:118
-#: src/UserList.js:174
+#: src/UserList.js:141
+#: src/UserList.js:197
 msgid "User List"
 msgstr "User List"
 
@@ -1894,7 +1887,7 @@ msgstr "User List"
 #~ msgid "User Profile"
 #~ msgstr "User Profile"
 
-#: src/UserList.js:104
+#: src/UserList.js:105
 msgid "User invited"
 msgstr "User invited"
 
@@ -1917,6 +1910,10 @@ msgstr "Verification TXT records for some/all 3rd party senders missing"
 #: src/fieldRequirements.js:26
 msgid "Verification code must only contains numbers"
 msgstr "Verification code must only contains numbers"
+
+#: src/Organizations.js:138
+msgid "Verified"
+msgstr "Verified"
 
 #: src/EditableUserPhoneNumber.js:238
 msgid "Verify"

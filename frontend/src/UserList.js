@@ -41,6 +41,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   const {
     loading,
+    isLoadingMore,
     error,
     nodes,
     next,
@@ -69,15 +70,36 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         position: 'top-left',
       })
     },
-    onCompleted() {
-      toast({
-        title: t`Role updated`,
-        description: t`The user's role has been successfully updated`,
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
+    onCompleted({ updateUserRole }) {
+      if (updateUserRole.result.__typename === 'UpdateUserRoleResult') {
+        toast({
+          title: t`Role updated`,
+          description: t`The user's role has been successfully updated`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else if (updateUserRole.result.__typename === 'AffiliationError') {
+        toast({
+          title: t`Unable to update user role.`,
+          description: updateUserRole.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect updateUserRole.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect updateUserRole.result typename.')
+      }
     },
   })
 
@@ -99,15 +121,38 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           position: 'top-left',
         })
       },
-      onCompleted() {
-        toast({
-          title: t`User invited`,
-          description: t`Email invitation sent to ${addedUserName}`,
-          status: 'info',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
+      onCompleted({ inviteUserToOrg }) {
+        if (inviteUserToOrg.result.__typename === 'InviteUserToOrgResult') {
+          toast({
+            title: t`User invited`,
+            description: t`Email invitation sent to ${addedUserName}`,
+            status: 'info',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else if (
+          inviteUserToOrg.result.__typename === 'AffiliationError'
+        ) {
+          toast({
+            title: t`Unable to invite user.`,
+            description: inviteUserToOrg.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect inviteUserToOrg.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect inviteUserToOrg.result typename.')
+        }
       },
     },
   )
@@ -302,6 +347,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         hasPreviousPage={hasPreviousPage}
         next={next}
         previous={previous}
+        isLoadingMore={isLoadingMore}
       />
     </Stack>
   )

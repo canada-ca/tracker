@@ -65,6 +65,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
 
   const {
     loading,
+    isLoadingMore,
     error,
     nodes,
     next,
@@ -96,16 +97,37 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         position: 'top-left',
       })
     },
-    onCompleted(mutationReturnData) {
-      toast({
-        title: t`Domain added`,
-        description: t`${mutationReturnData.createDomain.domain.domain} was added to ${orgSlug}`,
-        status: 'info',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-      setDomainSearch('')
+    onCompleted({ createDomain }) {
+      if (createDomain.result.__typename === 'Domain') {
+        toast({
+          title: t`Domain added`,
+          description: t`${createDomain.domain.domain} was added to ${orgSlug}`,
+          status: 'info',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        setDomainSearch('')
+      } else if (createDomain.result.__typename === 'DomainError') {
+        toast({
+          title: t`Unable to create new domain.`,
+          description: createDomain.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect createDomain.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect createDomain.result typename.')
+      }
     },
   })
 
@@ -159,16 +181,37 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         position: 'top-left',
       })
     },
-    onCompleted(mutationReturnData) {
-      toast({
-        title: t`Domain updated`,
-        description: t`${editingDomainUrl} from ${orgSlug} successfully updated to ${mutationReturnData.updateDomain.domain.domain}`,
-        status: 'info',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-      updateOnClose()
+    onCompleted({ updateDomain }) {
+      if (updateDomain.result.__typename === 'Domain') {
+        toast({
+          title: t`Domain updated`,
+          description: t`${editingDomainUrl} from ${orgSlug} successfully updated to ${updateDomain.result.domain}`,
+          status: 'info',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        updateOnClose()
+      } else if (updateDomain.result.__typename === 'DomainError') {
+        toast({
+          title: t`Unable to update domain.`,
+          description: updateDomain.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect updateDomain.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect updateDomain.result typename.')
+      }
     },
   })
 
@@ -283,6 +326,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         hasPreviousPage={hasPreviousPage}
         next={next}
         previous={previous}
+        isLoadingMore={isLoadingMore}
       />
 
       <SlideIn in={updateIsOpen}>

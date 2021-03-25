@@ -97,6 +97,8 @@ export const dkimFailureLoaderConnectionsBySumId = (
   let requestedDkimFailureInfo
   try {
     requestedDkimFailureInfo = await query`
+      WITH dmarcSummaries
+
       LET dkimFailures = FLATTEN(
         FOR summary IN dmarcSummaries
           FILTER summary._id == ${summaryId}
