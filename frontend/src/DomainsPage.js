@@ -115,7 +115,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
 
                 <Stack isInline align="center" ml={{ md: '10%' }}>
                   <Text fontSize="md" fontWeight="bold" textAlign="center">
-                    <Trans>Sort by :</Trans>
+                    <Trans>Sort by:</Trans>
                   </Text>
                   <Select
                     width="fit-content"
