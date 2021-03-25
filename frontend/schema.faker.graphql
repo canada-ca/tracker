@@ -1407,17 +1407,28 @@ type RegularSignInResult {
   authResult: AuthResult
 }
 
+type RemoveDomainPayload {
+  # `RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.
+  result: RemoveDomainUnion!
+  clientMutationId: String
+}
+
+# This union is used with the `RemoveDomain` mutation,
+# allowing for users to remove a domain belonging to their org,
+# and support any errors that may occur
+union RemoveDomainUnion = DomainError | DomainResult
+
+# This object is used to inform the user that no errors were encountered while removing a domain.
+type DomainResult {
+  # Informs the user if the domain removal was successful.
+  status: String
+}
+
 input RemoveDomainInput {
   # The global id of the domain you wish to remove.
   domainId: ID!
   # The organization you wish to remove the domain from.
   orgId: ID!
-  clientMutationId: String
-}
-
-type RemoveDomainPayload {
-  # Status string to inform the user if the domain was successfully removed.
-  status: String!
   clientMutationId: String
 }
 
