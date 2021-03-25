@@ -1,8 +1,9 @@
 import { GraphQLID, GraphQLNonNull, GraphQLList } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
+
+import { updateDomainUnion } from '../unions'
 import { Domain, Selectors } from '../../scalars'
-import { domainType } from '../objects'
 
 export const updateDomain = new mutationWithClientMutationId({
   name: 'UpdateDomain',
@@ -29,12 +30,11 @@ export const updateDomain = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    domain: {
-      type: domainType,
-      description: 'The updated domain.',
-      resolve: async (payload) => {
-        return payload.domain
-      },
+    result: {
+      type: updateDomainUnion,
+      description:
+        '`UpdateDomainUnion` returning either a `Domain`, or `DomainError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -71,7 +71,11 @@ export const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId}, however there is no domain associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to update unknown domain.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to update unknown domain.`),
+      }
     }
 
     // Check to see if org exists
@@ -81,7 +85,11 @@ export const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however there is no org associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to update domain in an unknown org.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to update domain in an unknown org.`),
+      }
     }
 
     // Check permission
@@ -95,11 +103,13 @@ export const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however they do not have permission in that org.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(
           t`Permission Denied: Please contact organization user for help with updating this domain.`,
         ),
-      )
+      }
     }
 
     // Check to see if org has a claim to this domain
@@ -121,11 +131,13 @@ export const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however that org has no claims to that domain.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
           t`Unable to update domain that does not belong to the given organization.`,
         ),
-      )
+      }
     }
 
     // Generate list of collections names
@@ -178,10 +190,6 @@ export const updateDomain = new mutationWithClientMutationId({
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
     returnDomain.id = returnDomain._key
 
-    return {
-      domain: {
-        ...returnDomain,
-      },
-    }
+    return returnDomain
   },
 })

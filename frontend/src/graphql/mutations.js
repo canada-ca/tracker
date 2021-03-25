@@ -234,8 +234,14 @@ export const UPDATE_DOMAIN = gql`
         selectors: $selectors
       }
     ) {
-      domain {
-        domain
+      result {
+        ... on Domain {
+          domain
+        }
+        ... on DomainError {
+          code
+          description
+        }
       }
     }
   }

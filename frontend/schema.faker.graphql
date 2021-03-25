@@ -1885,6 +1885,17 @@ type TFASignInResult {
   sendMethod: String @examples(values: ["PHONE", "EMAIL"])
 }
 
+type UpdateDomainPayload {
+  # `UpdateDomainUnion` returning either a `Domain`, or `DomainError` object.
+  result: UpdateDomainUnion
+  clientMutationId: String
+}
+
+# This union is used with the `UpdateDomain` mutation,
+# allowing for users to update a domain belonging to their org,
+# and support any errors that may occur
+union UpdateDomainUnion = DomainError | Domain
+
 input UpdateDomainInput {
   # The global id of the domain that is being updated.
   domainId: ID!
@@ -1894,12 +1905,6 @@ input UpdateDomainInput {
   domain: DomainScalar
   # The updated DKIM selector strings corresponding to this domain.
   selectors: [Selector]
-  clientMutationId: String
-}
-
-type UpdateDomainPayload {
-  # The updated domain.
-  domain: Domain
   clientMutationId: String
 }
 
