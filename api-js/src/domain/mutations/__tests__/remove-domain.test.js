@@ -196,7 +196,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -229,7 +237,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                    result: {
+                      status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                    },
                   },
                 },
               }
@@ -250,7 +260,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -299,7 +317,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -393,7 +419,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -426,7 +460,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                    result: {
+                      status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                    },
                   },
                 },
               }
@@ -447,7 +483,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -496,7 +540,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -567,7 +619,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -600,7 +660,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                    result: {
+                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                    },
                   },
                 },
               }
@@ -621,7 +683,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -670,7 +740,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -733,7 +811,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -766,7 +852,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                    result: {
+                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                    },
                   },
                 },
               }
@@ -787,7 +875,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -836,7 +932,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1001,7 +1105,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1034,7 +1146,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                    result: {
+                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                    },
                   },
                 },
               }
@@ -1055,7 +1169,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1104,7 +1226,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1169,7 +1299,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1202,7 +1340,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                    result: {
+                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                    },
                   },
                 },
               }
@@ -1223,7 +1363,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1272,7 +1420,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1339,7 +1495,15 @@ describe('removing a domain', () => {
                     orgId: "${toGlobalId('organizations', 1)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on DomainResult {
+                      status
+                    }
+                    ... on DomainError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1366,9 +1530,18 @@ describe('removing a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('Unable to remove unknown domain.')]
+          const error = {
+            data: {
+              removeDomain: {
+                result: {
+                  code: 400,
+                  description: 'Unable to remove unknown domain.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to remove 1 however no domain is associated with that id.`,
           ])
@@ -1393,7 +1566,15 @@ describe('removing a domain', () => {
                     orgId: "${toGlobalId('organizations', 1)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on DomainResult {
+                      status
+                    }
+                    ... on DomainError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1420,13 +1601,18 @@ describe('removing a domain', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove domain from unknown organization.',
-            ),
-          ]
+          const error = {
+            data: {
+              removeDomain: {
+                result: {
+                  code: 400,
+                  description: 'Unable to remove domain from unknown organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to remove test-gc-ca in org: 1 however there is no organization associated with that id.`,
           ])
@@ -1489,7 +1675,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1519,13 +1713,18 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact super admin for help with removing domain.',
-              ),
-            ]
+            const error = {
+              data: {
+                removeDomain: {
+                  result: {
+                    code: 403,
+                    description: 'Permission Denied: Please contact super admin for help with removing domain.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
@@ -1550,7 +1749,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1580,13 +1787,18 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact super admin for help with removing domain.',
-              ),
-            ]
+            const error = {
+              data: {
+                removeDomain: {
+                  result: {
+                    code: 403,
+                    description: 'Permission Denied: Please contact super admin for help with removing domain.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
@@ -1604,7 +1816,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1634,13 +1854,18 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact super admin for help with removing domain.',
-              ),
-            ]
+            const error = {
+              data: {
+                removeDomain: {
+                  result: {
+                    code: 403,
+                    description: 'Permission Denied: Please contact super admin for help with removing domain.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
@@ -1704,7 +1929,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1734,13 +1967,18 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact organization admin for help with removing domain.',
-              ),
-            ]
+            const error = {
+              data: {
+                removeDomain: {
+                  result: {
+                    code: 403,
+                    description: 'Permission Denied: Please contact organization admin for help with removing domain.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat however they do not have permission in that org.`,
             ])
@@ -1758,7 +1996,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1788,13 +2034,18 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact organization admin for help with removing domain.',
-              ),
-            ]
+            const error = {
+              data: {
+                removeDomain: {
+                  result: {
+                    code: 403,
+                    description: 'Permission Denied: Please contact organization admin for help with removing domain.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat however they do not have permission in that org.`,
             ])
@@ -1875,7 +2126,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1988,7 +2247,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2064,7 +2331,15 @@ describe('removing a domain', () => {
                         orgId: "${toGlobalId('organizations', org._key)}"
                       }
                     ) {
-                      status
+                      result {
+                        ... on DomainResult {
+                          status
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2134,7 +2409,15 @@ describe('removing a domain', () => {
                         orgId: "${toGlobalId('organizations', org._key)}"
                       }
                     ) {
-                      status
+                      result {
+                        ... on DomainResult {
+                          status
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -2200,7 +2483,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2384,7 +2675,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2417,7 +2716,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `todo`,
+                    result: {
+                      status: `todo`,
+                    },
                   },
                 },
               }
@@ -2438,7 +2739,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2487,7 +2796,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2582,7 +2899,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2615,7 +2940,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `todo`,
+                    result: {
+                      status: `todo`,
+                    },
                   },
                 },
               }
@@ -2636,7 +2963,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2685,7 +3020,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2756,7 +3099,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2789,7 +3140,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `todo`,
+                    result: {
+                      status: `todo`,
+                    },
                   },
                 },
               }
@@ -2810,7 +3163,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2859,7 +3220,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2922,7 +3291,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -2955,7 +3332,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `todo`,
+                    result: {
+                      status: `todo`,
+                    },
                   },
                 },
               }
@@ -2976,7 +3355,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3025,7 +3412,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3190,7 +3585,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3223,7 +3626,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `todo`,
+                    result: {
+                      status: `todo`,
+                    },
                   },
                 },
               }
@@ -3244,7 +3649,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3293,7 +3706,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3358,7 +3779,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3391,7 +3820,9 @@ describe('removing a domain', () => {
               const expectedResponse = {
                 data: {
                   removeDomain: {
-                    status: `todo`,
+                    result: {
+                      status: `todo`,
+                    },
                   },
                 },
               }
@@ -3412,7 +3843,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3461,7 +3900,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3528,7 +3975,15 @@ describe('removing a domain', () => {
                     orgId: "${toGlobalId('organizations', 1)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on DomainResult {
+                      status
+                    }
+                    ... on DomainError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -3555,9 +4010,18 @@ describe('removing a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              removeDomain: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to remove 1 however no domain is associated with that id.`,
           ])
@@ -3582,7 +4046,15 @@ describe('removing a domain', () => {
                     orgId: "${toGlobalId('organizations', 1)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on DomainResult {
+                      status
+                    }
+                    ... on DomainError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -3609,9 +4081,18 @@ describe('removing a domain', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              removeDomain: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to remove test-gc-ca in org: 1 however there is no organization associated with that id.`,
           ])
@@ -3674,7 +4155,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3704,9 +4193,18 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                removeDomain: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
@@ -3731,7 +4229,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3761,9 +4267,18 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                removeDomain: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
@@ -3781,7 +4296,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3811,9 +4334,18 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                removeDomain: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat but does not have permission to remove a domain from a verified check org.`,
             ])
@@ -3877,7 +4409,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3907,9 +4447,18 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                removeDomain: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat however they do not have permission in that org.`,
             ])
@@ -3927,7 +4476,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -3957,9 +4514,18 @@ describe('removing a domain', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                removeDomain: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove test-gc-ca in treasury-board-secretariat however they do not have permission in that org.`,
             ])
@@ -4034,7 +4600,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -4137,7 +4711,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -4211,7 +4793,15 @@ describe('removing a domain', () => {
                         orgId: "${toGlobalId('organizations', org._key)}"
                       }
                     ) {
-                      status
+                      result {
+                        ... on DomainResult {
+                          status
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -4279,7 +4869,15 @@ describe('removing a domain', () => {
                         orgId: "${toGlobalId('organizations', org._key)}"
                       }
                     ) {
-                      status
+                      result {
+                        ... on DomainResult {
+                          status
+                        }
+                        ... on DomainError {
+                          code
+                          description
+                        }
+                      }
                     }
                   }
                 `,
@@ -4343,7 +4941,15 @@ describe('removing a domain', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on DomainResult {
+                        status
+                      }
+                      ... on DomainError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,

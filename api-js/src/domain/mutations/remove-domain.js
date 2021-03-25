@@ -1,6 +1,8 @@
-import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql'
+import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
+
+import { removeDomainUnion } from '../unions'
 
 export const removeDomain = new mutationWithClientMutationId({
   name: 'RemoveDomain',
@@ -16,13 +18,11 @@ export const removeDomain = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLNonNull(GraphQLString),
+    result: {
+      type: GraphQLNonNull(removeDomainUnion),
       description:
-        'Status string to inform the user if the domain was successfully removed.',
-      resolve: async (payload) => {
-        return payload.status
-      },
+        '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -55,7 +55,11 @@ export const removeDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove ${domainId} however no domain is associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to remove unknown domain.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to remove unknown domain.`),
+      }
     }
 
     // Get Org from db
@@ -66,9 +70,13 @@ export const removeDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove ${domain.slug} in org: ${orgId} however there is no organization associated with that id.`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove domain from unknown organization.`),
-      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
+          t`Unable to remove domain from unknown organization.`,
+        ),
+      }
     }
 
     // Get permission
@@ -79,22 +87,26 @@ export const removeDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove ${domain.slug} in ${org.slug} but does not have permission to remove a domain from a verified check org.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(
           t`Permission Denied: Please contact super admin for help with removing domain.`,
         ),
-      )
+      }
     }
 
     if (permission !== 'super_admin' && permission !== 'admin') {
       console.warn(
         `User: ${userKey} attempted to remove ${domain.slug} in ${org.slug} however they do not have permission in that org.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(
           t`Permission Denied: Please contact organization admin for help with removing domain.`,
         ),
-      )
+      }
     }
 
     // Check to see if more than one organization has a claim to this domain
@@ -241,6 +253,7 @@ export const removeDomain = new mutationWithClientMutationId({
       `User: ${userKey} successfully removed domain: ${domain.slug} from org: ${org.slug}.`,
     )
     return {
+      _type: 'result',
       status: i18n._(
         t`Successfully removed domain: ${domain.slug} from ${org.slug}.`,
       ),
