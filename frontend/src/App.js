@@ -211,6 +211,13 @@ export default function App() {
           >
             <Trans>Terms & conditions</Trans>
           </Link>
+          <Link
+            ml={4}
+            href={"https://github.com/canada-ca/tracker/issues"}
+            target={"_blank"}
+          >
+            <Trans>Report an Issue</Trans>
+          </Link>
         </Footer>
       </Flex>
     </>
