@@ -204,13 +204,6 @@ export default function App() {
                 <QRcodePage userName={currentUser.userName} />
               </PrivatePage>
 
-              <PrivatePage
-                path="/dmarc-report/:period?/:year?"
-                title={t`Domain DMARC Report`}
-              >
-                <DmarcReportPage />
-              </PrivatePage>
-
               <Page component={PageNotFound} title="404" />
             </Switch>
           </Suspense>
