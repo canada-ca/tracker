@@ -29,6 +29,7 @@
     'Account created.': 'Compte créé',
     Acronym: 'Acronyme',
     'Add Domain': 'Ajouter un domaine',
+    'Add a domain': 'Add a domain',
     Admin: 'Administrateur',
     'Admin Portal': 'Portail Admin',
     'Admin Profile': "Profil de l'administrateur",
@@ -114,6 +115,7 @@
     'DKIM Flag t': 'DKIM Flag t',
     'DKIM Results': 'Résultats DKIM',
     'DKIM Selectors': 'Sélecteurs DKIM',
+    'DKIM Status': 'Statut DKIM',
     'DKIM TXT record invalid': 'Enregistrement DKIM TXT non valable',
     'DKIM key does not use RSA': "La clé DKIM n'utilise pas le RSA",
     'DKIM record missing but MX uses O365. Follow cloud-specific guidance':
@@ -134,6 +136,7 @@
     'DMARC Messages': 'Messages de la DMARC',
     'DMARC Not Implemented': "La DMARC n'est pas mise en œuvre",
     'DMARC Report': 'Rapport de la DMARC',
+    'DMARC Status': 'Statut DMARC',
     'DMARC fail': 'DMARC échoue',
     'DMARC pass': 'Passe DMARC',
     'DMARC-GC': 'DMARC-GC',
@@ -223,6 +226,7 @@
       'HTTP Strict Transport Security (HSTS) non mis en œuvre',
     'HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year':
       "L'âge maximum de la politique de sécurité stricte des transports HTTP (HSTS) est inférieur à un an",
+    'HTTPS Status': 'Statut HTTPS',
     'HTTPS certificate chain is invalid':
       "La chaîne de certificats HTTPS n'est pas valable",
     'HTTPS certificate is expired': 'Le certificat HTTPS est expiré',
@@ -289,6 +293,7 @@
     'L-30-D': 'L-30-D',
     'Language:': 'La langue:',
     'Last 30 Days': 'Les 30 derniers jours',
+    'Last Scanned': 'Dernière numérisation',
     'Last scanned:': 'Dernier scan:',
     'Level of Enforcment:': "Niveau d'application:",
     'Loading {children}...': ['Chargement ', ['children'], '...'],
@@ -455,11 +460,13 @@
     'SPF Failure Table': 'Tableau des échecs du SPF',
     'SPF Failures by IP Address': 'Défaillances du SPF par adresse IP',
     'SPF Results': 'Résultats du SPF',
+    'SPF Status': 'Statut SPF',
     'SPF implemented in incorrect subdomain':
       'SPF implémenté dans un sous-domaine incorrect',
     'SPF-GC': 'SPF-GC',
     'SPF-bad-path': 'SPF-bad-path',
     'SPF-missing': 'SPF-missing',
+    'SSL Status': 'Statut SSL',
     'SSL-3des': 'SSL-3des',
     'SSL-GC': 'SSL-GC',
     'SSL-acceptable-certificate': 'SSL-acceptable-certificate',
