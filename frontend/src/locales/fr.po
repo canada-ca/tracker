@@ -2155,3 +2155,15 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 #: src/OrganizationDetails.js:76
 msgid "{orgName}"
 msgstr ""
+
+#: src/GuidanceTagList.js:80
+msgid "No Guidance tags were found for this scan category"
+msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de balayage."
+
+#: src/GuidanceTagList.js:89
+msgid "This could be due to improper configurations, or could be the result of a scan error"
+msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
+
+#: src/GuidanceTagList.js:95
+msgid "Please use the contact form to notify an admin"
+msgstr "Veuillez utiliser le formulaire de contact pour informer un administrateur"

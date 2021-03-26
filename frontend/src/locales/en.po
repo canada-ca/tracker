@@ -2155,3 +2155,15 @@ msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 #: src/OrganizationDetails.js:76
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/GuidanceTagList.js:80
+msgid "No Guidance tags were found for this scan category"
+msgstr "No Guidance tags were found for this scan category"
+
+#: src/GuidanceTagList.js:89
+msgid "This could be due to improper configurations, or could be the result of a scan error"
+msgstr "This could be due to improper configurations, or could be the result of a scan error"
+
+#: src/GuidanceTagList.js:95
+msgid "Please use the contact form to notify an admin"
+msgstr "Please use the contact form to notify an admin"
