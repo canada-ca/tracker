@@ -105,14 +105,20 @@ describe('updating an organization', () => {
                     acronymEN: "TEST"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -147,7 +153,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TEST',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -178,14 +184,20 @@ describe('updating an organization', () => {
                     nameEN: "Test"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -220,7 +232,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -251,14 +263,20 @@ describe('updating an organization', () => {
                     zoneEN: "New Zone"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -293,7 +311,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -324,14 +342,20 @@ describe('updating an organization', () => {
                     sectorEN: "New Sector"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -366,7 +390,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -397,14 +421,20 @@ describe('updating an organization', () => {
                     countryEN: "A New Country"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -439,7 +469,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'Ottawa',
                     country: 'A New Country',
@@ -470,14 +500,20 @@ describe('updating an organization', () => {
                     provinceEN: "A New Province"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -512,7 +548,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -543,14 +579,20 @@ describe('updating an organization', () => {
                     cityEN: "A New City"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -585,7 +627,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'A New City',
                     country: 'Canada',
@@ -629,14 +671,20 @@ describe('updating an organization', () => {
                     cityFR: "Nouvelle ville"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -671,7 +719,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'NEW_ACRONYM',
                     name: 'New Name',
                     zone: 'New Zone',
@@ -704,14 +752,20 @@ describe('updating an organization', () => {
                     acronymFR: "TEST"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -746,7 +800,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TEST',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -777,14 +831,20 @@ describe('updating an organization', () => {
                     nameFR: "Test"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -819,7 +879,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -850,14 +910,20 @@ describe('updating an organization', () => {
                     zoneFR: "Secret Zone"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -892,7 +958,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     name: 'Secrétariat du Conseil Trésor du Canada',
                     zone: 'Secret Zone',
@@ -923,14 +989,20 @@ describe('updating an organization', () => {
                     sectorFR: "New Sector"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -965,7 +1037,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     name: 'Secrétariat du Conseil Trésor du Canada',
                     zone: 'FED',
@@ -996,14 +1068,20 @@ describe('updating an organization', () => {
                     countryFR: "A New Country"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1038,7 +1116,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     name: 'Secrétariat du Conseil Trésor du Canada',
                     zone: 'FED',
@@ -1069,14 +1147,20 @@ describe('updating an organization', () => {
                     provinceFR: "A New Province"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1111,7 +1195,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     name: 'Secrétariat du Conseil Trésor du Canada',
                     zone: 'FED',
@@ -1142,14 +1226,20 @@ describe('updating an organization', () => {
                     cityFR: "A New City"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1184,7 +1274,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     city: 'A New City',
                     country: 'Canada',
@@ -1228,14 +1318,20 @@ describe('updating an organization', () => {
                     cityFR: "Nouvelle ville"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1270,7 +1366,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'NOUVEL_ACRONYME',
                     city: 'Nouvelle ville',
                     country: 'Nouveau pays',
@@ -1312,14 +1408,20 @@ describe('updating an organization', () => {
                     acronymEN: "TEST"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1354,7 +1456,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TEST',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -1385,14 +1487,20 @@ describe('updating an organization', () => {
                     nameEN: "Test"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1427,7 +1535,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -1458,14 +1566,20 @@ describe('updating an organization', () => {
                     zoneEN: "New Zone"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1500,7 +1614,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -1531,14 +1645,20 @@ describe('updating an organization', () => {
                     sectorEN: "New Sector"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1573,7 +1693,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -1604,14 +1724,20 @@ describe('updating an organization', () => {
                     countryEN: "A New Country"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1646,7 +1772,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'Ottawa',
                     country: 'A New Country',
@@ -1677,14 +1803,20 @@ describe('updating an organization', () => {
                     provinceEN: "A New Province"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1719,7 +1851,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -1750,14 +1882,20 @@ describe('updating an organization', () => {
                     cityEN: "A New City"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1792,7 +1930,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TBS',
                     city: 'A New City',
                     country: 'Canada',
@@ -1836,14 +1974,20 @@ describe('updating an organization', () => {
                     cityFR: "Nouvelle ville"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1878,7 +2022,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'NEW_ACRONYM',
                     name: 'New Name',
                     zone: 'New Zone',
@@ -1911,14 +2055,20 @@ describe('updating an organization', () => {
                     acronymFR: "TEST"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -1953,7 +2103,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'TEST',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -1984,14 +2134,20 @@ describe('updating an organization', () => {
                     nameFR: "Test"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -2026,7 +2182,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     city: 'Ottawa',
                     country: 'Canada',
@@ -2057,14 +2213,20 @@ describe('updating an organization', () => {
                     zoneFR: "Secret Zone"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -2099,7 +2261,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     name: 'Secrétariat du Conseil Trésor du Canada',
                     zone: 'Secret Zone',
@@ -2130,14 +2292,20 @@ describe('updating an organization', () => {
                     sectorFR: "New Sector"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -2172,7 +2340,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     name: 'Secrétariat du Conseil Trésor du Canada',
                     zone: 'FED',
@@ -2203,14 +2371,20 @@ describe('updating an organization', () => {
                     countryFR: "A New Country"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -2245,7 +2419,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     name: 'Secrétariat du Conseil Trésor du Canada',
                     zone: 'FED',
@@ -2276,14 +2450,20 @@ describe('updating an organization', () => {
                     provinceFR: "A New Province"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -2318,7 +2498,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     name: 'Secrétariat du Conseil Trésor du Canada',
                     zone: 'FED',
@@ -2349,14 +2529,20 @@ describe('updating an organization', () => {
                     cityFR: "A New City"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -2391,7 +2577,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'SCT',
                     city: 'A New City',
                     country: 'Canada',
@@ -2435,14 +2621,20 @@ describe('updating an organization', () => {
                     cityFR: "Nouvelle ville"
                   }
                 ) {
-                  organization {
-                    acronym
-                    name
-                    zone
-                    sector
-                    country
-                    province
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -2477,7 +2669,7 @@ describe('updating an organization', () => {
             const expectedResponse = {
               data: {
                 updateOrganization: {
-                  organization: {
+                  result: {
                     acronym: 'NOUVEL_ACRONYME',
                     city: 'Nouvelle ville',
                     country: 'Nouveau pays',
@@ -2564,8 +2756,20 @@ describe('updating an organization', () => {
                       cityEN: "A New City"
                     }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -2598,13 +2802,18 @@ describe('updating an organization', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'Permission Denied: Please contact organization admin for help with updating organization.',
-                ),
-              ]
-
-              expect(response.errors).toEqual(error)
+              const error = {
+                data: {
+                  updateOrganization: {
+                    result: {
+                      code: 403,
+                      description: 'Permission Denied: Please contact organization admin for help with updating organization.',
+                    },
+                  },
+                },
+              }
+  
+              expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: user`,
               ])
@@ -2622,8 +2831,20 @@ describe('updating an organization', () => {
                       cityEN: "A New City"
                     }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -2656,13 +2877,18 @@ describe('updating an organization', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'Permission Denied: Please contact organization admin for help with updating organization.',
-                ),
-              ]
-
-              expect(response.errors).toEqual(error)
+              const error = {
+                data: {
+                  updateOrganization: {
+                    result: {
+                      code: 403,
+                      description: 'Permission Denied: Please contact organization admin for help with updating organization.',
+                    },
+                  },
+                },
+              }
+  
+              expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: undefined`,
               ])
@@ -2683,8 +2909,20 @@ describe('updating an organization', () => {
                       1,
                     )}", cityEN: "A New City" }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -2717,11 +2955,18 @@ describe('updating an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError('Unable to update unknown organization.'),
-            ]
+            const error = {
+              data: {
+                updateOrganization: {
+                  result: {
+                    code: 400,
+                    description: 'Unable to update unknown organization.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to update organization: 1, however no organizations is associated with that id.`,
             ])
@@ -2772,8 +3017,20 @@ describe('updating an organization', () => {
                     nameEN: "Treasury Board of Canada Secretariat"
                   }
                 ) {
-                  organization {
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -2807,13 +3064,18 @@ describe('updating an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Organization name already in use, please choose another and try again.',
-            ),
-          ]
+          const error = {
+            data: {
+              updateOrganization: {
+                result: {
+                  code: 400,
+                  description: 'Organization name already in use, please choose another and try again.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to change the name of org: ${org._key} however it is already in use.`,
           ])
@@ -2873,8 +3135,20 @@ describe('updating an organization', () => {
                       org._key,
                     )}", cityEN: "A New City" }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -2973,8 +3247,20 @@ describe('updating an organization', () => {
                       org._key,
                     )}", cityEN: "A New City" }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -3039,8 +3325,20 @@ describe('updating an organization', () => {
                       nameEN: "Treasury Board of Canada Secretariat"
                     }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -3172,8 +3470,20 @@ describe('updating an organization', () => {
                       org._key,
                     )}", cityEN: "A New City" }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -3270,8 +3580,20 @@ describe('updating an organization', () => {
                       org._key,
                     )}", cityEN: "A New City" }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -3381,8 +3703,20 @@ describe('updating an organization', () => {
                       cityEN: "A New City"
                     }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -3415,9 +3749,18 @@ describe('updating an organization', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
-
-              expect(response.errors).toEqual(error)
+              const error = {
+                data: {
+                  updateOrganization: {
+                    result: {
+                      code: 403,
+                      description: 'todo',
+                    },
+                  },
+                },
+              }
+  
+              expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: user`,
               ])
@@ -3435,8 +3778,20 @@ describe('updating an organization', () => {
                       cityEN: "A New City"
                     }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -3469,9 +3824,18 @@ describe('updating an organization', () => {
                 },
               )
 
-              const error = [new GraphQLError('todo')]
-
-              expect(response.errors).toEqual(error)
+              const error = {
+                data: {
+                  updateOrganization: {
+                    result: {
+                      code: 403,
+                      description: 'todo',
+                    },
+                  },
+                },
+              }
+  
+              expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: undefined`,
               ])
@@ -3523,8 +3887,20 @@ describe('updating an organization', () => {
                     nameEN: "Treasury Board of Canada Secretariat"
                   }
                 ) {
-                  organization {
-                    city
+                  result {
+                    ... on Organization {
+                      acronym
+                      name
+                      zone
+                      sector
+                      country
+                      province
+                      city
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
                   }
                 }
               }
@@ -3558,9 +3934,18 @@ describe('updating an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              updateOrganization: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to change the name of org: ${org._key} however it is already in use.`,
           ])
@@ -3579,8 +3964,20 @@ describe('updating an organization', () => {
                       1,
                     )}", cityEN: "A New City" }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -3613,9 +4010,18 @@ describe('updating an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                updateOrganization: {
+                  result: {
+                    code: 400,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to update organization: 1, however no organizations is associated with that id.`,
             ])
@@ -3676,8 +4082,20 @@ describe('updating an organization', () => {
                       org._key,
                     )}", cityEN: "A New City" }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -3772,8 +4190,20 @@ describe('updating an organization', () => {
                       org._key,
                     )}", cityEN: "A New City" }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -3834,8 +4264,20 @@ describe('updating an organization', () => {
                       nameEN: "Treasury Board of Canada Secretariat"
                     }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -3932,8 +4374,20 @@ describe('updating an organization', () => {
                       org._key,
                     )}", cityEN: "A New City" }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
@@ -4026,8 +4480,20 @@ describe('updating an organization', () => {
                       org._key,
                     )}", cityEN: "A New City" }
                   ) {
-                    organization {
-                      city
+                    result {
+                      ... on Organization {
+                        acronym
+                        name
+                        zone
+                        sector
+                        country
+                        province
+                        city
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
                     }
                   }
                 }
