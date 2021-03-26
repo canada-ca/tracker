@@ -1,9 +1,5 @@
 /*eslint-disable*/ module.exports = {
   messages: {
-    '*All data represented is mocked for demonstration purposes':
-      '*Toutes les données représentées sont simulées à des fins de démonstration',
-    "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature":
-      "*Les barres de recherche ne recherchent pas activement les bases de données actuellement. Elles sont utilisées pour démontrer la fonction du bouton 'Ajouter'",
     '3.2.2 Third Parties and DKIM': '3.2.2 Expéditeurs tiers et DKIM',
     '404 - Page Not Found': '404 - Page non trouvée',
     'A-all': 'A-all',
@@ -71,8 +67,8 @@
     'CCCS added to Forensic sender list':
       'Le CCCS ajouté à la liste des expéditeurs de la police scientifique',
     'CNAME-DMARC': 'CNAME-DMARC',
-    'Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure.':
-      "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre des services en ligne sécurisés. Un nouvel avis de politique vise à assurer que les sites gouvernementaux soient conformes aux bonnes pratiques en matière de sécurité Web. Voyez comment les sites gouvernementaux deviennent plus sécuritaires.",
+    'Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure.':
+      "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour le courrier électronique et les services Web. Suivez l'évolution de la sécurisation des sites gouvernementaux.",
     'Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.':
       'Le CCCS ajouté à la liste des expéditeurs de la police scientifique',
     'Certificate chain signed using SHA-256/SHA-384/AEAD':
@@ -245,8 +241,12 @@
     'Implementation Status:': "État d'avancement de la mise en œuvre:",
     'Incorrect authenticate.result typename.':
       'Incorrect authenticate.result typename.',
+    'Incorrect createDomain.result typename.':
+      'Incorrect createDomain.result typename.',
     'Incorrect inviteUserToOrg.result typename.':
       'Incorrect inviteUserToOrg.result typename.',
+    'Incorrect removeDomain.result typename.':
+      'Incorrect removeDomain.result typename.',
     'Incorrect resetPassword.result typename.':
       'Incorrect resetPassword.result typename.',
     'Incorrect send method received.': "Méthode d'envoi incorrecte reçue.",
@@ -255,10 +255,14 @@
     'Incorrect signIn.result typename.':
       "Nom d'utilisateur incorrect signIn.result.",
     'Incorrect signUp.result typename.': 'Incorrect signUp.result typename.',
+    'Incorrect updateDomain.result typename.':
+      'Incorrect updateDomain.result typename.',
     'Incorrect updateUserPassword.result typename.':
       'Incorrect updateUserPassword.result typename.',
     'Incorrect updateUserProfile.result typename.':
       'Incorrect updateUserProfile.result typename.',
+    'Incorrect updateUserRole.result typename.':
+      'Incorrect updateUserRole.result typename.',
     'Incorrect verifyPhoneNumber.result typename.':
       "Une erreur s'est produite lors de la vérification de votre numéro de téléphone.",
     'Internet facing services': "Services d'accès à Internet",
@@ -330,7 +334,6 @@
     'One or more ciphers in use are not compliant with guidelines':
       'Un ou plusieurs chiffres utilisés ne sont pas conformes aux lignes directrices',
     'Organization Details': "Détails de l'organisation",
-    'Organization Info': "Informations sur l'organisation",
     'Organization:': 'Organisation:',
     Organizations: 'Organisations',
     'Owner has not configured Aggregate reporting.':
@@ -372,7 +375,6 @@
       'Le mot de passe doit comporter au moins 12 caractères',
     'Password:': 'Mot de passe :',
     'Passwords must match': 'Les mots de passe doivent correspondre',
-    'Phase:': 'Phase:',
     Phone: 'Téléphone',
     'Phone Number': 'Numéro de téléphone',
     'Phone Number:': 'Numéro de téléphone:',
@@ -424,6 +426,7 @@
     'RUF-CCCS': 'RUF-CCCS',
     'RUF-none': 'RUF-none',
     'Remove Domain': 'Supprimer un domaine',
+    'Report an Issue': 'Signaler un problème',
     'Request a domain to be scanned:': "Demander qu'un domaine soit scanné:",
     'Result:': 'Résultat',
     'Results for scans of email technologies (DMARC, SPF, DKIM).':
@@ -490,8 +493,6 @@
     'Source IP Address': 'Adresse IP source',
     Submit: 'Soumettre',
     Summary: 'Résumé',
-    'Summary Cards': 'Fiches de synthèse',
-    'Summary:': 'Résumé:',
     'T-enabled': 'T-enabled',
     TBD: 'TBD',
     'TFA Method:': 'Méthode TFA:',
@@ -509,8 +510,7 @@
       'Ce service est développé de façon ouverte',
     'Total Messages': 'Total des messages',
     'Total users': 'total des utilisateurs',
-    'Track Web Security Compliance':
-      'Suivre la conformité de la sécurité du Web',
+    'Track Digital Security': 'Track Digital Security',
     'Tracker Logo': 'Logo du Tracker',
     'Two Factor Authentication': 'Authentification à deux facteurs',
     USER: 'UTILISATEUR',
@@ -518,9 +518,11 @@
       "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer.",
     'Unable to create account, please try again.':
       'Unable to create account, please try again.',
+    'Unable to create new domain.': 'Unable to create new domain.',
     'Unable to create your account, please try again.':
       'Impossible de créer votre compte, veuillez réessayer',
     'Unable to invite user.': 'Unable to invite user.',
+    'Unable to remove domain.': 'Unable to remove domain.',
     'Unable to request scan, please try again.':
       'Impossible de demander un balayage, veuillez réessayer.',
     'Unable to reset your password, please try again.':
@@ -529,6 +531,7 @@
       "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel.",
     'Unable to sign in to your account, please try again.':
       'Impossible de vous connecter à votre compte, veuillez réessayer.',
+    'Unable to update domain.': 'Unable to update domain.',
     'Unable to update password': 'Impossible de mettre à jour le mot de passe',
     'Unable to update to your TFA send method, please try again.':
       "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réessayer.",
@@ -540,6 +543,7 @@
       'Impossible de mettre à jour votre langue préférée, veuillez réessayer.',
     'Unable to update to your username, please try again.':
       "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessayer.",
+    'Unable to update user role.': 'Unable to update user role.',
     'Unable to update your password, please try again.':
       'Impossible de mettre à jour votre mot de passe, veuillez réessayer.',
     'Unable to update your phone number, please try again.':
