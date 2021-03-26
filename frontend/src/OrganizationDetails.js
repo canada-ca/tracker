@@ -23,12 +23,15 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { OrganizationDomains } from './OrganizationDomains'
 import { OrganizationAffiliations } from './OrganizationAffiliations'
+// import { useDocumentTitle } from './useDocumentTitle'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
   const { currentUser } = useUserState()
   const toast = useToast()
   const history = useHistory()
+  // useDocumentTitle(`${orgSlug} - Tracker`)
+
   const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
     variables: { slug: orgSlug },
     context: {
