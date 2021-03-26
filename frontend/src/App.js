@@ -120,74 +120,77 @@ export default function App() {
         <Main>
           <Suspense fallback={<div>Loading...</div>}>
             <Switch>
-              <Page exact path="/">
+              <Page exact path="/" title={t`Home`}>
                 <LandingPage />
               </Page>
 
-              <Page path="/create-user/:userOrgToken?">
+              <Page path="/create-user/:userOrgToken?" title={t`Create an Account`}>
                 <CreateUserPage />
               </Page>
 
-              <Page path="/sign-in" component={SignInPage} />
+              <Page path="/sign-in" component={SignInPage} title={t`Sign In`} />
 
               <Page
                 path="/authenticate/:sendMethod/:authenticateToken"
                 component={TwoFactorAuthenticatePage}
+                title={t`Authenticate`}
               />
 
-              <Page path="/forgot-password" component={ForgotPasswordPage} />
+              <Page path="/forgot-password" component={ForgotPasswordPage} title={t`Forgot Password`} />
 
               <Page
                 path="/reset-password/:resetToken"
                 component={ResetPasswordPage}
+                title={t`Reset Password`}
               />
 
-              <PrivatePage path="/organizations" title="Organizations" exact>
+              <PrivatePage path="/organizations" title={t`Organizations`} exact>
                 <Organizations />
               </PrivatePage>
 
-              <PrivatePage path="/organizations/:orgSlug" exact>
+              <PrivatePage path="/organizations/:orgSlug" title={t`Organization Details`} exact>
                 <OrganizationDetails />
               </PrivatePage>
 
-              <PrivatePage path="/admin">
+              <PrivatePage path="/admin" title={t`Admin`}>
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <AdminPage />
                 </ErrorBoundary>
               </PrivatePage>
 
-              <PrivatePage path="/domains" exact>
+              <PrivatePage path="/domains" title={t`Domains`} exact>
                 <DomainsPage />
               </PrivatePage>
 
-              <PrivatePage path="/domains/:domainSlug" exact>
+              <PrivatePage path="/domains/:domainSlug" title={t`Domain Details`} exact>
                 <DmarcGuidancePage />
               </PrivatePage>
 
               <PrivatePage
                 path="/domains/:domainSlug/dmarc-report/:period?/:year?"
+                title={t`Domain DMARC Report`}
                 exact
               >
                 <DmarcReportPage />
               </PrivatePage>
 
-              <PrivatePage path="/dmarc-summaries" exact>
+              <PrivatePage path="/dmarc-summaries" title={t`DMARC Report`} exact>
                 <DmarcByDomainPage />
               </PrivatePage>
 
-              <PrivatePage path="/user">
+              <PrivatePage path="/user" title={t`Your Account`}>
                 <UserPage username={currentUser.userName} />
               </PrivatePage>
 
-              <PrivatePage path="/two-factor-code">
+              <PrivatePage path="/two-factor-code" title={t`Authentication QR Code`}>
                 <QRcodePage userName={currentUser.userName} />
               </PrivatePage>
 
-              <PrivatePage path="/dmarc-report/:period?/:year?">
+              <PrivatePage path="/dmarc-report/:period?/:year?" title={t`Domain DMARC Report`}>
                 <DmarcReportPage />
               </PrivatePage>
 
-              <Page component={PageNotFound} />
+              <Page component={PageNotFound} title="404" />
             </Switch>
           </Suspense>
         </Main>

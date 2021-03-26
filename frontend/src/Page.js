@@ -4,7 +4,7 @@ import { string } from 'prop-types'
 import { useDocumentTitle } from './useDocumentTitle'
 
 export const Page = ({ title, ...props }) => {
-  useDocumentTitle(title)
+  useDocumentTitle(`${title} - Tracker`)
 
   return <Route {...props} />
 }
