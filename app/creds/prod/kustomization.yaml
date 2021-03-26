@@ -13,6 +13,10 @@ secretGenerator:
   - scanners.env
   name: scanners
   namespace: scanners
+- envs:
+  - dmarc.env
+  name: dmarc
+  namespace: scanners
 generatorOptions:
   disableNameSuffixHash: true
 components:
