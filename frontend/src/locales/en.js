@@ -1,9 +1,5 @@
 /*eslint-disable*/ module.exports = {
   messages: {
-    '*All data represented is mocked for demonstration purposes':
-      '*All data represented is mocked for demonstration purposes',
-    "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature":
-      "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature",
     '3.2.2 Third Parties and DKIM': '3.2.2 Third Parties and DKIM',
     '404 - Page Not Found': '404 - Page Not Found',
     'A-all': 'A-all',
@@ -31,6 +27,7 @@
     'Account created.': 'Account created.',
     Acronym: 'Acronym',
     'Add Domain': 'Add Domain',
+    Admin: 'Admin',
     'Admin Portal': 'Admin Portal',
     'Admin Profile': 'Admin Profile',
     'An email was sent with a link to reset your password':
@@ -56,6 +53,8 @@
     'As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.':
       'As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.',
     August: 'August',
+    Authenticate: 'Authenticate',
+    'Authentication QR Code': 'Authentication QR Code',
     'B.1.1 SPF Records': 'B.1.1 SPF Records',
     'B.1.3 DNS Lookup Limit': 'B.1.3 DNS Lookup Limit',
     'B.2.1 DKIM Records': 'B.2.1 DKIM Records',
@@ -67,8 +66,8 @@
       'CCCS added to Aggregate sender list',
     'CCCS added to Forensic sender list': 'CCCS added to Forensic sender list',
     'CNAME-DMARC': 'CNAME-DMARC',
-    'Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure.':
-      'Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure.',
+    'Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure.':
+      'Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure.',
     'Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.':
       'Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.',
     'Certificate chain signed using SHA-256/SHA-384/AEAD':
@@ -92,6 +91,7 @@
     'Confirm removal of domain:': 'Confirm removal of domain:',
     'Contact 3rd party': 'Contact 3rd party',
     'Create Account': 'Create Account',
+    'Create an Account': 'Create an Account',
     'Create an account by entering an email and password.':
       'Create an account by entering an email and password.',
     'Current Display Name:': 'Current Display Name:',
@@ -120,6 +120,7 @@
     'DKIM-value-invalid': 'DKIM-value-invalid',
     'DMARC Failure Table': 'DMARC Failure Table',
     'DMARC Failures by IP Address': 'DMARC Failures by IP Address',
+    'DMARC Implementation Phase: {0}': ['DMARC Implementation Phase: ', ['0']],
     'DMARC Implementation Phase: {status}': [
       'DMARC Implementation Phase: ',
       ['status'],
@@ -127,7 +128,6 @@
     'DMARC Messages': 'DMARC Messages',
     'DMARC Not Implemented': 'DMARC Not Implemented',
     'DMARC Report': 'DMARC Report',
-    'DMARC Report <0/>': 'DMARC Report <0/>',
     'DMARC fail': 'DMARC fail',
     'DMARC pass': 'DMARC pass',
     'DMARC-GC': 'DMARC-GC',
@@ -139,6 +139,8 @@
     'Display name cannot be empty': 'Display name cannot be empty',
     Disposition: 'Disposition',
     Domain: 'Domain',
+    'Domain DMARC Report': 'Domain DMARC Report',
+    'Domain Details': 'Domain Details',
     'Domain List': 'Domain List',
     'Domain URL': 'Domain URL',
     'Domain URL:': 'Domain URL:',
@@ -192,6 +194,7 @@
       'For in-depth CCCS implementation guidance:',
     'For technical implementation guidance:':
       'For technical implementation guidance:',
+    'Forgot Password': 'Forgot Password',
     'Forgot your password?': 'Forgot your password?',
     'Full Fail %': 'Full Fail %',
     'Full Pass %': 'Full Pass %',
@@ -203,7 +206,6 @@
     Guidance: 'Guidance',
     'Guidance Tags': 'Guidance Tags',
     'Guidance:': 'Guidance:',
-    'Guidance<0/>': 'Guidance<0/>',
     'HSTS Age:': 'HSTS Age:',
     'HSTS Status:': 'HSTS Status:',
     'HSTS-missing': 'HSTS-missing',
@@ -239,8 +241,12 @@
     'Implementation Status:': 'Implementation Status:',
     'Incorrect authenticate.result typename.':
       'Incorrect authenticate.result typename.',
+    'Incorrect createDomain.result typename.':
+      'Incorrect createDomain.result typename.',
     'Incorrect inviteUserToOrg.result typename.':
       'Incorrect inviteUserToOrg.result typename.',
+    'Incorrect removeDomain.result typename.':
+      'Incorrect removeDomain.result typename.',
     'Incorrect resetPassword.result typename.':
       'Incorrect resetPassword.result typename.',
     'Incorrect send method received.': 'Incorrect send method received.',
@@ -248,10 +254,14 @@
       'Incorrect setPhoneNumber.result typename.',
     'Incorrect signIn.result typename.': 'Incorrect signIn.result typename.',
     'Incorrect signUp.result typename.': 'Incorrect signUp.result typename.',
+    'Incorrect updateDomain.result typename.':
+      'Incorrect updateDomain.result typename.',
     'Incorrect updateUserPassword.result typename.':
       'Incorrect updateUserPassword.result typename.',
     'Incorrect updateUserProfile.result typename.':
       'Incorrect updateUserProfile.result typename.',
+    'Incorrect updateUserRole.result typename.':
+      'Incorrect updateUserRole.result typename.',
     'Incorrect verifyPhoneNumber.result typename.':
       'Incorrect verifyPhoneNumber.result typename.',
     'Internet facing services': 'Internet facing services',
@@ -321,7 +331,6 @@
     'One or more ciphers in use are not compliant with guidelines':
       'One or more ciphers in use are not compliant with guidelines',
     'Organization Details': 'Organization Details',
-    'Organization Info': 'Organization Info',
     'Organization:': 'Organization:',
     Organizations: 'Organizations',
     'Owner has not configured Aggregate reporting.':
@@ -363,7 +372,6 @@
       'Password must be at least 12 characters long',
     'Password:': 'Password:',
     'Passwords must match': 'Passwords must match',
-    'Phase:': 'Phase:',
     Phone: 'Phone',
     'Phone Number': 'Phone Number',
     'Phone Number:': 'Phone Number:',
@@ -411,6 +419,7 @@
     'RUF-none': 'RUF-none',
     'Remove Domain': 'Remove Domain',
     'Request a domain to be scanned:': 'Request a domain to be scanned:',
+    'Reset Password': 'Reset Password',
     'Result:': 'Result:',
     'Results for scans of email technologies (DMARC, SPF, DKIM).':
       'Results for scans of email technologies (DMARC, SPF, DKIM).',
@@ -476,8 +485,6 @@
     'Source IP Address': 'Source IP Address',
     Submit: 'Submit',
     Summary: 'Summary',
-    'Summary Cards': 'Summary Cards',
-    'Summary:': 'Summary:',
     'T-enabled': 'T-enabled',
     TBD: 'TBD',
     'TFA Method:': 'TFA Method:',
@@ -495,7 +502,8 @@
       'This service is being developed in the open',
     'Total Messages': 'Total Messages',
     'Total users': 'Total users',
-    'Track Web Security Compliance': 'Track Web Security Compliance',
+    'Track Digital Security': 'Track Digital Security',
+    Tracker: 'Tracker',
     'Tracker Logo': 'Tracker Logo',
     'Two Factor Authentication': 'Two Factor Authentication',
     USER: 'USER',
@@ -503,9 +511,11 @@
       'Unable to change user role, please try again.',
     'Unable to create account, please try again.':
       'Unable to create account, please try again.',
+    'Unable to create new domain.': 'Unable to create new domain.',
     'Unable to create your account, please try again.':
       'Unable to create your account, please try again.',
     'Unable to invite user.': 'Unable to invite user.',
+    'Unable to remove domain.': 'Unable to remove domain.',
     'Unable to request scan, please try again.':
       'Unable to request scan, please try again.',
     'Unable to reset your password, please try again.':
@@ -514,6 +524,7 @@
       'Unable to send password reset link to email.',
     'Unable to sign in to your account, please try again.':
       'Unable to sign in to your account, please try again.',
+    'Unable to update domain.': 'Unable to update domain.',
     'Unable to update password': 'Unable to update password',
     'Unable to update to your TFA send method, please try again.':
       'Unable to update to your TFA send method, please try again.',
@@ -525,6 +536,7 @@
       'Unable to update to your preferred language, please try again.',
     'Unable to update to your username, please try again.':
       'Unable to update to your username, please try again.',
+    'Unable to update user role.': 'Unable to update user role.',
     'Unable to update your password, please try again.':
       'Unable to update your password, please try again.',
     'Unable to update your phone number, please try again.':
@@ -589,6 +601,7 @@
       'You may now sign in with your new password',
     'Your 2FA app will then have a valid code that you can use when you sign in.':
       'Your 2FA app will then have a valid code that you can use when you sign in.',
+    'Your Account': 'Your Account',
     'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322':
       'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322',
     'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23':
