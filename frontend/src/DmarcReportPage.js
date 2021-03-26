@@ -28,14 +28,15 @@ import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
-// import { useDocumentTitle } from './useDocumentTitle'
+import { useDocumentTitle } from './useDocumentTitle'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
   const { i18n } = useLingui()
-  // useDocumentTitle(`${domainSlug} - Tracker`)
+
+  useDocumentTitle(t`DMARC Report | ${domainSlug}`)
 
   const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState(period)

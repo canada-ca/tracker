@@ -179,7 +179,7 @@ export default function App() {
 
               <PrivatePage
                 path="/domains/:domainSlug/dmarc-report/:period?/:year?"
-                title={t`Domain DMARC Report`}
+                setTitle={false}
                 exact
               >
                 <DmarcReportPage />
