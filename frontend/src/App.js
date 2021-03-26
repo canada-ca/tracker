@@ -124,7 +124,10 @@ export default function App() {
                 <LandingPage />
               </Page>
 
-              <Page path="/create-user/:userOrgToken?" title={t`Create an Account`}>
+              <Page
+                path="/create-user/:userOrgToken?"
+                title={t`Create an Account`}
+              >
                 <CreateUserPage />
               </Page>
 
@@ -136,7 +139,11 @@ export default function App() {
                 title={t`Authenticate`}
               />
 
-              <Page path="/forgot-password" component={ForgotPasswordPage} title={t`Forgot Password`} />
+              <Page
+                path="/forgot-password"
+                component={ForgotPasswordPage}
+                title={t`Forgot Password`}
+              />
 
               <Page
                 path="/reset-password/:resetToken"
@@ -148,7 +155,11 @@ export default function App() {
                 <Organizations />
               </PrivatePage>
 
-              <PrivatePage path="/organizations/:orgSlug" title={t`Organization Details`} exact>
+              <PrivatePage
+                path="/organizations/:orgSlug"
+                setTitle={false}
+                exact
+              >
                 <OrganizationDetails />
               </PrivatePage>
 
@@ -174,7 +185,11 @@ export default function App() {
                 <DmarcReportPage />
               </PrivatePage>
 
-              <PrivatePage path="/dmarc-summaries" title={t`DMARC Report`} exact>
+              <PrivatePage
+                path="/dmarc-summaries"
+                title={t`DMARC Report`}
+                exact
+              >
                 <DmarcByDomainPage />
               </PrivatePage>
 
@@ -182,11 +197,17 @@ export default function App() {
                 <UserPage username={currentUser.userName} />
               </PrivatePage>
 
-              <PrivatePage path="/two-factor-code" title={t`Authentication QR Code`}>
+              <PrivatePage
+                path="/two-factor-code"
+                title={t`Authentication QR Code`}
+              >
                 <QRcodePage userName={currentUser.userName} />
               </PrivatePage>
 
-              <PrivatePage path="/dmarc-report/:period?/:year?" title={t`Domain DMARC Report`}>
+              <PrivatePage
+                path="/dmarc-report/:period?/:year?"
+                title={t`Domain DMARC Report`}
+              >
                 <DmarcReportPage />
               </PrivatePage>
 
@@ -219,7 +240,7 @@ export default function App() {
           </Link>
           <Link
             ml={4}
-            href={"https://github.com/canada-ca/tracker/issues"}
+            href={'https://github.com/canada-ca/tracker/issues'}
             isExternal={true}
           >
             <Trans>Report an Issue</Trans>
