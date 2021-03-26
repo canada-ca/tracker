@@ -77,7 +77,7 @@ export function GuidanceTagList({
             <Trans>Result:</Trans>
           </Text>
           <Text>
-            <Trans>No Guidance tags were found for this scan category</Trans>
+            <Trans>No guidance tags were found for this scan category</Trans>
           </Text>
         </Stack>
         <Stack isInline>
@@ -86,13 +86,13 @@ export function GuidanceTagList({
           </Text>
           <Text>
             <Trans>
-              This could be due to improper configurations, or could be the
+              This could be due to improper configuration, or could be the
               result of a scan error
             </Trans>
           </Text>
         </Stack>
         <Text fontWeight="bold">
-          <Trans>Please use the contact form to notify an admin</Trans>
+          <Trans>Please use the contact form to notify an administrator</Trans>
         </Text>
       </Box>
     </Stack>
