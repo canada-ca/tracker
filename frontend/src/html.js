@@ -1,4 +1,3 @@
-import './images/favicon.ico'
 import './images/apple-touch-icon.png'
 import './images/favicon-32x32.png'
 import './images/favicon-16x16.png'
@@ -12,37 +11,25 @@ export default () => `
   <html lang="en">
     <head>
       <meta charset="utf-8" />
-      <link
-        rel="apple-touch-icon"
-        sizes="180x180"
-        href="/apple-touch-icon.png"
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href="/favicon-32x32.png"
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
-        href="/favicon-16x16.png"
-      />
-      <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-      <meta name="msapplication-TileColor" content="#da532c" />
-      <meta name="theme-color" content="#ffffff" />
-      <link rel="icon" href="/favicon.ico" />
+
+      <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+      <link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#e65225">
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="manifest" href="manifest.json" />
+      <meta name="msapplication-TileColor" content="#2e2e40">
+      <meta name="msapplication-config" content="./browserconfig.xml">
+      <meta name="theme-color" content="#ff0000">
+
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no"
       />
-      <meta name="theme-color" content="#000000" />
       <meta
         name="description"
         content="Tracking security best practices for the Government of Canada"
       />
-      <link rel="manifest" href="/manifest.json" />
       <title>Tracker</title>
     </head>
     <body>
