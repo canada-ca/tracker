@@ -27,6 +27,7 @@
     'Account created.': 'Account created.',
     Acronym: 'Acronym',
     'Add Domain': 'Add Domain',
+    'Add a domain': 'Add a domain',
     'Admin Portal': 'Admin Portal',
     'Admin Profile': 'Admin Profile',
     'An email was sent with a link to reset your password':
@@ -265,6 +266,7 @@
     'Invalid percent': 'Invalid percent',
     'Invalid public key': 'Invalid public key',
     'Invite User': 'Invite User',
+    'Invite a user': 'Invite a user',
     January: 'January',
     July: 'July',
     June: 'June',
