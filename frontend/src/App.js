@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
@@ -15,7 +15,8 @@ import { useUserState } from './UserState'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { FloatingMenu } from './FloatingMenu'
-import PrivateRoute from './PrivateRoute'
+import PrivatePage from './PrivatePage'
+import { Page } from './Page'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -119,74 +120,74 @@ export default function App() {
         <Main>
           <Suspense fallback={<div>Loading...</div>}>
             <Switch>
-              <Route exact path="/">
+              <Page exact path="/">
                 <LandingPage />
-              </Route>
+              </Page>
 
-              <Route path="/create-user/:userOrgToken?">
+              <Page path="/create-user/:userOrgToken?">
                 <CreateUserPage />
-              </Route>
+              </Page>
 
-              <Route path="/sign-in" component={SignInPage} />
+              <Page path="/sign-in" component={SignInPage} />
 
-              <Route
+              <Page
                 path="/authenticate/:sendMethod/:authenticateToken"
                 component={TwoFactorAuthenticatePage}
               />
 
-              <Route path="/forgot-password" component={ForgotPasswordPage} />
+              <Page path="/forgot-password" component={ForgotPasswordPage} />
 
-              <Route
+              <Page
                 path="/reset-password/:resetToken"
                 component={ResetPasswordPage}
               />
 
-              <PrivateRoute path="/organizations" exact>
+              <PrivatePage path="/organizations" title="Organizations" exact>
                 <Organizations />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/organizations/:orgSlug" exact>
+              <PrivatePage path="/organizations/:orgSlug" exact>
                 <OrganizationDetails />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/admin">
+              <PrivatePage path="/admin">
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <AdminPage />
                 </ErrorBoundary>
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/domains" exact>
+              <PrivatePage path="/domains" exact>
                 <DomainsPage />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/domains/:domainSlug" exact>
+              <PrivatePage path="/domains/:domainSlug" exact>
                 <DmarcGuidancePage />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute
+              <PrivatePage
                 path="/domains/:domainSlug/dmarc-report/:period?/:year?"
                 exact
               >
                 <DmarcReportPage />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/dmarc-summaries" exact>
+              <PrivatePage path="/dmarc-summaries" exact>
                 <DmarcByDomainPage />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/user">
+              <PrivatePage path="/user">
                 <UserPage username={currentUser.userName} />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/two-factor-code">
+              <PrivatePage path="/two-factor-code">
                 <QRcodePage userName={currentUser.userName} />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/dmarc-report/:period?/:year?">
+              <PrivatePage path="/dmarc-report/:period?/:year?">
                 <DmarcReportPage />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <Route component={PageNotFound} />
+              <Page component={PageNotFound} />
             </Switch>
           </Suspense>
         </Main>
