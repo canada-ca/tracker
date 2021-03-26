@@ -249,6 +249,20 @@ type DKIM implements Node {
   ): DKIMResultConnection
 }
 
+# Ordering options for DKIM connections.
+input DKIMOrder {
+  # The field to order DKIM scans by.
+  field: DKIMOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which DKIM connections can be ordered.
+enum DKIMOrderField {
+  # Order DKIM edges by timestamp.
+  TIMESTAMP
+}
+
 # A connection to a list of items.
 type DKIMConnection {
   # Information to aid in pagination.
@@ -469,6 +483,28 @@ type DMARC implements Node {
   ): GuidanceTagConnection
 }
 
+# Ordering options for DMARC connections.
+input DMARCOrder {
+  # The field to order DMARC scans by.
+  field: DmarcOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which dmarc connections can be ordered.
+enum DmarcOrderField {
+  # Order dmarc summaries by timestamp.
+  TIMESTAMP
+  # Order dmarc summaries by record.
+  RECORD
+  # Order dmarc summaries by p policy.
+  P_POLICY
+  # Order dmarc summaries by sp policy.
+  SP_POLICY
+  # Order dmarc summaries by percentage.
+  PCT
+}
+
 # A connection to a list of items.
 type DMARCConnection {
   # Information to aid in pagination.
@@ -638,7 +674,7 @@ type Domain implements Node {
   # The last time that a scan was ran on this domain.
   lastRan: String @fake(type: recentDate)
   # DMARC phase found during scan.
-  dmarcPhase: Int @examples(values: [1, 2, 3, 4])
+  dmarcPhase: String @examples(values: ["maintain", "deploy", "not implemented"])
   # Domain Keys Identified Mail (DKIM) selector strings associated with domain.
   selectors: [Selector] @listLength(min: 0, max: 2)
   # The domains scan status, based on the latest scan data.
@@ -747,6 +783,7 @@ type EmailScan {
     first: Int
     before: String
     last: Int
+    orderBy: DKIMOrder
   ): DKIMConnection
   # Domain-based Message Authentication, Reporting, and Conformance (DMARC) scan results.
   dmarc(
@@ -758,6 +795,7 @@ type EmailScan {
     first: Int
     before: String
     last: Int
+    orderBy: DMARCOrder
   ): DMARCConnection
   # Sender Policy Framework (SPF) scan results.
   spf(
@@ -769,6 +807,7 @@ type EmailScan {
     first: Int
     before: String
     last: Int
+    orderBy: SPFOrder
   ): SPFConnection
 }
 
@@ -951,6 +990,30 @@ type HTTPS implements Node {
     before: String
     last: Int
   ): GuidanceTagConnection
+}
+
+# Ordering options for HTTPS connections.
+input HTTPSOrder {
+  # The field to order HTTPS edges by.
+  field: HTTPSOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which HTTPS connections can be ordered.
+enum HTTPSOrderField {
+  # Order HTTPS edges by timestamp.
+  TIMESTAMP
+  # Order HTTPS edges by implementation.
+  IMPLEMENTATION
+  # Order HTTPS edges by enforced.
+  ENFORCED
+  # Order HTTPS edges by hsts.
+  HSTS
+  # Order HTTPS edges by hsts age.
+  HSTS_AGE
+  # Order HTTPS edges by preloaded.
+  PRELOADED
 }
 
 # A connection to a list of items.
@@ -1408,17 +1471,28 @@ type RegularSignInResult {
   authResult: AuthResult
 }
 
+type RemoveDomainPayload {
+  # `RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.
+  result: RemoveDomainUnion!
+  clientMutationId: String
+}
+
+# This union is used with the `RemoveDomain` mutation,
+# allowing for users to remove a domain belonging to their org,
+# and support any errors that may occur
+union RemoveDomainUnion = DomainError | DomainResult
+
+# This object is used to inform the user that no errors were encountered while removing a domain.
+type DomainResult {
+  # Informs the user if the domain removal was successful.
+  status: String
+}
+
 input RemoveDomainInput {
   # The global id of the domain you wish to remove.
   domainId: ID!
   # The organization you wish to remove the domain from.
   orgId: ID!
-  clientMutationId: String
-}
-
-type RemoveDomainPayload {
-  # Status string to inform the user if the domain was successfully removed.
-  status: String!
   clientMutationId: String
 }
 
@@ -1711,6 +1785,26 @@ type SPF implements Node {
   ): GuidanceTagConnection
 }
 
+# Ordering options for SPF connections.
+input SPFOrder {
+  # The field to order SPF scans by.
+  field: SPFOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which SPF connections can be ordered.
+enum SPFOrderField {
+  # Order SPF edges by timestamp.
+  TIMESTAMP
+  # Order SPF edges by lookups.
+  LOOKUPS
+  # Order SPF edges by record.
+  RECORD
+  # Order SPF edges by spf-default.
+  SPF_DEFAULT
+}
+
 # A connection to a list of items.
 type SPFConnection {
   # Information to aid in pagination.
@@ -1828,6 +1922,38 @@ type SSL implements Node {
   ): GuidanceTagConnection
 }
 
+# Ordering options for SSL connections.
+input SSLOrder {
+  # The field to order SSL edges by.
+  field: SSLOrderField!
+  # The ordering direction.
+  direction: OrderDirection!
+}
+
+# Properties by which SSL connections can be ordered.
+enum SSLOrderField {
+  # Order SSL edges by their acceptable ciphers.
+  ACCEPTABLE_CIPHERS
+  # Order SSL edges by their acceptable curves.
+  ACCEPTABLE_CURVES
+  # Order SSL edges by ccs-injection-vulnerable.
+  CCS_INJECTION_VULNERABLE
+  # Order SSL edges by heart-bleed-vulnerable.
+  HEARTBLEED_VULNERABLE
+  # Order SSL edges by their strong ciphers.
+  STRONG_CIPHERS
+  # Order SSL edges by their strong curves.
+  STRONG_CURVES
+  # Order SSL edges by supports-ecdh-key-exchange.
+  SUPPORTS_ECDH_KEY_EXCHANGE
+  # Order SSL edges by timestamp.
+  TIMESTAMP
+  # Order SSL edges by their weak ciphers.
+  WEAK_CIPHERS
+  # Order SSL edges by their weak curves.
+  WEAK_CURVES
+}
+
 # A connection to a list of items.
 type SSLConnection {
   # Information to aid in pagination.
@@ -1909,6 +2035,16 @@ input UpdateDomainInput {
   clientMutationId: String
 }
 
+type UpdateOrganizationPayload {
+  # `UpdateOrganizationUnion` returning either an `Organization`, or `OrganizationError` object.
+  result: UpdateOrganizationUnion!
+  clientMutationId: String
+}
+
+# This union is used with the `UpdateOrganization` mutation,
+# allowing for users to update an organization, and support any errors that may occur
+union UpdateOrganizationUnion = OrganizationError | Organization
+
 input UpdateOrganizationInput {
   # The global id of the organization to be updated.
   id: ID!
@@ -1940,12 +2076,6 @@ input UpdateOrganizationInput {
   cityEN: String
   # The French translation of the city the organization resides in.
   cityFR: String
-  clientMutationId: String
-}
-
-type UpdateOrganizationPayload {
-  # The newly created organization.
-  organization: Organization
   clientMutationId: String
 }
 
@@ -2262,6 +2392,7 @@ type WebScan {
     first: Int
     before: String
     last: Int
+    orderBy: HTTPSOrder
   ): HTTPSConnection
   # Secure Socket Layer scan results.
   ssl(
@@ -2273,6 +2404,7 @@ type WebScan {
     first: Int
     before: String
     last: Int
+    orderBy: SSLOrder
   ): SSLConnection
 }
 

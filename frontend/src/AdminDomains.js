@@ -150,16 +150,37 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           position: 'top-left',
         })
       },
-      onCompleted() {
-        removeOnClose()
-        toast({
-          title: t`Domain removed`,
-          description: t`Domain removed from ${orgSlug}`,
-          status: 'info',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
+      onCompleted({ removeDomain }) {
+        if (removeDomain.result.__typename === 'DomainResult') {
+          removeOnClose()
+          toast({
+            title: t`Domain removed`,
+            description: t`Domain removed from ${orgSlug}`,
+            status: 'info',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else if (removeDomain.result.__typename === 'DomainError') {
+          toast({
+            title: t`Unable to remove domain.`,
+            description: removeDomain.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect removeDomain.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect removeDomain.result typename.')
+        }
       },
     },
   )
@@ -236,12 +257,11 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
       </Text>
       <InputGroup width="100%" mb="8px">
         <InputLeftElement>
-          <Icon name="search" color="gray.300" />
+          <Icon name="add" color="gray.300" />
         </InputLeftElement>
         <Input
           type="text"
-          placeholder={t`Search for a domain`}
-          value={domainSearch}
+          placeholder={t`Add a domain`}
           onChange={(e) => {
             setDomainSearch(e.target.value)
           }}

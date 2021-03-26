@@ -104,8 +104,12 @@ msgstr "Compte créé"
 msgid "Acronym"
 msgstr "Acronyme"
 
-#: src/AdminDomains.js:275
+#: src/AdminDomains.js:295
 msgid "Add Domain"
+msgstr "Ajouter un domaine"
+
+#: src/AdminDomains.js:264
+msgid "Add a domain"
 msgstr "Ajouter un domaine"
 
 #: src/FloatingMenu.js:131
@@ -154,8 +158,8 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 
 #: src/AdminDomains.js:92
 #: src/AdminDomains.js:145
-#: src/AdminDomains.js:176
-#: src/AdminDomains.js:255
+#: src/AdminDomains.js:197
+#: src/AdminDomains.js:275
 #: src/TwoFactorAuthenticatePage.js:34
 #: src/UserList.js:116
 #: src/UserList.js:208
@@ -277,8 +281,8 @@ msgstr "Le champ de code ne doit pas être vide"
 msgid "Compliant TLS"
 msgstr "TLS conformant"
 
-#: src/AdminDomains.js:413
-#: src/AdminDomains.js:456
+#: src/AdminDomains.js:433
+#: src/AdminDomains.js:476
 #: src/EditableUserDisplayName.js:177
 #: src/EditableUserEmail.js:175
 #: src/EditableUserPassword.js:198
@@ -299,7 +303,7 @@ msgstr "Confirmez le mot de passe :"
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: src/AdminDomains.js:436
+#: src/AdminDomains.js:456
 msgid "Confirm removal of domain:"
 msgstr "Confirmer la suppression du domaine :"
 
@@ -320,7 +324,7 @@ msgstr "Créez un compte en entrant un courriel et un mot de passe."
 msgid "Current Display Name:"
 msgstr "Nom de l'affichage actuel :"
 
-#: src/AdminDomains.js:371
+#: src/AdminDomains.js:391
 msgid "Current Domain URL:"
 msgstr "URL du domaine actuel :"
 
@@ -368,10 +372,6 @@ msgstr "Résultats DKIM"
 #: src/DmarcReportPage.js:276
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
-
-#: src/DomainsPage.js:135
-msgid "DKIM Status"
-msgstr "Statut DKIM"
 
 #: src/guidanceTagConstants.js:414
 msgid "DKIM TXT record invalid"
@@ -437,10 +437,6 @@ msgstr "Messages de la DMARC"
 msgid "DMARC Report"
 msgstr "Rapport de la DMARC"
 
-#: src/DomainsPage.js:136
-msgid "DMARC Status"
-msgstr "Statut DMARC"
-
 #: src/SummaryGroup.js:44
 msgid "DMARC fail"
 msgstr "DMARC échoue"
@@ -483,12 +479,11 @@ msgid "Disposition"
 msgstr "Disposition"
 
 #: src/DmarcByDomainPage.js:84
-#: src/DomainsPage.js:130
 msgid "Domain"
 msgstr "Domaine"
 
-#: src/AdminDomains.js:227
-#: src/AdminDomains.js:235
+#: src/AdminDomains.js:248
+#: src/AdminDomains.js:256
 msgid "Domain List"
 msgstr "Liste des domaines"
 
@@ -524,15 +519,15 @@ msgstr "Domaine non préchargé par le HSTS"
 msgid "Domain not pre-loaded by HSTS, but is pre-load ready"
 msgstr "Le domaine n'est pas préchargé par le HSTS, mais est prêt à être préchargé"
 
-#: src/AdminDomains.js:156
+#: src/AdminDomains.js:157
 msgid "Domain removed"
 msgstr "Domaine supprimé"
 
-#: src/AdminDomains.js:157
+#: src/AdminDomains.js:158
 msgid "Domain removed from {orgSlug}"
 msgstr "Domaine supprimé de {orgSlug}"
 
-#: src/AdminDomains.js:187
+#: src/AdminDomains.js:208
 msgid "Domain updated"
 msgstr "Domaine mis à jour"
 
@@ -550,8 +545,8 @@ msgid "Domain:"
 msgstr "Domaine:"
 
 #: src/App.js:71
-#: src/DomainsPage.js:64
-#: src/DomainsPage.js:85
+#: src/DomainsPage.js:54
+#: src/DomainsPage.js:61
 #: src/OrganizationDetails.js:88
 #: src/OrganizationDomains.js:39
 msgid "Domains"
@@ -573,7 +568,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/AdminDomains.js:365
+#: src/AdminDomains.js:385
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
@@ -763,10 +758,6 @@ msgstr "HTTP Strict Transport Security (HSTS) non mis en œuvre"
 msgid "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year"
 msgstr "L'âge maximum de la politique de sécurité stricte des transports HTTP (HSTS) est inférieur à un an"
 
-#: src/DomainsPage.js:132
-msgid "HTTPS Status"
-msgstr "Statut HTTPS"
-
 #: src/guidanceTagConstants.js:499
 msgid "HTTPS certificate chain is invalid"
 msgstr "La chaîne de certificats HTTPS n'est pas valable"
@@ -867,12 +858,17 @@ msgstr ""
 msgid "Incorrect inviteUserToOrg.result typename."
 msgstr ""
 
+#: src/AdminDomains.js:176
+msgid "Incorrect removeDomain.result typename."
+msgstr ""
+
 #: src/ResetPasswordPage.js:61
 msgid "Incorrect resetPassword.result typename."
 msgstr ""
 
 #: src/AdminDomains.js:122
-#: src/AdminDomains.js:206
+#: src/AdminDomains.js:175
+#: src/AdminDomains.js:227
 #: src/CreateUserPage.js:92
 #: src/EditableUserDisplayName.js:82
 #: src/EditableUserEmail.js:80
@@ -901,7 +897,7 @@ msgstr "Nom d'utilisateur incorrect signIn.result."
 msgid "Incorrect signUp.result typename."
 msgstr ""
 
-#: src/AdminDomains.js:207
+#: src/AdminDomains.js:228
 msgid "Incorrect updateDomain.result typename."
 msgstr ""
 
@@ -949,6 +945,10 @@ msgstr "Clé publique invalide"
 msgid "Invite User"
 msgstr "Inviter l'utilisateur"
 
+#: src/UserList.js:253
+msgid "Invite a user"
+msgstr "Inviter un utilisateur"
+
 #: src/months.js:4
 msgid "January"
 msgstr "Janvier"
@@ -974,14 +974,6 @@ msgstr "La langue:"
 #: src/DmarcReportPage.js:138
 msgid "Last 30 Days"
 msgstr "Les 30 derniers jours"
-
-#: src/DomainsPage.js:131
-#~ msgid "Last Ran"
-#~ msgstr "Dernier Ran"
-
-#: src/DomainsPage.js:131
-msgid "Last Scanned"
-msgstr "Dernière numérisation"
 
 #: src/Domain.js:39
 #: src/DomainCard.js:55
@@ -1095,11 +1087,11 @@ msgstr "Nom"
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage :"
 
-#: src/AdminDomains.js:394
+#: src/AdminDomains.js:414
 msgid "New Domain Url"
 msgstr "Nouvel Url de domaine"
 
-#: src/AdminDomains.js:388
+#: src/AdminDomains.js:408
 msgid "New Domain Url:"
 msgstr "Nouvelle URL de domaine :"
 
@@ -1115,7 +1107,7 @@ msgstr "Nouveau mot de passe :"
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
-#: src/AdminDomains.js:256
+#: src/AdminDomains.js:276
 msgid "New domain name cannot be empty"
 msgstr "Un nouveau nom de domaine ne peut pas être vide"
 
@@ -1123,8 +1115,8 @@ msgstr "Un nouveau nom de domaine ne peut pas être vide"
 msgid "Next"
 msgstr "Suivant"
 
-#: src/AdminDomains.js:285
-#: src/DomainsPage.js:67
+#: src/AdminDomains.js:305
+#: src/DomainsPage.js:89
 #: src/OrganizationDomains.js:49
 msgid "No Domains"
 msgstr "Aucun domaine"
@@ -1509,9 +1501,13 @@ msgstr ""
 msgid "RUF-none"
 msgstr ""
 
-#: src/AdminDomains.js:430
+#: src/AdminDomains.js:450
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
+
+#: src/App.js:219
+msgid "Report an Issue"
+msgstr "Signaler un problème"
 
 #: src/ScanDomain.js:76
 msgid "Request a domain to be scanned:"
@@ -1580,10 +1576,6 @@ msgstr "Défaillances du SPF par adresse IP"
 msgid "SPF Results"
 msgstr "Résultats du SPF"
 
-#: src/DomainsPage.js:134
-msgid "SPF Status"
-msgstr "Statut SPF"
-
 #: src/guidanceTagConstants.js:278
 msgid "SPF implemented in incorrect subdomain"
 msgstr "SPF implémenté dans un sous-domaine incorrect"
@@ -1599,10 +1591,6 @@ msgstr ""
 #: src/guidanceTagConstants.js:270
 msgid "SPF-missing"
 msgstr ""
-
-#: src/DomainsPage.js:133
-msgid "SSL Status"
-msgstr "Statut SSL"
 
 #: src/guidanceTagConstants.js:447
 msgid "SSL-3des"
@@ -1640,7 +1628,7 @@ msgstr "Sauvegarder la langue"
 msgid "Save TFA Method"
 msgstr "Méthode Save TFA"
 
-#: src/DomainsPage.js:94
+#: src/DomainsPage.js:70
 msgid "Scan"
 msgstr "Scanner"
 
@@ -1660,24 +1648,23 @@ msgstr "Scan du domaine demandé avec succès"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
-#: src/DomainsPage.js:91
+#: src/DomainsPage.js:67
 msgid "Search"
 msgstr "Recherchez"
 
-#: src/AdminDomains.js:243
-#: src/DomainsPage.js:113
+#: src/DomainsPage.js:84
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
-#: src/UserList.js:253
-msgid "Search for a user"
-msgstr "Rechercher un utilisateur"
+#: src/UserList.js:231
+#~ msgid "Search for a user"
+#~ msgstr "Rechercher un utilisateur"
 
 #: src/Organizations.js:109
 msgid "Search for an organization"
 msgstr "Rechercher une organisation"
 
-#: src/DomainsPage.js:101
+#: src/DomainsPage.js:77
 msgid "Search for any Government of Canada tracked domain:"
 msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
 
@@ -1747,10 +1734,9 @@ msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
-#: src/DomainsPage.js:118
 #: src/Organizations.js:113
 msgid "Sort by:"
-msgstr "Trier par :"
+msgstr "Trier par:"
 
 #: src/DmarcReportPage.js:262
 msgid "Source IP Address"
@@ -1842,11 +1828,11 @@ msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
 #: src/CreateUserPage.js:83
 msgid "Unable to create account, please try again."
-msgstr "Impossible de créer un compte, veuillez réessayer."
+msgstr ""
 
 #: src/AdminDomains.js:113
 msgid "Unable to create new domain."
-msgstr "Impossible de créer un nouveau domaine."
+msgstr ""
 
 #: src/CreateUserPage.js:54
 msgid "Unable to create your account, please try again."
@@ -1854,7 +1840,11 @@ msgstr "Impossible de créer votre compte, veuillez réessayer"
 
 #: src/UserList.js:138
 msgid "Unable to invite user."
-msgstr "Impossible d'inviter un utilisateur."
+msgstr ""
+
+#: src/AdminDomains.js:166
+msgid "Unable to remove domain."
+msgstr ""
 
 #: src/ScanDomain.js:32
 msgid "Unable to request scan, please try again."
@@ -1862,7 +1852,7 @@ msgstr "Impossible de demander un balayage, veuillez réessayer."
 
 #: src/ResetPasswordPage.js:51
 msgid "Unable to reset your password, please try again."
-msgstr "Impossible de réinitialiser votre mot de passe, veuillez réessayer."
+msgstr ""
 
 #: src/ForgotPasswordPage.js:28
 msgid "Unable to send password reset link to email."
@@ -1875,9 +1865,9 @@ msgstr "Impossible d'envoyer le lien de réinitialisation du mot de passe par co
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
-#: src/AdminDomains.js:197
+#: src/AdminDomains.js:218
 msgid "Unable to update domain."
-msgstr "Impossible de mettre à jour le domaine."
+msgstr ""
 
 #: src/ResetPasswordPage.js:31
 msgid "Unable to update password"
@@ -1905,7 +1895,7 @@ msgstr "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessaye
 
 #: src/UserList.js:85
 msgid "Unable to update user role."
-msgstr "Impossible de mettre à jour le rôle de l'utilisateur."
+msgstr ""
 
 #: src/EditableUserPassword.js:73
 msgid "Unable to update your password, please try again."
@@ -2165,7 +2155,7 @@ msgstr "{0} a été ajouté à {orgSlug}"
 msgid "{count} records..."
 msgstr "{count} enregistrements..."
 
-#: src/AdminDomains.js:188
+#: src/AdminDomains.js:209
 msgid "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 
