@@ -1,9 +1,5 @@
 /*eslint-disable*/ module.exports = {
   messages: {
-    '*All data represented is mocked for demonstration purposes':
-      '*Toutes les données représentées sont simulées à des fins de démonstration',
-    "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature":
-      "*Les barres de recherche ne recherchent pas activement les bases de données actuellement. Elles sont utilisées pour démontrer la fonction du bouton 'Ajouter'",
     '3.2.2 Third Parties and DKIM': '3.2.2 Expéditeurs tiers et DKIM',
     '404 - Page Not Found': '404 - Page non trouvée',
     'A-all': 'A-all',
@@ -33,6 +29,8 @@
     'Account created.': 'Compte créé',
     Acronym: 'Acronyme',
     'Add Domain': 'Ajouter un domaine',
+    'Add a domain': 'Add a domain',
+    Admin: 'Administrateur',
     'Admin Portal': 'Portail Admin',
     'Admin Profile': "Profil de l'administrateur",
     'An email was sent with a link to reset your password':
@@ -58,6 +56,8 @@
     'As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.':
       "Conformément à la section 3.6.1 du RFC, l'indicateur de test t=y signifie que les vérificateurs DOIVENT traiter les messages comme non signés (c'est-à-dire que DKIM n'est pas activé), donc cet indicateur ne doit pas être activé.",
     August: 'Août',
+    Authenticate: 'Authentifier',
+    'Authentication QR Code': "Code QR d'authentification",
     'B.1.1 SPF Records': 'B.1.1 Enregistrements SPF',
     'B.1.3 DNS Lookup Limit': 'B.1.3 Limite de recherches DNS',
     'B.2.1 DKIM Records': 'B.2.1 Enregistrements DKIM',
@@ -71,8 +71,8 @@
     'CCCS added to Forensic sender list':
       'Le CCCS ajouté à la liste des expéditeurs de la police scientifique',
     'CNAME-DMARC': 'CNAME-DMARC',
-    'Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure.':
-      "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre des services en ligne sécurisés. Un nouvel avis de politique vise à assurer que les sites gouvernementaux soient conformes aux bonnes pratiques en matière de sécurité Web. Voyez comment les sites gouvernementaux deviennent plus sécuritaires.",
+    'Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure.':
+      "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour le courrier électronique et les services Web. Suivez l'évolution de la sécurisation des sites gouvernementaux.",
     'Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.':
       'Le CCCS ajouté à la liste des expéditeurs de la police scientifique',
     'Certificate chain signed using SHA-256/SHA-384/AEAD':
@@ -98,6 +98,7 @@
     'Confirm removal of domain:': 'Confirmer la suppression du domaine :',
     'Contact 3rd party': 'Contacter une tierce partie',
     'Create Account': 'Créer un compte',
+    'Create an Account': 'Créer un compte',
     'Create an account by entering an email and password.':
       'Créez un compte en entrant un courriel et un mot de passe.',
     'Current Display Name:': "Nom de l'affichage actuel :",
@@ -114,6 +115,7 @@
     'DKIM Flag t': 'DKIM Flag t',
     'DKIM Results': 'Résultats DKIM',
     'DKIM Selectors': 'Sélecteurs DKIM',
+    'DKIM Status': 'Statut DKIM',
     'DKIM TXT record invalid': 'Enregistrement DKIM TXT non valable',
     'DKIM key does not use RSA': "La clé DKIM n'utilise pas le RSA",
     'DKIM record missing but MX uses O365. Follow cloud-specific guidance':
@@ -126,6 +128,7 @@
     'DKIM-value-invalid': 'DKIM-value-invalid',
     'DMARC Failure Table': 'Tableau des échecs de la DMARC',
     'DMARC Failures by IP Address': 'Défaillances du DMARC par adresse IP',
+    'DMARC Implementation Phase: {0}': ['DMARC Implementation Phase: ', ['0']],
     'DMARC Implementation Phase: {status}': [
       'Phase de mise en œuvre de la DMARC: ',
       ['status'],
@@ -133,6 +136,7 @@
     'DMARC Messages': 'Messages de la DMARC',
     'DMARC Not Implemented': "La DMARC n'est pas mise en œuvre",
     'DMARC Report': 'Rapport de la DMARC',
+    'DMARC Status': 'Statut DMARC',
     'DMARC fail': 'DMARC échoue',
     'DMARC pass': 'Passe DMARC',
     'DMARC-GC': 'DMARC-GC',
@@ -144,6 +148,8 @@
     'Display name cannot be empty': "Le nom d'affichage ne peut pas être vide",
     Disposition: 'Disposition',
     Domain: 'Domaine',
+    'Domain DMARC Report': 'Rapport DMARC de domaine',
+    'Domain Details': 'Détails du domaine',
     'Domain List': 'Liste des domaines',
     'Domain URL': 'URL du domaine',
     'Domain URL:': 'URL du domaine:',
@@ -198,6 +204,7 @@
       'Pour des conseils approfondis sur la mise en œuvre du CCCS :',
     'For technical implementation guidance:':
       'Pour des conseils de mise en œuvre technique :',
+    'Forgot Password': 'Mot de passe oublié',
     'Forgot your password?': 'Oublié votre mot de passe?',
     'Full Fail %': 'Échec total %',
     'Full Pass %': 'Passage complet %',
@@ -219,6 +226,7 @@
       'HTTP Strict Transport Security (HSTS) non mis en œuvre',
     'HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year':
       "L'âge maximum de la politique de sécurité stricte des transports HTTP (HSTS) est inférieur à un an",
+    'HTTPS Status': 'Statut HTTPS',
     'HTTPS certificate chain is invalid':
       "La chaîne de certificats HTTPS n'est pas valable",
     'HTTPS certificate is expired': 'Le certificat HTTPS est expiré',
@@ -245,8 +253,12 @@
     'Implementation Status:': "État d'avancement de la mise en œuvre:",
     'Incorrect authenticate.result typename.':
       'Incorrect authenticate.result typename.',
+    'Incorrect createDomain.result typename.':
+      'Incorrect createDomain.result typename.',
     'Incorrect inviteUserToOrg.result typename.':
       'Incorrect inviteUserToOrg.result typename.',
+    'Incorrect removeDomain.result typename.':
+      'Incorrect removeDomain.result typename.',
     'Incorrect resetPassword.result typename.':
       'Incorrect resetPassword.result typename.',
     'Incorrect send method received.': "Méthode d'envoi incorrecte reçue.",
@@ -255,10 +267,14 @@
     'Incorrect signIn.result typename.':
       "Nom d'utilisateur incorrect signIn.result.",
     'Incorrect signUp.result typename.': 'Incorrect signUp.result typename.',
+    'Incorrect updateDomain.result typename.':
+      'Incorrect updateDomain.result typename.',
     'Incorrect updateUserPassword.result typename.':
       'Incorrect updateUserPassword.result typename.',
     'Incorrect updateUserProfile.result typename.':
       'Incorrect updateUserProfile.result typename.',
+    'Incorrect updateUserRole.result typename.':
+      'Incorrect updateUserRole.result typename.',
     'Incorrect verifyPhoneNumber.result typename.':
       "Une erreur s'est produite lors de la vérification de votre numéro de téléphone.",
     'Internet facing services': "Services d'accès à Internet",
@@ -270,12 +286,14 @@
     'Invalid percent': 'Pourcentage non valable',
     'Invalid public key': 'Clé publique invalide',
     'Invite User': "Inviter l'utilisateur",
+    'Invite a user': 'Inviter un utilisateur',
     January: 'Janvier',
     July: 'Juillet',
     June: 'Juin',
     'L-30-D': 'L-30-D',
     'Language:': 'La langue:',
     'Last 30 Days': 'Les 30 derniers jours',
+    'Last Scanned': 'Dernière numérisation',
     'Last scanned:': 'Dernier scan:',
     'Level of Enforcment:': "Niveau d'application:",
     'Loading {children}...': ['Chargement ', ['children'], '...'],
@@ -330,7 +348,6 @@
     'One or more ciphers in use are not compliant with guidelines':
       'Un ou plusieurs chiffres utilisés ne sont pas conformes aux lignes directrices',
     'Organization Details': "Détails de l'organisation",
-    'Organization Info': "Informations sur l'organisation",
     'Organization:': 'Organisation:',
     Organizations: 'Organisations',
     'Owner has not configured Aggregate reporting.':
@@ -372,7 +389,6 @@
       'Le mot de passe doit comporter au moins 12 caractères',
     'Password:': 'Mot de passe :',
     'Passwords must match': 'Les mots de passe doivent correspondre',
-    'Phase:': 'Phase:',
     Phone: 'Téléphone',
     'Phone Number': 'Numéro de téléphone',
     'Phone Number:': 'Numéro de téléphone:',
@@ -424,7 +440,9 @@
     'RUF-CCCS': 'RUF-CCCS',
     'RUF-none': 'RUF-none',
     'Remove Domain': 'Supprimer un domaine',
+    'Report an Issue': 'Signaler un problème',
     'Request a domain to be scanned:': "Demander qu'un domaine soit scanné:",
+    'Reset Password': 'Réinitialiser le mot de passe',
     'Result:': 'Résultat',
     'Results for scans of email technologies (DMARC, SPF, DKIM).':
       'Résultats des analyses des technologies du courrier électronique (DMARC, SPF, DKIM).',
@@ -442,11 +460,13 @@
     'SPF Failure Table': 'Tableau des échecs du SPF',
     'SPF Failures by IP Address': 'Défaillances du SPF par adresse IP',
     'SPF Results': 'Résultats du SPF',
+    'SPF Status': 'Statut SPF',
     'SPF implemented in incorrect subdomain':
       'SPF implémenté dans un sous-domaine incorrect',
     'SPF-GC': 'SPF-GC',
     'SPF-bad-path': 'SPF-bad-path',
     'SPF-missing': 'SPF-missing',
+    'SSL Status': 'Statut SSL',
     'SSL-3des': 'SSL-3des',
     'SSL-GC': 'SSL-GC',
     'SSL-acceptable-certificate': 'SSL-acceptable-certificate',
@@ -490,8 +510,6 @@
     'Source IP Address': 'Adresse IP source',
     Submit: 'Soumettre',
     Summary: 'Résumé',
-    'Summary Cards': 'Fiches de synthèse',
-    'Summary:': 'Résumé:',
     'T-enabled': 'T-enabled',
     TBD: 'TBD',
     'TFA Method:': 'Méthode TFA:',
@@ -509,8 +527,8 @@
       'Ce service est développé de façon ouverte',
     'Total Messages': 'Total des messages',
     'Total users': 'total des utilisateurs',
-    'Track Web Security Compliance':
-      'Suivre la conformité de la sécurité du Web',
+    'Track Digital Security': 'Track Digital Security',
+    Tracker: 'Suivi',
     'Tracker Logo': 'Logo du Tracker',
     'Two Factor Authentication': 'Authentification à deux facteurs',
     USER: 'UTILISATEUR',
@@ -518,9 +536,11 @@
       "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer.",
     'Unable to create account, please try again.':
       'Unable to create account, please try again.',
+    'Unable to create new domain.': 'Unable to create new domain.',
     'Unable to create your account, please try again.':
       'Impossible de créer votre compte, veuillez réessayer',
     'Unable to invite user.': 'Unable to invite user.',
+    'Unable to remove domain.': 'Unable to remove domain.',
     'Unable to request scan, please try again.':
       'Impossible de demander un balayage, veuillez réessayer.',
     'Unable to reset your password, please try again.':
@@ -529,6 +549,7 @@
       "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel.",
     'Unable to sign in to your account, please try again.':
       'Impossible de vous connecter à votre compte, veuillez réessayer.',
+    'Unable to update domain.': 'Unable to update domain.',
     'Unable to update password': 'Impossible de mettre à jour le mot de passe',
     'Unable to update to your TFA send method, please try again.':
       "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réessayer.",
@@ -540,6 +561,7 @@
       'Impossible de mettre à jour votre langue préférée, veuillez réessayer.',
     'Unable to update to your username, please try again.':
       "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessayer.",
+    'Unable to update user role.': 'Unable to update user role.',
     'Unable to update your password, please try again.':
       'Impossible de mettre à jour votre mot de passe, veuillez réessayer.',
     'Unable to update your phone number, please try again.':
@@ -605,6 +627,7 @@
       'Vous pouvez maintenant vous connecter avec votre nouveau mot de passe',
     'Your 2FA app will then have a valid code that you can use when you sign in.':
       "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez.",
+    'Your Account': 'Votre compte',
     'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322':
       'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a322',
     'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23':

@@ -1387,6 +1387,7 @@ type Query {
   findMyDomains(
     # Limit domains to those that belong to an organization that has ownership.
     ownership: Boolean
+    orderBy: DomainOrder
     after: String
     first: Int
     before: String
@@ -2034,6 +2035,16 @@ input UpdateDomainInput {
   clientMutationId: String
 }
 
+type UpdateOrganizationPayload {
+  # `UpdateOrganizationUnion` returning either an `Organization`, or `OrganizationError` object.
+  result: UpdateOrganizationUnion!
+  clientMutationId: String
+}
+
+# This union is used with the `UpdateOrganization` mutation,
+# allowing for users to update an organization, and support any errors that may occur
+union UpdateOrganizationUnion = OrganizationError | Organization
+
 input UpdateOrganizationInput {
   # The global id of the organization to be updated.
   id: ID!
@@ -2065,12 +2076,6 @@ input UpdateOrganizationInput {
   cityEN: String
   # The French translation of the city the organization resides in.
   cityFR: String
-  clientMutationId: String
-}
-
-type UpdateOrganizationPayload {
-  # The newly created organization.
-  organization: Organization
   clientMutationId: String
 }
 
