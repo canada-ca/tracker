@@ -1602,7 +1602,7 @@ msgstr ""
 
 #: src/DomainsPage.js:133
 msgid "SSL Status"
-msgstr ""
+msgstr "Statut SSL"
 
 #: src/guidanceTagConstants.js:447
 msgid "SSL-3des"
