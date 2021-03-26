@@ -197,6 +197,7 @@ export default function App() {
         <FloatingMenu />
         <Footer>
           <Link
+            isExternal={true}
             href={
               i18n.locale === 'en'
                 ? 'https://www.canada.ca/en/transparency/privacy.html'
@@ -207,6 +208,7 @@ export default function App() {
           </Link>
           <Link
             ml={4}
+            isExternal={true}
             href={
               i18n.locale === 'en'
                 ? 'https://www.canada.ca/en/transparency/terms.html'
@@ -214,6 +216,13 @@ export default function App() {
             }
           >
             <Trans>Terms & conditions</Trans>
+          </Link>
+          <Link
+            ml={4}
+            href={"https://github.com/canada-ca/tracker/issues"}
+            isExternal={true}
+          >
+            <Trans>Report an Issue</Trans>
           </Link>
         </Footer>
       </Flex>

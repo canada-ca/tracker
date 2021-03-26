@@ -385,6 +385,10 @@ msgstr "Résultats DKIM"
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
 
+#: src/DomainsPage.js:135
+msgid "DKIM Status"
+msgstr "Statut DKIM"
+
 #: src/guidanceTagConstants.js:414
 msgid "DKIM TXT record invalid"
 msgstr "Enregistrement DKIM TXT non valable"
@@ -453,6 +457,10 @@ msgstr "Messages de la DMARC"
 #: src/DomainCard.js:167
 msgid "DMARC Report"
 msgstr "Rapport de la DMARC"
+
+#: src/DomainsPage.js:136
+msgid "DMARC Status"
+msgstr "Statut DMARC"
 
 #: src/SummaryGroup.js:44
 msgid "DMARC fail"
@@ -789,6 +797,10 @@ msgstr "HTTP Strict Transport Security (HSTS) non mis en œuvre"
 msgid "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year"
 msgstr "L'âge maximum de la politique de sécurité stricte des transports HTTP (HSTS) est inférieur à un an"
 
+#: src/DomainsPage.js:132
+msgid "HTTPS Status"
+msgstr "Statut HTTPS"
+
 #: src/guidanceTagConstants.js:499
 msgid "HTTPS certificate chain is invalid"
 msgstr "La chaîne de certificats HTTPS n'est pas valable"
@@ -977,6 +989,10 @@ msgstr "Clé publique invalide"
 msgid "Invite User"
 msgstr "Inviter l'utilisateur"
 
+#: src/UserList.js:253
+msgid "Invite a user"
+msgstr "Inviter un utilisateur"
+
 #: src/months.js:4
 msgid "January"
 msgstr "Janvier"
@@ -1002,6 +1018,10 @@ msgstr "La langue:"
 #: src/DmarcReportPage.js:140
 msgid "Last 30 Days"
 msgstr "Les 30 derniers jours"
+
+#: src/DomainsPage.js:131
+msgid "Last Scanned"
+msgstr "Dernière numérisation"
 
 #: src/Domain.js:39
 #: src/DomainCard.js:55
@@ -1535,6 +1555,10 @@ msgstr ""
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
+#: src/App.js:221
+msgid "Report an Issue"
+msgstr "Signaler un problème"
+
 #: src/ScanDomain.js:76
 msgid "Request a domain to be scanned:"
 msgstr "Demander qu'un domaine soit scanné:"
@@ -1606,6 +1630,10 @@ msgstr "Défaillances du SPF par adresse IP"
 msgid "SPF Results"
 msgstr "Résultats du SPF"
 
+#: src/DomainsPage.js:134
+msgid "SPF Status"
+msgstr "Statut SPF"
+
 #: src/guidanceTagConstants.js:278
 msgid "SPF implemented in incorrect subdomain"
 msgstr "SPF implémenté dans un sous-domaine incorrect"
@@ -1621,6 +1649,10 @@ msgstr ""
 #: src/guidanceTagConstants.js:270
 msgid "SPF-missing"
 msgstr ""
+
+#: src/DomainsPage.js:133
+msgid "SSL Status"
+msgstr "Statut SSL"
 
 #: src/guidanceTagConstants.js:447
 msgid "SSL-3des"

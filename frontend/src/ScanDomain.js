@@ -75,7 +75,7 @@ export function ScanDomain() {
                 <Text fontSize="2xl" mb="2" textAlign={['center', 'left']}>
                   <Trans>Request a domain to be scanned:</Trans>
                 </Text>
-                <DomainField name="domain" mb="4" />
+                <DomainField name="domain" mb="4" isDisabled={true} />
 
                 <TrackerButton
                   w={['100%', '25%']}

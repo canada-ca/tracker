@@ -244,13 +244,13 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             >
               <InputGroup flexGrow={1}>
                 <InputLeftElement>
-                  <Icon name="search" color="gray.300" />
+                  <Icon name="add" color="gray.300" />
                 </InputLeftElement>
                 <Input
                   as={Field}
                   type="email"
                   name="userName"
-                  placeholder={t`Search for a user`}
+                  placeholder={t`Invite a user`}
                   isDisabled={addUserLoading}
                 />
               </InputGroup>

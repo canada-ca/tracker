@@ -3,7 +3,7 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { Acronym } from '../../scalars'
-import { organizationType } from '../objects'
+import { updateOrganizationUnion } from '../unions'
 
 export const updateOrganization = new mutationWithClientMutationId({
   name: 'UpdateOrganization',
@@ -82,12 +82,11 @@ export const updateOrganization = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    organization: {
-      type: organizationType,
-      description: 'The newly created organization.',
-      resolve: async (payload) => {
-        return payload.organization
-      },
+    result: {
+      type: GraphQLNonNull(updateOrganizationUnion),
+      description:
+        '`UpdateOrganizationUnion` returning either an `Organization`, or `OrganizationError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -134,7 +133,11 @@ export const updateOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to update organization: ${orgKey}, however no organizations is associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to update unknown organization.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to update unknown organization.`),
+      }
     }
 
     // Check to see if user has permission
@@ -144,11 +147,13 @@ export const updateOrganization = new mutationWithClientMutationId({
       console.error(
         `User: ${userKey} attempted to update organization ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(
           t`Permission Denied: Please contact organization admin for help with updating organization.`,
         ),
-      )
+      }
     }
 
     // Check to see if any orgs already have the name in use
@@ -173,11 +178,13 @@ export const updateOrganization = new mutationWithClientMutationId({
         console.error(
           `User: ${userKey} attempted to change the name of org: ${currentOrg._key} however it is already in use.`,
         )
-        throw new Error(
-          i18n._(
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(
             t`Organization name already in use, please choose another and try again.`,
           ),
-        )
+        }
       }
     }
 
@@ -279,8 +286,6 @@ export const updateOrganization = new mutationWithClientMutationId({
     const organization = await orgLoaderByKey.load(orgKey)
 
     console.info(`User: ${userKey}, successfully updated org ${orgKey}.`)
-    return {
-      organization,
-    }
+    return organization
   },
 })
