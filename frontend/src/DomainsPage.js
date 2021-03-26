@@ -81,7 +81,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                 <InputLeftElement>
                   <Icon name="search" color="gray.300" />
                 </InputLeftElement>
-                <Input type="text" placeholder={t`Search for a domain`} />
+                <Input type="text" placeholder={t`Search for a domain`} isDisabled={true} />
               </InputGroup>
 
               <ListOf

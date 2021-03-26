@@ -104,8 +104,12 @@ msgstr "Compte créé"
 msgid "Acronym"
 msgstr "Acronyme"
 
-#: src/AdminDomains.js:296
+#: src/AdminDomains.js:295
 msgid "Add Domain"
+msgstr "Ajouter un domaine"
+
+#: src/AdminDomains.js:264
+msgid "Add a domain"
 msgstr "Ajouter un domaine"
 
 #: src/FloatingMenu.js:131
@@ -155,7 +159,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/AdminDomains.js:92
 #: src/AdminDomains.js:145
 #: src/AdminDomains.js:197
-#: src/AdminDomains.js:276
+#: src/AdminDomains.js:275
 #: src/TwoFactorAuthenticatePage.js:34
 #: src/UserList.js:116
 #: src/UserList.js:208
@@ -277,8 +281,8 @@ msgstr "Le champ de code ne doit pas être vide"
 msgid "Compliant TLS"
 msgstr "TLS conformant"
 
-#: src/AdminDomains.js:434
-#: src/AdminDomains.js:477
+#: src/AdminDomains.js:433
+#: src/AdminDomains.js:476
 #: src/EditableUserDisplayName.js:177
 #: src/EditableUserEmail.js:175
 #: src/EditableUserPassword.js:198
@@ -299,7 +303,7 @@ msgstr "Confirmez le mot de passe :"
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: src/AdminDomains.js:457
+#: src/AdminDomains.js:456
 msgid "Confirm removal of domain:"
 msgstr "Confirmer la suppression du domaine :"
 
@@ -320,7 +324,7 @@ msgstr "Créez un compte en entrant un courriel et un mot de passe."
 msgid "Current Display Name:"
 msgstr "Nom de l'affichage actuel :"
 
-#: src/AdminDomains.js:392
+#: src/AdminDomains.js:391
 msgid "Current Domain URL:"
 msgstr "URL du domaine actuel :"
 
@@ -564,7 +568,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/AdminDomains.js:386
+#: src/AdminDomains.js:385
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
@@ -941,6 +945,10 @@ msgstr "Clé publique invalide"
 msgid "Invite User"
 msgstr "Inviter l'utilisateur"
 
+#: src/UserList.js:253
+msgid "Invite a user"
+msgstr "Inviter un utilisateur"
+
 #: src/months.js:4
 msgid "January"
 msgstr "Janvier"
@@ -1079,11 +1087,11 @@ msgstr "Nom"
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage :"
 
-#: src/AdminDomains.js:415
+#: src/AdminDomains.js:414
 msgid "New Domain Url"
 msgstr "Nouvel Url de domaine"
 
-#: src/AdminDomains.js:409
+#: src/AdminDomains.js:408
 msgid "New Domain Url:"
 msgstr "Nouvelle URL de domaine :"
 
@@ -1099,7 +1107,7 @@ msgstr "Nouveau mot de passe :"
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
-#: src/AdminDomains.js:277
+#: src/AdminDomains.js:276
 msgid "New domain name cannot be empty"
 msgstr "Un nouveau nom de domaine ne peut pas être vide"
 
@@ -1107,7 +1115,7 @@ msgstr "Un nouveau nom de domaine ne peut pas être vide"
 msgid "Next"
 msgstr "Suivant"
 
-#: src/AdminDomains.js:306
+#: src/AdminDomains.js:305
 #: src/DomainsPage.js:89
 #: src/OrganizationDomains.js:49
 msgid "No Domains"
@@ -1493,7 +1501,7 @@ msgstr ""
 msgid "RUF-none"
 msgstr ""
 
-#: src/AdminDomains.js:451
+#: src/AdminDomains.js:450
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
@@ -1644,14 +1652,13 @@ msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authen
 msgid "Search"
 msgstr "Recherchez"
 
-#: src/AdminDomains.js:264
 #: src/DomainsPage.js:84
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
-#: src/UserList.js:253
-msgid "Search for a user"
-msgstr "Rechercher un utilisateur"
+#: src/UserList.js:231
+#~ msgid "Search for a user"
+#~ msgstr "Rechercher un utilisateur"
 
 #: src/Organizations.js:109
 msgid "Search for an organization"

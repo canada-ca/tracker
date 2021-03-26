@@ -257,12 +257,11 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
       </Text>
       <InputGroup width="100%" mb="8px">
         <InputLeftElement>
-          <Icon name="search" color="gray.300" />
+          <Icon name="add" color="gray.300" />
         </InputLeftElement>
         <Input
           type="text"
-          placeholder={t`Search for a domain`}
-          value={domainSearch}
+          placeholder={t`Add a domain`}
           onChange={(e) => {
             setDomainSearch(e.target.value)
           }}
