@@ -424,7 +424,7 @@ msgstr "Défaillances du DMARC par adresse IP"
 
 #: src/ScanCard.js:48
 msgid "DMARC Implementation Phase: {0}"
-msgstr ""
+msgstr "Phase de mise en œuvre de DMARC : {0}"
 
 #: src/ScanCard.js:48
 #~ msgid "DMARC Implementation Phase: {status}"
@@ -1837,7 +1837,7 @@ msgstr "total des utilisateurs"
 
 #: src/WelcomeMessage.js:15
 msgid "Track Digital Security"
-msgstr ""
+msgstr "Suivre la sécurité numérique"
 
 #: src/TopBanner.js:36
 msgid "Tracker Logo"
@@ -1858,11 +1858,11 @@ msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
 #: src/CreateUserPage.js:83
 msgid "Unable to create account, please try again."
-msgstr ""
+msgstr "Impossible de créer un compte, veuillez réessayer."
 
 #: src/AdminDomains.js:113
 msgid "Unable to create new domain."
-msgstr ""
+msgstr "Impossible de créer un nouveau domaine."
 
 #: src/CreateUserPage.js:54
 msgid "Unable to create your account, please try again."
@@ -1870,11 +1870,11 @@ msgstr "Impossible de créer votre compte, veuillez réessayer"
 
 #: src/UserList.js:138
 msgid "Unable to invite user."
-msgstr ""
+msgstr "Impossible d'inviter un utilisateur."
 
 #: src/AdminDomains.js:166
 msgid "Unable to remove domain."
-msgstr ""
+msgstr "Impossible de supprimer le domaine."
 
 #: src/ScanDomain.js:32
 msgid "Unable to request scan, please try again."
@@ -1882,7 +1882,7 @@ msgstr "Impossible de demander un balayage, veuillez réessayer."
 
 #: src/ResetPasswordPage.js:51
 msgid "Unable to reset your password, please try again."
-msgstr ""
+msgstr "Impossible de réinitialiser votre mot de passe, veuillez réessayer."
 
 #: src/ForgotPasswordPage.js:28
 msgid "Unable to send password reset link to email."
@@ -1897,7 +1897,7 @@ msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
 #: src/AdminDomains.js:218
 msgid "Unable to update domain."
-msgstr ""
+msgstr "Impossible de mettre à jour le domaine."
 
 #: src/ResetPasswordPage.js:31
 msgid "Unable to update password"
@@ -1925,7 +1925,7 @@ msgstr "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessaye
 
 #: src/UserList.js:85
 msgid "Unable to update user role."
-msgstr ""
+msgstr "Impossible de mettre à jour le rôle de l'utilisateur."
 
 #: src/EditableUserPassword.js:73
 msgid "Unable to update your password, please try again."
