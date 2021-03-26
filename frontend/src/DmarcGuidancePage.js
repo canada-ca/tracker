@@ -14,6 +14,7 @@ import { useDocumentTitle } from './useDocumentTitle'
 export default function DmarcGuidancePage() {
   const { currentUser } = useUserState()
   const { domainSlug } = useParams()
+
   useDocumentTitle(`Tracker | ${domainSlug}`)
 
   const { loading, error, data } = useQuery(GET_GUIDANCE_TAGS_OF_DOMAIN, {

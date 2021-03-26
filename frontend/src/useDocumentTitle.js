@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
-export const useDocumentTitle = (title) => {
+export const useDocumentTitle = (title, setTitle = true) => {
   useEffect(() => {
-    document.title = title || 'Tracker'
-  }, [title])
+    if (setTitle) document.title = title || 'Tracker'
+  })
 }

@@ -156,11 +156,11 @@ export default function App() {
                 </ErrorBoundary>
               </PrivatePage>
 
-              <PrivatePage path="/domains" exact>
+              <PrivatePage path="/domains" title="Domains" exact>
                 <DomainsPage />
               </PrivatePage>
 
-              <PrivatePage path="/domains/:domainSlug" exact>
+              <PrivatePage path="/domains/:domainSlug" setTitle={false} exact>
                 <DmarcGuidancePage />
               </PrivatePage>
 
