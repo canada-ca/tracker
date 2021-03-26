@@ -106,7 +106,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
             <InputLeftElement>
               <Icon name="search" color="gray.300" />
             </InputLeftElement>
-            <Input type="text" placeholder={t`Search for an organization`} />
+            <Input type="text" placeholder={t`Search for an organization`} isDisabled={true} />
           </InputGroup>
           <Stack isInline align="center" ml={{ md: '10%' }}>
             <Text fontSize="md" fontWeight="bold" textAlign="center">
