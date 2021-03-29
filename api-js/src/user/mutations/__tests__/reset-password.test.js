@@ -17,7 +17,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
 
 describe('reset users password', () => {
-  let query, drop, truncate, schema, i18n
+  let query, drop, truncate, schema, i18n, collections, transaction
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -33,7 +33,7 @@ describe('reset users password', () => {
       mutation: createMutationSchema(),
     })
     // Generate DB Items
-    ;({ query, drop, truncate } = await ensure({
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
       url,
@@ -69,6 +69,8 @@ describe('reset users password', () => {
       null,
       {
         query,
+        collections,
+        transaction,
         auth: {
           bcrypt,
           tokenize,
