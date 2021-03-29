@@ -191,7 +191,7 @@ msgstr "todo"
 msgid "Permission Denied: Please contact organization admin for help with removing domain."
 msgstr "todo"
 
-#: src/organization/mutations/remove-organization.js:73
+#: src/organization/mutations/remove-organization.js:83
 msgid "Permission Denied: Please contact organization admin for help with removing organization."
 msgstr "todo"
 
@@ -237,7 +237,7 @@ msgstr "todo"
 msgid "Permission Denied: Please contact super admin for help with removing domain."
 msgstr "todo"
 
-#: src/organization/mutations/remove-organization.js:62
+#: src/organization/mutations/remove-organization.js:70
 msgid "Permission Denied: Please contact super admin for help with removing organization."
 msgstr "todo"
 
@@ -359,7 +359,7 @@ msgstr "todo"
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "todo"
 
-#: src/organization/mutations/remove-organization.js:205
+#: src/organization/mutations/remove-organization.js:215
 msgid "Successfully removed organization: {0}."
 msgstr "todo"
 
@@ -716,9 +716,9 @@ msgstr "todo"
 msgid "Unable to remove domain. Please try again."
 msgstr "todo"
 
-#: src/organization/mutations/remove-organization.js:150
-#: src/organization/mutations/remove-organization.js:184
-#: src/organization/mutations/remove-organization.js:195
+#: src/organization/mutations/remove-organization.js:160
+#: src/organization/mutations/remove-organization.js:194
+#: src/organization/mutations/remove-organization.js:205
 msgid "Unable to remove organization. Please try again."
 msgstr "todo"
 
@@ -726,7 +726,7 @@ msgstr "todo"
 msgid "Unable to remove unknown domain."
 msgstr "todo"
 
-#: src/organization/mutations/remove-organization.js:49
+#: src/organization/mutations/remove-organization.js:54
 msgid "Unable to remove unknown organization."
 msgstr "todo"
 

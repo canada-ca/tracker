@@ -1,6 +1,8 @@
-import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql'
+import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
+
+import { removeOrganizationUnion } from '../unions'
 
 export const removeOrganization = new mutationWithClientMutationId({
   name: 'RemoveOrganization',
@@ -12,11 +14,11 @@ export const removeOrganization = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
+    result: {
+      type: GraphQLNonNull(removeOrganizationUnion),
       description:
-        'Status string to inform the user if the organization was successfully removed.',
-      resolve: ({ status }) => status,
+        '`RemoveOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -46,7 +48,11 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove org: ${orgId}, but there is no org associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to remove unknown organization.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to remove unknown organization.`),
+      }
     }
 
     // Get users permission
@@ -57,22 +63,26 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to remove ${organization._key}, however the user is not a super admin.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(
           t`Permission Denied: Please contact super admin for help with removing organization.`,
         ),
-      )
+      }
     }
 
     if (permission !== 'super_admin' && permission !== 'admin') {
       console.warn(
         `User: ${userKey} attempted to remove ${organization._key}, however the user does not have permission to this organization.`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(
           t`Permission Denied: Please contact organization admin for help with removing organization.`,
         ),
-      )
+      }
     }
 
     // Generate list of collections names
@@ -201,6 +211,7 @@ export const removeOrganization = new mutationWithClientMutationId({
     )
 
     return {
+      _type: 'result',
       status: i18n._(
         t`Successfully removed organization: ${organization.slug}.`,
       ),
