@@ -1,6 +1,5 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
-import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
@@ -10,14 +9,14 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkPermission, tokenize, userRequired } from '../../../auth'
+import { checkPermission, userRequired } from '../../../auth'
 import { userLoaderByUserName, userLoaderByKey } from '../../../user/loaders'
 import { orgLoaderByKey } from '../../../organization/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('update a users role', () => {
-  let query, drop, truncate, schema, collections, transaction, i18n
+  let query, drop, truncate, schema, collections, transaction, i18n, user
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -25,6 +24,14 @@ describe('update a users role', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    // Generate DB Items
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
+      type: 'database',
+      name: dbNameFromFile(__filename),
+      url,
+      rootPassword: rootPass,
+      options: databaseOptions({ rootPass }),
+    }))
   })
 
   let consoleOutput = []
@@ -35,57 +42,17 @@ describe('update a users role', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    // Generate DB Items
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
-    }))
-    await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            result {
-              ... on AuthResult {
-                user {
-                  id
-                }
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
     consoleOutput = []
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+    })
   })
 
   afterEach(async () => {
+    await truncate()
+  })
+
+  afterAll(async () => {
     await drop()
   })
 
@@ -105,7 +72,7 @@ describe('update a users role', () => {
       })
     })
     describe('given a successful role update', () => {
-      let org, user, secondaryUser
+      let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -132,24 +99,11 @@ describe('update a users role', () => {
           },
         })
 
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-
-        await collections.users.save({
+        secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
           preferredLang: 'english',
         })
-        const secondaryUserCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test@email.gc.ca"
-          RETURN user
-        `
-        secondaryUser = await secondaryUserCursor.next()
       })
       describe('requesting user is a super admin', () => {
         beforeEach(async () => {
@@ -175,7 +129,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: SUPER_ADMIN
                     }
@@ -244,7 +198,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: USER
                     }
@@ -322,7 +276,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: SUPER_ADMIN
                     }
@@ -391,7 +345,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: ADMIN
                     }
@@ -478,7 +432,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: ADMIN
                     }
@@ -543,7 +497,7 @@ describe('update a users role', () => {
       })
     })
     describe('given an unsuccessful role update', () => {
-      let org, user, secondaryUser
+      let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -570,24 +524,11 @@ describe('update a users role', () => {
           },
         })
 
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-
-        await collections.users.save({
+        secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
           preferredLang: 'english',
         })
-        const secondaryUserCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test@email.gc.ca"
-            RETURN user
-        `
-        secondaryUser = await secondaryUserCursor.next()
       })
       describe('user attempts to update their own role', () => {
         it('returns an error message', async () => {
@@ -597,7 +538,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${user.userName}"
+                  userName: "test.account@istio.actually.exists"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -731,7 +672,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', 1)}"
                   role: ADMIN
                 }
@@ -805,7 +746,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -852,7 +793,8 @@ describe('update a users role', () => {
               updateUserRole: {
                 result: {
                   code: 400,
-                  description: 'Permission Denied: Please contact organization admin for help with user role changes.',
+                  description:
+                    'Permission Denied: Please contact organization admin for help with user role changes.',
                 },
               },
             },
@@ -905,7 +847,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -952,7 +894,8 @@ describe('update a users role', () => {
               updateUserRole: {
                 result: {
                   code: 400,
-                  description: 'Permission Denied: Please contact organization admin for help with user role changes.',
+                  description:
+                    'Permission Denied: Please contact organization admin for help with user role changes.',
                 },
               },
             },
@@ -979,7 +922,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -1026,7 +969,8 @@ describe('update a users role', () => {
               updateUserRole: {
                 result: {
                   code: 400,
-                  description: 'Unable to update role: user does not belong to organization.',
+                  description:
+                    'Unable to update role: user does not belong to organization.',
                 },
               },
             },
@@ -1060,7 +1004,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: ADMIN
                     }
@@ -1110,7 +1054,8 @@ describe('update a users role', () => {
                   updateUserRole: {
                     result: {
                       code: 400,
-                      description: 'Permission Denied: Please contact organization admin for help with updating user roles.',
+                      description:
+                        'Permission Denied: Please contact organization admin for help with updating user roles.',
                     },
                   },
                 },
@@ -1144,7 +1089,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: USER
                     }
@@ -1194,7 +1139,8 @@ describe('update a users role', () => {
                   updateUserRole: {
                     result: {
                       code: 400,
-                      description: 'Permission Denied: Please contact organization admin for help with updating user roles.',
+                      description:
+                        'Permission Denied: Please contact organization admin for help with updating user roles.',
                     },
                   },
                 },
@@ -1229,7 +1175,7 @@ describe('update a users role', () => {
               mutation {
                 updateUserRole (
                   input: {
-                    userName: "${secondaryUser.userName}"
+                    userName: "test@email.gc.ca"
                     orgId: "${toGlobalId('organizations', org._key)}"
                     role: USER
                   }
@@ -1279,7 +1225,8 @@ describe('update a users role', () => {
                 updateUserRole: {
                   result: {
                     code: 400,
-                    description: 'Permission Denied: Please contact organization admin for help with updating user roles.',
+                    description:
+                      'Permission Denied: Please contact organization admin for help with updating user roles.',
                   },
                 },
               },
@@ -1311,7 +1258,7 @@ describe('update a users role', () => {
               mutation {
                 updateUserRole (
                   input: {
-                    userName: "${secondaryUser.userName}"
+                    userName: "test@email.gc.ca"
                     orgId: "${toGlobalId('organizations', org._key)}"
                     role: USER
                   }
@@ -1361,7 +1308,8 @@ describe('update a users role', () => {
                 updateUserRole: {
                   result: {
                     code: 400,
-                    description: 'Permission Denied: Please contact organization admin for help with updating user roles.',
+                    description:
+                      'Permission Denied: Please contact organization admin for help with updating user roles.',
                   },
                 },
               },
@@ -1376,7 +1324,7 @@ describe('update a users role', () => {
       })
     })
     describe('database error occurs', () => {
-      let org, user, secondaryUser
+      let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -1403,24 +1351,11 @@ describe('update a users role', () => {
           },
         })
 
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-
-        await collections.users.save({
+        secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
           preferredLang: 'english',
         })
-        const secondaryUserCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test@email.gc.ca"
-            RETURN user
-        `
-        secondaryUser = await secondaryUserCursor.next()
 
         await collections.affiliations.save({
           _from: org._id,
@@ -1435,22 +1370,8 @@ describe('update a users role', () => {
       })
       describe('when getting current affiliation', () => {
         it('returns an error message', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoaderId = userLoaderByKey(query)
-          const userLoaderUserName = userLoaderByUserName(query)
-
-          query = jest
+          const mockedQuery = jest
             .fn()
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
-              },
-            })
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
-              },
-            })
             .mockRejectedValue(new Error('Database error occurred.'))
 
           const response = await graphql(
@@ -1459,7 +1380,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: USER
                 }
@@ -1479,7 +1400,7 @@ describe('update a users role', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               collections,
               transaction,
               userKey: user._key,
@@ -1487,13 +1408,13 @@ describe('update a users role', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderId,
+                  userLoaderByKey: userLoaderByKey(query),
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoaderId,
-                userLoaderByUserName: userLoaderUserName,
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
               },
               validators: {
                 cleanseInput,
@@ -1513,7 +1434,7 @@ describe('update a users role', () => {
       })
     })
     describe('transaction error occurs', () => {
-      let org, user, secondaryUser
+      let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -1540,24 +1461,11 @@ describe('update a users role', () => {
           },
         })
 
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-
-        await collections.users.save({
+        secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
           preferredLang: 'english',
         })
-        const secondaryUserCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test@email.gc.ca"
-            RETURN user
-        `
-        secondaryUser = await secondaryUserCursor.next()
 
         await collections.affiliations.save({
           _from: org._id,
@@ -1572,11 +1480,7 @@ describe('update a users role', () => {
       })
       describe('when running transaction', () => {
         it('returns an error message', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoaderId = userLoaderByKey(query)
-          const userLoaderUserName = userLoaderByUserName(query)
-
-          transaction = jest.fn().mockReturnValue({
+          const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               throw new Error('Transaction error occurred.')
             },
@@ -1588,7 +1492,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -1610,7 +1514,7 @@ describe('update a users role', () => {
               i18n,
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -1620,9 +1524,9 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoaderId,
-                userLoaderByUserName: userLoaderUserName,
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
               },
               validators: {
                 cleanseInput,
@@ -1642,11 +1546,7 @@ describe('update a users role', () => {
       })
       describe('when committing transaction', () => {
         it('returns an error message', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoaderId = userLoaderByKey(query)
-          const userLoaderUserName = userLoaderByUserName(query)
-
-          transaction = jest.fn().mockReturnValue({
+          const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               return undefined
             },
@@ -1661,7 +1561,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -1683,7 +1583,7 @@ describe('update a users role', () => {
               i18n,
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -1693,9 +1593,9 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoaderId,
-                userLoaderByUserName: userLoaderUserName,
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
               },
               validators: {
                 cleanseInput,
@@ -1731,7 +1631,7 @@ describe('update a users role', () => {
       })
     })
     describe('given a successful role update', () => {
-      let org, user, secondaryUser
+      let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -1757,25 +1657,11 @@ describe('update a users role', () => {
             },
           },
         })
-
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-
-        await collections.users.save({
+        secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
           preferredLang: 'english',
         })
-        const secondaryUserCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test@email.gc.ca"
-          RETURN user
-        `
-        secondaryUser = await secondaryUserCursor.next()
       })
       describe('requesting user is a super admin', () => {
         beforeEach(async () => {
@@ -1801,7 +1687,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: SUPER_ADMIN
                     }
@@ -1870,7 +1756,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: USER
                     }
@@ -1948,7 +1834,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: SUPER_ADMIN
                     }
@@ -2017,7 +1903,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: ADMIN
                     }
@@ -2104,7 +1990,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: ADMIN
                     }
@@ -2169,7 +2055,7 @@ describe('update a users role', () => {
       })
     })
     describe('given an unsuccessful role update', () => {
-      let org, user, secondaryUser
+      let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -2196,24 +2082,11 @@ describe('update a users role', () => {
           },
         })
 
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-
-        await collections.users.save({
+        secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
           preferredLang: 'english',
         })
-        const secondaryUserCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test@email.gc.ca"
-            RETURN user
-        `
-        secondaryUser = await secondaryUserCursor.next()
       })
       describe('user attempts to update their own role', () => {
         it('returns an error message', async () => {
@@ -2223,7 +2096,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${user.userName}"
+                  userName: "test.account@istio.actually.exists"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -2357,7 +2230,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', 1)}"
                   role: ADMIN
                 }
@@ -2431,7 +2304,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -2531,7 +2404,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -2605,7 +2478,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -2686,7 +2559,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: ADMIN
                     }
@@ -2770,7 +2643,7 @@ describe('update a users role', () => {
                 mutation {
                   updateUserRole (
                     input: {
-                      userName: "${secondaryUser.userName}"
+                      userName: "test@email.gc.ca"
                       orgId: "${toGlobalId('organizations', org._key)}"
                       role: USER
                     }
@@ -2855,7 +2728,7 @@ describe('update a users role', () => {
               mutation {
                 updateUserRole (
                   input: {
-                    userName: "${secondaryUser.userName}"
+                    userName: "test@email.gc.ca"
                     orgId: "${toGlobalId('organizations', org._key)}"
                     role: USER
                   }
@@ -2937,7 +2810,7 @@ describe('update a users role', () => {
               mutation {
                 updateUserRole (
                   input: {
-                    userName: "${secondaryUser.userName}"
+                    userName: "test@email.gc.ca"
                     orgId: "${toGlobalId('organizations', org._key)}"
                     role: USER
                   }
@@ -3002,7 +2875,7 @@ describe('update a users role', () => {
       })
     })
     describe('database error occurs', () => {
-      let org, user, secondaryUser
+      let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -3029,24 +2902,11 @@ describe('update a users role', () => {
           },
         })
 
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-
-        await collections.users.save({
+        secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
           preferredLang: 'english',
         })
-        const secondaryUserCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test@email.gc.ca"
-            RETURN user
-        `
-        secondaryUser = await secondaryUserCursor.next()
 
         await collections.affiliations.save({
           _from: org._id,
@@ -3061,22 +2921,8 @@ describe('update a users role', () => {
       })
       describe('when getting current affiliation', () => {
         it('returns an error message', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoaderId = userLoaderByKey(query)
-          const userLoaderUserName = userLoaderByUserName(query)
-
-          query = jest
+          const mockedQuery = jest
             .fn()
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
-              },
-            })
-            .mockReturnValueOnce({
-              next() {
-                return 'admin'
-              },
-            })
             .mockRejectedValue(new Error('Database error occurred.'))
 
           const response = await graphql(
@@ -3085,7 +2931,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: USER
                 }
@@ -3105,7 +2951,7 @@ describe('update a users role', () => {
             null,
             {
               i18n,
-              query,
+              query: mockedQuery,
               collections,
               transaction,
               userKey: user._key,
@@ -3113,13 +2959,13 @@ describe('update a users role', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderId,
+                  userLoaderByKey: userLoaderByKey(query),
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoaderId,
-                userLoaderByUserName: userLoaderUserName,
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
               },
               validators: {
                 cleanseInput,
@@ -3137,7 +2983,7 @@ describe('update a users role', () => {
       })
     })
     describe('transaction error occurs', () => {
-      let org, user, secondaryUser
+      let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -3163,25 +3009,11 @@ describe('update a users role', () => {
             },
           },
         })
-
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-
-        await collections.users.save({
+        secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
           preferredLang: 'english',
         })
-        const secondaryUserCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test@email.gc.ca"
-            RETURN user
-        `
-        secondaryUser = await secondaryUserCursor.next()
 
         await collections.affiliations.save({
           _from: org._id,
@@ -3196,11 +3028,7 @@ describe('update a users role', () => {
       })
       describe('when running transaction', () => {
         it('returns an error message', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoaderId = userLoaderByKey(query)
-          const userLoaderUserName = userLoaderByUserName(query)
-
-          transaction = jest.fn().mockReturnValue({
+          const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               throw new Error('Transaction error occurred.')
             },
@@ -3212,7 +3040,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -3234,7 +3062,7 @@ describe('update a users role', () => {
               i18n,
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -3244,9 +3072,9 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoaderId,
-                userLoaderByUserName: userLoaderUserName,
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
               },
               validators: {
                 cleanseInput,
@@ -3264,11 +3092,7 @@ describe('update a users role', () => {
       })
       describe('when committing transaction', () => {
         it('returns an error message', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoaderId = userLoaderByKey(query)
-          const userLoaderUserName = userLoaderByUserName(query)
-
-          transaction = jest.fn().mockReturnValue({
+          const mockedTransaction = jest.fn().mockReturnValue({
             step() {
               return undefined
             },
@@ -3283,7 +3107,7 @@ describe('update a users role', () => {
             mutation {
               updateUserRole (
                 input: {
-                  userName: "${secondaryUser.userName}"
+                  userName: "test@email.gc.ca"
                   orgId: "${toGlobalId('organizations', org._key)}"
                   role: ADMIN
                 }
@@ -3305,7 +3129,7 @@ describe('update a users role', () => {
               i18n,
               query,
               collections,
-              transaction,
+              transaction: mockedTransaction,
               userKey: user._key,
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
@@ -3315,9 +3139,9 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoaderId,
-                userLoaderByUserName: userLoaderUserName,
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
               },
               validators: {
                 cleanseInput,

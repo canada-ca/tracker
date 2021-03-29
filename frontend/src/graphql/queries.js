@@ -654,8 +654,8 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
 `
 
 export const PAGINATED_DOMAINS = gql`
-  query Domains($first: Int, $after: String) {
-    findMyDomains(first: $first, after: $after) {
+  query Domains($first: Int, $after: String, $orderBy: DomainOrder) {
+    findMyDomains(first: $first, after: $after, orderBy: $orderBy) {
       edges {
         cursor
         node {

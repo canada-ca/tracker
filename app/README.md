@@ -42,6 +42,24 @@ username=root
 password=test
 EOF
 ```
+Followed by the secret for DMARC Aggregate report importation.
+
+```
+cat <<'EOF' > app/creds/dev/dmarc.env
+DB_PASS=dbpass
+DB_URL=http://arangodb.db:8529/
+DB_NAME=track_dmarc
+GITHUB_BRANCH=master
+GITHUB_FILE=dmarc-domains.json
+GITHUB_OWNER=cybercentrecanada
+GITHUB_REPO=dmarc-tbs-domains
+GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GITHUB_URL=https://api.github.com/graphql
+AZURE_CONN_STRING=???
+DATABASE=tbs-tracker
+SUMMARIES_CONTAINER=tbs-tracker-summaries
+EOF
+```
 
 And finally the credentials needed for the API to talk to the database, and collaborative services like Notify.
 

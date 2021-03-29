@@ -29,6 +29,7 @@
     'Account created.': 'Compte créé',
     Acronym: 'Acronyme',
     'Add Domain': 'Ajouter un domaine',
+    'Add a domain': 'Ajouter un domaine',
     'Admin Portal': 'Portail Admin',
     'Admin Profile': "Profil de l'administrateur",
     'An email was sent with a link to reset your password':
@@ -277,6 +278,7 @@
     'Invalid percent': 'Pourcentage non valable',
     'Invalid public key': 'Clé publique invalide',
     'Invite User': "Inviter l'utilisateur",
+    'Invite a user': 'Inviter un utilisateur',
     January: 'Janvier',
     July: 'Juillet',
     June: 'Juin',

@@ -72,6 +72,8 @@ describe('create a domain', () => {
       null,
       {
         query,
+        collections,
+        transaction,
         auth: {
           bcrypt,
           tokenize,

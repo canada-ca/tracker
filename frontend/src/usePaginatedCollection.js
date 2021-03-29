@@ -18,7 +18,7 @@ export function usePaginatedCollection({
     },
   })
 
-  const[isLoadingMore, setIsLoadingMore] = useState(false)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   let currentEdges = []
   let currentPageInfo = {}

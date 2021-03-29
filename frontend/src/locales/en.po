@@ -104,9 +104,13 @@ msgstr "Account created."
 msgid "Acronym"
 msgstr "Acronym"
 
-#: src/AdminDomains.js:296
+#: src/AdminDomains.js:295
 msgid "Add Domain"
 msgstr "Add Domain"
+
+#: src/AdminDomains.js:264
+msgid "Add a domain"
+msgstr "Add a domain"
 
 #: src/FloatingMenu.js:131
 msgid "Admin Portal"
@@ -155,7 +159,7 @@ msgstr "An error occurred while verifying your phone number."
 #: src/AdminDomains.js:92
 #: src/AdminDomains.js:145
 #: src/AdminDomains.js:197
-#: src/AdminDomains.js:276
+#: src/AdminDomains.js:275
 #: src/TwoFactorAuthenticatePage.js:34
 #: src/UserList.js:116
 #: src/UserList.js:208
@@ -277,8 +281,8 @@ msgstr "Code field must not be empty"
 msgid "Compliant TLS"
 msgstr "Compliant TLS"
 
-#: src/AdminDomains.js:434
-#: src/AdminDomains.js:477
+#: src/AdminDomains.js:433
+#: src/AdminDomains.js:476
 #: src/EditableUserDisplayName.js:177
 #: src/EditableUserEmail.js:175
 #: src/EditableUserPassword.js:198
@@ -299,7 +303,7 @@ msgstr "Confirm Password:"
 msgid "Confirm password"
 msgstr "Confirm password"
 
-#: src/AdminDomains.js:457
+#: src/AdminDomains.js:456
 msgid "Confirm removal of domain:"
 msgstr "Confirm removal of domain:"
 
@@ -320,7 +324,7 @@ msgstr "Create an account by entering an email and password."
 msgid "Current Display Name:"
 msgstr "Current Display Name:"
 
-#: src/AdminDomains.js:392
+#: src/AdminDomains.js:391
 msgid "Current Domain URL:"
 msgstr "Current Domain URL:"
 
@@ -368,6 +372,10 @@ msgstr "DKIM Results"
 #: src/DmarcReportPage.js:276
 msgid "DKIM Selectors"
 msgstr "DKIM Selectors"
+
+#: src/DomainsPage.js:135
+msgid "DKIM Status"
+msgstr "DKIM Status"
 
 #: src/guidanceTagConstants.js:414
 msgid "DKIM TXT record invalid"
@@ -437,6 +445,10 @@ msgstr "DMARC Messages"
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
+#: src/DomainsPage.js:136
+msgid "DMARC Status"
+msgstr "DMARC Status"
+
 #: src/SummaryGroup.js:44
 msgid "DMARC fail"
 msgstr "DMARC fail"
@@ -479,6 +491,7 @@ msgid "Disposition"
 msgstr "Disposition"
 
 #: src/DmarcByDomainPage.js:84
+#: src/DomainsPage.js:130
 msgid "Domain"
 msgstr "Domain"
 
@@ -545,8 +558,8 @@ msgid "Domain:"
 msgstr "Domain:"
 
 #: src/App.js:71
-#: src/DomainsPage.js:54
-#: src/DomainsPage.js:61
+#: src/DomainsPage.js:64
+#: src/DomainsPage.js:85
 #: src/OrganizationDetails.js:88
 #: src/OrganizationDomains.js:39
 msgid "Domains"
@@ -568,7 +581,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Edit Display Name"
 
-#: src/AdminDomains.js:386
+#: src/AdminDomains.js:385
 msgid "Edit Domain Details"
 msgstr "Edit Domain Details"
 
@@ -758,6 +771,10 @@ msgstr "HTTP Strict Transport Security (HSTS) not implemented"
 #: src/guidanceTagConstants.js:535
 msgid "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year"
 msgstr "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year"
+
+#: src/DomainsPage.js:132
+msgid "HTTPS Status"
+msgstr "HTTPS Status"
 
 #: src/guidanceTagConstants.js:499
 msgid "HTTPS certificate chain is invalid"
@@ -950,6 +967,10 @@ msgstr "Invalid public key"
 msgid "Invite User"
 msgstr "Invite User"
 
+#: src/UserList.js:253
+msgid "Invite a user"
+msgstr "Invite a user"
+
 #: src/months.js:4
 msgid "January"
 msgstr "January"
@@ -975,6 +996,10 @@ msgstr "Language:"
 #: src/DmarcReportPage.js:138
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
+
+#: src/DomainsPage.js:131
+msgid "Last Scanned"
+msgstr "Last Scanned"
 
 #: src/Domain.js:39
 #: src/DomainCard.js:55
@@ -1088,11 +1113,11 @@ msgstr "Name"
 msgid "New Display Name:"
 msgstr "New Display Name:"
 
-#: src/AdminDomains.js:415
+#: src/AdminDomains.js:414
 msgid "New Domain Url"
 msgstr "New Domain Url"
 
-#: src/AdminDomains.js:409
+#: src/AdminDomains.js:408
 msgid "New Domain Url:"
 msgstr "New Domain Url:"
 
@@ -1108,7 +1133,7 @@ msgstr "New Password:"
 msgid "New Phone Number:"
 msgstr "New Phone Number:"
 
-#: src/AdminDomains.js:277
+#: src/AdminDomains.js:276
 msgid "New domain name cannot be empty"
 msgstr "New domain name cannot be empty"
 
@@ -1116,8 +1141,8 @@ msgstr "New domain name cannot be empty"
 msgid "Next"
 msgstr "Next"
 
-#: src/AdminDomains.js:306
-#: src/DomainsPage.js:89
+#: src/AdminDomains.js:305
+#: src/DomainsPage.js:67
 #: src/OrganizationDomains.js:49
 msgid "No Domains"
 msgstr "No Domains"
@@ -1514,7 +1539,7 @@ msgstr "RUF-CCCS"
 msgid "RUF-none"
 msgstr "RUF-none"
 
-#: src/AdminDomains.js:451
+#: src/AdminDomains.js:450
 msgid "Remove Domain"
 msgstr "Remove Domain"
 
@@ -1590,6 +1615,10 @@ msgstr "SPF Failures by IP Address"
 msgid "SPF Results"
 msgstr "SPF Results"
 
+#: src/DomainsPage.js:134
+msgid "SPF Status"
+msgstr "SPF Status"
+
 #: src/guidanceTagConstants.js:278
 msgid "SPF implemented in incorrect subdomain"
 msgstr "SPF implemented in incorrect subdomain"
@@ -1605,6 +1634,10 @@ msgstr "SPF-bad-path"
 #: src/guidanceTagConstants.js:270
 msgid "SPF-missing"
 msgstr "SPF-missing"
+
+#: src/DomainsPage.js:133
+msgid "SSL Status"
+msgstr "SSL Status"
 
 #: src/guidanceTagConstants.js:447
 msgid "SSL-3des"
@@ -1642,7 +1675,7 @@ msgstr "Save Language"
 msgid "Save TFA Method"
 msgstr "Save TFA Method"
 
-#: src/DomainsPage.js:70
+#: src/DomainsPage.js:94
 msgid "Scan"
 msgstr "Scan"
 
@@ -1662,24 +1695,23 @@ msgstr "Scan of domain successfully requested"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 
-#: src/DomainsPage.js:67
+#: src/DomainsPage.js:91
 msgid "Search"
 msgstr "Search"
 
-#: src/AdminDomains.js:264
-#: src/DomainsPage.js:84
+#: src/DomainsPage.js:113
 msgid "Search for a domain"
 msgstr "Search for a domain"
 
-#: src/UserList.js:253
-msgid "Search for a user"
-msgstr "Search for a user"
+#: src/UserList.js:231
+#~ msgid "Search for a user"
+#~ msgstr "Search for a user"
 
 #: src/Organizations.js:109
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
-#: src/DomainsPage.js:77
+#: src/DomainsPage.js:101
 msgid "Search for any Government of Canada tracked domain:"
 msgstr "Search for any Government of Canada tracked domain:"
 
@@ -1749,6 +1781,7 @@ msgstr "Sign in with your username and password."
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
+#: src/DomainsPage.js:118
 #: src/Organizations.js:113
 msgid "Sort by:"
 msgstr "Sort by:"
