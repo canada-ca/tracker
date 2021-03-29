@@ -165,7 +165,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -197,8 +205,10 @@ describe('removing an organization', () => {
             const expectedResponse = {
               data: {
                 removeOrganization: {
-                  status:
-                    'Successfully removed organization: treasury-board-secretariat.',
+                  result: {
+                    status:
+                      'Successfully removed organization: treasury-board-secretariat.',
+                  },
                 },
               },
             }
@@ -218,7 +228,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -287,7 +305,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -319,8 +345,10 @@ describe('removing an organization', () => {
             const expectedResponse = {
               data: {
                 removeOrganization: {
-                  status:
-                    'Successfully removed organization: treasury-board-secretariat.',
+                  result: {
+                    status:
+                      'Successfully removed organization: treasury-board-secretariat.',
+                  },
                 },
               },
             }
@@ -340,7 +368,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -417,7 +453,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', org._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -446,8 +490,10 @@ describe('removing an organization', () => {
           const expectedResponse = {
             data: {
               removeOrganization: {
-                status:
-                  'Successfully removed organization: treasury-board-secretariat.',
+                result: {
+                  status:
+                    'Successfully removed organization: treasury-board-secretariat.',
+                },
               },
             },
           }
@@ -467,7 +513,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', org._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -565,7 +619,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -597,7 +659,9 @@ describe('removing an organization', () => {
             const expectedResponse = {
               data: {
                 removeOrganization: {
-                  status: 'todo',
+                  result: {
+                    status: 'todo',
+                  },
                 },
               },
             }
@@ -617,7 +681,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -686,7 +758,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -718,7 +798,9 @@ describe('removing an organization', () => {
             const expectedResponse = {
               data: {
                 removeOrganization: {
-                  status: 'todo',
+                  result: {
+                    status: 'todo',
+                  },
                 },
               },
             }
@@ -738,7 +820,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -815,7 +905,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', org._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -844,7 +942,9 @@ describe('removing an organization', () => {
           const expectedResponse = {
             data: {
               removeOrganization: {
-                status: 'todo',
+                result: {
+                  status: 'todo',
+                },
               },
             },
           }
@@ -864,7 +964,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', org._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -949,7 +1057,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', 1)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -975,11 +1091,18 @@ describe('removing an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to remove unknown organization.'),
-          ]
+          const error = {
+            data: {
+              removeOrganization: {
+                result: {
+                  code: 400,
+                  description: 'Unable to remove unknown organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to remove org: 1, but there is no org associated with that id.`,
           ])
@@ -1057,7 +1180,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1086,13 +1217,19 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact super admin for help with removing organization.',
-              ),
-            ]
+            const error = {
+              data: {
+                removeOrganization: {
+                  result: {
+                    code: 403,
+                    description:
+                      'Permission Denied: Please contact super admin for help with removing organization.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove ${org._key}, however the user is not a super admin.`,
             ])
@@ -1116,7 +1253,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1145,13 +1290,19 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact organization admin for help with removing organization.',
-              ),
-            ]
+            const error = {
+              data: {
+                removeOrganization: {
+                  result: {
+                    code: 403,
+                    description:
+                      'Permission Denied: Please contact organization admin for help with removing organization.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove ${secondOrg._key}, however the user does not have permission to this organization.`,
             ])
@@ -1194,9 +1345,6 @@ describe('removing an organization', () => {
         })
         describe('when running scan transactions', () => {
           it('returns an error message', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
-
             const mockedTransaction = jest.fn().mockReturnValue({
               step() {
                 throw new Error('Database error occurred.')
@@ -1212,7 +1360,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1235,8 +1391,8 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1255,19 +1411,8 @@ describe('removing an organization', () => {
         })
         describe('when running domain, affiliations, org transactions', () => {
           it('returns an error message', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
-
-            const cursor = {
-              next() {
-                return 'admin'
-              },
-            }
-
             const mockedQuery = jest
               .fn()
-              .mockReturnValueOnce(cursor)
-              .mockReturnValueOnce(cursor)
               .mockReturnValueOnce(undefined)
               .mockReturnValueOnce(undefined)
               .mockReturnValueOnce(undefined)
@@ -1284,7 +1429,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1298,17 +1451,17 @@ describe('removing an organization', () => {
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query: mockedQuery,
+                    query: query,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoader,
+                    userLoaderByKey: userLoaderByKey(query),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1327,9 +1480,6 @@ describe('removing an organization', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error message', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
-
             const mockedTransaction = jest.fn().mockReturnValue({
               step() {
                 return undefined
@@ -1348,7 +1498,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1371,8 +1529,8 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1417,7 +1575,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', 1)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1443,9 +1609,18 @@ describe('removing an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              removeOrganization: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to remove org: 1, but there is no org associated with that id.`,
           ])
@@ -1523,7 +1698,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1552,9 +1735,18 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                removeOrganization: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove ${org._key}, however the user is not a super admin.`,
             ])
@@ -1578,7 +1770,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', secondOrg._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1607,9 +1807,18 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                removeOrganization: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to remove ${secondOrg._key}, however the user does not have permission to this organization.`,
             ])
@@ -1652,9 +1861,6 @@ describe('removing an organization', () => {
         })
         describe('when running scan transactions', () => {
           it('returns an error message', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
-
             const mockedTransaction = jest.fn().mockReturnValue({
               step() {
                 throw new Error('Database error occurred.')
@@ -1670,7 +1876,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1693,8 +1907,8 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1709,19 +1923,8 @@ describe('removing an organization', () => {
         })
         describe('when running domain, affiliations, org transactions', () => {
           it('returns an error message', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
-
-            const cursor = {
-              next() {
-                return 'admin'
-              },
-            }
-
             const mockedQuery = jest
               .fn()
-              .mockReturnValueOnce(cursor)
-              .mockReturnValueOnce(cursor)
               .mockReturnValueOnce(undefined)
               .mockReturnValueOnce(undefined)
               .mockReturnValueOnce(undefined)
@@ -1738,7 +1941,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1752,17 +1963,17 @@ describe('removing an organization', () => {
                 auth: {
                   checkPermission: checkPermission({
                     userKey: user._key,
-                    query: mockedQuery,
+                    query: query,
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoader,
+                    userLoaderByKey: userLoaderByKey(query),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1777,9 +1988,6 @@ describe('removing an organization', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error message', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
-            const userLoader = userLoaderByKey(query)
-
             const mockedTransaction = jest.fn().mockReturnValue({
               step() {
                 return undefined
@@ -1798,7 +2006,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1821,8 +2037,8 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
-                  userLoaderByKey: userLoader,
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
