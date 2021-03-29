@@ -43,7 +43,7 @@ export const cache = createCache()
 
 export const client = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://tracker.alpha.canada.ca/graphql',
+    uri: '/graphql',
   }),
   cache,
 })

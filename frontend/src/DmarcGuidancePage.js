@@ -9,10 +9,13 @@ import { Trans } from '@lingui/macro'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { ErrorBoundary } from 'react-error-boundary'
 import { LoadingMessage } from './LoadingMessage'
+import { useDocumentTitle } from './useDocumentTitle'
 
 export default function DmarcGuidancePage() {
   const { currentUser } = useUserState()
   const { domainSlug } = useParams()
+
+  useDocumentTitle(`${domainSlug}`)
 
   const { loading, error, data } = useQuery(GET_GUIDANCE_TAGS_OF_DOMAIN, {
     context: {

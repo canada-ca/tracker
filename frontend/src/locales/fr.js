@@ -30,6 +30,7 @@
     Acronym: 'Acronyme',
     'Add Domain': 'Ajouter un domaine',
     'Add a domain': 'Ajouter un domaine',
+    Admin: 'Administrateur',
     'Admin Portal': 'Portail Admin',
     'Admin Profile': "Profil de l'administrateur",
     'An email was sent with a link to reset your password':
@@ -55,6 +56,8 @@
     'As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.':
       "Conformément à la section 3.6.1 du RFC, l'indicateur de test t=y signifie que les vérificateurs DOIVENT traiter les messages comme non signés (c'est-à-dire que DKIM n'est pas activé), donc cet indicateur ne doit pas être activé.",
     August: 'Août',
+    Authenticate: 'Authentifier',
+    'Authentication QR Code': "Code QR d'authentification",
     'B.1.1 SPF Records': 'B.1.1 Enregistrements SPF',
     'B.1.3 DNS Lookup Limit': 'B.1.3 Limite de recherches DNS',
     'B.2.1 DKIM Records': 'B.2.1 Enregistrements DKIM',
@@ -95,6 +98,7 @@
     'Confirm removal of domain:': 'Confirmer la suppression du domaine :',
     'Contact 3rd party': 'Contacter une tierce partie',
     'Create Account': 'Créer un compte',
+    'Create an Account': 'Créer un compte',
     'Create an account by entering an email and password.':
       'Créez un compte en entrant un courriel et un mot de passe.',
     'Current Display Name:': "Nom de l'affichage actuel :",
@@ -111,6 +115,7 @@
     'DKIM Flag t': 'DKIM Flag t',
     'DKIM Results': 'Résultats DKIM',
     'DKIM Selectors': 'Sélecteurs DKIM',
+    'DKIM Status': 'Statut DKIM',
     'DKIM TXT record invalid': 'Enregistrement DKIM TXT non valable',
     'DKIM key does not use RSA': "La clé DKIM n'utilise pas le RSA",
     'DKIM record missing but MX uses O365. Follow cloud-specific guidance':
@@ -130,7 +135,9 @@
     ],
     'DMARC Messages': 'Messages de la DMARC',
     'DMARC Not Implemented': "La DMARC n'est pas mise en œuvre",
-    'DMARC Report': 'Rapport de la DMARC',
+    'DMARC Report': 'Rapport DMARC ',
+    'DMARC Report for {domainSlug}': ['Rapport DMARC pour ', ['domainSlug']],
+    'DMARC Status': 'Statut DMARC',
     'DMARC fail': 'DMARC échoue',
     'DMARC pass': 'Passe DMARC',
     'DMARC-GC': 'DMARC-GC',
@@ -142,6 +149,8 @@
     'Display name cannot be empty': "Le nom d'affichage ne peut pas être vide",
     Disposition: 'Disposition',
     Domain: 'Domaine',
+    'Domain DMARC Report': 'Domain DMARC Report',
+    'Domain Details': 'Détails du domaine',
     'Domain List': 'Liste des domaines',
     'Domain URL': 'URL du domaine',
     'Domain URL:': 'URL du domaine:',
@@ -196,6 +205,7 @@
       'Pour des conseils approfondis sur la mise en œuvre du CCCS :',
     'For technical implementation guidance:':
       'Pour des conseils de mise en œuvre technique :',
+    'Forgot Password': 'Mot de passe oublié',
     'Forgot your password?': 'Oublié votre mot de passe?',
     'Full Fail %': 'Échec total %',
     'Full Pass %': 'Passage complet %',
@@ -217,6 +227,7 @@
       'HTTP Strict Transport Security (HSTS) non mis en œuvre',
     'HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year':
       "L'âge maximum de la politique de sécurité stricte des transports HTTP (HSTS) est inférieur à un an",
+    'HTTPS Status': 'Statut HTTPS',
     'HTTPS certificate chain is invalid':
       "La chaîne de certificats HTTPS n'est pas valable",
     'HTTPS certificate is expired': 'Le certificat HTTPS est expiré',
@@ -285,6 +296,7 @@
     'L-30-D': 'L-30-D',
     'Language:': 'La langue:',
     'Last 30 Days': 'Les 30 derniers jours',
+    'Last Scanned': 'Dernière numérisation',
     'Last scanned:': 'Dernier scan:',
     'Level of Enforcment:': "Niveau d'application:",
     'Loading {children}...': ['Chargement ', ['children'], '...'],
@@ -439,6 +451,7 @@
     'Remove Domain': 'Supprimer un domaine',
     'Report an Issue': 'Signaler un problème',
     'Request a domain to be scanned:': "Demander qu'un domaine soit scanné:",
+    'Reset Password': 'Réinitialiser le mot de passe',
     'Result:': 'Résultat',
     'Results for scans of email technologies (DMARC, SPF, DKIM).':
       'Résultats des analyses des technologies du courrier électronique (DMARC, SPF, DKIM).',
@@ -456,11 +469,13 @@
     'SPF Failure Table': 'Tableau des échecs du SPF',
     'SPF Failures by IP Address': 'Défaillances du SPF par adresse IP',
     'SPF Results': 'Résultats du SPF',
+    'SPF Status': 'Statut SPF',
     'SPF implemented in incorrect subdomain':
       'SPF implémenté dans un sous-domaine incorrect',
     'SPF-GC': 'SPF-GC',
     'SPF-bad-path': 'SPF-bad-path',
     'SPF-missing': 'SPF-missing',
+    'SSL Status': 'Statut SSL',
     'SSL-3des': 'SSL-3des',
     'SSL-GC': 'SSL-GC',
     'SSL-acceptable-certificate': 'SSL-acceptable-certificate',
@@ -526,6 +541,7 @@
     'Total Messages': 'Total des messages',
     'Total users': 'total des utilisateurs',
     'Track Digital Security': 'Track Digital Security',
+    Tracker: 'Suivi',
     'Tracker Logo': 'Logo du Tracker',
     'Two Factor Authentication': 'Authentification à deux facteurs',
     USER: 'UTILISATEUR',
@@ -589,9 +605,9 @@
     "We've sent an SMS to your new phone number with an authentication code to confirm this change.":
       "Nous avons envoyé un SMS à votre nouveau numéro de téléphone avec un code d'authentification pour confirmer ce changement.",
     "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker.":
-      "Nous avons envoyé un SMS à votre numéro de téléphone enregistré avec un code d'authentification pour vous connecter à Tracker.",
+      "Nous avons envoyé un SMS à votre numéro de téléphone enregistré avec un code d'authentification pour vous connecter à Suivi.",
     "We've sent you an email with an authentication code to sign into Tracker.":
-      "Nous vous avons envoyé un e-mail avec un code d'authentification pour vous connecter à Tracker.",
+      "Nous vous avons envoyé un e-mail avec un code d'authentification pour vous connecter à Suivi.",
     'Web Configuration': 'Configuration Web',
     'Web Scan Results': "Résultats de l'analyse du Web",
     'Web encryption settings summary':
@@ -624,6 +640,7 @@
       'Vous pouvez maintenant vous connecter avec votre nouveau mot de passe',
     'Your 2FA app will then have a valid code that you can use when you sign in.':
       "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez.",
+    'Your Account': 'Votre compte',
     'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322':
       'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a322',
     'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23':
@@ -675,5 +692,6 @@
       ['0'],
     ],
     '{orgName}': [['orgName']],
+    '{title} - Tracker': [['title'], ' - Suivi'],
   },
 }

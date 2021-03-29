@@ -28,6 +28,7 @@
     Acronym: 'Acronym',
     'Add Domain': 'Add Domain',
     'Add a domain': 'Add a domain',
+    Admin: 'Admin',
     'Admin Portal': 'Admin Portal',
     'Admin Profile': 'Admin Profile',
     'An email was sent with a link to reset your password':
@@ -53,6 +54,8 @@
     'As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.':
       'As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.',
     August: 'August',
+    Authenticate: 'Authenticate',
+    'Authentication QR Code': 'Authentication QR Code',
     'B.1.1 SPF Records': 'B.1.1 SPF Records',
     'B.1.3 DNS Lookup Limit': 'B.1.3 DNS Lookup Limit',
     'B.2.1 DKIM Records': 'B.2.1 DKIM Records',
@@ -89,6 +92,7 @@
     'Confirm removal of domain:': 'Confirm removal of domain:',
     'Contact 3rd party': 'Contact 3rd party',
     'Create Account': 'Create Account',
+    'Create an Account': 'Create an Account',
     'Create an account by entering an email and password.':
       'Create an account by entering an email and password.',
     'Current Display Name:': 'Current Display Name:',
@@ -105,6 +109,7 @@
     'DKIM Flag t': 'DKIM Flag t',
     'DKIM Results': 'DKIM Results',
     'DKIM Selectors': 'DKIM Selectors',
+    'DKIM Status': 'DKIM Status',
     'DKIM TXT record invalid': 'DKIM TXT record invalid',
     'DKIM key does not use RSA': 'DKIM key does not use RSA',
     'DKIM record missing but MX uses O365. Follow cloud-specific guidance':
@@ -125,6 +130,9 @@
     'DMARC Messages': 'DMARC Messages',
     'DMARC Not Implemented': 'DMARC Not Implemented',
     'DMARC Report': 'DMARC Report',
+    'DMARC Report for {domainSlug}': ['DMARC Report for ', ['domainSlug']],
+    'DMARC Report | {domainSlug}': ['DMARC Report | ', ['domainSlug']],
+    'DMARC Status': 'DMARC Status',
     'DMARC fail': 'DMARC fail',
     'DMARC pass': 'DMARC pass',
     'DMARC-GC': 'DMARC-GC',
@@ -136,6 +144,8 @@
     'Display name cannot be empty': 'Display name cannot be empty',
     Disposition: 'Disposition',
     Domain: 'Domain',
+    'Domain DMARC Report': 'Domain DMARC Report',
+    'Domain Details': 'Domain Details',
     'Domain List': 'Domain List',
     'Domain URL': 'Domain URL',
     'Domain URL:': 'Domain URL:',
@@ -189,6 +199,7 @@
       'For in-depth CCCS implementation guidance:',
     'For technical implementation guidance:':
       'For technical implementation guidance:',
+    'Forgot Password': 'Forgot Password',
     'Forgot your password?': 'Forgot your password?',
     'Full Fail %': 'Full Fail %',
     'Full Pass %': 'Full Pass %',
@@ -210,6 +221,7 @@
       'HTTP Strict Transport Security (HSTS) not implemented',
     'HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year':
       'HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year',
+    'HTTPS Status': 'HTTPS Status',
     'HTTPS certificate chain is invalid': 'HTTPS certificate chain is invalid',
     'HTTPS certificate is expired': 'HTTPS certificate is expired',
     'HTTPS certificate is self-signed': 'HTTPS certificate is self-signed',
@@ -276,6 +288,7 @@
     'L-30-D': 'L-30-D',
     'Language:': 'Language:',
     'Last 30 Days': 'Last 30 Days',
+    'Last Scanned': 'Last Scanned',
     'Last scanned:': 'Last scanned:',
     'Level of Enforcment:': 'Level of Enforcment:',
     'Loading {children}...': ['Loading ', ['children'], '...'],
@@ -423,6 +436,7 @@
     'Remove Domain': 'Remove Domain',
     'Report an Issue': 'Report an Issue',
     'Request a domain to be scanned:': 'Request a domain to be scanned:',
+    'Reset Password': 'Reset Password',
     'Result:': 'Result:',
     'Results for scans of email technologies (DMARC, SPF, DKIM).':
       'Results for scans of email technologies (DMARC, SPF, DKIM).',
@@ -440,11 +454,13 @@
     'SPF Failure Table': 'SPF Failure Table',
     'SPF Failures by IP Address': 'SPF Failures by IP Address',
     'SPF Results': 'SPF Results',
+    'SPF Status': 'SPF Status',
     'SPF implemented in incorrect subdomain':
       'SPF implemented in incorrect subdomain',
     'SPF-GC': 'SPF-GC',
     'SPF-bad-path': 'SPF-bad-path',
     'SPF-missing': 'SPF-missing',
+    'SSL Status': 'SSL Status',
     'SSL-3des': 'SSL-3des',
     'SSL-GC': 'SSL-GC',
     'SSL-acceptable-certificate': 'SSL-acceptable-certificate',
@@ -510,6 +526,7 @@
     'Total Messages': 'Total Messages',
     'Total users': 'Total users',
     'Track Digital Security': 'Track Digital Security',
+    Tracker: 'Tracker',
     'Tracker Logo': 'Tracker Logo',
     'Two Factor Authentication': 'Two Factor Authentication',
     USER: 'USER',
@@ -607,6 +624,7 @@
       'You may now sign in with your new password',
     'Your 2FA app will then have a valid code that you can use when you sign in.':
       'Your 2FA app will then have a valid code that you can use when you sign in.',
+    'Your Account': 'Your Account',
     'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322':
       'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322',
     'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23':
@@ -650,6 +668,7 @@
       'pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be none but mail agents may process messages based on Quarantine)',
     '{0} was added to {orgSlug}': [['0'], ' was added to ', ['orgSlug']],
     '{count} records...': [['count'], ' records...'],
+    '{domainSlug} DMARC Report': [['domainSlug'], ' DMARC Report'],
     '{editingDomainUrl} from {orgSlug} successfully updated to {0}': [
       ['editingDomainUrl'],
       ' from ',
@@ -658,5 +677,6 @@
       ['0'],
     ],
     '{orgName}': [['orgName']],
+    '{title} - Tracker': [['title'], ' - Tracker'],
   },
 }

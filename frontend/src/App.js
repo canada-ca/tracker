@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
@@ -15,7 +15,8 @@ import { useUserState } from './UserState'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { FloatingMenu } from './FloatingMenu'
-import PrivateRoute from './PrivateRoute'
+import PrivatePage from './PrivatePage'
+import { Page } from './Page'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -119,74 +120,91 @@ export default function App() {
         <Main>
           <Suspense fallback={<div>Loading...</div>}>
             <Switch>
-              <Route exact path="/">
+              <Page exact path="/" title={t`Home`}>
                 <LandingPage />
-              </Route>
+              </Page>
 
-              <Route path="/create-user/:userOrgToken?">
+              <Page
+                path="/create-user/:userOrgToken?"
+                title={t`Create an Account`}
+              >
                 <CreateUserPage />
-              </Route>
+              </Page>
 
-              <Route path="/sign-in" component={SignInPage} />
+              <Page path="/sign-in" component={SignInPage} title={t`Sign In`} />
 
-              <Route
+              <Page
                 path="/authenticate/:sendMethod/:authenticateToken"
                 component={TwoFactorAuthenticatePage}
+                title={t`Authenticate`}
               />
 
-              <Route path="/forgot-password" component={ForgotPasswordPage} />
+              <Page
+                path="/forgot-password"
+                component={ForgotPasswordPage}
+                title={t`Forgot Password`}
+              />
 
-              <Route
+              <Page
                 path="/reset-password/:resetToken"
                 component={ResetPasswordPage}
+                title={t`Reset Password`}
               />
 
-              <PrivateRoute path="/organizations" exact>
+              <PrivatePage path="/organizations" title={t`Organizations`} exact>
                 <Organizations />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/organizations/:orgSlug" exact>
+              <PrivatePage
+                path="/organizations/:orgSlug"
+                setTitle={false}
+                exact
+              >
                 <OrganizationDetails />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/admin">
+              <PrivatePage path="/admin" title={t`Admin`}>
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <AdminPage />
                 </ErrorBoundary>
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/domains" exact>
+              <PrivatePage path="/domains" title={t`Domains`} exact>
                 <DomainsPage />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/domains/:domainSlug" exact>
+              <PrivatePage path="/domains/:domainSlug" setTitle={false} exact>
                 <DmarcGuidancePage />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute
+              <PrivatePage
                 path="/domains/:domainSlug/dmarc-report/:period?/:year?"
+                setTitle={false}
                 exact
               >
                 <DmarcReportPage />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/dmarc-summaries" exact>
+              <PrivatePage
+                path="/dmarc-summaries"
+                title={t`DMARC Report`}
+                exact
+              >
                 <DmarcByDomainPage />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/user">
+              <PrivatePage path="/user" title={t`Your Account`}>
                 <UserPage username={currentUser.userName} />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/two-factor-code">
+              <PrivatePage
+                path="/two-factor-code"
+                title={t`Authentication QR Code`}
+              >
                 <QRcodePage userName={currentUser.userName} />
-              </PrivateRoute>
+              </PrivatePage>
 
-              <PrivateRoute path="/dmarc-report/:period?/:year?">
-                <DmarcReportPage />
-              </PrivateRoute>
-
-              <Route component={PageNotFound} />
+              <Page component={PageNotFound} title="404" />
             </Switch>
           </Suspense>
         </Main>
@@ -215,7 +233,7 @@ export default function App() {
           </Link>
           <Link
             ml={4}
-            href={"https://github.com/canada-ca/tracker/issues"}
+            href={'https://github.com/canada-ca/tracker/issues'}
             isExternal={true}
           >
             <Trans>Report an Issue</Trans>
