@@ -71,6 +71,8 @@ describe('removing an organization', () => {
       null,
       {
         query,
+        collections,
+        transaction,
         auth: {
           bcrypt,
           tokenize,

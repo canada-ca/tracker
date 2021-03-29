@@ -17,7 +17,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, schema, i18n, tokenize
+  let query, drop, truncate, schema, i18n, tokenize, collections, transaction
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -26,7 +26,7 @@ describe('authenticate user account', () => {
       mutation: createMutationSchema(),
     })
     // Generate DB Items
-    ;({ query, drop, truncate } = await ensure({
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
       type: 'database',
       name: dbNameFromFile(__filename),
       url,
@@ -71,6 +71,8 @@ describe('authenticate user account', () => {
       null,
       {
         query,
+        collections,
+        transaction,
         auth: {
           bcrypt,
           tokenize,

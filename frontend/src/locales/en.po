@@ -774,6 +774,7 @@ msgid "Guidance Tags"
 msgstr "Guidance Tags"
 
 #: src/GuidanceTagDetails.js:82
+#: src/GuidanceTagList.js:85
 msgid "Guidance:"
 msgstr "Guidance:"
 
@@ -897,6 +898,10 @@ msgstr "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesen
 #: src/ScanCard.js:30
 msgid "ITPIN Compliant"
 msgstr "ITPIN Compliant"
+
+#: src/GuidanceTagList.js:95
+msgid "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
+msgstr "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
 
 #: src/PolicyComplianceDetails.js:17
 #~ msgid "Implementation Status:"
@@ -1181,6 +1186,10 @@ msgstr "Next"
 msgid "No Domains"
 msgstr "No Domains"
 
+#: src/GuidanceTagList.js:80
+#~ msgid "No Guidance tags were found for this scan category"
+#~ msgstr "No Guidance tags were found for this scan category"
+
 #: src/Organizations.js:69
 msgid "No Organizations"
 msgstr "No Organizations"
@@ -1228,6 +1237,10 @@ msgstr "No data for the SPF Failures by IP Address table"
 #: src/DomainList.js:12
 msgid "No domains scanned yet."
 msgstr "No domains scanned yet."
+
+#: src/GuidanceTagList.js:80
+msgid "No guidance tags were found for this scan category"
+msgstr "No guidance tags were found for this scan category"
 
 #: src/Doughnut.js:63
 msgid "No scan data for this organization."
@@ -1465,6 +1478,10 @@ msgstr "Please enter your current password."
 msgid "Please enter your two factor code below."
 msgstr "Please enter your two factor code below."
 
+#: src/GuidanceTagList.js:95
+#~ msgid "Please use the contact form to notify an admin"
+#~ msgstr "Please use the contact form to notify an admin"
+
 #: src/guidanceTagConstants.js:140
 msgid "Policy applies to all of mailflow"
 msgstr "Policy applies to all of mailflow"
@@ -1495,8 +1512,8 @@ msgid "Privacy"
 msgstr "Privacy"
 
 #: src/GuidanceTagList.js:73
-msgid "Properly configured!"
-msgstr "Properly configured!"
+#~ msgid "Properly configured!"
+#~ msgstr "Properly configured!"
 
 #: src/guidanceTagConstants.js:378
 msgid "Public key RSA and key length 1024"
@@ -1579,6 +1596,7 @@ msgid "Reset Password"
 msgstr "Reset Password"
 
 #: src/GuidanceTagDetails.js:76
+#: src/GuidanceTagList.js:77
 msgid "Result:"
 msgstr "Result:"
 
@@ -1866,6 +1884,14 @@ msgstr "The user's role has been successfully updated"
 #: src/ErrorFallbackMessage.js:21
 msgid "This component is currently unavailable. Try reloading the page."
 msgstr "This component is currently unavailable. Try reloading the page."
+
+#: src/GuidanceTagList.js:88
+msgid "This could be due to improper configuration, or could be the result of a scan error"
+msgstr "This could be due to improper configuration, or could be the result of a scan error"
+
+#: src/GuidanceTagList.js:89
+#~ msgid "This could be due to improper configurations, or could be the result of a scan error"
+#~ msgstr "This could be due to improper configurations, or could be the result of a scan error"
 
 #: src/App.js:54
 msgid "This service is being developed in the open"

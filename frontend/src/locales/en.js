@@ -244,6 +244,8 @@
     'IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.':
       'IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     'ITPIN Compliant': 'ITPIN Compliant',
+    'If you believe this was caused by a problem with Tracker, please use the "Report an Issue" link below':
+      'If you believe this was caused by a problem with Tracker, please use the "Report an Issue" link below',
     'Implementation Status:': 'Implementation Status:',
     'Incorrect authenticate.result typename.':
       'Incorrect authenticate.result typename.',
@@ -310,6 +312,8 @@
     'New domain name cannot be empty': 'New domain name cannot be empty',
     Next: 'Next',
     'No Domains': 'No Domains',
+    'No Guidance tags were found for this scan category':
+      'No Guidance tags were found for this scan category',
     'No Organizations': 'No Organizations',
     'No RUAs defined': 'No RUAs defined',
     'No RUFs defined': 'No RUFs defined',
@@ -328,6 +332,8 @@
     'No data for the SPF Failures by IP Address table':
       'No data for the SPF Failures by IP Address table',
     'No domains scanned yet.': 'No domains scanned yet.',
+    'No guidance tags were found for this scan category':
+      'No guidance tags were found for this scan category',
     'No scan data for this organization.':
       'No scan data for this organization.',
     'No users in this organization': 'No users in this organization',
@@ -394,6 +400,8 @@
       'Please enter your current password.',
     'Please enter your two factor code below.':
       'Please enter your two factor code below.',
+    'Please use the contact form to notify an admin':
+      'Please use the contact form to notify an admin',
     'Policy applies to all of mailflow': 'Policy applies to all of mailflow',
     'Policy applies to no part of mailflow - irregular config':
       'Policy applies to no part of mailflow - irregular config',
@@ -509,6 +517,10 @@
       "The user's role has been successfully updated",
     'This component is currently unavailable. Try reloading the page.':
       'This component is currently unavailable. Try reloading the page.',
+    'This could be due to improper configuration, or could be the result of a scan error':
+      'This could be due to improper configuration, or could be the result of a scan error',
+    'This could be due to improper configurations, or could be the result of a scan error':
+      'This could be due to improper configurations, or could be the result of a scan error',
     'This service is being developed in the open':
       'This service is being developed in the open',
     'Total Messages': 'Total Messages',

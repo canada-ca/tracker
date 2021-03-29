@@ -20,7 +20,8 @@ const colors = {
   strongMuted: '#E0FFE0',
   weakMuted: '#FFE0E0',
   infoMuted: '#d2e7fc',
-  unknown: '#B0B0B0',
+  moderateMuted: '#FFE6C0',
+  unknown: '#6C6C6C',
   green: {
     50: '#F2FFF0',
     100: '#C3EEBF',

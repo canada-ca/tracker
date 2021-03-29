@@ -440,7 +440,7 @@ msgstr "Défaillances du DMARC par adresse IP"
 
 #: src/ScanCard.js:48
 msgid "DMARC Implementation Phase: {0}"
-msgstr ""
+msgstr "Phase de mise en œuvre de DMARC : {0}"
 
 #: src/ScanCard.js:61
 #~ msgid "DMARC Implementation Phase: {status}"
@@ -770,6 +770,7 @@ msgid "Guidance Tags"
 msgstr "Étiquettes d'orientation"
 
 #: src/GuidanceTagDetails.js:82
+#: src/GuidanceTagList.js:85
 msgid "Guidance:"
 msgstr "Orientation :"
 
@@ -893,6 +894,10 @@ msgstr ""
 #: src/ScanCard.js:30
 msgid "ITPIN Compliant"
 msgstr "Conforme à l'ITPIN"
+
+#: src/GuidanceTagList.js:95
+msgid "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
+msgstr "Si vous pensez que cela est dû à un problème avec Tracker, veuillez utiliser le lien \"Signaler un problème\" ci-dessous"
 
 #: src/PolicyComplianceDetails.js:17
 #~ msgid "Implementation Status:"
@@ -1177,6 +1182,10 @@ msgstr "Suivant"
 msgid "No Domains"
 msgstr "Aucun domaine"
 
+#: src/GuidanceTagList.js:80
+#~ msgid "No Guidance tags were found for this scan category"
+#~ msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de balayage."
+
 #: src/Organizations.js:69
 msgid "No Organizations"
 msgstr "Aucune organisation"
@@ -1224,6 +1233,10 @@ msgstr "Aucune donnée pour le tableau des défaillances du SPF par adresse IP"
 #: src/DomainList.js:12
 msgid "No domains scanned yet."
 msgstr "Aucun domaine n'a encore été scanné."
+
+#: src/GuidanceTagList.js:80
+msgid "No guidance tags were found for this scan category"
+msgstr ""
 
 #: src/Doughnut.js:63
 msgid "No scan data for this organization."
@@ -1461,6 +1474,10 @@ msgstr "Veuillez entrer votre mot de passe actuel."
 msgid "Please enter your two factor code below."
 msgstr "Veuillez entrer votre code à deux facteurs ci-dessous."
 
+#: src/GuidanceTagList.js:95
+#~ msgid "Please use the contact form to notify an admin"
+#~ msgstr "Veuillez utiliser le formulaire de contact pour informer un administrateur"
+
 #: src/guidanceTagConstants.js:140
 msgid "Policy applies to all of mailflow"
 msgstr "La politique s'applique à l'ensemble du flux de courrier"
@@ -1491,8 +1508,8 @@ msgid "Privacy"
 msgstr "Confidentialité"
 
 #: src/GuidanceTagList.js:73
-msgid "Properly configured!"
-msgstr "Bien configuré !"
+#~ msgid "Properly configured!"
+#~ msgstr "Bien configuré !"
 
 #: src/guidanceTagConstants.js:378
 msgid "Public key RSA and key length 1024"
@@ -1575,6 +1592,7 @@ msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
 #: src/GuidanceTagDetails.js:76
+#: src/GuidanceTagList.js:77
 msgid "Result:"
 msgstr "Résultat"
 
@@ -1863,6 +1881,14 @@ msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 msgid "This component is currently unavailable. Try reloading the page."
 msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la page."
 
+#: src/GuidanceTagList.js:88
+msgid "This could be due to improper configuration, or could be the result of a scan error"
+msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
+
+#: src/GuidanceTagList.js:89
+#~ msgid "This could be due to improper configurations, or could be the result of a scan error"
+#~ msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
+
 #: src/App.js:54
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
@@ -1878,7 +1904,7 @@ msgstr "total des utilisateurs"
 
 #: src/WelcomeMessage.js:15
 msgid "Track Digital Security"
-msgstr ""
+msgstr "Suivre la sécurité numérique"
 
 #: src/Page.js:8
 #~ msgid "Tracker"
@@ -1903,11 +1929,11 @@ msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
 #: src/CreateUserPage.js:83
 msgid "Unable to create account, please try again."
-msgstr ""
+msgstr "Impossible de créer un compte, veuillez réessayer."
 
 #: src/AdminDomains.js:113
 msgid "Unable to create new domain."
-msgstr ""
+msgstr "Impossible de créer un nouveau domaine."
 
 #: src/CreateUserPage.js:54
 msgid "Unable to create your account, please try again."
@@ -1915,11 +1941,11 @@ msgstr "Impossible de créer votre compte, veuillez réessayer"
 
 #: src/UserList.js:138
 msgid "Unable to invite user."
-msgstr ""
+msgstr "Impossible d'inviter un utilisateur."
 
 #: src/AdminDomains.js:166
 msgid "Unable to remove domain."
-msgstr ""
+msgstr "Impossible de supprimer le domaine."
 
 #: src/ScanDomain.js:32
 msgid "Unable to request scan, please try again."
@@ -1927,7 +1953,7 @@ msgstr "Impossible de demander un balayage, veuillez réessayer."
 
 #: src/ResetPasswordPage.js:51
 msgid "Unable to reset your password, please try again."
-msgstr ""
+msgstr "Impossible de réinitialiser votre mot de passe, veuillez réessayer."
 
 #: src/ForgotPasswordPage.js:28
 msgid "Unable to send password reset link to email."
@@ -1942,7 +1968,7 @@ msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
 #: src/AdminDomains.js:218
 msgid "Unable to update domain."
-msgstr ""
+msgstr "Impossible de mettre à jour le domaine."
 
 #: src/ResetPasswordPage.js:31
 msgid "Unable to update password"
@@ -1970,7 +1996,7 @@ msgstr "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessaye
 
 #: src/UserList.js:85
 msgid "Unable to update user role."
-msgstr ""
+msgstr "Impossible de mettre à jour le rôle de l'utilisateur."
 
 #: src/EditableUserPassword.js:73
 msgid "Unable to update your password, please try again."

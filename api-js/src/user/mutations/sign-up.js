@@ -50,9 +50,10 @@ export const signUp = new mutationWithClientMutationId({
     args,
     {
       i18n,
-      query,
-      auth: { tokenize, bcrypt },
-      loaders: { userLoaderByUserName },
+      collections,
+      transaction,
+      auth: { bcrypt, tokenize, verifyToken },
+      loaders: { orgLoaderByKey, userLoaderByUserName, userLoaderByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -62,6 +63,7 @@ export const signUp = new mutationWithClientMutationId({
     const password = cleanseInput(args.password)
     const confirmPassword = cleanseInput(args.confirmPassword)
     const preferredLang = cleanseInput(args.preferredLang)
+    const signUpToken = cleanseInput(args.signUpToken)
 
     // Check to make sure password meets length requirement
     if (password.length < 12) {
@@ -116,39 +118,99 @@ export const signUp = new mutationWithClientMutationId({
       tfaSendMethod: 'none',
     }
 
-    let insertedCursor, insertedUser
+    // Generate list of collections names
+    const collectionStrings = []
+    for (const property in collections) {
+      collectionStrings.push(property.toString())
+    }
+
+    // Setup Transaction
+    const trx = await transaction(collectionStrings)
+
+    let insertedUser
     try {
-      insertedCursor = await query`
-        INSERT ${user} INTO users RETURN NEW
-      `
+      insertedUser = await trx.step(() => collections.users.save(user))
     } catch (err) {
       console.error(
-        `Database error occurred when ${userName} tried to sign up: ${err}`,
+        `Transaction step error occurred while user: ${userName} attempted to sign up, creating user: ${err}`,
       )
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
+    // Assign user to org
+    if (signUpToken !== '') {
+      // Gather token parameters
+      const tokenParameters = verifyToken({
+        token: signUpToken,
+      })
+
+      const tokenUserName = cleanseInput(tokenParameters.userName)
+      const tokenOrgKey = cleanseInput(tokenParameters.orgKey)
+      const tokenRequestedRole = cleanseInput(tokenParameters.requestedRole)
+
+      if (userName !== tokenUserName) {
+        console.warn(
+          `User: ${userName} attempted to sign up with an invite token, however emails do not match.`,
+        )
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(
+            t`Unable to sign up, please contact org admin for a new invite.`,
+          ),
+        }
+      }
+
+      const checkOrg = await orgLoaderByKey.load(tokenOrgKey)
+      if (typeof checkOrg === 'undefined') {
+        console.warn(
+          `User: ${userName} attempted to sign up with an invite token, however the org could not be found.`,
+        )
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(
+            t`Unable to sign up, please contact org admin for a new invite.`,
+          ),
+        }
+      }
+
+      try {
+        await trx.step(() =>
+          collections.affiliations.save({
+            _from: checkOrg._id,
+            _to: insertedUser._id,
+            permission: tokenRequestedRole,
+          }),
+        )
+      } catch (err) {
+        console.error(
+          `Transaction step error occurred while user: ${userName} attempted to sign up, assigning affiliation: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to sign up. Please try again.`))
+      }
+    }
+
     try {
-      insertedUser = await insertedCursor.next()
+      await trx.commit()
     } catch (err) {
       console.error(
-        `Cursor error occurred when trying to get new user ${userName}: ${err}`,
+        `Transaction commit error occurred while user: ${userName} attempted to sign up: ${err}`,
       )
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
-
-    // Assign global id
-    insertedUser.id = insertedUser._key
 
     // Generate JWT
     const token = tokenize({ parameters: { userKey: insertedUser._key } })
+
+    const returnUser = await userLoaderByKey.load(insertedUser._key)
 
     console.info(`User: ${userName} successfully created a new account.`)
 
     return {
       _type: 'authResult',
       token,
-      user: insertedUser,
+      user: returnUser,
     }
   },
 })

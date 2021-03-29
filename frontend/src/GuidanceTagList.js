@@ -66,12 +66,35 @@ export function GuidanceTagList({
       )
     })
 
-  const properlyConfigured = (
-    <Stack isInline align="center" bg="strongMuted" px="2">
-      <Icon name="check-circle" color="strong" />
-      <Text>
-        <Trans>Properly configured!</Trans>
-      </Text>
+  const smallDevice = window.matchMedia('(max-width: 500px)').matches
+  const noTags = (
+    <Stack isInline align="center" bg="moderateMuted" px="2">
+      {!smallDevice && <Icon name="warning-2" color="moderate" />}
+      <Box>
+        <Stack isInline align="center">
+          {smallDevice && <Icon name="warning-2" color="moderate" />}
+          <Text fontWeight="bold">
+            <Trans>Result:</Trans>
+          </Text>
+          <Text>
+            <Trans>No guidance tags were found for this scan category</Trans>
+          </Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">
+            <Trans>Guidance:</Trans>
+          </Text>
+          <Text>
+            <Trans>
+              This could be due to improper configuration, or could be the
+              result of a scan error
+            </Trans>
+          </Text>
+        </Stack>
+        <Text fontWeight="bold">
+          <Trans>If you believe this was caused by a problem with Tracker, please use the "Report an Issue" link below</Trans>
+        </Text>
+      </Box>
     </Stack>
   )
 
@@ -86,7 +109,7 @@ export function GuidanceTagList({
       {!positiveTagList.length &&
         !neutralTagList.length &&
         !negativeTagList.length &&
-        properlyConfigured}
+        noTags}
     </Box>
   )
 }
