@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY src ./src
 COPY index.js .
-COPY package* .
+COPY package* ./
 COPY database-options.js .
 COPY ./.env.example .
 
