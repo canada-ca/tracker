@@ -1496,15 +1496,26 @@ input RemoveDomainInput {
   clientMutationId: String
 }
 
-input RemoveOrganizationInput {
-  # The global id of the organization you wish you remove.
-  orgId: ID!
+type RemoveOrganizationPayload {
+  # `RemoveOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.
+  result: RemoveOrganizationUnion!
   clientMutationId: String
 }
 
-type RemoveOrganizationPayload {
-  # Status string to inform the user if the organization was successfully removed.
+# This union is used with the `RemoveOrganization` mutation,
+# allowing for users to remove an organization they belong to,
+# and support any errors that may occur
+union RemoveOrganizationUnion = OrganizationError | OrganizationResult
+
+# This object is used to inform the user that no errors were encountered while running organization mutations.
+type OrganizationResult {
+  # Informs the user if the organization mutation was successful.
   status: String
+}
+
+input RemoveOrganizationInput {
+  # The global id of the organization you wish you remove.
+  orgId: ID!
   clientMutationId: String
 }
 
