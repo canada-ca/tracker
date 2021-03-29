@@ -4,7 +4,7 @@ metadata:
   name: dmarc-report
   namespace: scanners
 spec:
-  schedule: "0 7 * * *"
+  schedule: "0 10 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   successfulJobsHistoryLimit: 0
