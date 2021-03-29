@@ -36,7 +36,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const history = useHistory()
   const { i18n } = useLingui()
 
-  useDocumentTitle(t`DMARC Report | ${domainSlug}`)
+  useDocumentTitle(t`DMARC Report for ${domainSlug}`)
 
   const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState(period)

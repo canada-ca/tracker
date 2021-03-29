@@ -31,7 +31,7 @@ export default function OrganizationDetails() {
   const toast = useToast()
   const history = useHistory()
 
-  useDocumentTitle(`Tracker | ${orgSlug}`)
+  useDocumentTitle(`${orgSlug}`)
 
   const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
     variables: { slug: orgSlug },

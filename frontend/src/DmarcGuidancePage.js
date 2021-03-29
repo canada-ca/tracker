@@ -15,7 +15,7 @@ export default function DmarcGuidancePage() {
   const { currentUser } = useUserState()
   const { domainSlug } = useParams()
 
-  useDocumentTitle(`Tracker | ${domainSlug}`)
+  useDocumentTitle(`${domainSlug}`)
 
   const { loading, error, data } = useQuery(GET_GUIDANCE_TAGS_OF_DOMAIN, {
     context: {
