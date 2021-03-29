@@ -463,8 +463,8 @@ msgid "DMARC Report"
 msgstr "Rapport DMARC "
 
 #: src/DmarcReportPage.js:39
-msgid "DMARC Report | {domainSlug}"
-msgstr "Rapport DMARC | {domainSlug}"
+msgid "DMARC Report for {domainSlug}"
+msgstr "Rapport DMARC pour {domainSlug}"
 
 #: src/DomainsPage.js:136
 msgid "DMARC Status"
@@ -2057,11 +2057,11 @@ msgstr "Nous avons envoyé un SMS à votre nouveau numéro de téléphone avec u
 
 #: src/AuthenticateField.js:34
 msgid "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker."
-msgstr "Nous avons envoyé un SMS à votre numéro de téléphone enregistré avec un code d'authentification pour vous connecter à Tracker."
+msgstr "Nous avons envoyé un SMS à votre numéro de téléphone enregistré avec un code d'authentification pour vous connecter à Suivi."
 
 #: src/AuthenticateField.js:29
 msgid "We've sent you an email with an authentication code to sign into Tracker."
-msgstr "Nous vous avons envoyé un e-mail avec un code d'authentification pour vous connecter à Tracker."
+msgstr "Nous vous avons envoyé un e-mail avec un code d'authentification pour vous connecter à Suivi."
 
 #: src/OrganizationCard.js:107
 #: src/SummaryGroup.js:21
@@ -2241,3 +2241,7 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 #: src/OrganizationDetails.js:80
 msgid "{orgName}"
 msgstr ""
+
+#: src/useDocumentTitle.js:6
+msgid "{title} - Tracker"
+msgstr "{title} - Suivi"

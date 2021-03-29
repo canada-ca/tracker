@@ -29,7 +29,7 @@
     'Account created.': 'Compte créé',
     Acronym: 'Acronyme',
     'Add Domain': 'Ajouter un domaine',
-    'Add a domain': 'Add a domain',
+    'Add a domain': 'Ajouter un domaine',
     Admin: 'Administrateur',
     'Admin Portal': 'Portail Admin',
     'Admin Profile': "Profil de l'administrateur",
@@ -135,7 +135,8 @@
     ],
     'DMARC Messages': 'Messages de la DMARC',
     'DMARC Not Implemented': "La DMARC n'est pas mise en œuvre",
-    'DMARC Report': 'Rapport de la DMARC',
+    'DMARC Report': 'Rapport DMARC ',
+    'DMARC Report for {domainSlug}': ['Rapport DMARC pour ', ['domainSlug']],
     'DMARC Status': 'Statut DMARC',
     'DMARC fail': 'DMARC échoue',
     'DMARC pass': 'Passe DMARC',
@@ -148,7 +149,7 @@
     'Display name cannot be empty': "Le nom d'affichage ne peut pas être vide",
     Disposition: 'Disposition',
     Domain: 'Domaine',
-    'Domain DMARC Report': 'Rapport DMARC de domaine',
+    'Domain DMARC Report': 'Domain DMARC Report',
     'Domain Details': 'Détails du domaine',
     'Domain List': 'Liste des domaines',
     'Domain URL': 'URL du domaine',
@@ -592,9 +593,9 @@
     "We've sent an SMS to your new phone number with an authentication code to confirm this change.":
       "Nous avons envoyé un SMS à votre nouveau numéro de téléphone avec un code d'authentification pour confirmer ce changement.",
     "We've sent an SMS to your registered phone number with an authentication code to sign into Tracker.":
-      "Nous avons envoyé un SMS à votre numéro de téléphone enregistré avec un code d'authentification pour vous connecter à Tracker.",
+      "Nous avons envoyé un SMS à votre numéro de téléphone enregistré avec un code d'authentification pour vous connecter à Suivi.",
     "We've sent you an email with an authentication code to sign into Tracker.":
-      "Nous vous avons envoyé un e-mail avec un code d'authentification pour vous connecter à Tracker.",
+      "Nous vous avons envoyé un e-mail avec un code d'authentification pour vous connecter à Suivi.",
     'Web Configuration': 'Configuration Web',
     'Web Scan Results': "Résultats de l'analyse du Web",
     'Web encryption settings summary':
@@ -679,5 +680,6 @@
       ['0'],
     ],
     '{orgName}': [['orgName']],
+    '{title} - Tracker': [['title'], ' - Suivi'],
   },
 }

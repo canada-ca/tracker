@@ -463,8 +463,12 @@ msgid "DMARC Report"
 msgstr "DMARC Report"
 
 #: src/DmarcReportPage.js:39
-msgid "DMARC Report | {domainSlug}"
-msgstr "DMARC Report | {domainSlug}"
+msgid "DMARC Report for {domainSlug}"
+msgstr "DMARC Report for {domainSlug}"
+
+#: src/DmarcReportPage.js:39
+#~ msgid "DMARC Report | {domainSlug}"
+#~ msgstr "DMARC Report | {domainSlug}"
 
 #: src/DomainsPage.js:136
 msgid "DMARC Status"
@@ -2234,6 +2238,10 @@ msgstr "{0} was added to {orgSlug}"
 msgid "{count} records..."
 msgstr "{count} records..."
 
+#: src/DmarcReportPage.js:39
+#~ msgid "{domainSlug} DMARC Report"
+#~ msgstr "{domainSlug} DMARC Report"
+
 #: src/AdminDomains.js:209
 msgid "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
@@ -2241,3 +2249,7 @@ msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 #: src/OrganizationDetails.js:80
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/useDocumentTitle.js:6
+msgid "{title} - Tracker"
+msgstr "{title} - Tracker"
