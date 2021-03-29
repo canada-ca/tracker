@@ -92,7 +92,7 @@ export function GuidanceTagList({
           </Text>
         </Stack>
         <Text fontWeight="bold">
-          <Trans>Please use the contact form to notify an administrator</Trans>
+          <Trans>If you believe this was caused by a problem with Tracker, please use the "Report an Issue" link below</Trans>
         </Text>
       </Box>
     </Stack>

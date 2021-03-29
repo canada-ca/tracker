@@ -415,8 +415,12 @@ msgid "DMARC Failures by IP Address"
 msgstr "DMARC Failures by IP Address"
 
 #: src/ScanCard.js:48
-msgid "DMARC Implementation Phase: {status}"
-msgstr "DMARC Implementation Phase: {status}"
+msgid "DMARC Implementation Phase: {0}"
+msgstr "DMARC Implementation Phase: {0}"
+
+#: src/ScanCard.js:48
+#~ msgid "DMARC Implementation Phase: {status}"
+#~ msgstr "DMARC Implementation Phase: {status}"
 
 #: src/DmarcByDomainPage.js:121
 #: src/DmarcByDomainPage.js:226
@@ -719,6 +723,7 @@ msgid "Guidance Tags"
 msgstr "Guidance Tags"
 
 #: src/GuidanceTagDetails.js:82
+#: src/GuidanceTagList.js:85
 msgid "Guidance:"
 msgstr "Guidance:"
 
@@ -837,6 +842,10 @@ msgstr "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesen
 #: src/ScanCard.js:30
 msgid "ITPIN Compliant"
 msgstr "ITPIN Compliant"
+
+#: src/GuidanceTagList.js:95
+msgid "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
+msgstr "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
 
 #: src/PolicyComplianceDetails.js:17
 #~ msgid "Implementation Status:"
@@ -1113,6 +1122,10 @@ msgstr "Next"
 msgid "No Domains"
 msgstr "No Domains"
 
+#: src/GuidanceTagList.js:80
+#~ msgid "No Guidance tags were found for this scan category"
+#~ msgstr "No Guidance tags were found for this scan category"
+
 #: src/Organizations.js:69
 msgid "No Organizations"
 msgstr "No Organizations"
@@ -1160,6 +1173,10 @@ msgstr "No data for the SPF Failures by IP Address table"
 #: src/DomainList.js:12
 msgid "No domains scanned yet."
 msgstr "No domains scanned yet."
+
+#: src/GuidanceTagList.js:80
+msgid "No guidance tags were found for this scan category"
+msgstr "No guidance tags were found for this scan category"
 
 #: src/Doughnut.js:63
 msgid "No scan data for this organization."
@@ -1396,6 +1413,10 @@ msgstr "Please enter your current password."
 msgid "Please enter your two factor code below."
 msgstr "Please enter your two factor code below."
 
+#: src/GuidanceTagList.js:95
+#~ msgid "Please use the contact form to notify an admin"
+#~ msgstr "Please use the contact form to notify an admin"
+
 #: src/guidanceTagConstants.js:140
 msgid "Policy applies to all of mailflow"
 msgstr "Policy applies to all of mailflow"
@@ -1420,14 +1441,14 @@ msgstr "Pre-Alpha"
 msgid "Previous"
 msgstr "Previous"
 
-#: src/App.js:202
+#: src/App.js:203
 #: src/FloatingMenu.js:175
 msgid "Privacy"
 msgstr "Privacy"
 
 #: src/GuidanceTagList.js:73
-msgid "Properly configured!"
-msgstr "Properly configured!"
+#~ msgid "Properly configured!"
+#~ msgstr "Properly configured!"
 
 #: src/guidanceTagConstants.js:378
 msgid "Public key RSA and key length 1024"
@@ -1497,7 +1518,7 @@ msgstr "RUF-none"
 msgid "Remove Domain"
 msgstr "Remove Domain"
 
-#: src/App.js:219
+#: src/App.js:221
 msgid "Report an Issue"
 msgstr "Report an Issue"
 
@@ -1506,6 +1527,7 @@ msgid "Request a domain to be scanned:"
 msgstr "Request a domain to be scanned:"
 
 #: src/GuidanceTagDetails.js:76
+#: src/GuidanceTagList.js:77
 msgid "Result:"
 msgstr "Result:"
 
@@ -1764,7 +1786,7 @@ msgstr "TXT-DMARC-enabled"
 msgid "TXT-DMARC-missing"
 msgstr "TXT-DMARC-missing"
 
-#: src/App.js:212
+#: src/App.js:214
 #: src/FloatingMenu.js:185
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
@@ -1784,6 +1806,14 @@ msgstr "The user's role has been successfully updated"
 #: src/ErrorFallbackMessage.js:21
 msgid "This component is currently unavailable. Try reloading the page."
 msgstr "This component is currently unavailable. Try reloading the page."
+
+#: src/GuidanceTagList.js:88
+msgid "This could be due to improper configuration, or could be the result of a scan error"
+msgstr "This could be due to improper configuration, or could be the result of a scan error"
+
+#: src/GuidanceTagList.js:89
+#~ msgid "This could be due to improper configurations, or could be the result of a scan error"
+#~ msgstr "This could be due to improper configurations, or could be the result of a scan error"
 
 #: src/App.js:53
 msgid "This service is being developed in the open"
@@ -2155,15 +2185,3 @@ msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 #: src/OrganizationDetails.js:76
 msgid "{orgName}"
 msgstr "{orgName}"
-
-#: src/GuidanceTagList.js:80
-msgid "No Guidance tags were found for this scan category"
-msgstr "No Guidance tags were found for this scan category"
-
-#: src/GuidanceTagList.js:89
-msgid "This could be due to improper configurations, or could be the result of a scan error"
-msgstr "This could be due to improper configurations, or could be the result of a scan error"
-
-#: src/GuidanceTagList.js:95
-msgid "Please use the contact form to notify an admin"
-msgstr "Please use the contact form to notify an admin"

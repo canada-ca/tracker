@@ -122,6 +122,7 @@
     'DKIM-value-invalid': 'DKIM-value-invalid',
     'DMARC Failure Table': 'Tableau des échecs de la DMARC',
     'DMARC Failures by IP Address': 'Défaillances du DMARC par adresse IP',
+    'DMARC Implementation Phase: {0}': ['DMARC Implementation Phase: ', ['0']],
     'DMARC Implementation Phase: {status}': [
       'Phase de mise en œuvre de la DMARC: ',
       ['status'],
@@ -238,6 +239,8 @@
     'IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.':
       'IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     'ITPIN Compliant': "Conforme à l'ITPIN",
+    'If you believe this was caused by a problem with Tracker, please use the "Report an Issue" link below':
+      'Si vous pensez que cela est dû à un problème avec Tracker, veuillez utiliser le lien "Signaler un problème" ci-dessous',
     'Implementation Status:': "État d'avancement de la mise en œuvre:",
     'Incorrect authenticate.result typename.':
       'Incorrect authenticate.result typename.',
@@ -304,6 +307,8 @@
       'Un nouveau nom de domaine ne peut pas être vide',
     Next: 'Suivant',
     'No Domains': 'Aucun domaine',
+    'No Guidance tags were found for this scan category':
+      "Aucune balise d'orientation n'a été trouvée pour cette catégorie de balayage.",
     'No Organizations': 'Aucune organisation',
     'No RUAs defined': 'Pas de RUA définis',
     'No RUFs defined': 'Pas de RUF définis',
@@ -322,6 +327,8 @@
     'No data for the SPF Failures by IP Address table':
       'Aucune donnée pour le tableau des défaillances du SPF par adresse IP',
     'No domains scanned yet.': "Aucun domaine n'a encore été scanné.",
+    'No guidance tags were found for this scan category':
+      'No guidance tags were found for this scan category',
     'No scan data for this organization.':
       "Aucune donnée d'analyse pour cette organisation.",
     'No users in this organization':
@@ -389,6 +396,8 @@
       'Veuillez entrer votre mot de passe actuel.',
     'Please enter your two factor code below.':
       'Veuillez entrer votre code à deux facteurs ci-dessous.',
+    'Please use the contact form to notify an admin':
+      'Veuillez utiliser le formulaire de contact pour informer un administrateur',
     'Policy applies to all of mailflow':
       "La politique s'applique à l'ensemble du flux de courrier",
     'Policy applies to no part of mailflow - irregular config':
@@ -506,6 +515,10 @@
       "Le rôle de l'utilisateur a été mis à jour avec succès",
     'This component is currently unavailable. Try reloading the page.':
       "Ce composant n'est pas disponible actuellement. Essayez de recharger la page.",
+    'This could be due to improper configuration, or could be the result of a scan error':
+      'This could be due to improper configuration, or could be the result of a scan error',
+    'This could be due to improper configurations, or could be the result of a scan error':
+      "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse",
     'This service is being developed in the open':
       'Ce service est développé de façon ouverte',
     'Total Messages': 'Total des messages',

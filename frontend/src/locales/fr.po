@@ -415,8 +415,12 @@ msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
 #: src/ScanCard.js:48
-msgid "DMARC Implementation Phase: {status}"
-msgstr "Phase de mise en œuvre de la DMARC: {status}"
+msgid "DMARC Implementation Phase: {0}"
+msgstr ""
+
+#: src/ScanCard.js:48
+#~ msgid "DMARC Implementation Phase: {status}"
+#~ msgstr "Phase de mise en œuvre de la DMARC: {status}"
 
 #: src/DmarcByDomainPage.js:121
 #: src/DmarcByDomainPage.js:226
@@ -719,6 +723,7 @@ msgid "Guidance Tags"
 msgstr "Étiquettes d'orientation"
 
 #: src/GuidanceTagDetails.js:82
+#: src/GuidanceTagList.js:85
 msgid "Guidance:"
 msgstr "Orientation :"
 
@@ -837,6 +842,10 @@ msgstr ""
 #: src/ScanCard.js:30
 msgid "ITPIN Compliant"
 msgstr "Conforme à l'ITPIN"
+
+#: src/GuidanceTagList.js:95
+msgid "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
+msgstr "Si vous pensez que cela est dû à un problème avec Tracker, veuillez utiliser le lien \"Signaler un problème\" ci-dessous"
 
 #: src/PolicyComplianceDetails.js:17
 #~ msgid "Implementation Status:"
@@ -1113,6 +1122,10 @@ msgstr "Suivant"
 msgid "No Domains"
 msgstr "Aucun domaine"
 
+#: src/GuidanceTagList.js:80
+#~ msgid "No Guidance tags were found for this scan category"
+#~ msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de balayage."
+
 #: src/Organizations.js:69
 msgid "No Organizations"
 msgstr "Aucune organisation"
@@ -1160,6 +1173,10 @@ msgstr "Aucune donnée pour le tableau des défaillances du SPF par adresse IP"
 #: src/DomainList.js:12
 msgid "No domains scanned yet."
 msgstr "Aucun domaine n'a encore été scanné."
+
+#: src/GuidanceTagList.js:80
+msgid "No guidance tags were found for this scan category"
+msgstr ""
 
 #: src/Doughnut.js:63
 msgid "No scan data for this organization."
@@ -1396,6 +1413,10 @@ msgstr "Veuillez entrer votre mot de passe actuel."
 msgid "Please enter your two factor code below."
 msgstr "Veuillez entrer votre code à deux facteurs ci-dessous."
 
+#: src/GuidanceTagList.js:95
+#~ msgid "Please use the contact form to notify an admin"
+#~ msgstr "Veuillez utiliser le formulaire de contact pour informer un administrateur"
+
 #: src/guidanceTagConstants.js:140
 msgid "Policy applies to all of mailflow"
 msgstr "La politique s'applique à l'ensemble du flux de courrier"
@@ -1420,14 +1441,14 @@ msgstr "préalpha"
 msgid "Previous"
 msgstr "Précédent"
 
-#: src/App.js:202
+#: src/App.js:203
 #: src/FloatingMenu.js:175
 msgid "Privacy"
 msgstr "Confidentialité"
 
 #: src/GuidanceTagList.js:73
-msgid "Properly configured!"
-msgstr "Bien configuré !"
+#~ msgid "Properly configured!"
+#~ msgstr "Bien configuré !"
 
 #: src/guidanceTagConstants.js:378
 msgid "Public key RSA and key length 1024"
@@ -1497,7 +1518,7 @@ msgstr ""
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
-#: src/App.js:219
+#: src/App.js:221
 msgid "Report an Issue"
 msgstr "Signaler un problème"
 
@@ -1506,6 +1527,7 @@ msgid "Request a domain to be scanned:"
 msgstr "Demander qu'un domaine soit scanné:"
 
 #: src/GuidanceTagDetails.js:76
+#: src/GuidanceTagList.js:77
 msgid "Result:"
 msgstr "Résultat"
 
@@ -1764,7 +1786,7 @@ msgstr ""
 msgid "TXT-DMARC-missing"
 msgstr ""
 
-#: src/App.js:212
+#: src/App.js:214
 #: src/FloatingMenu.js:185
 msgid "Terms & conditions"
 msgstr "Avis"
@@ -1784,6 +1806,14 @@ msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 #: src/ErrorFallbackMessage.js:21
 msgid "This component is currently unavailable. Try reloading the page."
 msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la page."
+
+#: src/GuidanceTagList.js:88
+msgid "This could be due to improper configuration, or could be the result of a scan error"
+msgstr ""
+
+#: src/GuidanceTagList.js:89
+#~ msgid "This could be due to improper configurations, or could be the result of a scan error"
+#~ msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
 
 #: src/App.js:53
 msgid "This service is being developed in the open"
@@ -2155,15 +2185,3 @@ msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 #: src/OrganizationDetails.js:76
 msgid "{orgName}"
 msgstr ""
-
-#: src/GuidanceTagList.js:80
-msgid "No Guidance tags were found for this scan category"
-msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de balayage."
-
-#: src/GuidanceTagList.js:89
-msgid "This could be due to improper configurations, or could be the result of a scan error"
-msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
-
-#: src/GuidanceTagList.js:95
-msgid "Please use the contact form to notify an admin"
-msgstr "Veuillez utiliser le formulaire de contact pour informer un administrateur"
