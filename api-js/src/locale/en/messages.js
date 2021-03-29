@@ -425,6 +425,8 @@
       'Unable to set phone number, please try again.',
     'Unable to sign in, please try again.':
       'Unable to sign in, please try again.',
+    'Unable to sign up, please contact org admin for a new invite.':
+      'Unable to sign up, please contact org admin for a new invite.',
     'Unable to sign up. Please try again.':
       'Unable to sign up. Please try again.',
     'Unable to two factor authenticate. Please try again.':

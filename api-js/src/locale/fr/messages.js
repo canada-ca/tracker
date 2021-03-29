@@ -227,6 +227,7 @@
     'Unable to send verification email. Please try again.': 'todo',
     'Unable to set phone number, please try again.': 'todo',
     'Unable to sign in, please try again.': 'todo',
+    'Unable to sign up, please contact org admin for a new invite.': 'todo',
     'Unable to sign up. Please try again.': 'todo',
     'Unable to two factor authenticate. Please try again.': 'todo',
     'Unable to update domain in an unknown org.': 'todo',

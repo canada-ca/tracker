@@ -1,6 +1,5 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
-import bcrypt from 'bcryptjs'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
@@ -17,7 +16,15 @@ import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
 describe('invite user to org', () => {
-  let query, drop, truncate, schema, collections, transaction, i18n, tokenize
+  let query,
+    drop,
+    truncate,
+    schema,
+    collections,
+    transaction,
+    i18n,
+    tokenize,
+    user
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -43,44 +50,9 @@ describe('invite user to org', () => {
   })
 
   beforeEach(async () => {
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            result {
-              ... on AuthResult {
-                user {
-                  id
-                }
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+    })
     consoleOutput.length = 0
   })
 
@@ -108,7 +80,7 @@ describe('invite user to org', () => {
       })
     })
     describe('given a successful invitation', () => {
-      let org, user
+      let org
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -134,12 +106,6 @@ describe('invite user to org', () => {
             },
           },
         })
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN MERGE({ id: user._key }, user)
-        `
-        user = await userCursor.next()
       })
       describe('users role is super admin', () => {
         beforeEach(async () => {
@@ -153,17 +119,11 @@ describe('invite user to org', () => {
           describe('requested role is super_admin', () => {
             let secondaryUser
             beforeEach(async () => {
-              await collections.users.save({
+              secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
                 preferredLang: 'english',
               })
-              const userCursor = await query`
-                  FOR user IN users
-                    FILTER user.userName == "test@email.gc.ca"
-                    RETURN MERGE({ id: user._key, _type: 'user' }, user)
-                `
-              secondaryUser = await userCursor.next()
             })
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
@@ -239,7 +199,14 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                user: secondaryUser,
+                user: {
+                  _type: 'user',
+                  displayName: 'Test Account',
+                  id: secondaryUser._key,
+                  preferredLang: 'english',
+                  userName: 'test@email.gc.ca',
+                  ...secondaryUser,
+                },
                 orgName: 'Treasury Board of Canada Secretariat',
               })
             })
@@ -247,17 +214,11 @@ describe('invite user to org', () => {
           describe('requested role is admin', () => {
             let secondaryUser
             beforeEach(async () => {
-              await collections.users.save({
+              secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
                 preferredLang: 'english',
               })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
-              `
-              secondaryUser = await userCursor.next()
             })
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
@@ -333,7 +294,14 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                user: secondaryUser,
+                user: {
+                  _type: 'user',
+                  displayName: 'Test Account',
+                  id: secondaryUser._key,
+                  preferredLang: 'english',
+                  userName: 'test@email.gc.ca',
+                  ...secondaryUser,
+                },
                 orgName: 'Treasury Board of Canada Secretariat',
               })
             })
@@ -341,17 +309,11 @@ describe('invite user to org', () => {
           describe('requested role is user', () => {
             let secondaryUser
             beforeEach(async () => {
-              await collections.users.save({
+              secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
                 preferredLang: 'english',
               })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
-              `
-              secondaryUser = await userCursor.next()
             })
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
@@ -427,7 +389,14 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                user: secondaryUser,
+                user: {
+                  _type: 'user',
+                  displayName: 'Test Account',
+                  id: secondaryUser._key,
+                  preferredLang: 'english',
+                  userName: 'test@email.gc.ca',
+                  ...secondaryUser,
+                },
                 orgName: 'Treasury Board of Canada Secretariat',
               })
             })
@@ -731,17 +700,11 @@ describe('invite user to org', () => {
           describe('requested role is admin', () => {
             let secondaryUser
             beforeEach(async () => {
-              await collections.users.save({
+              secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
                 preferredLang: 'english',
               })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
-              `
-              secondaryUser = await userCursor.next()
             })
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
@@ -817,7 +780,14 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                user: secondaryUser,
+                user: {
+                  _type: 'user',
+                  displayName: 'Test Account',
+                  id: secondaryUser._key,
+                  preferredLang: 'english',
+                  userName: 'test@email.gc.ca',
+                  ...secondaryUser,
+                },
                 orgName: 'Treasury Board of Canada Secretariat',
               })
             })
@@ -825,17 +795,11 @@ describe('invite user to org', () => {
           describe('requested role is user', () => {
             let secondaryUser
             beforeEach(async () => {
-              await collections.users.save({
+              secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
                 preferredLang: 'english',
               })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
-              `
-              secondaryUser = await userCursor.next()
             })
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
@@ -911,7 +875,14 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                user: secondaryUser,
+                user: {
+                  _type: 'user',
+                  displayName: 'Test Account',
+                  id: secondaryUser._key,
+                  preferredLang: 'english',
+                  userName: 'test@email.gc.ca',
+                  ...secondaryUser,
+                },
                 orgName: 'Treasury Board of Canada Secretariat',
               })
             })
@@ -1113,15 +1084,6 @@ describe('invite user to org', () => {
     })
     describe('given an unsuccessful invitation', () => {
       describe('user attempts to invite themselves', () => {
-        let user
-        beforeEach(async () => {
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await userCursor.next()
-        })
         it('returns an error message', async () => {
           const sendOrgInviteCreateAccount = jest.fn()
 
@@ -1197,15 +1159,6 @@ describe('invite user to org', () => {
         })
       })
       describe('user attempts to invite to an org that does not exist', () => {
-        let user
-        beforeEach(async () => {
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await userCursor.next()
-        })
         it('returns an error message', async () => {
           const sendOrgInviteCreateAccount = jest.fn()
 
@@ -1281,7 +1234,7 @@ describe('invite user to org', () => {
         })
       })
       describe('user with undefined permission attempts to invite a user', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             orgDetails: {
@@ -1307,13 +1260,6 @@ describe('invite user to org', () => {
               },
             },
           })
-
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await userCursor.next()
         })
         it('returns an error message', async () => {
           const sendOrgInviteCreateAccount = jest.fn()
@@ -1391,7 +1337,7 @@ describe('invite user to org', () => {
         })
       })
       describe('user with user level permission attempts to invite a user', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             orgDetails: {
@@ -1417,12 +1363,6 @@ describe('invite user to org', () => {
               },
             },
           })
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1505,7 +1445,7 @@ describe('invite user to org', () => {
         })
       })
       describe('user with admin level permission attempts to invite a user to super_admin permission', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             orgDetails: {
@@ -1531,12 +1471,6 @@ describe('invite user to org', () => {
               },
             },
           })
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -1620,7 +1554,7 @@ describe('invite user to org', () => {
       })
     })
     describe('transaction error occurs', () => {
-      let org, user, secondaryUser
+      let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -1646,29 +1580,17 @@ describe('invite user to org', () => {
             },
           },
         })
-        let userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-        user = await userCursor.next()
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
           permission: 'super_admin',
         })
 
-        await collections.users.save({
+        secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
           preferredLang: 'french',
         })
-        userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test@email.gc.ca"
-            RETURN MERGE({ id: user._key }, user)
-        `
-        secondaryUser = await userCursor.next()
       })
       describe('when creating affiliation', () => {
         it('returns an error message', async () => {
@@ -1841,7 +1763,7 @@ describe('invite user to org', () => {
       })
     })
     describe('given a successful invitation', () => {
-      let org, user
+      let org
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -1867,12 +1789,6 @@ describe('invite user to org', () => {
             },
           },
         })
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN MERGE({ id: user._key }, user)
-        `
-        user = await userCursor.next()
       })
       describe('users role is super admin', () => {
         beforeEach(async () => {
@@ -1886,17 +1802,11 @@ describe('invite user to org', () => {
           describe('requested role is super_admin', () => {
             let secondaryUser
             beforeEach(async () => {
-              await collections.users.save({
+              secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
                 preferredLang: 'french',
               })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
-              `
-              secondaryUser = await userCursor.next()
             })
             it('returns a status message', async () => {
               const sendOrgInviteEmail = jest.fn()
@@ -1971,7 +1881,14 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                user: secondaryUser,
+                user: {
+                  _type: 'user',
+                  displayName: 'Test Account',
+                  id: secondaryUser._key,
+                  preferredLang: 'french',
+                  userName: 'test@email.gc.ca',
+                  ...secondaryUser,
+                },
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
@@ -1979,17 +1896,11 @@ describe('invite user to org', () => {
           describe('requested role is admin', () => {
             let secondaryUser
             beforeEach(async () => {
-              await collections.users.save({
+              secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
                 preferredLang: 'french',
               })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
-              `
-              secondaryUser = await userCursor.next()
             })
             it('returns a status message', async () => {
               const sendOrgInviteEmail = jest.fn()
@@ -2064,7 +1975,14 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                user: secondaryUser,
+                user: {
+                  _type: 'user',
+                  displayName: 'Test Account',
+                  id: secondaryUser._key,
+                  preferredLang: 'french',
+                  userName: 'test@email.gc.ca',
+                  ...secondaryUser,
+                },
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
@@ -2072,17 +1990,11 @@ describe('invite user to org', () => {
           describe('requested role is user', () => {
             let secondaryUser
             beforeEach(async () => {
-              await collections.users.save({
+              secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
                 preferredLang: 'french',
               })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
-              `
-              secondaryUser = await userCursor.next()
             })
             it('returns a status message', async () => {
               const sendOrgInviteEmail = jest.fn()
@@ -2157,7 +2069,14 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                user: secondaryUser,
+                user: {
+                  _type: 'user',
+                  displayName: 'Test Account',
+                  id: secondaryUser._key,
+                  preferredLang: 'french',
+                  userName: 'test@email.gc.ca',
+                  ...secondaryUser,
+                },
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
@@ -2451,17 +2370,11 @@ describe('invite user to org', () => {
           describe('requested role is admin', () => {
             let secondaryUser
             beforeEach(async () => {
-              await collections.users.save({
+              secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
                 preferredLang: 'french',
               })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
-              `
-              secondaryUser = await userCursor.next()
             })
             it('returns a status message', async () => {
               const sendOrgInviteEmail = jest.fn()
@@ -2536,7 +2449,14 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                user: secondaryUser,
+                user: {
+                  _type: 'user',
+                  displayName: 'Test Account',
+                  id: secondaryUser._key,
+                  preferredLang: 'french',
+                  userName: 'test@email.gc.ca',
+                  ...secondaryUser,
+                },
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
@@ -2544,17 +2464,11 @@ describe('invite user to org', () => {
           describe('requested role is user', () => {
             let secondaryUser
             beforeEach(async () => {
-              await collections.users.save({
+              secondaryUser = await collections.users.save({
                 displayName: 'Test Account',
                 userName: 'test@email.gc.ca',
                 preferredLang: 'french',
               })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN MERGE({ id: user._key, _type: 'user' }, user)
-              `
-              secondaryUser = await userCursor.next()
             })
             it('returns a status message', async () => {
               const sendOrgInviteEmail = jest.fn()
@@ -2629,7 +2543,14 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                user: secondaryUser,
+                user: {
+                  _type: 'user',
+                  displayName: 'Test Account',
+                  id: secondaryUser._key,
+                  preferredLang: 'french',
+                  userName: 'test@email.gc.ca',
+                  ...secondaryUser,
+                },
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
@@ -2823,15 +2744,6 @@ describe('invite user to org', () => {
     })
     describe('given an unsuccessful invitation', () => {
       describe('user attempts to invite themselves', () => {
-        let user
-        beforeEach(async () => {
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await userCursor.next()
-        })
         it('returns an error message', async () => {
           const sendOrgInviteCreateAccount = jest.fn()
 
@@ -2907,15 +2819,6 @@ describe('invite user to org', () => {
         })
       })
       describe('user attempts to invite to an org that does not exist', () => {
-        let user
-        beforeEach(async () => {
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await userCursor.next()
-        })
         it('returns an error message', async () => {
           const sendOrgInviteCreateAccount = jest.fn()
 
@@ -2991,7 +2894,7 @@ describe('invite user to org', () => {
         })
       })
       describe('user with user level permission attempts to invite a user', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             orgDetails: {
@@ -3017,12 +2920,6 @@ describe('invite user to org', () => {
               },
             },
           })
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -3104,7 +3001,7 @@ describe('invite user to org', () => {
         })
       })
       describe('user with admin level permission attempts to invite a user to super_admin permission', () => {
-        let org, user
+        let org
         beforeEach(async () => {
           org = await collections.organizations.save({
             orgDetails: {
@@ -3130,12 +3027,6 @@ describe('invite user to org', () => {
               },
             },
           })
-          const userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-          user = await userCursor.next()
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
@@ -3218,7 +3109,7 @@ describe('invite user to org', () => {
       })
     })
     describe('transaction error occurs', () => {
-      let org, user, secondaryUser
+      let org, secondaryUser
       beforeEach(async () => {
         org = await collections.organizations.save({
           orgDetails: {
@@ -3244,29 +3135,17 @@ describe('invite user to org', () => {
             },
           },
         })
-        let userCursor = await query`
-            FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN MERGE({ id: user._key }, user)
-          `
-        user = await userCursor.next()
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
           permission: 'super_admin',
         })
 
-        await collections.users.save({
+        secondaryUser = await collections.users.save({
           displayName: 'Test Account',
           userName: 'test@email.gc.ca',
           preferredLang: 'french',
         })
-        userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test@email.gc.ca"
-            RETURN MERGE({ id: user._key }, user)
-        `
-        secondaryUser = await userCursor.next()
       })
       describe('when creating affiliation', () => {
         it('returns an error message', async () => {
