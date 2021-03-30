@@ -7,7 +7,7 @@ export function createCache() {
     typePolicies: {
       Query: {
         fields: {
-          findMyDomains: relayStylePagination(['orderBy']),
+          findMyDomains: relayStylePagination(['orderBy', 'search']),
           findMyOrganizations: relayStylePagination(['orderBy']),
         },
       },
@@ -43,7 +43,7 @@ export const cache = createCache()
 
 export const client = new ApolloClient({
   link: new HttpLink({
-    uri: '/graphql',
+    uri: 'https://tracker.alpha.canada.ca/graphql',
   }),
   cache,
 })
