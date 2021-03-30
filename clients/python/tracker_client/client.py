@@ -46,7 +46,7 @@ class Client:
         return Organization(self, **result["findOrganizationBySlug"])
 
     # Consider changing to generator
-    def get_organizations(self,):
+    def get_organizations(self):
         """Get a list of your :class:`organizations <tracker_client.organization.Organization>`.
 
         :return: A list of your organizations.
@@ -97,6 +97,8 @@ class Client:
     def get_domains(self, search=""):
         """Get a list of your :class:`domains <tracker_client.domain.Domain>`.
 
+        :param str search: Search term to filter results with. For example, supplying
+            the string "abc" would return only Domains containing "abc" in their domain_name.
         :return: A list of your domains.
         :rtype: list[Domain]
         :raises ValueError: if your domains can't be retrieved.
