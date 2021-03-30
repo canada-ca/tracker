@@ -109,7 +109,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: ssl-scanner
-          image: gcr.io/track-compliance/scanners/ssl # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/ssl:master-36359cc # {"$imagepolicy": "flux-system:ssl-scanner"}
 
 ---
 

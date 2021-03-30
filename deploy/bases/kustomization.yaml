@@ -8,6 +8,7 @@ resources:
 - dmarc-report-registry.yaml
 - https-scanner-registry.yaml
 - result-processor-registry.yaml
+- ssl-scanner-registry.yaml
 - tracker-repo.yaml
 - app-kustomization.yaml
 - platform-kustomization.yaml
