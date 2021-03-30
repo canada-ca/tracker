@@ -6,11 +6,13 @@ export const PAGINATED_ORGANIZATIONS = gql`
     $first: Int!
     $field: OrganizationOrderField!
     $direction: OrderDirection!
+    $search: String
   ) {
     findMyOrganizations(
       after: $after
       first: $first
       orderBy: { field: $field, direction: $direction }
+      search: $search
     ) {
       edges {
         cursor
@@ -588,7 +590,7 @@ export const ORG_DETAILS_PAGE = gql`
         edges {
           node {
             id
-          } 
+          }
         }
       }
     }
