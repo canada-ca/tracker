@@ -25,7 +25,11 @@ describe('<DomainsPage />', () => {
     {
       request: {
         query: PAGINATED_DOMAINS,
-        variables: { first: 2, orderBy: { field: 'DOMAIN', direction: 'ASC' }, search: "" },
+        variables: {
+          first: 2,
+          orderBy: { field: 'DOMAIN', direction: 'ASC' },
+          search: '',
+        },
       },
       result: {
         data: {
