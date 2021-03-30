@@ -136,7 +136,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: dns-scanner
-          image: gcr.io/track-compliance/scanners/dns # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/dns:master-36359cc # {"$imagepolicy": "flux-system:dns-scanner"}
 
 ---
 

@@ -6,6 +6,7 @@ resources:
 - frontend-registry.yaml
 - autoscan-registry.yaml
 - dmarc-report-registry.yaml
+- dns-scanner-registry.yaml
 - https-scanner-registry.yaml
 - result-processor-registry.yaml
 - ssl-scanner-registry.yaml
