@@ -6,6 +6,7 @@ resources:
 - frontend-registry.yaml
 - autoscan-registry.yaml
 - dmarc-report-registry.yaml
+- result-processor-registry.yaml
 - tracker-repo.yaml
 - app-kustomization.yaml
 - platform-kustomization.yaml

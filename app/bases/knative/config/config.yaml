@@ -48,7 +48,7 @@ spec:
       containerConcurrency: 1
       containers:
         - name: result-processor
-          image: gcr.io/track-compliance/scanners/results # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/results:master-bd31de0 # {"$imagepolicy": "flux-system:result-processor"}
           env:
             - name: DB_USER
               valueFrom:
