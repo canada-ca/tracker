@@ -104,4 +104,22 @@ export const databaseOptions = ({ rootPass }) => [
     type: 'edgecollection',
     name: 'domainsToDmarcSummaries',
   },
+  {
+    type: 'delimiteranalyzer',
+    name: 'space-delimiter-analyzer',
+    delimiter: ' ',
+  },
+  {
+    type: 'searchview',
+    name: 'domainSearch',
+    options: {
+      links: {
+        domains: {
+          fields: {
+            domain: { analyzers: ['space-delimiter-analyzer'] },
+          },
+        },
+      },
+    },
+  },
 ]

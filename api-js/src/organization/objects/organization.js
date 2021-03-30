@@ -88,6 +88,10 @@ export const organizationType = new GraphQLObjectType({
           description:
             'Limit domains to those that belong to an organization that has ownership.',
         },
+        search: {
+          type: GraphQLString,
+          description: 'String used to search for domains.',
+        },
         ...connectionArgs,
       },
       resolve: async (

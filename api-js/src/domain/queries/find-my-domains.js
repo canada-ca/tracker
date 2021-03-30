@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { GraphQLBoolean } from 'graphql'
+import { GraphQLBoolean, GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
 import { domainOrder } from '../inputs'
@@ -17,6 +17,10 @@ export const findMyDomains = {
       type: GraphQLBoolean,
       description:
         'Limit domains to those that belong to an organization that has ownership.',
+    },
+    search: {
+      type: GraphQLString,
+      description: 'String used to search for domains.',
     },
     ...connectionArgs,
   },
@@ -48,7 +52,7 @@ export const findMyDomains = {
       throw new Error(i18n._(t`Unable to load domains. Please try again.`))
     }
 
-    console.info(`User ${userKey} successfully retrieved their domains.`)
+    console.info(`User: ${userKey} successfully retrieved their domains.`)
 
     return domainConnections
   },

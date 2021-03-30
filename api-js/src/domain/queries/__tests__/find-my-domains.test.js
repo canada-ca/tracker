@@ -213,7 +213,7 @@ describe('given findMyDomainsQuery', () => {
         }
         expect(response).toEqual(expectedResponse)
         expect(consoleOutput).toEqual([
-          `User ${user._key} successfully retrieved their domains.`,
+          `User: ${user._key} successfully retrieved their domains.`,
         ])
       })
     })

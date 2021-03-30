@@ -31,7 +31,6 @@ describe('given the load domain connections by user id function', () => {
   })
 
   beforeEach(async () => {
-    await truncate()
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -281,6 +280,54 @@ describe('given the load domain connections by user id function', () => {
               hasPreviousPage: true,
               startCursor: toGlobalId('domains', expectedDomains[1]._key),
               endCursor: toGlobalId('domains', expectedDomains[1]._key),
+            },
+          }
+
+          expect(domains).toEqual(expectedStructure)
+        })
+      })
+      describe('using search argument', () => {
+        beforeEach(async () => {
+          // This is used to sync the view before running the test below
+          await query`
+            FOR domain IN domainSearch
+              SEARCH domain.domain == "domain"
+              OPTIONS { waitForSync: true }
+              RETURN domain
+          `
+        })
+        it('returns filtered domains', async () => {
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+          )
+
+          const domainLoader = domainLoaderByKey(query)
+          const expectedDomain = await domainLoader.load(domainOne._key)
+
+          const connectionArgs = {
+            first: 1,
+            search: 'test1.gc.ca',
+          }
+
+          const domains = await connectionLoader({ ...connectionArgs })
+
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('domains', expectedDomain._key),
+                node: {
+                  ...expectedDomain,
+                },
+              },
+            ],
+            totalCount: 1,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: toGlobalId('domains', expectedDomain._key),
+              endCursor: toGlobalId('domains', expectedDomain._key),
             },
           }
 
