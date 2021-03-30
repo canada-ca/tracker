@@ -6,6 +6,7 @@ resources:
 - frontend-image-policy.yaml
 - autoscan-image-policy.yaml
 - dmarc-report-image-policy.yaml
+- https-scanner-image-policy.yaml
 - result-processor-image-policy.yaml
 - update-automation.yaml
 patches:
