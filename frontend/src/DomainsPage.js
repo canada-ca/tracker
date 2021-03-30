@@ -36,6 +36,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
+  const [searchTerm, setSearchTerm] = useState('')
 
   const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
 
@@ -54,7 +55,10 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
     fetchHeaders: { authorization: currentUser.jwt },
     recordsPerPage: domainsPerPage,
     relayRoot: 'findMyDomains',
-    variables: { orderBy: { field: orderField, direction: orderDirection } },
+    variables: {
+      orderBy: { field: orderField, direction: orderDirection },
+      search: searchTerm,
+    },
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -110,7 +114,13 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                   <InputLeftElement>
                     <Icon name="search" color="gray.300" />
                   </InputLeftElement>
-                  <Input type="text" placeholder={t`Search for a domain`} isDisabled={true}/>
+                  <Input
+                    type="text"
+                    placeholder={t`Search for a domain`}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value)
+                    }}
+                  />
                 </InputGroup>
 
                 <Stack isInline align="center" ml={{ md: '10%' }}>
