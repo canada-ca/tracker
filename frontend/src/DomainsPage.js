@@ -119,6 +119,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                     placeholder={t`Search for a domain`}
                     onChange={(e) => {
                       setSearchTerm(e.target.value)
+                      resetToFirstPage()
                     }}
                   />
                 </InputGroup>
