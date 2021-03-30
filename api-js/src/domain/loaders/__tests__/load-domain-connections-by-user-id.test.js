@@ -287,6 +287,15 @@ describe('given the load domain connections by user id function', () => {
         })
       })
       describe('using search argument', () => {
+        beforeEach(async () => {
+          // This is used to sync the view before running the test below
+          await query`
+            FOR domain IN domainSearch
+              SEARCH domain.domain == "domain"
+              OPTIONS { waitForSync: true }
+              RETURN domain
+          `
+        })
         it('returns filtered domains', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
