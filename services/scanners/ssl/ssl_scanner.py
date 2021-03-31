@@ -56,8 +56,8 @@ def get_server_info(domain):
     """
 
     # Retrieve server information, look-up IP address
-    server_location = (
-        ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(domain, 443)
+    server_location = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
+        domain, 443
     )
     server_tester = ServerConnectivityTester()
 
@@ -69,7 +69,6 @@ def get_server_info(domain):
     logging.info("Server Info %s\n" % server_info)
 
     return server_info
-
 
 
 def get_supported_tls(highest_supported, domain):
@@ -108,7 +107,8 @@ def get_supported_tls(highest_supported, domain):
 def scan_ssl(domain):
     try:
         server_info = get_server_info(domain)
-    except ConnectionToServerFailed:
+    except ConnectionToServerFailed as e:
+        logging.error(f"Failed to connect to {domain}: {e.error_message}")
         return {}
 
     highest_tls_supported = str(
@@ -145,7 +145,7 @@ def scan_ssl(domain):
         server_info=server_info, scan_commands=designated_scans
     )
 
-    scanner.queue_scan(scan_request)
+    scanner.start_scans([scan_request])
 
     # Wait for asynchronous scans to complete
     # get_results() returns a generator with a single "ServerScanResult". We only want that object
