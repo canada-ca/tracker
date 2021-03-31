@@ -123,19 +123,28 @@ export const databaseOptions = ({ rootPass }) => [
     },
   },
   {
+    type: 'searchview',
     name: 'organizationSearch',
     options: {
       links: {
         organizations: {
           fields: {
-            'orgDetails.en.acronym': {
-              analyzers: ['text_en'],
+            orgDetails: {
+              fields: {
+                en: {
+                  fields: {
+                    acronym: { analyzers: ['text_en'] },
+                    name: { analyzers: ['text_en'] },
+                  },
+                },
+                fr: {
+                  fields: {
+                    acronym: { analyzers: ['text_en'] },
+                    name: { analyzers: ['text_en'] },
+                  },
+                },
+              },
             },
-            'orgDetails.fr.acronym': {
-              analyzers: ['text_en'],
-            },
-            'orgDetails.en.name': { analyzers: ['text_en'] },
-            'orgDetails.fr.name': { analyzers: ['text_en'] },
           },
         },
       },
