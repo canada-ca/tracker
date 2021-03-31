@@ -130,7 +130,7 @@ def test_client_get_organizations(mocker, client_all_orgs_input):
     org_list = test_client.get_organizations()
 
     test_client.execute_query.assert_called_once_with(
-        queries.GET_ALL_ORGS, {"after": "abc"}
+        queries.GET_ALL_ORGS, {"after": "abc", "search": ""}
     )
     assert org_list[0].acronym == "FOO"
     assert org_list[1].name == "Fizz Bang"
