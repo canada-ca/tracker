@@ -405,9 +405,9 @@ describe('given the load organizations connection function', () => {
                   },
                 },
               ],
-              totalCount: 2,
+              totalCount: 1,
               pageInfo: {
-                hasNextPage: true,
+                hasNextPage: false,
                 hasPreviousPage: false,
                 startCursor: toGlobalId('organizations', expectedOrg._key),
                 endCursor: toGlobalId('organizations', expectedOrg._key),
