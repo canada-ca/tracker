@@ -94,14 +94,19 @@ class Client:
         return Domain(self, **result["findDomainByDomain"])
 
     # Consider changing to generator
-    def get_domains(self):
+    def get_domains(self, search=""):
         """Get a list of your :class:`domains <tracker_client.domain.Domain>`.
 
+        Note that the optional search term is supplied as part of the GraphQL query variables and
+        affects the API response received, rather than filtering results client-side.
+
+        :param str search: Search term to filter results with. For example, supplying
+            the string "abc" would return only Domains containing "abc" in their domain_name.
         :return: A list of your domains.
         :rtype: list[Domain]
         :raises ValueError: if your domains can't be retrieved.
         """
-        params = {"after": ""}
+        params = {"after": "", "search": search}
         has_next = True
         domain_list = []
 

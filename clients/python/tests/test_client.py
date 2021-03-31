@@ -222,7 +222,7 @@ def test_client_get_domains(mocker, client_all_domains_input):
     domain_list = test_client.get_domains()
 
     test_client.execute_query.assert_called_once_with(
-        queries.GET_ALL_DOMAINS, {"after": "abc"}
+        queries.GET_ALL_DOMAINS, {"after": "abc", "search": ""}
     )
     assert domain_list[0].domain_name == "foo.bar"
     assert domain_list[1].dmarc_phase == "not implemented"
