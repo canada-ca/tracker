@@ -28,7 +28,9 @@ from sslyze.server_setting import (
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local")
+QUEUE_URL = os.getenv(
+    "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
+)
 
 
 class TlsVersionEnum(Enum):
@@ -55,8 +57,8 @@ def get_server_info(domain):
 
     try:
         # Retrieve server information, look-up IP address
-        server_location = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
-            domain, 443
+        server_location = (
+            ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(domain, 443)
         )
         server_tester = ServerConnectivityTester()
 
@@ -100,9 +102,7 @@ def get_supported_tls(highest_supported, domain):
             response = connx.connect(domain)
             supported.append(version)
         except Exception as e:
-            logging.info(
-                f"Failed to connect using %{version}: ({type(e)}) - {e}"
-            )
+            logging.info(f"Failed to connect using %{version}: ({type(e)}) - {e}")
 
     return supported
 
@@ -249,8 +249,12 @@ def process_results(results):
         report["signature_algorithm"] = results.get("signature_algorithm", "unknown")
         report["preferred_cipher"] = results["TLS"]["preferred_cipher"]
         report["heartbleed"] = results.get("is_vulnerable_to_heartbleed", False)
-        report["openssl_ccs_injection"] = results.get("is_vulnerable_to_ccs_injection", False)
-        report["supports_ecdh_key_exchange"] = results.get("supports_ecdh_key_exchange", False)
+        report["openssl_ccs_injection"] = results.get(
+            "is_vulnerable_to_ccs_injection", False
+        )
+        report["supports_ecdh_key_exchange"] = results.get(
+            "supports_ecdh_key_exchange", False
+        )
         report["supported_curves"] = results["supported_curves"]
 
     logging.info(f"Processed SSL scan results: {str(report)}")
@@ -293,7 +297,7 @@ def Server(server_client=requests):
                         "results": processed_results,
                         "scan_type": "ssl",
                         "uuid": uuid,
-                        "domain_key": domain_key
+                        "domain_key": domain_key,
                     }
                 )
                 logging.info(f"Scan results: {str(scan_results)}")
@@ -305,7 +309,13 @@ def Server(server_client=requests):
             msg = f"The designated domain could not be resolved: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             dispatch_results(
-                {"scan_type": "ssl", "uuid": uuid, "domain_key": domain_key, "results": {"missing": True}}, server_client
+                {
+                    "scan_type": "ssl",
+                    "uuid": uuid,
+                    "domain_key": domain_key,
+                    "results": {"missing": True},
+                },
+                server_client,
             )
             return PlainTextResponse(msg)
 
@@ -315,7 +325,13 @@ def Server(server_client=requests):
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "ssl", "uuid": uuid, "domain_key": domain_key, "results": {"missing": True}}, server_client
+                {
+                    "scan_type": "ssl",
+                    "uuid": uuid,
+                    "domain_key": domain_key,
+                    "results": {"missing": True},
+                },
+                server_client,
             )
             return PlainTextResponse(msg)
 
