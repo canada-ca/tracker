@@ -53,6 +53,10 @@ export const domainType = new GraphQLObjectType({
           type: organizationOrder,
           description: 'Ordering options for organization connections',
         },
+        search: {
+          type: GraphQLString,
+          description: 'String argument used to search for organizations.',
+        },
         ...connectionArgs,
       },
       description: 'The organization that this domain belongs to.',
