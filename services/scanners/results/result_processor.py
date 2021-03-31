@@ -77,8 +77,9 @@ def process_https(results, domain_key, db):
             hsts_age = results.get("hsts_age", None)
 
             if hsts_age is not None:
-                if hsts_age < 31536000 and "https" not in tags:
-                    negative_tags.append("https10")
+                if hsts_age < 31536000:
+                    if "https9" not in negative_tags and "https10" not in negative_tags:
+                        negative_tags.append("https10")
 
         # Preload Status
         preload_status = results.get("preload_status", None)
