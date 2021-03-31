@@ -122,4 +122,23 @@ export const databaseOptions = ({ rootPass }) => [
       },
     },
   },
+  {
+    name: 'organizationSearch',
+    options: {
+      links: {
+        organizations: {
+          fields: {
+            'orgDetails.en.acronym': {
+              analyzers: ['text_en'],
+            },
+            'orgDetails.fr.acronym': {
+              analyzers: ['text_en'],
+            },
+            'orgDetails.en.name': { analyzers: ['text_en'] },
+            'orgDetails.fr.name': { analyzers: ['text_en'] },
+          },
+        },
+      },
+    },
+  },
 ]
