@@ -160,7 +160,6 @@ def scan_ssl(domain):
         "TLS": {
             "supported": tls_supported,
             "accepted_cipher_list": set(),
-            "preferred_cipher": None,
             "rejected_cipher_list": set(),
         }
     }
@@ -183,13 +182,6 @@ def scan_ssl(domain):
                 rejected_cipher_list.append(c.cipher_suite.name)
 
             res["TLS"]["rejected_cipher_list"] = rejected_cipher_list
-
-            if result.cipher_suite_preferred_by_server is not None:
-                # We want the preferred cipher for the highest SSL/TLS version supported
-                if str(result.tls_version_used).split(".")[1] == highest_tls_supported:
-                    res["TLS"][
-                        "preferred_cipher"
-                    ] = result.cipher_suite_preferred_by_server.cipher_suite.name
 
         elif name == "openssl_ccs_injection":
             logging.info("Parsing OpenSSL CCS Injection Vulnerability Scan results...")
@@ -247,7 +239,6 @@ def process_results(results):
 
         report["cipher_list"] = results["TLS"]["accepted_cipher_list"]
         report["signature_algorithm"] = results.get("signature_algorithm", "unknown")
-        report["preferred_cipher"] = results["TLS"]["preferred_cipher"]
         report["heartbleed"] = results.get("is_vulnerable_to_heartbleed", False)
         report["openssl_ccs_injection"] = results.get(
             "is_vulnerable_to_ccs_injection", False
