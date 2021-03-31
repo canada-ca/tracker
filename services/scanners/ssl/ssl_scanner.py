@@ -55,25 +55,21 @@ def get_server_info(domain):
     :return: Server connectivity information
     """
 
-    try:
-        # Retrieve server information, look-up IP address
-        server_location = (
-            ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(domain, 443)
-        )
-        server_tester = ServerConnectivityTester()
+    # Retrieve server information, look-up IP address
+    server_location = (
+        ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(domain, 443)
+    )
+    server_tester = ServerConnectivityTester()
 
-        logging.info(
-            f"Testing connectivity with {server_location.hostname}:{server_location.port}..."
-        )
-        # Test connection to server and retrieve info
-        server_info = server_tester.perform(server_location)
-        logging.info("Server Info %s\n" % server_info)
+    logging.info(
+        f"Testing connectivity with {server_location.hostname}:{server_location.port}..."
+    )
+    # Test connection to server and retrieve info
+    server_info = server_tester.perform(server_location)
+    logging.info("Server Info %s\n" % server_info)
 
-        return server_info
+    return server_info
 
-    except ConnectionToServerFailed as e:
-        # Could not establish a TLS connection to the server
-        return None
 
 
 def get_supported_tls(highest_supported, domain):
@@ -94,12 +90,14 @@ def get_supported_tls(highest_supported, domain):
 
         try:
             # Attempt connection
+            # If connection fails, exception will be raised, causing the failure to be
+            # logged and the version to not be appended to the supported list
             ctx = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
                 domain, 443
             )
             cfg = ServerNetworkConfiguration(domain)
             connx = SslConnection(ctx, cfg, method, True)
-            response = connx.connect(domain)
+            connx.connect(domain)
             supported.append(version)
         except Exception as e:
             logging.info(f"Failed to connect using %{version}: ({type(e)}) - {e}")
@@ -108,16 +106,14 @@ def get_supported_tls(highest_supported, domain):
 
 
 def scan_ssl(domain):
-
-    server_info = get_server_info(domain)
-
-    if server_info is None:
+    try:
+        server_info = get_server_info(domain)
+    except ConnectionToServerFailed:
         return {}
-    else:
-        # Retrieve highest TLS supported from retrieved server info
-        highest_tls_supported = str(
-            server_info.tls_probing_result.highest_tls_version_supported
-        ).split(".")[1]
+
+    highest_tls_supported = str(
+        server_info.tls_probing_result.highest_tls_version_supported
+    ).split(".")[1]
 
     tls_supported = get_supported_tls(highest_tls_supported, domain)
 
