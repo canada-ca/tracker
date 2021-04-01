@@ -53,7 +53,7 @@ class Client:
         affects the API response received, rather than filtering results client-side.
 
         :param str search: Search term to filter results with. For example, supplying
-            the string "canada" would return only Domains containing "canada" in their domain_name.
+            the string "canada" would return only Organizations containing "canada" in their name.
         :return: A list of your organizations.
         :rtype: list[Organization]
         :raises ValueError: if your organizations can't be retrieved.
