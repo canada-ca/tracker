@@ -365,6 +365,59 @@ describe('given the load organizations connection function', () => {
           expect(orgs).toEqual(expectedStructure)
         })
       })
+      describe('using the search argument', () => {
+        beforeEach(async () => {
+          await query`
+            FOR org IN organizationSearch
+              SEARCH org._key == 1
+              OPTIONS { waitForSync: true }
+              RETURN org
+          `
+        })
+        describe('search using name', () => {
+          it('returns the filtered organizations', async () => {
+            const connectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const expectedOrg = await orgLoader.load(org._key)
+
+            const connectionArgs = {
+              domainId: domain._id,
+              first: 5,
+              search: 'One',
+            }
+            const orgs = await connectionLoader({
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('organizations', expectedOrg._key),
+                  node: {
+                    ...expectedOrg,
+                  },
+                },
+              ],
+              totalCount: 1,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('organizations', expectedOrg._key),
+                endCursor: toGlobalId('organizations', expectedOrg._key),
+              },
+            }
+
+            expect(orgs).toEqual(expectedStructure)
+          })
+        })
+      })
       describe('using the orderBy field', () => {
         let orgThree
         beforeEach(async () => {

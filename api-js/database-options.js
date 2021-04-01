@@ -122,4 +122,32 @@ export const databaseOptions = ({ rootPass }) => [
       },
     },
   },
+  {
+    type: 'searchview',
+    name: 'organizationSearch',
+    options: {
+      links: {
+        organizations: {
+          fields: {
+            orgDetails: {
+              fields: {
+                en: {
+                  fields: {
+                    acronym: { analyzers: ['text_en'] },
+                    name: { analyzers: ['text_en'] },
+                  },
+                },
+                fr: {
+                  fields: {
+                    acronym: { analyzers: ['text_en'] },
+                    name: { analyzers: ['text_en'] },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 ]

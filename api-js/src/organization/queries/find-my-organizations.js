@@ -3,6 +3,7 @@ import { t } from '@lingui/macro'
 
 import { organizationOrder } from '../inputs'
 import { organizationConnection } from '../objects'
+import { GraphQLString } from 'graphql'
 
 export const findMyOrganizations = {
   type: organizationConnection.connectionType,
@@ -11,6 +12,10 @@ export const findMyOrganizations = {
     orderBy: {
       type: organizationOrder,
       description: 'Ordering options for organization connections',
+    },
+    search: {
+      type: GraphQLString,
+      description: 'String argument used to search for organizations.',
     },
     ...connectionArgs,
   },

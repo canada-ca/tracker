@@ -367,6 +367,62 @@ describe('given the load organization connections by user id function', () => {
             expect(orgs).toEqual(expectedStructure)
           })
         })
+        describe('using the search argument', () => {
+          beforeEach(async () => {
+            // This is used to sync the view before running the test below
+            await query`
+              FOR org IN organizationSearch
+                SEARCH ANALYZER(
+                  org.orgDetails.en.acronym == ""
+                  OR org.orgDetails.fr.acronym == ""
+                  OR org.orgDetails.en.name == ""
+                  OR org.orgDetails.fr.name == ""
+                , "text_en")
+                OPTIONS { waitForSync: true }
+                RETURN org._key
+            `
+          })
+          it('returns the filtered organizations', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const expectedOrg = await orgLoader.load(orgOne._key)
+
+            const connectionLoader = orgLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              'en',
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 5,
+              search: 'one',
+            }
+            const orgs = await connectionLoader({
+              ...connectionArgs,
+            })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('organizations', expectedOrg._key),
+                  node: {
+                    ...expectedOrg,
+                  },
+                },
+              ],
+              totalCount: 1,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('organizations', expectedOrg._key),
+                endCursor: toGlobalId('organizations', expectedOrg._key),
+              },
+            }
+
+            expect(orgs).toEqual(expectedStructure)
+          })
+        })
         describe('using the orderBy field', () => {
           let orgThree
           beforeEach(async () => {
