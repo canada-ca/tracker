@@ -2359,15 +2359,20 @@ input VerifyAccountInput {
   clientMutationId: String
 }
 
-input VerifyOrganizationInput {
-  # The global id of the organization to be verified.
-  orgId: ID!
+type VerifyOrganizationPayload {
+  # `VerifyOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.
+  result: VerifyOrganizationUnion
   clientMutationId: String
 }
 
-type VerifyOrganizationPayload {
-  # Status of organization verification.
-  status: String
+# This union is used with the `VerifyOrganization` mutation,
+# allowing for super admins to verify an organization,
+# and support any errors that may occur
+union VerifyOrganizationUnion = OrganizationError | OrganizationResult
+
+input VerifyOrganizationInput {
+  # The global id of the organization to be verified.
+  orgId: ID!
   clientMutationId: String
 }
 

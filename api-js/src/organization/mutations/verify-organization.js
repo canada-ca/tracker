@@ -1,6 +1,8 @@
-import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql'
-import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
+import { GraphQLNonNull, GraphQLID } from 'graphql'
+import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
+
+import { verifyOrganizationUnion } from '../unions'
 
 export const verifyOrganization = new mutationWithClientMutationId({
   name: 'VerifyOrganization',
@@ -12,10 +14,11 @@ export const verifyOrganization = new mutationWithClientMutationId({
     },
   }),
   outputFields: () => ({
-    status: {
-      type: GraphQLString,
-      description: 'Status of organization verification.',
-      resolve: async ({ status }) => status,
+    result: {
+      type: verifyOrganizationUnion,
+      description:
+        '`VerifyOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.',
+      resolve: (payload) => payload,
     },
   }),
   mutateAndGetPayload: async (
@@ -43,7 +46,11 @@ export const verifyOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to verify organization: ${orgKey}, however no organizations is associated with that id.`,
       )
-      throw new Error(i18n._(t`Unable to verify unknown organization.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to verify unknown organization.`),
+      }
     }
 
     // Check to see if use has permission
@@ -53,11 +60,13 @@ export const verifyOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to verify organization: ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
       )
-      throw new Error(
-        i18n._(
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(
           t`Permission Denied: Please contact super admin for help with verifying this organization.`,
         ),
-      )
+      }
     }
 
     // Check to see if org is already verified
@@ -65,7 +74,11 @@ export const verifyOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to verify organization: ${orgKey}, however the organization has already been verified.`,
       )
-      throw new Error(i18n._(t`Organization has already been verified.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Organization has already been verified.`),
+      }
     }
 
     // Set org to verified
@@ -114,6 +127,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
     console.info(`User: ${userKey}, successfully verified org: ${orgKey}.`)
 
     return {
+      _type: 'result',
       status: i18n._(
         t`Successfully verified organization: ${currentOrg.slug}.`,
       ),
