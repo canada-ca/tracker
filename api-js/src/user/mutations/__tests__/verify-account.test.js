@@ -145,10 +145,63 @@ describe('user send password reset email', () => {
         user = await cursor.next()
 
         expect(response).toEqual(expectedResult)
-        expect(user.emailValidated).toEqual(true)
         expect(consoleOutput).toEqual([
           `User: ${user._key} successfully email validated their account.`,
         ])
+      })
+      it('sets emailValidated to true', async () => {
+        let cursor = await query`
+            FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
+          `
+        let user = await cursor.next()
+
+        const token = tokenize({ parameters: { userKey: user._key } })
+
+        await graphql(
+          schema,
+          `
+            mutation {
+              verifyAccount(input: { verifyTokenString: "${token}" }) {
+                result {
+                  ... on VerifyAccountResult {
+                    status
+                  }
+                  ... on VerifyAccountError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+          `,
+          null,
+          {
+            i18n,
+            request,
+            userKey: user._key,
+            query,
+            auth: {
+              verifyToken: verifyToken({}),
+            },
+            validators: {
+              cleanseInput,
+            },
+            loaders: {
+              userLoaderByKey: userLoaderByKey(query),
+            },
+          },
+        )
+
+        cursor = await query`
+            FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
+          `
+        user = await cursor.next()
+
+        expect(user.emailValidated).toEqual(true)
       })
     })
     describe('given an unsuccessful validation', () => {
@@ -659,6 +712,60 @@ describe('user send password reset email', () => {
         expect(consoleOutput).toEqual([
           `User: ${user._key} successfully email validated their account.`,
         ])
+      })
+      it('sets emailValidated to true', async () => {
+        let cursor = await query`
+            FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
+          `
+        let user = await cursor.next()
+
+        const token = tokenize({ parameters: { userKey: user._key } })
+
+        await graphql(
+          schema,
+          `
+            mutation {
+              verifyAccount(input: { verifyTokenString: "${token}" }) {
+                result {
+                  ... on VerifyAccountResult {
+                    status
+                  }
+                  ... on VerifyAccountError {
+                    code
+                    description
+                  }
+                }
+              }
+            }
+          `,
+          null,
+          {
+            i18n,
+            request,
+            userKey: user._key,
+            query,
+            auth: {
+              verifyToken: verifyToken({}),
+            },
+            validators: {
+              cleanseInput,
+            },
+            loaders: {
+              userLoaderByKey: userLoaderByKey(query),
+            },
+          },
+        )
+
+        cursor = await query`
+            FOR user IN users
+                FILTER user.userName == "test.account@istio.actually.exists"
+                RETURN user
+          `
+        user = await cursor.next()
+
+        expect(user.emailValidated).toEqual(true)
       })
     })
     describe('given an unsuccessful validation', () => {

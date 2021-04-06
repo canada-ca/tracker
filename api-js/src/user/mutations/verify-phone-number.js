@@ -66,8 +66,8 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
     try {
       await query`
         UPSERT { _key: ${user._key} }
-          INSERT { phoneValidated: true, tfaSendMethod: 'phone' }
-          UPDATE { phoneValidated: true, tfaSendMethod: 'phone' }
+          INSERT { phoneValidated: true }
+          UPDATE { phoneValidated: true }
           IN users
       `
     } catch (err) {
