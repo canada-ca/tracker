@@ -364,9 +364,9 @@ export const orgLoaderConnectionArgsByDomainId = (
   if (typeof search !== 'undefined' && search !== '') {
     search = cleanseInput(search)
     orgQuery = aql`
-      LET tokenArr = TOKENS(${search}, "text_en")
-      LET searchedOrgs = FLATTEN(UNIQUE(
-        FOR token IN tokenArr
+      LET tokenArrEN = TOKENS(${search}, "text_en")
+      LET searchedOrgsEN = FLATTEN(UNIQUE(
+        FOR token IN tokenArrEN
           FOR org IN organizationSearch
             SEARCH ANALYZER(
               org.orgDetails.en.acronym LIKE CONCAT("%", token, "%")
@@ -377,6 +377,18 @@ export const orgLoaderConnectionArgsByDomainId = (
             FILTER org._key IN orgKeys
             RETURN org._key
       ))
+      LET tokenArrFR = TOKENS(${search}, "text_fr")
+      LET searchedOrgsFR = FLATTEN(UNIQUE(
+        FOR token IN tokenArrFR
+          FOR org IN organizationSearch
+            SEARCH ANALYZER(
+              org.orgDetails.fr.acronym LIKE CONCAT("%", token, "%")
+              OR org.orgDetails.fr.name LIKE CONCAT("%", token, "%")
+            , "text_fr")
+            FILTER org._key IN orgKeys
+            RETURN org._key
+      ))
+      LET searchedOrgs = UNION_DISTINCT(searchedOrgsEN, searchedOrgsFR)
     `
     filterString = aql`FILTER org._key IN searchedOrgs`
     totalCount = aql`LENGTH(searchedOrgs)`
