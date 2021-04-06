@@ -100,7 +100,7 @@ msgstr "Paramètres du compte"
 msgid "Account created."
 msgstr "Compte créé"
 
-#: src/Organizations.js:129
+#: src/Organizations.js:133
 msgid "Acronym"
 msgstr "Acronyme"
 
@@ -1006,6 +1006,10 @@ msgstr "Inviter l'utilisateur"
 msgid "Invite a user"
 msgstr "Inviter un utilisateur"
 
+#: src/RelayPaginationControls.js:32
+msgid "Items per page:"
+msgstr "Objets par page:"
+
 #: src/months.js:4
 msgid "January"
 msgstr "Janvier"
@@ -1140,7 +1144,7 @@ msgstr "Absent du guide - besoin v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 
-#: src/Organizations.js:126
+#: src/Organizations.js:130
 msgid "Name"
 msgstr "Nom"
 
@@ -1172,7 +1176,7 @@ msgstr "Nouveau numéro de téléphone:"
 msgid "New domain name cannot be empty"
 msgstr "Un nouveau nom de domaine ne peut pas être vide"
 
-#: src/RelayPaginationControls.js:65
+#: src/RelayPaginationControls.js:71
 msgid "Next"
 msgstr "Suivant"
 
@@ -1376,8 +1380,8 @@ msgid "Page"
 msgstr "Page"
 
 #: src/RelayPaginationControls.js:31
-msgid "Page Size:"
-msgstr "Taille de la page :"
+#~ msgid "Page Size:"
+#~ msgstr "Taille de la page :"
 
 #: src/DmarcReportTable.js:300
 msgid "Page {0} of {1}"
@@ -1498,7 +1502,7 @@ msgstr "préalpha"
 #~ msgid "Preloaded Status:"
 #~ msgstr "Statut préchargé:"
 
-#: src/RelayPaginationControls.js:55
+#: src/RelayPaginationControls.js:61
 msgid "Previous"
 msgstr "Précédent"
 
@@ -1747,7 +1751,7 @@ msgstr "Rechercher un domaine"
 #~ msgid "Search for a user"
 #~ msgstr "Rechercher un utilisateur"
 
-#: src/Organizations.js:109
+#: src/Organizations.js:111
 msgid "Search for an organization"
 msgstr "Rechercher une organisation"
 
@@ -1775,7 +1779,7 @@ msgstr "Sélectionnez une organisation pour voir les options d'administration"
 msgid "September"
 msgstr "Septembre"
 
-#: src/Organizations.js:132
+#: src/Organizations.js:136
 msgid "Services"
 msgstr "Services"
 
@@ -1823,7 +1827,7 @@ msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
 #: src/DomainsPage.js:118
-#: src/Organizations.js:113
+#: src/Organizations.js:117
 msgid "Sort by:"
 msgstr "Trier par:"
 
@@ -2053,7 +2057,7 @@ msgstr "Vérification des enregistrements TXT pour certains/toutes les expédite
 msgid "Verification code must only contains numbers"
 msgstr "Le code de vérification ne doit contenir que des chiffres"
 
-#: src/Organizations.js:135
+#: src/Organizations.js:139
 msgid "Verified"
 msgstr "Vérifié"
 

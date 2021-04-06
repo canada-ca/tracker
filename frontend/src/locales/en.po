@@ -100,7 +100,7 @@ msgstr "Account Settings"
 msgid "Account created."
 msgstr "Account created."
 
-#: src/Organizations.js:129
+#: src/Organizations.js:133
 msgid "Acronym"
 msgstr "Acronym"
 
@@ -1010,6 +1010,10 @@ msgstr "Invite User"
 msgid "Invite a user"
 msgstr "Invite a user"
 
+#: src/RelayPaginationControls.js:32
+msgid "Items per page:"
+msgstr "Items per page:"
+
 #: src/months.js:4
 msgid "January"
 msgstr "January"
@@ -1144,7 +1148,7 @@ msgstr "Missing from guide- need v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "More than 10 lookups - Follow implementation guide"
 
-#: src/Organizations.js:126
+#: src/Organizations.js:130
 msgid "Name"
 msgstr "Name"
 
@@ -1176,7 +1180,7 @@ msgstr "New Phone Number:"
 msgid "New domain name cannot be empty"
 msgstr "New domain name cannot be empty"
 
-#: src/RelayPaginationControls.js:65
+#: src/RelayPaginationControls.js:71
 msgid "Next"
 msgstr "Next"
 
@@ -1380,8 +1384,8 @@ msgid "Page"
 msgstr "Page"
 
 #: src/RelayPaginationControls.js:31
-msgid "Page Size:"
-msgstr "Page Size:"
+#~ msgid "Page Size:"
+#~ msgstr "Page Size:"
 
 #: src/DmarcReportTable.js:300
 msgid "Page {0} of {1}"
@@ -1502,7 +1506,7 @@ msgstr "Pre-Alpha"
 #~ msgid "Preloaded Status:"
 #~ msgstr "Preloaded Status:"
 
-#: src/RelayPaginationControls.js:55
+#: src/RelayPaginationControls.js:61
 msgid "Previous"
 msgstr "Previous"
 
@@ -1751,7 +1755,7 @@ msgstr "Search for a domain"
 #~ msgid "Search for a user"
 #~ msgstr "Search for a user"
 
-#: src/Organizations.js:109
+#: src/Organizations.js:111
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
@@ -1779,7 +1783,7 @@ msgstr "Select an organization to view admin options"
 msgid "September"
 msgstr "September"
 
-#: src/Organizations.js:132
+#: src/Organizations.js:136
 msgid "Services"
 msgstr "Services"
 
@@ -1827,7 +1831,7 @@ msgid "Skip to main content"
 msgstr "Skip to main content"
 
 #: src/DomainsPage.js:118
-#: src/Organizations.js:113
+#: src/Organizations.js:117
 msgid "Sort by:"
 msgstr "Sort by:"
 
@@ -2057,7 +2061,7 @@ msgstr "Verification TXT records for some/all 3rd party senders missing"
 msgid "Verification code must only contains numbers"
 msgstr "Verification code must only contains numbers"
 
-#: src/Organizations.js:135
+#: src/Organizations.js:139
 msgid "Verified"
 msgstr "Verified"
 
