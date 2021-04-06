@@ -26,10 +26,11 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
 
-export default function Organisations({ orgsPerPage = 10 }) {
+export default function Organisations() {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('NAME')
   const [searchTerm, setSearchTerm] = useState('')
+  const [orgsPerPage, setOrgsPerPage] = useState(10)
   const { currentUser } = useUserState()
 
   const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
@@ -169,6 +170,29 @@ export default function Organisations({ orgsPerPage = 10 }) {
           previous={previous}
           isLoadingMore={isLoadingMore}
         />
+        <Select
+          aria-label="Organizations per page"
+          w="fit-content"
+          size="md"
+          variant="filled"
+          onChange={(e) => {
+            setOrgsPerPage(parseInt(e.target.value))
+            resetToFirstPage()
+          }}
+        >
+          <option key="10" value={10}>
+            {'10'}
+          </option>
+          <option key="20" value={20}>
+            {'20'}
+          </option>
+          <option key="40" value={40}>
+            {'40'}
+          </option>
+          <option key="80" value={80}>
+            {'80'}
+          </option>
+        </Select>
       </ErrorBoundary>
     </Layout>
   )
