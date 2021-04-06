@@ -65,7 +65,6 @@ export const Server = ({
   })
 
   const server = new ApolloServer({
-    tracing: true,
     schema: createSchema(),
     context: async ({ req, res }) => createContext({ context, req, res }),
     validationRules: createValidationRules(
