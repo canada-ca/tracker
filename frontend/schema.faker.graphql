@@ -1115,6 +1115,8 @@ type Mutation {
   verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
   # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
   authenticate(input: AuthenticateInput!): AuthenticatePayload
+  # This mutation allows for users to remove a phone number from their account.
+  removePhoneNumber(input: RemovePhoneNumberInput!): RemovePhoneNumberPayload
   # This mutation allows the user to take the token they received in their email to reset their password.
   resetPassword(input: ResetPasswordInput!): ResetPasswordPayload
   # This mutation is used for re-sending a verification email if it failed during user creation.
@@ -1536,6 +1538,34 @@ input RemoveOrganizationInput {
 type RemoveUserFromOrgPayload {
   # `RemoveUserFromOrgUnion` returning either a `RemoveUserFromOrgResult`, or `AffiliationError` object.
   result: RemoveUserFromOrgUnion
+  clientMutationId: String
+}
+
+type RemovePhoneNumberPayload {
+  # `RemovePhoneNumberUnion` returning either a `RemovePhoneNumberResult`, or `RemovePhoneNumberError` object.
+  result: RemovePhoneNumberUnion
+  clientMutationId: String
+}
+
+# This union is used with the `RemovePhoneNumber` mutation, allowing for users to remove their phone number, and support any errors that may occur
+union RemovePhoneNumberUnion = RemovePhoneNumberError | RemovePhoneNumberResult
+
+# This object is used to inform the user if any errors occurred while removing their phone number.
+type RemovePhoneNumberError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user that no errors were encountered while removing their phone number.
+type RemovePhoneNumberResult {
+  # Informs the user if the phone number removal was successful.
+  status: String
+}
+
+input RemovePhoneNumberInput {
   clientMutationId: String
 }
 
