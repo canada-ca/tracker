@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { number } from 'prop-types'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
@@ -163,39 +162,18 @@ export default function Organisations() {
         </Flex>
         {orgList}
         <RelayPaginationControls
-          onlyPagination={true}
+          onlyPagination={false}
+          selectedDisplayLimit={orgsPerPage}
+          setSelectedDisplayLimit={setOrgsPerPage}
+          displayLimitOptions={[10, 20, 40, 80]}
+          resetToFirstPage={resetToFirstPage}
           hasNextPage={hasNextPage}
           hasPreviousPage={hasPreviousPage}
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
         />
-        <Select
-          aria-label="Organizations per page"
-          w="fit-content"
-          size="md"
-          variant="filled"
-          onChange={(e) => {
-            setOrgsPerPage(parseInt(e.target.value))
-            resetToFirstPage()
-          }}
-        >
-          <option key="10" value={10}>
-            {'10'}
-          </option>
-          <option key="20" value={20}>
-            {'20'}
-          </option>
-          <option key="40" value={40}>
-            {'40'}
-          </option>
-          <option key="80" value={80}>
-            {'80'}
-          </option>
-        </Select>
       </ErrorBoundary>
     </Layout>
   )
 }
-
-Organisations.propTypes = { orgsPerPage: number }
