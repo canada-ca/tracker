@@ -38,7 +38,7 @@ export function RelayPaginationControls({
           value={selectedDisplayLimit}
           onChange={(e) => {
             setSelectedDisplayLimit(parseInt(e.target.value))
-            resetToFirstPage()
+            resetToFirstPage() // Make sure to provide this as a prop if !onlyPagination
           }}
           width="fit-content"
           variant="filled"
