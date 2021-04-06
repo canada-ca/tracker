@@ -374,21 +374,22 @@ export const orgLoaderConnectionsByUserId = (
   let orgQuery = aql``
   let filterString = aql`FILTER org._key IN orgKeys`
   let totalCount = aql`LENGTH(orgKeys)`
-  if (typeof search !== 'undefined') {
+  if (typeof search !== 'undefined' && search !== '') {
     search = cleanseInput(search)
     orgQuery = aql`
       LET tokenArr = TOKENS(${search}, "text_en")
-      LET searchedOrgs = FLATTEN(
-        FOR org IN organizationSearch
-          SEARCH ANALYZER(
-              org.orgDetails.en.acronym IN tokenArr
-              OR org.orgDetails.fr.acronym IN tokenArr
-              OR org.orgDetails.en.name IN tokenArr
-              OR org.orgDetails.fr.name In tokenArr
-          , "text_en")
-          FILTER org._key IN orgKeys
-          RETURN org._key
-      )
+      LET searchedOrgs = FLATTEN(UNIQUE(
+        FOR token IN tokenArr
+          FOR org IN organizationSearch
+            SEARCH ANALYZER(
+                org.orgDetails.en.acronym LIKE CONCAT("%", token, "%")
+                OR org.orgDetails.fr.acronym LIKE CONCAT("%", token, "%")
+                OR org.orgDetails.en.name LIKE CONCAT("%", token, "%")
+                OR org.orgDetails.fr.name LIKE CONCAT("%", token, "%")
+            , "text_en")
+            FILTER org._key IN orgKeys
+            RETURN org._key
+      ))
     `
     filterString = aql`FILTER org._key IN searchedOrgs`
     totalCount = aql`LENGTH(searchedOrgs)`
