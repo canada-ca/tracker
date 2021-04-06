@@ -26,7 +26,7 @@ describe('<DomainsPage />', () => {
       request: {
         query: PAGINATED_DOMAINS,
         variables: {
-          first: 2,
+          first: 10,
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
         },
@@ -85,7 +85,7 @@ describe('<DomainsPage />', () => {
     {
       request: {
         query: PAGINATED_DOMAINS,
-        variables: { first: 2 },
+        variables: { first: 10 },
       },
       result: {
         data: {
@@ -150,7 +150,7 @@ describe('<DomainsPage />', () => {
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                 <MockedProvider mocks={mocks} cache={createCache()}>
-                  <DomainsPage domainsPerPage={2} />
+                  <DomainsPage />
                 </MockedProvider>
               </MemoryRouter>
             </I18nProvider>

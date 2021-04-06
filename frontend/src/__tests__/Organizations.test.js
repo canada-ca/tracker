@@ -62,7 +62,7 @@ describe('<Organisations />', () => {
           request: {
             query: PAGINATED_ORGANIZATIONS,
             variables: {
-              first: 2,
+              first: 10,
               field: 'NAME',
               direction: 'ASC',
               search: '',
@@ -126,7 +126,7 @@ describe('<Organisations />', () => {
                 initialIndex={0}
               >
                 <MockedProvider mocks={mocks} cache={createCache()}>
-                  <Organizations orgsPerPage={2} />
+                  <Organizations />
                 </MockedProvider>
               </MemoryRouter>
             </I18nProvider>
@@ -146,7 +146,7 @@ describe('<Organisations />', () => {
           request: {
             query: PAGINATED_ORGANIZATIONS,
             variables: {
-              first: 1,
+              first: 10,
               field: 'NAME',
               direction: 'ASC',
               search: '',
@@ -187,7 +187,7 @@ describe('<Organisations />', () => {
           request: {
             query: PAGINATED_ORGANIZATIONS,
             variables: {
-              first: 1,
+              first: 10,
               after: 'YXJyYXljb25uZWN0aW9uOjA=',
               field: 'NAME',
               direction: 'ASC',
@@ -229,7 +229,7 @@ describe('<Organisations />', () => {
           request: {
             query: PAGINATED_ORGANIZATIONS,
             variables: {
-              first: 1,
+              first: 10,
               after: 'YXJyYXljb25uZWN0aW9uOjA=',
               field: 'NAME',
               direction: 'ASC',
@@ -285,7 +285,7 @@ describe('<Organisations />', () => {
                   <Switch>
                     <Route
                       path="/organizations"
-                      render={() => <Organizations orgsPerPage={1} />}
+                      render={() => <Organizations />}
                     />
                   </Switch>
                 </Router>
@@ -315,7 +315,7 @@ describe('<Organisations />', () => {
             request: {
               query: PAGINATED_ORGANIZATIONS,
               variables: {
-                first: 1,
+                first: 10,
                 field: 'NAME',
                 direction: 'ASC',
                 search: '',
@@ -356,7 +356,7 @@ describe('<Organisations />', () => {
             request: {
               query: PAGINATED_ORGANIZATIONS,
               variables: {
-                first: 1,
+                first: 10,
                 after: 'Y3Vyc29yOnYyOpHOAAfgfQ==',
                 field: 'NAME',
                 direction: 'ASC',
@@ -414,7 +414,7 @@ describe('<Organisations />', () => {
                     <Switch>
                       <Route
                         path="/organizations"
-                        render={() => <Organizations orgsPerPage={1} />}
+                        render={() => <Organizations />}
                       />
                     </Switch>
                   </Router>
@@ -451,7 +451,7 @@ describe('<Organisations />', () => {
         const cache = createCache()
         cache.writeQuery({
           query: PAGINATED_ORGANIZATIONS,
-          variables: { first: 1, field: 'NAME', direction: 'ASC', search: '' },
+          variables: { first: 10, field: 'NAME', direction: 'ASC', search: '' },
           data: {
             findMyOrganizations: {
               edges: [
@@ -486,7 +486,7 @@ describe('<Organisations />', () => {
           {
             request: {
               query: PAGINATED_ORGANIZATIONS,
-              variables: { first: 1, search: '' },
+              variables: { first: 10, search: '' },
             },
             result: {
               data: {
@@ -523,7 +523,7 @@ describe('<Organisations />', () => {
             request: {
               query: PAGINATED_ORGANIZATIONS,
               variables: {
-                first: 1,
+                first: 10,
                 after: 'YXJyYXljb25uZWN0aW9uOjA=',
                 field: 'NAME',
                 direction: 'ASC',
@@ -565,7 +565,7 @@ describe('<Organisations />', () => {
             request: {
               query: PAGINATED_ORGANIZATIONS,
               variables: {
-                first: 1,
+                first: 10,
                 after: 'YXJyYXljb25uZWN0aW9uOjA=',
                 field: 'NAME',
                 direction: 'ASC',
@@ -621,7 +621,7 @@ describe('<Organisations />', () => {
                     <Switch>
                       <Route
                         path="/organizations"
-                        render={() => <Organizations orgsPerPage={1} />}
+                        render={() => <Organizations />}
                       />
                     </Switch>
                   </Router>
