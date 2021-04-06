@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Stack, Text, Select, useToast } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
 import { USER_AFFILIATIONS } from './graphql/queries'
@@ -13,14 +12,12 @@ import { LoadingMessage } from './LoadingMessage'
 export default function AdminPage() {
   const { currentUser } = useUserState()
   const [orgDetails, setOrgDetails] = useState()
-  const { i18n } = useLingui()
   const toast = useToast()
 
   const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
     context: {
       headers: {
         authorization: currentUser.jwt,
-        'accept-language': i18n.locale,
       },
     },
     variables: {
