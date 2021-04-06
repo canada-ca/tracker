@@ -46,14 +46,19 @@ class Client:
         return Organization(self, **result["findOrganizationBySlug"])
 
     # Consider changing to generator
-    def get_organizations(self):
+    def get_organizations(self, search=""):
         """Get a list of your :class:`organizations <tracker_client.organization.Organization>`.
 
+        Note that the optional search term is supplied as part of the GraphQL query variables and
+        affects the API response received, rather than filtering results client-side.
+
+        :param str search: Search term to filter results with. For example, supplying
+            the string "canada" would return only Organizations containing "canada" in their name.
         :return: A list of your organizations.
         :rtype: list[Organization]
         :raises ValueError: if your organizations can't be retrieved.
         """
-        params = {"after": ""}
+        params = {"after": "", "search": search}
         has_next = True
         org_list = []
 
