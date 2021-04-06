@@ -22,7 +22,7 @@ msgstr "todo"
 msgid "Authentication error. Please sign in."
 msgstr "todo"
 
-#: src/organization/objects/organization.js:134
+#: src/organization/objects/organization.js:138
 msgid "Cannot query affiliations on organization without admin permission or higher."
 msgstr "todo"
 
@@ -73,7 +73,7 @@ msgstr "todo"
 msgid "No verified organization with the provided slug could be found."
 msgstr "todo"
 
-#: src/organization/mutations/verify-organization.js:68
+#: src/organization/mutations/verify-organization.js:80
 msgid "Organization has already been verified."
 msgstr "todo"
 
@@ -158,8 +158,8 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:131
-#: src/domain/loaders/load-domain-connections-by-user-id.js:139
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:140
+#: src/domain/loaders/load-domain-connections-by-user-id.js:140
 msgid "Passing both `first` and `last` to paginate the `domain` connection is not supported."
 msgstr "todo"
 
@@ -241,7 +241,7 @@ msgstr "todo"
 msgid "Permission Denied: Please contact super admin for help with removing organization."
 msgstr "todo"
 
-#: src/organization/mutations/verify-organization.js:58
+#: src/organization/mutations/verify-organization.js:67
 msgid "Permission Denied: Please contact super admin for help with verifying this organization."
 msgstr "todo"
 
@@ -256,6 +256,10 @@ msgstr "todo"
 #: src/auth/check-user-is-admin-for-user.js:62
 #: src/auth/check-user-is-admin-for-user.js:72
 msgid "Permission error, not an admin for this user."
+msgstr "todo"
+
+#: src/user/mutations/remove-phone-number.js:79
+msgid "Phone number has been successfully removed."
 msgstr "todo"
 
 #: src/user/mutations/set-phone-number.js:107
@@ -314,8 +318,8 @@ msgstr "todo"
 msgid "Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:154
-#: src/domain/loaders/load-domain-connections-by-user-id.js:162
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:163
+#: src/domain/loaders/load-domain-connections-by-user-id.js:163
 msgid "Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
@@ -359,7 +363,7 @@ msgstr "todo"
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "todo"
 
-#: src/organization/mutations/remove-organization.js:215
+#: src/organization/mutations/remove-organization.js:216
 msgid "Successfully removed organization: {0}."
 msgstr "todo"
 
@@ -371,7 +375,7 @@ msgstr "todo"
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "todo"
 
-#: src/organization/mutations/verify-organization.js:118
+#: src/organization/mutations/verify-organization.js:132
 msgid "Successfully verified organization: {0}."
 msgstr "todo"
 
@@ -615,9 +619,9 @@ msgstr "todo"
 msgid "Unable to load affiliation(s). Please try again."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:315
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:325
-#: src/domain/loaders/load-domain-connections-by-user-id.js:348
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:344
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:354
+#: src/domain/loaders/load-domain-connections-by-user-id.js:370
 msgid "Unable to load domain(s). Please try again."
 msgstr "todo"
 
@@ -628,7 +632,7 @@ msgstr "todo"
 msgid "Unable to load domain. Please try again."
 msgstr "todo"
 
-#: src/domain/queries/find-my-domains.js:48
+#: src/domain/queries/find-my-domains.js:52
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
@@ -646,14 +650,14 @@ msgstr "todo"
 #: src/organization/loaders/load-organization-by-key.js:47
 #: src/organization/loaders/load-organization-by-slug.js:33
 #: src/organization/loaders/load-organization-by-slug.js:47
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:429
-#: src/organization/loaders/load-organization-connections-by-domain-id.js:441
-#: src/organization/loaders/load-organization-connections-by-user-id.js:435
-#: src/organization/loaders/load-organization-connections-by-user-id.js:447
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:454
+#: src/organization/loaders/load-organization-connections-by-domain-id.js:466
+#: src/organization/loaders/load-organization-connections-by-user-id.js:460
+#: src/organization/loaders/load-organization-connections-by-user-id.js:472
 msgid "Unable to load organization(s). Please try again."
 msgstr "todo"
 
-#: src/organization/queries/find-my-organizations.js:43
+#: src/organization/queries/find-my-organizations.js:48
 msgid "Unable to load organizations. Please try again."
 msgstr "todo"
 
@@ -696,7 +700,7 @@ msgstr "todo"
 msgid "Unable to query affiliation(s). Please try again."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-user-id.js:338
+#: src/domain/loaders/load-domain-connections-by-user-id.js:360
 msgid "Unable to query domain(s). Please try again."
 msgstr "todo"
 
@@ -720,6 +724,11 @@ msgstr "todo"
 #: src/organization/mutations/remove-organization.js:194
 #: src/organization/mutations/remove-organization.js:205
 msgid "Unable to remove organization. Please try again."
+msgstr "todo"
+
+#: src/user/mutations/remove-phone-number.js:62
+#: src/user/mutations/remove-phone-number.js:73
+msgid "Unable to remove phone number. Please try again."
 msgstr "todo"
 
 #: src/domain/mutations/remove-domain.js:61
@@ -906,12 +915,12 @@ msgstr "todo"
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "todo"
 
-#: src/organization/mutations/verify-organization.js:99
-#: src/organization/mutations/verify-organization.js:110
+#: src/organization/mutations/verify-organization.js:112
+#: src/organization/mutations/verify-organization.js:123
 msgid "Unable to verify organization. Please try again."
 msgstr "todo"
 
-#: src/organization/mutations/verify-organization.js:46
+#: src/organization/mutations/verify-organization.js:52
 msgid "Unable to verify unknown organization."
 msgstr "todo"
 
@@ -1003,8 +1012,8 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:122
-#: src/domain/loaders/load-domain-connections-by-user-id.js:130
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:131
+#: src/domain/loaders/load-domain-connections-by-user-id.js:131
 msgid "You must provide a `first` or `last` value to properly paginate the `domain` connection."
 msgstr "todo"
 
@@ -1023,8 +1032,8 @@ msgstr "todo"
 #: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:212
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:84
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:86
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:169
-#: src/domain/loaders/load-domain-connections-by-user-id.js:177
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:178
+#: src/domain/loaders/load-domain-connections-by-user-id.js:178
 #: src/email-scan/loaders/load-dkim-connections-by-domain-id.js:167
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:133
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:183
@@ -1117,8 +1126,8 @@ msgstr "todo"
 msgid "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
 msgstr "todo"
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:143
-#: src/domain/loaders/load-domain-connections-by-user-id.js:151
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:152
+#: src/domain/loaders/load-domain-connections-by-user-id.js:152
 msgid "`{argSet}` on the `domain` connection cannot be less than zero."
 msgstr "todo"
 

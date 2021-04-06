@@ -92,6 +92,7 @@
       'todo',
     'Permission check error. Unable to request domain information.': 'todo',
     'Permission error, not an admin for this user.': 'todo',
+    'Phone number has been successfully removed.': 'todo',
     'Phone number has been successfully set, you will receive a verification text message shortly.':
       'todo',
     'Profile successfully updated.': 'todo',
@@ -207,6 +208,7 @@
     'Unable to remove domain from unknown organization.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
     'Unable to remove organization. Please try again.': 'todo',
+    'Unable to remove phone number. Please try again.': 'todo',
     'Unable to remove unknown domain.': 'todo',
     'Unable to remove unknown organization.': 'todo',
     'Unable to remove unknown user from organization.': 'todo',
