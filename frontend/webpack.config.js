@@ -45,6 +45,11 @@ module.exports = (env) => {
     module: {
       rules: [
         {
+          test: /\.js$/,
+          enforce: 'pre',
+          use: ['source-map-loader'],
+        },
+        {
           test: /manifest.json$/i,
           type: 'javascript/auto',
           use: [
