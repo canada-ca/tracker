@@ -5,7 +5,8 @@ import { removePhoneNumberUnion } from '../unions'
 
 export const removePhoneNumber = new mutationWithClientMutationId({
   name: 'RemovePhoneNumber',
-  description: '',
+  description:
+    'This mutation allows for users to remove a phone number from their account.',
   outputFields: () => ({
     result: {
       type: removePhoneNumberUnion,
