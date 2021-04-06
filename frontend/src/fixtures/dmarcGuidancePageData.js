@@ -8,7 +8,7 @@ export const rawDmarcGuidancePageData = {
       ssl: 'PASS',
       __typename: 'DomainStatus',
     },
-    dmarcPhase: 2,
+    dmarcPhase: 'deploy',
     web: {
       https: {
         edges: [
