@@ -30,14 +30,14 @@ export const findMyDmarcSummaries = {
     {
       userKey,
       auth: { checkSuperAdmin, userRequired },
-      loaders: { dmarcSumLoaderConnectionsByUserId },
+      loaders: { loadDmarcSummaryConnectionsByUserId },
     },
   ) => {
     await userRequired()
 
     const isSuperAdmin = await checkSuperAdmin()
 
-    const dmarcSummaries = await dmarcSumLoaderConnectionsByUserId({
+    const dmarcSummaries = await loadDmarcSummaryConnectionsByUserId({
       period: args.month,
       isSuperAdmin,
       ...args,

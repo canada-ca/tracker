@@ -34,7 +34,7 @@ import {
 import {
   loadDkimFailConnectionsBySumId,
   loadDmarcFailConnectionsBySumId,
-  dmarcSumLoaderConnectionsByUserId,
+  loadDmarcSummaryConnectionsByUserId,
   dmarcSummaryEdgeLoaderByDomainIdPeriod,
   dmarcSumLoaderByKey,
   fullPassLoaderConnectionsBySumId,
@@ -169,7 +169,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
+      loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
         query,
         userKey,
         cleanseInput,

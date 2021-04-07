@@ -2,13 +2,13 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const dmarcSumLoaderConnectionsByUserId = (
+export const loadDmarcSummaryConnectionsByUserId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
   loadStartDateFromPeriod,
-) => async ({
+}) => async ({
   after,
   before,
   first,
@@ -22,7 +22,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
 
   if (typeof period === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have \`period\` argument set for: dmarcSumLoaderConnectionsByUserId.`,
+      `User: ${userKey} did not have \`period\` argument set for: loadDmarcSummaryConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -34,7 +34,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
 
   if (typeof year === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have \`year\` argument set for: dmarcSumLoaderConnectionsByUserId.`,
+      `User: ${userKey} did not have \`year\` argument set for: loadDmarcSummaryConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -158,7 +158,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: dmarcSumLoaderConnectionsByUserId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadDmarcSummaryConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -167,7 +167,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: dmarcSumLoaderConnectionsByUserId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadDmarcSummaryConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -179,7 +179,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: dmarcSumLoaderConnectionsByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadDmarcSummaryConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -190,7 +190,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: dmarcSumLoaderConnectionsByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadDmarcSummaryConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -206,7 +206,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: dmarcSumLoaderConnectionsByUserId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadDmarcSummaryConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -413,7 +413,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather dmarc summaries in loadDmarcSummaryConnectionsByUserId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load DMARC summary data. Please try again.`),
@@ -425,7 +425,7 @@ export const dmarcSumLoaderConnectionsByUserId = (
     summariesInfo = await requestedSummaryInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather dmarc summaries in loadDmarcSummaryConnectionsByUserId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load DMARC summary data. Please try again.`),
