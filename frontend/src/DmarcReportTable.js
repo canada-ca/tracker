@@ -7,7 +7,7 @@ import {
   useSortBy,
   useTable,
 } from 'react-table'
-import { array, bool, func, number, shape, string } from 'prop-types'
+import { array, bool, number, string } from 'prop-types'
 import {
   Box,
   Button,
@@ -24,7 +24,6 @@ import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import WithPseudoBox from './withPseudoBox'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
-import { RelayPaginationControls } from './RelayPaginationControls'
 
 const Table = styled.table`
 width: calc(100% - 2px);
@@ -128,14 +127,10 @@ function DmarcReportTable({ ...props }) {
     prependLink,
     appendLink,
     frontendPagination,
-    paginationConfig,
     selectedDisplayLimit = window.matchMedia('screen and (max-width: 760px)')
       .matches
       ? 5
       : 10,
-    setSelectedDisplayLimit,
-    currentPage,
-    setCurrentPage,
   } = props
   const [show, setShow] = React.useState(true)
   const [firstRender, setFirstRender] = React.useState(true)
@@ -320,28 +315,7 @@ function DmarcReportTable({ ...props }) {
         </Stack>
       </Stack>
     </Box>
-  ) : (
-    <RelayPaginationControls
-      previous={() => {
-        paginationConfig.previous()
-      }}
-      hasPreviousPage={paginationConfig.hasPreviousPage}
-      next={() => {
-        if (paginationConfig.hasNextPage && !canNextPage)
-          paginationConfig.next()
-        else {
-          setCurrentPage(currentPage + 1)
-        }
-      }}
-      hasNextPage={paginationConfig.hasNextPage}
-      selectedDisplayLimit={selectedDisplayLimit}
-      setSelectedDisplayLimit={setSelectedDisplayLimit}
-      displayLimitOptions={paginationConfig.displayLimitOptions}
-      gotoPage={gotoPage}
-      isLoadingMore={paginationConfig.isLoadingMore}
-      mt="10px"
-    />
-  )
+  ) : ("")
 
   return (
     <Box ref={wrapperRef}>
@@ -430,18 +404,7 @@ DmarcReportTable.propTypes = {
   prependLink: string,
   appendLink: string,
   frontendPagination: bool,
-  paginationConfig: shape({
-    previous: func,
-    hasPreviousPage: bool,
-    next: func,
-    hasNextPage: bool,
-    displayLimitOptions: array,
-    isLoadingMore: bool,
-  }),
   selectedDisplayLimit: number,
-  setSelectedDisplayLimit: func,
-  currentPage: number,
-  setCurrentPage: func,
 }
 
 DmarcReportTable.defaultProps = {

@@ -10,6 +10,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
+import { RelayPaginationControls } from './RelayPaginationControls'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -23,6 +24,7 @@ export default function DmarcByDomainPage() {
     `LAST30DAYS, ${currentDate.getFullYear()}`,
   )
   const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
+  const displayLimitOptions = [5, 10, 20, 50, 100]
 
   const {
     loading,
@@ -31,6 +33,7 @@ export default function DmarcByDomainPage() {
     nodes,
     next,
     previous,
+    resetToFirstPage,
     hasNextPage,
     hasPreviousPage,
   } = usePaginatedCollection({
@@ -131,16 +134,6 @@ export default function DmarcByDomainPage() {
       },
     ]
 
-    const displayLimitOptions = [5, 10, 20, 50, 100]
-    const paginationConfig = {
-      previous: previous,
-      hasPreviousPage: hasPreviousPage,
-      next: next,
-      hasNextPage: hasNextPage,
-      displayLimitOptions: displayLimitOptions,
-      isLoadingMore: isLoadingMore,
-    }
-
     tableDisplay = (
       <DmarcReportTable
         data={formattedData}
@@ -153,9 +146,7 @@ export default function DmarcByDomainPage() {
         prependLink="domains/"
         appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
         frontendPagination={false}
-        paginationConfig={paginationConfig}
         selectedDisplayLimit={selectedTableDisplayLimit}
-        setSelectedDisplayLimit={setSelectedTableDisplayLimit}
       />
     )
   }
@@ -241,6 +232,18 @@ export default function DmarcByDomainPage() {
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
       </ErrorBoundary>
+      <RelayPaginationControls
+          onlyPagination={false}
+          selectedDisplayLimit={selectedTableDisplayLimit}
+          setSelectedDisplayLimit={setSelectedTableDisplayLimit}
+          displayLimitOptions={displayLimitOptions}
+          resetToFirstPage={resetToFirstPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+        />
     </Box>
   )
 }
