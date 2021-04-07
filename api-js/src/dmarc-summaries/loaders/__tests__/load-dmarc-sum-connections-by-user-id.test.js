@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   loadDmarcSummaryConnectionsByUserId,
-  dmarcSumLoaderByKey,
+  loadDmarcSummaryByKey,
 } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -165,11 +165,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
   describe('given there are dmarc summary connections to be returned', () => {
     describe('using after cursor', () => {
       it('returns a dmarc summary', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
-        const expectedSummaries = await summaryLoader.loadMany([
-          dmarcSummary1._key,
-          dmarcSummary2._key,
-        ])
+        const expectedSummaries = await loadDmarcSummaryByKey({
+          query,
+        }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
         const connectionLoader = loadDmarcSummaryConnectionsByUserId({
           query,
@@ -214,11 +212,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
     })
     describe('using before cursor', () => {
       it('returns a dmarc summary', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
-        const expectedSummaries = await summaryLoader.loadMany([
-          dmarcSummary1._key,
-          dmarcSummary2._key,
-        ])
+        const expectedSummaries = await loadDmarcSummaryByKey({
+          query,
+        }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
         const connectionLoader = loadDmarcSummaryConnectionsByUserId({
           query,
@@ -263,11 +259,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
     })
     describe('using first limit', () => {
       it('returns a dmarc summary', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
-        const expectedSummaries = await summaryLoader.loadMany([
-          dmarcSummary1._key,
-          dmarcSummary2._key,
-        ])
+        const expectedSummaries = await loadDmarcSummaryByKey({
+          query,
+        }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
         const connectionLoader = loadDmarcSummaryConnectionsByUserId({
           query,
@@ -311,11 +305,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
     })
     describe('using last limit', () => {
       it('returns a dmarc summary', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
-        const expectedSummaries = await summaryLoader.loadMany([
-          dmarcSummary1._key,
-          dmarcSummary2._key,
-        ])
+        const expectedSummaries = await loadDmarcSummaryByKey({
+          query,
+        }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
         const connectionLoader = loadDmarcSummaryConnectionsByUserId({
           query,
@@ -362,11 +354,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on FAIL_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -423,11 +413,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -486,11 +474,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -547,11 +533,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -610,11 +594,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_DKIM_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -671,11 +653,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -734,11 +714,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_SPF_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -795,11 +773,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -858,11 +834,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on FAIL_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -919,11 +893,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -982,11 +954,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1043,11 +1013,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1106,11 +1074,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_DKIM_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1167,11 +1133,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1230,11 +1194,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_SPF_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1291,11 +1253,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1354,11 +1314,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on TOTAL_MESSAGES', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1415,11 +1373,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1480,11 +1436,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on FAIL_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1541,11 +1495,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1604,11 +1556,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1665,11 +1615,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1728,11 +1676,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_DKIM_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1789,11 +1735,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1852,11 +1796,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_SPF_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1913,11 +1855,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -1976,11 +1916,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on FAIL_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -2037,11 +1975,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -2100,11 +2036,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -2161,11 +2095,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -2224,11 +2156,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_DKIM_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -2285,11 +2215,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -2348,11 +2276,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on PASS_SPF_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -2409,11 +2335,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -2472,11 +2396,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('ordering on TOTAL_MESSAGES', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -2533,11 +2455,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -2597,11 +2517,9 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
     })
     describe('isSuperAdmin is set to true', () => {
       it('returns dmarc summaries', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
-        const expectedSummaries = await summaryLoader.loadMany([
-          dmarcSummary1._key,
-          dmarcSummary2._key,
-        ])
+        const expectedSummaries = await loadDmarcSummaryByKey({
+          query,
+        }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
         const connectionLoader = loadDmarcSummaryConnectionsByUserId({
           query,
@@ -2654,7 +2572,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
   describe('given there are no dmarc summaries to be returned', () => {
     it('returns no dmarc summary connections', async () => {
       await truncate()
-      
+
       const connectionLoader = loadDmarcSummaryConnectionsByUserId({
         query,
         userKey: user._key,

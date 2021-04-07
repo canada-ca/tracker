@@ -12,7 +12,7 @@ import { PeriodEnums } from '../../../enums'
 import { Year } from '../../../scalars'
 import { domainLoaderByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { dmarcSumLoaderByKey } from '../../loaders'
+import { loadDmarcSummaryByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -218,7 +218,11 @@ describe('testing the period gql object', () => {
           demoType.categoryPercentages.resolve(
             { _id: dmarcSummary._id },
             {},
-            { loaders: { dmarcSumLoaderByKey: dmarcSumLoaderByKey(query) } },
+            {
+              loaders: {
+                loadDmarcSummaryByKey: loadDmarcSummaryByKey({ query }),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -238,7 +242,11 @@ describe('testing the period gql object', () => {
           demoType.categoryTotals.resolve(
             { _id: dmarcSummary._id },
             {},
-            { loaders: { dmarcSumLoaderByKey: dmarcSumLoaderByKey(query) } },
+            {
+              loaders: {
+                loadDmarcSummaryByKey: loadDmarcSummaryByKey({ query }),
+              },
+            },
           ),
         ).resolves.toEqual(expectedResult)
       })
