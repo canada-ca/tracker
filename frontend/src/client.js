@@ -8,7 +8,7 @@ export function createCache() {
       Query: {
         fields: {
           findMyDomains: relayStylePagination(['orderBy', 'search']),
-          findMyOrganizations: relayStylePagination(['orderBy']),
+          findMyOrganizations: relayStylePagination(['orderBy', 'search']),
         },
       },
       Organization: {

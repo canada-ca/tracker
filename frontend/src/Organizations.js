@@ -29,6 +29,7 @@ import { RelayPaginationControls } from './RelayPaginationControls'
 export default function Organisations({ orgsPerPage = 10 }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('NAME')
+  const [searchTerm, setSearchTerm] = useState('')
   const { currentUser } = useUserState()
 
   const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
@@ -46,7 +47,11 @@ export default function Organisations({ orgsPerPage = 10 }) {
   } = usePaginatedCollection({
     fetchForward: FORWARD,
     fetchHeaders: { authorization: currentUser.jwt },
-    variables: { field: orderField, direction: orderDirection },
+    variables: {
+      field: orderField,
+      direction: orderDirection,
+      search: searchTerm,
+    },
     recordsPerPage: orgsPerPage,
     relayRoot: 'findMyOrganizations',
   })
@@ -106,7 +111,14 @@ export default function Organisations({ orgsPerPage = 10 }) {
             <InputLeftElement>
               <Icon name="search" color="gray.300" />
             </InputLeftElement>
-            <Input type="text" placeholder={t`Search for an organization`} isDisabled={true} />
+            <Input
+              type="text"
+              placeholder={t`Search for an organization`}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+                resetToFirstPage()
+              }}
+            />
           </InputGroup>
           <Stack isInline align="center" ml={{ md: '10%' }}>
             <Text fontSize="md" fontWeight="bold" textAlign="center">
