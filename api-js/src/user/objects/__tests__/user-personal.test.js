@@ -193,6 +193,19 @@ describe('given the user object', () => {
           ).toEqual(null)
         })
       })
+      describe('testing null phoneDetails', () => {
+        it('returns null', () => {
+          const demoType = userPersonalType.getFields()
+
+          const phoneDetails = null
+
+          expect(
+            demoType.phoneNumber.resolve({
+              phoneDetails,
+            }),
+          ).toEqual(null)
+        })
+      })
       describe('testing defined phoneDetails', () => {
         it('returns the resolved value', () => {
           const demoType = userPersonalType.getFields()
