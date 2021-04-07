@@ -12,7 +12,7 @@ import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
 import { orgLoaderByKey } from '../../../organization/loaders'
 import { userLoaderByKey } from '../../../user/loaders'
-import { affiliationLoaderByKey } from '../../loaders'
+import { loadAffiliationByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -303,7 +303,11 @@ describe('removing a user from an organization', () => {
               },
             )
 
-            const loader = affiliationLoaderByKey(query, admin._key, i18n)
+            const loader = loadAffiliationByKey({
+              query,
+              userKey: admin._key,
+              i18n,
+            })
 
             const data = await loader.load(affiliation._key)
 
@@ -436,7 +440,11 @@ describe('removing a user from an organization', () => {
               },
             )
 
-            const loader = affiliationLoaderByKey(query, admin._key, i18n)
+            const loader = loadAffiliationByKey({
+              query,
+              userKey: admin._key,
+              i18n,
+            })
 
             const data = await loader.load(affiliation._key)
 
@@ -576,7 +584,11 @@ describe('removing a user from an organization', () => {
               },
             )
 
-            const loader = affiliationLoaderByKey(query, admin._key, i18n)
+            const loader = loadAffiliationByKey({
+              query,
+              userKey: admin._key,
+              i18n,
+            })
 
             const data = await loader.load(affiliation._key)
 
@@ -652,7 +664,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'Unable to remove user from unknown organization.',
+                  description:
+                    'Unable to remove user from unknown organization.',
                 },
               },
             },
@@ -732,7 +745,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'Permission Denied: Please contact organization admin for help with removing users.',
+                  description:
+                    'Permission Denied: Please contact organization admin for help with removing users.',
                 },
               },
             },
@@ -812,7 +826,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'Unable to remove a user that already does not belong to this organization.',
+                  description:
+                    'Unable to remove a user that already does not belong to this organization.',
                 },
               },
             },
@@ -892,7 +907,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'Permission Denied: Please contact organization admin for help with removing users.',
+                  description:
+                    'Permission Denied: Please contact organization admin for help with removing users.',
                 },
               },
             },
@@ -1053,7 +1069,8 @@ describe('removing a user from an organization', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'Unable to remove unknown user from organization.',
+                  description:
+                    'Unable to remove unknown user from organization.',
                 },
               },
             },
@@ -1454,7 +1471,11 @@ describe('removing a user from an organization', () => {
               },
             )
 
-            const loader = affiliationLoaderByKey(query, admin._key, i18n)
+            const loader = loadAffiliationByKey({
+              query,
+              userKey: admin._key,
+              i18n,
+            })
 
             const data = await loader.load(affiliation._key)
 
@@ -1587,7 +1608,11 @@ describe('removing a user from an organization', () => {
               },
             )
 
-            const loader = affiliationLoaderByKey(query, admin._key, i18n)
+            const loader = loadAffiliationByKey({
+              query,
+              userKey: admin._key,
+              i18n,
+            })
 
             const data = await loader.load(affiliation._key)
 
@@ -1727,7 +1752,11 @@ describe('removing a user from an organization', () => {
               },
             )
 
-            const loader = affiliationLoaderByKey(query, admin._key, i18n)
+            const loader = loadAffiliationByKey({
+              query,
+              userKey: admin._key,
+              i18n,
+            })
 
             const data = await loader.load(affiliation._key)
 

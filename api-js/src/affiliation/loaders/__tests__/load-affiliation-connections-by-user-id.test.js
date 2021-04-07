@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { affiliationConnectionLoaderByUserId, affiliationLoaderByKey } from '..'
+import { affiliationConnectionLoaderByUserId, loadAffiliationByKey } from '..'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -138,7 +138,7 @@ describe('given the load affiliations by user id function', () => {
             i18n,
           )
 
-          const affLoader = affiliationLoaderByKey(query)
+          const affLoader = loadAffiliationByKey({ query })
           const expectedAffiliations = await affLoader.loadMany([
             affOne._key,
             affTwo._key,
@@ -196,11 +196,9 @@ describe('given the load affiliations by user id function', () => {
             i18n,
           )
 
-          const affLoader = affiliationLoaderByKey(query)
-          const expectedAffiliations = await affLoader.loadMany([
-            affOne._key,
-            affTwo._key,
-          ])
+          const expectedAffiliations = await loadAffiliationByKey({
+            query,
+          }).loadMany([affOne._key, affTwo._key])
 
           expectedAffiliations[0].id = expectedAffiliations[0]._key
           expectedAffiliations[1].id = expectedAffiliations[1]._key
@@ -254,11 +252,9 @@ describe('given the load affiliations by user id function', () => {
             i18n,
           )
 
-          const affLoader = affiliationLoaderByKey(query)
-          const expectedAffiliations = await affLoader.loadMany([
-            affOne._key,
-            affTwo._key,
-          ])
+          const expectedAffiliations = await loadAffiliationByKey({
+            query,
+          }).loadMany([affOne._key, affTwo._key])
 
           expectedAffiliations[0].id = expectedAffiliations[0]._key
           expectedAffiliations[1].id = expectedAffiliations[1]._key
@@ -311,11 +307,9 @@ describe('given the load affiliations by user id function', () => {
             i18n,
           )
 
-          const affLoader = affiliationLoaderByKey(query)
-          const expectedAffiliations = await affLoader.loadMany([
-            affOne._key,
-            affTwo._key,
-          ])
+          const expectedAffiliations = await loadAffiliationByKey({
+            query,
+          }).loadMany([affOne._key, affTwo._key])
 
           expectedAffiliations[0].id = expectedAffiliations[0]._key
           expectedAffiliations[1].id = expectedAffiliations[1]._key
@@ -541,15 +535,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_ACRONYM', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -595,15 +583,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -651,15 +633,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_NAME', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -705,15 +681,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -761,15 +731,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SLUG', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -815,15 +779,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -871,15 +829,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_ZONE', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -925,15 +877,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -981,15 +927,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SECTOR', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -1035,15 +975,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -1091,15 +1025,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_COUNTRY', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -1145,11 +1073,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1201,11 +1125,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_PROVINCE', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1255,11 +1175,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1311,11 +1227,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_CITY', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1365,11 +1277,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1421,11 +1329,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_VERIFIED', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1475,11 +1379,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1531,11 +1431,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_MAIL_PASS', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1585,11 +1481,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1641,11 +1533,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_MAIL_FAIL', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1695,11 +1583,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1751,11 +1635,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_MAIL_TOTAL', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1805,11 +1685,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1861,11 +1737,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_WEB_PASS', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1915,11 +1787,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -1971,11 +1839,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_WEB_FAIL', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2025,11 +1889,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2081,11 +1941,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_WEB_TOTAL', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2135,11 +1991,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2191,11 +2043,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_DOMAIN_COUNT', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2245,11 +2093,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2303,11 +2147,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_ACRONYM', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2357,11 +2197,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2413,11 +2249,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_NAME', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2467,11 +2299,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2523,11 +2351,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SLUG', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2577,11 +2401,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2633,11 +2453,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_ZONE', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2687,11 +2503,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2743,11 +2555,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SECTOR', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2797,11 +2605,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2853,11 +2657,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_COUNTRY', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2907,11 +2707,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -2963,11 +2759,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_PROVINCE', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -3017,11 +2809,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -3073,11 +2861,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_CITY', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -3127,11 +2911,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -3183,11 +2963,7 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_VERIFIED', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -3237,11 +3013,7 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
-                  query,
-                  user._key,
-                  i18n,
-                )
+                const affiliationLoader = loadAffiliationByKey({ query })
 
                 const expectedAffiliation = await affiliationLoader.load(
                   affTwo._key,
@@ -3293,15 +3065,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_MAIL_PASS', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3347,15 +3113,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3403,15 +3163,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_MAIL_FAIL', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3457,15 +3211,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3513,15 +3261,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_MAIL_TOTAL', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3567,15 +3309,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3623,15 +3359,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_WEB_PASS', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3677,15 +3407,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3733,15 +3457,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_WEB_FAIL', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3787,15 +3505,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3843,15 +3555,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_SUMMARY_WEB_TOTAL', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3897,15 +3603,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -3953,15 +3653,9 @@ describe('given the load affiliations by user id function', () => {
           describe('ordering by ORG_DOMAIN_COUNT', () => {
             describe('direction is set to ASC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
@@ -4007,15 +3701,9 @@ describe('given the load affiliations by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns affiliation', async () => {
-                const affiliationLoader = affiliationLoaderByKey(
+                const expectedAffiliation = await loadAffiliationByKey({
                   query,
-                  user._key,
-                  i18n,
-                )
-
-                const expectedAffiliation = await affiliationLoader.load(
-                  affTwo._key,
-                )
+                }).load(affTwo._key)
 
                 const connectionLoader = affiliationConnectionLoaderByUserId(
                   query,
