@@ -8,6 +8,7 @@ export function RelayPaginationControls({
   hasPreviousPage,
   next,
   hasNextPage,
+  resetToFirstPage,
   selectedDisplayLimit,
   setSelectedDisplayLimit,
   displayLimitOptions,
@@ -27,15 +28,20 @@ export function RelayPaginationControls({
 
     displayLimitControls = (
       <>
-        <Text ml="auto">
-          <Trans>Page Size:</Trans>
+        <Text ml="auto" mr={'1%'}>
+          <Trans>Items per page:</Trans>
         </Text>
 
         <Select
+          aria-label="Items per page"
           isDisabled={isLoadingMore}
           value={selectedDisplayLimit}
-          onChange={(e) => setSelectedDisplayLimit(parseInt(e.target.value))}
+          onChange={(e) => {
+            setSelectedDisplayLimit(parseInt(e.target.value))
+            resetToFirstPage() // Make sure to provide this as a prop if !onlyPagination
+          }}
           width="fit-content"
+          variant="filled"
         >
           {options}
         </Select>
@@ -75,6 +81,7 @@ RelayPaginationControls.propTypes = {
   hasPreviousPage: bool,
   next: func,
   hasNextPage: bool,
+  resetToFirstPage: func,
   selectedDisplayLimit: number,
   setSelectedDisplayLimit: func,
   displayLimitOptions: array,

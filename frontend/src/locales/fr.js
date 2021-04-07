@@ -128,7 +128,10 @@
     'DKIM-value-invalid': 'DKIM-value-invalid',
     'DMARC Failure Table': 'Tableau des échecs de la DMARC',
     'DMARC Failures by IP Address': 'Défaillances du DMARC par adresse IP',
-    'DMARC Implementation Phase: {0}': ['DMARC Implementation Phase: ', ['0']],
+    'DMARC Implementation Phase: {0}': [
+      'Phase de mise en œuvre de DMARC : ',
+      ['0'],
+    ],
     'DMARC Implementation Phase: {status}': [
       'Phase de mise en œuvre de la DMARC: ',
       ['status'],
@@ -290,6 +293,7 @@
     'Invalid public key': 'Clé publique invalide',
     'Invite User': "Inviter l'utilisateur",
     'Invite a user': 'Inviter un utilisateur',
+    'Items per page:': 'Objets par page:',
     January: 'Janvier',
     July: 'Juillet',
     June: 'Juin',
@@ -533,14 +537,14 @@
     'This component is currently unavailable. Try reloading the page.':
       "Ce composant n'est pas disponible actuellement. Essayez de recharger la page.",
     'This could be due to improper configuration, or could be the result of a scan error':
-      'This could be due to improper configuration, or could be the result of a scan error',
+      "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse",
     'This could be due to improper configurations, or could be the result of a scan error':
       "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse",
     'This service is being developed in the open':
       'Ce service est développé de façon ouverte',
     'Total Messages': 'Total des messages',
     'Total users': 'total des utilisateurs',
-    'Track Digital Security': 'Track Digital Security',
+    'Track Digital Security': 'Suivre la sécurité numérique',
     Tracker: 'Suivi',
     'Tracker Logo': 'Logo du Tracker',
     'Two Factor Authentication': 'Authentification à deux facteurs',
@@ -548,21 +552,21 @@
     'Unable to change user role, please try again.':
       "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer.",
     'Unable to create account, please try again.':
-      'Unable to create account, please try again.',
-    'Unable to create new domain.': 'Unable to create new domain.',
+      'Impossible de créer un compte, veuillez réessayer.',
+    'Unable to create new domain.': 'Impossible de créer un nouveau domaine.',
     'Unable to create your account, please try again.':
       'Impossible de créer votre compte, veuillez réessayer',
-    'Unable to invite user.': 'Unable to invite user.',
-    'Unable to remove domain.': 'Unable to remove domain.',
+    'Unable to invite user.': "Impossible d'inviter un utilisateur.",
+    'Unable to remove domain.': 'Impossible de supprimer le domaine.',
     'Unable to request scan, please try again.':
       'Impossible de demander un balayage, veuillez réessayer.',
     'Unable to reset your password, please try again.':
-      'Unable to reset your password, please try again.',
+      'Impossible de réinitialiser votre mot de passe, veuillez réessayer.',
     'Unable to send password reset link to email.':
       "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel.",
     'Unable to sign in to your account, please try again.':
       'Impossible de vous connecter à votre compte, veuillez réessayer.',
-    'Unable to update domain.': 'Unable to update domain.',
+    'Unable to update domain.': 'Impossible de mettre à jour le domaine.',
     'Unable to update password': 'Impossible de mettre à jour le mot de passe',
     'Unable to update to your TFA send method, please try again.':
       "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réessayer.",
@@ -574,7 +578,8 @@
       'Impossible de mettre à jour votre langue préférée, veuillez réessayer.',
     'Unable to update to your username, please try again.':
       "Impossible de mettre à jour votre nom d'utilisateur, veuillez réessayer.",
-    'Unable to update user role.': 'Unable to update user role.',
+    'Unable to update user role.':
+      "Impossible de mettre à jour le rôle de l'utilisateur.",
     'Unable to update your password, please try again.':
       'Impossible de mettre à jour votre mot de passe, veuillez réessayer.',
     'Unable to update your phone number, please try again.':

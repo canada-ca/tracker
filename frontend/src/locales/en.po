@@ -100,7 +100,7 @@ msgstr "Account Settings"
 msgid "Account created."
 msgstr "Account created."
 
-#: src/Organizations.js:129
+#: src/Organizations.js:141
 msgid "Acronym"
 msgstr "Acronym"
 
@@ -389,7 +389,7 @@ msgstr "DKIM Results"
 msgid "DKIM Selectors"
 msgstr "DKIM Selectors"
 
-#: src/DomainsPage.js:135
+#: src/DomainsPage.js:146
 msgid "DKIM Status"
 msgstr "DKIM Status"
 
@@ -470,7 +470,7 @@ msgstr "DMARC Report for {domainSlug}"
 #~ msgid "DMARC Report | {domainSlug}"
 #~ msgstr "DMARC Report | {domainSlug}"
 
-#: src/DomainsPage.js:136
+#: src/DomainsPage.js:147
 msgid "DMARC Status"
 msgstr "DMARC Status"
 
@@ -516,7 +516,7 @@ msgid "Disposition"
 msgstr "Disposition"
 
 #: src/DmarcByDomainPage.js:84
-#: src/DomainsPage.js:130
+#: src/DomainsPage.js:141
 msgid "Domain"
 msgstr "Domain"
 
@@ -592,8 +592,8 @@ msgstr "Domain:"
 
 #: src/App.js:72
 #: src/App.js:172
-#: src/DomainsPage.js:64
-#: src/DomainsPage.js:85
+#: src/DomainsPage.js:68
+#: src/DomainsPage.js:89
 #: src/OrganizationDetails.js:92
 #: src/OrganizationDomains.js:39
 msgid "Domains"
@@ -810,7 +810,7 @@ msgstr "HTTP Strict Transport Security (HSTS) not implemented"
 msgid "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year"
 msgstr "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year"
 
-#: src/DomainsPage.js:132
+#: src/DomainsPage.js:143
 msgid "HTTPS Status"
 msgstr "HTTPS Status"
 
@@ -1010,6 +1010,10 @@ msgstr "Invite User"
 msgid "Invite a user"
 msgstr "Invite a user"
 
+#: src/RelayPaginationControls.js:32
+msgid "Items per page:"
+msgstr "Items per page:"
+
 #: src/months.js:4
 msgid "January"
 msgstr "January"
@@ -1036,7 +1040,7 @@ msgstr "Language:"
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
 
-#: src/DomainsPage.js:131
+#: src/DomainsPage.js:142
 msgid "Last Scanned"
 msgstr "Last Scanned"
 
@@ -1144,7 +1148,7 @@ msgstr "Missing from guide- need v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "More than 10 lookups - Follow implementation guide"
 
-#: src/Organizations.js:126
+#: src/Organizations.js:138
 msgid "Name"
 msgstr "Name"
 
@@ -1176,12 +1180,12 @@ msgstr "New Phone Number:"
 msgid "New domain name cannot be empty"
 msgstr "New domain name cannot be empty"
 
-#: src/RelayPaginationControls.js:65
+#: src/RelayPaginationControls.js:71
 msgid "Next"
 msgstr "Next"
 
 #: src/AdminDomains.js:305
-#: src/DomainsPage.js:67
+#: src/DomainsPage.js:71
 #: src/OrganizationDomains.js:49
 msgid "No Domains"
 msgstr "No Domains"
@@ -1190,7 +1194,7 @@ msgstr "No Domains"
 #~ msgid "No Guidance tags were found for this scan category"
 #~ msgstr "No Guidance tags were found for this scan category"
 
-#: src/Organizations.js:69
+#: src/Organizations.js:74
 msgid "No Organizations"
 msgstr "No Organizations"
 
@@ -1285,8 +1289,8 @@ msgstr "Organization:"
 
 #: src/App.js:66
 #: src/App.js:154
-#: src/Organizations.js:62
-#: src/Organizations.js:97
+#: src/Organizations.js:67
+#: src/Organizations.js:102
 msgid "Organizations"
 msgstr "Organizations"
 
@@ -1380,8 +1384,8 @@ msgid "Page"
 msgstr "Page"
 
 #: src/RelayPaginationControls.js:31
-msgid "Page Size:"
-msgstr "Page Size:"
+#~ msgid "Page Size:"
+#~ msgstr "Page Size:"
 
 #: src/DmarcReportTable.js:300
 msgid "Page {0} of {1}"
@@ -1502,7 +1506,7 @@ msgstr "Pre-Alpha"
 #~ msgid "Preloaded Status:"
 #~ msgstr "Preloaded Status:"
 
-#: src/RelayPaginationControls.js:55
+#: src/RelayPaginationControls.js:61
 msgid "Previous"
 msgstr "Previous"
 
@@ -1659,7 +1663,7 @@ msgstr "SPF Failures by IP Address"
 msgid "SPF Results"
 msgstr "SPF Results"
 
-#: src/DomainsPage.js:134
+#: src/DomainsPage.js:145
 msgid "SPF Status"
 msgstr "SPF Status"
 
@@ -1679,7 +1683,7 @@ msgstr "SPF-bad-path"
 msgid "SPF-missing"
 msgstr "SPF-missing"
 
-#: src/DomainsPage.js:133
+#: src/DomainsPage.js:144
 msgid "SSL Status"
 msgstr "SSL Status"
 
@@ -1719,7 +1723,7 @@ msgstr "Save Language"
 msgid "Save TFA Method"
 msgstr "Save TFA Method"
 
-#: src/DomainsPage.js:94
+#: src/DomainsPage.js:98
 msgid "Scan"
 msgstr "Scan"
 
@@ -1739,11 +1743,11 @@ msgstr "Scan of domain successfully requested"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 
-#: src/DomainsPage.js:91
+#: src/DomainsPage.js:95
 msgid "Search"
 msgstr "Search"
 
-#: src/DomainsPage.js:113
+#: src/DomainsPage.js:119
 msgid "Search for a domain"
 msgstr "Search for a domain"
 
@@ -1751,11 +1755,11 @@ msgstr "Search for a domain"
 #~ msgid "Search for a user"
 #~ msgstr "Search for a user"
 
-#: src/Organizations.js:109
+#: src/Organizations.js:116
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
-#: src/DomainsPage.js:101
+#: src/DomainsPage.js:105
 msgid "Search for any Government of Canada tracked domain:"
 msgstr "Search for any Government of Canada tracked domain:"
 
@@ -1779,7 +1783,7 @@ msgstr "Select an organization to view admin options"
 msgid "September"
 msgstr "September"
 
-#: src/Organizations.js:132
+#: src/Organizations.js:144
 msgid "Services"
 msgstr "Services"
 
@@ -1826,8 +1830,8 @@ msgstr "Sign in with your username and password."
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
-#: src/DomainsPage.js:118
-#: src/Organizations.js:113
+#: src/DomainsPage.js:129
+#: src/Organizations.js:125
 msgid "Sort by:"
 msgstr "Sort by:"
 
@@ -2057,7 +2061,7 @@ msgstr "Verification TXT records for some/all 3rd party senders missing"
 msgid "Verification code must only contains numbers"
 msgstr "Verification code must only contains numbers"
 
-#: src/Organizations.js:135
+#: src/Organizations.js:147
 msgid "Verified"
 msgstr "Verified"
 

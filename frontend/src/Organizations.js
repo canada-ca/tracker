@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { number } from 'prop-types'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
@@ -26,10 +25,11 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
 
-export default function Organisations({ orgsPerPage = 10 }) {
+export default function Organisations() {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('NAME')
   const [searchTerm, setSearchTerm] = useState('')
+  const [orgsPerPage, setOrgsPerPage] = useState(10)
   const { currentUser } = useUserState()
 
   const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
@@ -162,7 +162,11 @@ export default function Organisations({ orgsPerPage = 10 }) {
         </Flex>
         {orgList}
         <RelayPaginationControls
-          onlyPagination={true}
+          onlyPagination={false}
+          selectedDisplayLimit={orgsPerPage}
+          setSelectedDisplayLimit={setOrgsPerPage}
+          displayLimitOptions={[10, 20, 40, 80]}
+          resetToFirstPage={resetToFirstPage}
           hasNextPage={hasNextPage}
           hasPreviousPage={hasPreviousPage}
           next={next}
@@ -173,5 +177,3 @@ export default function Organisations({ orgsPerPage = 10 }) {
     </Layout>
   )
 }
-
-Organisations.propTypes = { orgsPerPage: number }

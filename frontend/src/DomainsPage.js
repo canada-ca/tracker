@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { number } from 'prop-types'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
@@ -32,11 +31,12 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { RelayPaginationControls } from './RelayPaginationControls'
 
-export default function DomainsPage({ domainsPerPage = 10 }) {
+export default function DomainsPage() {
   const { currentUser } = useUserState()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
+  const [domainsPerPage, setDomainsPerPage] = useState(10)
 
   const orderIconName = orderDirection === 'ASC' ? 'arrow-up' : 'arrow-down'
 
@@ -163,7 +163,11 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
               {domainList}
 
               <RelayPaginationControls
-                onlyPagination={true}
+                onlyPagination={false}
+                selectedDisplayLimit={domainsPerPage}
+                setSelectedDisplayLimit={setDomainsPerPage}
+                displayLimitOptions={[10, 20, 40, 80]}
+                resetToFirstPage={resetToFirstPage}
                 hasNextPage={hasNextPage}
                 hasPreviousPage={hasPreviousPage}
                 next={next}
@@ -180,5 +184,3 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
     </Layout>
   )
 }
-
-DomainsPage.propTypes = { domainsPerPage: number }

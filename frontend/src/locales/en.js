@@ -282,6 +282,7 @@
     'Invalid public key': 'Invalid public key',
     'Invite User': 'Invite User',
     'Invite a user': 'Invite a user',
+    'Items per page:': 'Items per page:',
     January: 'January',
     July: 'July',
     June: 'June',

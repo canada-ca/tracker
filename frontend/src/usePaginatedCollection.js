@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import { indexes } from './indexes'
 
 export function usePaginatedCollection({
-  recordsPerPage = 10,
+  recordsPerPage,
   fetchForward,
   fetchHeaders = {},
   variables,
