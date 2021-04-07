@@ -105,7 +105,7 @@ export const domainType = new GraphQLObjectType({
         {
           userKey,
           loaders: {
-            dmarcSummaryEdgeLoaderByDomainIdPeriod,
+            loadDmarcSummaryEdgeByDomainIdAndPeriod,
             loadStartDateFromPeriod,
           },
           auth: { checkDomainOwnership, userRequired },
@@ -127,7 +127,7 @@ export const domainType = new GraphQLObjectType({
 
         const startDate = loadStartDateFromPeriod({ period: month, year })
 
-        const dmarcSummaryEdge = await dmarcSummaryEdgeLoaderByDomainIdPeriod({
+        const dmarcSummaryEdge = await loadDmarcSummaryEdgeByDomainIdAndPeriod({
           domainId: _id,
           startDate,
         })

@@ -12,7 +12,7 @@ import { userLoaderByKey } from '../../../user'
 import { domainStatus } from '../domain-status'
 import { dmarcSummaryType } from '../../../dmarc-summaries/objects'
 import {
-  dmarcSummaryEdgeLoaderByDomainIdPeriod,
+  loadDmarcSummaryEdgeByDomainIdAndPeriod,
   dmarcYearlySumEdgeLoader,
   loadStartDateFromPeriod,
 } from '../../../dmarc-summaries/loaders'
@@ -441,10 +441,12 @@ describe('given the domain object', () => {
               {
                 userKey: user._key,
                 loaders: {
-                  dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
-                    query,
-                    user._key,
-                    i18n,
+                  loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
+                    {
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    },
                   ),
                   loadStartDateFromPeriod: loadStartDateFromPeriod(
                     moment,
@@ -489,10 +491,12 @@ describe('given the domain object', () => {
               {
                 userKey: user._key,
                 loaders: {
-                  dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
-                    query,
-                    user._key,
-                    i18n,
+                  loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
+                    {
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    },
                   ),
                   loadStartDateFromPeriod: loadStartDateFromPeriod(
                     moment,
