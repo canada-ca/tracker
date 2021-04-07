@@ -51,36 +51,24 @@ module.exports = (env) => {
         },
         {
           test: /manifest.json$/i,
-          type: 'javascript/auto',
-          use: [
-            {
-              loader: 'file-loader',
-              options: { name: '[name].[ext]' },
-            },
-          ],
+          type: 'asset/resource',
+          generator: {
+            filename: '[name][ext]',
+          },
         },
         {
-          // put any images imported into the /public/images folder
           test: /robots.txt|favicon.ico$/i,
-          use: [
-            {
-              loader: 'file-loader',
-              options: { name: '[name].[ext]' },
-            },
-          ],
+          type: 'asset/resource',
+          generator: {
+            filename: '[name][ext]',
+          },
         },
         {
-          // put any images imported into the /public/images folder
           test: /\.(png|svg|jpe?g|gif)$/i,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                name: '[name].[ext]',
-                outputPath: './images',
-              },
-            },
-          ],
+          type: 'asset/resource',
+          generator: {
+            filename: 'images/[name][ext]',
+          },
         },
         {
           test: /\.m?js$/,
