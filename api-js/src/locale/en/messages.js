@@ -109,6 +109,8 @@
       'Permission check error. Unable to request domain information.',
     'Permission error, not an admin for this user.':
       'Permission error, not an admin for this user.',
+    'Phone number has been successfully removed.':
+      'Phone number has been successfully removed.',
     'Phone number has been successfully set, you will receive a verification text message shortly.':
       'Phone number has been successfully set, you will receive a verification text message shortly.',
     'Profile successfully updated.': 'Profile successfully updated.',
@@ -388,6 +390,8 @@
       'Unable to remove domain. Please try again.',
     'Unable to remove organization. Please try again.':
       'Unable to remove organization. Please try again.',
+    'Unable to remove phone number. Please try again.':
+      'Unable to remove phone number. Please try again.',
     'Unable to remove unknown domain.': 'Unable to remove unknown domain.',
     'Unable to remove unknown organization.':
       'Unable to remove unknown organization.',

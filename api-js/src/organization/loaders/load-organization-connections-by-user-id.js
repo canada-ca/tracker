@@ -8,7 +8,7 @@ export const orgLoaderConnectionsByUserId = (
   cleanseInput,
   language,
   i18n,
-) => async ({ after, before, first, last, orderBy, isSuperAdmin }) => {
+) => async ({ after, before, first, last, orderBy, isSuperAdmin, search }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -371,14 +371,50 @@ export const orgLoaderConnectionsByUserId = (
     `
   }
 
+  let orgQuery = aql``
+  let filterString = aql`FILTER org._key IN orgKeys`
+  let totalCount = aql`LENGTH(orgKeys)`
+  if (typeof search !== 'undefined' && search !== '') {
+    search = cleanseInput(search)
+    orgQuery = aql`
+      LET tokenArrEN = TOKENS(${search}, "text_en")
+      LET searchedOrgsEN = FLATTEN(UNIQUE(
+        FOR token IN tokenArrEN
+          FOR org IN organizationSearch
+            SEARCH ANALYZER(
+                org.orgDetails.en.acronym LIKE CONCAT("%", token, "%")
+                OR org.orgDetails.en.name LIKE CONCAT("%", token, "%")
+            , "text_en")
+            FILTER org._key IN orgKeys
+            RETURN org._key
+      ))
+      LET tokenArrFR = TOKENS(${search}, "text_fr")
+      LET searchedOrgsFR = FLATTEN(UNIQUE(
+        FOR token IN tokenArrEN
+        FOR org IN organizationSearch
+          SEARCH ANALYZER(
+              org.orgDetails.fr.acronym LIKE CONCAT("%", token, "%")
+              OR org.orgDetails.fr.name LIKE CONCAT("%", token, "%")
+          , "text_fr")
+          FILTER org._key IN orgKeys
+          RETURN org._key
+      ))
+      LET searchedOrgs = UNION_DISTINCT(searchedOrgsEN, searchedOrgsFR)
+    `
+    filterString = aql`FILTER org._key IN searchedOrgs`
+    totalCount = aql`LENGTH(searchedOrgs)`
+  }
+
   let organizationInfoCursor
   try {
     organizationInfoCursor = await query`
       ${orgKeysQuery}
 
+      ${orgQuery}
+
       LET retrievedOrgs = (
         FOR org IN organizations
-            FILTER org._key IN orgKeys
+            ${filterString}
             LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
             ${afterTemplate}
             ${beforeTemplate}
@@ -402,7 +438,7 @@ export const orgLoaderConnectionsByUserId = (
 
       LET hasNextPage = (LENGTH(
         FOR org IN organizations
-          FILTER org._key IN orgKeys
+          ${filterString}
           LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
           ${hasNextPageFilter}
           SORT ${sortByField} org._key ${sortString} LIMIT 1
@@ -411,16 +447,16 @@ export const orgLoaderConnectionsByUserId = (
       
       LET hasPreviousPage = (LENGTH(
         FOR org IN organizations
-          FILTER org._key IN orgKeys
+          ${filterString}
           LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
           ${hasPreviousPageFilter}
           SORT ${sortByField} org._key ${sortString} LIMIT 1
           RETURN org
       ) > 0 ? true : false)
       
-      RETURN { 
+      RETURN {
         "organizations": retrievedOrgs,
-        "totalCount": LENGTH(orgKeys),
+        "totalCount": ${totalCount},
         "hasNextPage": hasNextPage, 
         "hasPreviousPage": hasPreviousPage, 
         "startKey": FIRST(retrievedOrgs)._key, 

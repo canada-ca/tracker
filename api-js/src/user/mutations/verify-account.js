@@ -100,8 +100,8 @@ export const verifyAccount = new mutationWithClientMutationId({
     try {
       await query`
         UPSERT { _key: ${user._key} }
-          INSERT { emailValidated: true, tfaSendMethod: 'email' }
-          UPDATE { emailValidated: true, tfaSendMethod: 'email' }
+          INSERT { emailValidated: true }
+          UPDATE { emailValidated: true }
           IN users
       `
     } catch (err) {

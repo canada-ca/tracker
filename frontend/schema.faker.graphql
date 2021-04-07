@@ -681,6 +681,10 @@ type Domain implements Node {
   status: DomainStatus
   # The organization that this domain belongs to.
   organizations(
+    # Ordering options for organization connections
+    orderBy: OrganizationOrder
+    # String argument used to search for organizations.
+    search: String
     after: String
     first: Int
     before: String
@@ -1111,6 +1115,8 @@ type Mutation {
   verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
   # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
   authenticate(input: AuthenticateInput!): AuthenticatePayload
+  # This mutation allows for users to remove a phone number from their account.
+  removePhoneNumber(input: RemovePhoneNumberInput!): RemovePhoneNumberPayload
   # This mutation allows the user to take the token they received in their email to reset their password.
   resetPassword(input: ResetPasswordInput!): ResetPasswordPayload
   # This mutation is used for re-sending a verification email if it failed during user creation.
@@ -1191,8 +1197,12 @@ type Organization implements Node {
   )
   # The domains which are associated with this organization.
   domains(
+    # Ordering options for domain connections.
+    orderBy: DomainOrder
     # Limit domains to those that belong to an organization that has ownership.
     ownership: Boolean
+    # String used to search for domains.
+    search: String
     after: String
     first: Int
     before: String
@@ -1385,9 +1395,12 @@ type Query {
   ): Domain
   # Select domains a user has access to.
   findMyDomains(
+    # Ordering options for domain connections.
+    orderBy: DomainOrder
     # Limit domains to those that belong to an organization that has ownership.
     ownership: Boolean
-    orderBy: DomainOrder
+    # String used to search for domains.
+    search: String
     after: String
     first: Int
     before: String
@@ -1395,7 +1408,10 @@ type Query {
   ): DomainConnection
   # Select organizations a user has access to.
   findMyOrganizations(
+    # Ordering options for organization connections
     orderBy: OrganizationOrder
+    # String argument used to search for organizations.
+    search: String
     after: String
     first: Int
     before: String
@@ -1522,6 +1538,34 @@ input RemoveOrganizationInput {
 type RemoveUserFromOrgPayload {
   # `RemoveUserFromOrgUnion` returning either a `RemoveUserFromOrgResult`, or `AffiliationError` object.
   result: RemoveUserFromOrgUnion
+  clientMutationId: String
+}
+
+type RemovePhoneNumberPayload {
+  # `RemovePhoneNumberUnion` returning either a `RemovePhoneNumberResult`, or `RemovePhoneNumberError` object.
+  result: RemovePhoneNumberUnion
+  clientMutationId: String
+}
+
+# This union is used with the `RemovePhoneNumber` mutation, allowing for users to remove their phone number, and support any errors that may occur
+union RemovePhoneNumberUnion = RemovePhoneNumberError | RemovePhoneNumberResult
+
+# This object is used to inform the user if any errors occurred while removing their phone number.
+type RemovePhoneNumberError {
+  # Error code to inform user what the issue is related to.
+  code: Int
+
+  # Description of the issue that was encountered.
+  description: String
+}
+
+# This object is used to inform the user that no errors were encountered while removing their phone number.
+type RemovePhoneNumberResult {
+  # Informs the user if the phone number removal was successful.
+  status: String
+}
+
+input RemovePhoneNumberInput {
   clientMutationId: String
 }
 
@@ -2345,15 +2389,20 @@ input VerifyAccountInput {
   clientMutationId: String
 }
 
-input VerifyOrganizationInput {
-  # The global id of the organization to be verified.
-  orgId: ID!
+type VerifyOrganizationPayload {
+  # `VerifyOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.
+  result: VerifyOrganizationUnion
   clientMutationId: String
 }
 
-type VerifyOrganizationPayload {
-  # Status of organization verification.
-  status: String
+# This union is used with the `VerifyOrganization` mutation,
+# allowing for super admins to verify an organization,
+# and support any errors that may occur
+union VerifyOrganizationUnion = OrganizationError | OrganizationResult
+
+input VerifyOrganizationInput {
+  # The global id of the organization to be verified.
+  orgId: ID!
   clientMutationId: String
 }
 

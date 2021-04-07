@@ -367,6 +367,160 @@ describe('given the load organization connections by user id function', () => {
             expect(orgs).toEqual(expectedStructure)
           })
         })
+        describe('using the search argument', () => {
+          beforeEach(async () => {
+            // This is used to sync the view before running the test below
+            await query`
+              FOR org IN organizationSearch
+                SEARCH ANALYZER(
+                  org.orgDetails.en.acronym == ""
+                  OR org.orgDetails.fr.acronym == ""
+                  OR org.orgDetails.en.name == ""
+                  OR org.orgDetails.fr.name == ""
+                , "text_en")
+                OPTIONS { waitForSync: true }
+                RETURN org._key
+            `
+          })
+          describe('search based on orgs name', () => {
+            it('returns the filtered organizations', async () => {
+              const orgLoader = orgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgOne._key)
+
+              const connectionLoader = orgLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                'en',
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: 5,
+                search: 'one',
+              }
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organizations', expectedOrg._key),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 1,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('organizations', expectedOrg._key),
+                  endCursor: toGlobalId('organizations', expectedOrg._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('search based on orgs acronym', () => {
+            it('returns the filtered organizations', async () => {
+              const orgLoader = orgLoaderByKey(query, 'en')
+              const expectedOrg = await orgLoader.load(orgOne._key)
+
+              const connectionLoader = orgLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                'en',
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: 5,
+                search: 'ONE',
+              }
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organizations', expectedOrg._key),
+                    node: {
+                      ...expectedOrg,
+                    },
+                  },
+                ],
+                totalCount: 1,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('organizations', expectedOrg._key),
+                  endCursor: toGlobalId('organizations', expectedOrg._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+          describe('search field is left empty', () => {
+            it('returns unfiltered organizations', async () => {
+              const orgLoader = orgLoaderByKey(query, 'en')
+              const expectedOrgs = await orgLoader.loadMany([
+                orgOne._key,
+                orgTwo._key,
+              ])
+
+              const connectionLoader = orgLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                'en',
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: 5,
+                search: '',
+              }
+              const orgs = await connectionLoader({
+                ...connectionArgs,
+              })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                    node: {
+                      ...expectedOrgs[0],
+                    },
+                  },
+                  {
+                    cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                    node: {
+                      ...expectedOrgs[1],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'organizations',
+                    expectedOrgs[0]._key,
+                  ),
+                  endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
+        })
         describe('using the orderBy field', () => {
           let orgThree
           beforeEach(async () => {

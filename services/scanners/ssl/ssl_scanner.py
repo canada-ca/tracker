@@ -28,7 +28,9 @@ from sslyze.server_setting import (
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-QUEUE_URL = os.getenv("RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local")
+QUEUE_URL = os.getenv(
+    "RESULT_QUEUE_URL", "http://result-queue.scanners.svc.cluster.local"
+)
 
 
 class TlsVersionEnum(Enum):
@@ -53,25 +55,20 @@ def get_server_info(domain):
     :return: Server connectivity information
     """
 
-    try:
-        # Retrieve server information, look-up IP address
-        server_location = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
-            domain, 443
-        )
-        server_tester = ServerConnectivityTester()
+    # Retrieve server information, look-up IP address
+    server_location = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
+        domain, 443
+    )
+    server_tester = ServerConnectivityTester()
 
-        logging.info(
-            f"Testing connectivity with {server_location.hostname}:{server_location.port}..."
-        )
-        # Test connection to server and retrieve info
-        server_info = server_tester.perform(server_location)
-        logging.info("Server Info %s\n" % server_info)
+    logging.info(
+        f"Testing connectivity with {server_location.hostname}:{server_location.port}..."
+    )
+    # Test connection to server and retrieve info
+    server_info = server_tester.perform(server_location)
+    logging.info("Server Info %s\n" % server_info)
 
-        return server_info
-
-    except ConnectionToServerFailed as e:
-        # Could not establish a TLS connection to the server
-        return None
+    return server_info
 
 
 def get_supported_tls(highest_supported, domain):
@@ -92,32 +89,31 @@ def get_supported_tls(highest_supported, domain):
 
         try:
             # Attempt connection
+            # If connection fails, exception will be raised, causing the failure to be
+            # logged and the version to not be appended to the supported list
             ctx = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(
                 domain, 443
             )
             cfg = ServerNetworkConfiguration(domain)
             connx = SslConnection(ctx, cfg, method, True)
-            response = connx.connect(domain)
+            connx.connect(domain)
             supported.append(version)
         except Exception as e:
-            logging.info(
-                f"Failed to connect using %{version}: ({type(e)}) - {e}"
-            )
+            logging.info(f"Failed to connect using %{version}: ({type(e)}) - {e}")
 
     return supported
 
 
 def scan_ssl(domain):
-
-    server_info = get_server_info(domain)
-
-    if server_info is None:
+    try:
+        server_info = get_server_info(domain)
+    except ConnectionToServerFailed as e:
+        logging.error(f"Failed to connect to {domain}: {e.error_message}")
         return {}
-    else:
-        # Retrieve highest TLS supported from retrieved server info
-        highest_tls_supported = str(
-            server_info.tls_probing_result.highest_tls_version_supported
-        ).split(".")[1]
+
+    highest_tls_supported = str(
+        server_info.tls_probing_result.highest_tls_version_supported
+    ).split(".")[1]
 
     tls_supported = get_supported_tls(highest_tls_supported, domain)
 
@@ -149,7 +145,7 @@ def scan_ssl(domain):
         server_info=server_info, scan_commands=designated_scans
     )
 
-    scanner.queue_scan(scan_request)
+    scanner.start_scans([scan_request])
 
     # Wait for asynchronous scans to complete
     # get_results() returns a generator with a single "ServerScanResult". We only want that object
@@ -160,7 +156,6 @@ def scan_ssl(domain):
         "TLS": {
             "supported": tls_supported,
             "accepted_cipher_list": set(),
-            "preferred_cipher": None,
             "rejected_cipher_list": set(),
         }
     }
@@ -183,13 +178,6 @@ def scan_ssl(domain):
                 rejected_cipher_list.append(c.cipher_suite.name)
 
             res["TLS"]["rejected_cipher_list"] = rejected_cipher_list
-
-            if result.cipher_suite_preferred_by_server is not None:
-                # We want the preferred cipher for the highest SSL/TLS version supported
-                if str(result.tls_version_used).split(".")[1] == highest_tls_supported:
-                    res["TLS"][
-                        "preferred_cipher"
-                    ] = result.cipher_suite_preferred_by_server.cipher_suite.name
 
         elif name == "openssl_ccs_injection":
             logging.info("Parsing OpenSSL CCS Injection Vulnerability Scan results...")
@@ -247,10 +235,13 @@ def process_results(results):
 
         report["cipher_list"] = results["TLS"]["accepted_cipher_list"]
         report["signature_algorithm"] = results.get("signature_algorithm", "unknown")
-        report["preferred_cipher"] = results["TLS"]["preferred_cipher"]
         report["heartbleed"] = results.get("is_vulnerable_to_heartbleed", False)
-        report["openssl_ccs_injection"] = results.get("is_vulnerable_to_ccs_injection", False)
-        report["supports_ecdh_key_exchange"] = results.get("supports_ecdh_key_exchange", False)
+        report["openssl_ccs_injection"] = results.get(
+            "is_vulnerable_to_ccs_injection", False
+        )
+        report["supports_ecdh_key_exchange"] = results.get(
+            "supports_ecdh_key_exchange", False
+        )
         report["supported_curves"] = results["supported_curves"]
 
     logging.info(f"Processed SSL scan results: {str(report)}")
@@ -293,7 +284,7 @@ def Server(server_client=requests):
                         "results": processed_results,
                         "scan_type": "ssl",
                         "uuid": uuid,
-                        "domain_key": domain_key
+                        "domain_key": domain_key,
                     }
                 )
                 logging.info(f"Scan results: {str(scan_results)}")
@@ -305,7 +296,13 @@ def Server(server_client=requests):
             msg = f"The designated domain could not be resolved: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             dispatch_results(
-                {"scan_type": "ssl", "uuid": uuid, "domain_key": domain_key, "results": {"missing": True}}, server_client
+                {
+                    "scan_type": "ssl",
+                    "uuid": uuid,
+                    "domain_key": domain_key,
+                    "results": {"missing": True},
+                },
+                server_client,
             )
             return PlainTextResponse(msg)
 
@@ -315,7 +312,13 @@ def Server(server_client=requests):
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
             dispatch_results(
-                {"scan_type": "ssl", "uuid": uuid, "domain_key": domain_key, "results": {"missing": True}}, server_client
+                {
+                    "scan_type": "ssl",
+                    "uuid": uuid,
+                    "domain_key": domain_key,
+                    "results": {"missing": True},
+                },
+                server_client,
             )
             return PlainTextResponse(msg)
 

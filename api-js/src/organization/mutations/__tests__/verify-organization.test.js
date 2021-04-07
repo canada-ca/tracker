@@ -155,7 +155,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', org._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -189,8 +197,10 @@ describe('removing an organization', () => {
           const expectedResponse = {
             data: {
               verifyOrganization: {
-                status:
-                  'Successfully verified organization: treasury-board-secretariat.',
+                result: {
+                  status:
+                    'Successfully verified organization: treasury-board-secretariat.',
+                },
               },
             },
           }
@@ -232,7 +242,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', org._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -266,7 +284,9 @@ describe('removing an organization', () => {
           const expectedResponse = {
             data: {
               verifyOrganization: {
-                status: 'todo',
+                result: {
+                  status: 'todo',
+                },
               },
             },
           }
@@ -346,7 +366,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', org._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -377,12 +405,18 @@ describe('removing an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Organization has already been verified.'),
-          ]
+          const error = {
+            data: {
+              verifyOrganization: {
+                result: {
+                  code: 400,
+                  description: 'Organization has already been verified.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
-
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to verify organization: ${org._key}, however the organization has already been verified.`,
           ])
@@ -435,7 +469,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', -1)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -466,12 +508,18 @@ describe('removing an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to verify unknown organization.'),
-          ]
+          const error = {
+            data: {
+              verifyOrganization: {
+                result: {
+                  code: 400,
+                  description: 'Unable to verify unknown organization.',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
-
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to verify organization: -1, however no organizations is associated with that id.`,
           ])
@@ -525,7 +573,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -555,15 +611,19 @@ describe('removing an organization', () => {
                 },
               },
             )
+            const error = {
+              data: {
+                verifyOrganization: {
+                  result: {
+                    code: 403,
+                    description:
+                      'Permission Denied: Please contact super admin for help with verifying this organization.',
+                  },
+                },
+              },
+            }
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact super admin for help with verifying this organization.',
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to verify organization: ${org._key}, however they do not have the correct permission level. Permission: admin`,
             ])
@@ -616,7 +676,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -647,14 +715,19 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Permission Denied: Please contact super admin for help with verifying this organization.',
-              ),
-            ]
+            const error = {
+              data: {
+                verifyOrganization: {
+                  result: {
+                    code: 403,
+                    description:
+                      'Permission Denied: Please contact super admin for help with verifying this organization.',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
-
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to verify organization: ${org._key}, however they do not have the correct permission level. Permission: user`,
             ])
@@ -718,7 +791,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -782,7 +863,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -890,7 +979,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', org._key)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -921,10 +1018,18 @@ describe('removing an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              verifyOrganization: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
-
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to verify organization: ${org._key}, however the organization has already been verified.`,
           ])
@@ -977,7 +1082,15 @@ describe('removing an organization', () => {
                     orgId: "${toGlobalId('organizations', -1)}"
                   }
                 ) {
-                  status
+                  result {
+                    ... on OrganizationResult {
+                      status
+                    }
+                    ... on OrganizationError {
+                      code
+                      description
+                    }
+                  }
                 }
               }
             `,
@@ -1008,10 +1121,18 @@ describe('removing an organization', () => {
             },
           )
 
-          const error = [new GraphQLError('todo')]
+          const error = {
+            data: {
+              verifyOrganization: {
+                result: {
+                  code: 400,
+                  description: 'todo',
+                },
+              },
+            },
+          }
 
-          expect(response.errors).toEqual(error)
-
+          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: ${user._key} attempted to verify organization: -1, however no organizations is associated with that id.`,
           ])
@@ -1065,7 +1186,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1096,10 +1225,18 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                verifyOrganization: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
-
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to verify organization: ${org._key}, however they do not have the correct permission level. Permission: admin`,
             ])
@@ -1152,7 +1289,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1183,10 +1328,18 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [new GraphQLError('todo')]
+            const error = {
+              data: {
+                verifyOrganization: {
+                  result: {
+                    code: 403,
+                    description: 'todo',
+                  },
+                },
+              },
+            }
 
-            expect(response.errors).toEqual(error)
-
+            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to verify organization: ${org._key}, however they do not have the correct permission level. Permission: user`,
             ])
@@ -1250,7 +1403,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,
@@ -1310,7 +1471,15 @@ describe('removing an organization', () => {
                       orgId: "${toGlobalId('organizations', org._key)}"
                     }
                   ) {
-                    status
+                    result {
+                      ... on OrganizationResult {
+                        status
+                      }
+                      ... on OrganizationError {
+                        code
+                        description
+                      }
+                    }
                   }
                 }
               `,

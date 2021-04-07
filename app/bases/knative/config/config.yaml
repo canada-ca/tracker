@@ -21,7 +21,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: https-scanner
-          image: gcr.io/track-compliance/scanners/https # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/https:master-36359cc # {"$imagepolicy": "flux-system:https-scanner"}
 
 ---
 
@@ -48,7 +48,7 @@ spec:
       containerConcurrency: 1
       containers:
         - name: result-processor
-          image: gcr.io/track-compliance/scanners/results # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/results:master-bd31de0 # {"$imagepolicy": "flux-system:result-processor"}
           env:
             - name: DB_USER
               valueFrom:
@@ -109,7 +109,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: ssl-scanner
-          image: gcr.io/track-compliance/scanners/ssl # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/ssl:master-36359cc # {"$imagepolicy": "flux-system:ssl-scanner"}
 
 ---
 
@@ -136,7 +136,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: dns-scanner
-          image: gcr.io/track-compliance/scanners/dns # The URL to the image of the app
+          image: gcr.io/track-compliance/scanners/dns:master-36359cc # {"$imagepolicy": "flux-system:dns-scanner"}
 
 ---
 
