@@ -2,12 +2,12 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const affiliationConnectionLoaderByOrgId = (
+export const affiliationConnectionLoaderByOrgId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ orgId, after, before, first, last, orderBy }) => {
+}) => async ({ orgId, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))

@@ -27,7 +27,7 @@ import {
 } from './notify'
 
 import {
-  affiliationLoaderByKey,
+  loadAffiliationByKey,
   affiliationConnectionLoaderByUserId,
   affiliationConnectionLoaderByOrgId,
 } from './affiliation/loaders'
@@ -303,7 +303,7 @@ export const createContext = ({ context, req: request, res: response }) => {
       ),
       userLoaderByUserName: userLoaderByUserName(query, userKey, i18n),
       userLoaderByKey: userLoaderByKey(query, userKey, i18n),
-      affiliationLoaderByKey: affiliationLoaderByKey(query, userKey, i18n),
+      loadAffiliationByKey: loadAffiliationByKey({ query, userKey, i18n }),
       affiliationConnectionLoaderByUserId: affiliationConnectionLoaderByUserId(
         query,
         request.language,
