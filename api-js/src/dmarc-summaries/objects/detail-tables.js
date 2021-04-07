@@ -35,9 +35,9 @@ export const detailTablesType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { dmarcFailureLoaderConnectionsBySumId } },
+        { loaders: { loadDmarcFailConnectionsBySumId } },
       ) => {
-        const dmarcFailures = await dmarcFailureLoaderConnectionsBySumId({
+        const dmarcFailures = await loadDmarcFailConnectionsBySumId({
           summaryId: _id,
           ...args,
         })

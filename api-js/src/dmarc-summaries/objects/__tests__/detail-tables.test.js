@@ -4,7 +4,7 @@ import { toGlobalId } from 'graphql-relay'
 import { databaseOptions } from '../../../../database-options'
 import {
   loadDkimFailConnectionsBySumId,
-  dmarcFailureLoaderConnectionsBySumId,
+  loadDmarcFailConnectionsBySumId,
   fullPassLoaderConnectionsBySumId,
   spfFailureLoaderConnectionsBySumId,
 } from '../../loaders'
@@ -222,9 +222,9 @@ describe('testing the detailTables gql object', () => {
             { first: 1 },
             {
               loaders: {
-                dmarcFailureLoaderConnectionsBySumId: dmarcFailureLoaderConnectionsBySumId(
+                loadDmarcFailConnectionsBySumId: loadDmarcFailConnectionsBySumId({
                   query,
-                ),
+                }),
               },
             },
           ),

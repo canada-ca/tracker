@@ -33,7 +33,7 @@ import {
 } from './affiliation/loaders'
 import {
   loadDkimFailConnectionsBySumId,
-  dmarcFailureLoaderConnectionsBySumId,
+  loadDmarcFailConnectionsBySumId,
   dmarcSumLoaderConnectionsByUserId,
   dmarcSummaryEdgeLoaderByDomainIdPeriod,
   dmarcSumLoaderByKey,
@@ -163,12 +163,12 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      dmarcFailureLoaderConnectionsBySumId: dmarcFailureLoaderConnectionsBySumId(
+      loadDmarcFailConnectionsBySumId: loadDmarcFailConnectionsBySumId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
+      }),
       dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
         query,
         userKey,
