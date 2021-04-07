@@ -16,7 +16,7 @@ import { cleanseInput } from '../../../validators'
 import { Acronym, Slug } from '../../../scalars'
 import { domainLoaderConnectionsByOrgId } from '../../../domain/loaders'
 import { domainConnection } from '../../../domain/objects'
-import { affiliationConnectionLoaderByOrgId } from '../../../affiliation/loaders'
+import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
 import { affiliationConnection } from '../../../affiliation/objects'
 import { organizationType, organizationSummaryType } from '../../objects'
 
@@ -362,12 +362,12 @@ describe('given the organization object', () => {
         it('returns the resolved value', async () => {
           const demoType = organizationType.getFields()
 
-          const loader = affiliationConnectionLoaderByOrgId(
+          const loader = loadAffiliationConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            {},
-          )
+            i18n: {},
+          })
 
           const checkPermission = jest.fn().mockReturnValue('admin')
 
@@ -404,7 +404,7 @@ describe('given the organization object', () => {
               { first: 5 },
               {
                 auth: { checkPermission },
-                loaders: { affiliationConnectionLoaderByOrgId: loader },
+                loaders: { loadAffiliationConnectionsByOrgId: loader },
               },
             ),
           ).resolves.toEqual(expectedResults)
@@ -429,12 +429,12 @@ describe('given the organization object', () => {
           it('returns the resolved value', async () => {
             const demoType = organizationType.getFields()
 
-            const loader = affiliationConnectionLoaderByOrgId(
+            const loader = loadAffiliationConnectionsByOrgId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              {},
-            )
+              i18n: {},
+            })
 
             const checkPermission = jest.fn().mockReturnValue('user')
 
@@ -445,7 +445,7 @@ describe('given the organization object', () => {
                 {
                   i18n,
                   auth: { checkPermission },
-                  loaders: { affiliationConnectionLoaderByOrgId: loader },
+                  loaders: { loadAffiliationConnectionsByOrgId: loader },
                 },
               )
             } catch (err) {
@@ -475,12 +475,12 @@ describe('given the organization object', () => {
           it('returns the resolved value', async () => {
             const demoType = organizationType.getFields()
 
-            const loader = affiliationConnectionLoaderByOrgId(
+            const loader = loadAffiliationConnectionsByOrgId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              {},
-            )
+              i18n: {},
+            })
 
             const checkPermission = jest.fn().mockReturnValue('user')
 
@@ -491,7 +491,7 @@ describe('given the organization object', () => {
                 {
                   i18n,
                   auth: { checkPermission },
-                  loaders: { affiliationConnectionLoaderByOrgId: loader },
+                  loaders: { loadAffiliationConnectionsByOrgId: loader },
                 },
               )
             } catch (err) {

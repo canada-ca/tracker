@@ -6,7 +6,7 @@ import { databaseOptions } from '../../../../database-options'
 import { userRequired } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
-import { affiliationConnectionLoaderByUserId } from '../../../affiliation/loaders'
+import { loadAffiliationConnectionsByUserId } from '../../../affiliation/loaders'
 import { userLoaderByKey } from '../../loaders'
 import { cleanseInput } from '../../../validators'
 
@@ -79,10 +79,12 @@ describe('given the findMe query', () => {
             }),
           },
           loaders: {
-            affiliationConnectionLoaderByUserId: affiliationConnectionLoaderByUserId(
-              query,
-              user._key,
-              cleanseInput,
+            loadAffiliationConnectionsByUserId: loadAffiliationConnectionsByUserId(
+              {
+                query,
+                userKey: user._key,
+                cleanseInput,
+              },
             ),
           },
         },

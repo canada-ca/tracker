@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
-import { affiliationConnectionLoaderByOrgId } from '../../../affiliation/loaders'
+import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
 import { domainLoaderConnectionsByOrgId } from '../../../domain/loaders'
 import { userLoaderByKey } from '../../../user/loaders'
 import { orgLoaderBySlug, orgLoaderByKey } from '../../loaders'
@@ -160,12 +160,12 @@ describe('given findOrganizationBySlugQuery', () => {
                   cleanseInput,
                   i18n,
                 ),
-                affiliationConnectionLoaderByOrgId: affiliationConnectionLoaderByOrgId(
+                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
                   i18n,
-                ),
+                }),
               },
             },
           )
@@ -375,12 +375,12 @@ describe('given findOrganizationBySlugQuery', () => {
                   cleanseInput,
                   i18n,
                 ),
-                affiliationConnectionLoaderByOrgId: affiliationConnectionLoaderByOrgId(
+                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
                   i18n,
-                ),
+                }),
               },
             },
           )
