@@ -7,7 +7,7 @@ export function createCache() {
     typePolicies: {
       Query: {
         fields: {
-          findMyDomains: relayStylePagination(['orderBy']),
+          findMyDomains: relayStylePagination(['orderBy', 'search']),
           findMyOrganizations: relayStylePagination(['orderBy']),
         },
       },
