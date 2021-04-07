@@ -2,15 +2,15 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const fullPassLoaderConnectionsBySumId = (
+export const loadFullPassConnectionsBySumId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ after, before, first, last, summaryId }) => {
+}) => async ({ after, before, first, last, summaryId }) => {
   if (typeof summaryId === 'undefined') {
     console.warn(
-      `SummaryId was undefined when user: ${userKey} attempted to load full passes in fullPassLoaderConnectionsBySumId.`,
+      `SummaryId was undefined when user: ${userKey} attempted to load full passes in loadFullPassConnectionsBySumId.`,
     )
     throw new Error(i18n._(t`Unable to load full pass data. Please try again.`))
   }
@@ -30,7 +30,7 @@ export const fullPassLoaderConnectionsBySumId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: fullPassLoaderConnectionsBySumId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadFullPassConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(
@@ -39,7 +39,7 @@ export const fullPassLoaderConnectionsBySumId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: fullPassLoaderConnectionsBySumId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadFullPassConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(
@@ -51,7 +51,7 @@ export const fullPassLoaderConnectionsBySumId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: fullPassLoaderConnectionsBySumId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadFullPassConnectionsBySumId.`,
       )
       throw new Error(
         i18n._(
@@ -62,7 +62,7 @@ export const fullPassLoaderConnectionsBySumId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: fullPassLoaderConnectionsBySumId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadFullPassConnectionsBySumId.`,
       )
       throw new Error(
         i18n._(
@@ -78,7 +78,7 @@ export const fullPassLoaderConnectionsBySumId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: fullPassLoaderConnectionsBySumId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadFullPassConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -135,7 +135,7 @@ export const fullPassLoaderConnectionsBySumId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to gather full passes in fullPassLoaderConnectionsBySumId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather full passes in loadFullPassConnectionsBySumId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load full pass data. Please try again.`))
   }
@@ -145,7 +145,7 @@ export const fullPassLoaderConnectionsBySumId = (
     fullPassInfo = await requestedFullPassInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather full passes in fullPassLoaderConnectionsBySumId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather full passes in loadFullPassConnectionsBySumId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load full pass data. Please try again.`))
   }

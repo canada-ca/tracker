@@ -37,7 +37,7 @@ import {
   loadDmarcSummaryConnectionsByUserId,
   loadDmarcSummaryEdgeByDomainIdAndPeriod,
   loadDmarcSummaryByKey,
-  fullPassLoaderConnectionsBySumId,
+  loadFullPassConnectionsBySumId,
   spfFailureLoaderConnectionsBySumId,
   loadStartDateFromPeriod,
   dmarcYearlySumEdgeLoader,
@@ -184,12 +184,12 @@ export const createContext = ({ context, req: request, res: response }) => {
         },
       ),
       loadDmarcSummaryByKey: loadDmarcSummaryByKey({ query, userKey, i18n }),
-      fullPassLoaderConnectionsBySumId: fullPassLoaderConnectionsBySumId(
+      loadFullPassConnectionsBySumId: loadFullPassConnectionsBySumId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
+      }),
       spfFailureLoaderConnectionsBySumId: spfFailureLoaderConnectionsBySumId(
         query,
         userKey,

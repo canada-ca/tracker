@@ -52,9 +52,9 @@ export const detailTablesType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { fullPassLoaderConnectionsBySumId } },
+        { loaders: { loadFullPassConnectionsBySumId } },
       ) => {
-        const fullPasses = await fullPassLoaderConnectionsBySumId({
+        const fullPasses = await loadFullPassConnectionsBySumId({
           summaryId: _id,
           ...args,
         })

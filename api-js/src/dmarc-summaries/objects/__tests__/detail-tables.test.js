@@ -5,7 +5,7 @@ import { databaseOptions } from '../../../../database-options'
 import {
   loadDkimFailConnectionsBySumId,
   loadDmarcFailConnectionsBySumId,
-  fullPassLoaderConnectionsBySumId,
+  loadFullPassConnectionsBySumId,
   spfFailureLoaderConnectionsBySumId,
 } from '../../loaders'
 import { detailTablesType } from '../detail-tables'
@@ -222,9 +222,11 @@ describe('testing the detailTables gql object', () => {
             { first: 1 },
             {
               loaders: {
-                loadDmarcFailConnectionsBySumId: loadDmarcFailConnectionsBySumId({
-                  query,
-                }),
+                loadDmarcFailConnectionsBySumId: loadDmarcFailConnectionsBySumId(
+                  {
+                    query,
+                  },
+                ),
               },
             },
           ),
@@ -268,9 +270,9 @@ describe('testing the detailTables gql object', () => {
             { first: 1 },
             {
               loaders: {
-                fullPassLoaderConnectionsBySumId: fullPassLoaderConnectionsBySumId(
+                loadFullPassConnectionsBySumId: loadFullPassConnectionsBySumId({
                   query,
-                ),
+                }),
               },
             },
           ),
