@@ -1183,8 +1183,8 @@ msgid "No Domains"
 msgstr "Aucun domaine"
 
 #: src/GuidanceTagList.js:80
-#~ msgid "No Guidance tags were found for this scan category"
-#~ msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de balayage."
+msgid "No guidance tags were found for this scan category"
+msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de balayage."
 
 #: src/Organizations.js:69
 msgid "No Organizations"
@@ -1233,10 +1233,6 @@ msgstr "Aucune donnée pour le tableau des défaillances du SPF par adresse IP"
 #: src/DomainList.js:12
 msgid "No domains scanned yet."
 msgstr "Aucun domaine n'a encore été scanné."
-
-#: src/GuidanceTagList.js:80
-msgid "No guidance tags were found for this scan category"
-msgstr ""
 
 #: src/Doughnut.js:63
 msgid "No scan data for this organization."

@@ -1,6 +1,15 @@
 import React from 'react'
 import { array, string } from 'prop-types'
-import { Box, Divider, Heading, Icon, Stack, Text } from '@chakra-ui/core'
+import {
+  Box,
+  Divider,
+  Heading,
+  Icon,
+  Stack,
+  Text,
+  Collapse,
+  Button,
+} from '@chakra-ui/core'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 import { Trans } from '@lingui/macro'
 
@@ -10,6 +19,13 @@ export function GuidanceTagList({
   neutralTags,
   selector,
 }) {
+  const [showPosi, setShowPosi] = React.useState(true)
+  const [showNega, setShowNega] = React.useState(true)
+  const [showNeut, setShowNeut] = React.useState(true)
+  const handleShowPosi = () => setShowPosi(!showPosi)
+  const handleShowNega = () => setShowNega(!showNega)
+  const handleShowNeut = () => setShowNeut(!showNeut)
+
   const selectorHeading = (
     <Heading as="h3" size="sm">
       {selector}
@@ -92,7 +108,10 @@ export function GuidanceTagList({
           </Text>
         </Stack>
         <Text fontWeight="bold">
-          <Trans>If you believe this was caused by a problem with Tracker, please use the "Report an Issue" link below</Trans>
+          <Trans>
+            If you believe this was caused by a problem with Tracker, please use
+            the "Report an Issue" link below
+          </Trans>
         </Text>
       </Box>
     </Stack>
@@ -101,11 +120,50 @@ export function GuidanceTagList({
   return (
     <Box my="2">
       {selectorHeading}
-      {positiveTagList}
+      {positiveTagList.length && (
+        <Box>
+          <Button
+            mb="2"
+            onClick={handleShowPosi}
+            bg="strong"
+            color="white"
+            w="100%"
+          >
+            <Trans>Positive Tags</Trans>
+          </Button>
+          <Collapse isOpen={showPosi}>{positiveTagList}</Collapse>
+        </Box>
+      )}
       <Divider borderColor="gray.50" />
-      {neutralTagList}
+      {neutralTagList.length && (
+        <Box>
+          <Button
+            mb="2"
+            onClick={handleShowNeut}
+            bg="info"
+            color="white"
+            w="100%"
+          >
+            <Trans>Neutral Tags</Trans>
+          </Button>
+          <Collapse isOpen={showNeut}>{neutralTagList}</Collapse>
+        </Box>
+      )}
       <Divider borderColor="gray.50" />
-      {negativeTagList}
+      {negativeTagList.length && (
+        <Box>
+          <Button
+            mb="2"
+            onClick={handleShowNega}
+            bg="weak"
+            color="white"
+            w="100%"
+          >
+            <Trans>Negative Tags</Trans>
+          </Button>
+          <Collapse isOpen={showNega}>{negativeTagList}</Collapse>
+        </Box>
+      )}
       {!positiveTagList.length &&
         !neutralTagList.length &&
         !negativeTagList.length &&
