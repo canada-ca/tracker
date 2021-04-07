@@ -32,7 +32,7 @@ import {
   loadAffiliationConnectionsByOrgId,
 } from './affiliation/loaders'
 import {
-  dkimFailureLoaderConnectionsBySumId,
+  loadDkimFailConnectionsBySumId,
   dmarcFailureLoaderConnectionsBySumId,
   dmarcSumLoaderConnectionsByUserId,
   dmarcSummaryEdgeLoaderByDomainIdPeriod,
@@ -157,12 +157,12 @@ export const createContext = ({ context, req: request, res: response }) => {
     },
     loaders: {
       chartSummaryLoaderByKey: chartSummaryLoaderByKey(query, userKey, i18n),
-      dkimFailureLoaderConnectionsBySumId: dkimFailureLoaderConnectionsBySumId(
+      loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
+      }),
       dmarcFailureLoaderConnectionsBySumId: dmarcFailureLoaderConnectionsBySumId(
         query,
         userKey,

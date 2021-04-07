@@ -18,9 +18,9 @@ export const detailTablesType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { dkimFailureLoaderConnectionsBySumId } },
+        { loaders: { loadDkimFailConnectionsBySumId } },
       ) => {
-        const dkimFailures = await dkimFailureLoaderConnectionsBySumId({
+        const dkimFailures = await loadDkimFailConnectionsBySumId({
           summaryId: _id,
           ...args,
         })
