@@ -14,7 +14,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { Acronym, Slug } from '../../../scalars'
-import { domainLoaderConnectionsByOrgId } from '../../../domain/loaders'
+import { loadDomainConnectionsByOrgId } from '../../../domain/loaders'
 import { domainConnection } from '../../../domain/objects'
 import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
 import { affiliationConnection } from '../../../affiliation/objects'
@@ -318,12 +318,12 @@ describe('given the organization object', () => {
       it('returns the resolved value', async () => {
         const demoType = organizationType.getFields()
 
-        const loader = domainLoaderConnectionsByOrgId(
+        const loader = loadDomainConnectionsByOrgId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const expectedResult = {
           edges: [
@@ -352,7 +352,7 @@ describe('given the organization object', () => {
           demoType.domains.resolve(
             { _id: org._id },
             { first: 1 },
-            { loaders: { domainLoaderConnectionsByOrgId: loader } },
+            { loaders: { loadDomainConnectionsByOrgId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

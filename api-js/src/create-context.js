@@ -45,7 +45,7 @@ import {
 import {
   loadDomainByKey,
   loadDomainByDomain,
-  domainLoaderConnectionsByOrgId,
+  loadDomainConnectionsByOrgId,
   domainLoaderConnectionsByUserId,
 } from './domain/loaders'
 import {
@@ -204,12 +204,12 @@ export const createContext = ({ context, req: request, res: response }) => {
       loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({ query, userKey, i18n }),
       loadDomainByDomain: loadDomainByDomain({ query, userKey, i18n }),
       loadDomainByKey: loadDomainByKey({ query, userKey, i18n }),
-      domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
+      loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
+      }),
       domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
         query,
         userKey,

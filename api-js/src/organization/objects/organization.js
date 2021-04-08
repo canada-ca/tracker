@@ -97,9 +97,9 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { domainLoaderConnectionsByOrgId } },
+        { loaders: { loadDomainConnectionsByOrgId } },
       ) => {
-        const connections = await domainLoaderConnectionsByOrgId({
+        const connections = await loadDomainConnectionsByOrgId({
           orgId: _id,
           ...args,
         })

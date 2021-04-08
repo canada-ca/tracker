@@ -11,7 +11,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
 import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
-import { domainLoaderConnectionsByOrgId } from '../../../domain/loaders'
+import { loadDomainConnectionsByOrgId } from '../../../domain/loaders'
 import { userLoaderByKey } from '../../../user/loaders'
 import { orgLoaderBySlug, orgLoaderByKey } from '../../loaders'
 
@@ -154,18 +154,20 @@ describe('given findOrganizationBySlugQuery', () => {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
                 userLoaderByKey: userLoaderByKey(query),
-                domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
-                  query,
-                  user._key,
-                  cleanseInput,
-                  i18n,
-                ),
-                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
+                loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   i18n,
                 }),
+                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId(
+                  {
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                  },
+                ),
               },
             },
           )
@@ -369,18 +371,20 @@ describe('given findOrganizationBySlugQuery', () => {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
-                domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
-                  query,
-                  user._key,
-                  cleanseInput,
-                  i18n,
-                ),
-                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId({
+                loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   i18n,
                 }),
+                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId(
+                  {
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                  },
+                ),
               },
             },
           )

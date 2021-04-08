@@ -6,7 +6,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderConnectionsByOrgId, loadDomainByKey } from '../index'
+import { loadDomainConnectionsByOrgId, loadDomainByKey } from '../index'
 import { toGlobalId } from 'graphql-relay'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -113,11 +113,11 @@ describe('given the load domain connection using org id function', () => {
   describe('given a successful load', () => {
     describe('using after cursor', () => {
       it('returns a domain', async () => {
-        const connectionLoader = domainLoaderConnectionsByOrgId(
+        const connectionLoader = loadDomainConnectionsByOrgId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-        )
+        })
 
         const domainLoader = loadDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
@@ -160,11 +160,11 @@ describe('given the load domain connection using org id function', () => {
     })
     describe('using before cursor', () => {
       it('returns a domain', async () => {
-        const connectionLoader = domainLoaderConnectionsByOrgId(
+        const connectionLoader = loadDomainConnectionsByOrgId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-        )
+        })
 
         const domainLoader = loadDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
@@ -207,11 +207,11 @@ describe('given the load domain connection using org id function', () => {
     })
     describe('using first limit', () => {
       it('returns a domain', async () => {
-        const connectionLoader = domainLoaderConnectionsByOrgId(
+        const connectionLoader = loadDomainConnectionsByOrgId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-        )
+        })
 
         const domainLoader = loadDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
@@ -253,11 +253,11 @@ describe('given the load domain connection using org id function', () => {
     })
     describe('using last limit', () => {
       it('returns a domain', async () => {
-        const connectionLoader = domainLoaderConnectionsByOrgId(
+        const connectionLoader = loadDomainConnectionsByOrgId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-        )
+        })
 
         const domainLoader = loadDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
@@ -308,11 +308,11 @@ describe('given the load domain connection using org id function', () => {
         `
       })
       it('returns filtered domains', async () => {
-        const connectionLoader = domainLoaderConnectionsByOrgId(
+        const connectionLoader = loadDomainConnectionsByOrgId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-        )
+        })
 
         const domainLoader = loadDomainByKey({ query })
         const expectedDomain = await domainLoader.load(domain._key)
@@ -349,11 +349,11 @@ describe('given the load domain connection using org id function', () => {
     describe('no organizations are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = domainLoaderConnectionsByOrgId(
+        const connectionLoader = loadDomainConnectionsByOrgId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-        )
+        })
 
         const connectionArgs = {
           first: 10,
@@ -394,11 +394,11 @@ describe('given the load domain connection using org id function', () => {
       })
       describe('ownership is set to true', () => {
         it('returns only a domain belonging to a domain that owns it', async () => {
-          const connectionLoader = domainLoaderConnectionsByOrgId(
+          const connectionLoader = loadDomainConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-          )
+          })
 
           const domainLoader = loadDomainByKey({ query })
           const expectedDomains = await domainLoader.loadMany([
@@ -439,11 +439,11 @@ describe('given the load domain connection using org id function', () => {
       })
       describe('ownership is set to false', () => {
         it('returns all domains', async () => {
-          const connectionLoader = domainLoaderConnectionsByOrgId(
+          const connectionLoader = loadDomainConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-          )
+          })
 
           const domainLoader = loadDomainByKey({ query })
           const expectedDomains = await domainLoader.loadMany([
@@ -517,11 +517,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ...connectionArgs,
@@ -567,11 +567,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -620,11 +620,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -671,11 +671,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -724,11 +724,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -775,11 +775,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -828,11 +828,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -879,11 +879,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -932,11 +932,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -983,11 +983,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1036,11 +1036,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1087,11 +1087,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1140,11 +1140,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1191,11 +1191,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1246,11 +1246,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1297,11 +1297,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1350,11 +1350,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1401,11 +1401,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1454,11 +1454,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1505,11 +1505,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1558,11 +1558,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1609,11 +1609,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1662,11 +1662,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1713,11 +1713,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1766,11 +1766,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1817,11 +1817,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1870,11 +1870,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'ASC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1921,11 +1921,11 @@ describe('given the load domain connection using org id function', () => {
                   direction: 'DESC',
                 },
               }
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              )
+              })
               const domains = await connectionLoader({
                 orgId: org._id,
                 ownership: false,
@@ -1975,12 +1975,12 @@ describe('given the load domain connection using org id function', () => {
     describe('given an unsuccessful load', () => {
       describe('limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = domainLoaderConnectionsByOrgId(
+          const connectionLoader = loadDomainConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {}
           try {
@@ -1997,18 +1997,18 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDomainConnectionsByOrgId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = domainLoaderConnectionsByOrgId(
+          const connectionLoader = loadDomainConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -2028,19 +2028,19 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDomainConnectionsByOrgId.`,
           ])
         })
       })
       describe('limits are set below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByOrgId(
+            const connectionLoader = loadDomainConnectionsByOrgId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -5,
@@ -2059,18 +2059,18 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByOrgId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDomainConnectionsByOrgId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByOrgId(
+            const connectionLoader = loadDomainConnectionsByOrgId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -5,
@@ -2089,7 +2089,7 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByOrgId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDomainConnectionsByOrgId.`,
             ])
           })
         })
@@ -2097,12 +2097,12 @@ describe('given the load domain connection using org id function', () => {
       describe('limits are set above maximum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByOrgId(
+            const connectionLoader = loadDomainConnectionsByOrgId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 1000,
@@ -2121,18 +2121,18 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` to 1000 for: domainLoaderConnectionsByOrgId.`,
+              `User: ${user._key} attempted to have \`first\` to 1000 for: loadDomainConnectionsByOrgId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByOrgId(
+            const connectionLoader = loadDomainConnectionsByOrgId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 1000,
@@ -2151,7 +2151,7 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` to 1000 for: domainLoaderConnectionsByOrgId.`,
+              `User: ${user._key} attempted to have \`last\` to 1000 for: loadDomainConnectionsByOrgId.`,
             ])
           })
         })
@@ -2162,12 +2162,12 @@ describe('given the load domain connection using org id function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -2188,7 +2188,7 @@ describe('given the load domain connection using org id function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByOrgId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDomainConnectionsByOrgId.`,
               ])
             })
           })
@@ -2198,12 +2198,12 @@ describe('given the load domain connection using org id function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -2224,7 +2224,7 @@ describe('given the load domain connection using org id function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByOrgId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDomainConnectionsByOrgId.`,
               ])
             })
           })
@@ -2238,12 +2238,12 @@ describe('given the load domain connection using org id function', () => {
             .fn()
             .mockRejectedValue(new Error('Database Error Occurred.'))
 
-          const connectionLoader = domainLoaderConnectionsByOrgId(
+          const connectionLoader = loadDomainConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -2275,12 +2275,12 @@ describe('given the load domain connection using org id function', () => {
           }
           const query = jest.fn().mockReturnValueOnce(cursor)
 
-          const connectionLoader = domainLoaderConnectionsByOrgId(
+          const connectionLoader = loadDomainConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -2321,12 +2321,12 @@ describe('given the load domain connection using org id function', () => {
     describe('given an unsuccessful load', () => {
       describe('limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = domainLoaderConnectionsByOrgId(
+          const connectionLoader = loadDomainConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {}
           try {
@@ -2339,18 +2339,18 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDomainConnectionsByOrgId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = domainLoaderConnectionsByOrgId(
+          const connectionLoader = loadDomainConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -2366,19 +2366,19 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDomainConnectionsByOrgId.`,
           ])
         })
       })
       describe('limits are set below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByOrgId(
+            const connectionLoader = loadDomainConnectionsByOrgId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -5,
@@ -2393,18 +2393,18 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByOrgId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDomainConnectionsByOrgId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByOrgId(
+            const connectionLoader = loadDomainConnectionsByOrgId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -5,
@@ -2419,7 +2419,7 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByOrgId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDomainConnectionsByOrgId.`,
             ])
           })
         })
@@ -2427,12 +2427,12 @@ describe('given the load domain connection using org id function', () => {
       describe('limits are set above maximum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByOrgId(
+            const connectionLoader = loadDomainConnectionsByOrgId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 1000,
@@ -2447,18 +2447,18 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` to 1000 for: domainLoaderConnectionsByOrgId.`,
+              `User: ${user._key} attempted to have \`first\` to 1000 for: loadDomainConnectionsByOrgId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = domainLoaderConnectionsByOrgId(
+            const connectionLoader = loadDomainConnectionsByOrgId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 1000,
@@ -2473,7 +2473,7 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` to 1000 for: domainLoaderConnectionsByOrgId.`,
+              `User: ${user._key} attempted to have \`last\` to 1000 for: loadDomainConnectionsByOrgId.`,
             ])
           })
         })
@@ -2484,12 +2484,12 @@ describe('given the load domain connection using org id function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -2506,7 +2506,7 @@ describe('given the load domain connection using org id function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByOrgId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDomainConnectionsByOrgId.`,
               ])
             })
           })
@@ -2516,12 +2516,12 @@ describe('given the load domain connection using org id function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = domainLoaderConnectionsByOrgId(
+              const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -2538,7 +2538,7 @@ describe('given the load domain connection using org id function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByOrgId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDomainConnectionsByOrgId.`,
               ])
             })
           })
@@ -2552,12 +2552,12 @@ describe('given the load domain connection using org id function', () => {
             .fn()
             .mockRejectedValue(new Error('Database Error Occurred.'))
 
-          const connectionLoader = domainLoaderConnectionsByOrgId(
+          const connectionLoader = loadDomainConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -2587,12 +2587,12 @@ describe('given the load domain connection using org id function', () => {
           }
           const query = jest.fn().mockReturnValueOnce(cursor)
 
-          const connectionLoader = domainLoaderConnectionsByOrgId(
+          const connectionLoader = loadDomainConnectionsByOrgId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
