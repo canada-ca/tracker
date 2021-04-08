@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   loadSslGuidanceTagConnectionsByTagId,
-  sslGuidanceTagLoader,
+  loadSslGuidanceTagByTagId,
 } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -87,7 +87,7 @@ describe('when given the load ssl guidance tag connection function', () => {
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
+        const sslTagLoader = loadSslGuidanceTagByTagId({ query })
         const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
 
         const connectionArgs = {
@@ -132,7 +132,7 @@ describe('when given the load ssl guidance tag connection function', () => {
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
+        const sslTagLoader = loadSslGuidanceTagByTagId({ query })
         const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
 
         const connectionArgs = {
@@ -177,7 +177,7 @@ describe('when given the load ssl guidance tag connection function', () => {
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
+        const sslTagLoader = loadSslGuidanceTagByTagId({ query })
         const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
 
         const connectionArgs = {
@@ -221,7 +221,7 @@ describe('when given the load ssl guidance tag connection function', () => {
 
         const sslGuidanceTags = ['ssl1', 'ssl2']
 
-        const sslTagLoader = sslGuidanceTagLoader(query)
+        const sslTagLoader = loadSslGuidanceTagByTagId({ query })
         const expectedSslTags = await sslTagLoader.loadMany(sslGuidanceTags)
 
         const connectionArgs = {
@@ -276,7 +276,7 @@ describe('when given the load ssl guidance tag connection function', () => {
       describe('ordering on TAG_ID', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
             const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
@@ -321,7 +321,7 @@ describe('when given the load ssl guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
             const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
@@ -368,7 +368,7 @@ describe('when given the load ssl guidance tag connection function', () => {
       describe('ordering on TAG_NAME', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
             const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
@@ -413,7 +413,7 @@ describe('when given the load ssl guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
             const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
@@ -460,7 +460,7 @@ describe('when given the load ssl guidance tag connection function', () => {
       describe('ordering on GUIDANCE', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
             const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
@@ -505,7 +505,7 @@ describe('when given the load ssl guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = sslGuidanceTagLoader(query)
+            const loader = loadSslGuidanceTagByTagId({ query })
             const expectedSslTag = await loader.load('ssl2')
 
             const connectionLoader = loadSslGuidanceTagConnectionsByTagId({
