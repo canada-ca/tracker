@@ -1,3 +1,8 @@
+"""This module primarily functions as a script that connects to the database and
+dispatches a request to the scan queue for each domain and scan type
+
+Needs environment variables (see below for list) seeded from a secret in the cluster to function
+"""
 import os
 import sys
 import logging
@@ -17,6 +22,13 @@ QUEUE_URL = os.getenv("SCAN_QUEUE_URL", "http://scan-queue.scanners.svc.cluster.
 
 
 def dispatch_https(domain, client):
+    """ This function dispatches a scan request to the HTTPS scanner
+
+    :param domain: A domain obtained from the DB's domains collection
+    :type domain: dict
+    :param client: Http client used to post the payload to the queue
+    :type client: requests
+    """
     payload = {
         "domain_key": domain["_key"],
         "domain": domain["domain"],
@@ -26,6 +38,13 @@ def dispatch_https(domain, client):
 
 
 def dispatch_ssl(domain, client):
+    """ This function dispatches a scan request to the SSL scanner
+
+    :param domain: A domain obtained from the DB's domains collection
+    :type domain: dict
+    :param client: Http client used to post the payload to the queue
+    :type client: requests
+    """
     payload = {
         "domain_key": domain["_key"],
         "domain": domain["domain"],
@@ -35,6 +54,13 @@ def dispatch_ssl(domain, client):
 
 
 def dispatch_dns(domain, client):
+    """ This function dispatches a scan request to the DNS scanner
+
+    :param domain: A domain obtained from the DB's domains collection
+    :type domain: dict
+    :param client: Http client used to post the payload to the queue
+    :type client: requests
+    """
     payload = {
         "domain_key": domain["_key"],
         "domain": domain["domain"],
@@ -45,6 +71,23 @@ def dispatch_dns(domain, client):
 
 
 def scan(db_host, db_port, db_name, user_name, password, http_client=requests):
+    """Uses credentials provided to queue scans for all domains in the Tracker DB
+
+    :param db_host: DB host name. 
+    :type db_host: str
+    :param db_port: DB TCP port.
+    :type db_port: int
+    :param db_name: Name of the DB to connect to.
+    :type db_name: str
+    :param user_name: Username to connect to DB with.
+    :type user_name: str
+    :param password: Password to connect to DB with.
+    :type password: str
+    :param http_client: HTTP client to supply to dispatch functions, defaults to requests
+    :type http_client: requests, optional
+    :return: count of domains scans were dispatched for
+    :rtype: int
+    """
     logging.info("Retrieving domains for scheduled scan...")
     try:
         # Establish DB connection
@@ -64,6 +107,7 @@ def scan(db_host, db_port, db_name, user_name, password, http_client=requests):
             logging.info(f"Dispatching scan number {count} of {len(domains)}")
             logging.info(f"Requesting scan for {domain['domain']}")
 
+            # Update the 'lastRan' timestamp on the domain being scanned
             db.collection("domains").update_match({"_key": domain["_key"]}, {"lastRan": scan_time})
 
             dispatch_https(domain, http_client)
