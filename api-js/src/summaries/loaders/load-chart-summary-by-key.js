@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const chartSummaryLoaderByKey = (query, userKey, i18n) =>
+export const loadChartSummaryByKey = ({ query, userKey, i18n }) =>
   new DataLoader(async (keys) => {
     let cursor
 
@@ -14,7 +14,7 @@ export const chartSummaryLoaderByKey = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running chartSummaryLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running loadChartSummaryByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to load summary. Please try again.`))
     }
@@ -26,7 +26,7 @@ export const chartSummaryLoaderByKey = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running chartSummaryLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadChartSummaryByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to load summary. Please try again.`))
     }

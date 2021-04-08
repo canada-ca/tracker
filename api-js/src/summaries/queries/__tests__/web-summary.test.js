@@ -7,7 +7,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
-import { chartSummaryLoaderByKey } from '../../loaders'
+import { loadChartSummaryByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -87,7 +87,7 @@ describe('given webSummary query', () => {
         {
           i18n,
           loaders: {
-            chartSummaryLoaderByKey: chartSummaryLoaderByKey(query),
+            loadChartSummaryByKey: loadChartSummaryByKey({ query }),
           },
         },
       )
@@ -153,11 +153,11 @@ describe('given webSummary query', () => {
             {
               i18n,
               loaders: {
-                chartSummaryLoaderByKey: chartSummaryLoaderByKey(
+                loadChartSummaryByKey: loadChartSummaryByKey({
                   query,
-                  '1234',
+                  userKey: '1234',
                   i18n,
-                ),
+                }),
               },
             },
           )
@@ -212,11 +212,11 @@ describe('given webSummary query', () => {
             {
               i18n,
               loaders: {
-                chartSummaryLoaderByKey: chartSummaryLoaderByKey(
+                loadChartSummaryByKey: loadChartSummaryByKey({
                   query,
-                  '1234',
+                  userKey: '1234',
                   i18n,
-                ),
+                }),
               },
             },
           )

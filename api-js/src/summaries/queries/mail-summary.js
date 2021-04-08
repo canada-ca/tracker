@@ -4,8 +4,8 @@ import { t } from '@lingui/macro'
 export const mailSummary = {
   type: categorizedSummaryType,
   description: 'Email summary computed values, used to build summary cards.',
-  resolve: async (_, __, { i18n, loaders: { chartSummaryLoaderByKey } }) => {
-    const summary = await chartSummaryLoaderByKey.load('mail')
+  resolve: async (_, __, { i18n, loaders: { loadChartSummaryByKey } }) => {
+    const summary = await loadChartSummaryByKey.load('mail')
 
     if (typeof summary === 'undefined') {
       console.warn(`User could not retrieve mail summary.`)

@@ -95,7 +95,7 @@ import {
   verifiedOrgLoaderConnectionsByDomainId,
   verifiedOrgLoaderConnections,
 } from './verified-organizations/loaders'
-import { chartSummaryLoaderByKey } from './summaries/loaders'
+import { loadChartSummaryByKey } from './summaries/loaders'
 
 export const createContext = ({ context, req: request, res: response }) => {
   const { query } = context
@@ -156,7 +156,7 @@ export const createContext = ({ context, req: request, res: response }) => {
       sendVerificationEmail: sendVerificationEmail({ notifyClient, i18n }),
     },
     loaders: {
-      chartSummaryLoaderByKey: chartSummaryLoaderByKey(query, userKey, i18n),
+      loadChartSummaryByKey: loadChartSummaryByKey({ query, userKey, i18n }),
       loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
         query,
         userKey,
