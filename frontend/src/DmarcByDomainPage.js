@@ -44,7 +44,7 @@ export default function DmarcByDomainPage() {
       month: selectedPeriod,
       year: selectedYear,
     },
-    relayRoot: 'findMyDomains',
+    relayRoot: 'findMyDmarcSummaries',
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -64,8 +64,8 @@ export default function DmarcByDomainPage() {
   else if (nodes.length > 0) {
     const formattedData = []
     nodes.forEach((node) => {
-      const domain = node.domain
-      const percentages = { ...node.dmarcSummaryByPeriod.categoryPercentages }
+      const domain = node.domain.domain
+      const percentages = { ...node.categoryPercentages }
       Object.entries(percentages).forEach(([key, value]) => {
         if (typeof value === 'number') percentages[key] = Math.round(value)
       })
