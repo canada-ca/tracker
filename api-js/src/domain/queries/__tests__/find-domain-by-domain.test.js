@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkDomainPermission, userRequired } from '../../../auth'
-import { domainLoaderByDomain } from '../../loaders'
+import { loadDomainByDomain } from '../../loaders'
 import { userLoaderByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -144,7 +144,7 @@ describe('given findDomainByDomain query', () => {
               cleanseInput,
             },
             loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
+              loadDomainByDomain: loadDomainByDomain({ query }),
               userLoaderByKey: userLoaderByKey(query),
             },
           },
@@ -231,7 +231,7 @@ describe('given findDomainByDomain query', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -322,7 +322,7 @@ describe('given findDomainByDomain query', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -390,7 +390,7 @@ describe('given findDomainByDomain query', () => {
                 cleanseInput,
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -479,7 +479,7 @@ describe('given findDomainByDomain query', () => {
                 cleanseInput,
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },

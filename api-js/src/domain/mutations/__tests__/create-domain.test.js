@@ -11,7 +11,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
 import { checkPermission, tokenize, userRequired } from '../../../auth'
-import { domainLoaderByDomain } from '../../loaders'
+import { loadDomainByDomain } from '../../loaders'
 import {
   orgLoaderByKey,
   orgLoaderConnectionArgsByDomainId,
@@ -196,7 +196,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -344,7 +344,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -469,7 +469,7 @@ describe('create a domain', () => {
               }),
             },
             loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
+              loadDomainByDomain: loadDomainByDomain({ query }),
               orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
@@ -593,7 +593,7 @@ describe('create a domain', () => {
               }),
             },
             loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
+              loadDomainByDomain: loadDomainByDomain({ query }),
               orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
@@ -752,7 +752,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -885,7 +885,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -1018,7 +1018,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -1166,7 +1166,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -1259,7 +1259,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -1366,7 +1366,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -1474,7 +1474,7 @@ describe('create a domain', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
                   orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                     query,
@@ -1582,7 +1582,7 @@ describe('create a domain', () => {
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    loadDomainByDomain: loadDomainByDomain({ query }),
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                       query,
@@ -1681,7 +1681,7 @@ describe('create a domain', () => {
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    loadDomainByDomain: loadDomainByDomain({ query }),
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                       query,
@@ -1787,7 +1787,7 @@ describe('create a domain', () => {
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    loadDomainByDomain: loadDomainByDomain({ query }),
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                       query,
@@ -1886,7 +1886,7 @@ describe('create a domain', () => {
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    loadDomainByDomain: loadDomainByDomain({ query }),
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                       query,
@@ -1996,7 +1996,7 @@ describe('create a domain', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
                   orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                     query,
@@ -2098,7 +2098,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -2190,7 +2190,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -2296,7 +2296,7 @@ describe('create a domain', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -2403,7 +2403,7 @@ describe('create a domain', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
                   orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                   orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                     query,
@@ -2509,7 +2509,7 @@ describe('create a domain', () => {
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    loadDomainByDomain: loadDomainByDomain({ query }),
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                       query,
@@ -2606,7 +2606,7 @@ describe('create a domain', () => {
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    loadDomainByDomain: loadDomainByDomain({ query }),
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                       query,
@@ -2710,7 +2710,7 @@ describe('create a domain', () => {
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    loadDomainByDomain: loadDomainByDomain({ query }),
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                       query,
@@ -2807,7 +2807,7 @@ describe('create a domain', () => {
                     }),
                   },
                   loaders: {
-                    domainLoaderByDomain: domainLoaderByDomain(query),
+                    loadDomainByDomain: loadDomainByDomain({ query }),
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                       query,
@@ -2915,7 +2915,7 @@ describe('create a domain', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
                   orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                   orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                     query,

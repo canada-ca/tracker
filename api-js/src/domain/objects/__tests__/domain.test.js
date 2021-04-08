@@ -448,11 +448,11 @@ describe('given the domain object', () => {
                       i18n,
                     },
                   ),
-                  loadStartDateFromPeriod: loadStartDateFromPeriod(
+                  loadStartDateFromPeriod: loadStartDateFromPeriod({
                     moment,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,
@@ -498,11 +498,11 @@ describe('given the domain object', () => {
                       i18n,
                     },
                   ),
-                  loadStartDateFromPeriod: loadStartDateFromPeriod(
+                  loadStartDateFromPeriod: loadStartDateFromPeriod({
                     moment,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,

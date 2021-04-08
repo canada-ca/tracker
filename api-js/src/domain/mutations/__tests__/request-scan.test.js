@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { checkDomainPermission, userRequired } from '../../../auth'
-import { domainLoaderByDomain } from '../../loaders'
+import { loadDomainByDomain } from '../../loaders'
 import { userLoaderByKey } from '../../../user/loaders'
 import { cleanseInput } from '../../../validators'
 
@@ -154,11 +154,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -206,11 +206,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -267,11 +267,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -319,11 +319,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -380,11 +380,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -432,11 +432,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -488,11 +488,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -574,11 +574,11 @@ describe('requesting a one time scan', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(
+                  loadDomainByDomain: loadDomainByDomain({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 validators: { cleanseInput },
               },
@@ -633,11 +633,11 @@ describe('requesting a one time scan', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(
+                  loadDomainByDomain: loadDomainByDomain({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 validators: { cleanseInput },
               },
@@ -698,11 +698,11 @@ describe('requesting a one time scan', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(
+                  loadDomainByDomain: loadDomainByDomain({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 validators: { cleanseInput },
               },
@@ -756,11 +756,11 @@ describe('requesting a one time scan', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(
+                  loadDomainByDomain: loadDomainByDomain({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 validators: { cleanseInput },
               },
@@ -815,11 +815,11 @@ describe('requesting a one time scan', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(
+                  loadDomainByDomain: loadDomainByDomain({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 validators: { cleanseInput },
               },
@@ -899,11 +899,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -951,11 +951,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -1012,11 +1012,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -1064,11 +1064,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -1125,11 +1125,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -1177,11 +1177,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -1233,11 +1233,11 @@ describe('requesting a one time scan', () => {
                 }),
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(
+                loadDomainByDomain: loadDomainByDomain({
                   query,
-                  user._key,
+                  userKey: user._key,
                   i18n,
-                ),
+                }),
               },
               validators: { cleanseInput },
             },
@@ -1315,11 +1315,11 @@ describe('requesting a one time scan', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(
+                  loadDomainByDomain: loadDomainByDomain({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 validators: { cleanseInput },
               },
@@ -1370,11 +1370,11 @@ describe('requesting a one time scan', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(
+                  loadDomainByDomain: loadDomainByDomain({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 validators: { cleanseInput },
               },
@@ -1431,11 +1431,11 @@ describe('requesting a one time scan', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(
+                  loadDomainByDomain: loadDomainByDomain({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 validators: { cleanseInput },
               },
@@ -1485,11 +1485,11 @@ describe('requesting a one time scan', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(
+                  loadDomainByDomain: loadDomainByDomain({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 validators: { cleanseInput },
               },
@@ -1540,11 +1540,11 @@ describe('requesting a one time scan', () => {
                   }),
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(
+                  loadDomainByDomain: loadDomainByDomain({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 validators: { cleanseInput },
               },

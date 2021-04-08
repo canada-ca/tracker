@@ -41,7 +41,7 @@ export const createDomain = new mutationWithClientMutationId({
       transaction,
       userKey,
       auth: { checkPermission, userRequired },
-      loaders: { domainLoaderByDomain, orgLoaderByKey },
+      loaders: { loadDomainByDomain, orgLoaderByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -143,7 +143,7 @@ export const createDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if domain already exists in db
-    const checkDomain = await domainLoaderByDomain.load(insertDomain.domain)
+    const checkDomain = await loadDomainByDomain.load(insertDomain.domain)
 
     // Generate list of collections names
     const collectionStrings = []
@@ -157,7 +157,9 @@ export const createDomain = new mutationWithClientMutationId({
     let insertedDomain
     if (typeof checkDomain === 'undefined') {
       try {
-        insertedDomain = await trx.step(() => collections.domains.save(insertDomain))
+        insertedDomain = await trx.step(() =>
+          collections.domains.save(insertDomain),
+        )
       } catch (err) {
         console.error(
           `Transaction step error occurred for user: ${userKey} when inserting new domain: ${err}`,
@@ -225,8 +227,8 @@ export const createDomain = new mutationWithClientMutationId({
     }
 
     // Clear dataloader incase anything was updated or inserted into domain
-    await domainLoaderByDomain.clear(insertDomain.domain)
-    const returnDomain = await domainLoaderByDomain.load(insertDomain.domain)
+    await loadDomainByDomain.clear(insertDomain.domain)
+    const returnDomain = await loadDomainByDomain.load(insertDomain.domain)
 
     console.info(
       `User: ${userKey} successfully created ${returnDomain.domain} in org: ${org.slug}.`,
