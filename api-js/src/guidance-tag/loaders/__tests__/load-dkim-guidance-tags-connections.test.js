@@ -8,7 +8,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
-  dkimGuidanceTagConnectionsLoader,
+  loadDkimGuidanceTagConnectionsByTagId,
   dkimGuidanceTagLoader,
 } from '../index'
 
@@ -78,12 +78,12 @@ describe('when given the load dkim guidance tag connection function', () => {
   describe('given a successful load', () => {
     describe('using after cursor', () => {
       it('returns dkim result(s) after a given node id', async () => {
-        const connectionLoader = dkimGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
 
@@ -123,12 +123,12 @@ describe('when given the load dkim guidance tag connection function', () => {
     })
     describe('using before cursor', () => {
       it('returns dkim result(s) before a given node id', async () => {
-        const connectionLoader = dkimGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
 
@@ -168,12 +168,12 @@ describe('when given the load dkim guidance tag connection function', () => {
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = dkimGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
 
@@ -212,12 +212,12 @@ describe('when given the load dkim guidance tag connection function', () => {
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = dkimGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
 
@@ -279,12 +279,12 @@ describe('when given the load dkim guidance tag connection function', () => {
             const loader = dkimGuidanceTagLoader(query)
             const expectedDkimTag = await loader.load('dkim2')
 
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
@@ -324,12 +324,12 @@ describe('when given the load dkim guidance tag connection function', () => {
             const loader = dkimGuidanceTagLoader(query)
             const expectedDkimTag = await loader.load('dkim2')
 
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
@@ -371,12 +371,12 @@ describe('when given the load dkim guidance tag connection function', () => {
             const loader = dkimGuidanceTagLoader(query)
             const expectedDkimTag = await loader.load('dkim2')
 
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
@@ -416,12 +416,12 @@ describe('when given the load dkim guidance tag connection function', () => {
             const loader = dkimGuidanceTagLoader(query)
             const expectedDkimTag = await loader.load('dkim2')
 
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
@@ -463,12 +463,12 @@ describe('when given the load dkim guidance tag connection function', () => {
             const loader = dkimGuidanceTagLoader(query)
             const expectedDkimTag = await loader.load('dkim2')
 
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
@@ -508,12 +508,12 @@ describe('when given the load dkim guidance tag connection function', () => {
             const loader = dkimGuidanceTagLoader(query)
             const expectedDkimTag = await loader.load('dkim2')
 
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dkimGuidanceTags: ['dkim1', 'dkim2', 'dkim3'],
@@ -553,12 +553,12 @@ describe('when given the load dkim guidance tag connection function', () => {
     describe('no dkim results are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = dkimGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -603,12 +603,12 @@ describe('when given the load dkim guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimGuidanceTagConnectionsLoader(
+          const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const dkimGuidanceTags = ['dkim1', 'dkim2']
           const connectionArgs = {}
@@ -626,18 +626,18 @@ describe('when given the load dkim guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDkimGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimGuidanceTagConnectionsLoader(
+          const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const dkimGuidanceTags = ['dkim1', 'dkim2']
           const connectionArgs = {
@@ -658,19 +658,19 @@ describe('when given the load dkim guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDkimGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
@@ -690,18 +690,18 @@ describe('when given the load dkim guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDkimGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
@@ -721,7 +721,7 @@ describe('when given the load dkim guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDkimGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -729,12 +729,12 @@ describe('when given the load dkim guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
@@ -754,18 +754,18 @@ describe('when given the load dkim guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: dkimGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDkimGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
@@ -785,7 +785,7 @@ describe('when given the load dkim guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: dkimGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadDkimGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -796,12 +796,12 @@ describe('when given the load dkim guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimGuidanceTagConnectionsLoader(
+              const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const dkimGuidanceTags = ['dkim1', 'dkim2']
               const connectionArgs = {
@@ -823,7 +823,7 @@ describe('when given the load dkim guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDkimGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -833,12 +833,12 @@ describe('when given the load dkim guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimGuidanceTagConnectionsLoader(
+              const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const dkimGuidanceTags = ['dkim1', 'dkim2']
               const connectionArgs = {
@@ -860,7 +860,7 @@ describe('when given the load dkim guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDkimGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -873,12 +873,12 @@ describe('when given the load dkim guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = dkimGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
         const connectionArgs = {
@@ -896,7 +896,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadDkimGuidanceTagConnectionsByTagId, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -909,12 +909,12 @@ describe('when given the load dkim guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dkimGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
         const connectionArgs = {
@@ -932,7 +932,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadDkimGuidanceTagConnectionsByTagId, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
@@ -955,12 +955,12 @@ describe('when given the load dkim guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimGuidanceTagConnectionsLoader(
+          const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const dkimGuidanceTags = ['dkim1', 'dkim2']
           const connectionArgs = {}
@@ -974,18 +974,18 @@ describe('when given the load dkim guidance tag connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDkimGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimGuidanceTagConnectionsLoader(
+          const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const dkimGuidanceTags = ['dkim1', 'dkim2']
           const connectionArgs = {
@@ -1002,19 +1002,19 @@ describe('when given the load dkim guidance tag connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDkimGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
@@ -1030,18 +1030,18 @@ describe('when given the load dkim guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDkimGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
@@ -1057,7 +1057,7 @@ describe('when given the load dkim guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dkimGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDkimGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -1065,12 +1065,12 @@ describe('when given the load dkim guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
@@ -1086,18 +1086,18 @@ describe('when given the load dkim guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: dkimGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDkimGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dkimGuidanceTags = ['dkim1', 'dkim2']
             const connectionArgs = {
@@ -1113,7 +1113,7 @@ describe('when given the load dkim guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: dkimGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadDkimGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -1124,12 +1124,12 @@ describe('when given the load dkim guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimGuidanceTagConnectionsLoader(
+              const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const dkimGuidanceTags = ['dkim1', 'dkim2']
               const connectionArgs = {
@@ -1147,7 +1147,7 @@ describe('when given the load dkim guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDkimGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -1157,12 +1157,12 @@ describe('when given the load dkim guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimGuidanceTagConnectionsLoader(
+              const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const dkimGuidanceTags = ['dkim1', 'dkim2']
               const connectionArgs = {
@@ -1180,7 +1180,7 @@ describe('when given the load dkim guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDkimGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -1193,12 +1193,12 @@ describe('when given the load dkim guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = dkimGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
         const connectionArgs = {
@@ -1214,7 +1214,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadDkimGuidanceTagConnectionsByTagId, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -1227,12 +1227,12 @@ describe('when given the load dkim guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dkimGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dkimGuidanceTags = ['dkim1', 'dkim2']
         const connectionArgs = {
@@ -1248,7 +1248,7 @@ describe('when given the load dkim guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in dkimGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadDkimGuidanceTagConnectionsByTagId, error: Error: Cursor Error Occurred.`,
         ])
       })
     })

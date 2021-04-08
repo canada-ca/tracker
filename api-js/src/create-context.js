@@ -60,7 +60,7 @@ import {
 } from './email-scan/loaders'
 import {
   dkimGuidanceTagLoader,
-  dkimGuidanceTagConnectionsLoader,
+  loadDkimGuidanceTagConnectionsByTagId,
   dmarcGuidanceTagLoader,
   dmarcGuidanceTagConnectionsLoader,
   httpsGuidanceTagLoader,
@@ -257,11 +257,13 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
       ),
       dkimGuidanceTagLoader: dkimGuidanceTagLoader(query, userKey, i18n),
-      dkimGuidanceTagConnectionsLoader: dkimGuidanceTagConnectionsLoader(
-        query,
-        userKey,
-        cleanseInput,
-        i18n,
+      loadDkimGuidanceTagConnectionsByTagId: loadDkimGuidanceTagConnectionsByTagId(
+        {
+          query,
+          userKey,
+          cleanseInput,
+          i18n,
+        },
       ),
       dmarcGuidanceTagLoader: dmarcGuidanceTagLoader(query, userKey, i18n),
       dmarcGuidanceTagConnectionsLoader: dmarcGuidanceTagConnectionsLoader(
