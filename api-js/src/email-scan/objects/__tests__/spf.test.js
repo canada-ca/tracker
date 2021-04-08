@@ -7,7 +7,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { spfGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
+import { loadSpfGuidanceTagConnectionsByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 import { spfType } from '../index'
 
@@ -223,12 +223,12 @@ describe('given the spfType object', () => {
       it('returns the resolved value', async () => {
         const demoType = spfType.getFields()
 
-        const loader = spfGuidanceTagConnectionsLoader(
+        const loader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const guidanceTags = ['spf1']
 
@@ -273,7 +273,7 @@ describe('given the spfType object', () => {
           demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadSpfGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -282,12 +282,12 @@ describe('given the spfType object', () => {
       it('returns the resolved value', async () => {
         const demoType = spfType.getFields()
 
-        const loader = spfGuidanceTagConnectionsLoader(
+        const loader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const negativeTags = ['spf1']
 
@@ -332,7 +332,7 @@ describe('given the spfType object', () => {
           demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadSpfGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -341,12 +341,12 @@ describe('given the spfType object', () => {
       it('returns the resolved value', async () => {
         const demoType = spfType.getFields()
 
-        const loader = spfGuidanceTagConnectionsLoader(
+        const loader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const neutralTags = ['spf1']
 
@@ -391,7 +391,7 @@ describe('given the spfType object', () => {
           demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadSpfGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -400,12 +400,12 @@ describe('given the spfType object', () => {
       it('returns the resolved value', async () => {
         const demoType = spfType.getFields()
 
-        const loader = spfGuidanceTagConnectionsLoader(
+        const loader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const positiveTags = ['spf1']
 
@@ -450,7 +450,7 @@ describe('given the spfType object', () => {
           demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { spfGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadSpfGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

@@ -61,9 +61,9 @@ export const spfType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         args,
-        { loaders: { spfGuidanceTagConnectionsLoader } },
+        { loaders: { loadSpfGuidanceTagConnectionsByTagId } },
       ) => {
-        const spfTags = await spfGuidanceTagConnectionsLoader({
+        const spfTags = await loadSpfGuidanceTagConnectionsByTagId({
           spfGuidanceTags: guidanceTags,
           ...args,
         })
@@ -83,9 +83,9 @@ export const spfType = new GraphQLObjectType({
       resolve: async (
         { negativeTags },
         args,
-        { loaders: { spfGuidanceTagConnectionsLoader } },
+        { loaders: { loadSpfGuidanceTagConnectionsByTagId } },
       ) => {
-        const spfTags = await spfGuidanceTagConnectionsLoader({
+        const spfTags = await loadSpfGuidanceTagConnectionsByTagId({
           spfGuidanceTags: negativeTags,
           ...args,
         })
@@ -105,9 +105,9 @@ export const spfType = new GraphQLObjectType({
       resolve: async (
         { neutralTags },
         args,
-        { loaders: { spfGuidanceTagConnectionsLoader } },
+        { loaders: { loadSpfGuidanceTagConnectionsByTagId } },
       ) => {
-        const spfTags = await spfGuidanceTagConnectionsLoader({
+        const spfTags = await loadSpfGuidanceTagConnectionsByTagId({
           spfGuidanceTags: neutralTags,
           ...args,
         })
@@ -127,9 +127,9 @@ export const spfType = new GraphQLObjectType({
       resolve: async (
         { positiveTags },
         args,
-        { loaders: { spfGuidanceTagConnectionsLoader } },
+        { loaders: { loadSpfGuidanceTagConnectionsByTagId } },
       ) => {
-        const spfTags = await spfGuidanceTagConnectionsLoader({
+        const spfTags = await loadSpfGuidanceTagConnectionsByTagId({
           spfGuidanceTags: positiveTags,
           ...args,
         })

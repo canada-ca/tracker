@@ -2,12 +2,12 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const spfGuidanceTagConnectionsLoader = (
+export const loadSpfGuidanceTagConnectionsByTagId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ spfGuidanceTags, after, before, first, last, orderBy }) => {
+}) => async ({ spfGuidanceTags, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -79,7 +79,7 @@ export const spfGuidanceTagConnectionsLoader = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: spfGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadSpfGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(
@@ -88,7 +88,7 @@ export const spfGuidanceTagConnectionsLoader = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: spfGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadSpfGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(
@@ -100,7 +100,7 @@ export const spfGuidanceTagConnectionsLoader = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: spfGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadSpfGuidanceTagConnectionsByTagId.`,
       )
       throw new Error(
         i18n._(
@@ -111,7 +111,7 @@ export const spfGuidanceTagConnectionsLoader = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: spfGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadSpfGuidanceTagConnectionsByTagId.`,
       )
       throw new Error(
         i18n._(
@@ -127,7 +127,7 @@ export const spfGuidanceTagConnectionsLoader = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: spfGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadSpfGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -237,7 +237,7 @@ export const spfGuidanceTagConnectionsLoader = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to gather orgs in spfGuidanceTagConnectionsLoader, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather orgs in loadSpfGuidanceTagConnectionsByTagId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load SPF guidance tag(s). Please try again.`),
@@ -249,7 +249,7 @@ export const spfGuidanceTagConnectionsLoader = (
     spfGuidanceTagInfo = await spfGuidanceTagInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather orgs in spfGuidanceTagConnectionsLoader, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather orgs in loadSpfGuidanceTagConnectionsByTagId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load SPF guidance tag(s). Please try again.`),

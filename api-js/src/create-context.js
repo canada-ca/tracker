@@ -66,7 +66,7 @@ import {
   loadHttpsGuidanceTagByTagId,
   loadHttpsGuidanceTagConnectionsByTagId,
   spfGuidanceTagLoader,
-  spfGuidanceTagConnectionsLoader,
+  loadSpfGuidanceTagConnectionsByTagId,
   sslGuidanceTagLoader,
   sslGuidanceTagConnectionsLoader,
 } from './guidance-tag/loaders'
@@ -296,11 +296,13 @@ export const createContext = ({ context, req: request, res: response }) => {
         },
       ),
       spfGuidanceTagLoader: spfGuidanceTagLoader(query, userKey, i18n),
-      spfGuidanceTagConnectionsLoader: spfGuidanceTagConnectionsLoader(
-        query,
-        userKey,
-        cleanseInput,
-        i18n,
+      loadSpfGuidanceTagConnectionsByTagId: loadSpfGuidanceTagConnectionsByTagId(
+        {
+          query,
+          userKey,
+          cleanseInput,
+          i18n,
+        },
       ),
       sslGuidanceTagLoader: sslGuidanceTagLoader(query, userKey, i18n),
       sslGuidanceTagConnectionsLoader: sslGuidanceTagConnectionsLoader(
