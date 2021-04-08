@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { dmarcLoaderConnectionsByDomainId, dmarcLoaderByKey } from '../index'
+import { dmarcLoaderConnectionsByDomainId, loadDmarcByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -97,7 +97,7 @@ describe('when given the load dmarc connection function', () => {
           i18n,
         )
 
-        const dkimLoader = dmarcLoaderByKey(query)
+        const dkimLoader = loadDmarcByKey({ query })
         const expectedDmarcScans = await dkimLoader.loadMany([
           dmarcScan1._key,
           dmarcScan2._key,
@@ -149,7 +149,7 @@ describe('when given the load dmarc connection function', () => {
           i18n,
         )
 
-        const dkimLoader = dmarcLoaderByKey(query)
+        const dkimLoader = loadDmarcByKey({ query })
         const expectedDmarcScans = await dkimLoader.loadMany([
           dmarcScan1._key,
           dmarcScan2._key,
@@ -201,7 +201,7 @@ describe('when given the load dmarc connection function', () => {
           i18n,
         )
 
-        const dkimLoader = dmarcLoaderByKey(query)
+        const dkimLoader = loadDmarcByKey({ query })
         const expectedDmarcScans = await dkimLoader.loadMany([
           dmarcScan1._key,
           dmarcScan2._key,
@@ -252,7 +252,7 @@ describe('when given the load dmarc connection function', () => {
           i18n,
         )
 
-        const dkimLoader = dmarcLoaderByKey(query)
+        const dkimLoader = loadDmarcByKey({ query })
         const expectedDmarcScans = await dkimLoader.loadMany([
           dmarcScan1._key,
           dmarcScan2._key,
@@ -314,7 +314,7 @@ describe('when given the load dmarc connection function', () => {
             i18n,
           )
 
-          const dmarcLoader = dmarcLoaderByKey(query)
+          const dmarcLoader = loadDmarcByKey({ query })
           const expectedDmarcScans = await dmarcLoader.loadMany([
             dmarcScan2._key,
             dmarcScan3._key,
@@ -372,7 +372,7 @@ describe('when given the load dmarc connection function', () => {
             i18n,
           )
 
-          const dmarcLoader = dmarcLoaderByKey(query)
+          const dmarcLoader = loadDmarcByKey({ query })
           const expectedDmarcScans = await dmarcLoader.loadMany([
             dmarcScan1._key,
             dmarcScan2._key,
@@ -430,7 +430,7 @@ describe('when given the load dmarc connection function', () => {
             i18n,
           )
 
-          const dmarcLoader = dmarcLoaderByKey(query)
+          const dmarcLoader = loadDmarcByKey({ query })
           const expectedDmarcScans = await dmarcLoader.loadMany([
             dmarcScan2._key,
           ])
@@ -516,7 +516,7 @@ describe('when given the load dmarc connection function', () => {
       describe('ordering on TIMESTAMP', () => {
         describe('direction is set to ASC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
             const connectionLoader = dmarcLoaderConnectionsByDomainId(
@@ -563,7 +563,7 @@ describe('when given the load dmarc connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
             const connectionLoader = dmarcLoaderConnectionsByDomainId(
@@ -612,7 +612,7 @@ describe('when given the load dmarc connection function', () => {
       describe('ordering on RECORD', () => {
         describe('direction is set to ASC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
             const connectionLoader = dmarcLoaderConnectionsByDomainId(
@@ -659,7 +659,7 @@ describe('when given the load dmarc connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
             const connectionLoader = dmarcLoaderConnectionsByDomainId(
@@ -708,7 +708,7 @@ describe('when given the load dmarc connection function', () => {
       describe('ordering on P_POLICY', () => {
         describe('direction is set to ASC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
             const connectionLoader = dmarcLoaderConnectionsByDomainId(
@@ -755,7 +755,7 @@ describe('when given the load dmarc connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
             const connectionLoader = dmarcLoaderConnectionsByDomainId(
@@ -804,7 +804,7 @@ describe('when given the load dmarc connection function', () => {
       describe('ordering on SP_POLICY', () => {
         describe('direction is set to ASC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
             const connectionLoader = dmarcLoaderConnectionsByDomainId(
@@ -851,7 +851,7 @@ describe('when given the load dmarc connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
             const connectionLoader = dmarcLoaderConnectionsByDomainId(
@@ -900,7 +900,7 @@ describe('when given the load dmarc connection function', () => {
       describe('ordering on PCT', () => {
         describe('direction is set to ASC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
             const connectionLoader = dmarcLoaderConnectionsByDomainId(
@@ -947,7 +947,7 @@ describe('when given the load dmarc connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
             const connectionLoader = dmarcLoaderConnectionsByDomainId(

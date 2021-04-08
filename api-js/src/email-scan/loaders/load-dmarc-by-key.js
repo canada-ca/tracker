@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const dmarcLoaderByKey = (query, userKey, i18n) =>
+export const loadDmarcByKey = ({ query, userKey, i18n }) =>
   new DataLoader(async (keys) => {
     let cursor
 
@@ -14,7 +14,7 @@ export const dmarcLoaderByKey = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running dmarcLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running loadDmarcByKey: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find DMARC scan(s). Please try again.`),
@@ -28,7 +28,7 @@ export const dmarcLoaderByKey = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running dmarcLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadDmarcByKey: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find DMARC scan(s). Please try again.`),
