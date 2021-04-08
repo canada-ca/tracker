@@ -13,7 +13,7 @@ import { checkPermission, userRequired } from '../../../auth'
 import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
 import { loadDomainConnectionsByOrgId } from '../../../domain/loaders'
 import { userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderBySlug, loadOrgByKey } from '../../loaders'
+import { loadOrgBySlug, loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -152,7 +152,7 @@ describe('given findOrganizationBySlugQuery', () => {
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey(query, 'en'),
-                orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
+                loadOrgBySlug: loadOrgBySlug({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
                 loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
                   query,
@@ -231,7 +231,7 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
+                loadOrgBySlug: loadOrgBySlug({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -286,7 +286,7 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
+                loadOrgBySlug: loadOrgBySlug({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -369,7 +369,7 @@ describe('given findOrganizationBySlugQuery', () => {
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey(query, 'fr'),
-                orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
+                loadOrgBySlug: loadOrgBySlug({query, language:'fr'}),
                 userLoaderByKey: userLoaderByKey(query),
                 loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
                   query,
@@ -462,7 +462,7 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
+                loadOrgBySlug: loadOrgBySlug({query, language:'fr'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -513,7 +513,7 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
+                loadOrgBySlug: loadOrgBySlug({query, language:'fr'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },

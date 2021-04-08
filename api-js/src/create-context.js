@@ -72,7 +72,7 @@ import {
 } from './guidance-tag/loaders'
 import {
   loadOrgByKey,
-  orgLoaderBySlug,
+  loadOrgBySlug,
   orgLoaderConnectionArgsByDomainId,
   orgLoaderConnectionsByUserId,
 } from './organization/loaders'
@@ -327,7 +327,12 @@ export const createContext = ({ context, req: request, res: response }) => {
         userKey,
         i18n,
       }),
-      orgLoaderBySlug: orgLoaderBySlug(query, request.language, userKey, i18n),
+      loadOrgBySlug: loadOrgBySlug({
+        query,
+        language: request.language,
+        userKey,
+        i18n,
+      }),
       orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
         query,
         request.language,
