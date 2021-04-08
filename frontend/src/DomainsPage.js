@@ -166,7 +166,7 @@ export default function DomainsPage() {
                 onlyPagination={false}
                 selectedDisplayLimit={domainsPerPage}
                 setSelectedDisplayLimit={setDomainsPerPage}
-                displayLimitOptions={[10, 20, 40, 80]}
+                displayLimitOptions={[5, 10, 20, 50, 100]}
                 resetToFirstPage={resetToFirstPage}
                 hasNextPage={hasNextPage}
                 hasPreviousPage={hasPreviousPage}
