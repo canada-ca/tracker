@@ -10,7 +10,7 @@ import { detailTablesType } from '../detail-tables'
 import { dmarcSummaryType } from '../dmarc-summary'
 import { PeriodEnums } from '../../../enums'
 import { Year } from '../../../scalars'
-import { domainLoaderByKey } from '../../../domain/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
 import { loadDmarcSummaryByKey } from '../../loaders'
 
@@ -123,13 +123,13 @@ describe('testing the period gql object', () => {
 
         const demoType = dmarcSummaryType.getFields()
 
-        const loader = domainLoaderByKey(query, '1', {})
+        const loader = loadDomainByKey({ query, userKey: '1', i18n: {} })
 
         await expect(
           demoType.domain.resolve(
             { domainKey: domain._key },
             {},
-            { loaders: { domainLoaderByKey: loader } },
+            { loaders: { loadDomainByKey: loader } },
           ),
         ).resolves.toEqual(domain)
       })

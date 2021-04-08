@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const domainLoaderByKey = (query, userKey, i18n) =>
+export const loadDomainByKey = ({ query, userKey, i18n }) =>
   new DataLoader(async (ids) => {
     let cursor
 
@@ -14,7 +14,7 @@ export const domainLoaderByKey = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running domainLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to load domain. Please try again.`))
     }
@@ -26,7 +26,7 @@ export const domainLoaderByKey = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running domainLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to load domain. Please try again.`))
     }

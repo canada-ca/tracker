@@ -20,9 +20,9 @@ export const dmarcSummaryType = new GraphQLObjectType({
       resolve: async (
         { domainKey },
         _args,
-        { loaders: { domainLoaderByKey } },
+        { loaders: { loadDomainByKey } },
       ) => {
-        const domain = await domainLoaderByKey.load(domainKey)
+        const domain = await loadDomainByKey.load(domainKey)
         return domain
       },
     },

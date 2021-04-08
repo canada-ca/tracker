@@ -11,7 +11,7 @@ import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderByKey } from '../../../domain/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
 import { sslGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
@@ -251,7 +251,7 @@ describe('given the ssl gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = sslType.getFields()
 
-        const loader = domainLoaderByKey(query, '1', {})
+        const loader = loadDomainByKey({ query, userKey: '1', i18n: {} })
 
         const expectedResult = {
           _id: domain._id,
@@ -267,7 +267,7 @@ describe('given the ssl gql object', () => {
           demoType.domain.resolve(
             { domainId: domain._id },
             {},
-            { loaders: { domainLoaderByKey: loader } },
+            { loaders: { loadDomainByKey: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

@@ -35,7 +35,7 @@ export const removeDomain = new mutationWithClientMutationId({
       userKey,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
-      loaders: { domainLoaderByKey, orgLoaderByKey },
+      loaders: { loadDomainByKey, orgLoaderByKey },
     },
   ) => {
     // Cleanse Input
@@ -48,7 +48,7 @@ export const removeDomain = new mutationWithClientMutationId({
     await userRequired()
 
     // Get domain from db
-    const domain = await domainLoaderByKey.load(domainId)
+    const domain = await loadDomainByKey.load(domainId)
 
     // Check to see if domain exists
     if (typeof domain === 'undefined') {

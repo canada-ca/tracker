@@ -5,7 +5,7 @@ import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderByKey } from '../../../domain/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
 import { dmarcGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
@@ -168,13 +168,13 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = domainLoaderByKey(query, '1', {})
+        const loader = loadDomainByKey({ query, userKey: '1', i18n: {} })
 
         await expect(
           demoType.domain.resolve(
             { domainId: domain._id },
             {},
-            { loaders: { domainLoaderByKey: loader } },
+            { loaders: { loadDomainByKey: loader } },
           ),
         ).resolves.toEqual({
           _id: domain._id,

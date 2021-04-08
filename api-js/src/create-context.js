@@ -43,7 +43,7 @@ import {
   loadDmarcYearlySumEdge,
 } from './dmarc-summaries/loaders'
 import {
-  domainLoaderByKey,
+  loadDomainByKey,
   loadDomainByDomain,
   domainLoaderConnectionsByOrgId,
   domainLoaderConnectionsByUserId,
@@ -203,7 +203,7 @@ export const createContext = ({ context, req: request, res: response }) => {
       }),
       loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({ query, userKey, i18n }),
       loadDomainByDomain: loadDomainByDomain({ query, userKey, i18n }),
-      domainLoaderByKey: domainLoaderByKey(query, userKey, i18n),
+      loadDomainByKey: loadDomainByKey({ query, userKey, i18n }),
       domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
         query,
         userKey,

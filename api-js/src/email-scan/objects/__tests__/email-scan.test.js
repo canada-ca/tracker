@@ -2,7 +2,7 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderByKey } from '../../../domain/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
 import {
   dkimLoaderConnectionsByDomainId,
@@ -149,7 +149,7 @@ describe('given the email gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = emailScanType.getFields()
 
-        const loader = domainLoaderByKey(query, user._key, {})
+        const loader = loadDomainByKey({ query, userKey: user._key, i18n: {} })
 
         const expectedResult = {
           _id: domain._id,
@@ -165,7 +165,7 @@ describe('given the email gql object', () => {
           demoType.domain.resolve(
             { _key: domain._key },
             {},
-            { loaders: { domainLoaderByKey: loader } },
+            { loaders: { loadDomainByKey: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

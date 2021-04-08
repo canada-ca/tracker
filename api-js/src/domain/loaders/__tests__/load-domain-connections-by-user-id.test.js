@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderConnectionsByUserId, domainLoaderByKey } from '../index'
+import { domainLoaderConnectionsByUserId, loadDomainByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -120,7 +120,7 @@ describe('given the load domain connections by user id function', () => {
             cleanseInput,
           )
 
-          const domainLoader = domainLoaderByKey(query)
+          const domainLoader = loadDomainByKey({ query })
           const expectedDomains = await domainLoader.loadMany([
             domainOne._key,
             domainTwo._key,
@@ -164,7 +164,7 @@ describe('given the load domain connections by user id function', () => {
             cleanseInput,
           )
 
-          const domainLoader = domainLoaderByKey(query)
+          const domainLoader = loadDomainByKey({ query })
           const expectedDomains = await domainLoader.loadMany([
             domainOne._key,
             domainTwo._key,
@@ -208,7 +208,7 @@ describe('given the load domain connections by user id function', () => {
             cleanseInput,
           )
 
-          const domainLoader = domainLoaderByKey(query)
+          const domainLoader = loadDomainByKey({ query })
           const expectedDomains = await domainLoader.loadMany([
             domainOne._key,
             domainTwo._key,
@@ -251,7 +251,7 @@ describe('given the load domain connections by user id function', () => {
             cleanseInput,
           )
 
-          const domainLoader = domainLoaderByKey(query)
+          const domainLoader = loadDomainByKey({ query })
           const expectedDomains = await domainLoader.loadMany([
             domainOne._key,
             domainTwo._key,
@@ -303,7 +303,7 @@ describe('given the load domain connections by user id function', () => {
             cleanseInput,
           )
 
-          const domainLoader = domainLoaderByKey(query)
+          const domainLoader = loadDomainByKey({ query })
           const expectedDomain = await domainLoader.load(domainOne._key)
 
           const connectionArgs = {
@@ -359,7 +359,7 @@ describe('given the load domain connections by user id function', () => {
               cleanseInput,
             )
 
-            const domainLoader = domainLoaderByKey(query)
+            const domainLoader = loadDomainByKey({ query })
             const expectedDomains = await domainLoader.loadMany([
               domainThree._key,
             ])
@@ -399,7 +399,7 @@ describe('given the load domain connections by user id function', () => {
               cleanseInput,
             )
 
-            const domainLoader = domainLoaderByKey(query)
+            const domainLoader = loadDomainByKey({ query })
             const expectedDomains = await domainLoader.loadMany([
               domainOne._key,
               domainTwo._key,
@@ -451,7 +451,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DOMAIN', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -498,7 +498,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -547,7 +547,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on LAST_RAN', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -594,7 +594,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -643,7 +643,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DKIM_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -690,7 +690,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -739,7 +739,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DMARC_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -786,7 +786,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -835,7 +835,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on HTTPS_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -882,7 +882,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -931,7 +931,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on SPF_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -978,7 +978,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1027,7 +1027,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on SSL_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1074,7 +1074,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1125,7 +1125,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DOMAIN', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1172,7 +1172,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1221,7 +1221,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on LAST_RAN', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1268,7 +1268,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1317,7 +1317,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DKIM_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1364,7 +1364,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1413,7 +1413,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DMARC_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1460,7 +1460,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1509,7 +1509,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on HTTPS_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1556,7 +1556,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1605,7 +1605,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on SPF_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1652,7 +1652,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1701,7 +1701,7 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on SSL_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1748,7 +1748,7 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = domainLoaderByKey(query)
+                const domainLoader = loadDomainByKey({ query })
                 const expectedDomains = await domainLoader.loadMany([
                   domainOne._key,
                   domainTwo._key,
@@ -1810,7 +1810,7 @@ describe('given the load domain connections by user id function', () => {
           }
           const domains = await connectionLoader({ ...connectionArgs })
 
-          const domainLoader = domainLoaderByKey(query)
+          const domainLoader = loadDomainByKey({ query })
           const expectedDomains = await domainLoader.loadMany([
             domainOne._key,
             domainTwo._key,
