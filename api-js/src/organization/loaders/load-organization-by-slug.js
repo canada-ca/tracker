@@ -9,7 +9,8 @@ export const orgLoaderBySlug = (query, language, userKey, i18n) =>
       cursor = await query`
         WITH claims, domains, organizations
         FOR org IN organizations
-          FILTER TRANSLATE(${language}, org.orgDetails).slug IN ${slugs}
+          FILTER org.orgDetails.en.slug IN ${slugs}
+          OR org.orgDetails.fr.slug IN ${slugs}
           LET orgDomains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
           RETURN MERGE(
             {
