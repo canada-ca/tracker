@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { httpsGuidanceTagLoader } from '../index'
+import { loadHttpsGuidanceTagByTagId } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the httpsGuidanceTagLoader function', () => {
+describe('given the loadHttpsGuidanceTagByTagId function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -59,7 +59,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
       `
       const expectedHttpsTag = await expectedCursor.next()
 
-      const loader = httpsGuidanceTagLoader(query, i18n)
+      const loader = loadHttpsGuidanceTagByTagId({ query, i18n })
       const httpsTag = await loader.load(expectedHttpsTag._key)
 
       expect(httpsTag).toEqual(expectedHttpsTag)
@@ -80,7 +80,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         expectedHttpsTags.push(tempHttps)
       }
 
-      const loader = httpsGuidanceTagLoader(query, i18n)
+      const loader = loadHttpsGuidanceTagByTagId({ query, i18n })
       const httpsTags = await loader.loadMany(httpsTagKeys)
       expect(httpsTags).toEqual(expectedHttpsTags)
     })
@@ -105,7 +105,11 @@ describe('given the httpsGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadHttpsGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -118,7 +122,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadHttpsGuidanceTagByTagId: Error: Database error occurred.`,
         ])
       })
     })
@@ -130,7 +134,11 @@ describe('given the httpsGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadHttpsGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -143,7 +151,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadHttpsGuidanceTagByTagId: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -168,7 +176,11 @@ describe('given the httpsGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadHttpsGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -177,7 +189,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadHttpsGuidanceTagByTagId: Error: Database error occurred.`,
         ])
       })
     })
@@ -189,7 +201,11 @@ describe('given the httpsGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadHttpsGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -198,7 +214,7 @@ describe('given the httpsGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running httpsGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadHttpsGuidanceTagByTagId: Error: Cursor error occurred.`,
         ])
       })
     })

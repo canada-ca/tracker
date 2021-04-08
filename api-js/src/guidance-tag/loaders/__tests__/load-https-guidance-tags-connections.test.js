@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   loadHttpsGuidanceTagConnectionsByTagId,
-  httpsGuidanceTagLoader,
+  loadHttpsGuidanceTagByTagId,
 } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -87,7 +87,7 @@ describe('when given the load https guidance tag connection function', () => {
 
         const httpsGuidanceTags = ['https1', 'https2']
 
-        const httpsTagLoader = httpsGuidanceTagLoader(query)
+        const httpsTagLoader = loadHttpsGuidanceTagByTagId({ query })
         const expectedHttpsTags = await httpsTagLoader.loadMany(
           httpsGuidanceTags,
         )
@@ -134,7 +134,7 @@ describe('when given the load https guidance tag connection function', () => {
 
         const httpsGuidanceTags = ['https1', 'https2']
 
-        const httpsTagLoader = httpsGuidanceTagLoader(query)
+        const httpsTagLoader = loadHttpsGuidanceTagByTagId({ query })
         const expectedHttpsTags = await httpsTagLoader.loadMany(
           httpsGuidanceTags,
         )
@@ -181,7 +181,7 @@ describe('when given the load https guidance tag connection function', () => {
 
         const httpsGuidanceTags = ['https1', 'https2']
 
-        const httpsTagLoader = httpsGuidanceTagLoader(query)
+        const httpsTagLoader = loadHttpsGuidanceTagByTagId({ query })
         const expectedHttpsTags = await httpsTagLoader.loadMany(
           httpsGuidanceTags,
         )
@@ -227,7 +227,7 @@ describe('when given the load https guidance tag connection function', () => {
 
         const httpsGuidanceTags = ['https1', 'https2']
 
-        const httpsTagLoader = httpsGuidanceTagLoader(query)
+        const httpsTagLoader = loadHttpsGuidanceTagByTagId({ query })
         const expectedHttpsTags = await httpsTagLoader.loadMany(
           httpsGuidanceTags,
         )
@@ -284,7 +284,7 @@ describe('when given the load https guidance tag connection function', () => {
       describe('ordering on TAG_ID', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = httpsGuidanceTagLoader(query)
+            const loader = loadHttpsGuidanceTagByTagId({ query })
             const expectedHttpsTag = await loader.load('https2')
 
             const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
@@ -329,7 +329,7 @@ describe('when given the load https guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = httpsGuidanceTagLoader(query)
+            const loader = loadHttpsGuidanceTagByTagId({ query })
             const expectedHttpsTag = await loader.load('https2')
 
             const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
@@ -376,7 +376,7 @@ describe('when given the load https guidance tag connection function', () => {
       describe('ordering on TAG_NAME', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = httpsGuidanceTagLoader(query)
+            const loader = loadHttpsGuidanceTagByTagId({ query })
             const expectedHttpsTag = await loader.load('https2')
 
             const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
@@ -421,7 +421,7 @@ describe('when given the load https guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = httpsGuidanceTagLoader(query)
+            const loader = loadHttpsGuidanceTagByTagId({ query })
             const expectedHttpsTag = await loader.load('https2')
 
             const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
@@ -468,7 +468,7 @@ describe('when given the load https guidance tag connection function', () => {
       describe('ordering on GUIDANCE', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = httpsGuidanceTagLoader(query)
+            const loader = loadHttpsGuidanceTagByTagId({ query })
             const expectedHttpsTag = await loader.load('https2')
 
             const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
@@ -513,7 +513,7 @@ describe('when given the load https guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = httpsGuidanceTagLoader(query)
+            const loader = loadHttpsGuidanceTagByTagId({ query })
             const expectedHttpsTag = await loader.load('https2')
 
             const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({

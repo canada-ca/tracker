@@ -63,7 +63,7 @@ import {
   loadDkimGuidanceTagConnectionsByTagId,
   loadDmarcGuidanceTagByTagId,
   loadDmarcGuidanceTagConnectionsByTagId,
-  httpsGuidanceTagLoader,
+  loadHttpsGuidanceTagByTagId,
   loadHttpsGuidanceTagConnectionsByTagId,
   spfGuidanceTagLoader,
   spfGuidanceTagConnectionsLoader,
@@ -282,7 +282,11 @@ export const createContext = ({ context, req: request, res: response }) => {
           i18n,
         },
       ),
-      httpsGuidanceTagLoader: httpsGuidanceTagLoader(query, userKey, i18n),
+      loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
+        query,
+        userKey,
+        i18n,
+      }),
       loadHttpsGuidanceTagConnectionsByTagId: loadHttpsGuidanceTagConnectionsByTagId(
         {
           query,
