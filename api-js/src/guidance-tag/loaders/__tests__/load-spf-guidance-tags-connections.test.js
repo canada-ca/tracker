@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   loadSpfGuidanceTagConnectionsByTagId,
-  spfGuidanceTagLoader,
+  loadSpfGuidanceTagByTagId,
 } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -87,7 +87,7 @@ describe('when given the load spf guidance tag connection function', () => {
 
         const spfGuidanceTags = ['spf1', 'spf2']
 
-        const spfTagLoader = spfGuidanceTagLoader(query)
+        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
         const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
 
         const connectionArgs = {
@@ -132,7 +132,7 @@ describe('when given the load spf guidance tag connection function', () => {
 
         const spfGuidanceTags = ['spf1', 'spf2']
 
-        const spfTagLoader = spfGuidanceTagLoader(query)
+        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
         const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
 
         const connectionArgs = {
@@ -177,7 +177,7 @@ describe('when given the load spf guidance tag connection function', () => {
 
         const spfGuidanceTags = ['spf1', 'spf2']
 
-        const spfTagLoader = spfGuidanceTagLoader(query)
+        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
         const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
 
         const connectionArgs = {
@@ -221,7 +221,7 @@ describe('when given the load spf guidance tag connection function', () => {
 
         const spfGuidanceTags = ['spf1', 'spf2']
 
-        const spfTagLoader = spfGuidanceTagLoader(query)
+        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
         const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
 
         const connectionArgs = {
@@ -276,7 +276,7 @@ describe('when given the load spf guidance tag connection function', () => {
       describe('ordering on TAG_ID', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
             const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
@@ -321,7 +321,7 @@ describe('when given the load spf guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
             const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
@@ -368,7 +368,7 @@ describe('when given the load spf guidance tag connection function', () => {
       describe('ordering on TAG_NAME', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
             const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
@@ -413,7 +413,7 @@ describe('when given the load spf guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
             const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
@@ -460,7 +460,7 @@ describe('when given the load spf guidance tag connection function', () => {
       describe('ordering on GUIDANCE', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
             const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
@@ -505,7 +505,7 @@ describe('when given the load spf guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
             const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({

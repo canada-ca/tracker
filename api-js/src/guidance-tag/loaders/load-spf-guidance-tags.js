@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const spfGuidanceTagLoader = (query, userKey, i18n) =>
+export const loadSpfGuidanceTagByTagId = ({ query, userKey, i18n }) =>
   new DataLoader(async (tags) => {
     let cursor
     try {
@@ -13,7 +13,7 @@ export const spfGuidanceTagLoader = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running spfGuidanceTagLoader: ${err}`,
+        `Database error occurred when user: ${userKey} running loadSpfGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find SPF guidance tag(s). Please try again.`),
@@ -27,7 +27,7 @@ export const spfGuidanceTagLoader = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running spfGuidanceTagLoader: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadSpfGuidanceTagByTagId: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find SPF guidance tag(s). Please try again.`),
