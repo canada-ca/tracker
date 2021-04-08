@@ -196,7 +196,7 @@ describe('given a loadOrgByKey dataloader', () => {
         const loader = loadOrgByKey({
           query: mockedQuery,
           language: 'en',
-          user: '1234',
+          userKey: '1234',
           i18n,
         })
 
