@@ -6,7 +6,7 @@ import { toGlobalId } from 'graphql-relay'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { userRequired, tokenize } from '../../../auth'
-import { orgLoaderConnectionArgsByDomainId } from '../../../organization/loaders'
+import { loadOrgConnectionsByDomainId } from '../../../organization/loaders'
 import { organizationConnection } from '../../../organization/objects'
 import { userLoaderByKey } from '../../../user'
 import { domainStatus } from '../domain-status'
@@ -322,13 +322,13 @@ describe('given the domain object', () => {
       it('returns the resolved value', async () => {
         const demoType = domainType.getFields()
 
-        const loader = orgLoaderConnectionArgsByDomainId(
+        const loader = loadOrgConnectionsByDomainId({
           query,
-          'en',
-          user._key,
+          language: 'en',
+          userKey: user._key,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const expectedResult = {
           edges: [
@@ -378,7 +378,7 @@ describe('given the domain object', () => {
           demoType.organizations.resolve(
             { _id: domainOne._id },
             { first: 1 },
-            { loaders: { orgLoaderConnectionArgsByDomainId: loader } },
+            { loaders: { loadOrgConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

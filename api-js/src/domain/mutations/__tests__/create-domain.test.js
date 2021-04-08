@@ -14,7 +14,7 @@ import { checkPermission, tokenize, userRequired } from '../../../auth'
 import { loadDomainByDomain } from '../../loaders'
 import {
   loadOrgByKey,
-  orgLoaderConnectionArgsByDomainId,
+  loadOrgConnectionsByDomainId,
 } from '../../../organization/loaders'
 import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
 
@@ -198,12 +198,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -346,12 +346,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -471,12 +471,12 @@ describe('create a domain', () => {
             loaders: {
               loadDomainByDomain: loadDomainByDomain({ query }),
               loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+              loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                 query,
-                'en',
-                user._key,
+                language: 'en',
+                userKey: user._key,
                 cleanseInput,
-              ),
+              }),
               userLoaderByKey: userLoaderByKey(query),
             },
             validators: { cleanseInput, slugify },
@@ -595,12 +595,12 @@ describe('create a domain', () => {
             loaders: {
               loadDomainByDomain: loadDomainByDomain({ query }),
               loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+              loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                 query,
-                'en',
-                user._key,
+                language: 'en',
+                userKey: user._key,
                 cleanseInput,
-              ),
+              }),
               userLoaderByKey: userLoaderByKey(query),
             },
             validators: { cleanseInput, slugify },
@@ -754,12 +754,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -887,12 +887,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -1020,12 +1020,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -1168,12 +1168,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -1261,12 +1261,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -1368,12 +1368,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -1476,12 +1476,12 @@ describe('create a domain', () => {
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({ query }),
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                     query,
-                    'en',
-                    user._key,
+                    language: 'en',
+                    userKey: user._key,
                     cleanseInput,
-                  ),
+                  }),
                   userLoaderByKey: userLoaderByKey(query),
                 },
                 validators: { cleanseInput, slugify },
@@ -1584,12 +1584,12 @@ describe('create a domain', () => {
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'en',
-                      user._key,
+                      language: 'en',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
+                    }),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                   validators: { cleanseInput, slugify },
@@ -1683,12 +1683,12 @@ describe('create a domain', () => {
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'en',
-                      user._key,
+                      language: 'en',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
+                    }),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                   validators: { cleanseInput, slugify },
@@ -1789,12 +1789,12 @@ describe('create a domain', () => {
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'en',
-                      user._key,
+                      language: 'en',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
+                    }),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                   validators: { cleanseInput, slugify },
@@ -1888,12 +1888,12 @@ describe('create a domain', () => {
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'en',
-                      user._key,
+                      language: 'en',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
+                    }),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                   validators: { cleanseInput, slugify },
@@ -1998,12 +1998,12 @@ describe('create a domain', () => {
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({ query }),
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                     query,
-                    'en',
-                    user._key,
+                    language: 'en',
+                    userKey: user._key,
                     cleanseInput,
-                  ),
+                  }),
                   userLoaderByKey: userLoaderByKey(query),
                 },
                 validators: { cleanseInput, slugify },
@@ -2100,12 +2100,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -2192,12 +2192,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -2298,12 +2298,12 @@ describe('create a domain', () => {
               loaders: {
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
-                  'en',
-                  user._key,
+                  language: 'en',
+                  userKey: user._key,
                   cleanseInput,
-                ),
+                }),
                 userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
@@ -2405,12 +2405,12 @@ describe('create a domain', () => {
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({ query }),
                   loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                     query,
-                    'fr',
-                    user._key,
+                    language: 'en',
+                    userKey: user._key,
                     cleanseInput,
-                  ),
+                  }),
                   userLoaderByKey: userLoaderByKey(query),
                 },
                 validators: { cleanseInput, slugify },
@@ -2511,12 +2511,12 @@ describe('create a domain', () => {
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'fr',
-                      user._key,
+                      language: 'fr',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
+                    }),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                   validators: { cleanseInput, slugify },
@@ -2608,12 +2608,12 @@ describe('create a domain', () => {
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'fr',
-                      user._key,
+                      language: 'fr',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
+                    }),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                   validators: { cleanseInput, slugify },
@@ -2712,12 +2712,12 @@ describe('create a domain', () => {
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'fr',
-                      user._key,
+                      language: 'fr',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
+                    }),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                   validators: { cleanseInput, slugify },
@@ -2809,12 +2809,12 @@ describe('create a domain', () => {
                   loaders: {
                     loadDomainByDomain: loadDomainByDomain({ query }),
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                    orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                    loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                       query,
-                      'fr',
-                      user._key,
+                      language: 'fr',
+                      userKey: user._key,
                       cleanseInput,
-                    ),
+                    }),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                   validators: { cleanseInput, slugify },
@@ -2917,12 +2917,12 @@ describe('create a domain', () => {
                 loaders: {
                   loadDomainByDomain: loadDomainByDomain({ query }),
                   loadOrgByKey: loadOrgByKey({ query, language: 'fr', i18n }),
-                  orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                     query,
-                    'fr',
-                    user._key,
+                    language: 'fr',
+                    userKey: user._key,
                     cleanseInput,
-                  ),
+                  }),
                   userLoaderByKey: userLoaderByKey(query),
                 },
                 validators: { cleanseInput, slugify },
