@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { dkimResultLoaderByKey } from '../index'
+import { loadDkimResultByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the dkimResultLoaderByKey function', () => {
+describe('given the loadDkimResultByKey function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -59,7 +59,7 @@ describe('given the dkimResultLoaderByKey function', () => {
       `
       const expectedDkimResult = await expectedCursor.next()
 
-      const loader = dkimResultLoaderByKey(query, i18n)
+      const loader = loadDkimResultByKey({ query, i18n })
       const dkimResult = await loader.load(expectedDkimResult._key)
 
       expect(dkimResult).toEqual(expectedDkimResult)
@@ -80,7 +80,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         expectedDkimResults.push(tempDkimResult)
       }
 
-      const loader = dkimResultLoaderByKey(query, i18n)
+      const loader = loadDkimResultByKey({ query, i18n })
       const dkimResults = await loader.loadMany(dkimResultKeys)
       expect(dkimResults).toEqual(expectedDkimResults)
     })
@@ -105,7 +105,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dkimResultLoaderByKey(query, '1234', i18n)
+        const loader = loadDkimResultByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -116,7 +116,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dkimResultLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDkimResultByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -128,7 +128,7 @@ describe('given the dkimResultLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dkimResultLoaderByKey(query, '1234', i18n)
+        const loader = loadDkimResultByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -139,7 +139,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dkimResultLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDkimResultByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -164,7 +164,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dkimResultLoaderByKey(query, '1234', i18n)
+        const loader = loadDkimResultByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -173,7 +173,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dkimResultLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDkimResultByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -185,7 +185,7 @@ describe('given the dkimResultLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dkimResultLoaderByKey(query, '1234', i18n)
+        const loader = loadDkimResultByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -194,7 +194,7 @@ describe('given the dkimResultLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dkimResultLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDkimResultByKey: Error: Cursor error occurred.`,
         ])
       })
     })

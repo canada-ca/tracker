@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   dkimResultsLoaderConnectionByDkimId,
-  dkimResultLoaderByKey,
+  loadDkimResultByKey,
 } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -96,7 +96,7 @@ describe('when given the load dkim results connection function', () => {
           i18n,
         )
 
-        const dkimResultLoader = dkimResultLoaderByKey(query)
+        const dkimResultLoader = loadDkimResultByKey({ query })
         const expectedDkimResults = await dkimResultLoader.loadMany([
           dkimResult1._key,
           dkimResult2._key,
@@ -148,7 +148,7 @@ describe('when given the load dkim results connection function', () => {
           i18n,
         )
 
-        const dkimResultLoader = dkimResultLoaderByKey(query)
+        const dkimResultLoader = loadDkimResultByKey({ query })
         const expectedDkimResults = await dkimResultLoader.loadMany([
           dkimResult1._key,
           dkimResult2._key,
@@ -200,7 +200,7 @@ describe('when given the load dkim results connection function', () => {
           i18n,
         )
 
-        const dkimResultLoader = dkimResultLoaderByKey(query)
+        const dkimResultLoader = loadDkimResultByKey({ query })
         const expectedDkimResults = await dkimResultLoader.loadMany([
           dkimResult1._key,
           dkimResult2._key,
@@ -251,7 +251,7 @@ describe('when given the load dkim results connection function', () => {
           i18n,
         )
 
-        const dkimResultLoader = dkimResultLoaderByKey(query)
+        const dkimResultLoader = loadDkimResultByKey({ query })
         const expectedDkimResults = await dkimResultLoader.loadMany([
           dkimResult1._key,
           dkimResult2._key,
@@ -328,7 +328,11 @@ describe('when given the load dkim results connection function', () => {
       describe('ordering on SELECTOR', () => {
         describe('direction set to ASC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
             const connectionLoader = dkimResultsLoaderConnectionByDkimId(
@@ -375,7 +379,11 @@ describe('when given the load dkim results connection function', () => {
         })
         describe('direction set to DESC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
             const connectionLoader = dkimResultsLoaderConnectionByDkimId(
@@ -424,7 +432,11 @@ describe('when given the load dkim results connection function', () => {
       describe('ordering on RECORD', () => {
         describe('direction set to ASC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
             const connectionLoader = dkimResultsLoaderConnectionByDkimId(
@@ -471,7 +483,11 @@ describe('when given the load dkim results connection function', () => {
         })
         describe('direction set to DESC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
             const connectionLoader = dkimResultsLoaderConnectionByDkimId(
@@ -520,7 +536,11 @@ describe('when given the load dkim results connection function', () => {
       describe('ordering on KEY_LENGTH', () => {
         describe('direction set to ASC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
             const connectionLoader = dkimResultsLoaderConnectionByDkimId(
@@ -567,7 +587,11 @@ describe('when given the load dkim results connection function', () => {
         })
         describe('direction set to DESC', () => {
           it('returns the dkim result', async () => {
-            const loader = dkimResultLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimResultByKey({
+              query,
+              userKey: user._key,
+              i18n,
+            })
             const expectedDkimResult = await loader.load(dkimResultTwo._key)
 
             const connectionLoader = dkimResultsLoaderConnectionByDkimId(
