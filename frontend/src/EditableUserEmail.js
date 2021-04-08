@@ -27,7 +27,6 @@ import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EmailField from './EmailField'
 import { TrackerButton } from './TrackerButton'
-import { UpdateUserProfileUserName } from './graphql/fragments'
 
 function EditableUserEmail({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -36,7 +35,7 @@ function EditableUserEmail({ detailValue }) {
   const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE({ UpdateUserProfileFields: UpdateUserProfileUserName }),
+    UPDATE_USER_PROFILE,
     {
       context: {
         headers: {

@@ -27,7 +27,6 @@ import { useUserState } from './UserState'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
 import { TrackerButton } from './TrackerButton'
-import { UpdateUserProfileDisplayName } from './graphql/fragments'
 
 function EditableUserDisplayName({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -36,9 +35,7 @@ function EditableUserDisplayName({ detailValue }) {
   const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE({
-      UpdateUserProfileFields: UpdateUserProfileDisplayName,
-    }),
+    UPDATE_USER_PROFILE,
     {
       context: {
         headers: {
