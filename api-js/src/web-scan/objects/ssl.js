@@ -104,9 +104,9 @@ export const sslType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         args,
-        { loaders: { sslGuidanceTagConnectionsLoader } },
+        { loaders: { loadSslGuidanceTagConnectionsByTagId } },
       ) => {
-        const sslTags = await sslGuidanceTagConnectionsLoader({
+        const sslTags = await loadSslGuidanceTagConnectionsByTagId({
           sslGuidanceTags: guidanceTags,
           ...args,
         })
@@ -126,9 +126,9 @@ export const sslType = new GraphQLObjectType({
       resolve: async (
         { negativeTags },
         args,
-        { loaders: { sslGuidanceTagConnectionsLoader } },
+        { loaders: { loadSslGuidanceTagConnectionsByTagId } },
       ) => {
-        const sslTags = await sslGuidanceTagConnectionsLoader({
+        const sslTags = await loadSslGuidanceTagConnectionsByTagId({
           sslGuidanceTags: negativeTags,
           ...args,
         })
@@ -148,9 +148,9 @@ export const sslType = new GraphQLObjectType({
       resolve: async (
         { neutralTags },
         args,
-        { loaders: { sslGuidanceTagConnectionsLoader } },
+        { loaders: { loadSslGuidanceTagConnectionsByTagId } },
       ) => {
-        const sslTags = await sslGuidanceTagConnectionsLoader({
+        const sslTags = await loadSslGuidanceTagConnectionsByTagId({
           sslGuidanceTags: neutralTags,
           ...args,
         })
@@ -170,9 +170,9 @@ export const sslType = new GraphQLObjectType({
       resolve: async (
         { positiveTags },
         args,
-        { loaders: { sslGuidanceTagConnectionsLoader } },
+        { loaders: { loadSslGuidanceTagConnectionsByTagId } },
       ) => {
-        const sslTags = await sslGuidanceTagConnectionsLoader({
+        const sslTags = await loadSslGuidanceTagConnectionsByTagId({
           sslGuidanceTags: positiveTags,
           ...args,
         })

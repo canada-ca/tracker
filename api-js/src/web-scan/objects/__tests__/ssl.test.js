@@ -13,7 +13,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { sslGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
+import { loadSslGuidanceTagConnectionsByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 import { sslType } from '../index'
 
@@ -374,12 +374,12 @@ describe('given the ssl gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = sslType.getFields()
 
-        const loader = sslGuidanceTagConnectionsLoader(
+        const loader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const guidanceTags = ['ssl1']
 
@@ -424,7 +424,7 @@ describe('given the ssl gql object', () => {
           demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { sslGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadSslGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -433,12 +433,12 @@ describe('given the ssl gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = sslType.getFields()
 
-        const loader = sslGuidanceTagConnectionsLoader(
+        const loader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const negativeTags = ['ssl1']
 
@@ -483,7 +483,7 @@ describe('given the ssl gql object', () => {
           demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { sslGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadSslGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -492,12 +492,12 @@ describe('given the ssl gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = sslType.getFields()
 
-        const loader = sslGuidanceTagConnectionsLoader(
+        const loader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const neutralTags = ['ssl1']
 
@@ -542,7 +542,7 @@ describe('given the ssl gql object', () => {
           demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { sslGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadSslGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -551,12 +551,12 @@ describe('given the ssl gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = sslType.getFields()
 
-        const loader = sslGuidanceTagConnectionsLoader(
+        const loader = loadSslGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const positiveTags = ['ssl1']
 
@@ -601,7 +601,7 @@ describe('given the ssl gql object', () => {
           demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { sslGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadSslGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
