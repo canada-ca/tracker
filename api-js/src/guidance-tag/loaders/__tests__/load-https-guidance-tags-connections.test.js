@@ -8,7 +8,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
-  httpsGuidanceTagConnectionsLoader,
+  loadHttpsGuidanceTagConnectionsByTagId,
   httpsGuidanceTagLoader,
 } from '../index'
 
@@ -78,12 +78,12 @@ describe('when given the load https guidance tag connection function', () => {
   describe('given a successful load', () => {
     describe('using after cursor', () => {
       it('returns https result(s) after a given node id', async () => {
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const httpsGuidanceTags = ['https1', 'https2']
 
@@ -125,12 +125,12 @@ describe('when given the load https guidance tag connection function', () => {
     })
     describe('using before cursor', () => {
       it('returns https result(s) before a given node id', async () => {
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const httpsGuidanceTags = ['https1', 'https2']
 
@@ -172,12 +172,12 @@ describe('when given the load https guidance tag connection function', () => {
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const httpsGuidanceTags = ['https1', 'https2']
 
@@ -218,12 +218,12 @@ describe('when given the load https guidance tag connection function', () => {
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const httpsGuidanceTags = ['https1', 'https2']
 
@@ -287,12 +287,12 @@ describe('when given the load https guidance tag connection function', () => {
             const loader = httpsGuidanceTagLoader(query)
             const expectedHttpsTag = await loader.load('https2')
 
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
@@ -332,12 +332,12 @@ describe('when given the load https guidance tag connection function', () => {
             const loader = httpsGuidanceTagLoader(query)
             const expectedHttpsTag = await loader.load('https2')
 
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
@@ -379,12 +379,12 @@ describe('when given the load https guidance tag connection function', () => {
             const loader = httpsGuidanceTagLoader(query)
             const expectedHttpsTag = await loader.load('https2')
 
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
@@ -424,12 +424,12 @@ describe('when given the load https guidance tag connection function', () => {
             const loader = httpsGuidanceTagLoader(query)
             const expectedHttpsTag = await loader.load('https2')
 
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
@@ -471,12 +471,12 @@ describe('when given the load https guidance tag connection function', () => {
             const loader = httpsGuidanceTagLoader(query)
             const expectedHttpsTag = await loader.load('https2')
 
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
@@ -516,12 +516,12 @@ describe('when given the load https guidance tag connection function', () => {
             const loader = httpsGuidanceTagLoader(query)
             const expectedHttpsTag = await loader.load('https2')
 
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               httpsGuidanceTags: ['https1', 'https2', 'https3'],
@@ -561,12 +561,12 @@ describe('when given the load https guidance tag connection function', () => {
     describe('no https results are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -611,12 +611,12 @@ describe('when given the load https guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = httpsGuidanceTagConnectionsLoader(
+          const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const httpsGuidanceTags = ['https1', 'https2']
           const connectionArgs = {}
@@ -634,18 +634,18 @@ describe('when given the load https guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadHttpsGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = httpsGuidanceTagConnectionsLoader(
+          const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const httpsGuidanceTags = ['https1', 'https2']
           const connectionArgs = {
@@ -666,19 +666,19 @@ describe('when given the load https guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadHttpsGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const httpsGuidanceTags = ['https1', 'https2']
             const connectionArgs = {
@@ -698,18 +698,18 @@ describe('when given the load https guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadHttpsGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const httpsGuidanceTags = ['https1', 'https2']
             const connectionArgs = {
@@ -729,7 +729,7 @@ describe('when given the load https guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadHttpsGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -737,12 +737,12 @@ describe('when given the load https guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const httpsGuidanceTags = ['https1', 'https2']
             const connectionArgs = {
@@ -762,18 +762,18 @@ describe('when given the load https guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadHttpsGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const httpsGuidanceTags = ['https1', 'https2']
             const connectionArgs = {
@@ -793,7 +793,7 @@ describe('when given the load https guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadHttpsGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -804,12 +804,12 @@ describe('when given the load https guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = httpsGuidanceTagConnectionsLoader(
+              const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const httpsGuidanceTags = ['https1', 'https2']
               const connectionArgs = {
@@ -831,7 +831,7 @@ describe('when given the load https guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: httpsGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadHttpsGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -841,12 +841,12 @@ describe('when given the load https guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = httpsGuidanceTagConnectionsLoader(
+              const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const httpsGuidanceTags = ['https1', 'https2']
               const connectionArgs = {
@@ -868,7 +868,7 @@ describe('when given the load https guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: httpsGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadHttpsGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -881,12 +881,12 @@ describe('when given the load https guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const httpsGuidanceTags = ['https1', 'https2']
         const connectionArgs = {
@@ -906,7 +906,7 @@ describe('when given the load https guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in httpsGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadHttpsGuidanceTagConnectionsByTagId, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -919,12 +919,12 @@ describe('when given the load https guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const httpsGuidanceTags = ['https1', 'https2']
         const connectionArgs = {
@@ -944,7 +944,7 @@ describe('when given the load https guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in httpsGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadHttpsGuidanceTagConnectionsByTagId, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
@@ -967,12 +967,12 @@ describe('when given the load https guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = httpsGuidanceTagConnectionsLoader(
+          const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const httpsGuidanceTags = ['https1', 'https2']
           const connectionArgs = {}
@@ -986,18 +986,18 @@ describe('when given the load https guidance tag connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadHttpsGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = httpsGuidanceTagConnectionsLoader(
+          const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const httpsGuidanceTags = ['https1', 'https2']
           const connectionArgs = {
@@ -1014,20 +1014,19 @@ describe('when given the load https guidance tag connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadHttpsGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
-
+            })
             const httpsGuidanceTags = ['https1', 'https2']
             const connectionArgs = {
               first: -1,
@@ -1042,18 +1041,18 @@ describe('when given the load https guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadHttpsGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const httpsGuidanceTags = ['https1', 'https2']
             const connectionArgs = {
@@ -1069,7 +1068,7 @@ describe('when given the load https guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadHttpsGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -1077,12 +1076,12 @@ describe('when given the load https guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const httpsGuidanceTags = ['https1', 'https2']
             const connectionArgs = {
@@ -1098,18 +1097,18 @@ describe('when given the load https guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadHttpsGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = httpsGuidanceTagConnectionsLoader(
+            const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const httpsGuidanceTags = ['https1', 'https2']
             const connectionArgs = {
@@ -1125,7 +1124,7 @@ describe('when given the load https guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: httpsGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadHttpsGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -1136,12 +1135,12 @@ describe('when given the load https guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = httpsGuidanceTagConnectionsLoader(
+              const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const httpsGuidanceTags = ['https1', 'https2']
               const connectionArgs = {
@@ -1159,7 +1158,7 @@ describe('when given the load https guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: httpsGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadHttpsGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -1169,12 +1168,12 @@ describe('when given the load https guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = httpsGuidanceTagConnectionsLoader(
+              const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const httpsGuidanceTags = ['https1', 'https2']
               const connectionArgs = {
@@ -1192,7 +1191,7 @@ describe('when given the load https guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: httpsGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadHttpsGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -1205,12 +1204,12 @@ describe('when given the load https guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const httpsGuidanceTags = ['https1', 'https2']
         const connectionArgs = {
@@ -1226,7 +1225,7 @@ describe('when given the load https guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in httpsGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadHttpsGuidanceTagConnectionsByTagId, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -1239,12 +1238,12 @@ describe('when given the load https guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = httpsGuidanceTagConnectionsLoader(
+        const connectionLoader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const httpsGuidanceTags = ['https1', 'https2']
         const connectionArgs = {
@@ -1260,7 +1259,7 @@ describe('when given the load https guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in httpsGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadHttpsGuidanceTagConnectionsByTagId, error: Error: Cursor Error Occurred.`,
         ])
       })
     })

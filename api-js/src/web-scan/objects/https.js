@@ -71,9 +71,9 @@ export const httpsType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         args,
-        { loaders: { httpsGuidanceTagConnectionsLoader } },
+        { loaders: { loadHttpsGuidanceTagConnectionsByTagId } },
       ) => {
-        const httpsTags = await httpsGuidanceTagConnectionsLoader({
+        const httpsTags = await loadHttpsGuidanceTagConnectionsByTagId({
           httpsGuidanceTags: guidanceTags,
           ...args,
         })
@@ -93,9 +93,9 @@ export const httpsType = new GraphQLObjectType({
       resolve: async (
         { negativeTags },
         args,
-        { loaders: { httpsGuidanceTagConnectionsLoader } },
+        { loaders: { loadHttpsGuidanceTagConnectionsByTagId } },
       ) => {
-        const httpsTags = await httpsGuidanceTagConnectionsLoader({
+        const httpsTags = await loadHttpsGuidanceTagConnectionsByTagId({
           httpsGuidanceTags: negativeTags,
           ...args,
         })
@@ -115,9 +115,9 @@ export const httpsType = new GraphQLObjectType({
       resolve: async (
         { neutralTags },
         args,
-        { loaders: { httpsGuidanceTagConnectionsLoader } },
+        { loaders: { loadHttpsGuidanceTagConnectionsByTagId } },
       ) => {
-        const httpsTags = await httpsGuidanceTagConnectionsLoader({
+        const httpsTags = await loadHttpsGuidanceTagConnectionsByTagId({
           httpsGuidanceTags: neutralTags,
           ...args,
         })
@@ -137,9 +137,9 @@ export const httpsType = new GraphQLObjectType({
       resolve: async (
         { positiveTags },
         args,
-        { loaders: { httpsGuidanceTagConnectionsLoader } },
+        { loaders: { loadHttpsGuidanceTagConnectionsByTagId } },
       ) => {
-        const httpsTags = await httpsGuidanceTagConnectionsLoader({
+        const httpsTags = await loadHttpsGuidanceTagConnectionsByTagId({
           httpsGuidanceTags: positiveTags,
           ...args,
         })
