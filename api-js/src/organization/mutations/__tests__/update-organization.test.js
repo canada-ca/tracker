@@ -11,7 +11,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
 import { userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderByKey } from '../../loaders'
+import { loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -144,7 +144,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -223,7 +223,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -302,7 +302,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -381,7 +381,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -460,7 +460,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -539,7 +539,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -618,7 +618,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -710,7 +710,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -791,7 +791,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -870,7 +870,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -949,7 +949,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1028,7 +1028,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1107,7 +1107,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1186,7 +1186,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1265,7 +1265,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1357,7 +1357,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1447,7 +1447,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1526,7 +1526,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1605,7 +1605,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1684,7 +1684,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1763,7 +1763,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1842,7 +1842,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1921,7 +1921,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2013,7 +2013,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2094,7 +2094,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2173,7 +2173,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2252,7 +2252,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2331,7 +2331,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2410,7 +2410,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2489,7 +2489,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2568,7 +2568,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2660,7 +2660,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2796,7 +2796,7 @@ describe('updating an organization', () => {
                     slugify,
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -2807,12 +2807,13 @@ describe('updating an organization', () => {
                   updateOrganization: {
                     result: {
                       code: 403,
-                      description: 'Permission Denied: Please contact organization admin for help with updating organization.',
+                      description:
+                        'Permission Denied: Please contact organization admin for help with updating organization.',
                     },
                   },
                 },
               }
-  
+
               expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: user`,
@@ -2871,7 +2872,7 @@ describe('updating an organization', () => {
                     slugify,
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -2882,12 +2883,13 @@ describe('updating an organization', () => {
                   updateOrganization: {
                     result: {
                       code: 403,
-                      description: 'Permission Denied: Please contact organization admin for help with updating organization.',
+                      description:
+                        'Permission Denied: Please contact organization admin for help with updating organization.',
                     },
                   },
                 },
               }
-  
+
               expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: undefined`,
@@ -2949,7 +2951,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -3058,7 +3060,7 @@ describe('updating an organization', () => {
                 slugify,
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -3069,7 +3071,8 @@ describe('updating an organization', () => {
               updateOrganization: {
                 result: {
                   code: 400,
-                  description: 'Organization name already in use, please choose another and try again.',
+                  description:
+                    'Organization name already in use, please choose another and try again.',
                 },
               },
             },
@@ -3116,7 +3119,7 @@ describe('updating an organization', () => {
         })
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockQuery = jest.fn().mockReturnValue({
@@ -3176,7 +3179,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -3230,7 +3233,7 @@ describe('updating an organization', () => {
         })
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockQuery = jest
@@ -3288,7 +3291,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -3308,7 +3311,7 @@ describe('updating an organization', () => {
         })
         describe('when checking to see if orgName is already in use', () => {
           it('throws an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockQuery = jest
@@ -3366,7 +3369,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -3420,7 +3423,7 @@ describe('updating an organization', () => {
         })
         describe('when updating/inserting new org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockQuery = jest
@@ -3511,7 +3514,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -3531,7 +3534,7 @@ describe('updating an organization', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             transaction = jest.fn().mockReturnValue({
@@ -3620,7 +3623,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -3743,7 +3746,7 @@ describe('updating an organization', () => {
                     slugify,
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3759,7 +3762,7 @@ describe('updating an organization', () => {
                   },
                 },
               }
-  
+
               expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: user`,
@@ -3818,7 +3821,7 @@ describe('updating an organization', () => {
                     slugify,
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3834,7 +3837,7 @@ describe('updating an organization', () => {
                   },
                 },
               }
-  
+
               expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: undefined`,
@@ -3928,7 +3931,7 @@ describe('updating an organization', () => {
                 slugify,
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -4004,7 +4007,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -4063,7 +4066,7 @@ describe('updating an organization', () => {
         })
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockQuery = jest.fn().mockReturnValue({
@@ -4123,7 +4126,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -4173,7 +4176,7 @@ describe('updating an organization', () => {
         })
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockQuery = jest
@@ -4231,7 +4234,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -4247,7 +4250,7 @@ describe('updating an organization', () => {
         })
         describe('when checking to see if orgName is already in use', () => {
           it('throws an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockQuery = jest
@@ -4305,7 +4308,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -4355,7 +4358,7 @@ describe('updating an organization', () => {
         })
         describe('when updating/inserting new org details', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -4415,7 +4418,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -4431,7 +4434,7 @@ describe('updating an organization', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -4520,7 +4523,7 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },

@@ -5,7 +5,7 @@ import { toGlobalId } from 'graphql-relay'
 import { affiliationType } from '../affiliation'
 import { databaseOptions } from '../../../../database-options'
 import { userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderByKey } from '../../../organization/loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
 import { organizationType } from '../../../organization/objects'
 import { RoleEnums } from '../../../enums'
 import { userSharedType } from '../../../user/objects'
@@ -163,7 +163,12 @@ describe('given the user affiliation object', () => {
       it('returns the resolved value', async () => {
         const demoType = affiliationType.getFields()
 
-        const loader = orgLoaderByKey(query, 'en', '1', {})
+        const loader = loadOrgByKey({
+          query,
+          language: 'en',
+          userKey: '1',
+          i18n: {},
+        })
 
         const expectedResult = {
           _id: org._id,
@@ -199,7 +204,7 @@ describe('given the user affiliation object', () => {
           demoType.organization.resolve(
             { _from: org._id },
             {},
-            { loaders: { orgLoaderByKey: loader } },
+            { loaders: { loadOrgByKey: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

@@ -41,7 +41,7 @@ export const createDomain = new mutationWithClientMutationId({
       transaction,
       userKey,
       auth: { checkPermission, userRequired },
-      loaders: { loadDomainByDomain, orgLoaderByKey },
+      loaders: { loadDomainByDomain, loadOrgByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -60,7 +60,7 @@ export const createDomain = new mutationWithClientMutationId({
     await userRequired()
 
     // Check to see if org exists
-    const org = await orgLoaderByKey.load(orgId)
+    const org = await loadOrgByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(

@@ -30,7 +30,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
       transaction,
       userKey,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderByKey },
+      loaders: { loadOrgByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -40,7 +40,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
     await userRequired()
 
     // Check to see if org exists
-    const currentOrg = await orgLoaderByKey.load(orgKey)
+    const currentOrg = await loadOrgByKey.load(orgKey)
 
     if (typeof currentOrg === 'undefined') {
       console.warn(

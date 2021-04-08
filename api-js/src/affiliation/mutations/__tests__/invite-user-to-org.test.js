@@ -10,7 +10,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
-import { orgLoaderByKey } from '../../../organization/loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
 import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
@@ -174,7 +174,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -269,7 +269,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -364,7 +364,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -454,7 +454,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -548,7 +548,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -643,7 +643,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -755,7 +755,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -850,7 +850,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -941,7 +941,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -1036,7 +1036,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -1132,7 +1132,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1207,7 +1207,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1309,7 +1309,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1417,7 +1417,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1525,7 +1525,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1647,7 +1647,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1726,7 +1726,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1857,7 +1857,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -1951,7 +1951,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2045,7 +2045,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2135,7 +2135,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2226,7 +2226,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2317,7 +2317,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2425,7 +2425,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2519,7 +2519,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2609,7 +2609,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2700,7 +2700,7 @@ describe('invite user to org', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2792,7 +2792,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -2867,7 +2867,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -2974,7 +2974,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -3081,7 +3081,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -3202,7 +3202,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -3277,7 +3277,7 @@ describe('invite user to org', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },

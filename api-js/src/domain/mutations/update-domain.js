@@ -47,7 +47,7 @@ export const updateDomain = new mutationWithClientMutationId({
       userKey,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
-      loaders: { loadDomainByKey, orgLoaderByKey },
+      loaders: { loadDomainByKey, loadOrgByKey },
     },
   ) => {
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
@@ -79,7 +79,7 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if org exists
-    const org = await orgLoaderByKey.load(orgId)
+    const org = await loadOrgByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(

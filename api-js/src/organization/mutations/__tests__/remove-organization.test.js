@@ -11,7 +11,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
 import { userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderByKey } from '../../loaders'
+import { loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -196,7 +196,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -259,7 +259,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -336,7 +336,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -399,7 +399,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -481,7 +481,7 @@ describe('removing an organization', () => {
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -541,7 +541,7 @@ describe('removing an organization', () => {
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -650,7 +650,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -712,7 +712,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -789,7 +789,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -851,7 +851,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -933,7 +933,7 @@ describe('removing an organization', () => {
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -992,7 +992,7 @@ describe('removing an organization', () => {
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({query, language:'fr'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1085,7 +1085,7 @@ describe('removing an organization', () => {
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1211,7 +1211,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1284,7 +1284,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1391,7 +1391,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1460,7 +1460,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1529,7 +1529,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1603,7 +1603,7 @@ describe('removing an organization', () => {
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1729,7 +1729,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1801,7 +1801,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1907,7 +1907,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1972,7 +1972,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2037,7 +2037,7 @@ describe('removing an organization', () => {
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },

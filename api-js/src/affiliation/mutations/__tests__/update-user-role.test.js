@@ -11,7 +11,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
 import { userLoaderByUserName, userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderByKey } from '../../../organization/loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -164,7 +164,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -233,7 +233,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -311,7 +311,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -380,7 +380,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -467,7 +467,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -570,7 +570,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -637,7 +637,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -704,7 +704,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -778,7 +778,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -879,7 +879,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -954,7 +954,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1039,7 +1039,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -1124,7 +1124,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -1210,7 +1210,7 @@ describe('update a users role', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
@@ -1293,7 +1293,7 @@ describe('update a users role', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
@@ -1412,7 +1412,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1524,7 +1524,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1593,7 +1593,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -1722,7 +1722,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -1791,7 +1791,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -1869,7 +1869,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -1938,7 +1938,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2025,7 +2025,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2128,7 +2128,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -2195,7 +2195,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -2262,7 +2262,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -2336,7 +2336,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -2436,7 +2436,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -2510,7 +2510,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -2594,7 +2594,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2678,7 +2678,7 @@ describe('update a users role', () => {
                     }),
                   },
                   loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     userLoaderByKey: userLoaderByKey(query),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
@@ -2763,7 +2763,7 @@ describe('update a users role', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
@@ -2845,7 +2845,7 @@ describe('update a users role', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
@@ -2963,7 +2963,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -3072,7 +3072,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
@@ -3139,7 +3139,7 @@ describe('update a users role', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },

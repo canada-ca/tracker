@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
-import { orgLoaderByKey } from '../../../organization/loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
 import { userLoaderByKey } from '../../../user/loaders'
 import { loadAffiliationByKey } from '../../loaders'
 
@@ -231,7 +231,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -296,7 +301,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -368,7 +378,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -433,7 +448,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -512,7 +532,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -577,7 +602,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'en',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -652,7 +682,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -733,7 +768,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -814,7 +854,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -895,7 +940,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -976,7 +1026,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -1057,7 +1112,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -1145,7 +1205,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -1230,7 +1295,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -1303,7 +1373,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'en',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -1399,7 +1474,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'fr',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -1464,7 +1544,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'fr',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -1536,7 +1621,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'fr',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -1601,7 +1691,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'fr',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -1680,7 +1775,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'fr',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -1745,7 +1845,12 @@ describe('removing a user from an organization', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                  loadOrgByKey: loadOrgByKey({
+                    query,
+                    language: 'fr',
+                    userKey: admin._key,
+                    i18n,
+                  }),
                   userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
                 },
                 validators: { cleanseInput },
@@ -1820,7 +1925,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'fr',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -1900,7 +2010,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'fr',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -1980,7 +2095,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'fr',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -2060,7 +2180,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'fr',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -2140,7 +2265,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'fr',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -2221,7 +2351,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'fr',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -2308,7 +2443,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'fr',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -2389,7 +2529,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'fr',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },
@@ -2458,7 +2603,12 @@ describe('removing a user from an organization', () => {
                 }),
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr', admin._key, i18n),
+                loadOrgByKey: loadOrgByKey({
+                  query,
+                  language: 'fr',
+                  userKey: admin._key,
+                  i18n,
+                }),
                 userLoaderByKey: userLoaderByKey(query, admin._key, i18n),
               },
               validators: { cleanseInput },

@@ -13,7 +13,7 @@ import { checkPermission, userRequired } from '../../../auth'
 import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
 import { loadDomainConnectionsByOrgId } from '../../../domain/loaders'
 import { userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderBySlug, orgLoaderByKey } from '../../loaders'
+import { orgLoaderBySlug, loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -151,7 +151,7 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey(query, 'en'),
                 orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
                 userLoaderByKey: userLoaderByKey(query),
                 loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
@@ -368,7 +368,7 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey(query, 'fr'),
                 orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
                 loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({

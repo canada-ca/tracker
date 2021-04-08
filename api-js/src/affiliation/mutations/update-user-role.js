@@ -44,7 +44,7 @@ given organization.`,
       transaction,
       userKey,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderByKey, userLoaderByUserName },
+      loaders: { loadOrgByKey, userLoaderByUserName },
       validators: { cleanseInput },
     },
   ) => {
@@ -83,7 +83,7 @@ given organization.`,
     }
 
     // Check to see if org exists
-    const org = await orgLoaderByKey.load(orgId)
+    const org = await loadOrgByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(

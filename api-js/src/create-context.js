@@ -71,7 +71,7 @@ import {
   loadSslGuidanceTagConnectionsByTagId,
 } from './guidance-tag/loaders'
 import {
-  orgLoaderByKey,
+  loadOrgByKey,
   orgLoaderBySlug,
   orgLoaderConnectionArgsByDomainId,
   orgLoaderConnectionsByUserId,
@@ -321,7 +321,12 @@ export const createContext = ({ context, req: request, res: response }) => {
           i18n,
         },
       ),
-      orgLoaderByKey: orgLoaderByKey(query, request.language, userKey, i18n),
+      loadOrgByKey: loadOrgByKey({
+        query,
+        language: request.language,
+        userKey,
+        i18n,
+      }),
       orgLoaderBySlug: orgLoaderBySlug(query, request.language, userKey, i18n),
       orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
         query,

@@ -11,7 +11,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
 import { loadDomainByKey } from '../../loaders'
-import { orgLoaderByKey } from '../../../organization/loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
 import { userLoaderByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -228,7 +228,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -292,7 +292,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -349,7 +349,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -451,7 +451,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -515,7 +515,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -572,7 +572,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -651,7 +651,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -715,7 +715,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -772,7 +772,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -843,7 +843,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -907,7 +907,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -964,7 +964,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -1137,7 +1137,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -1201,7 +1201,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -1258,7 +1258,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -1331,7 +1331,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -1395,7 +1395,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -1452,7 +1452,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -1524,7 +1524,7 @@ describe('removing a domain', () => {
               validators: { cleanseInput },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1595,7 +1595,7 @@ describe('removing a domain', () => {
               validators: { cleanseInput },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1708,7 +1708,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1783,7 +1783,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1851,7 +1851,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1965,7 +1965,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2033,7 +2033,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2105,7 +2105,7 @@ describe('removing a domain', () => {
         describe('when checking to see how many edges there are', () => {
           it('returns an error', async () => {
             const domainLoader = loadDomainByKey({ query })
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockedQuery = jest
@@ -2164,7 +2164,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: domainLoader,
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -2234,7 +2234,7 @@ describe('removing a domain', () => {
         describe('when removing scans', () => {
           it('returns an error', async () => {
             const domainLoader = loadDomainByKey({ query })
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2285,7 +2285,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: domainLoader,
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -2305,7 +2305,7 @@ describe('removing a domain', () => {
           describe('domain has only one edge', () => {
             it('returns an error', async () => {
               const domainLoader = loadDomainByKey({ query })
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const userLoader = userLoaderByKey(query)
 
               const cursor = {
@@ -2369,7 +2369,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: domainLoader,
-                    orgLoaderByKey: orgLoader,
+                    loadOrgByKey: orgLoader,
                     userLoaderByKey: userLoader,
                   },
                 },
@@ -2388,7 +2388,7 @@ describe('removing a domain', () => {
           describe('domain has more than one edge', () => {
             it('returns an error', async () => {
               const domainLoader = loadDomainByKey({ query })
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const userLoader = userLoaderByKey(query)
 
               const cursor = {
@@ -2447,7 +2447,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: domainLoader,
-                    orgLoaderByKey: orgLoader,
+                    loadOrgByKey: orgLoader,
                     userLoaderByKey: userLoader,
                   },
                 },
@@ -2467,7 +2467,7 @@ describe('removing a domain', () => {
         describe('when committing to db', () => {
           it('returns an error', async () => {
             const domainLoader = loadDomainByKey({ query })
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2521,7 +2521,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: domainLoader,
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -2713,7 +2713,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -2777,7 +2777,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -2834,7 +2834,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -2937,7 +2937,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3001,7 +3001,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3058,7 +3058,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3137,7 +3137,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3201,7 +3201,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3258,7 +3258,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3329,7 +3329,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3393,7 +3393,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3450,7 +3450,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3623,7 +3623,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3687,7 +3687,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3744,7 +3744,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3817,7 +3817,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3881,7 +3881,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -3938,7 +3938,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: loadDomainByKey({ query }),
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    loadOrgByKey: loadOrgByKey({query, language:'en'}),
                     userLoaderByKey: userLoaderByKey(query),
                   },
                 },
@@ -4010,7 +4010,7 @@ describe('removing a domain', () => {
               validators: { cleanseInput },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -4081,7 +4081,7 @@ describe('removing a domain', () => {
               validators: { cleanseInput },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -4193,7 +4193,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -4267,7 +4267,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -4334,7 +4334,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -4447,7 +4447,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -4514,7 +4514,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -4579,7 +4579,7 @@ describe('removing a domain', () => {
         describe('when checking to see how many edges there are', () => {
           it('returns an error', async () => {
             const domainLoader = loadDomainByKey({ query })
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockedQuery = jest
@@ -4638,7 +4638,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: domainLoader,
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -4698,7 +4698,7 @@ describe('removing a domain', () => {
         describe('when removing scans', () => {
           it('returns an error', async () => {
             const domainLoader = loadDomainByKey({ query })
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             transaction = jest.fn().mockReturnValue({
@@ -4749,7 +4749,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: domainLoader,
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },
@@ -4767,7 +4767,7 @@ describe('removing a domain', () => {
           describe('domain has only one edge', () => {
             it('returns an error', async () => {
               const domainLoader = loadDomainByKey({ query })
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const userLoader = userLoaderByKey(query)
 
               const cursor = {
@@ -4831,7 +4831,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: domainLoader,
-                    orgLoaderByKey: orgLoader,
+                    loadOrgByKey: orgLoader,
                     userLoaderByKey: userLoader,
                   },
                 },
@@ -4848,7 +4848,7 @@ describe('removing a domain', () => {
           describe('domain has more than one edge', () => {
             it('returns an error', async () => {
               const domainLoader = loadDomainByKey({ query })
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const userLoader = userLoaderByKey(query)
 
               const cursor = {
@@ -4907,7 +4907,7 @@ describe('removing a domain', () => {
                   validators: { cleanseInput },
                   loaders: {
                     loadDomainByKey: domainLoader,
-                    orgLoaderByKey: orgLoader,
+                    loadOrgByKey: orgLoader,
                     userLoaderByKey: userLoader,
                   },
                 },
@@ -4925,7 +4925,7 @@ describe('removing a domain', () => {
         describe('when committing to db', () => {
           it('returns an error', async () => {
             const domainLoader = loadDomainByKey({ query })
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const userLoader = userLoaderByKey(query)
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -4979,7 +4979,7 @@ describe('removing a domain', () => {
                 validators: { cleanseInput },
                 loaders: {
                   loadDomainByKey: domainLoader,
-                  orgLoaderByKey: orgLoader,
+                  loadOrgByKey: orgLoader,
                   userLoaderByKey: userLoader,
                 },
               },

@@ -98,7 +98,7 @@ export const updateOrganization = new mutationWithClientMutationId({
       transaction,
       userKey,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderByKey },
+      loaders: { loadOrgByKey },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -127,7 +127,7 @@ export const updateOrganization = new mutationWithClientMutationId({
     await userRequired()
 
     // Check to see if org exists
-    const currentOrg = await orgLoaderByKey.load(orgKey)
+    const currentOrg = await loadOrgByKey.load(orgKey)
 
     if (typeof currentOrg === 'undefined') {
       console.warn(
@@ -282,8 +282,8 @@ export const updateOrganization = new mutationWithClientMutationId({
       )
     }
 
-    await orgLoaderByKey.clear(orgKey)
-    const organization = await orgLoaderByKey.load(orgKey)
+    await loadOrgByKey.clear(orgKey)
+    const organization = await loadOrgByKey.load(orgKey)
 
     console.info(`User: ${userKey}, successfully updated org ${orgKey}.`)
     return organization

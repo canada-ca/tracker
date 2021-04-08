@@ -13,7 +13,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { userLoaderByUserName, userLoaderByKey } from '../../loaders'
-import { orgLoaderByKey } from '../../../organization/loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -323,7 +323,7 @@ describe('user sign up', () => {
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
                 userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
             },
           )
@@ -410,7 +410,7 @@ describe('user sign up', () => {
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
                 userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
             },
           )
@@ -490,7 +490,7 @@ describe('user sign up', () => {
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
                 userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
               },
             },
           )
@@ -577,7 +577,7 @@ describe('user sign up', () => {
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
                 userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
             },
           )
@@ -938,7 +938,7 @@ describe('user sign up', () => {
                 loaders: {
                   userLoaderByUserName: userLoaderByUserName(query),
                   userLoaderByKey: userLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 },
               },
             )
@@ -1023,7 +1023,7 @@ describe('user sign up', () => {
                 loaders: {
                   userLoaderByUserName: userLoaderByUserName(query),
                   userLoaderByKey: userLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 },
               },
             )
@@ -1217,7 +1217,7 @@ describe('user sign up', () => {
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
                 userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
             },
           )
@@ -1641,7 +1641,7 @@ describe('user sign up', () => {
                 loaders: {
                   userLoaderByUserName: userLoaderByUserName(query),
                   userLoaderByKey: userLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 },
               },
             )
@@ -1725,7 +1725,7 @@ describe('user sign up', () => {
                 loaders: {
                   userLoaderByUserName: userLoaderByUserName(query),
                   userLoaderByKey: userLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 },
               },
             )
@@ -1916,7 +1916,7 @@ describe('user sign up', () => {
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
                 userLoaderByKey: userLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
             },
           )

@@ -11,7 +11,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
 import { loadDomainByKey } from '../../loaders'
-import { orgLoaderByKey } from '../../../organization/loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
 import { userLoaderByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -145,7 +145,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -216,7 +216,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -288,7 +288,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -365,7 +365,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -436,7 +436,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -508,7 +508,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -585,7 +585,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -656,7 +656,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -728,7 +728,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -824,7 +824,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -907,7 +907,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1054,7 +1054,7 @@ describe('updating a domain', () => {
                 },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1140,7 +1140,7 @@ describe('updating a domain', () => {
                 },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1254,7 +1254,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1376,7 +1376,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1493,7 +1493,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1570,7 +1570,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1654,7 +1654,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1737,7 +1737,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -1884,7 +1884,7 @@ describe('updating a domain', () => {
                 },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -1969,7 +1969,7 @@ describe('updating a domain', () => {
                 },
                 loaders: {
                   loadDomainByKey: loadDomainByKey({ query }),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  loadOrgByKey: loadOrgByKey({query, language:'en'}),
                   userLoaderByKey: userLoaderByKey(query),
                 },
               },
@@ -2082,7 +2082,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -2203,7 +2203,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -2318,7 +2318,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },
@@ -2393,7 +2393,7 @@ describe('updating a domain', () => {
               },
               loaders: {
                 loadDomainByKey: loadDomainByKey({ query }),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                loadOrgByKey: loadOrgByKey({query, language:'en'}),
                 userLoaderByKey: userLoaderByKey(query),
               },
             },

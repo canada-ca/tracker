@@ -46,7 +46,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       transaction,
       userKey,
       auth: { checkPermission, tokenize, userRequired },
-      loaders: { orgLoaderByKey, userLoaderByUserName },
+      loaders: { loadOrgByKey, userLoaderByUserName },
       notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
       validators: { cleanseInput },
     },
@@ -72,7 +72,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     }
 
     // Check to see if requested org exists
-    const org = await orgLoaderByKey.load(orgId)
+    const org = await loadOrgByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(

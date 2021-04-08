@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { orgLoaderConnectionArgsByDomainId, orgLoaderByKey } from '../index'
+import { orgLoaderConnectionArgsByDomainId, loadOrgByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -193,7 +193,7 @@ describe('given the load organizations connection function', () => {
             i18n,
           )
 
-          const orgLoader = orgLoaderByKey(query, 'en')
+          const orgLoader = loadOrgByKey({query, language:'en'})
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -239,7 +239,7 @@ describe('given the load organizations connection function', () => {
             i18n,
           )
 
-          const orgLoader = orgLoaderByKey(query, 'en')
+          const orgLoader = loadOrgByKey({query, language:'en'})
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -285,7 +285,7 @@ describe('given the load organizations connection function', () => {
             i18n,
           )
 
-          const orgLoader = orgLoaderByKey(query, 'en')
+          const orgLoader = loadOrgByKey({query, language:'en'})
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -330,7 +330,7 @@ describe('given the load organizations connection function', () => {
             i18n,
           )
 
-          const orgLoader = orgLoaderByKey(query, 'en')
+          const orgLoader = loadOrgByKey({query, language:'en'})
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -384,7 +384,7 @@ describe('given the load organizations connection function', () => {
               i18n,
             )
 
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const expectedOrg = await orgLoader.load(org._key)
 
             const connectionArgs = {
@@ -427,7 +427,7 @@ describe('given the load organizations connection function', () => {
               i18n,
             )
 
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const expectedOrg = await orgLoader.load(org._key)
 
             const connectionArgs = {
@@ -470,7 +470,7 @@ describe('given the load organizations connection function', () => {
               i18n,
             )
 
-            const orgLoader = orgLoaderByKey(query, 'en')
+            const orgLoader = loadOrgByKey({query, language:'en'})
             const expectedOrgs = await orgLoader.loadMany([
               org._key,
               orgTwo._key,
@@ -570,7 +570,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on ACRONYM', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -617,7 +617,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -666,7 +666,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on NAME', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -713,7 +713,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -762,7 +762,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SLUG', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -809,7 +809,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -858,7 +858,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on ZONE', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -905,7 +905,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -954,7 +954,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SECTOR', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1001,7 +1001,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1050,7 +1050,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on COUNTRY', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1097,7 +1097,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1146,7 +1146,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on PROVINCE', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1193,7 +1193,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1242,7 +1242,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on CITY', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1289,7 +1289,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1338,7 +1338,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on VERIFIED', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgTwo._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1385,7 +1385,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgTwo._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1434,7 +1434,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_MAIL_PASS', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1481,7 +1481,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1530,7 +1530,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_MAIL_FAIL', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1577,7 +1577,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1626,7 +1626,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_MAIL_TOTAL', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1673,7 +1673,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1722,7 +1722,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_WEB_PASS', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1769,7 +1769,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1818,7 +1818,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_WEB_FAIL', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1865,7 +1865,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1914,7 +1914,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_WEB_TOTAL', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1961,7 +1961,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -2010,7 +2010,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on DOMAIN_COUNT', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -2057,7 +2057,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'en')
+              const orgLoader = loadOrgByKey({query, language:'en'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -2493,7 +2493,7 @@ describe('given the load organizations connection function', () => {
             i18n,
           )
 
-          const orgLoader = orgLoaderByKey(query, 'fr')
+          const orgLoader = loadOrgByKey({query, language:'fr'})
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -2539,7 +2539,7 @@ describe('given the load organizations connection function', () => {
             i18n,
           )
 
-          const orgLoader = orgLoaderByKey(query, 'fr')
+          const orgLoader = loadOrgByKey({query, language:'fr'})
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -2585,7 +2585,7 @@ describe('given the load organizations connection function', () => {
             i18n,
           )
 
-          const orgLoader = orgLoaderByKey(query, 'fr')
+          const orgLoader = loadOrgByKey({query, language:'fr'})
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -2630,7 +2630,7 @@ describe('given the load organizations connection function', () => {
             i18n,
           )
 
-          const orgLoader = orgLoaderByKey(query, 'fr')
+          const orgLoader = loadOrgByKey({query, language:'fr'})
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -2722,7 +2722,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on ACRONYM', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -2769,7 +2769,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -2818,7 +2818,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on NAME', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -2865,7 +2865,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -2914,7 +2914,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SLUG', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -2961,7 +2961,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3010,7 +3010,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on ZONE', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3057,7 +3057,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3106,7 +3106,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SECTOR', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3153,7 +3153,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3202,7 +3202,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on COUNTRY', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3249,7 +3249,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3298,7 +3298,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on PROVINCE', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3345,7 +3345,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3394,7 +3394,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on CITY', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3441,7 +3441,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3490,7 +3490,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on VERIFIED', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgTwo._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3537,7 +3537,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgTwo._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3586,7 +3586,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_MAIL_PASS', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3633,7 +3633,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3682,7 +3682,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_MAIL_FAIL', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3729,7 +3729,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3778,7 +3778,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_MAIL_TOTAL', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3825,7 +3825,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3874,7 +3874,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_WEB_PASS', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3921,7 +3921,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -3970,7 +3970,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_WEB_FAIL', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -4017,7 +4017,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -4066,7 +4066,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on SUMMARY_WEB_TOTAL', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -4113,7 +4113,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -4162,7 +4162,7 @@ describe('given the load organizations connection function', () => {
         describe('ordering on DOMAIN_COUNT', () => {
           describe('direction is set to ASC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -4209,7 +4209,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('direction is set to DESC', () => {
             it('returns organization', async () => {
-              const orgLoader = orgLoaderByKey(query, 'fr')
+              const orgLoader = loadOrgByKey({query, language:'fr'})
               const expectedOrg = await orgLoader.load(orgThree._key)
 
               const connectionLoader = orgLoaderConnectionArgsByDomainId(
