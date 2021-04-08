@@ -134,7 +134,7 @@ export const UPDATE_USER_ROLE = gql`
   }
 `
 
-export const UPDATE_USER_PROFILE = ({ UpdateUserProfileFields }) => gql`
+export const UPDATE_USER_PROFILE = gql`
   mutation UpdateUserProfile(
     $displayName: String
     $userName: EmailAddress
@@ -151,7 +151,14 @@ export const UPDATE_USER_PROFILE = ({ UpdateUserProfileFields }) => gql`
     ) {
       result {
         ... on UpdateUserProfileResult {
-          ...UpdateUserProfileFields
+          status
+          user {
+            id
+            displayName
+            userName
+            preferredLang
+            tfaSendMethod
+          }
         }
         ... on UpdateUserProfileError {
           code
@@ -160,7 +167,6 @@ export const UPDATE_USER_PROFILE = ({ UpdateUserProfileFields }) => gql`
       }
     }
   }
-  ${UpdateUserProfileFields.fragments.requiredFields}
 `
 
 export const UPDATE_USER_PASSWORD = gql`

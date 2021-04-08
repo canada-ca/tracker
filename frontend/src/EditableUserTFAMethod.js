@@ -16,7 +16,6 @@ import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useUserState } from './UserState'
 import { TrackerButton } from './TrackerButton'
-import { UpdateUserProfileTfaSendMethod } from './graphql/fragments'
 
 function EditableUserTFAMethod({
   currentTFAMethod,
@@ -27,9 +26,7 @@ function EditableUserTFAMethod({
   const toast = useToast()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE({
-      UpdateUserProfileFields: UpdateUserProfileTfaSendMethod,
-    }),
+    UPDATE_USER_PROFILE,
     {
       context: {
         headers: {

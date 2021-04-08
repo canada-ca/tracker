@@ -11,14 +11,13 @@ import { useUserState } from './UserState'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
-import { UpdateUserProfileLanguage } from './graphql/fragments'
 
 function EditableUserLanguage({ currentLang }) {
   const { currentUser } = useUserState()
   const toast = useToast()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE({ UpdateUserProfileFields: UpdateUserProfileLanguage }),
+    UPDATE_USER_PROFILE,
     {
       context: {
         headers: {
