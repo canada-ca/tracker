@@ -39,9 +39,9 @@ export const dkimType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { dkimResultsLoaderConnectionByDkimId } },
+        { loaders: { loadDkimResultConnectionsByDkimId } },
       ) => {
-        const dkimResults = await dkimResultsLoaderConnectionByDkimId({
+        const dkimResults = await loadDkimResultConnectionsByDkimId({
           dkimId: _id,
           ...args,
         })

@@ -7,7 +7,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { dkimResultsLoaderConnectionByDkimId } from '../../loaders'
+import { loadDkimResultConnectionsByDkimId } from '../../loaders'
 import { dkimType } from '../dkim'
 import { dkimResultConnection } from '../dkim-result-connection'
 
@@ -130,12 +130,12 @@ describe('given the dkimType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimType.getFields()
 
-        const loader = dkimResultsLoaderConnectionByDkimId(
+        const loader = loadDkimResultConnectionsByDkimId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const expectedResult = {
           edges: [
@@ -168,7 +168,7 @@ describe('given the dkimType object', () => {
           demoType.results.resolve(
             { _id: dkim._id },
             { first: 1 },
-            { loaders: { dkimResultsLoaderConnectionByDkimId: loader } },
+            { loaders: { loadDkimResultConnectionsByDkimId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

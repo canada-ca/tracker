@@ -54,7 +54,7 @@ import {
   dmarcLoaderByKey,
   spfLoaderByKey,
   loadDkimConnectionsByDomainId,
-  dkimResultsLoaderConnectionByDkimId,
+  loadDkimResultConnectionsByDkimId,
   dmarcLoaderConnectionsByDomainId,
   spfLoaderConnectionsByDomainId,
 } from './email-scan/loaders'
@@ -226,12 +226,12 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      dkimResultsLoaderConnectionByDkimId: dkimResultsLoaderConnectionByDkimId(
+      loadDkimResultConnectionsByDkimId: loadDkimResultConnectionsByDkimId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
+      }),
       dmarcLoaderConnectionsByDomainId: dmarcLoaderConnectionsByDomainId(
         query,
         userKey,
