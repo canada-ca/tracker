@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   loadDmarcGuidanceTagConnectionsByTagId,
-  dmarcGuidanceTagLoader,
+  loadDmarcGuidanceTagByTagId,
 } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -87,7 +87,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
-        const dmarcTagLoader = dmarcGuidanceTagLoader(query)
+        const dmarcTagLoader = loadDmarcGuidanceTagByTagId({ query })
         const expectedDmarcTags = await dmarcTagLoader.loadMany(
           dmarcGuidanceTags,
         )
@@ -134,7 +134,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
-        const dmarcTagLoader = dmarcGuidanceTagLoader(query)
+        const dmarcTagLoader = loadDmarcGuidanceTagByTagId({ query })
         const expectedDmarcTags = await dmarcTagLoader.loadMany(
           dmarcGuidanceTags,
         )
@@ -181,7 +181,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
-        const dmarcTagLoader = dmarcGuidanceTagLoader(query)
+        const dmarcTagLoader = loadDmarcGuidanceTagByTagId({ query })
         const expectedDmarcTags = await dmarcTagLoader.loadMany(
           dmarcGuidanceTags,
         )
@@ -227,7 +227,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
-        const dmarcTagLoader = dmarcGuidanceTagLoader(query)
+        const dmarcTagLoader = loadDmarcGuidanceTagByTagId({ query })
         const expectedDmarcTags = await dmarcTagLoader.loadMany(
           dmarcGuidanceTags,
         )
@@ -284,7 +284,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
       describe('ordering on TAG_ID', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = dmarcGuidanceTagLoader(query)
+            const loader = loadDmarcGuidanceTagByTagId({ query })
             const expectedDmarcTag = await loader.load('dmarc2')
 
             const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
@@ -329,7 +329,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = dmarcGuidanceTagLoader(query)
+            const loader = loadDmarcGuidanceTagByTagId({ query })
             const expectedDmarcTag = await loader.load('dmarc2')
 
             const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
@@ -376,7 +376,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
       describe('ordering on TAG_NAME', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = dmarcGuidanceTagLoader(query)
+            const loader = loadDmarcGuidanceTagByTagId({ query })
             const expectedDmarcTag = await loader.load('dmarc2')
 
             const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
@@ -421,7 +421,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = dmarcGuidanceTagLoader(query)
+            const loader = loadDmarcGuidanceTagByTagId({ query })
             const expectedDmarcTag = await loader.load('dmarc2')
 
             const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
@@ -468,7 +468,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
       describe('ordering on GUIDANCE', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = dmarcGuidanceTagLoader(query)
+            const loader = loadDmarcGuidanceTagByTagId({ query })
             const expectedDmarcTag = await loader.load('dmarc2')
 
             const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
@@ -513,7 +513,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = dmarcGuidanceTagLoader(query)
+            const loader = loadDmarcGuidanceTagByTagId({ query })
             const expectedDmarcTag = await loader.load('dmarc2')
 
             const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({

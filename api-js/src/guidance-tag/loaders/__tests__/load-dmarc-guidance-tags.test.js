@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { dmarcGuidanceTagLoader } from '../index'
+import { loadDmarcGuidanceTagByTagId } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the dmarcGuidanceTagLoader function', () => {
+describe('given the loadDmarcGuidanceTagByTagId function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -59,7 +59,7 @@ describe('given the dmarcGuidanceTagLoader function', () => {
       `
       const expectedDmarcTag = await expectedCursor.next()
 
-      const loader = dmarcGuidanceTagLoader(query, i18n)
+      const loader = loadDmarcGuidanceTagByTagId({ query, i18n })
       const dmarcTag = await loader.load(expectedDmarcTag._key)
 
       expect(dmarcTag).toEqual(expectedDmarcTag)
@@ -80,7 +80,7 @@ describe('given the dmarcGuidanceTagLoader function', () => {
         expectedDmarcTags.push(tempDkim)
       }
 
-      const loader = dmarcGuidanceTagLoader(query, i18n)
+      const loader = loadDmarcGuidanceTagByTagId({ query, i18n })
       const dmarcTags = await loader.loadMany(dmarcTagKeys)
       expect(dmarcTags).toEqual(expectedDmarcTags)
     })
@@ -105,7 +105,11 @@ describe('given the dmarcGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dmarcGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadDmarcGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -118,7 +122,7 @@ describe('given the dmarcGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dmarcGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDmarcGuidanceTagByTagId: Error: Database error occurred.`,
         ])
       })
     })
@@ -130,7 +134,11 @@ describe('given the dmarcGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dmarcGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadDmarcGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -143,7 +151,7 @@ describe('given the dmarcGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dmarcGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDmarcGuidanceTagByTagId: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -168,7 +176,11 @@ describe('given the dmarcGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dmarcGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadDmarcGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -177,7 +189,7 @@ describe('given the dmarcGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dmarcGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDmarcGuidanceTagByTagId: Error: Database error occurred.`,
         ])
       })
     })
@@ -189,7 +201,11 @@ describe('given the dmarcGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dmarcGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadDmarcGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -198,7 +214,7 @@ describe('given the dmarcGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dmarcGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDmarcGuidanceTagByTagId: Error: Cursor error occurred.`,
         ])
       })
     })

@@ -61,7 +61,7 @@ import {
 import {
   loadDkimGuidanceTagById,
   loadDkimGuidanceTagConnectionsByTagId,
-  dmarcGuidanceTagLoader,
+  loadDmarcGuidanceTagByTagId,
   loadDmarcGuidanceTagConnectionsByTagId,
   httpsGuidanceTagLoader,
   httpsGuidanceTagConnectionsLoader,
@@ -269,7 +269,11 @@ export const createContext = ({ context, req: request, res: response }) => {
           i18n,
         },
       ),
-      dmarcGuidanceTagLoader: dmarcGuidanceTagLoader(query, userKey, i18n),
+      loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
+        query,
+        userKey,
+        i18n,
+      }),
       loadDmarcGuidanceTagConnectionsByTagId: loadDmarcGuidanceTagConnectionsByTagId(
         {
           query,
