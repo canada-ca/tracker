@@ -38,7 +38,7 @@ import {
   loadDmarcSummaryEdgeByDomainIdAndPeriod,
   loadDmarcSummaryByKey,
   loadFullPassConnectionsBySumId,
-  spfFailureLoaderConnectionsBySumId,
+  loadSpfFailureConnectionsBySumId,
   loadStartDateFromPeriod,
   dmarcYearlySumEdgeLoader,
 } from './dmarc-summaries/loaders'
@@ -169,13 +169,13 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+      loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId({
         query,
         userKey,
         cleanseInput,
         i18n,
-        loadStartDateFromPeriod(moment, userKey, i18n),
-      ),
+        loadStartDateFromPeriod: loadStartDateFromPeriod(moment, userKey, i18n),
+      }),
       loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
         {
           query,
@@ -190,12 +190,12 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      spfFailureLoaderConnectionsBySumId: spfFailureLoaderConnectionsBySumId(
+      loadSpfFailureConnectionsBySumId: loadSpfFailureConnectionsBySumId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
+      }),
       loadStartDateFromPeriod: loadStartDateFromPeriod(moment, userKey, i18n),
       dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(query, userKey, i18n),
       domainLoaderByDomain: domainLoaderByDomain(query, userKey, i18n),

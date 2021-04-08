@@ -69,9 +69,9 @@ export const detailTablesType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { spfFailureLoaderConnectionsBySumId } },
+        { loaders: { loadSpfFailureConnectionsBySumId } },
       ) => {
-        const spfFailures = await spfFailureLoaderConnectionsBySumId({
+        const spfFailures = await loadSpfFailureConnectionsBySumId({
           summaryId: _id,
           ...args,
         })

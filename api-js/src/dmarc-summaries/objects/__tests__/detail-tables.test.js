@@ -6,7 +6,7 @@ import {
   loadDkimFailConnectionsBySumId,
   loadDmarcFailConnectionsBySumId,
   loadFullPassConnectionsBySumId,
-  spfFailureLoaderConnectionsBySumId,
+  loadSpfFailureConnectionsBySumId,
 } from '../../loaders'
 import { detailTablesType } from '../detail-tables'
 import { dkimFailureConnection } from '../dkim-failure-table-connection'
@@ -317,8 +317,10 @@ describe('testing the detailTables gql object', () => {
             { first: 1 },
             {
               loaders: {
-                spfFailureLoaderConnectionsBySumId: spfFailureLoaderConnectionsBySumId(
-                  query,
+                loadSpfFailureConnectionsBySumId: loadSpfFailureConnectionsBySumId(
+                  {
+                    query,
+                  },
                 ),
               },
             },
