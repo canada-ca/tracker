@@ -41,9 +41,9 @@ export const emailScanType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { dkimLoaderConnectionsByDomainId } },
+        { loaders: { loadDkimConnectionsByDomainId } },
       ) => {
-        const dkim = await dkimLoaderConnectionsByDomainId({
+        const dkim = await loadDkimConnectionsByDomainId({
           domainId: _id,
           ...args,
         })

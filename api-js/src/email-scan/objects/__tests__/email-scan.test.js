@@ -5,7 +5,7 @@ import { cleanseInput } from '../../../validators'
 import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
 import {
-  dkimLoaderConnectionsByDomainId,
+  loadDkimConnectionsByDomainId,
   dmarcLoaderConnectionsByDomainId,
   spfLoaderConnectionsByDomainId,
 } from '../../loaders'
@@ -198,18 +198,18 @@ describe('given the email gql object', () => {
           },
         }
 
-        const loader = dkimLoaderConnectionsByDomainId(
+        const loader = loadDkimConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         await expect(
           demoType.dkim.resolve(
             { _id: domain._id },
             { first: 1 },
-            { loaders: { dkimLoaderConnectionsByDomainId: loader } },
+            { loaders: { loadDkimConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
