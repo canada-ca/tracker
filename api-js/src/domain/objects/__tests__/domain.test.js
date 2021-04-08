@@ -13,7 +13,7 @@ import { domainStatus } from '../domain-status'
 import { dmarcSummaryType } from '../../../dmarc-summaries/objects'
 import {
   loadDmarcSummaryEdgeByDomainIdAndPeriod,
-  dmarcYearlySumEdgeLoader,
+  loadDmarcYearlySumEdge,
   loadStartDateFromPeriod,
 } from '../../../dmarc-summaries/loaders'
 import { emailScanType } from '../../../email-scan/objects'
@@ -554,11 +554,11 @@ describe('given the domain object', () => {
               {
                 userKey: user._key,
                 loaders: {
-                  dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(
+                  loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,
@@ -596,11 +596,11 @@ describe('given the domain object', () => {
               {
                 userKey: user._key,
                 loaders: {
-                  dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(
+                  loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,

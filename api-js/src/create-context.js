@@ -40,7 +40,7 @@ import {
   loadFullPassConnectionsBySumId,
   loadSpfFailureConnectionsBySumId,
   loadStartDateFromPeriod,
-  dmarcYearlySumEdgeLoader,
+  loadDmarcYearlySumEdge,
 } from './dmarc-summaries/loaders'
 import {
   domainLoaderByKey,
@@ -201,7 +201,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         userKey,
         i18n,
       }),
-      dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(query, userKey, i18n),
+      loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({ query, userKey, i18n }),
       domainLoaderByDomain: domainLoaderByDomain(query, userKey, i18n),
       domainLoaderByKey: domainLoaderByKey(query, userKey, i18n),
       domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(

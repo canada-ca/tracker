@@ -147,7 +147,7 @@ export const domainType = new GraphQLObjectType({
         __,
         {
           userKey,
-          loaders: { dmarcYearlySumEdgeLoader },
+          loaders: { loadDmarcYearlySumEdge },
           auth: { checkDomainOwnership, userRequired },
         },
       ) => {
@@ -165,7 +165,7 @@ export const domainType = new GraphQLObjectType({
           )
         }
 
-        const dmarcSummaryEdges = await dmarcYearlySumEdgeLoader({
+        const dmarcSummaryEdges = await loadDmarcYearlySumEdge({
           domainId: _id,
         })
 
