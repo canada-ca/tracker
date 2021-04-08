@@ -7,7 +7,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { dmarcGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
+import { loadDmarcGuidanceTagConnectionsByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 import { dmarcType } from '../index'
 
@@ -245,7 +245,7 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = dmarcGuidanceTagConnectionsLoader(
+        const loader = loadDmarcGuidanceTagConnectionsByTagId(
           query,
           '1',
           cleanseInput,
@@ -294,7 +294,7 @@ describe('given the dmarcType object', () => {
           demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -303,7 +303,7 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = dmarcGuidanceTagConnectionsLoader(
+        const loader = loadDmarcGuidanceTagConnectionsByTagId(
           query,
           '1',
           cleanseInput,
@@ -352,7 +352,7 @@ describe('given the dmarcType object', () => {
           demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -361,7 +361,7 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = dmarcGuidanceTagConnectionsLoader(
+        const loader = loadDmarcGuidanceTagConnectionsByTagId(
           query,
           '1',
           cleanseInput,
@@ -410,7 +410,7 @@ describe('given the dmarcType object', () => {
           demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -419,7 +419,7 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = dmarcGuidanceTagConnectionsLoader(
+        const loader = loadDmarcGuidanceTagConnectionsByTagId(
           query,
           '1',
           cleanseInput,
@@ -468,7 +468,7 @@ describe('given the dmarcType object', () => {
           demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

@@ -8,7 +8,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
-  dmarcGuidanceTagConnectionsLoader,
+  loadDmarcGuidanceTagConnectionsByTagId,
   dmarcGuidanceTagLoader,
 } from '../index'
 
@@ -78,12 +78,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
   describe('given a successful load', () => {
     describe('using after cursor', () => {
       it('returns dmarc result(s) after a given node id', async () => {
-        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
@@ -125,12 +125,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
     })
     describe('using before cursor', () => {
       it('returns dmarc result(s) before a given node id', async () => {
-        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
@@ -172,12 +172,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
@@ -218,12 +218,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
 
@@ -287,12 +287,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const loader = dmarcGuidanceTagLoader(query)
             const expectedDmarcTag = await loader.load('dmarc2')
 
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
@@ -332,12 +332,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const loader = dmarcGuidanceTagLoader(query)
             const expectedDmarcTag = await loader.load('dmarc2')
 
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
@@ -379,12 +379,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const loader = dmarcGuidanceTagLoader(query)
             const expectedDmarcTag = await loader.load('dmarc2')
 
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
@@ -424,12 +424,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const loader = dmarcGuidanceTagLoader(query)
             const expectedDmarcTag = await loader.load('dmarc2')
 
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
@@ -471,12 +471,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const loader = dmarcGuidanceTagLoader(query)
             const expectedDmarcTag = await loader.load('dmarc2')
 
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
@@ -516,12 +516,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
             const loader = dmarcGuidanceTagLoader(query)
             const expectedDmarcTag = await loader.load('dmarc2')
 
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               dmarcGuidanceTags: ['dmarc1', 'dmarc2', 'dmarc3'],
@@ -561,12 +561,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
     describe('no dmarc results are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -611,12 +611,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+          const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
           const connectionArgs = {}
@@ -634,18 +634,18 @@ describe('when given the load dmarc guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDmarcGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+          const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
           const connectionArgs = {
@@ -666,19 +666,19 @@ describe('when given the load dmarc guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDmarcGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
@@ -698,18 +698,18 @@ describe('when given the load dmarc guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDmarcGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
@@ -729,7 +729,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDmarcGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -737,12 +737,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
@@ -762,18 +762,18 @@ describe('when given the load dmarc guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: dmarcGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDmarcGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
@@ -793,7 +793,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: dmarcGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadDmarcGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -804,12 +804,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+              const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
               const connectionArgs = {
@@ -831,7 +831,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dmarcGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDmarcGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -841,12 +841,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+              const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
               const connectionArgs = {
@@ -868,7 +868,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dmarcGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDmarcGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -881,12 +881,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
         const connectionArgs = {
@@ -906,7 +906,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadDmarcGuidanceTagConnectionsByTagId, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -919,12 +919,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
         const connectionArgs = {
@@ -944,7 +944,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadDmarcGuidanceTagConnectionsByTagId, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
@@ -967,12 +967,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+          const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
           const connectionArgs = {}
@@ -986,18 +986,18 @@ describe('when given the load dmarc guidance tag connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDmarcGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+          const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
           const connectionArgs = {
@@ -1014,19 +1014,19 @@ describe('when given the load dmarc guidance tag connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDmarcGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
@@ -1042,18 +1042,18 @@ describe('when given the load dmarc guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDmarcGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
@@ -1069,7 +1069,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDmarcGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -1077,12 +1077,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
@@ -1098,18 +1098,18 @@ describe('when given the load dmarc guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: dmarcGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDmarcGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+            const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
             const connectionArgs = {
@@ -1125,7 +1125,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: dmarcGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadDmarcGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -1136,12 +1136,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+              const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
               const connectionArgs = {
@@ -1159,7 +1159,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dmarcGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDmarcGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -1169,12 +1169,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+              const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
               const connectionArgs = {
@@ -1192,7 +1192,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dmarcGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDmarcGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -1205,12 +1205,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
         const connectionArgs = {
@@ -1226,7 +1226,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadDmarcGuidanceTagConnectionsByTagId, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -1239,12 +1239,12 @@ describe('when given the load dmarc guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dmarcGuidanceTagConnectionsLoader(
+        const connectionLoader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const dmarcGuidanceTags = ['dmarc1', 'dmarc2']
         const connectionArgs = {
@@ -1260,7 +1260,7 @@ describe('when given the load dmarc guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadDmarcGuidanceTagConnectionsByTagId, error: Error: Cursor Error Occurred.`,
         ])
       })
     })

@@ -68,9 +68,9 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       resolve: async (
         { guidanceTags },
         args,
-        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+        { loaders: { loadDmarcGuidanceTagConnectionsByTagId } },
       ) => {
-        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+        const dmarcTags = await loadDmarcGuidanceTagConnectionsByTagId({
           dmarcGuidanceTags: guidanceTags,
           ...args,
         })
@@ -90,9 +90,9 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       resolve: async (
         { negativeTags },
         args,
-        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+        { loaders: { loadDmarcGuidanceTagConnectionsByTagId } },
       ) => {
-        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+        const dmarcTags = await loadDmarcGuidanceTagConnectionsByTagId({
           dmarcGuidanceTags: negativeTags,
           ...args,
         })
@@ -112,9 +112,9 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       resolve: async (
         { neutralTags },
         args,
-        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+        { loaders: { loadDmarcGuidanceTagConnectionsByTagId } },
       ) => {
-        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+        const dmarcTags = await loadDmarcGuidanceTagConnectionsByTagId({
           dmarcGuidanceTags: neutralTags,
           ...args,
         })
@@ -134,9 +134,9 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       resolve: async (
         { positiveTags },
         args,
-        { loaders: { dmarcGuidanceTagConnectionsLoader } },
+        { loaders: { loadDmarcGuidanceTagConnectionsByTagId } },
       ) => {
-        const dmarcTags = await dmarcGuidanceTagConnectionsLoader({
+        const dmarcTags = await loadDmarcGuidanceTagConnectionsByTagId({
           dmarcGuidanceTags: positiveTags,
           ...args,
         })
