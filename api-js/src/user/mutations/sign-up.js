@@ -53,7 +53,7 @@ export const signUp = new mutationWithClientMutationId({
       collections,
       transaction,
       auth: { bcrypt, tokenize, verifyToken },
-      loaders: { loadOrgByKey, userLoaderByUserName, loadUserByKey },
+      loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -90,7 +90,7 @@ export const signUp = new mutationWithClientMutationId({
     }
 
     // Check to see if user already exists
-    const checkUser = await userLoaderByUserName.load(userName)
+    const checkUser = await loadUserByUserName.load(userName)
 
     if (typeof checkUser !== 'undefined') {
       console.warn(

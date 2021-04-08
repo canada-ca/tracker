@@ -2,7 +2,7 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import { databaseOptions } from '../../../database-options'
-import { loadUserByKey, userLoaderByUserName } from '../../user/loaders'
+import { loadUserByKey, loadUserByUserName } from '../../user/loaders'
 import { userRequired } from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
@@ -49,9 +49,11 @@ describe('given a loadUserByKey dataloader', () => {
   describe('provided a user id', () => {
     it('returns the user', async () => {
       // Get User From db
-      const expectedUser = await userLoaderByUserName(query, '1', {}).load(
-        'test.account@istio.actually.exists',
-      )
+      const expectedUser = await loadUserByUserName({
+        query,
+        userKey: '1',
+        i18n: {},
+      }).load('test.account@istio.actually.exists')
 
       const testUserRequired = userRequired({
         userKey: expectedUser._key,

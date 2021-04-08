@@ -44,7 +44,7 @@ given organization.`,
       transaction,
       userKey,
       auth: { checkPermission, userRequired },
-      loaders: { loadOrgByKey, userLoaderByUserName },
+      loaders: { loadOrgByKey, loadUserByUserName },
       validators: { cleanseInput },
     },
   ) => {
@@ -69,7 +69,7 @@ given organization.`,
     }
 
     // Check to see if requested user exists
-    const requestedUser = await userLoaderByUserName.load(userName)
+    const requestedUser = await loadUserByUserName.load(userName)
 
     if (typeof requestedUser === 'undefined') {
       console.warn(

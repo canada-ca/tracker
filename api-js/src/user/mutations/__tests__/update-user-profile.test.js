@@ -11,7 +11,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
-import { userLoaderByUserName, loadUserByKey } from '../../loaders'
+import { loadUserByUserName, loadUserByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
 
@@ -123,7 +123,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -196,7 +196,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -267,7 +267,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -367,7 +367,7 @@ describe('authenticate user account', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
@@ -465,7 +465,7 @@ describe('authenticate user account', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
@@ -548,7 +548,7 @@ describe('authenticate user account', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
@@ -629,7 +629,7 @@ describe('authenticate user account', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
@@ -711,7 +711,7 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -792,7 +792,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -824,7 +824,7 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
           const idLoader = loadUserByKey({ query })
 
           const mockedQuery = jest
@@ -874,7 +874,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
                 loadUserByKey: idLoader,
               },
             },
@@ -954,7 +954,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1027,7 +1027,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1098,7 +1098,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1198,7 +1198,7 @@ describe('authenticate user account', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
@@ -1296,7 +1296,7 @@ describe('authenticate user account', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
@@ -1379,7 +1379,7 @@ describe('authenticate user account', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
@@ -1460,7 +1460,7 @@ describe('authenticate user account', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
@@ -1542,7 +1542,7 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
@@ -1623,7 +1623,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1655,7 +1655,7 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
           const idLoader = loadUserByKey({ query })
 
           const mockedQuery = jest
@@ -1705,7 +1705,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
                 loadUserByKey: idLoader,
               },
             },

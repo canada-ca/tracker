@@ -11,7 +11,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, tokenize, userRequired } from '../../../auth'
-import { loadUserByKey, userLoaderByUserName } from '../../../user/loaders'
+import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
 import { loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -81,7 +81,7 @@ describe('removing an organization', () => {
           cleanseInput,
         },
         loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
+          loadUserByUserName: loadUserByUserName({ query }),
         },
       },
     )
@@ -120,7 +120,7 @@ describe('removing an organization', () => {
           },
         },
       })
-      user = await userLoaderByUserName(query).load(
+      user = await loadUserByUserName({ query }).load(
         'test.account@istio.actually.exists',
       )
       await collections.affiliations.save({
@@ -383,7 +383,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -499,7 +499,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -616,7 +616,7 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await userLoaderByUserName(query).load(
+            user = await loadUserByUserName({ query }).load(
               'test.account@istio.actually.exists',
             )
             await collections.affiliations.save({
@@ -732,7 +732,7 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await userLoaderByUserName(query).load(
+            user = await loadUserByUserName({ query }).load(
               'test.account@istio.actually.exists',
             )
             await collections.affiliations.save({
@@ -850,7 +850,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -1074,7 +1074,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -1190,7 +1190,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({
@@ -1307,7 +1307,7 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await userLoaderByUserName(query).load(
+            user = await loadUserByUserName({ query }).load(
               'test.account@istio.actually.exists',
             )
             await collections.affiliations.save({
@@ -1423,7 +1423,7 @@ describe('removing an organization', () => {
                 },
               },
             })
-            user = await userLoaderByUserName(query).load(
+            user = await loadUserByUserName({ query }).load(
               'test.account@istio.actually.exists',
             )
             await collections.affiliations.save({
@@ -1540,7 +1540,7 @@ describe('removing an organization', () => {
               },
             },
           })
-          user = await userLoaderByUserName(query).load(
+          user = await loadUserByUserName({ query }).load(
             'test.account@istio.actually.exists',
           )
           await collections.affiliations.save({

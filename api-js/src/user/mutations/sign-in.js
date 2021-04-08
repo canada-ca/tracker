@@ -35,7 +35,7 @@ export const signIn = new mutationWithClientMutationId({
       i18n,
       query,
       auth: { tokenize, bcrypt },
-      loaders: { userLoaderByUserName },
+      loaders: { loadUserByUserName },
       validators: { cleanseInput },
       notify: { sendAuthEmail, sendAuthTextMsg },
     },
@@ -45,7 +45,7 @@ export const signIn = new mutationWithClientMutationId({
     const password = cleanseInput(args.password)
 
     // Gather user who just signed in
-    let user = await userLoaderByUserName.load(userName)
+    let user = await loadUserByUserName.load(userName)
 
     // Replace with userRequired()
     if (typeof user === 'undefined') {
@@ -109,8 +109,8 @@ export const signIn = new mutationWithClientMutationId({
           }
 
           // Get newly updated user
-          await userLoaderByUserName.clear(userName)
-          user = await userLoaderByUserName.load(userName)
+          await loadUserByUserName.clear(userName)
+          user = await loadUserByUserName.load(userName)
 
           // Check to see if user has phone validated
           let sendMethod

@@ -12,7 +12,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { userLoaderByUserName, loadUserByKey } from '../../loaders'
+import { loadUserByUserName, loadUserByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -112,7 +112,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -197,7 +197,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -321,7 +321,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
@@ -408,7 +408,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
@@ -488,7 +488,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
               },
@@ -575,7 +575,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
@@ -672,7 +672,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -744,7 +744,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -825,7 +825,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -936,7 +936,7 @@ describe('user sign up', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                   loadUserByKey: loadUserByKey({ query }),
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 },
@@ -1021,7 +1021,7 @@ describe('user sign up', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                   loadUserByKey: loadUserByKey({ query }),
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 },
@@ -1105,7 +1105,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1215,7 +1215,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
@@ -1291,7 +1291,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1375,7 +1375,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1447,7 +1447,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1528,7 +1528,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1639,7 +1639,7 @@ describe('user sign up', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                   loadUserByKey: loadUserByKey({ query }),
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 },
@@ -1723,7 +1723,7 @@ describe('user sign up', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                   loadUserByKey: loadUserByKey({ query }),
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 },
@@ -1806,7 +1806,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1914,7 +1914,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
@@ -1988,7 +1988,7 @@ describe('user sign up', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },

@@ -135,7 +135,7 @@ describe('given the user affiliation object', () => {
       it('returns the resolved value', async () => {
         const demoType = affiliationType.getFields()
 
-        const loader = loadUserByKey(query, '1', {})
+        const loader = loadUserByKey({ query, userKey: '1', i18n: {} })
 
         const expectedResult = {
           _id: user._id,

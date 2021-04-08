@@ -16,7 +16,7 @@ import {
   loadOrgByKey,
   loadOrgConnectionsByDomainId,
 } from '../../../organization/loaders'
-import { loadUserByKey, userLoaderByUserName } from '../../../user/loaders'
+import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -82,7 +82,7 @@ describe('create a domain', () => {
           cleanseInput,
         },
         loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
+          loadUserByUserName: loadUserByUserName({ query }),
         },
       },
     )

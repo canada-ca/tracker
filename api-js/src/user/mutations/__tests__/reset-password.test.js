@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
-import { userLoaderByUserName, loadUserByKey } from '../../loaders'
+import { loadUserByUserName, loadUserByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -79,7 +79,7 @@ describe('reset users password', () => {
           cleanseInput,
         },
         loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
+          loadUserByUserName: loadUserByUserName({ query }),
         },
       },
     )
@@ -158,7 +158,7 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              loadUserByUserName: loadUserByUserName({ query }),
               loadUserByKey: loadUserByKey({ query }),
             },
           },
@@ -215,7 +215,7 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              loadUserByUserName: loadUserByUserName({ query }),
             },
             notify: {
               sendAuthEmail: mockNotify,
@@ -287,7 +287,7 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              loadUserByUserName: loadUserByUserName({ query }),
               loadUserByKey: loadUserByKey({ query }),
             },
           },
@@ -346,7 +346,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -412,7 +412,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -478,7 +478,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -553,7 +553,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -626,7 +626,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -698,7 +698,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -731,7 +731,7 @@ describe('reset users password', () => {
           `
           const user = await userCursor.next()
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
           const userKeyLoader = loadUserByKey({ query })
 
           const resetToken = tokenize({
@@ -775,7 +775,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
                 loadUserByKey: userKeyLoader,
               },
             },
@@ -800,7 +800,7 @@ describe('reset users password', () => {
           `
           const user = await userCursor.next()
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
           const userKeyLoader = loadUserByKey({ query })
 
           const resetToken = tokenize({
@@ -847,7 +847,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
                 loadUserByKey: userKeyLoader,
               },
             },
@@ -929,7 +929,7 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              loadUserByUserName: loadUserByUserName({ query }),
               loadUserByKey: loadUserByKey({ query }),
             },
           },
@@ -986,7 +986,7 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              loadUserByUserName: loadUserByUserName({ query }),
             },
             notify: {
               sendAuthEmail: mockNotify,
@@ -1053,7 +1053,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1118,7 +1118,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1183,7 +1183,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1258,7 +1258,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1330,7 +1330,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1402,7 +1402,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
@@ -1434,7 +1434,7 @@ describe('reset users password', () => {
           `
           const user = await userCursor.next()
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
           const userKeyLoader = loadUserByKey({ query })
 
           const resetToken = tokenize({
@@ -1478,7 +1478,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
                 loadUserByKey: userKeyLoader,
               },
             },
@@ -1501,7 +1501,7 @@ describe('reset users password', () => {
           `
           const user = await userCursor.next()
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
           const userKeyLoader = loadUserByKey({ query })
 
           const resetToken = tokenize({
@@ -1548,7 +1548,7 @@ describe('reset users password', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
                 loadUserByKey: userKeyLoader,
               },
             },

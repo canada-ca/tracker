@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
-import { userLoaderByUserName, loadUserByKey } from '../../../user/loaders'
+import { loadUserByUserName, loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -166,7 +166,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -235,7 +235,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -313,7 +313,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -382,7 +382,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -469,7 +469,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -572,7 +572,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -639,7 +639,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -706,7 +706,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -780,7 +780,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -881,7 +881,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -956,7 +956,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -1041,7 +1041,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -1126,7 +1126,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -1212,7 +1212,7 @@ describe('update a users role', () => {
                 loaders: {
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                 },
                 validators: {
                   cleanseInput,
@@ -1295,7 +1295,7 @@ describe('update a users role', () => {
                 loaders: {
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                 },
                 validators: {
                   cleanseInput,
@@ -1414,7 +1414,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -1526,7 +1526,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -1595,7 +1595,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -1724,7 +1724,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -1793,7 +1793,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -1871,7 +1871,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -1940,7 +1940,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -2027,7 +2027,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -2130,7 +2130,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -2197,7 +2197,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -2264,7 +2264,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -2338,7 +2338,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -2438,7 +2438,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -2512,7 +2512,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -2596,7 +2596,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -2680,7 +2680,7 @@ describe('update a users role', () => {
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                     loadUserByKey: loadUserByKey({ query }),
-                    userLoaderByUserName: userLoaderByUserName(query),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -2765,7 +2765,7 @@ describe('update a users role', () => {
                 loaders: {
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                 },
                 validators: {
                   cleanseInput,
@@ -2847,7 +2847,7 @@ describe('update a users role', () => {
                 loaders: {
                   loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   loadUserByKey: loadUserByKey({ query }),
-                  userLoaderByUserName: userLoaderByUserName(query),
+                  loadUserByUserName: loadUserByUserName({ query }),
                 },
                 validators: {
                   cleanseInput,
@@ -2965,7 +2965,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -3074,7 +3074,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
@@ -3141,7 +3141,7 @@ describe('update a users role', () => {
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               validators: {
                 cleanseInput,
