@@ -14,9 +14,9 @@ export const dkimResultType = new GraphQLObjectType({
     dkim: {
       type: dkimType,
       description: 'The DKIM scan information that this result belongs to.',
-      resolve: async ({ dkimId }, _, { loaders: { dkimLoaderByKey } }) => {
+      resolve: async ({ dkimId }, _, { loaders: { loadDkimByKey } }) => {
         const dkimKey = dkimId.split('/')[1]
-        const dkim = await dkimLoaderByKey.load(dkimKey)
+        const dkim = await loadDkimByKey.load(dkimKey)
         dkim.id = dkim._key
         return dkim
       },

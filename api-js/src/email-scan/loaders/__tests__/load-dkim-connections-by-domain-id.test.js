@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { dkimLoaderConnectionsByDomainId, dkimLoaderByKey } from '../index'
+import { dkimLoaderConnectionsByDomainId, loadDkimByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -97,7 +97,7 @@ describe('when given the load dkim connection function', () => {
           i18n,
         )
 
-        const dkimLoader = dkimLoaderByKey(query)
+        const dkimLoader = loadDkimByKey({ query })
         const expectedDkimScans = await dkimLoader.loadMany([
           dkimScan1._key,
           dkimScan2._key,
@@ -149,7 +149,7 @@ describe('when given the load dkim connection function', () => {
           i18n,
         )
 
-        const dkimLoader = dkimLoaderByKey(query)
+        const dkimLoader = loadDkimByKey({ query })
         const expectedDkimScans = await dkimLoader.loadMany([
           dkimScan1._key,
           dkimScan2._key,
@@ -201,7 +201,7 @@ describe('when given the load dkim connection function', () => {
           i18n,
         )
 
-        const dkimLoader = dkimLoaderByKey(query)
+        const dkimLoader = loadDkimByKey({ query })
         const expectedDkimScans = await dkimLoader.loadMany([
           dkimScan1._key,
           dkimScan2._key,
@@ -252,7 +252,7 @@ describe('when given the load dkim connection function', () => {
           i18n,
         )
 
-        const dkimLoader = dkimLoaderByKey(query)
+        const dkimLoader = loadDkimByKey({ query })
         const expectedDkimScans = await dkimLoader.loadMany([
           dkimScan1._key,
           dkimScan2._key,
@@ -311,7 +311,7 @@ describe('when given the load dkim connection function', () => {
             i18n,
           )
 
-          const dkimLoader = dkimLoaderByKey(query)
+          const dkimLoader = loadDkimByKey({ query })
           const expectedDkimScans = await dkimLoader.loadMany([
             dkimScan2._key,
             dkimScan3._key,
@@ -369,7 +369,7 @@ describe('when given the load dkim connection function', () => {
             i18n,
           )
 
-          const dkimLoader = dkimLoaderByKey(query)
+          const dkimLoader = loadDkimByKey({ query })
           const expectedDkimScans = await dkimLoader.loadMany([
             dkimScan1._key,
             dkimScan2._key,
@@ -427,7 +427,7 @@ describe('when given the load dkim connection function', () => {
             i18n,
           )
 
-          const dkimLoader = dkimLoaderByKey(query)
+          const dkimLoader = loadDkimByKey({ query })
           const expectedDkimScans = await dkimLoader.loadMany([dkimScan2._key])
 
           expectedDkimScans[0].id = expectedDkimScans[0]._key
@@ -499,7 +499,7 @@ describe('when given the load dkim connection function', () => {
       describe('ordering on TIMESTAMP', () => {
         describe('direction set to ASC', () => {
           it('returns dkim scan', async () => {
-            const loader = dkimLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimByKey({ query, userKey: user._key, i18n })
             const expectedDkimScan = await loader.load(dkimScanTwo._key)
 
             const connectionLoader = dkimLoaderConnectionsByDomainId(
@@ -546,7 +546,7 @@ describe('when given the load dkim connection function', () => {
         })
         describe('direction set to DESC', () => {
           it('returns dkim scan', async () => {
-            const loader = dkimLoaderByKey(query, user._key, i18n)
+            const loader = loadDkimByKey({ query, userKey: user._key, i18n })
             const expectedDkimScan = await loader.load(dkimScanTwo._key)
 
             const connectionLoader = dkimLoaderConnectionsByDomainId(

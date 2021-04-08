@@ -49,7 +49,7 @@ import {
   loadDomainConnectionsByUserId,
 } from './domain/loaders'
 import {
-  dkimLoaderByKey,
+  loadDkimByKey,
   dkimResultLoaderByKey,
   dmarcLoaderByKey,
   spfLoaderByKey,
@@ -216,7 +216,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      dkimLoaderByKey: dkimLoaderByKey(query, userKey, i18n),
+      loadDkimByKey: loadDkimByKey({ query, userKey, i18n }),
       dkimResultLoaderByKey: dkimResultLoaderByKey(query, userKey, i18n),
       dmarcLoaderByKey: dmarcLoaderByKey(query, userKey, i18n),
       spfLoaderByKey: spfLoaderByKey(query, userKey, i18n),

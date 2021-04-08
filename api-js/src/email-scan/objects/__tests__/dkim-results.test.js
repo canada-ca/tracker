@@ -5,7 +5,7 @@ import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { dkimLoaderByKey } from '../../loaders'
+import { loadDkimByKey } from '../../loaders'
 import { dkimType, dkimResultType } from '../index'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 import { dkimGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
@@ -150,13 +150,13 @@ describe('given the dkim result object', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
 
-        const loader = dkimLoaderByKey(query, '1', {})
+        const loader = loadDkimByKey({ query, userKey: '1', i18n: {} })
 
         expect(
           await demoType.dkim.resolve(
             { dkimId: dkim._id },
             {},
-            { loaders: { dkimLoaderByKey: loader } },
+            { loaders: { loadDkimByKey: loader } },
           ),
         ).toEqual({
           _id: dkim._id,
