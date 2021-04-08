@@ -74,7 +74,7 @@ import {
   loadOrgByKey,
   loadOrgBySlug,
   loadOrgConnectionsByDomainId,
-  orgLoaderConnectionsByUserId,
+  loadOrgConnectionsByUserId,
 } from './organization/loaders'
 import { userLoaderByUserName, userLoaderByKey } from './user/loaders'
 import {
@@ -340,13 +340,13 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
+      loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
         query,
         userKey,
         cleanseInput,
-        request.language,
+        language: request.language,
         i18n,
-      ),
+      }),
       userLoaderByUserName: userLoaderByUserName(query, userKey, i18n),
       userLoaderByKey: userLoaderByKey(query, userKey, i18n),
       loadAffiliationByKey: loadAffiliationByKey({ query, userKey, i18n }),

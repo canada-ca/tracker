@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { orgLoaderConnectionsByUserId, loadOrgByKey } from '../index'
+import { loadOrgConnectionsByUserId, loadOrgByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -187,15 +187,15 @@ describe('given the load organization connections by user id function', () => {
       describe('given there are organization connections to be returned', () => {
         describe('using after cursor', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+            })
 
-            const orgLoader = loadOrgByKey({query, language:'en'})
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
             const expectedOrgs = await orgLoader.loadMany([
               orgOne._key,
               orgTwo._key,
@@ -233,15 +233,15 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using before cursor', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+            })
 
-            const orgLoader = loadOrgByKey({query, language:'en'})
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
             const expectedOrgs = await orgLoader.loadMany([
               orgOne._key,
               orgTwo._key,
@@ -279,15 +279,15 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using first limit', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+            })
 
-            const orgLoader = loadOrgByKey({query, language:'en'})
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
             const expectedOrgs = await orgLoader.loadMany([
               orgOne._key,
               orgTwo._key,
@@ -324,15 +324,15 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using last limit', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+            })
 
-            const orgLoader = loadOrgByKey({query, language:'en'})
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
             const expectedOrgs = await orgLoader.loadMany([
               orgOne._key,
               orgTwo._key,
@@ -384,16 +384,16 @@ describe('given the load organization connections by user id function', () => {
           })
           describe('search based on orgs name', () => {
             it('returns the filtered organizations', async () => {
-              const orgLoader = loadOrgByKey({query, language:'en'})
+              const orgLoader = loadOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgOne._key)
 
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'en',
+                language: 'en',
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -426,16 +426,16 @@ describe('given the load organization connections by user id function', () => {
           })
           describe('search based on orgs acronym', () => {
             it('returns the filtered organizations', async () => {
-              const orgLoader = loadOrgByKey({query, language:'en'})
+              const orgLoader = loadOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgOne._key)
 
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'en',
+                language: 'en',
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -468,19 +468,19 @@ describe('given the load organization connections by user id function', () => {
           })
           describe('search field is left empty', () => {
             it('returns unfiltered organizations', async () => {
-              const orgLoader = loadOrgByKey({query, language:'en'})
+              const orgLoader = loadOrgByKey({ query, language: 'en' })
               const expectedOrgs = await orgLoader.loadMany([
                 orgOne._key,
                 orgTwo._key,
               ])
 
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'en',
+                language: 'en',
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -578,16 +578,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on ACRONYM', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -624,16 +624,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -672,16 +672,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on NAME', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -718,16 +718,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -766,16 +766,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SLUG', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -812,16 +812,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -860,16 +860,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on ZONE', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -906,16 +906,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -954,16 +954,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SECTOR', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1000,16 +1000,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -1048,16 +1048,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on COUNTRY', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1094,16 +1094,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -1142,16 +1142,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on PROVINCE', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1188,16 +1188,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -1236,16 +1236,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on CITY', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1282,16 +1282,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -1330,16 +1330,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on VERIFIED', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgTwo._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1376,16 +1376,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgTwo._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1424,16 +1424,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_MAIL_PASS', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1470,16 +1470,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -1518,16 +1518,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_MAIL_FAIL', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1564,16 +1564,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -1612,16 +1612,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_MAIL_TOTAL', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1658,16 +1658,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -1706,16 +1706,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_WEB_PASS', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1752,16 +1752,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -1800,16 +1800,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_WEB_FAIL', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1846,16 +1846,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -1894,16 +1894,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_WEB_TOTAL', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -1940,16 +1940,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -1988,16 +1988,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on DOMAIN_COUNT', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -2034,16 +2034,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'en'})
+                const orgLoader = loadOrgByKey({ query, language: 'en' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'en',
+                  language: 'en',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -2082,13 +2082,13 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('isSuperAdmin is set to true', () => {
           it('returns organizations', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 5,
@@ -2096,7 +2096,7 @@ describe('given the load organization connections by user id function', () => {
             }
             const orgs = await connectionLoader({ ...connectionArgs })
 
-            const orgLoader = loadOrgByKey({query, language:'en'})
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
             const expectedOrgs = await orgLoader.loadMany([
               orgOne._key,
               orgTwo._key,
@@ -2137,13 +2137,13 @@ describe('given the load organization connections by user id function', () => {
         it('returns no organization connections', async () => {
           await truncate()
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = loadOrgConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'en',
+            language: 'en',
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -2168,13 +2168,13 @@ describe('given the load organization connections by user id function', () => {
     describe('given an unsuccessful load', () => {
       describe('limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = loadOrgConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'en',
+            language: 'en',
             i18n,
-          )
+          })
 
           const connectionArgs = {}
           try {
@@ -2190,19 +2190,19 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadOrgConnectionsByUserId.`,
           ])
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = loadOrgConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'en',
+            language: 'en',
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -2221,20 +2221,20 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadOrgConnectionsByUserId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -2252,19 +2252,19 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: orgLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -1,
@@ -2282,7 +2282,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: orgLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
@@ -2290,13 +2290,13 @@ describe('given the load organization connections by user id function', () => {
       describe('limits are above maximum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 101,
@@ -2314,19 +2314,19 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` to 101 for: orgLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`first\` to 101 for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'en',
+              language: 'en',
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 101,
@@ -2344,7 +2344,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`last\` to 101 for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
@@ -2355,13 +2355,13 @@ describe('given the load organization connections by user id function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'en',
+                language: 'en',
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -2381,7 +2381,7 @@ describe('given the load organization connections by user id function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -2391,13 +2391,13 @@ describe('given the load organization connections by user id function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'en',
+                language: 'en',
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -2417,7 +2417,7 @@ describe('given the load organization connections by user id function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -2433,13 +2433,13 @@ describe('given the load organization connections by user id function', () => {
               new Error('Unable to query organizations. Please try again.'),
             )
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = loadOrgConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'en',
+            language: 'en',
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -2455,7 +2455,7 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query organizations in orgLoaderConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
+            `Database error occurred while user: ${user._key} was trying to query organizations in loadOrgConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
           ])
         })
       })
@@ -2470,13 +2470,13 @@ describe('given the load organization connections by user id function', () => {
           }
           const query = jest.fn().mockReturnValueOnce(cursor)
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = loadOrgConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'en',
+            language: 'en',
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -2492,7 +2492,7 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather organizations in orgLoaderConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather organizations in loadOrgConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
           ])
         })
       })
@@ -2517,15 +2517,15 @@ describe('given the load organization connections by user id function', () => {
       describe('given there are organization connections to be returned', () => {
         describe('using after cursor', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+            })
 
-            const orgLoader = loadOrgByKey({query, language:'fr'})
+            const orgLoader = loadOrgByKey({ query, language: 'fr' })
             const expectedOrgs = await orgLoader.loadMany([
               orgOne._key,
               orgTwo._key,
@@ -2563,15 +2563,15 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using before cursor', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+            })
 
-            const orgLoader = loadOrgByKey({query, language:'fr'})
+            const orgLoader = loadOrgByKey({ query, language: 'fr' })
             const expectedOrgs = await orgLoader.loadMany([
               orgOne._key,
               orgTwo._key,
@@ -2609,15 +2609,15 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using first limit', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+            })
 
-            const orgLoader = loadOrgByKey({query, language:'fr'})
+            const orgLoader = loadOrgByKey({ query, language: 'fr' })
             const expectedOrgs = await orgLoader.loadMany([
               orgOne._key,
               orgTwo._key,
@@ -2654,15 +2654,15 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('using last limit', () => {
           it('returns an organization', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+            })
 
-            const orgLoader = loadOrgByKey({query, language:'fr'})
+            const orgLoader = loadOrgByKey({ query, language: 'fr' })
             const expectedOrgs = await orgLoader.loadMany([
               orgOne._key,
               orgTwo._key,
@@ -2754,16 +2754,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on ACRONYM', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -2800,16 +2800,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -2848,16 +2848,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on NAME', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -2894,16 +2894,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -2942,16 +2942,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SLUG', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -2988,16 +2988,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -3036,16 +3036,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on ZONE', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3082,16 +3082,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -3130,16 +3130,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SECTOR', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3176,16 +3176,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -3224,16 +3224,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on COUNTRY', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3270,16 +3270,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -3318,16 +3318,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on PROVINCE', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3364,16 +3364,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -3412,16 +3412,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on CITY', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3458,16 +3458,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -3506,16 +3506,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on VERIFIED', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgTwo._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3552,16 +3552,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgTwo._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3600,16 +3600,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_MAIL_PASS', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3646,16 +3646,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -3694,16 +3694,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_MAIL_FAIL', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3740,16 +3740,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -3788,16 +3788,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_MAIL_TOTAL', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3834,16 +3834,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -3882,16 +3882,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_WEB_PASS', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -3928,16 +3928,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -3976,16 +3976,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_WEB_FAIL', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -4022,16 +4022,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -4070,16 +4070,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on SUMMARY_WEB_TOTAL', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -4116,16 +4116,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -4164,16 +4164,16 @@ describe('given the load organization connections by user id function', () => {
           describe('ordering on DOMAIN_COUNT', () => {
             describe('direction is set to ASC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   after: toGlobalId('organizations', orgOne._key),
@@ -4210,16 +4210,16 @@ describe('given the load organization connections by user id function', () => {
             })
             describe('direction is set to DESC', () => {
               it('returns organization', async () => {
-                const orgLoader = loadOrgByKey({query, language:'fr'})
+                const orgLoader = loadOrgByKey({ query, language: 'fr' })
                 const expectedOrg = await orgLoader.load(orgThree._key)
 
-                const connectionLoader = orgLoaderConnectionsByUserId(
+                const connectionLoader = loadOrgConnectionsByUserId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                )
+                })
                 const connectionArgs = {
                   first: 5,
                   before: toGlobalId('organizations', orgOne._key),
@@ -4258,13 +4258,13 @@ describe('given the load organization connections by user id function', () => {
         })
         describe('isSuperAdmin is set to true', () => {
           it('returns organizations', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 5,
@@ -4272,7 +4272,7 @@ describe('given the load organization connections by user id function', () => {
             }
             const orgs = await connectionLoader({ ...connectionArgs })
 
-            const orgLoader = loadOrgByKey({query, language:'fr'})
+            const orgLoader = loadOrgByKey({ query, language: 'fr' })
             const expectedOrgs = await orgLoader.loadMany([
               orgOne._key,
               orgTwo._key,
@@ -4313,13 +4313,13 @@ describe('given the load organization connections by user id function', () => {
         it('returns no organization connections', async () => {
           await truncate()
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = loadOrgConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'fr',
+            language: 'fr',
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -4344,13 +4344,13 @@ describe('given the load organization connections by user id function', () => {
     describe('given an unsuccessful load', () => {
       describe('limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = loadOrgConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'fr',
+            language: 'fr',
             i18n,
-          )
+          })
 
           const connectionArgs = {}
           try {
@@ -4362,19 +4362,19 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadOrgConnectionsByUserId.`,
           ])
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = loadOrgConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'fr',
+            language: 'fr',
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -4389,20 +4389,20 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadOrgConnectionsByUserId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -4416,19 +4416,19 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: orgLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -1,
@@ -4442,7 +4442,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: orgLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
@@ -4450,13 +4450,13 @@ describe('given the load organization connections by user id function', () => {
       describe('limits are above maximum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 101,
@@ -4470,19 +4470,19 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` to 101 for: orgLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`first\` to 101 for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = orgLoaderConnectionsByUserId(
+            const connectionLoader = loadOrgConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
-              'fr',
+              language: 'fr',
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 101,
@@ -4496,7 +4496,7 @@ describe('given the load organization connections by user id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`last\` to 101 for: loadOrgConnectionsByUserId.`,
             ])
           })
         })
@@ -4507,13 +4507,13 @@ describe('given the load organization connections by user id function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'fr',
+                language: 'fr',
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -4529,7 +4529,7 @@ describe('given the load organization connections by user id function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -4539,13 +4539,13 @@ describe('given the load organization connections by user id function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = orgLoaderConnectionsByUserId(
+              const connectionLoader = loadOrgConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-                'fr',
+                language: 'fr',
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -4561,7 +4561,7 @@ describe('given the load organization connections by user id function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadOrgConnectionsByUserId.`,
               ])
             })
           })
@@ -4577,13 +4577,13 @@ describe('given the load organization connections by user id function', () => {
               new Error('Unable to query organizations. Please try again.'),
             )
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = loadOrgConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'fr',
+            language: 'fr',
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -4597,7 +4597,7 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query organizations in orgLoaderConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
+            `Database error occurred while user: ${user._key} was trying to query organizations in loadOrgConnectionsByUserId, error: Error: Unable to query organizations. Please try again.`,
           ])
         })
       })
@@ -4612,13 +4612,13 @@ describe('given the load organization connections by user id function', () => {
           }
           const query = jest.fn().mockReturnValueOnce(cursor)
 
-          const connectionLoader = orgLoaderConnectionsByUserId(
+          const connectionLoader = loadOrgConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
-            'fr',
+            language: 'fr',
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -4632,7 +4632,7 @@ describe('given the load organization connections by user id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather organizations in orgLoaderConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather organizations in loadOrgConnectionsByUserId, error: Error: Unable to load organizations. Please try again.`,
           ])
         })
       })

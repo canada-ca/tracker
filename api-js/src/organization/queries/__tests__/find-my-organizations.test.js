@@ -11,7 +11,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, userRequired } from '../../../auth'
 import { userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderConnectionsByUserId } from '../../loaders'
+import { loadOrgConnectionsByUserId } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -186,7 +186,7 @@ describe('given findMyOrganizationsQuery', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
+                  loadOrgConnectionsByUserId: loadOrgConnectionsByUserId(
                     query,
                     user._key,
                     cleanseInput,
@@ -290,7 +290,7 @@ describe('given findMyOrganizationsQuery', () => {
               userRequired: jest.fn(),
             },
             loaders: {
-              orgLoaderConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
+              loadOrgConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
             },
           },
         )
@@ -383,7 +383,7 @@ describe('given findMyOrganizationsQuery', () => {
                   }),
                 },
                 loaders: {
-                  orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
+                  loadOrgConnectionsByUserId: loadOrgConnectionsByUserId(
                     query,
                     user._key,
                     cleanseInput,
@@ -487,7 +487,7 @@ describe('given findMyOrganizationsQuery', () => {
               userRequired: jest.fn(),
             },
             loaders: {
-              orgLoaderConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
+              loadOrgConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
             },
           },
         )
