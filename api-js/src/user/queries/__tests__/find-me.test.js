@@ -7,7 +7,7 @@ import { userRequired } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { loadAffiliationConnectionsByUserId } from '../../../affiliation/loaders'
-import { userLoaderByKey } from '../../loaders'
+import { loadUserByKey } from '../../loaders'
 import { cleanseInput } from '../../../validators'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -75,7 +75,7 @@ describe('given the findMe query', () => {
           auth: {
             userRequired: userRequired({
               userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             }),
           },
           loaders: {

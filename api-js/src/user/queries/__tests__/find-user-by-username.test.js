@@ -8,7 +8,7 @@ import { userRequired, checkUserIsAdminForUser } from '../../../auth'
 import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
 import { createMutationSchema } from '../../../mutation'
-import { userLoaderByKey, userLoaderByUserName } from '../../loaders'
+import { loadUserByKey, userLoaderByUserName } from '../../loaders'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 
@@ -139,7 +139,7 @@ describe('given the findUserByUsername query', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
                     userKey: user._key,
@@ -200,7 +200,7 @@ describe('given the findUserByUsername query', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
                     userKey: user._key,
@@ -264,7 +264,7 @@ describe('given the findUserByUsername query', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkUserIsAdminForUser: checkUserIsAdminForUser({
                   userKey: user._key,
@@ -318,7 +318,7 @@ describe('given the findUserByUsername query', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkUserIsAdminForUser: checkUserIsAdminForUser({
                   userKey: user._key,
@@ -392,7 +392,7 @@ describe('given the findUserByUsername query', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
                     userKey: user._key,
@@ -453,7 +453,7 @@ describe('given the findUserByUsername query', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                   checkUserIsAdminForUser: checkUserIsAdminForUser({
                     userKey: user._key,
@@ -517,7 +517,7 @@ describe('given the findUserByUsername query', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkUserIsAdminForUser: checkUserIsAdminForUser({
                   userKey: user._key,
@@ -569,7 +569,7 @@ describe('given the findUserByUsername query', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 checkUserIsAdminForUser: checkUserIsAdminForUser({
                   userKey: user._key,

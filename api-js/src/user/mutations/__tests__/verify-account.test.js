@@ -9,7 +9,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
-import { userLoaderByKey } from '../../loaders'
+import { loadUserByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -121,7 +121,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -189,7 +189,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -241,7 +241,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -298,7 +298,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -372,7 +372,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -447,7 +447,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -522,7 +522,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -567,7 +567,7 @@ describe('user send password reset email', () => {
             parameters: { userKey: user._key },
           })
 
-          const loader = userLoaderByKey(query)
+          const loader = loadUserByKey({ query })
 
           const mockedQuery = jest
             .fn()
@@ -603,7 +603,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: loader,
+                loadUserByKey: loader,
               },
             },
           )
@@ -685,7 +685,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -753,7 +753,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -805,7 +805,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -862,7 +862,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -936,7 +936,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1010,7 +1010,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1084,7 +1084,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1128,7 +1128,7 @@ describe('user send password reset email', () => {
             parameters: { userKey: user._key },
           })
 
-          const loader = userLoaderByKey(query)
+          const loader = loadUserByKey({ query })
 
           const mockedQuery = jest
             .fn()
@@ -1164,7 +1164,7 @@ describe('user send password reset email', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: loader,
+                loadUserByKey: loader,
               },
             },
           )

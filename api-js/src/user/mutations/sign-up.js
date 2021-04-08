@@ -53,7 +53,7 @@ export const signUp = new mutationWithClientMutationId({
       collections,
       transaction,
       auth: { bcrypt, tokenize, verifyToken },
-      loaders: { loadOrgByKey, userLoaderByUserName, userLoaderByKey },
+      loaders: { loadOrgByKey, userLoaderByUserName, loadUserByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -203,7 +203,7 @@ export const signUp = new mutationWithClientMutationId({
     // Generate JWT
     const token = tokenize({ parameters: { userKey: insertedUser._key } })
 
-    const returnUser = await userLoaderByKey.load(insertedUser._key)
+    const returnUser = await loadUserByKey.load(insertedUser._key)
 
     console.info(`User: ${userName} successfully created a new account.`)
 

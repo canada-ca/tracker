@@ -16,7 +16,7 @@ import {
   loadOrgByKey,
   loadOrgConnectionsByDomainId,
 } from '../../../organization/loaders'
-import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { loadUserByKey, userLoaderByUserName } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -192,7 +192,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -204,7 +204,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -340,7 +340,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -352,7 +352,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -465,7 +465,7 @@ describe('create a domain', () => {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
@@ -477,7 +477,7 @@ describe('create a domain', () => {
                 userKey: user._key,
                 cleanseInput,
               }),
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
             validators: { cleanseInput, slugify },
           },
@@ -589,7 +589,7 @@ describe('create a domain', () => {
               checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
@@ -601,7 +601,7 @@ describe('create a domain', () => {
                 userKey: user._key,
                 cleanseInput,
               }),
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
             validators: { cleanseInput, slugify },
           },
@@ -748,7 +748,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -760,7 +760,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -881,7 +881,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -893,7 +893,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1014,7 +1014,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -1026,7 +1026,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1162,7 +1162,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -1174,7 +1174,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1255,7 +1255,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -1267,7 +1267,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1362,7 +1362,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -1374,7 +1374,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1470,7 +1470,7 @@ describe('create a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 loaders: {
@@ -1482,7 +1482,7 @@ describe('create a domain', () => {
                     userKey: user._key,
                     cleanseInput,
                   }),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -1578,7 +1578,7 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
@@ -1590,7 +1590,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       cleanseInput,
                     }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -1677,7 +1677,7 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
@@ -1689,7 +1689,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       cleanseInput,
                     }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -1783,7 +1783,7 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
@@ -1795,7 +1795,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       cleanseInput,
                     }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -1882,7 +1882,7 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
@@ -1894,7 +1894,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       cleanseInput,
                     }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -1992,7 +1992,7 @@ describe('create a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 loaders: {
@@ -2004,7 +2004,7 @@ describe('create a domain', () => {
                     userKey: user._key,
                     cleanseInput,
                   }),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -2094,7 +2094,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -2106,7 +2106,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -2186,7 +2186,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -2198,7 +2198,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -2292,7 +2292,7 @@ describe('create a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
@@ -2304,7 +2304,7 @@ describe('create a domain', () => {
                   userKey: user._key,
                   cleanseInput,
                 }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: { cleanseInput, slugify },
             },
@@ -2399,7 +2399,7 @@ describe('create a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 loaders: {
@@ -2411,7 +2411,7 @@ describe('create a domain', () => {
                     userKey: user._key,
                     cleanseInput,
                   }),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 validators: { cleanseInput, slugify },
               },
@@ -2505,7 +2505,7 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
@@ -2517,7 +2517,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       cleanseInput,
                     }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2602,7 +2602,7 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
@@ -2614,7 +2614,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       cleanseInput,
                     }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2706,7 +2706,7 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
@@ -2718,7 +2718,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       cleanseInput,
                     }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2803,7 +2803,7 @@ describe('create a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
@@ -2815,7 +2815,7 @@ describe('create a domain', () => {
                       userKey: user._key,
                       cleanseInput,
                     }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   validators: { cleanseInput, slugify },
                 },
@@ -2911,7 +2911,7 @@ describe('create a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 loaders: {
@@ -2923,7 +2923,7 @@ describe('create a domain', () => {
                     userKey: user._key,
                     cleanseInput,
                   }),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 validators: { cleanseInput, slugify },
               },

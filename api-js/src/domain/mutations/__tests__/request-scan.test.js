@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { checkDomainPermission, userRequired } from '../../../auth'
 import { loadDomainByDomain } from '../../loaders'
-import { userLoaderByKey } from '../../../user/loaders'
+import { loadUserByKey } from '../../../user/loaders'
 import { cleanseInput } from '../../../validators'
 
 require('jest-fetch-mock').enableFetchMocks()
@@ -150,7 +150,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -202,7 +206,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -263,7 +271,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -315,7 +327,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -376,7 +392,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -428,7 +448,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -484,7 +508,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -570,7 +598,11 @@ describe('requesting a one time scan', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
@@ -629,7 +661,11 @@ describe('requesting a one time scan', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
@@ -694,7 +730,11 @@ describe('requesting a one time scan', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
@@ -752,7 +792,11 @@ describe('requesting a one time scan', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
@@ -811,7 +855,11 @@ describe('requesting a one time scan', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
@@ -895,7 +943,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -947,7 +999,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -1008,7 +1064,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -1060,7 +1120,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -1121,7 +1185,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -1173,7 +1241,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -1229,7 +1301,11 @@ describe('requesting a one time scan', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -1311,7 +1387,11 @@ describe('requesting a one time scan', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
@@ -1366,7 +1446,11 @@ describe('requesting a one time scan', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
@@ -1427,7 +1511,11 @@ describe('requesting a one time scan', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
@@ -1481,7 +1569,11 @@ describe('requesting a one time scan', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
@@ -1536,7 +1628,11 @@ describe('requesting a one time scan', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {

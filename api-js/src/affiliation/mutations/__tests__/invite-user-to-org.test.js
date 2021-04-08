@@ -11,7 +11,7 @@ import { createMutationSchema } from '../../../mutation'
 import { createQuerySchema } from '../../../query'
 import { cleanseInput } from '../../../validators'
 import { loadOrgByKey } from '../../../organization/loaders'
-import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { loadUserByKey, userLoaderByUserName } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
@@ -170,12 +170,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
@@ -265,12 +265,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
@@ -360,12 +360,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
@@ -450,12 +450,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteCreateAccount },
@@ -544,12 +544,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteCreateAccount },
@@ -639,12 +639,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteCreateAccount },
@@ -751,12 +751,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
@@ -846,12 +846,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
@@ -937,12 +937,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteCreateAccount },
@@ -1032,12 +1032,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteCreateAccount },
@@ -1128,12 +1128,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteCreateAccount },
@@ -1203,12 +1203,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteCreateAccount },
@@ -1305,12 +1305,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteCreateAccount },
@@ -1413,12 +1413,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteCreateAccount },
@@ -1521,12 +1521,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteCreateAccount },
@@ -1643,12 +1643,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteEmail },
@@ -1722,12 +1722,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteEmail },
@@ -1853,12 +1853,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
@@ -1947,12 +1947,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
@@ -2041,12 +2041,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
@@ -2131,12 +2131,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteCreateAccount },
@@ -2222,12 +2222,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteCreateAccount },
@@ -2313,12 +2313,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteCreateAccount },
@@ -2421,12 +2421,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
@@ -2515,12 +2515,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
@@ -2605,12 +2605,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteCreateAccount },
@@ -2696,12 +2696,12 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                     userLoaderByUserName: userLoaderByUserName(query),
                   },
                   notify: { sendOrgInviteCreateAccount },
@@ -2788,12 +2788,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteCreateAccount },
@@ -2863,12 +2863,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteCreateAccount },
@@ -2970,12 +2970,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteCreateAccount },
@@ -3077,12 +3077,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteCreateAccount },
@@ -3198,12 +3198,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteEmail },
@@ -3273,12 +3273,12 @@ describe('invite user to org', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               notify: { sendOrgInviteEmail },

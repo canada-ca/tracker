@@ -11,7 +11,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, tokenize, userRequired } from '../../../auth'
-import { userLoaderByKey, userLoaderByUserName } from '../../../user/loaders'
+import { loadUserByKey, userLoaderByUserName } from '../../../user/loaders'
 import { loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -182,7 +182,11 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
@@ -194,7 +198,11 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   i18n,
                 }),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -279,7 +287,11 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
@@ -291,7 +303,11 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   i18n,
                 }),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -413,7 +429,11 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
@@ -425,7 +445,11 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   i18n,
                 }),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -521,7 +545,11 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
@@ -533,7 +561,11 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   i18n,
                 }),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -630,7 +662,11 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
@@ -642,7 +678,11 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     i18n,
                   }),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -738,7 +778,11 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
@@ -750,7 +794,11 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     i18n,
                   }),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -858,7 +906,11 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
@@ -870,7 +922,11 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     i18n,
                   }),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -935,7 +991,11 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
@@ -947,7 +1007,11 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     i18n,
                   }),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -1056,7 +1120,11 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
@@ -1068,7 +1136,11 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   i18n,
                 }),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -1164,7 +1236,11 @@ describe('removing an organization', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                   i18n,
                 }),
               },
@@ -1176,7 +1252,11 @@ describe('removing an organization', () => {
                   userKey: user._key,
                   i18n,
                 }),
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               },
             },
           )
@@ -1273,7 +1353,11 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
@@ -1285,7 +1369,11 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     i18n,
                   }),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -1381,7 +1469,11 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
@@ -1393,7 +1485,11 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     i18n,
                   }),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -1500,7 +1596,11 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
@@ -1512,7 +1612,11 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     i18n,
                   }),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )
@@ -1573,7 +1677,11 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                     i18n,
                   }),
                 },
@@ -1585,7 +1693,11 @@ describe('removing an organization', () => {
                     userKey: user._key,
                     i18n,
                   }),
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 },
               },
             )

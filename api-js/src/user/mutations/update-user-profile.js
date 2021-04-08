@@ -45,7 +45,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       query,
       userKey,
       auth: { userRequired },
-      loaders: { userLoaderByKey, userLoaderByUserName },
+      loaders: { loadUserByKey, userLoaderByUserName },
       validators: { cleanseInput },
     },
   ) => {
@@ -109,8 +109,8 @@ export const updateUserProfile = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
 
-    await userLoaderByKey.clear(user._key)
-    const returnUser = await userLoaderByKey.load(userKey)
+    await loadUserByKey.clear(user._key)
+    const returnUser = await loadUserByKey.load(userKey)
 
     console.info(`User: ${user._key} successfully updated their profile.`)
     return {

@@ -11,7 +11,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
-import { userLoaderByUserName, userLoaderByKey } from '../../loaders'
+import { userLoaderByUserName, loadUserByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
 
@@ -116,7 +116,7 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -124,7 +124,7 @@ describe('authenticate user account', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -189,7 +189,7 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -197,7 +197,7 @@ describe('authenticate user account', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -260,7 +260,7 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -268,7 +268,7 @@ describe('authenticate user account', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -360,7 +360,7 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -368,7 +368,7 @@ describe('authenticate user account', () => {
                   },
                   loaders: {
                     userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -458,7 +458,7 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -466,7 +466,7 @@ describe('authenticate user account', () => {
                   },
                   loaders: {
                     userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -541,7 +541,7 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -549,7 +549,7 @@ describe('authenticate user account', () => {
                   },
                   loaders: {
                     userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -622,7 +622,7 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -630,7 +630,7 @@ describe('authenticate user account', () => {
                   },
                   loaders: {
                     userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -704,7 +704,7 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -712,7 +712,7 @@ describe('authenticate user account', () => {
                 },
                 loaders: {
                   userLoaderByUserName: userLoaderByUserName(query),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -785,7 +785,7 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -793,7 +793,7 @@ describe('authenticate user account', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -825,7 +825,7 @@ describe('authenticate user account', () => {
           const user = await cursor.next()
 
           const userNameLoader = userLoaderByUserName(query)
-          const idLoader = userLoaderByKey(query)
+          const idLoader = loadUserByKey({ query })
 
           const mockedQuery = jest
             .fn()
@@ -867,7 +867,7 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -875,7 +875,7 @@ describe('authenticate user account', () => {
               },
               loaders: {
                 userLoaderByUserName: userNameLoader,
-                userLoaderByKey: idLoader,
+                loadUserByKey: idLoader,
               },
             },
           )
@@ -947,7 +947,7 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -955,7 +955,7 @@ describe('authenticate user account', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1020,7 +1020,7 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -1028,7 +1028,7 @@ describe('authenticate user account', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1091,7 +1091,7 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -1099,7 +1099,7 @@ describe('authenticate user account', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1191,7 +1191,7 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -1199,7 +1199,7 @@ describe('authenticate user account', () => {
                   },
                   loaders: {
                     userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -1289,7 +1289,7 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -1297,7 +1297,7 @@ describe('authenticate user account', () => {
                   },
                   loaders: {
                     userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -1372,7 +1372,7 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -1380,7 +1380,7 @@ describe('authenticate user account', () => {
                   },
                   loaders: {
                     userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -1453,7 +1453,7 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      userLoaderByKey: userLoaderByKey(query),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
@@ -1461,7 +1461,7 @@ describe('authenticate user account', () => {
                   },
                   loaders: {
                     userLoaderByUserName: userLoaderByUserName(query),
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                 },
               )
@@ -1535,7 +1535,7 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1543,7 +1543,7 @@ describe('authenticate user account', () => {
                 },
                 loaders: {
                   userLoaderByUserName: userLoaderByUserName(query),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1616,7 +1616,7 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -1624,7 +1624,7 @@ describe('authenticate user account', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1656,7 +1656,7 @@ describe('authenticate user account', () => {
           const user = await cursor.next()
 
           const userNameLoader = userLoaderByUserName(query)
-          const idLoader = userLoaderByKey(query)
+          const idLoader = loadUserByKey({ query })
 
           const mockedQuery = jest
             .fn()
@@ -1698,7 +1698,7 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -1706,7 +1706,7 @@ describe('authenticate user account', () => {
               },
               loaders: {
                 userLoaderByUserName: userNameLoader,
-                userLoaderByKey: idLoader,
+                loadUserByKey: idLoader,
               },
             },
           )

@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
-import { userLoaderByUserName, userLoaderByKey } from '../../loaders'
+import { userLoaderByUserName, loadUserByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
@@ -114,14 +114,14 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               notify: {
                 sendTfaTextMsg: mockNotify,
@@ -197,14 +197,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -265,14 +265,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -313,14 +313,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -375,14 +375,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -443,14 +443,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -491,14 +491,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -553,14 +553,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -621,14 +621,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -669,14 +669,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -704,7 +704,7 @@ describe('user sets a new phone number', () => {
       })
       describe('database error occurs on upsert', () => {
         it('returns an error message', async () => {
-          const loaderById = userLoaderByKey(query)
+          const loaderById = loadUserByKey({ query })
 
           const mockedQuery = jest
             .fn()
@@ -738,14 +738,14 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: loaderById,
+                loadUserByKey: loaderById,
               },
               notify: {
                 sendTfaTextMsg: mockNotify,
@@ -821,14 +821,14 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               notify: {
                 sendTfaTextMsg: mockNotify,
@@ -903,14 +903,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -970,14 +970,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1018,14 +1018,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1080,14 +1080,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1147,14 +1147,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1195,14 +1195,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1257,14 +1257,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1324,14 +1324,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1372,14 +1372,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1407,7 +1407,7 @@ describe('user sets a new phone number', () => {
       })
       describe('database error occurs on upsert', () => {
         it('returns an error message', async () => {
-          const loaderById = userLoaderByKey(query)
+          const loaderById = loadUserByKey({ query })
 
           const mockedQuery = jest
             .fn()
@@ -1441,14 +1441,14 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: loaderById,
+                loadUserByKey: loaderById,
               },
               notify: {
                 sendTfaTextMsg: mockNotify,

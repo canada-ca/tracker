@@ -11,7 +11,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, userRequired } from '../../../auth'
 import { loadDomainConnectionsByUserId } from '../../loaders'
-import { userLoaderByKey } from '../../../user'
+import { loadUserByKey } from '../../../user'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -165,7 +165,11 @@ describe('given findMyDomainsQuery', () => {
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                loadUserByKey: loadUserByKey({
+                  query,
+                  userKey: user._key,
+                  i18n,
+                }),
               }),
             },
             loaders: {

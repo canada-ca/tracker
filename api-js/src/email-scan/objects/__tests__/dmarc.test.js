@@ -245,12 +245,12 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = loadDmarcGuidanceTagConnectionsByTagId(
+const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const guidanceTags = ['dmarc1']
 
         const expectedResult = {
@@ -303,12 +303,12 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = loadDmarcGuidanceTagConnectionsByTagId(
+const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const negativeTags = ['dmarc1']
 
         const expectedResult = {
@@ -361,12 +361,12 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = loadDmarcGuidanceTagConnectionsByTagId(
+const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const neutralTags = ['dmarc1']
 
         const expectedResult = {
@@ -419,12 +419,12 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = loadDmarcGuidanceTagConnectionsByTagId(
+        const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const positiveTags = ['dmarc1']
 
         const expectedResult = {

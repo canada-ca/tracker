@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, userRequired } from '../../../auth'
-import { userLoaderByKey } from '../../../user/loaders'
+import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgConnectionsByUserId } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -182,16 +182,20 @@ describe('given findMyOrganizationsQuery', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
-                  loadOrgConnectionsByUserId: loadOrgConnectionsByUserId(
+                  loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
                     query,
-                    user._key,
+                    userKey: user._key,
                     cleanseInput,
-                    'en',
-                  ),
+                    language: 'en',
+                  }),
                 },
               },
             )
@@ -379,16 +383,20 @@ describe('given findMyOrganizationsQuery', () => {
                   userRequired: userRequired({
                     i18n,
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                    loadUserByKey: loadUserByKey({
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    }),
                   }),
                 },
                 loaders: {
-                  loadOrgConnectionsByUserId: loadOrgConnectionsByUserId(
+                  loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
                     query,
-                    user._key,
+                    userKey: user._key,
                     cleanseInput,
-                    'fr',
-                  ),
+                    language: 'fr',
+                  }),
                 },
               },
             )

@@ -12,7 +12,7 @@ import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, userRequired } from '../../../auth'
 import { loadDmarcSummaryConnectionsByUserId } from '../../loaders'
-import { userLoaderByKey } from '../../../user/loaders'
+import { loadUserByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -193,7 +193,7 @@ describe('given the findMyDmarcSummaries query', () => {
             userRequired: userRequired({
               i18n,
               userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+              loadUserByKey: loadUserByKey({ query, userKey: user._key, i18n }),
             }),
           },
           loaders: {
@@ -291,7 +291,11 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: undefined,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -352,7 +356,11 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -433,7 +441,11 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: undefined,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
@@ -492,7 +504,11 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {

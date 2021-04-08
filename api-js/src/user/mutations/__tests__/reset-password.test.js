@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
-import { userLoaderByUserName, userLoaderByKey } from '../../loaders'
+import { userLoaderByUserName, loadUserByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -159,7 +159,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -288,7 +288,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -347,7 +347,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -413,7 +413,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -479,7 +479,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -554,7 +554,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -627,7 +627,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -699,7 +699,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -732,7 +732,7 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const userNameLoader = userLoaderByUserName(query)
-          const userKeyLoader = userLoaderByKey(query)
+          const userKeyLoader = loadUserByKey({ query })
 
           const resetToken = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },
@@ -776,7 +776,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userNameLoader,
-                userLoaderByKey: userKeyLoader,
+                loadUserByKey: userKeyLoader,
               },
             },
           )
@@ -801,7 +801,7 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const userNameLoader = userLoaderByUserName(query)
-          const userKeyLoader = userLoaderByKey(query)
+          const userKeyLoader = loadUserByKey({ query })
 
           const resetToken = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },
@@ -848,7 +848,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userNameLoader,
-                userLoaderByKey: userKeyLoader,
+                loadUserByKey: userKeyLoader,
               },
             },
           )
@@ -930,7 +930,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -1054,7 +1054,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1119,7 +1119,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1184,7 +1184,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1259,7 +1259,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1331,7 +1331,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1403,7 +1403,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userLoaderByUserName(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1435,7 +1435,7 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const userNameLoader = userLoaderByUserName(query)
-          const userKeyLoader = userLoaderByKey(query)
+          const userKeyLoader = loadUserByKey({ query })
 
           const resetToken = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },
@@ -1479,7 +1479,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userNameLoader,
-                userLoaderByKey: userKeyLoader,
+                loadUserByKey: userKeyLoader,
               },
             },
           )
@@ -1502,7 +1502,7 @@ describe('reset users password', () => {
           const user = await userCursor.next()
 
           const userNameLoader = userLoaderByUserName(query)
-          const userKeyLoader = userLoaderByKey(query)
+          const userKeyLoader = loadUserByKey({ query })
 
           const resetToken = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },
@@ -1549,7 +1549,7 @@ describe('reset users password', () => {
               },
               loaders: {
                 userLoaderByUserName: userNameLoader,
-                userLoaderByKey: userKeyLoader,
+                loadUserByKey: userKeyLoader,
               },
             },
           )

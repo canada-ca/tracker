@@ -8,7 +8,7 @@ import { cleanseInput } from '../../../validators'
 import { userRequired, tokenize } from '../../../auth'
 import { loadOrgConnectionsByDomainId } from '../../../organization/loaders'
 import { organizationConnection } from '../../../organization/objects'
-import { userLoaderByKey } from '../../../user'
+import { loadUserByKey } from '../../../user'
 import { domainStatus } from '../domain-status'
 import { dmarcSummaryType } from '../../../dmarc-summaries/objects'
 import {
@@ -412,7 +412,7 @@ describe('given the domain object', () => {
           mockUserRequired = userRequired({
             i18n: {},
             userKey: user._key,
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
         })
         it('returns the resolved value', async () => {
@@ -472,7 +472,7 @@ describe('given the domain object', () => {
           mockUserRequired = userRequired({
             i18n: {},
             userKey: user._key,
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
         })
         it('returns the resolved value', async () => {
@@ -530,7 +530,7 @@ describe('given the domain object', () => {
           mockUserRequired = userRequired({
             i18n: {},
             userKey: user._key,
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
         })
         it('returns the resolved value', async () => {
@@ -577,7 +577,7 @@ describe('given the domain object', () => {
           mockUserRequired = userRequired({
             i18n: {},
             userKey: user._key,
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
         })
         it('returns the resolved value', async () => {

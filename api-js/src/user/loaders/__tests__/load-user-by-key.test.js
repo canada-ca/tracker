@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { userLoaderByKey } from '../index'
+import { loadUserByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given a userLoaderByKey dataloader', () => {
+describe('given a loadUserByKey dataloader', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleOutput = []
@@ -72,7 +72,7 @@ describe('given a userLoaderByKey dataloader', () => {
       `
       const expectedUser = await expectedCursor.next()
 
-      const loader = userLoaderByKey(query)
+      const loader = loadUserByKey({ query })
       const user = await loader.load(expectedUser._key)
 
       expect(user).toEqual(expectedUser)
@@ -93,7 +93,7 @@ describe('given a userLoaderByKey dataloader', () => {
         expectedUsers.push(tempUser)
       }
 
-      const loader = userLoaderByKey(query)
+      const loader = loadUserByKey({ query })
       const users = await loader.loadMany(userKeys)
       expect(users).toEqual(expectedUsers)
     })
@@ -125,7 +125,11 @@ describe('given a userLoaderByKey dataloader', () => {
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadUserByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load(expectedUser._key)
@@ -136,7 +140,7 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running userLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadUserByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -155,7 +159,11 @@ describe('given a userLoaderByKey dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadUserByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load(expectedUser._key)
@@ -166,7 +174,7 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 funning userLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 funning loadUserByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -198,7 +206,11 @@ describe('given a userLoaderByKey dataloader', () => {
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadUserByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load(expectedUser._key)
@@ -207,7 +219,7 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running userLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadUserByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -226,7 +238,11 @@ describe('given a userLoaderByKey dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadUserByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load(expectedUser._key)
@@ -235,7 +251,7 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 funning userLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 funning loadUserByKey: Error: Cursor error occurred.`,
         ])
       })
     })
