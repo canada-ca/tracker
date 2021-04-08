@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { dkimGuidanceTagLoader } from '../index'
+import { loadDkimGuidanceTagById } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the dkimGuidanceTagLoader function', () => {
+describe('given the loadDkimGuidanceTagById function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -59,7 +59,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
       `
       const expectedDkimTag = await expectedCursor.next()
 
-      const loader = dkimGuidanceTagLoader(query, i18n)
+      const loader = loadDkimGuidanceTagById({ query, i18n })
       const dkim = await loader.load(expectedDkimTag._key)
 
       expect(dkim).toEqual(expectedDkimTag)
@@ -80,7 +80,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
         expectedDkimTags.push(tempDkim)
       }
 
-      const loader = dkimGuidanceTagLoader(query, i18n)
+      const loader = loadDkimGuidanceTagById({ query, i18n })
       const dkimTags = await loader.loadMany(dkimTagKeys)
       expect(dkimTags).toEqual(expectedDkimTags)
     })
@@ -105,7 +105,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dkimGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadDkimGuidanceTagById({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -116,7 +116,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dkimGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDkimGuidanceTagById: Error: Database error occurred.`,
         ])
       })
     })
@@ -128,7 +128,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dkimGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadDkimGuidanceTagById({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -139,7 +139,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dkimGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDkimGuidanceTagById: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -164,7 +164,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dkimGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadDkimGuidanceTagById({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -173,7 +173,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dkimGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDkimGuidanceTagById: Error: Database error occurred.`,
         ])
       })
     })
@@ -185,7 +185,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dkimGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadDkimGuidanceTagById({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -194,7 +194,7 @@ describe('given the dkimGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dkimGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDkimGuidanceTagById: Error: Cursor error occurred.`,
         ])
       })
     })

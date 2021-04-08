@@ -59,7 +59,7 @@ import {
   loadSpfConnectionsByDomainId,
 } from './email-scan/loaders'
 import {
-  dkimGuidanceTagLoader,
+  loadDkimGuidanceTagById,
   loadDkimGuidanceTagConnectionsByTagId,
   dmarcGuidanceTagLoader,
   dmarcGuidanceTagConnectionsLoader,
@@ -256,7 +256,11 @@ export const createContext = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
       ),
-      dkimGuidanceTagLoader: dkimGuidanceTagLoader(query, userKey, i18n),
+      loadDkimGuidanceTagById: loadDkimGuidanceTagById({
+        query,
+        userKey,
+        i18n,
+      }),
       loadDkimGuidanceTagConnectionsByTagId: loadDkimGuidanceTagConnectionsByTagId(
         {
           query,
