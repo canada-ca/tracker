@@ -196,7 +196,11 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      loadStartDateFromPeriod: loadStartDateFromPeriod(moment, userKey, i18n),
+      loadStartDateFromPeriod: loadStartDateFromPeriod({
+        moment,
+        userKey,
+        i18n,
+      }),
       dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(query, userKey, i18n),
       domainLoaderByDomain: domainLoaderByDomain(query, userKey, i18n),
       domainLoaderByKey: domainLoaderByKey(query, userKey, i18n),

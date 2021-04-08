@@ -46,7 +46,7 @@ describe('given the loadStartDateFromPeriod', () => {
           })
       })
       it('returns the start date', () => {
-        const loader = loadStartDateFromPeriod(mockedMoment)
+        const loader = loadStartDateFromPeriod({ moment: mockedMoment })
 
         const startDate = loader({ period: 'january', year: '2020' })
 
@@ -74,7 +74,7 @@ describe('given the loadStartDateFromPeriod', () => {
           })
       })
       it('returns thirty days', () => {
-        const loader = loadStartDateFromPeriod(mockedMoment)
+        const loader = loadStartDateFromPeriod({ moment: mockedMoment })
 
         const startDate = loader({ period: 'thirtyDays', year: '2020' })
 
@@ -128,7 +128,11 @@ describe('given the loadStartDateFromPeriod', () => {
               })
           })
           it('throws an error', () => {
-            const loader = loadStartDateFromPeriod(mockedMoment, '123', i18n)
+            const loader = loadStartDateFromPeriod({
+              moment: mockedMoment,
+              userKey: '123',
+              i18n,
+            })
             try {
               loader({ period: 'january', year: '2021' })
             } catch (err) {
@@ -165,7 +169,11 @@ describe('given the loadStartDateFromPeriod', () => {
               })
           })
           it('throws an error', () => {
-            const loader = loadStartDateFromPeriod(mockedMoment, '123', i18n)
+            const loader = loadStartDateFromPeriod({
+              moment: mockedMoment,
+              userKey: '123',
+              i18n,
+            })
             try {
               loader({ period: 'thirtyDays', year: '2021' })
             } catch (err) {
@@ -230,7 +238,11 @@ describe('given the loadStartDateFromPeriod', () => {
               })
           })
           it('throws an error', () => {
-            const loader = loadStartDateFromPeriod(mockedMoment, '123', i18n)
+            const loader = loadStartDateFromPeriod({
+              moment: mockedMoment,
+              userKey: '123',
+              i18n,
+            })
             try {
               loader({ period: 'january', year: '2021' })
             } catch (err) {
@@ -263,7 +275,11 @@ describe('given the loadStartDateFromPeriod', () => {
               })
           })
           it('throws an error', () => {
-            const loader = loadStartDateFromPeriod(mockedMoment, '123', i18n)
+            const loader = loadStartDateFromPeriod({
+              moment: mockedMoment,
+              userKey: '123',
+              i18n,
+            })
             try {
               loader({ period: 'thirtyDays', year: '2021' })
             } catch (err) {
