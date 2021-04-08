@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { spfLoaderConnectionsByDomainId, spfLoaderByKey } from '../index'
+import { spfLoaderConnectionsByDomainId, loadSpfByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -97,7 +97,7 @@ describe('when given the load spf connection function', () => {
           i18n,
         )
 
-        const spfLoader = spfLoaderByKey(query)
+        const spfLoader = loadSpfByKey({ query })
         const expectedSpfScans = await spfLoader.loadMany([
           spfScan1._key,
           spfScan2._key,
@@ -149,7 +149,7 @@ describe('when given the load spf connection function', () => {
           i18n,
         )
 
-        const spfLoader = spfLoaderByKey(query)
+        const spfLoader = loadSpfByKey({ query })
         const expectedSpfScans = await spfLoader.loadMany([
           spfScan1._key,
           spfScan2._key,
@@ -201,7 +201,7 @@ describe('when given the load spf connection function', () => {
           i18n,
         )
 
-        const spfLoader = spfLoaderByKey(query)
+        const spfLoader = loadSpfByKey({ query })
         const expectedSpfScans = await spfLoader.loadMany([
           spfScan1._key,
           spfScan2._key,
@@ -252,7 +252,7 @@ describe('when given the load spf connection function', () => {
           i18n,
         )
 
-        const spfLoader = spfLoaderByKey(query)
+        const spfLoader = loadSpfByKey({ query })
         const expectedSpfScans = await spfLoader.loadMany([
           spfScan1._key,
           spfScan2._key,
@@ -314,7 +314,7 @@ describe('when given the load spf connection function', () => {
             i18n,
           )
 
-          const spfLoader = spfLoaderByKey(query)
+          const spfLoader = loadSpfByKey({ query })
           const expectedSpfScans = await spfLoader.loadMany([
             spfScan2._key,
             spfScan3._key,
@@ -372,7 +372,7 @@ describe('when given the load spf connection function', () => {
             i18n,
           )
 
-          const spfLoader = spfLoaderByKey(query)
+          const spfLoader = loadSpfByKey({ query })
           const expectedSpfScans = await spfLoader.loadMany([
             spfScan1._key,
             spfScan2._key,
@@ -430,7 +430,7 @@ describe('when given the load spf connection function', () => {
             i18n,
           )
 
-          const spfLoader = spfLoaderByKey(query)
+          const spfLoader = loadSpfByKey({ query })
           const expectedSpfScans = await spfLoader.loadMany([spfScan2._key])
 
           expectedSpfScans[0].id = expectedSpfScans[0]._key
@@ -510,7 +510,7 @@ describe('when given the load spf connection function', () => {
       describe('ordering on TIMESTAMP', () => {
         describe('direction is set to ASC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
             const connectionLoader = spfLoaderConnectionsByDomainId(
@@ -557,7 +557,7 @@ describe('when given the load spf connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
             const connectionLoader = spfLoaderConnectionsByDomainId(
@@ -606,7 +606,7 @@ describe('when given the load spf connection function', () => {
       describe('ordering on LOOKUPS', () => {
         describe('direction is set to ASC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
             const connectionLoader = spfLoaderConnectionsByDomainId(
@@ -653,7 +653,7 @@ describe('when given the load spf connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
             const connectionLoader = spfLoaderConnectionsByDomainId(
@@ -702,7 +702,7 @@ describe('when given the load spf connection function', () => {
       describe('ordering on RECORD', () => {
         describe('direction is set to ASC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
             const connectionLoader = spfLoaderConnectionsByDomainId(
@@ -749,7 +749,7 @@ describe('when given the load spf connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
             const connectionLoader = spfLoaderConnectionsByDomainId(
@@ -798,7 +798,7 @@ describe('when given the load spf connection function', () => {
       describe('ordering on SPF_DEFAULT', () => {
         describe('direction is set to ASC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
             const connectionLoader = spfLoaderConnectionsByDomainId(
@@ -845,7 +845,7 @@ describe('when given the load spf connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns spf scan', async () => {
-            const loader = spfLoaderByKey(query, user._key, i18n)
+            const loader = loadSpfByKey({ query, userKey: user._key, i18n })
             const expectedSpfScan = await loader.load(spfTwo._key)
 
             const connectionLoader = spfLoaderConnectionsByDomainId(
