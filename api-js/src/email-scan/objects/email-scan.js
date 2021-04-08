@@ -71,9 +71,9 @@ export const emailScanType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { dmarcLoaderConnectionsByDomainId } },
+        { loaders: { loadDmarcConnectionsByDomainId } },
       ) => {
-        const dmarc = await dmarcLoaderConnectionsByDomainId({
+        const dmarc = await loadDmarcConnectionsByDomainId({
           domainId: _id,
           ...args,
         })

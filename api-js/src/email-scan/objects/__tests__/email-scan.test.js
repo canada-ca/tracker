@@ -6,7 +6,7 @@ import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
 import {
   loadDkimConnectionsByDomainId,
-  dmarcLoaderConnectionsByDomainId,
+  loadDmarcConnectionsByDomainId,
   spfLoaderConnectionsByDomainId,
 } from '../../loaders'
 import {
@@ -248,18 +248,18 @@ describe('given the email gql object', () => {
           },
         }
 
-        const loader = dmarcLoaderConnectionsByDomainId(
+        const loader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         await expect(
           demoType.dmarc.resolve(
             { _id: domain._id },
             { first: 1 },
-            { loaders: { dmarcLoaderConnectionsByDomainId: loader } },
+            { loaders: { loadDmarcConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
