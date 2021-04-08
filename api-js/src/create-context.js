@@ -56,7 +56,7 @@ import {
   loadDkimConnectionsByDomainId,
   loadDkimResultConnectionsByDkimId,
   loadDmarcConnectionsByDomainId,
-  spfLoaderConnectionsByDomainId,
+  loadSpfConnectionsByDomainId,
 } from './email-scan/loaders'
 import {
   dkimGuidanceTagLoader,
@@ -238,12 +238,12 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      spfLoaderConnectionsByDomainId: spfLoaderConnectionsByDomainId(
+      loadSpfConnectionsByDomainId: loadSpfConnectionsByDomainId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
+      }),
       httpsLoaderByKey: httpsLoaderByKey(query, userKey, i18n),
       httpsLoaderConnectionsByDomainId: httpsLoaderConnectionsByDomainId(
         query,

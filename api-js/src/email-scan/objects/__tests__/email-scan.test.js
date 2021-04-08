@@ -7,7 +7,7 @@ import { domainType } from '../../../domain/objects'
 import {
   loadDkimConnectionsByDomainId,
   loadDmarcConnectionsByDomainId,
-  spfLoaderConnectionsByDomainId,
+  loadSpfConnectionsByDomainId,
 } from '../../loaders'
 import {
   emailScanType,
@@ -296,18 +296,18 @@ describe('given the email gql object', () => {
           },
         }
 
-        const loader = spfLoaderConnectionsByDomainId(
+        const loader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         await expect(
           demoType.spf.resolve(
             { _id: domain._id },
             { first: 1 },
-            { loaders: { spfLoaderConnectionsByDomainId: loader } },
+            { loaders: { loadSpfConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

@@ -101,9 +101,9 @@ export const emailScanType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { spfLoaderConnectionsByDomainId } },
+        { loaders: { loadSpfConnectionsByDomainId } },
       ) => {
-        const spf = await spfLoaderConnectionsByDomainId({
+        const spf = await loadSpfConnectionsByDomainId({
           domainId: _id,
           ...args,
         })
