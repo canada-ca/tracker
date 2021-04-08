@@ -46,7 +46,7 @@ import {
   loadDomainByKey,
   loadDomainByDomain,
   loadDomainConnectionsByOrgId,
-  domainLoaderConnectionsByUserId,
+  loadDomainConnectionsByUserId,
 } from './domain/loaders'
 import {
   dkimLoaderByKey,
@@ -210,12 +210,12 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
+      loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
         query,
         userKey,
         cleanseInput,
         i18n,
-      ),
+      }),
       dkimLoaderByKey: dkimLoaderByKey(query, userKey, i18n),
       dkimResultLoaderByKey: dkimResultLoaderByKey(query, userKey, i18n),
       dmarcLoaderByKey: dmarcLoaderByKey(query, userKey, i18n),

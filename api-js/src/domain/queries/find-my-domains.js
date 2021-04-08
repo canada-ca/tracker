@@ -31,7 +31,7 @@ export const findMyDomains = {
       i18n,
       userKey,
       auth: { checkSuperAdmin, userRequired },
-      loaders: { domainLoaderConnectionsByUserId },
+      loaders: { loadDomainConnectionsByUserId },
     },
   ) => {
     let domainConnections
@@ -41,7 +41,7 @@ export const findMyDomains = {
     const isSuperAdmin = await checkSuperAdmin()
 
     try {
-      domainConnections = await domainLoaderConnectionsByUserId({
+      domainConnections = await loadDomainConnectionsByUserId({
         isSuperAdmin,
         ...args,
       })

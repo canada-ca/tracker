@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, userRequired } from '../../../auth'
-import { domainLoaderConnectionsByUserId } from '../../loaders'
+import { loadDomainConnectionsByUserId } from '../../loaders'
 import { userLoaderByKey } from '../../../user'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -169,11 +169,11 @@ describe('given findMyDomainsQuery', () => {
               }),
             },
             loaders: {
-              domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
+              loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
-              ),
+              }),
             },
           },
         )
@@ -273,7 +273,7 @@ describe('given findMyDomainsQuery', () => {
                 userRequired: jest.fn(),
               },
               loaders: {
-                domainLoaderConnectionsByUserId: mockedLoader,
+                loadDomainConnectionsByUserId: mockedLoader,
               },
             },
           )
@@ -345,7 +345,7 @@ describe('given findMyDomainsQuery', () => {
                 userRequired: jest.fn(),
               },
               loaders: {
-                domainLoaderConnectionsByUserId: mockedLoader,
+                loadDomainConnectionsByUserId: mockedLoader,
               },
             },
           )
