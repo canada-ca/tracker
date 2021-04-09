@@ -39,6 +39,10 @@ export const DmarcSummaryOrderField = new GraphQLEnumType({
       value: 'total-messages',
       description: 'Order dmarc summaries by total messages',
     },
+    DOMAIN: {
+      value: 'domain',
+      description: 'Order dmarc summaries by their respective domains.',
+    },
   },
   description: 'Properties by which dmarc summary connections can be ordered.',
 })
