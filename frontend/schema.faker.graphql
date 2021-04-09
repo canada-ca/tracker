@@ -638,6 +638,8 @@ enum DmarcSummaryOrderField {
   PASS_SPF_PERCENTAGE
   # Order dmarc summaries by total messages
   TOTAL_MESSAGES
+  # Order dmarc summaries by their respective domains.
+  DOMAIN
 }
 
 # Domain object containing information for a given domain.
