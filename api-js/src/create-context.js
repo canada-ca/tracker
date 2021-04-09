@@ -78,7 +78,7 @@ import {
 } from './organization/loaders'
 import { loadUserByUserName, loadUserByKey } from './user/loaders'
 import {
-  httpsLoaderByKey,
+  loadHttpsByKey,
   httpsLoaderConnectionsByDomainId,
   sslLoaderByKey,
   sslLoaderConnectionsByDomainId,
@@ -244,7 +244,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      httpsLoaderByKey: httpsLoaderByKey(query, userKey, i18n),
+      loadHttpsByKey: loadHttpsByKey({ query, userKey, i18n }),
       httpsLoaderConnectionsByDomainId: httpsLoaderConnectionsByDomainId(
         query,
         userKey,

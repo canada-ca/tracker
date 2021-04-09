@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { httpsLoaderByKey } from '../index'
+import { loadHttpsByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the httpsLoaderByKey function', () => {
+describe('given the loadHttpsByKey function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -60,7 +60,7 @@ describe('given the httpsLoaderByKey function', () => {
       `
       const expectedHttps = await expectedCursor.next()
 
-      const loader = httpsLoaderByKey(query)
+      const loader = loadHttpsByKey({ query })
       const https = await loader.load(expectedHttps._key)
 
       expect(https).toEqual(expectedHttps)
@@ -82,7 +82,7 @@ describe('given the httpsLoaderByKey function', () => {
         expectedHttpsScans.push(tempHttps)
       }
 
-      const loader = httpsLoaderByKey(query)
+      const loader = loadHttpsByKey({ query })
       const httpsScans = await loader.loadMany(httpsKeys)
 
       expect(httpsScans).toEqual(expectedHttpsScans)
@@ -108,7 +108,7 @@ describe('given the httpsLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsLoaderByKey(query, '1234', i18n)
+        const loader = loadHttpsByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -118,7 +118,7 @@ describe('given the httpsLoaderByKey function', () => {
           )
         }
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running httpsLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadHttpsByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -130,7 +130,7 @@ describe('given the httpsLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsLoaderByKey(query, '1234', i18n)
+        const loader = loadHttpsByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -140,7 +140,7 @@ describe('given the httpsLoaderByKey function', () => {
           )
         }
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running httpsLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadHttpsByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -165,7 +165,7 @@ describe('given the httpsLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = httpsLoaderByKey(query, '1234', i18n)
+        const loader = loadHttpsByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -173,7 +173,7 @@ describe('given the httpsLoaderByKey function', () => {
           expect(err).toEqual(new Error('todo'))
         }
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running httpsLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadHttpsByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -185,7 +185,7 @@ describe('given the httpsLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = httpsLoaderByKey(query, '1234', i18n)
+        const loader = loadHttpsByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -193,7 +193,7 @@ describe('given the httpsLoaderByKey function', () => {
           expect(err).toEqual(new Error('todo'))
         }
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running httpsLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadHttpsByKey: Error: Cursor error occurred.`,
         ])
       })
     })

@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { httpsLoaderConnectionsByDomainId, httpsLoaderByKey } from '../index'
+import { httpsLoaderConnectionsByDomainId, loadHttpsByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -96,7 +96,7 @@ describe('given the load https connection function', () => {
           i18n,
         )
 
-        const httpsLoader = httpsLoaderByKey(query, i18n)
+        const httpsLoader = loadHttpsByKey({ query, i18n })
         const expectedHttpsScans = await httpsLoader.loadMany([
           httpsScan1._key,
           httpsScan2._key,
@@ -148,7 +148,7 @@ describe('given the load https connection function', () => {
           i18n,
         )
 
-        const httpsLoader = httpsLoaderByKey(query, i18n)
+        const httpsLoader = loadHttpsByKey({ query, i18n })
         const expectedHttpsScans = await httpsLoader.loadMany([
           httpsScan1._key,
           httpsScan2._key,
@@ -200,7 +200,7 @@ describe('given the load https connection function', () => {
           i18n,
         )
 
-        const httpsLoader = httpsLoaderByKey(query, i18n)
+        const httpsLoader = loadHttpsByKey({ query, i18n })
         const expectedHttpsScans = await httpsLoader.loadMany([
           httpsScan1._key,
           httpsScan2._key,
@@ -251,7 +251,7 @@ describe('given the load https connection function', () => {
           i18n,
         )
 
-        const httpsLoader = httpsLoaderByKey(query, i18n)
+        const httpsLoader = loadHttpsByKey({ query, i18n })
         const expectedHttpsScans = await httpsLoader.loadMany([
           httpsScan1._key,
           httpsScan2._key,
@@ -313,7 +313,7 @@ describe('given the load https connection function', () => {
             i18n,
           )
 
-          const httpsLoader = httpsLoaderByKey(query, i18n)
+          const httpsLoader = loadHttpsByKey({ query, i18n })
           const expectedHttpsScans = await httpsLoader.loadMany([
             httpsScan2._key,
             httpsScan3._key,
@@ -371,7 +371,7 @@ describe('given the load https connection function', () => {
             i18n,
           )
 
-          const httpsLoader = await httpsLoaderByKey(query, i18n)
+          const httpsLoader = await loadHttpsByKey({ query, i18n })
           const expectedHttpsScans = await httpsLoader.loadMany([
             httpsScan1._key,
             httpsScan2._key,
@@ -429,7 +429,7 @@ describe('given the load https connection function', () => {
             i18n,
           )
 
-          const httpsLoader = httpsLoaderByKey(query, i18n)
+          const httpsLoader = loadHttpsByKey({ query, i18n })
           const expectedHttpsScans = await httpsLoader.loadMany([
             httpsScan2._key,
           ])
@@ -518,7 +518,7 @@ describe('given the load https connection function', () => {
       describe('ordering on TIMESTAMP', () => {
         describe('direction is set to ASC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -565,7 +565,7 @@ describe('given the load https connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -614,7 +614,7 @@ describe('given the load https connection function', () => {
       describe('order on IMPLEMENTATION', () => {
         describe('direction is set to ASC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -661,7 +661,7 @@ describe('given the load https connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -710,7 +710,7 @@ describe('given the load https connection function', () => {
       describe('ordering on ENFORCED', () => {
         describe('direction is set to ASC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -757,7 +757,7 @@ describe('given the load https connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -806,7 +806,7 @@ describe('given the load https connection function', () => {
       describe('ordering on HSTS', () => {
         describe('direction is set to ASC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -853,7 +853,7 @@ describe('given the load https connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -902,7 +902,7 @@ describe('given the load https connection function', () => {
       describe('ordering on HSTS_AGE', () => {
         describe('direction is set to ASC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -949,7 +949,7 @@ describe('given the load https connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -998,7 +998,7 @@ describe('given the load https connection function', () => {
       describe('ordering on PRELOADED', () => {
         describe('direction is set to ASC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
@@ -1045,7 +1045,7 @@ describe('given the load https connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns https scans', async () => {
-            const loader = httpsLoaderByKey(query, user._key, i18n)
+            const loader = loadHttpsByKey({ query, userKey: user._key, i18n })
             const expectedHttpsScan = await loader.load(httpsTwo._key)
 
             const connectionLoader = httpsLoaderConnectionsByDomainId(
