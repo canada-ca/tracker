@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useUserState } from './UserState'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from './graphql/queries'
 import { Box, Heading, Select, Stack, Text } from '@chakra-ui/core'
@@ -11,6 +11,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { RelayPaginationControls } from './RelayPaginationControls'
+import { toConstantCase } from './helpers/toConstantCase'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -25,6 +26,10 @@ export default function DmarcByDomainPage() {
   )
   const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
   const displayLimitOptions = [5, 10, 20, 50, 100]
+  const [orderBy, setOrderBy] = useState({
+    field: 'TOTAL_MESSAGES',
+    direction: 'DESC',
+  })
 
   const {
     loading,
@@ -43,9 +48,24 @@ export default function DmarcByDomainPage() {
     variables: {
       month: selectedPeriod,
       year: selectedYear,
+      orderBy: orderBy,
     },
     relayRoot: 'findMyDmarcSummaries',
   })
+
+  const updateOrderBy = useCallback((sortBy) => {
+    let newOrderBy = null
+    if (sortBy.length) {
+      newOrderBy = {}
+      newOrderBy.field = toConstantCase(sortBy[0].id)
+      newOrderBy.direction = sortBy[0].desc === true ? 'DESC' : 'ASC'
+    }
+    setOrderBy(newOrderBy)
+  }, [])
+
+  useEffect(() => {
+    console.log(orderBy)
+  }, [orderBy])
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -147,6 +167,8 @@ export default function DmarcByDomainPage() {
         appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
         frontendPagination={false}
         selectedDisplayLimit={selectedTableDisplayLimit}
+        manualSort={true}
+        onSort={updateOrderBy}
       />
     )
   }
@@ -233,17 +255,17 @@ export default function DmarcByDomainPage() {
         {tableDisplay}
       </ErrorBoundary>
       <RelayPaginationControls
-          onlyPagination={false}
-          selectedDisplayLimit={selectedTableDisplayLimit}
-          setSelectedDisplayLimit={setSelectedTableDisplayLimit}
-          displayLimitOptions={displayLimitOptions}
-          resetToFirstPage={resetToFirstPage}
-          hasNextPage={hasNextPage}
-          hasPreviousPage={hasPreviousPage}
-          next={next}
-          previous={previous}
-          isLoadingMore={isLoadingMore}
-        />
+        onlyPagination={false}
+        selectedDisplayLimit={selectedTableDisplayLimit}
+        setSelectedDisplayLimit={setSelectedTableDisplayLimit}
+        displayLimitOptions={displayLimitOptions}
+        resetToFirstPage={resetToFirstPage}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+        isLoadingMore={isLoadingMore}
+      />
     </Box>
   )
 }

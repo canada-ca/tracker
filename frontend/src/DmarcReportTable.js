@@ -7,7 +7,7 @@ import {
   useSortBy,
   useTable,
 } from 'react-table'
-import { array, bool, number, string } from 'prop-types'
+import { array, bool, func, number, string } from 'prop-types'
 import {
   Box,
   Button,
@@ -131,6 +131,8 @@ function DmarcReportTable({ ...props }) {
       .matches
       ? 5
       : 10,
+    onSort,
+    manualSort,
   } = props
   const [show, setShow] = React.useState(true)
   const [firstRender, setFirstRender] = React.useState(true)
@@ -158,7 +160,7 @@ function DmarcReportTable({ ...props }) {
     previousPage,
     setPageSize,
     flatHeaders,
-    state: { pageIndex, pageSize },
+    state: { pageIndex, pageSize, sortBy },
     preGlobalFilteredRows,
     setGlobalFilter,
     state,
@@ -166,6 +168,8 @@ function DmarcReportTable({ ...props }) {
     {
       columns,
       data,
+      manualSortBy: manualSort,
+      disableMultiSort: true,
       initialState: {
         sortBy: initialSort,
         pageSize: selectedDisplayLimit,
@@ -176,6 +180,12 @@ function DmarcReportTable({ ...props }) {
     useSortBy,
     usePagination,
   )
+
+  useEffect(() => {
+    if (onSort) {
+      onSort(sortBy)
+    }
+  }, [onSort, sortBy])
 
   const [goToPageValue, setGoToPageNumber] = useState(pageIndex + 1)
 
@@ -315,7 +325,9 @@ function DmarcReportTable({ ...props }) {
         </Stack>
       </Stack>
     </Box>
-  ) : ("")
+  ) : (
+    ''
+  )
 
   return (
     <Box ref={wrapperRef}>
@@ -405,6 +417,8 @@ DmarcReportTable.propTypes = {
   appendLink: string,
   frontendPagination: bool,
   selectedDisplayLimit: number,
+  onSort: func,
+  manualSort: bool,
 }
 
 DmarcReportTable.defaultProps = {
