@@ -360,19 +360,19 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         `
       })
       it('returns the filtered dmarc summaries', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
+        const summaryLoader = loadDmarcSummaryByKey({ query })
         const expectedSummaries = await summaryLoader.loadMany([
           dmarcSummary1._key,
           dmarcSummary2._key,
         ])
 
-        const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+        const connectionLoader = loadDmarcSummaryConnectionsByUserId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-          {},
-          jest.fn().mockReturnValueOnce('thirtyDays'),
-        )
+          i18n: {},
+          loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
+        })
 
         const connectionArgs = {
           first: 5,
@@ -2534,6 +2534,126 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 year: '2021',
                 orderBy: {
                   field: 'total-messages',
+                  direction: 'DESC',
+                },
+              }
+
+              const summaries = await connectionLoader({ ...connectionArgs })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'dmarcSummaries',
+                      expectedSummaries[1]._key,
+                    ),
+                    node: {
+                      ...expectedSummaries[1],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'dmarcSummaries',
+                    expectedSummaries[1]._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'dmarcSummaries',
+                    expectedSummaries[1]._key,
+                  ),
+                },
+              }
+
+              expect(summaries).toEqual(expectedStructure)
+            })
+          })
+        })
+        describe('ordering on DOMAIN', () => {
+          describe('ordering direction is ASC', () => {
+            it('returns dmarc summaries in order', async () => {
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
+
+              const connectionArgs = {
+                first: 10,
+                before: toGlobalId('dmarcSummaries', expectedSummaries[1]._key),
+                period: 'thirtyDays',
+                year: '2021',
+                orderBy: {
+                  field: 'domain',
+                  direction: 'ASC',
+                },
+              }
+
+              const summaries = await connectionLoader({ ...connectionArgs })
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId(
+                      'dmarcSummaries',
+                      expectedSummaries[0]._key,
+                    ),
+                    node: {
+                      ...expectedSummaries[0],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId(
+                    'dmarcSummaries',
+                    expectedSummaries[0]._key,
+                  ),
+                  endCursor: toGlobalId(
+                    'dmarcSummaries',
+                    expectedSummaries[0]._key,
+                  ),
+                },
+              }
+
+              expect(summaries).toEqual(expectedStructure)
+            })
+          })
+          describe('order direction is DESC', () => {
+            it('returns dmarc summaries in order', async () => {
+              const expectedSummaries = await loadDmarcSummaryByKey({
+                query,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
+
+              const connectionArgs = {
+                first: 10,
+                before: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+                period: 'thirtyDays',
+                year: '2021',
+                orderBy: {
+                  field: 'domain',
                   direction: 'DESC',
                 },
               }
