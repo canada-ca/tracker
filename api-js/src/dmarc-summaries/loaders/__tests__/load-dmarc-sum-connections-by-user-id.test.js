@@ -349,6 +349,64 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         expect(summaries).toEqual(expectedStructure)
       })
     })
+    describe('using the search argument', () => {
+      beforeEach(async () => {
+        // This is used to sync the view before running the test below
+        await query`
+          FOR domain IN domainSearch
+            SEARCH domain.domain == "domain"
+            OPTIONS { waitForSync: true }
+            RETURN domain
+        `
+      })
+      it('returns the filtered dmarc summaries', async () => {
+        const summaryLoader = dmarcSumLoaderByKey(query)
+        const expectedSummaries = await summaryLoader.loadMany([
+          dmarcSummary1._key,
+          dmarcSummary2._key,
+        ])
+
+        const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+          query,
+          user._key,
+          cleanseInput,
+          {},
+          jest.fn().mockReturnValueOnce('thirtyDays'),
+        )
+
+        const connectionArgs = {
+          first: 5,
+          search: 'test1.gc.ca',
+          period: 'thirtyDays',
+          year: '2021',
+        }
+
+        const summaries = await connectionLoader({ ...connectionArgs })
+
+        const expectedStructure = {
+          edges: [
+            {
+              cursor: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+              node: {
+                ...expectedSummaries[0],
+              },
+            },
+          ],
+          totalCount: 1,
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: toGlobalId(
+              'dmarcSummaries',
+              expectedSummaries[0]._key,
+            ),
+            endCursor: toGlobalId('dmarcSummaries', expectedSummaries[0]._key),
+          },
+        }
+
+        expect(summaries).toEqual(expectedStructure)
+      })
+    })
     describe('using orderBy field', () => {
       describe('using after cursor', () => {
         describe('ordering on FAIL_COUNT', () => {

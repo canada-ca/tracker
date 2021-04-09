@@ -17,6 +17,7 @@ export const loadDmarcSummaryConnectionsByUserId = ({
   year,
   orderBy,
   isSuperAdmin,
+  search,
 }) => {
   const userDBId = `users/${userKey}`
 
@@ -321,10 +322,26 @@ export const loadDmarcSummaryConnectionsByUserId = ({
     sortString = aql`ASC`
   }
 
+  let domainQuery = aql``
+  let searchDomainFilter = aql``
+  if (typeof search !== 'undefined') {
+    search = cleanseInput(search)
+    domainQuery = aql`
+      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
+      LET searchedDomains = (
+        FOR token IN tokenArr
+          FOR domain IN domainSearch
+            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
+            RETURN domain._id
+      )
+    `
+    searchDomainFilter = aql`FILTER domainId IN searchedDomains`
+  }
+
   let domainIdQueries
   if (isSuperAdmin) {
     domainIdQueries = aql`
-      WITH dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership
+      WITH dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, domainSearch
       LET domainIds = UNIQUE(FLATTEN(
         LET ids = []
         LET orgIds = (FOR org IN organizations RETURN org._id)
@@ -335,7 +352,7 @@ export const loadDmarcSummaryConnectionsByUserId = ({
     `
   } else {
     domainIdQueries = aql`
-      WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users
+      WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users, domainSearch
       LET domainIds = UNIQUE(FLATTEN(
         LET ids = []
         LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
@@ -351,39 +368,41 @@ export const loadDmarcSummaryConnectionsByUserId = ({
     requestedSummaryInfo = await query`
     ${domainIdQueries}
 
+    ${domainQuery}
+
     LET summaryIds = (
       FOR domainId IN domainIds
+        ${searchDomainFilter}
         FOR v, e IN 1..1 ANY domainId domainsToDmarcSummaries
           FILTER e.startDate == ${startDate}
           RETURN e._to
     )
 
     LET retrievedSummaries = (
-      FOR summaryId IN summaryIds
-        FOR summary IN dmarcSummaries
-          FILTER summary._id == summaryId
-          LET domain = FIRST(
-            FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
-              RETURN v
-          )
-          ${afterTemplate}
-          ${beforeTemplate}
-          
-          SORT
-          ${sortByField}
-          ${limitTemplate}
+      FOR summary IN dmarcSummaries
+        FILTER summary._id IN summaryIds
+        LET domain = FIRST(
+          FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+            RETURN v
+        )
+        ${afterTemplate}
+        ${beforeTemplate}
+        
+        SORT
+        ${sortByField}
+        ${limitTemplate}
 
-          RETURN {
-            _id: summary._id,
-            _key: summary._key,
-            _rev: summary._rev,
-            _type: "dmarcSummary",
-            id: summary._key,
-            domainKey: domain._key,
-            categoryTotals: summary.categoryTotals,
-            categoryPercentages: summary.categoryPercentages,
-            totalMessages: summary.totalMessages
-          }
+        RETURN {
+          _id: summary._id,
+          _key: summary._key,
+          _rev: summary._rev,
+          _type: "dmarcSummary",
+          id: summary._key,
+          domainKey: domain._key,
+          categoryTotals: summary.categoryTotals,
+          categoryPercentages: summary.categoryPercentages,
+          totalMessages: summary.totalMessages
+        }
     )
 
     LET hasNextPage = (LENGTH(
