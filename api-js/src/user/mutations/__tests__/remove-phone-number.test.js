@@ -8,7 +8,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { userRequired } from '../../../auth'
-import { userLoaderByKey } from '../../loaders'
+import { loadUserByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -107,7 +107,7 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
@@ -155,13 +155,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.phoneDetails).toEqual(null)
         })
@@ -192,13 +194,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.phoneValidated).toEqual(false)
         })
@@ -229,13 +233,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.tfaSendMethod).toEqual('email')
         })
@@ -281,7 +287,7 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
@@ -329,13 +335,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.phoneDetails).toEqual(null)
         })
@@ -366,13 +374,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.phoneValidated).toEqual(false)
         })
@@ -403,13 +413,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.tfaSendMethod).toEqual('none')
         })
@@ -466,7 +478,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key),
+                    loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                   }),
                 },
               },
@@ -523,7 +535,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key),
+                    loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                   }),
                 },
               },
@@ -601,7 +613,7 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
@@ -649,13 +661,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.phoneDetails).toEqual(null)
         })
@@ -686,13 +700,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.phoneValidated).toEqual(false)
         })
@@ -723,13 +739,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.tfaSendMethod).toEqual('email')
         })
@@ -775,7 +793,7 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
@@ -823,13 +841,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.phoneDetails).toEqual(null)
         })
@@ -860,13 +880,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.phoneValidated).toEqual(false)
         })
@@ -897,13 +919,15 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key),
+                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                 }),
               },
             },
           )
 
-          user = await userLoaderByKey(query, user._key).load(user._key)
+          user = await loadUserByKey({ query, userKey: user._key }).load(
+            user._key,
+          )
 
           expect(user.tfaSendMethod).toEqual('none')
         })
@@ -960,7 +984,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key),
+                    loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                   }),
                 },
               },
@@ -1013,7 +1037,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query, user._key),
+                    loadUserByKey: loadUserByKey({ query, userKey: user._key }),
                   }),
                 },
               },
