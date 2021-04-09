@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadVerifiedDomainConnectionsByOrgId } from '../../../verified-domains/loaders'
-import { verifiedOrgLoaderConnections } from '../../loaders'
+import { loadVerifiedOrgConnections } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -146,7 +146,7 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections(
                   query,
                   'en',
                   cleanseInput,
@@ -219,7 +219,7 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections(
                   query,
                   'en',
                   cleanseInput,
@@ -296,7 +296,7 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections(
                   query,
                   'fr',
                   cleanseInput,
@@ -369,7 +369,7 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections(
                   query,
                   'fr',
                   cleanseInput,

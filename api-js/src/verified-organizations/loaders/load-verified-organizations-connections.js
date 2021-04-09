@@ -2,12 +2,12 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const verifiedOrgLoaderConnections = (
+export const loadVerifiedOrgConnections = ({
   query,
   language,
   cleanseInput,
   i18n,
-) => async ({ after, before, first, last, orderBy }) => {
+}) => async ({ after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -160,7 +160,7 @@ export const verifiedOrgLoaderConnections = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User did not have either \`first\` or \`last\` arguments set for: verifiedOrgLoaderConnections.`,
+      `User did not have either \`first\` or \`last\` arguments set for: loadVerifiedOrgConnections.`,
     )
     throw new Error(
       i18n._(
@@ -169,7 +169,7 @@ export const verifiedOrgLoaderConnections = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User attempted to have \`first\` and \`last\` arguments set for: verifiedOrgLoaderConnections.`,
+      `User attempted to have \`first\` and \`last\` arguments set for: loadVerifiedOrgConnections.`,
     )
     throw new Error(
       i18n._(
@@ -181,7 +181,7 @@ export const verifiedOrgLoaderConnections = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User attempted to have \`${argSet}\` set below zero for: verifiedOrgLoaderConnections.`,
+        `User attempted to have \`${argSet}\` set below zero for: loadVerifiedOrgConnections.`,
       )
       throw new Error(
         i18n._(
@@ -192,7 +192,7 @@ export const verifiedOrgLoaderConnections = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User attempted to have \`${argSet}\` to ${amount} for: verifiedOrgLoaderConnections.`,
+        `User attempted to have \`${argSet}\` to ${amount} for: loadVerifiedOrgConnections.`,
       )
       throw new Error(
         i18n._(
@@ -208,7 +208,7 @@ export const verifiedOrgLoaderConnections = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User attempted to have \`${argSet}\` set as a ${typeSet} for: verifiedOrgLoaderConnections.`,
+      `User attempted to have \`${argSet}\` set as a ${typeSet} for: loadVerifiedOrgConnections.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -418,7 +418,7 @@ export const verifiedOrgLoaderConnections = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user was trying to gather orgs in verifiedOrgLoaderConnections, error: ${err}`,
+      `Database error occurred while user was trying to gather orgs in loadVerifiedOrgConnections, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load verified organization(s). Please try again.`),
@@ -430,7 +430,7 @@ export const verifiedOrgLoaderConnections = (
     organizationInfo = await organizationInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user was trying to gather orgs in verifiedOrgLoaderConnections, error: ${err}`,
+      `Cursor error occurred while user was trying to gather orgs in loadVerifiedOrgConnections, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load verified organization(s). Please try again.`),
