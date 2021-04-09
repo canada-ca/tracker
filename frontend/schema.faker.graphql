@@ -1383,6 +1383,8 @@ type Query {
     month: PeriodEnums!
     # The year in which the returned data is relevant to.
     year: Year!
+    # An optional string used to filter the results based on domains.
+    search: String
     after: String
     first: Int
     before: String
