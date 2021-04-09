@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { sslLoaderByKey, sslLoaderConnectionsByDomainId } from '../index'
+import { loadSslByKey, sslLoaderConnectionsByDomainId } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -96,7 +96,7 @@ describe('given the load ssl connection function', () => {
           i18n,
         )
 
-        const sslLoader = sslLoaderByKey(query, i18n)
+        const sslLoader = loadSslByKey({ query, i18n })
         const expectedSslScans = await sslLoader.loadMany([
           sslScan1._key,
           sslScan2._key,
@@ -148,7 +148,7 @@ describe('given the load ssl connection function', () => {
           i18n,
         )
 
-        const sslLoader = sslLoaderByKey(query, i18n)
+        const sslLoader = loadSslByKey({ query, i18n })
         const expectedSslScans = await sslLoader.loadMany([
           sslScan1._key,
           sslScan2._key,
@@ -200,7 +200,7 @@ describe('given the load ssl connection function', () => {
           i18n,
         )
 
-        const sslLoader = sslLoaderByKey(query, i18n)
+        const sslLoader = loadSslByKey({ query, i18n })
         const expectedSslScans = await sslLoader.loadMany([
           sslScan1._key,
           sslScan2._key,
@@ -251,7 +251,7 @@ describe('given the load ssl connection function', () => {
           i18n,
         )
 
-        const sslLoader = sslLoaderByKey(query, i18n)
+        const sslLoader = loadSslByKey({ query, i18n })
         const expectedSslScans = await sslLoader.loadMany([
           sslScan1._key,
           sslScan2._key,
@@ -313,7 +313,7 @@ describe('given the load ssl connection function', () => {
             i18n,
           )
 
-          const sslLoader = sslLoaderByKey(query)
+          const sslLoader = loadSslByKey({ query })
           const expectedSslScans = await sslLoader.loadMany([
             sslScan2._key,
             sslScan3._key,
@@ -371,7 +371,7 @@ describe('given the load ssl connection function', () => {
             i18n,
           )
 
-          const sslLoader = sslLoaderByKey(query, i18n)
+          const sslLoader = loadSslByKey({ query, i18n })
           const expectedSslScans = await sslLoader.loadMany([
             sslScan1._key,
             sslScan2._key,
@@ -429,7 +429,7 @@ describe('given the load ssl connection function', () => {
             i18n,
           )
 
-          const sslLoader = sslLoaderByKey(query, i18n)
+          const sslLoader = loadSslByKey({ query, i18n })
           const expectedSslScans = await sslLoader.loadMany([sslScan2._key])
 
           expectedSslScans[0].id = expectedSslScans[0]._key
@@ -527,7 +527,7 @@ describe('given the load ssl connection function', () => {
       describe('ordering on ACCEPTABLE_CIPHERS', () => {
         describe('direction is set to ASC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -574,7 +574,7 @@ describe('given the load ssl connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -623,7 +623,7 @@ describe('given the load ssl connection function', () => {
       describe('ordering on ACCEPTABLE_CURVES', () => {
         describe('direction is set to ASC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -670,7 +670,7 @@ describe('given the load ssl connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -719,7 +719,7 @@ describe('given the load ssl connection function', () => {
       describe('ordering on CCS_INJECTION_VULNERABLE', () => {
         describe('direction is set to ASC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -766,7 +766,7 @@ describe('given the load ssl connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -815,7 +815,7 @@ describe('given the load ssl connection function', () => {
       describe('ordering on HEARTBLEED_VULNERABLE', () => {
         describe('direction is set to ASC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -862,7 +862,7 @@ describe('given the load ssl connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -911,7 +911,7 @@ describe('given the load ssl connection function', () => {
       describe('ordering on STRONG_CIPHERS', () => {
         describe('direction is set to ASC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -958,7 +958,7 @@ describe('given the load ssl connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -1007,7 +1007,7 @@ describe('given the load ssl connection function', () => {
       describe('ordering on STRONG_CURVES', () => {
         describe('direction is set to ASC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -1054,7 +1054,7 @@ describe('given the load ssl connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -1103,7 +1103,7 @@ describe('given the load ssl connection function', () => {
       describe('ordering on SUPPORTS_ECDH_KEY_EXCHANGE', () => {
         describe('direction is set to ASC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -1150,7 +1150,7 @@ describe('given the load ssl connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -1199,7 +1199,7 @@ describe('given the load ssl connection function', () => {
       describe('ordering on TIMESTAMP', () => {
         describe('direction is set to ASC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -1246,7 +1246,7 @@ describe('given the load ssl connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -1295,7 +1295,7 @@ describe('given the load ssl connection function', () => {
       describe('ordering on WEAK_CIPHERS', () => {
         describe('direction is set to ASC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -1342,7 +1342,7 @@ describe('given the load ssl connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -1391,7 +1391,7 @@ describe('given the load ssl connection function', () => {
       describe('ordering on WEAK_CURVES', () => {
         describe('direction is set to ASC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(
@@ -1438,7 +1438,7 @@ describe('given the load ssl connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns ssl scan', async () => {
-            const loader = sslLoaderByKey(query, user._key, i18n)
+            const loader = loadSslByKey({ query, userKey: user._key, i18n })
             const expectedSslScan = await loader.load(sslTwo._key)
 
             const connectionLoader = sslLoaderConnectionsByDomainId(

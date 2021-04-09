@@ -80,7 +80,7 @@ import { loadUserByUserName, loadUserByKey } from './user/loaders'
 import {
   loadHttpsByKey,
   loadHttpsConnectionsByDomainId,
-  sslLoaderByKey,
+  loadSslByKey,
   sslLoaderConnectionsByDomainId,
 } from './web-scan/loaders'
 import {
@@ -250,7 +250,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
       }),
-      sslLoaderByKey: sslLoaderByKey(query, userKey, i18n),
+      loadSslByKey: loadSslByKey({ query, userKey, i18n }),
       sslLoaderConnectionsByDomainId: sslLoaderConnectionsByDomainId(
         query,
         userKey,

@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { sslLoaderByKey } from '../index'
+import { loadSslByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the sslLoaderByKey function', () => {
+describe('given the loadSslByKey function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -60,7 +60,7 @@ describe('given the sslLoaderByKey function', () => {
       `
       const expectedSsl = await expectedCursor.next()
 
-      const loader = sslLoaderByKey(query, i18n)
+      const loader = loadSslByKey({ query, i18n })
       const ssl = await loader.load(expectedSsl._key)
 
       expect(ssl).toEqual(expectedSsl)
@@ -82,7 +82,7 @@ describe('given the sslLoaderByKey function', () => {
         expectedSslScans.push(tempSsl)
       }
 
-      const loader = sslLoaderByKey(query, i18n)
+      const loader = loadSslByKey({ query, i18n })
       const sslScans = await loader.loadMany(sslKeys)
 
       expect(sslScans).toEqual(expectedSslScans)
@@ -108,7 +108,7 @@ describe('given the sslLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = sslLoaderByKey(query, '1234', i18n)
+        const loader = loadSslByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -118,7 +118,7 @@ describe('given the sslLoaderByKey function', () => {
           )
         }
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running sslLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadSslByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -130,7 +130,7 @@ describe('given the sslLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = sslLoaderByKey(query, '1234', i18n)
+        const loader = loadSslByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -140,7 +140,7 @@ describe('given the sslLoaderByKey function', () => {
           )
         }
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running sslLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadSslByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -165,7 +165,7 @@ describe('given the sslLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = sslLoaderByKey(query, '1234', i18n)
+        const loader = loadSslByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -173,7 +173,7 @@ describe('given the sslLoaderByKey function', () => {
           expect(err).toEqual(new Error('todo'))
         }
         expect(consoleErrorOutput).toEqual([
-          'Database error occurred when user: 1234 running sslLoaderByKey: Error: Database error occurred.',
+          'Database error occurred when user: 1234 running loadSslByKey: Error: Database error occurred.',
         ])
       })
     })
@@ -185,7 +185,7 @@ describe('given the sslLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = sslLoaderByKey(query, '1234', i18n)
+        const loader = loadSslByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -193,7 +193,7 @@ describe('given the sslLoaderByKey function', () => {
           expect(err).toEqual(new Error('todo'))
         }
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running sslLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadSslByKey: Error: Cursor error occurred.`,
         ])
       })
     })
