@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { verifiedOrgLoaderBySlug } from '../../loaders'
+import { loadVerifiedOrgBySlug } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given a verifiedOrgLoaderBySlug dataloader', () => {
+describe('given a loadVerifiedOrgBySlug dataloader', () => {
   let query, drop, truncate, collections, i18n
 
   let consoleOutput = []
@@ -136,7 +136,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
         `
         const expectedOrg = await expectedCursor.next()
 
-        const loader = verifiedOrgLoaderBySlug(query, 'en', i18n)
+        const loader = loadVerifiedOrgBySlug({ query, language: 'en', i18n })
         const org = await loader.load(expectedOrg.slug)
 
         expect(org).toEqual(expectedOrg)
@@ -158,7 +158,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
           expectedOrgs.push(tempOrg)
         }
 
-        const loader = verifiedOrgLoaderBySlug(query, 'en', i18n)
+        const loader = loadVerifiedOrgBySlug({ query, language: 'en', i18n })
         const orgs = await loader.loadMany(orgSlugs)
         expect(orgs).toEqual(expectedOrgs)
       })
@@ -168,7 +168,11 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = verifiedOrgLoaderBySlug(mockedQuery, 'en', i18n)
+        const loader = loadVerifiedOrgBySlug({
+          query: mockedQuery,
+          language: 'en',
+          i18n,
+        })
 
         try {
           await loader.load('slug')
@@ -181,7 +185,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error when running verifiedOrgLoaderBySlug: Error: Database error occurred.`,
+          `Database error when running loadVerifiedOrgBySlug: Error: Database error occurred.`,
         ])
       })
     })
@@ -193,7 +197,11 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = verifiedOrgLoaderBySlug(mockedQuery, 'fr', i18n)
+        const loader = loadVerifiedOrgBySlug({
+          query: mockedQuery,
+          language: 'en',
+          i18n,
+        })
 
         try {
           await loader.load('slug')
@@ -206,7 +214,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error during verifiedOrgLoaderBySlug: Error: Cursor error occurred.`,
+          `Cursor error during loadVerifiedOrgBySlug: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -237,7 +245,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
         `
         const expectedOrg = await expectedCursor.next()
 
-        const loader = verifiedOrgLoaderBySlug(query, 'fr', i18n)
+        const loader = loadVerifiedOrgBySlug({ query, language: 'fr', i18n })
         const org = await loader.load(expectedOrg.slug)
 
         expect(org).toEqual(expectedOrg)
@@ -259,7 +267,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
           expectedOrgs.push(tempOrg)
         }
 
-        const loader = verifiedOrgLoaderBySlug(query, 'fr', i18n)
+        const loader = loadVerifiedOrgBySlug({ query, language: 'fr', i18n })
         const orgs = await loader.loadMany(orgSlugs)
         expect(orgs).toEqual(expectedOrgs)
       })
@@ -269,7 +277,11 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = verifiedOrgLoaderBySlug(mockedQuery, 'en', i18n)
+        const loader = loadVerifiedOrgBySlug({
+          query: mockedQuery,
+          language: 'fr',
+          i18n,
+        })
 
         try {
           await loader.load('slug')
@@ -278,7 +290,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error when running verifiedOrgLoaderBySlug: Error: Database error occurred.`,
+          `Database error when running loadVerifiedOrgBySlug: Error: Database error occurred.`,
         ])
       })
     })
@@ -290,7 +302,11 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = verifiedOrgLoaderBySlug(mockedQuery, 'fr', i18n)
+        const loader = loadVerifiedOrgBySlug({
+          query: mockedQuery,
+          language: 'fr',
+          i18n,
+        })
 
         try {
           await loader.load('slug')
@@ -299,7 +315,7 @@ describe('given a verifiedOrgLoaderBySlug dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error during verifiedOrgLoaderBySlug: Error: Cursor error occurred.`,
+          `Cursor error during loadVerifiedOrgBySlug: Error: Cursor error occurred.`,
         ])
       })
     })

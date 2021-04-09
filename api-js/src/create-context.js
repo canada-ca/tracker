@@ -91,7 +91,7 @@ import {
 } from './verified-domains/loaders'
 import {
   loadVerifiedOrgByKey,
-  verifiedOrgLoaderBySlug,
+  loadVerifiedOrgBySlug,
   verifiedOrgLoaderConnectionsByDomainId,
   verifiedOrgLoaderConnections,
 } from './verified-organizations/loaders'
@@ -378,11 +378,11 @@ export const createContext = ({ context, req: request, res: response }) => {
         },
       ),
       loadVerifiedOrgByKey: loadVerifiedOrgByKey(query, request.language, i18n),
-      verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
+      loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
         query,
-        request.language,
+        language: request.language,
         i18n,
-      ),
+      }),
       verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
         query,
         request.language,

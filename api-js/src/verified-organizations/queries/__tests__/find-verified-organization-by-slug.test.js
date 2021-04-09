@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { loadVerifiedDomainConnectionsByOrgId } from '../../../verified-domains/loaders'
-import { verifiedOrgLoaderBySlug } from '../../loaders'
+import { loadVerifiedOrgBySlug } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -120,11 +120,11 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
+                loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
                   query,
-                  'en',
+                  language: 'en',
                   i18n,
-                ),
+                }),
                 loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
                   {
                     query,
@@ -170,11 +170,11 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
+                loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
                   query,
-                  'en',
+                  language: 'en',
                   i18n,
-                ),
+                }),
                 loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
                   {
                     query,
@@ -234,11 +234,11 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
+                loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
                   query,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                ),
+                }),
                 loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
                   {
                     query,
@@ -298,11 +298,11 @@ describe('given findOrganizationBySlugQuery', () => {
                 cleanseInput,
               },
               loaders: {
-                verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
+                loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
                   query,
-                  'fr',
+                  language: 'fr',
                   i18n,
-                ),
+                }),
                 loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
                   {
                     query,
