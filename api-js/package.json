@@ -21,7 +21,7 @@
     "lin-clean": "npx lingui extract --clean"
   },
   "dependencies": {
-    "@lingui/core": "^3.8.2",
+    "@lingui/core": "^3.8.6",
     "apollo-server": "^2.21.1",
     "apollo-server-express": "^2.21.1",
     "arango-tools": "^0.4.1",
