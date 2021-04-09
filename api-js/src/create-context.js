@@ -92,7 +92,7 @@ import {
 import {
   loadVerifiedOrgByKey,
   loadVerifiedOrgBySlug,
-  verifiedOrgLoaderConnectionsByDomainId,
+  loadVerifiedOrgConnectionsByDomainId,
   verifiedOrgLoaderConnections,
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
@@ -383,11 +383,13 @@ export const createContext = ({ context, req: request, res: response }) => {
         language: request.language,
         i18n,
       }),
-      verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
-        query,
-        request.language,
-        cleanseInput,
-        i18n,
+      loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
+        {
+          query,
+          language: request.language,
+          cleanseInput,
+          i18n,
+        },
       ),
       verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
         query,

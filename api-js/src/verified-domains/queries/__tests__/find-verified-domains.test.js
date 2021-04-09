@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { verifiedOrgLoaderConnectionsByDomainId } from '../../../verified-organizations'
+import { loadVerifiedOrgConnectionsByDomainId } from '../../../verified-organizations'
 import { loadVerifiedDomainConnections } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -141,7 +141,7 @@ describe('given findVerifiedDomains query', () => {
               query,
               cleanseInput,
             }),
-            verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
+            loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
               query,
               'en',
               cleanseInput,
@@ -229,7 +229,7 @@ describe('given findVerifiedDomains query', () => {
                   cleanseInput,
                   i18n,
                 }),
-                verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
+                loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
                   query,
                   'en',
                   cleanseInput,
@@ -311,7 +311,7 @@ describe('given findVerifiedDomains query', () => {
                   cleanseInput,
                   i18n,
                 }),
-                verifiedOrgLoaderConnectionsByDomainId: verifiedOrgLoaderConnectionsByDomainId(
+                loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(
                   query,
                   'en',
                   cleanseInput,

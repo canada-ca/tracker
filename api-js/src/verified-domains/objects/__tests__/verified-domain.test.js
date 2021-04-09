@@ -5,7 +5,7 @@ import { GraphQLDate } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { verifiedOrgLoaderConnectionsByDomainId } from '../../../verified-organizations/loaders'
+import { loadVerifiedOrgConnectionsByDomainId } from '../../../verified-organizations/loaders'
 import { verifiedOrganizationConnection } from '../../../verified-organizations/objects'
 import { verifiedDomainType } from '../index'
 import { domainStatus } from '../../../domain/objects'
@@ -179,7 +179,7 @@ describe('given the verified domains object', () => {
       it('returns the resolved value', async () => {
         const demoType = verifiedDomainType.getFields()
 
-        const loader = verifiedOrgLoaderConnectionsByDomainId(
+        const loader = loadVerifiedOrgConnectionsByDomainId(
           query,
           'en',
           '1',
@@ -235,7 +235,7 @@ describe('given the verified domains object', () => {
           demoType.organizations.resolve(
             { _id: domain._id },
             { first: 1 },
-            { loaders: { verifiedOrgLoaderConnectionsByDomainId: loader } },
+            { loaders: { loadVerifiedOrgConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
