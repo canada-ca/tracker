@@ -81,7 +81,7 @@ import {
   loadHttpsByKey,
   loadHttpsConnectionsByDomainId,
   loadSslByKey,
-  sslLoaderConnectionsByDomainId,
+  loadSslConnectionByDomainId,
 } from './web-scan/loaders'
 import {
   loadVerifiedDomainsById,
@@ -251,11 +251,11 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
       }),
       loadSslByKey: loadSslByKey({ query, userKey, i18n }),
-      sslLoaderConnectionsByDomainId: sslLoaderConnectionsByDomainId(
+      loadSslConnectionByDomainId: loadSslConnectionByDomainId({
         query,
         userKey,
         cleanseInput,
-      ),
+      }),
       loadDkimGuidanceTagById: loadDkimGuidanceTagById({
         query,
         userKey,
