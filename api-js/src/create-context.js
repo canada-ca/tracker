@@ -84,7 +84,7 @@ import {
   sslLoaderConnectionsByDomainId,
 } from './web-scan/loaders'
 import {
-  verifiedDomainLoaderByDomain,
+  loadVerifiedDomainsById,
   verifiedDomainLoaderByKey,
   verifiedDomainLoaderConnections,
   verifiedDomainLoaderConnectionsByOrgId,
@@ -363,7 +363,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       }),
-      verifiedDomainLoaderByDomain: verifiedDomainLoaderByDomain(query, i18n),
+      loadVerifiedDomainsById: loadVerifiedDomainsById({ query, i18n }),
       verifiedDomainLoaderByKey: verifiedDomainLoaderByKey(query, i18n),
       verifiedDomainLoaderConnections: verifiedDomainLoaderConnections(
         query,

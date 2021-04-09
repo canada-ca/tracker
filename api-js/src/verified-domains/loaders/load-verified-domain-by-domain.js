@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const verifiedDomainLoaderByDomain = (query, i18n) =>
+export const loadVerifiedDomainsById = ({ query, i18n }) =>
   new DataLoader(async (domains) => {
     let cursor
 
@@ -18,7 +18,7 @@ export const verifiedDomainLoaderByDomain = (query, i18n) =>
     `
     } catch (err) {
       console.error(
-        `Database error occurred when running verifiedDomainLoaderByDomain: ${err}`,
+        `Database error occurred when running loadVerifiedDomainsById: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to load verified domain(s). Please try again.`),
@@ -32,7 +32,7 @@ export const verifiedDomainLoaderByDomain = (query, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred during verifiedDomainLoaderByDomain: ${err}`,
+        `Cursor error occurred during loadVerifiedDomainsById: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to load verified domain(s). Please try again.`),
