@@ -87,7 +87,7 @@ import {
   loadVerifiedDomainsById,
   loadVerifiedDomainByKey,
   verifiedDomainLoaderConnections,
-  verifiedDomainLoaderConnectionsByOrgId,
+  loadVerifiedDomainConnectionsByOrgId,
 } from './verified-domains/loaders'
 import {
   verifiedOrgLoaderByKey,
@@ -370,10 +370,12 @@ export const createContext = ({ context, req: request, res: response }) => {
         cleanseInput,
         i18n,
       ),
-      verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-        query,
-        cleanseInput,
-        i18n,
+      loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+        {
+          query,
+          cleanseInput,
+          i18n,
+        },
       ),
       verifiedOrgLoaderByKey: verifiedOrgLoaderByKey(
         query,

@@ -8,13 +8,13 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
-  verifiedDomainLoaderConnectionsByOrgId,
+  loadVerifiedDomainConnectionsByOrgId,
   loadVerifiedDomainByKey,
 } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
+describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
   let query, drop, truncate, collections, user, org, domain, domainTwo, i18n
 
   let consoleOutput = []
@@ -98,10 +98,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
   describe('given a successful load', () => {
     describe('using after cursor', () => {
       it('returns a domain', async () => {
-        const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+        const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
           query,
           cleanseInput,
-        )
+        })
 
         const domainLoader = loadVerifiedDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
@@ -144,10 +144,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
     })
     describe('using before cursor', () => {
       it('returns a domain', async () => {
-        const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+        const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
           query,
           cleanseInput,
-        )
+        })
 
         const domainLoader = loadVerifiedDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
@@ -190,10 +190,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
     })
     describe('using first limit', () => {
       it('returns a domain', async () => {
-        const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+        const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
           query,
           cleanseInput,
-        )
+        })
 
         const domainLoader = loadVerifiedDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
@@ -235,10 +235,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
     })
     describe('using last limit', () => {
       it('returns a domain', async () => {
-        const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+        const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
           query,
           cleanseInput,
-        )
+        })
 
         const domainLoader = loadVerifiedDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
@@ -359,10 +359,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -403,10 +403,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -449,10 +449,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -493,10 +493,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -539,10 +539,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -583,10 +583,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -629,10 +629,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -673,10 +673,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -719,10 +719,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -763,10 +763,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -809,10 +809,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -853,10 +853,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -899,10 +899,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -943,10 +943,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
-            )
+            })
 
             const connectionArgs = {
               orgId: org._id,
@@ -987,10 +987,10 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
     describe('no organizations are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+        const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
           query,
           cleanseInput,
-        )
+        })
 
         const connectionArgs = {
           first: 10,
@@ -1033,11 +1033,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
     describe('given an unsuccessful load', () => {
       describe('limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+          const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
             query,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {}
           try {
@@ -1054,17 +1054,17 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User did not have either \`first\` or \`last\` arguments set for: verifiedDomainLoaderConnectionsByOrgId.`,
+            `User did not have either \`first\` or \`last\` arguments set for: loadVerifiedDomainConnectionsByOrgId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+          const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
             query,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -1084,18 +1084,18 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User attempted to have \`first\` and \`last\` arguments set for: verifiedDomainLoaderConnectionsByOrgId.`,
+            `User attempted to have \`first\` and \`last\` arguments set for: loadVerifiedDomainConnectionsByOrgId.`,
           ])
         })
       })
       describe('limits are set below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -5,
@@ -1114,17 +1114,17 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User attempted to have \`first\` set below zero for: verifiedDomainLoaderConnectionsByOrgId.`,
+              `User attempted to have \`first\` set below zero for: loadVerifiedDomainConnectionsByOrgId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -5,
@@ -1143,7 +1143,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User attempted to have \`last\` set below zero for: verifiedDomainLoaderConnectionsByOrgId.`,
+              `User attempted to have \`last\` set below zero for: loadVerifiedDomainConnectionsByOrgId.`,
             ])
           })
         })
@@ -1151,11 +1151,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
       describe('limits are set above maximum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 1000,
@@ -1174,17 +1174,17 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User attempted to have \`first\` to 1000 for: verifiedDomainLoaderConnectionsByOrgId.`,
+              `User attempted to have \`first\` to 1000 for: loadVerifiedDomainConnectionsByOrgId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 1000,
@@ -1203,7 +1203,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User attempted to have \`last\` to 1000 for: verifiedDomainLoaderConnectionsByOrgId.`,
+              `User attempted to have \`last\` to 1000 for: loadVerifiedDomainConnectionsByOrgId.`,
             ])
           })
         })
@@ -1214,11 +1214,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
                 query,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -1237,7 +1237,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
                 )
               }
               expect(consoleOutput).toEqual([
-                `User attempted to have \`first\` set as a ${typeof invalidInput} for: verifiedDomainLoaderConnectionsByOrgId.`,
+                `User attempted to have \`first\` set as a ${typeof invalidInput} for: loadVerifiedDomainConnectionsByOrgId.`,
               ])
             })
           })
@@ -1247,11 +1247,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
                 query,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -1270,7 +1270,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
                 )
               }
               expect(consoleOutput).toEqual([
-                `User attempted to have \`last\` set as a ${typeof invalidInput} for: verifiedDomainLoaderConnectionsByOrgId.`,
+                `User attempted to have \`last\` set as a ${typeof invalidInput} for: loadVerifiedDomainConnectionsByOrgId.`,
               ])
             })
           })
@@ -1284,11 +1284,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             .fn()
             .mockRejectedValue(new Error('Database Error Occurred.'))
 
-          const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+          const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
             query,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -1305,7 +1305,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user was trying to gather domains in verifiedDomainLoaderConnectionsByOrgId, error: Error: Database Error Occurred.`,
+            `Database error occurred while user was trying to gather domains in loadVerifiedDomainConnectionsByOrgId, error: Error: Database Error Occurred.`,
           ])
         })
       })
@@ -1320,11 +1320,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           }
           const query = jest.fn().mockReturnValueOnce(cursor)
 
-          const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+          const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
             query,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -1341,7 +1341,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user was trying to gather domains in verifiedDomainLoaderConnectionsByOrgId, error: Error: Cursor error occurred.`,
+            `Cursor error occurred while user was trying to gather domains in loadVerifiedDomainConnectionsByOrgId, error: Error: Cursor error occurred.`,
           ])
         })
       })
@@ -1365,11 +1365,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
     describe('given an unsuccessful load', () => {
       describe('limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+          const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
             query,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {}
           try {
@@ -1382,17 +1382,17 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User did not have either \`first\` or \`last\` arguments set for: verifiedDomainLoaderConnectionsByOrgId.`,
+            `User did not have either \`first\` or \`last\` arguments set for: loadVerifiedDomainConnectionsByOrgId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+          const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
             query,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -1408,18 +1408,18 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User attempted to have \`first\` and \`last\` arguments set for: verifiedDomainLoaderConnectionsByOrgId.`,
+            `User attempted to have \`first\` and \`last\` arguments set for: loadVerifiedDomainConnectionsByOrgId.`,
           ])
         })
       })
       describe('limits are set below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -5,
@@ -1434,17 +1434,17 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User attempted to have \`first\` set below zero for: verifiedDomainLoaderConnectionsByOrgId.`,
+              `User attempted to have \`first\` set below zero for: loadVerifiedDomainConnectionsByOrgId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -5,
@@ -1459,7 +1459,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User attempted to have \`last\` set below zero for: verifiedDomainLoaderConnectionsByOrgId.`,
+              `User attempted to have \`last\` set below zero for: loadVerifiedDomainConnectionsByOrgId.`,
             ])
           })
         })
@@ -1467,11 +1467,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
       describe('limits are set above maximum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 1000,
@@ -1486,17 +1486,17 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User attempted to have \`first\` to 1000 for: verifiedDomainLoaderConnectionsByOrgId.`,
+              `User attempted to have \`first\` to 1000 for: loadVerifiedDomainConnectionsByOrgId.`,
             ])
           })
         })
         describe('last limit is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+            const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
               query,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 1000,
@@ -1511,7 +1511,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User attempted to have \`last\` to 1000 for: verifiedDomainLoaderConnectionsByOrgId.`,
+              `User attempted to have \`last\` to 1000 for: loadVerifiedDomainConnectionsByOrgId.`,
             ])
           })
         })
@@ -1522,11 +1522,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
                 query,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -1541,7 +1541,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
                 expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleOutput).toEqual([
-                `User attempted to have \`first\` set as a ${typeof invalidInput} for: verifiedDomainLoaderConnectionsByOrgId.`,
+                `User attempted to have \`first\` set as a ${typeof invalidInput} for: loadVerifiedDomainConnectionsByOrgId.`,
               ])
             })
           })
@@ -1551,11 +1551,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+              const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
                 query,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -1570,7 +1570,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
                 expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleOutput).toEqual([
-                `User attempted to have \`last\` set as a ${typeof invalidInput} for: verifiedDomainLoaderConnectionsByOrgId.`,
+                `User attempted to have \`last\` set as a ${typeof invalidInput} for: loadVerifiedDomainConnectionsByOrgId.`,
               ])
             })
           })
@@ -1584,11 +1584,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
             .fn()
             .mockRejectedValue(new Error('Database Error Occurred.'))
 
-          const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+          const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
             query,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -1603,7 +1603,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user was trying to gather domains in verifiedDomainLoaderConnectionsByOrgId, error: Error: Database Error Occurred.`,
+            `Database error occurred while user was trying to gather domains in loadVerifiedDomainConnectionsByOrgId, error: Error: Database Error Occurred.`,
           ])
         })
       })
@@ -1618,11 +1618,11 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           }
           const query = jest.fn().mockReturnValueOnce(cursor)
 
-          const connectionLoader = verifiedDomainLoaderConnectionsByOrgId(
+          const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
             query,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 5,
@@ -1637,7 +1637,7 @@ describe('given the verifiedDomainLoaderConnectionsByOrgId function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user was trying to gather domains in verifiedDomainLoaderConnectionsByOrgId, error: Error: Cursor error occurred.`,
+            `Cursor error occurred while user was trying to gather domains in loadVerifiedDomainConnectionsByOrgId, error: Error: Cursor error occurred.`,
           ])
         })
       })

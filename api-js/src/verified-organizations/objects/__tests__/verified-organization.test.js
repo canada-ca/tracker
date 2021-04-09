@@ -10,7 +10,7 @@ import { toGlobalId } from 'graphql-relay'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { verifiedDomainLoaderConnectionsByOrgId } from '../../../verified-domains/loaders'
+import { loadVerifiedDomainConnectionsByOrgId } from '../../../verified-domains/loaders'
 import { verifiedDomainConnection } from '../../../verified-domains/objects'
 import { verifiedOrganizationType } from '../index'
 import { organizationSummaryType } from '../../../organization/objects'
@@ -294,11 +294,11 @@ describe('given the verified organization object', () => {
       it('returns the resolved value', async () => {
         const demoType = verifiedOrganizationType.getFields()
 
-        const loader = verifiedDomainLoaderConnectionsByOrgId(
+        const loader = loadVerifiedDomainConnectionsByOrgId({
           query,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const expectedResult = {
           edges: [
@@ -327,7 +327,7 @@ describe('given the verified organization object', () => {
           demoType.domains.resolve(
             { _id: org._id },
             { first: 1 },
-            { loaders: { verifiedDomainLoaderConnectionsByOrgId: loader } },
+            { loaders: { loadVerifiedDomainConnectionsByOrgId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

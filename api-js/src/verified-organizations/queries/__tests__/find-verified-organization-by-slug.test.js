@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { verifiedDomainLoaderConnectionsByOrgId } from '../../../verified-domains/loaders'
+import { loadVerifiedDomainConnectionsByOrgId } from '../../../verified-domains/loaders'
 import { verifiedOrgLoaderBySlug } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -125,10 +125,12 @@ describe('given findOrganizationBySlugQuery', () => {
                   'en',
                   i18n,
                 ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -173,10 +175,12 @@ describe('given findOrganizationBySlugQuery', () => {
                   'en',
                   i18n,
                 ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -235,10 +239,12 @@ describe('given findOrganizationBySlugQuery', () => {
                   'fr',
                   i18n,
                 ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -297,10 +303,12 @@ describe('given findOrganizationBySlugQuery', () => {
                   'fr',
                   i18n,
                 ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
