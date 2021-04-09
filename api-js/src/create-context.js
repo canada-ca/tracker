@@ -90,7 +90,7 @@ import {
   loadVerifiedDomainConnectionsByOrgId,
 } from './verified-domains/loaders'
 import {
-  verifiedOrgLoaderByKey,
+  loadVerifiedOrgByKey,
   verifiedOrgLoaderBySlug,
   verifiedOrgLoaderConnectionsByDomainId,
   verifiedOrgLoaderConnections,
@@ -377,11 +377,7 @@ export const createContext = ({ context, req: request, res: response }) => {
           i18n,
         },
       ),
-      verifiedOrgLoaderByKey: verifiedOrgLoaderByKey(
-        query,
-        request.language,
-        i18n,
-      ),
+      loadVerifiedOrgByKey: loadVerifiedOrgByKey(query, request.language, i18n),
       verifiedOrgLoaderBySlug: verifiedOrgLoaderBySlug(
         query,
         request.language,
