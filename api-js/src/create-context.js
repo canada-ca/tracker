@@ -86,7 +86,7 @@ import {
 import {
   loadVerifiedDomainsById,
   loadVerifiedDomainByKey,
-  verifiedDomainLoaderConnections,
+  loadVerifiedDomainConnections,
   loadVerifiedDomainConnectionsByOrgId,
 } from './verified-domains/loaders'
 import {
@@ -365,11 +365,11 @@ export const createContext = ({ context, req: request, res: response }) => {
       }),
       loadVerifiedDomainsById: loadVerifiedDomainsById({ query, i18n }),
       loadVerifiedDomainByKey: loadVerifiedDomainByKey({ query, i18n }),
-      verifiedDomainLoaderConnections: verifiedDomainLoaderConnections(
+      loadVerifiedDomainConnections: loadVerifiedDomainConnections({
         query,
         cleanseInput,
         i18n,
-      ),
+      }),
       loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
         {
           query,
