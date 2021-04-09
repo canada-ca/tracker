@@ -85,7 +85,7 @@ import {
 } from './web-scan/loaders'
 import {
   loadVerifiedDomainsById,
-  verifiedDomainLoaderByKey,
+  loadVerifiedDomainByKey,
   verifiedDomainLoaderConnections,
   verifiedDomainLoaderConnectionsByOrgId,
 } from './verified-domains/loaders'
@@ -364,7 +364,7 @@ export const createContext = ({ context, req: request, res: response }) => {
         i18n,
       }),
       loadVerifiedDomainsById: loadVerifiedDomainsById({ query, i18n }),
-      verifiedDomainLoaderByKey: verifiedDomainLoaderByKey(query, i18n),
+      loadVerifiedDomainByKey: loadVerifiedDomainByKey({ query, i18n }),
       verifiedDomainLoaderConnections: verifiedDomainLoaderConnections(
         query,
         cleanseInput,

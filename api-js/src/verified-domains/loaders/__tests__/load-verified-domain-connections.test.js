@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
   verifiedDomainLoaderConnections,
-  verifiedDomainLoaderByKey,
+  loadVerifiedDomainByKey,
 } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -103,7 +103,7 @@ describe('given the load domain connection using org id function', () => {
           cleanseInput,
         )
 
-        const domainLoader = verifiedDomainLoaderByKey(query)
+        const domainLoader = loadVerifiedDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -148,7 +148,7 @@ describe('given the load domain connection using org id function', () => {
           cleanseInput,
         )
 
-        const domainLoader = verifiedDomainLoaderByKey(query)
+        const domainLoader = loadVerifiedDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -193,7 +193,7 @@ describe('given the load domain connection using org id function', () => {
           cleanseInput,
         )
 
-        const domainLoader = verifiedDomainLoaderByKey(query)
+        const domainLoader = loadVerifiedDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -237,7 +237,7 @@ describe('given the load domain connection using org id function', () => {
           cleanseInput,
         )
 
-        const domainLoader = verifiedDomainLoaderByKey(query)
+        const domainLoader = loadVerifiedDomainByKey({ query })
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -352,7 +352,7 @@ describe('given the load domain connection using org id function', () => {
       describe('ordering on DOMAIN', () => {
         describe('direction is ASC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -395,7 +395,7 @@ describe('given the load domain connection using org id function', () => {
         })
         describe('direction is DESC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -440,7 +440,7 @@ describe('given the load domain connection using org id function', () => {
       describe('ordering on LAST_RAN', () => {
         describe('direction is ASC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -483,7 +483,7 @@ describe('given the load domain connection using org id function', () => {
         })
         describe('direction is DESC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -528,7 +528,7 @@ describe('given the load domain connection using org id function', () => {
       describe('ordering on DKIM_STATUS', () => {
         describe('direction is ASC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -571,7 +571,7 @@ describe('given the load domain connection using org id function', () => {
         })
         describe('direction is DESC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -616,7 +616,7 @@ describe('given the load domain connection using org id function', () => {
       describe('ordering on DMARC_STATUS', () => {
         describe('direction is ASC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -659,7 +659,7 @@ describe('given the load domain connection using org id function', () => {
         })
         describe('direction is DESC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -704,7 +704,7 @@ describe('given the load domain connection using org id function', () => {
       describe('ordering on HTTPS_STATUS', () => {
         describe('direction is ASC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -747,7 +747,7 @@ describe('given the load domain connection using org id function', () => {
         })
         describe('direction is DESC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -792,7 +792,7 @@ describe('given the load domain connection using org id function', () => {
       describe('ordering on SPF_STATUS', () => {
         describe('direction is ASC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -835,7 +835,7 @@ describe('given the load domain connection using org id function', () => {
         })
         describe('direction is DESC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -880,7 +880,7 @@ describe('given the load domain connection using org id function', () => {
       describe('ordering on SSL_STATUS', () => {
         describe('direction is ASC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(
@@ -923,7 +923,7 @@ describe('given the load domain connection using org id function', () => {
         })
         describe('direction is DESC', () => {
           it('returns domains in order', async () => {
-            const domainLoader = verifiedDomainLoaderByKey(query)
+            const domainLoader = loadVerifiedDomainByKey({ query })
             const expectedDomain = await domainLoader.load(domainTwo._key)
 
             const connectionLoader = verifiedDomainLoaderConnections(

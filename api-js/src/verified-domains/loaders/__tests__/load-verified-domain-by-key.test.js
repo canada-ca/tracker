@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { verifiedDomainLoaderByKey } from '../../loaders'
+import { loadVerifiedDomainByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given a verifiedDomainLoaderByKey dataloader', () => {
+describe('given a loadVerifiedDomainByKey dataloader', () => {
   let query, drop, truncate, collections, i18n, domain1, domain2, org
 
   let consoleOutput = []
@@ -85,7 +85,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
       `
       const expectedDomain = await expectedCursor.next()
 
-      const loader = verifiedDomainLoaderByKey(query)
+      const loader = loadVerifiedDomainByKey({ query })
       const user = await loader.load(expectedDomain._key)
 
       expect(user).toEqual(expectedDomain)
@@ -106,7 +106,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         expectedDomains.push(tempUser)
       }
 
-      const loader = verifiedDomainLoaderByKey(query)
+      const loader = loadVerifiedDomainByKey({ query })
       const users = await loader.loadMany(domainIds)
       expect(users).toEqual(expectedDomains)
     })
@@ -138,7 +138,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = verifiedDomainLoaderByKey(mockedQuery, i18n)
+        const loader = loadVerifiedDomainByKey({ query: mockedQuery, i18n })
 
         try {
           await loader.load(expectedDomain._key)
@@ -149,7 +149,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running verifiedDomainLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when running loadVerifiedDomainByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -168,7 +168,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = verifiedDomainLoaderByKey(mockedQuery, i18n)
+        const loader = loadVerifiedDomainByKey({ query: mockedQuery, i18n })
 
         try {
           await loader.load(expectedDomain._key)
@@ -179,7 +179,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during verifiedDomainLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred during loadVerifiedDomainByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -211,7 +211,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = verifiedDomainLoaderByKey(mockedQuery, i18n)
+        const loader = loadVerifiedDomainByKey({ query: mockedQuery, i18n })
 
         try {
           await loader.load(expectedDomain._key)
@@ -220,7 +220,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running verifiedDomainLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when running loadVerifiedDomainByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -239,7 +239,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = verifiedDomainLoaderByKey(mockedQuery, i18n)
+        const loader = loadVerifiedDomainByKey({ query: mockedQuery, i18n })
 
         try {
           await loader.load(expectedDomain._key)
@@ -248,7 +248,7 @@ describe('given a verifiedDomainLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during verifiedDomainLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred during loadVerifiedDomainByKey: Error: Cursor error occurred.`,
         ])
       })
     })
