@@ -16,9 +16,9 @@ msgstr ""
 msgid "Authentication error. Please sign in again."
 msgstr "todo"
 
-#: src/auth/user-required.js:12
-#: src/auth/user-required.js:23
-#: src/auth/user-required.js:30
+#: src/auth/user-required.js:8
+#: src/auth/user-required.js:19
+#: src/auth/user-required.js:26
 msgid "Authentication error. Please sign in."
 msgstr "todo"
 
@@ -69,7 +69,7 @@ msgstr "todo"
 msgid "No verified domain with the provided domain could be found."
 msgstr "todo"
 
-#: src/verified-organizations/queries/find-verified-organization-by-slug.js:35
+#: src/verified-organizations/queries/find-verified-organization-by-slug.js:31
 msgid "No verified organization with the provided slug could be found."
 msgstr "todo"
 
@@ -424,11 +424,11 @@ msgid "Unable to create domain, organization has already claimed it."
 msgstr "todo"
 
 #: src/domain/mutations/create-domain.js:127
-#: src/domain/mutations/create-domain.js:165
-#: src/domain/mutations/create-domain.js:178
-#: src/domain/mutations/create-domain.js:203
-#: src/domain/mutations/create-domain.js:214
-#: src/domain/mutations/create-domain.js:224
+#: src/domain/mutations/create-domain.js:167
+#: src/domain/mutations/create-domain.js:180
+#: src/domain/mutations/create-domain.js:205
+#: src/domain/mutations/create-domain.js:216
+#: src/domain/mutations/create-domain.js:226
 msgid "Unable to create domain. Please try again."
 msgstr "todo"
 
@@ -512,10 +512,10 @@ msgstr "todo"
 msgid "Unable to find user affiliation(s). Please try again."
 msgstr "todo"
 
-#: src/verified-organizations/loaders/load-verified-organization-by-key.js:34
-#: src/verified-organizations/loaders/load-verified-organization-by-key.js:48
-#: src/verified-organizations/loaders/load-verified-organization-by-slug.js:34
-#: src/verified-organizations/loaders/load-verified-organization-by-slug.js:46
+#: src/verified-organizations/loaders/load-verified-organization-by-key.js:32
+#: src/verified-organizations/loaders/load-verified-organization-by-key.js:44
+#: src/verified-organizations/loaders/load-verified-organization-by-slug.js:32
+#: src/verified-organizations/loaders/load-verified-organization-by-slug.js:44
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "todo"
 
