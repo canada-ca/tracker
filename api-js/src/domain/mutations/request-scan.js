@@ -41,7 +41,7 @@ export const requestScan = new mutationWithClientMutationId({
       userKey,
       uuidv4,
       auth: { checkDomainPermission, userRequired },
-      loaders: { domainLoaderByDomain },
+      loaders: { loadDomainByDomain },
       validators: { cleanseInput },
     },
   ) => {
@@ -51,7 +51,7 @@ export const requestScan = new mutationWithClientMutationId({
     await userRequired()
 
     // Check to see if domain exists
-    const domain = await domainLoaderByDomain.load(requestedDomain)
+    const domain = await loadDomainByDomain.load(requestedDomain)
 
     if (typeof domain === 'undefined') {
       console.warn(

@@ -2,12 +2,12 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const httpsGuidanceTagConnectionsLoader = (
+export const loadHttpsGuidanceTagConnectionsByTagId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ httpsGuidanceTags, after, before, first, last, orderBy }) => {
+}) => async ({ httpsGuidanceTags, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -79,7 +79,7 @@ export const httpsGuidanceTagConnectionsLoader = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadHttpsGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(
@@ -88,7 +88,7 @@ export const httpsGuidanceTagConnectionsLoader = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: httpsGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadHttpsGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(
@@ -100,7 +100,7 @@ export const httpsGuidanceTagConnectionsLoader = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: httpsGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadHttpsGuidanceTagConnectionsByTagId.`,
       )
       throw new Error(
         i18n._(
@@ -111,7 +111,7 @@ export const httpsGuidanceTagConnectionsLoader = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: httpsGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadHttpsGuidanceTagConnectionsByTagId.`,
       )
       throw new Error(
         i18n._(
@@ -127,7 +127,7 @@ export const httpsGuidanceTagConnectionsLoader = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: httpsGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadHttpsGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -237,7 +237,7 @@ export const httpsGuidanceTagConnectionsLoader = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to gather orgs in httpsGuidanceTagConnectionsLoader, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather orgs in loadHttpsGuidanceTagConnectionsByTagId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load HTTPS guidance tag(s). Please try again.`),
@@ -249,7 +249,7 @@ export const httpsGuidanceTagConnectionsLoader = (
     httpsGuidanceTagInfo = await httpsGuidanceTagInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather orgs in httpsGuidanceTagConnectionsLoader, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather orgs in loadHttpsGuidanceTagConnectionsByTagId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load HTTPS guidance tag(s). Please try again.`),

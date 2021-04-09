@@ -26,7 +26,7 @@ export const findMyOrganizations = {
       i18n,
       userKey,
       auth: { checkSuperAdmin, userRequired },
-      loaders: { orgLoaderConnectionsByUserId },
+      loaders: { loadOrgConnectionsByUserId },
     },
   ) => {
     let orgConnections
@@ -36,7 +36,7 @@ export const findMyOrganizations = {
     const isSuperAdmin = await checkSuperAdmin()
 
     try {
-      orgConnections = await orgLoaderConnectionsByUserId({
+      orgConnections = await loadOrgConnectionsByUserId({
         isSuperAdmin,
         ...args,
       })

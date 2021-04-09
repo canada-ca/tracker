@@ -33,7 +33,7 @@ export const authenticate = new mutationWithClientMutationId({
       i18n,
       query,
       auth: { tokenize, verifyToken },
-      loaders: { userLoaderByKey },
+      loaders: { loadUserByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -60,7 +60,7 @@ export const authenticate = new mutationWithClientMutationId({
     }
 
     // Gather sign in user
-    const user = await userLoaderByKey.load(tokenParameters.userKey)
+    const user = await loadUserByKey.load(tokenParameters.userKey)
 
     // Replace with userRequired()
     if (typeof user === 'undefined') {

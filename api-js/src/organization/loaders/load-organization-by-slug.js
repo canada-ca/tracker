@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const orgLoaderBySlug = (query, language, userKey, i18n) =>
+export const loadOrgBySlug = ({ query, language, userKey, i18n }) =>
   new DataLoader(async (slugs) => {
     let cursor
 
@@ -28,7 +28,7 @@ export const orgLoaderBySlug = (query, language, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running orgLoaderBySlug: ${err}`,
+        `Database error occurred when user: ${userKey} running loadOrgBySlug: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to load organization(s). Please try again.`),
@@ -42,7 +42,7 @@ export const orgLoaderBySlug = (query, language, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running orgLoaderBySlug: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadOrgBySlug: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to load organization(s). Please try again.`),

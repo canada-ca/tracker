@@ -2,14 +2,14 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import { setupI18n } from '@lingui/core'
 
 import { databaseOptions } from '../../../database-options'
-import { userLoaderByKey, userLoaderByUserName } from '../../user/loaders'
+import { loadUserByKey, loadUserByUserName } from '../../user/loaders'
 import { userRequired } from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given a userLoaderByKey dataloader', () => {
+describe('given a loadUserByKey dataloader', () => {
   let query, drop, truncate, collections, i18n
 
   let consoleOutput = []
@@ -49,13 +49,15 @@ describe('given a userLoaderByKey dataloader', () => {
   describe('provided a user id', () => {
     it('returns the user', async () => {
       // Get User From db
-      const expectedUser = await userLoaderByUserName(query, '1', {}).load(
-        'test.account@istio.actually.exists',
-      )
+      const expectedUser = await loadUserByUserName({
+        query,
+        userKey: '1',
+        i18n: {},
+      }).load('test.account@istio.actually.exists')
 
       const testUserRequired = userRequired({
         userKey: expectedUser._key,
-        userLoaderByKey: userLoaderByKey(query),
+        loadUserByKey: loadUserByKey({ query }),
       })
       const user = await testUserRequired()
 
@@ -83,7 +85,7 @@ describe('given a userLoaderByKey dataloader', () => {
           const testUserRequired = userRequired({
             i18n,
             userKey: undefined,
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
           await testUserRequired()
         } catch (err) {
@@ -105,7 +107,7 @@ describe('given a userLoaderByKey dataloader', () => {
           const testUserRequired = userRequired({
             i18n,
             userKey: '1',
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
           await testUserRequired()
         } catch (err) {
@@ -133,7 +135,7 @@ describe('given a userLoaderByKey dataloader', () => {
           const testUserRequired = userRequired({
             i18n,
             userKey: '1',
-            userLoaderByKey: testLoader(),
+            loadUserByKey: testLoader(),
           })
           await testUserRequired()
         } catch (err) {
@@ -169,7 +171,7 @@ describe('given a userLoaderByKey dataloader', () => {
           const testUserRequired = userRequired({
             i18n,
             userKey: undefined,
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
           await testUserRequired()
         } catch (err) {
@@ -189,7 +191,7 @@ describe('given a userLoaderByKey dataloader', () => {
           const testUserRequired = userRequired({
             i18n,
             userKey: '1',
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
           await testUserRequired()
         } catch (err) {
@@ -215,7 +217,7 @@ describe('given a userLoaderByKey dataloader', () => {
           const testUserRequired = userRequired({
             i18n,
             userKey: '1',
-            userLoaderByKey: testLoader(),
+            loadUserByKey: testLoader(),
           })
           await testUserRequired()
         } catch (err) {

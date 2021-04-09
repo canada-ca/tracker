@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { chartSummaryLoaderByKey } from '../../index'
+import { loadChartSummaryByKey } from '../../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the chartSummaryLoaderByKey function', () => {
+describe('given the loadChartSummaryByKey function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -68,7 +68,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
       `
       const expectedSummary = await expectedCursor.next()
 
-      const loader = chartSummaryLoaderByKey(query, i18n)
+      const loader = loadChartSummaryByKey({ query, i18n })
       const webSummary = await loader.load('web')
 
       expect(webSummary).toEqual(expectedSummary)
@@ -89,7 +89,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
         expectedSummaries.push(tempSummary)
       }
 
-      const loader = chartSummaryLoaderByKey(query, i18n)
+      const loader = loadChartSummaryByKey({ query, i18n })
       const chartSummaries = await loader.loadMany(summaryKeys)
       expect(chartSummaries).toEqual(expectedSummaries)
     })
@@ -114,7 +114,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = chartSummaryLoaderByKey(query, '1234', i18n)
+        const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -125,7 +125,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running chartSummaryLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadChartSummaryByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -137,7 +137,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = chartSummaryLoaderByKey(query, '1234', i18n)
+        const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -148,7 +148,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running chartSummaryLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadChartSummaryByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -173,7 +173,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = chartSummaryLoaderByKey(query, '1234', i18n)
+        const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -182,7 +182,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running chartSummaryLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadChartSummaryByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -194,7 +194,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = chartSummaryLoaderByKey(query, '1234', i18n)
+        const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -203,7 +203,7 @@ describe('given the chartSummaryLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running chartSummaryLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadChartSummaryByKey: Error: Cursor error occurred.`,
         ])
       })
     })

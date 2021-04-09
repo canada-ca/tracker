@@ -3,10 +3,10 @@ import { toGlobalId } from 'graphql-relay'
 
 import { databaseOptions } from '../../../../database-options'
 import {
-  dkimFailureLoaderConnectionsBySumId,
-  dmarcFailureLoaderConnectionsBySumId,
-  fullPassLoaderConnectionsBySumId,
-  spfFailureLoaderConnectionsBySumId,
+  loadDkimFailConnectionsBySumId,
+  loadDmarcFailConnectionsBySumId,
+  loadFullPassConnectionsBySumId,
+  loadSpfFailureConnectionsBySumId,
 } from '../../loaders'
 import { detailTablesType } from '../detail-tables'
 import { dkimFailureConnection } from '../dkim-failure-table-connection'
@@ -175,9 +175,9 @@ describe('testing the detailTables gql object', () => {
             { first: 1 },
             {
               loaders: {
-                dkimFailureLoaderConnectionsBySumId: dkimFailureLoaderConnectionsBySumId(
+                loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
                   query,
-                ),
+                }),
               },
             },
           ),
@@ -222,8 +222,10 @@ describe('testing the detailTables gql object', () => {
             { first: 1 },
             {
               loaders: {
-                dmarcFailureLoaderConnectionsBySumId: dmarcFailureLoaderConnectionsBySumId(
-                  query,
+                loadDmarcFailConnectionsBySumId: loadDmarcFailConnectionsBySumId(
+                  {
+                    query,
+                  },
                 ),
               },
             },
@@ -268,9 +270,9 @@ describe('testing the detailTables gql object', () => {
             { first: 1 },
             {
               loaders: {
-                fullPassLoaderConnectionsBySumId: fullPassLoaderConnectionsBySumId(
+                loadFullPassConnectionsBySumId: loadFullPassConnectionsBySumId({
                   query,
-                ),
+                }),
               },
             },
           ),
@@ -315,8 +317,10 @@ describe('testing the detailTables gql object', () => {
             { first: 1 },
             {
               loaders: {
-                spfFailureLoaderConnectionsBySumId: spfFailureLoaderConnectionsBySumId(
-                  query,
+                loadSpfFailureConnectionsBySumId: loadSpfFailureConnectionsBySumId(
+                  {
+                    query,
+                  },
                 ),
               },
             },

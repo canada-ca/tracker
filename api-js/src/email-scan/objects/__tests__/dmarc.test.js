@@ -5,9 +5,9 @@ import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderByKey } from '../../../domain/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { dmarcGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
+import { loadDmarcGuidanceTagConnectionsByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 import { dmarcType } from '../index'
 
@@ -168,13 +168,13 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = domainLoaderByKey(query, '1', {})
+        const loader = loadDomainByKey({ query, userKey: '1', i18n: {} })
 
         await expect(
           demoType.domain.resolve(
             { domainId: domain._id },
             {},
-            { loaders: { domainLoaderByKey: loader } },
+            { loaders: { loadDomainByKey: loader } },
           ),
         ).resolves.toEqual({
           _id: domain._id,
@@ -245,12 +245,12 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = dmarcGuidanceTagConnectionsLoader(
+        const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const guidanceTags = ['dmarc1']
 
         const expectedResult = {
@@ -294,7 +294,7 @@ describe('given the dmarcType object', () => {
           demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -303,12 +303,12 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = dmarcGuidanceTagConnectionsLoader(
+        const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const negativeTags = ['dmarc1']
 
         const expectedResult = {
@@ -352,7 +352,7 @@ describe('given the dmarcType object', () => {
           demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -361,12 +361,12 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = dmarcGuidanceTagConnectionsLoader(
+        const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const neutralTags = ['dmarc1']
 
         const expectedResult = {
@@ -410,7 +410,7 @@ describe('given the dmarcType object', () => {
           demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -419,12 +419,12 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-        const loader = dmarcGuidanceTagConnectionsLoader(
+        const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const positiveTags = ['dmarc1']
 
         const expectedResult = {
@@ -468,7 +468,7 @@ describe('given the dmarcType object', () => {
           demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { dmarcGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDmarcGuidanceTagConnectionsByTagId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

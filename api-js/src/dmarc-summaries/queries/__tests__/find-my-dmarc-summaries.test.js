@@ -11,8 +11,8 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkSuperAdmin, userRequired } from '../../../auth'
-import { dmarcSumLoaderConnectionsByUserId } from '../../loaders'
-import { userLoaderByKey } from '../../../user/loaders'
+import { loadDmarcSummaryConnectionsByUserId } from '../../loaders'
+import { loadUserByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -193,16 +193,18 @@ describe('given the findMyDmarcSummaries query', () => {
             userRequired: userRequired({
               i18n,
               userKey: user._key,
-              userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+              loadUserByKey: loadUserByKey({ query, userKey: user._key, i18n }),
             }),
           },
           loaders: {
-            dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
-              query,
-              user._key,
-              cleanseInput,
-              i18n,
-              mockedStartDateLoader,
+            loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+              {
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                loadStartDateFromPeriod: mockedStartDateLoader,
+              },
             ),
           },
         },
@@ -289,16 +291,22 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: undefined,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
-                dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
-                  query,
-                  user._key,
-                  cleanseInput,
-                  i18n,
-                  jest.fn(),
+                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+                  {
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    loadStartDateFromPeriod: jest.fn(),
+                  },
                 ),
               },
             },
@@ -348,18 +356,24 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
-                dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
-                  jest
-                    .fn()
-                    .mockRejectedValue(new Error('Database error occurred.')),
-                  user._key,
-                  cleanseInput,
-                  i18n,
-                  jest.fn(),
+                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+                  {
+                    query: jest
+                      .fn()
+                      .mockRejectedValue(new Error('Database error occurred.')),
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    loadStartDateFromPeriod: jest.fn(),
+                  },
                 ),
               },
             },
@@ -372,7 +386,7 @@ describe('given the findMyDmarcSummaries query', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: Error: Database error occurred.`,
+            `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in loadDmarcSummaryConnectionsByUserId, error: Error: Database error occurred.`,
           ])
         })
       })
@@ -427,16 +441,22 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: undefined,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
-                dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
-                  query,
-                  user._key,
-                  cleanseInput,
-                  i18n,
-                  jest.fn(),
+                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+                  {
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    loadStartDateFromPeriod: jest.fn(),
+                  },
                 ),
               },
             },
@@ -484,18 +504,24 @@ describe('given the findMyDmarcSummaries query', () => {
                 userRequired: userRequired({
                   i18n,
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query, user._key, i18n),
+                  loadUserByKey: loadUserByKey({
+                    query,
+                    userKey: user._key,
+                    i18n,
+                  }),
                 }),
               },
               loaders: {
-                dmarcSumLoaderConnectionsByUserId: dmarcSumLoaderConnectionsByUserId(
-                  jest
-                    .fn()
-                    .mockRejectedValue(new Error('Database error occurred.')),
-                  user._key,
-                  cleanseInput,
-                  i18n,
-                  jest.fn(),
+                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
+                  {
+                    query: jest
+                      .fn()
+                      .mockRejectedValue(new Error('Database error occurred.')),
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    loadStartDateFromPeriod: jest.fn(),
+                  },
                 ),
               },
             },
@@ -504,7 +530,7 @@ describe('given the findMyDmarcSummaries query', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: Error: Database error occurred.`,
+            `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in loadDmarcSummaryConnectionsByUserId, error: Error: Database error occurred.`,
           ])
         })
       })

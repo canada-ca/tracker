@@ -9,7 +9,7 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { userLoaderByUserName } from '../../loaders'
+import { loadUserByUserName } from '../../loaders'
 
 const { SIGN_IN_KEY } = process.env
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -81,7 +81,7 @@ describe('authenticate user account', () => {
           cleanseInput,
         },
         loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
+          loadUserByUserName: loadUserByUserName({ query }),
         },
       },
     )
@@ -160,7 +160,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthTextMsg: mockNotify,
@@ -241,7 +241,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -322,7 +322,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -402,7 +402,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              loadUserByUserName: loadUserByUserName({ query }),
             },
             notify: {
               sendAuthEmail: mockNotify,
@@ -461,7 +461,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -539,7 +539,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -615,7 +615,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -685,7 +685,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -719,7 +719,7 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
 
           const mockedQuery = jest
             .fn()
@@ -763,7 +763,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -794,7 +794,7 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { phoneValidated: false } IN users
           `
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
 
           const mockedQuery = jest
             .fn()
@@ -838,7 +838,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -870,7 +870,7 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
           `
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
 
           const mockedQuery = jest
             .fn()
@@ -915,7 +915,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -1003,7 +1003,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthTextMsg: mockNotify,
@@ -1088,7 +1088,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -1173,7 +1173,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -1257,7 +1257,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              loadUserByUserName: loadUserByUserName({ query }),
             },
             notify: {
               sendAuthEmail: mockNotify,
@@ -1316,7 +1316,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -1393,7 +1393,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -1468,7 +1468,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -1538,7 +1538,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userLoaderByUserName(query),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -1572,7 +1572,7 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
 
           const mockedQuery = jest
             .fn()
@@ -1616,7 +1616,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -1645,7 +1645,7 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { phoneValidated: false } IN users
           `
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
 
           const mockedQuery = jest
             .fn()
@@ -1689,7 +1689,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -1719,7 +1719,7 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
           `
 
-          const userNameLoader = userLoaderByUserName(query)
+          const userNameLoader = loadUserByUserName({ query })
 
           const mockedQuery = jest
             .fn()
@@ -1764,7 +1764,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByUserName: userNameLoader,
+                loadUserByUserName: userNameLoader,
               },
               notify: {
                 sendAuthEmail: mockNotify,

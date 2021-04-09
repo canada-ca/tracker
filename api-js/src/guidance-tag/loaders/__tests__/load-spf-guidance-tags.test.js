@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { spfGuidanceTagLoader } from '../index'
+import { loadSpfGuidanceTagByTagId } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the spfGuidanceTagLoader function', () => {
+describe('given the loadSpfGuidanceTagByTagId function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -59,7 +59,7 @@ describe('given the spfGuidanceTagLoader function', () => {
       `
       const expectedSpfTag = await expectedCursor.next()
 
-      const loader = spfGuidanceTagLoader(query, i18n)
+      const loader = loadSpfGuidanceTagByTagId({ query, i18n })
       const spfTag = await loader.load(expectedSpfTag._key)
 
       expect(spfTag).toEqual(expectedSpfTag)
@@ -80,7 +80,7 @@ describe('given the spfGuidanceTagLoader function', () => {
         expectedSpfTags.push(tempSpf)
       }
 
-      const loader = spfGuidanceTagLoader(query, i18n)
+      const loader = loadSpfGuidanceTagByTagId({ query, i18n })
       const spfTags = await loader.loadMany(spfTagKeys)
       expect(spfTags).toEqual(expectedSpfTags)
     })
@@ -105,7 +105,11 @@ describe('given the spfGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = spfGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadSpfGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -116,7 +120,7 @@ describe('given the spfGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running spfGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadSpfGuidanceTagByTagId: Error: Database error occurred.`,
         ])
       })
     })
@@ -128,7 +132,11 @@ describe('given the spfGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = spfGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadSpfGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -139,7 +147,7 @@ describe('given the spfGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running spfGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadSpfGuidanceTagByTagId: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -164,7 +172,11 @@ describe('given the spfGuidanceTagLoader function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = spfGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadSpfGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -173,7 +185,7 @@ describe('given the spfGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running spfGuidanceTagLoader: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadSpfGuidanceTagByTagId: Error: Database error occurred.`,
         ])
       })
     })
@@ -185,7 +197,11 @@ describe('given the spfGuidanceTagLoader function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = spfGuidanceTagLoader(query, '1234', i18n)
+        const loader = loadSpfGuidanceTagByTagId({
+          query,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -194,7 +210,7 @@ describe('given the spfGuidanceTagLoader function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running spfGuidanceTagLoader: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadSpfGuidanceTagByTagId: Error: Cursor error occurred.`,
         ])
       })
     })

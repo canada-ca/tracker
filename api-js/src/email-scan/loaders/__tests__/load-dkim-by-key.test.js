@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { dkimLoaderByKey } from '../load-dkim-by-key'
+import { loadDkimByKey } from '../load-dkim-by-key'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the dkimLoaderByKey function', () => {
+describe('given the loadDkimByKey function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -59,7 +59,7 @@ describe('given the dkimLoaderByKey function', () => {
       `
       const expectedDkim = await expectedCursor.next()
 
-      const loader = dkimLoaderByKey(query, i18n)
+      const loader = loadDkimByKey({ query, i18n })
       const dkim = await loader.load(expectedDkim._key)
 
       expect(dkim).toEqual(expectedDkim)
@@ -80,7 +80,7 @@ describe('given the dkimLoaderByKey function', () => {
         expectedDkimScans.push(tempDkim)
       }
 
-      const loader = dkimLoaderByKey(query, i18n)
+      const loader = loadDkimByKey({ query, i18n })
       const dkimScans = await loader.loadMany(dkimKeys)
       expect(dkimScans).toEqual(expectedDkimScans)
     })
@@ -105,7 +105,7 @@ describe('given the dkimLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dkimLoaderByKey(query, '1234', i18n)
+        const loader = loadDkimByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -116,7 +116,7 @@ describe('given the dkimLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dkimLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDkimByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -128,7 +128,7 @@ describe('given the dkimLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dkimLoaderByKey(query, '1234', i18n)
+        const loader = loadDkimByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -139,7 +139,7 @@ describe('given the dkimLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dkimLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDkimByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -164,7 +164,7 @@ describe('given the dkimLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dkimLoaderByKey(query, '1234', i18n)
+        const loader = loadDkimByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -173,7 +173,7 @@ describe('given the dkimLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dkimLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDkimByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -185,7 +185,7 @@ describe('given the dkimLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dkimLoaderByKey(query, '1234', i18n)
+        const loader = loadDkimByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -194,7 +194,7 @@ describe('given the dkimLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dkimLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDkimByKey: Error: Cursor error occurred.`,
         ])
       })
     })

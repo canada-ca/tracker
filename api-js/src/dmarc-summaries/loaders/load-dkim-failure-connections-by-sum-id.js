@@ -2,15 +2,15 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const dkimFailureLoaderConnectionsBySumId = (
+export const loadDkimFailConnectionsBySumId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ after, before, first, last, summaryId }) => {
+}) => async ({ after, before, first, last, summaryId }) => {
   if (typeof summaryId === 'undefined') {
     console.warn(
-      `SummaryId was undefined when user: ${userKey} attempted to load dkim failures in dkimFailureLoaderConnectionsBySumId.`,
+      `SummaryId was undefined when user: ${userKey} attempted to load dkim failures in loadDkimFailConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(t`Unable to load DKIM failure data. Please try again.`),
@@ -32,7 +32,7 @@ export const dkimFailureLoaderConnectionsBySumId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: dkimFailureLoaderConnectionsBySumId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadDkimFailConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(
@@ -41,7 +41,7 @@ export const dkimFailureLoaderConnectionsBySumId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: dkimFailureLoaderConnectionsBySumId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadDkimFailConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(
@@ -53,7 +53,7 @@ export const dkimFailureLoaderConnectionsBySumId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: dkimFailureLoaderConnectionsBySumId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadDkimFailConnectionsBySumId.`,
       )
       throw new Error(
         i18n._(
@@ -64,7 +64,7 @@ export const dkimFailureLoaderConnectionsBySumId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: dkimFailureLoaderConnectionsBySumId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadDkimFailConnectionsBySumId.`,
       )
       throw new Error(
         i18n._(
@@ -80,7 +80,7 @@ export const dkimFailureLoaderConnectionsBySumId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: dkimFailureLoaderConnectionsBySumId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadDkimFailConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -138,7 +138,7 @@ export const dkimFailureLoaderConnectionsBySumId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to gather dkim failures in dkimFailureLoaderConnectionsBySumId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather dkim failures in loadDkimFailConnectionsBySumId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load DKIM failure data. Please try again.`),
@@ -150,7 +150,7 @@ export const dkimFailureLoaderConnectionsBySumId = (
     dkimFailureInfo = await requestedDkimFailureInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather dkim failures in dkimFailureLoaderConnectionsBySumId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather dkim failures in loadDkimFailConnectionsBySumId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load DKIM failure data. Please try again.`),

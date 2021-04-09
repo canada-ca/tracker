@@ -47,7 +47,7 @@ export const updateDomain = new mutationWithClientMutationId({
       userKey,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
-      loaders: { domainLoaderByKey, orgLoaderByKey },
+      loaders: { loadDomainByKey, loadOrgByKey },
     },
   ) => {
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
@@ -65,7 +65,7 @@ export const updateDomain = new mutationWithClientMutationId({
     await userRequired()
 
     // Check to see if domain exists
-    const domain = await domainLoaderByKey.load(domainId)
+    const domain = await loadDomainByKey.load(domainId)
 
     if (typeof domain === 'undefined') {
       console.warn(
@@ -79,7 +79,7 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if org exists
-    const org = await orgLoaderByKey.load(orgId)
+    const org = await loadOrgByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(
@@ -184,8 +184,8 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Clear dataloader and load updated domain
-    await domainLoaderByKey.clear(domain._key)
-    const returnDomain = await domainLoaderByKey.load(domain._key)
+    await loadDomainByKey.clear(domain._key)
+    const returnDomain = await loadDomainByKey.load(domain._key)
 
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
     returnDomain.id = returnDomain._key

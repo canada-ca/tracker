@@ -7,7 +7,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { dmarcLoaderConnectionsByDomainId, dmarcLoaderByKey } from '../index'
+import { loadDmarcConnectionsByDomainId, loadDmarcByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -90,14 +90,14 @@ describe('when given the load dmarc connection function', () => {
 
     describe('using after cursor', () => {
       it('returns dmarc scan(s) after a given node id', async () => {
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+        const connectionLoader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const dkimLoader = dmarcLoaderByKey(query)
+        const dkimLoader = loadDmarcByKey({ query })
         const expectedDmarcScans = await dkimLoader.loadMany([
           dmarcScan1._key,
           dmarcScan2._key,
@@ -142,14 +142,14 @@ describe('when given the load dmarc connection function', () => {
     })
     describe('using before cursor', () => {
       it('returns dmarc scan(s) before a given node id', async () => {
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+        const connectionLoader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const dkimLoader = dmarcLoaderByKey(query)
+        const dkimLoader = loadDmarcByKey({ query })
         const expectedDmarcScans = await dkimLoader.loadMany([
           dmarcScan1._key,
           dmarcScan2._key,
@@ -194,14 +194,14 @@ describe('when given the load dmarc connection function', () => {
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+        const connectionLoader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const dkimLoader = dmarcLoaderByKey(query)
+        const dkimLoader = loadDmarcByKey({ query })
         const expectedDmarcScans = await dkimLoader.loadMany([
           dmarcScan1._key,
           dmarcScan2._key,
@@ -245,14 +245,14 @@ describe('when given the load dmarc connection function', () => {
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+        const connectionLoader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
-        const dkimLoader = dmarcLoaderByKey(query)
+        const dkimLoader = loadDmarcByKey({ query })
         const expectedDmarcScans = await dkimLoader.loadMany([
           dmarcScan1._key,
           dmarcScan2._key,
@@ -307,14 +307,14 @@ describe('when given the load dmarc connection function', () => {
       })
       describe('using start date filter', () => {
         it('returns dkim scans at and after the start date', async () => {
-          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+          const connectionLoader = loadDmarcConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
-          const dmarcLoader = dmarcLoaderByKey(query)
+          const dmarcLoader = loadDmarcByKey({ query })
           const expectedDmarcScans = await dmarcLoader.loadMany([
             dmarcScan2._key,
             dmarcScan3._key,
@@ -365,14 +365,14 @@ describe('when given the load dmarc connection function', () => {
       })
       describe('using end date filter', () => {
         it('returns dkim scans at and before the end date', async () => {
-          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+          const connectionLoader = loadDmarcConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
-          const dmarcLoader = dmarcLoaderByKey(query)
+          const dmarcLoader = loadDmarcByKey({ query })
           const expectedDmarcScans = await dmarcLoader.loadMany([
             dmarcScan1._key,
             dmarcScan2._key,
@@ -423,14 +423,14 @@ describe('when given the load dmarc connection function', () => {
       })
       describe('using start and end date filters', () => {
         it('returns dkim scan on a specific date', async () => {
-          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+          const connectionLoader = loadDmarcConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
-          const dmarcLoader = dmarcLoaderByKey(query)
+          const dmarcLoader = loadDmarcByKey({ query })
           const expectedDmarcScans = await dmarcLoader.loadMany([
             dmarcScan2._key,
           ])
@@ -516,15 +516,15 @@ describe('when given the load dmarc connection function', () => {
       describe('ordering on TIMESTAMP', () => {
         describe('direction is set to ASC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -563,15 +563,15 @@ describe('when given the load dmarc connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -612,15 +612,15 @@ describe('when given the load dmarc connection function', () => {
       describe('ordering on RECORD', () => {
         describe('direction is set to ASC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -659,15 +659,15 @@ describe('when given the load dmarc connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -708,15 +708,15 @@ describe('when given the load dmarc connection function', () => {
       describe('ordering on P_POLICY', () => {
         describe('direction is set to ASC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -755,15 +755,15 @@ describe('when given the load dmarc connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -804,15 +804,15 @@ describe('when given the load dmarc connection function', () => {
       describe('ordering on SP_POLICY', () => {
         describe('direction is set to ASC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -851,15 +851,15 @@ describe('when given the load dmarc connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -900,15 +900,15 @@ describe('when given the load dmarc connection function', () => {
       describe('ordering on PCT', () => {
         describe('direction is set to ASC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -947,15 +947,15 @@ describe('when given the load dmarc connection function', () => {
         })
         describe('direction is set to DESC', () => {
           it('returns the dmarc scan', async () => {
-            const loader = dmarcLoaderByKey(query, user._key, i18n)
+            const loader = loadDmarcByKey({ query, userKey: user._key, i18n })
             const expectedDmarcScan = await loader.load(dmarcScanTwo._key)
 
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               domainId: domain._id,
@@ -997,12 +997,12 @@ describe('when given the load dmarc connection function', () => {
     describe('no dmarc scans are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+        const connectionLoader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -1046,12 +1046,12 @@ describe('when given the load dmarc connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+          const connectionLoader = loadDmarcConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {}
 
@@ -1068,18 +1068,18 @@ describe('when given the load dmarc connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDmarcConnectionsByDomainId.`,
           ])
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+          const connectionLoader = loadDmarcConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -1099,19 +1099,19 @@ describe('when given the load dmarc connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDmarcConnectionsByDomainId.`,
           ])
         })
       })
       describe('limits are set below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -1130,18 +1130,18 @@ describe('when given the load dmarc connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDmarcConnectionsByDomainId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -2,
@@ -1160,7 +1160,7 @@ describe('when given the load dmarc connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDmarcConnectionsByDomainId.`,
             ])
           })
         })
@@ -1168,12 +1168,12 @@ describe('when given the load dmarc connection function', () => {
       describe('limits are set above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 1000,
@@ -1192,18 +1192,18 @@ describe('when given the load dmarc connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: dmarcLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDmarcConnectionsByDomainId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 200,
@@ -1222,7 +1222,7 @@ describe('when given the load dmarc connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 200 for: dmarcLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set to 200 for: loadDmarcConnectionsByDomainId.`,
             ])
           })
         })
@@ -1233,12 +1233,12 @@ describe('when given the load dmarc connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              const connectionLoader = loadDmarcConnectionsByDomainId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -1258,7 +1258,7 @@ describe('when given the load dmarc connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dmarcLoaderConnectionsByDomainId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDmarcConnectionsByDomainId.`,
               ])
             })
           })
@@ -1268,12 +1268,12 @@ describe('when given the load dmarc connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              const connectionLoader = loadDmarcConnectionsByDomainId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -1293,7 +1293,7 @@ describe('when given the load dmarc connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dmarcLoaderConnectionsByDomainId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDmarcConnectionsByDomainId.`,
               ])
             })
           })
@@ -1306,12 +1306,12 @@ describe('when given the load dmarc connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+        const connectionLoader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -1342,12 +1342,12 @@ describe('when given the load dmarc connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+        const connectionLoader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -1388,12 +1388,12 @@ describe('when given the load dmarc connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+          const connectionLoader = loadDmarcConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {}
 
@@ -1406,18 +1406,18 @@ describe('when given the load dmarc connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDmarcConnectionsByDomainId.`,
           ])
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+          const connectionLoader = loadDmarcConnectionsByDomainId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -1433,19 +1433,19 @@ describe('when given the load dmarc connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDmarcConnectionsByDomainId.`,
           ])
         })
       })
       describe('limits are set below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -1460,18 +1460,18 @@ describe('when given the load dmarc connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDmarcConnectionsByDomainId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -2,
@@ -1486,7 +1486,7 @@ describe('when given the load dmarc connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDmarcConnectionsByDomainId.`,
             ])
           })
         })
@@ -1494,12 +1494,12 @@ describe('when given the load dmarc connection function', () => {
       describe('limits are set above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 1000,
@@ -1514,18 +1514,18 @@ describe('when given the load dmarc connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: dmarcLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadDmarcConnectionsByDomainId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            const connectionLoader = loadDmarcConnectionsByDomainId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 200,
@@ -1540,7 +1540,7 @@ describe('when given the load dmarc connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 200 for: dmarcLoaderConnectionsByDomainId.`,
+              `User: ${user._key} attempted to have \`last\` set to 200 for: loadDmarcConnectionsByDomainId.`,
             ])
           })
         })
@@ -1551,12 +1551,12 @@ describe('when given the load dmarc connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              const connectionLoader = loadDmarcConnectionsByDomainId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -1572,7 +1572,7 @@ describe('when given the load dmarc connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dmarcLoaderConnectionsByDomainId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDmarcConnectionsByDomainId.`,
               ])
             })
           })
@@ -1582,12 +1582,12 @@ describe('when given the load dmarc connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              const connectionLoader = loadDmarcConnectionsByDomainId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -1603,7 +1603,7 @@ describe('when given the load dmarc connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dmarcLoaderConnectionsByDomainId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDmarcConnectionsByDomainId.`,
               ])
             })
           })
@@ -1616,12 +1616,12 @@ describe('when given the load dmarc connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+        const connectionLoader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -1650,12 +1650,12 @@ describe('when given the load dmarc connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+        const connectionLoader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,

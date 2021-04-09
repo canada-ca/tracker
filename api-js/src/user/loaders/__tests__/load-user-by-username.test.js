@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { userLoaderByUserName } from '../index'
+import { loadUserByUserName } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given a userLoaderByUserName dataloader', () => {
+describe('given a loadUserByUserName dataloader', () => {
   let query, drop, truncate, collections, i18n
 
   let consoleOutput = []
@@ -65,7 +65,7 @@ describe('given a userLoaderByUserName dataloader', () => {
   describe('provided a single username', () => {
     it('returns a single user', async () => {
       const userName = 'random@email.ca'
-      const loader = userLoaderByUserName(query, i18n)
+      const loader = loadUserByUserName({ query, i18n })
 
       // Get Query User
       const cursor = await query`
@@ -86,7 +86,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         'random@email.ca',
         'test.account@istio.actually.exists',
       ]
-      const loader = userLoaderByUserName(query, i18n)
+      const loader = loadUserByUserName({ query, i18n })
 
       for (const i in userNames) {
         // Get Query User
@@ -124,7 +124,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByUserName(query, '1234', i18n)
+        const loader = loadUserByUserName({ query, userKey: '1234', i18n })
 
         try {
           await loader.load(userName)
@@ -135,7 +135,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running userLoaderByUserName: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadUserByUserName: Error: Database error occurred.`,
         ])
       })
     })
@@ -149,7 +149,7 @@ describe('given a userLoaderByUserName dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByUserName(query, '1234', i18n)
+        const loader = loadUserByUserName({ query, userKey: '1234', i18n })
 
         try {
           await loader.load(userName)
@@ -160,7 +160,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 running userLoaderByUserName: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadUserByUserName: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -187,7 +187,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByUserName(query, '1234', i18n)
+        const loader = loadUserByUserName({ query, userKey: '1234', i18n })
 
         try {
           await loader.load(userName)
@@ -196,7 +196,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running userLoaderByUserName: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadUserByUserName: Error: Database error occurred.`,
         ])
       })
     })
@@ -210,7 +210,7 @@ describe('given a userLoaderByUserName dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByUserName(query, '1234', i18n)
+        const loader = loadUserByUserName({ query, userKey: '1234', i18n })
 
         try {
           await loader.load(userName)
@@ -219,7 +219,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 running userLoaderByUserName: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadUserByUserName: Error: Cursor error occurred.`,
         ])
       })
     })

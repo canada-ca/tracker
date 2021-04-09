@@ -53,7 +53,7 @@ export const signUp = new mutationWithClientMutationId({
       collections,
       transaction,
       auth: { bcrypt, tokenize, verifyToken },
-      loaders: { orgLoaderByKey, userLoaderByUserName, userLoaderByKey },
+      loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -90,7 +90,7 @@ export const signUp = new mutationWithClientMutationId({
     }
 
     // Check to see if user already exists
-    const checkUser = await userLoaderByUserName.load(userName)
+    const checkUser = await loadUserByUserName.load(userName)
 
     if (typeof checkUser !== 'undefined') {
       console.warn(
@@ -161,7 +161,7 @@ export const signUp = new mutationWithClientMutationId({
         }
       }
 
-      const checkOrg = await orgLoaderByKey.load(tokenOrgKey)
+      const checkOrg = await loadOrgByKey.load(tokenOrgKey)
       if (typeof checkOrg === 'undefined') {
         console.warn(
           `User: ${userName} attempted to sign up with an invite token, however the org could not be found.`,
@@ -203,7 +203,7 @@ export const signUp = new mutationWithClientMutationId({
     // Generate JWT
     const token = tokenize({ parameters: { userKey: insertedUser._key } })
 
-    const returnUser = await userLoaderByKey.load(insertedUser._key)
+    const returnUser = await loadUserByKey.load(insertedUser._key)
 
     console.info(`User: ${userName} successfully created a new account.`)
 

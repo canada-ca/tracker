@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const userLoaderByUserName = (query, userKey, i18n) =>
+export const loadUserByUserName = ({ query, userKey, i18n }) =>
   new DataLoader(async (userNames) => {
     let cursor
 
@@ -14,7 +14,7 @@ export const userLoaderByUserName = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running userLoaderByUserName: ${err}`,
+        `Database error occurred when user: ${userKey} running loadUserByUserName: ${err}`,
       )
       throw new Error(i18n._(t`Unable to load user(s). Please try again.`))
     }
@@ -26,7 +26,7 @@ export const userLoaderByUserName = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running userLoaderByUserName: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadUserByUserName: ${err}`,
       )
       throw new Error(i18n._(t`Unable to load user(s). Please try again.`))
     }

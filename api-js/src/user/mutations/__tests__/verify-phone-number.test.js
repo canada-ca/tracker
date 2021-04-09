@@ -7,7 +7,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
-import { userLoaderByKey } from '../../loaders'
+import { loadUserByKey } from '../../loaders'
 import { userRequired } from '../../../auth'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -105,11 +105,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -162,11 +162,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -215,11 +215,11 @@ describe('user send password reset email', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -272,11 +272,11 @@ describe('user send password reset email', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -333,11 +333,11 @@ describe('user send password reset email', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -401,11 +401,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -457,11 +457,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              userLoaderByKey: userLoaderByKey(query),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -510,11 +510,11 @@ describe('user send password reset email', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -566,11 +566,11 @@ describe('user send password reset email', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -626,11 +626,11 @@ describe('user send password reset email', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )

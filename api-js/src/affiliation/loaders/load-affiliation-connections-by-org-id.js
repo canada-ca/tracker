@@ -2,12 +2,12 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const affiliationConnectionLoaderByOrgId = (
+export const loadAffiliationConnectionsByOrgId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ orgId, after, before, first, last, orderBy }) => {
+}) => async ({ orgId, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -67,7 +67,7 @@ export const affiliationConnectionLoaderByOrgId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: affiliationConnectionLoaderByOrgId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadAffiliationConnectionsByOrgId.`,
     )
     throw new Error(
       i18n._(
@@ -76,7 +76,7 @@ export const affiliationConnectionLoaderByOrgId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: affiliationConnectionLoaderByOrgId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadAffiliationConnectionsByOrgId.`,
     )
     throw new Error(
       i18n._(
@@ -88,7 +88,7 @@ export const affiliationConnectionLoaderByOrgId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: affiliationConnectionLoaderByOrgId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadAffiliationConnectionsByOrgId.`,
       )
       throw new Error(
         i18n._(
@@ -99,7 +99,7 @@ export const affiliationConnectionLoaderByOrgId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: affiliationConnectionLoaderByOrgId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadAffiliationConnectionsByOrgId.`,
       )
       throw new Error(
         i18n._(
@@ -115,7 +115,7 @@ export const affiliationConnectionLoaderByOrgId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: affiliationConnectionLoaderByOrgId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadAffiliationConnectionsByOrgId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -217,7 +217,7 @@ export const affiliationConnectionLoaderByOrgId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to query affiliations in affiliationConnectionLoaderByOrgId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to query affiliations in loadAffiliationConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to query affiliation(s). Please try again.`),
@@ -229,7 +229,7 @@ export const affiliationConnectionLoaderByOrgId = (
     filteredAffiliations = await filteredAffiliationCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather affiliations in affiliationConnectionLoaderByOrgId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather affiliations in loadAffiliationConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load affiliation(s). Please try again.`))
   }

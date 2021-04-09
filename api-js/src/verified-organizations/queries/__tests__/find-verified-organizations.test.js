@@ -9,8 +9,8 @@ import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { verifiedDomainLoaderConnectionsByOrgId } from '../../../verified-domains/loaders'
-import { verifiedOrgLoaderConnections } from '../../loaders'
+import { loadVerifiedDomainConnectionsByOrgId } from '../../../verified-domains/loaders'
+import { loadVerifiedOrgConnections } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -146,16 +146,18 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections({
                   query,
-                  'en',
+                  language: 'en',
                   cleanseInput,
                   i18n,
-                ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -219,16 +221,18 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections({
                   query,
-                  'en',
+                  language: 'en',
                   cleanseInput,
                   i18n,
-                ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -296,16 +300,18 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections({
                   query,
-                  'fr',
+                  language: 'fr',
                   cleanseInput,
                   i18n,
-                ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -369,16 +375,18 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                verifiedOrgLoaderConnections: verifiedOrgLoaderConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections({
                   query,
-                  'fr',
+                  language: 'fr',
                   cleanseInput,
                   i18n,
-                ),
-                verifiedDomainLoaderConnectionsByOrgId: verifiedDomainLoaderConnectionsByOrgId(
-                  query,
-                  cleanseInput,
-                  i18n,
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                  {
+                    query,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },

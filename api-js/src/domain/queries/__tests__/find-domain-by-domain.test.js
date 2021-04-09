@@ -10,8 +10,8 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkDomainPermission, userRequired } from '../../../auth'
-import { domainLoaderByDomain } from '../../loaders'
-import { userLoaderByKey } from '../../../user/loaders'
+import { loadDomainByDomain } from '../../loaders'
+import { loadUserByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -137,15 +137,15 @@ describe('given findDomainByDomain query', () => {
               }),
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             validators: {
               cleanseInput,
             },
             loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
-              userLoaderByKey: userLoaderByKey(query),
+              loadDomainByDomain: loadDomainByDomain({ query }),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
         )
@@ -224,15 +224,15 @@ describe('given findDomainByDomain query', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -315,15 +315,15 @@ describe('given findDomainByDomain query', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  domainLoaderByDomain: domainLoaderByDomain(query),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadDomainByDomain: loadDomainByDomain({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -383,15 +383,15 @@ describe('given findDomainByDomain query', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -472,15 +472,15 @@ describe('given findDomainByDomain query', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                domainLoaderByDomain: domainLoaderByDomain(query),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )

@@ -2,11 +2,11 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const verifiedDomainLoaderConnectionsByOrgId = (
+export const loadVerifiedDomainConnectionsByOrgId = ({
   query,
   cleanseInput,
   i18n,
-) => async ({ orgId, after, before, first, last, orderBy }) => {
+}) => async ({ orgId, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -105,7 +105,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User did not have either \`first\` or \`last\` arguments set for: verifiedDomainLoaderConnectionsByOrgId.`,
+      `User did not have either \`first\` or \`last\` arguments set for: loadVerifiedDomainConnectionsByOrgId.`,
     )
     throw new Error(
       i18n._(
@@ -114,7 +114,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User attempted to have \`first\` and \`last\` arguments set for: verifiedDomainLoaderConnectionsByOrgId.`,
+      `User attempted to have \`first\` and \`last\` arguments set for: loadVerifiedDomainConnectionsByOrgId.`,
     )
     throw new Error(
       i18n._(
@@ -126,7 +126,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User attempted to have \`${argSet}\` set below zero for: verifiedDomainLoaderConnectionsByOrgId.`,
+        `User attempted to have \`${argSet}\` set below zero for: loadVerifiedDomainConnectionsByOrgId.`,
       )
       throw new Error(
         i18n._(
@@ -137,7 +137,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User attempted to have \`${argSet}\` to ${amount} for: verifiedDomainLoaderConnectionsByOrgId.`,
+        `User attempted to have \`${argSet}\` to ${amount} for: loadVerifiedDomainConnectionsByOrgId.`,
       )
       throw new Error(
         i18n._(
@@ -153,7 +153,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User attempted to have \`${argSet}\` set as a ${typeSet} for: verifiedDomainLoaderConnectionsByOrgId.`,
+      `User attempted to have \`${argSet}\` set as a ${typeSet} for: loadVerifiedDomainConnectionsByOrgId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -292,7 +292,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user was trying to gather domains in verifiedDomainLoaderConnectionsByOrgId, error: ${err}`,
+      `Database error occurred while user was trying to gather domains in loadVerifiedDomainConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load verified domain(s). Please try again.`),
@@ -304,7 +304,7 @@ export const verifiedDomainLoaderConnectionsByOrgId = (
     domainsInfo = await requestedDomainInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user was trying to gather domains in verifiedDomainLoaderConnectionsByOrgId, error: ${err}`,
+      `Cursor error occurred while user was trying to gather domains in loadVerifiedDomainConnectionsByOrgId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load verified domain(s). Please try again.`),

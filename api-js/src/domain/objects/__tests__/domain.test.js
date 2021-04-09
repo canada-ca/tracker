@@ -6,14 +6,14 @@ import { toGlobalId } from 'graphql-relay'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { userRequired, tokenize } from '../../../auth'
-import { orgLoaderConnectionArgsByDomainId } from '../../../organization/loaders'
+import { loadOrgConnectionsByDomainId } from '../../../organization/loaders'
 import { organizationConnection } from '../../../organization/objects'
-import { userLoaderByKey } from '../../../user'
+import { loadUserByKey } from '../../../user'
 import { domainStatus } from '../domain-status'
 import { dmarcSummaryType } from '../../../dmarc-summaries/objects'
 import {
-  dmarcSummaryEdgeLoaderByDomainIdPeriod,
-  dmarcYearlySumEdgeLoader,
+  loadDmarcSummaryEdgeByDomainIdAndPeriod,
+  loadDmarcYearlySumEdge,
   loadStartDateFromPeriod,
 } from '../../../dmarc-summaries/loaders'
 import { emailScanType } from '../../../email-scan/objects'
@@ -322,13 +322,13 @@ describe('given the domain object', () => {
       it('returns the resolved value', async () => {
         const demoType = domainType.getFields()
 
-        const loader = orgLoaderConnectionArgsByDomainId(
+        const loader = loadOrgConnectionsByDomainId({
           query,
-          'en',
-          user._key,
+          language: 'en',
+          userKey: user._key,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const expectedResult = {
           edges: [
@@ -378,7 +378,7 @@ describe('given the domain object', () => {
           demoType.organizations.resolve(
             { _id: domainOne._id },
             { first: 1 },
-            { loaders: { orgLoaderConnectionArgsByDomainId: loader } },
+            { loaders: { loadOrgConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -412,7 +412,7 @@ describe('given the domain object', () => {
           mockUserRequired = userRequired({
             i18n: {},
             userKey: user._key,
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
         })
         it('returns the resolved value', async () => {
@@ -441,16 +441,18 @@ describe('given the domain object', () => {
               {
                 userKey: user._key,
                 loaders: {
-                  dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
-                    query,
-                    user._key,
-                    i18n,
+                  loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
+                    {
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    },
                   ),
-                  loadStartDateFromPeriod: loadStartDateFromPeriod(
+                  loadStartDateFromPeriod: loadStartDateFromPeriod({
                     moment,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,
@@ -470,7 +472,7 @@ describe('given the domain object', () => {
           mockUserRequired = userRequired({
             i18n: {},
             userKey: user._key,
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
         })
         it('returns the resolved value', async () => {
@@ -489,16 +491,18 @@ describe('given the domain object', () => {
               {
                 userKey: user._key,
                 loaders: {
-                  dmarcSummaryEdgeLoaderByDomainIdPeriod: dmarcSummaryEdgeLoaderByDomainIdPeriod(
-                    query,
-                    user._key,
-                    i18n,
+                  loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
+                    {
+                      query,
+                      userKey: user._key,
+                      i18n,
+                    },
                   ),
-                  loadStartDateFromPeriod: loadStartDateFromPeriod(
+                  loadStartDateFromPeriod: loadStartDateFromPeriod({
                     moment,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,
@@ -526,7 +530,7 @@ describe('given the domain object', () => {
           mockUserRequired = userRequired({
             i18n: {},
             userKey: user._key,
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
         })
         it('returns the resolved value', async () => {
@@ -550,11 +554,11 @@ describe('given the domain object', () => {
               {
                 userKey: user._key,
                 loaders: {
-                  dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(
+                  loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,
@@ -573,7 +577,7 @@ describe('given the domain object', () => {
           mockUserRequired = userRequired({
             i18n: {},
             userKey: user._key,
-            userLoaderByKey: userLoaderByKey(query),
+            loadUserByKey: loadUserByKey({ query }),
           })
         })
         it('returns the resolved value', async () => {
@@ -592,11 +596,11 @@ describe('given the domain object', () => {
               {
                 userKey: user._key,
                 loaders: {
-                  dmarcYearlySumEdgeLoader: dmarcYearlySumEdgeLoader(
+                  loadDmarcYearlySumEdge: loadDmarcYearlySumEdge({
                     query,
-                    user._key,
+                    userKey: user._key,
                     i18n,
-                  ),
+                  }),
                 },
                 auth: {
                   checkDomainOwnership: mockCheckDomainOwnership,

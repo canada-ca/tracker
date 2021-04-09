@@ -7,11 +7,11 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { dkimFailureLoaderConnectionsBySumId } from '../index'
+import { loadDkimFailConnectionsBySumId } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
+describe('given the loadDkimFailConnectionsBySumId loader', () => {
   let query,
     drop,
     truncate,
@@ -108,12 +108,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
   describe('given there are dkim failures to load', () => {
     describe('using after cursor', () => {
       it('returns dkim failure', async () => {
-        const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadDkimFailConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 100,
@@ -147,12 +147,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
     })
     describe('using before cursor', () => {
       it('returns dkim failure', async () => {
-        const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadDkimFailConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 100,
@@ -186,12 +186,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
     })
     describe('using first limit', () => {
       it('returns dkim failure', async () => {
-        const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadDkimFailConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 1,
@@ -224,12 +224,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
     })
     describe('using last limit', () => {
       it('returns dkim failure', async () => {
-        const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+        const connectionLoader = loadDkimFailConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           last: 1,
@@ -265,12 +265,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
     it('returns no dkim failure connections', async () => {
       await truncate()
 
-      const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+      const connectionLoader = loadDkimFailConnectionsBySumId({
         query,
-        user._key,
+        userKey: user._key,
         cleanseInput,
         i18n,
-      )
+      })
 
       const connectionArgs = {
         first: 1,
@@ -311,12 +311,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
     describe('given an unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadDkimFailConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             summaryId: '',
@@ -334,18 +334,18 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimFailureLoaderConnectionsBySumId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDkimFailConnectionsBySumId.`,
           ])
         })
       })
       describe('given first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadDkimFailConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -365,19 +365,19 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimFailureLoaderConnectionsBySumId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDkimFailConnectionsBySumId.`,
           ])
         })
       })
       describe('first or last argument exceeds maximum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadDkimFailConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 101,
@@ -396,18 +396,18 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 101 for: dkimFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set to 101 for: loadDkimFailConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadDkimFailConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 101,
@@ -426,7 +426,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 101 for: dkimFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set to 101 for: loadDkimFailConnectionsBySumId.`,
             ])
           })
         })
@@ -434,12 +434,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
       describe('first or last argument exceeds minimum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadDkimFailConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -458,18 +458,18 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dkimFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDkimFailConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadDkimFailConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -1,
@@ -488,7 +488,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dkimFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDkimFailConnectionsBySumId.`,
             ])
           })
         })
@@ -499,12 +499,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+              const connectionLoader = loadDkimFailConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -525,7 +525,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimFailureLoaderConnectionsBySumId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDkimFailConnectionsBySumId.`,
               ])
             })
           })
@@ -535,12 +535,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+              const connectionLoader = loadDkimFailConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -561,7 +561,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimFailureLoaderConnectionsBySumId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDkimFailConnectionsBySumId.`,
               ])
             })
           })
@@ -569,12 +569,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
       })
       describe('summaryId is not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadDkimFailConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 10,
@@ -590,23 +590,23 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `SummaryId was undefined when user: ${user._key} attempted to load dkim failures in dkimFailureLoaderConnectionsBySumId.`,
+            `SummaryId was undefined when user: ${user._key} attempted to load dkim failures in loadDkimFailConnectionsBySumId.`,
           ])
         })
       })
     })
     describe('given a database error occurs', () => {
       it('returns an error message', async () => {
-        const query = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        const connectionLoader = dkimFailureLoaderConnectionsBySumId(
-          query,
-          user._key,
+        const connectionLoader = loadDkimFailConnectionsBySumId({
+          query: mockedQuery,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -623,7 +623,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather dkim failures in dkimFailureLoaderConnectionsBySumId, error: Error: Database error occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather dkim failures in loadDkimFailConnectionsBySumId, error: Error: Database error occurred.`,
         ])
       })
     })
@@ -634,14 +634,14 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             throw new Error('Cursor error occurred.')
           },
         }
-        const query = jest.fn().mockReturnValueOnce(cursor)
+        const mockedQuery = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dkimFailureLoaderConnectionsBySumId(
-          query,
-          user._key,
+        const connectionLoader = loadDkimFailConnectionsBySumId({
+          query: mockedQuery,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -658,7 +658,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather dkim failures in dkimFailureLoaderConnectionsBySumId, error: Error: Cursor error occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather dkim failures in loadDkimFailConnectionsBySumId, error: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -681,12 +681,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
     describe('given an unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadDkimFailConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             summaryId: '',
@@ -700,18 +700,18 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimFailureLoaderConnectionsBySumId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDkimFailConnectionsBySumId.`,
           ])
         })
       })
       describe('given first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadDkimFailConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -727,19 +727,19 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dkimFailureLoaderConnectionsBySumId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDkimFailConnectionsBySumId.`,
           ])
         })
       })
       describe('first or last argument exceeds maximum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadDkimFailConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 101,
@@ -754,18 +754,18 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 101 for: dkimFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set to 101 for: loadDkimFailConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadDkimFailConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 101,
@@ -780,7 +780,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 101 for: dkimFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set to 101 for: loadDkimFailConnectionsBySumId.`,
             ])
           })
         })
@@ -788,12 +788,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
       describe('first or last argument exceeds minimum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadDkimFailConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -808,18 +808,18 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dkimFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDkimFailConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+            const connectionLoader = loadDkimFailConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -1,
@@ -834,7 +834,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dkimFailureLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDkimFailConnectionsBySumId.`,
             ])
           })
         })
@@ -845,12 +845,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+              const connectionLoader = loadDkimFailConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -867,7 +867,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dkimFailureLoaderConnectionsBySumId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDkimFailConnectionsBySumId.`,
               ])
             })
           })
@@ -877,12 +877,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+              const connectionLoader = loadDkimFailConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -899,7 +899,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dkimFailureLoaderConnectionsBySumId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDkimFailConnectionsBySumId.`,
               ])
             })
           })
@@ -907,12 +907,12 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
       })
       describe('summaryId is not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dkimFailureLoaderConnectionsBySumId(
+          const connectionLoader = loadDkimFailConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 10,
@@ -926,23 +926,23 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `SummaryId was undefined when user: ${user._key} attempted to load dkim failures in dkimFailureLoaderConnectionsBySumId.`,
+            `SummaryId was undefined when user: ${user._key} attempted to load dkim failures in loadDkimFailConnectionsBySumId.`,
           ])
         })
       })
     })
     describe('given a database error occurs', () => {
       it('returns an error message', async () => {
-        const query = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        const connectionLoader = dkimFailureLoaderConnectionsBySumId(
-          query,
-          user._key,
+        const connectionLoader = loadDkimFailConnectionsBySumId({
+          query: mockedQuery,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -957,7 +957,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather dkim failures in dkimFailureLoaderConnectionsBySumId, error: Error: Database error occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather dkim failures in loadDkimFailConnectionsBySumId, error: Error: Database error occurred.`,
         ])
       })
     })
@@ -968,14 +968,14 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
             throw new Error('Cursor error occurred.')
           },
         }
-        const query = jest.fn().mockReturnValueOnce(cursor)
+        const mockedQuery = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = dkimFailureLoaderConnectionsBySumId(
-          query,
-          user._key,
+        const connectionLoader = loadDkimFailConnectionsBySumId({
+          query: mockedQuery,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -990,7 +990,7 @@ describe('given the dkimFailureLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather dkim failures in dkimFailureLoaderConnectionsBySumId, error: Error: Cursor error occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather dkim failures in loadDkimFailConnectionsBySumId, error: Error: Cursor error occurred.`,
         ])
       })
     })

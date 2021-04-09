@@ -10,7 +10,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
-import { userLoaderByUserName, userLoaderByKey } from '../../loaders'
+import { loadUserByUserName, loadUserByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
@@ -114,14 +114,14 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               notify: {
                 sendTfaTextMsg: mockNotify,
@@ -140,9 +140,11 @@ describe('user sets a new phone number', () => {
             },
           }
 
-          user = await userLoaderByUserName(query, '1', {}).load(
-            'test.account@istio.actually.exists',
-          )
+          user = await loadUserByUserName({
+            query,
+            userKey: '1',
+            i18n: {},
+          }).load('test.account@istio.actually.exists')
 
           expect(response).toEqual(expectedResult)
           expect(mockNotify).toHaveBeenCalledWith({
@@ -197,14 +199,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -223,9 +225,11 @@ describe('user sets a new phone number', () => {
               },
             }
 
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
@@ -265,23 +269,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.tfaSendMethod).toEqual('none')
           })
           it('sets phoneValidated to false', async () => {
@@ -313,23 +319,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.phoneValidated).toEqual(false)
           })
         })
@@ -375,14 +383,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -401,9 +409,11 @@ describe('user sets a new phone number', () => {
               },
             }
 
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
@@ -443,23 +453,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.tfaSendMethod).toEqual('email')
           })
           it('sets phoneValidated to false', async () => {
@@ -491,23 +503,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.phoneValidated).toEqual(false)
           })
         })
@@ -553,14 +567,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -579,9 +593,11 @@ describe('user sets a new phone number', () => {
               },
             }
 
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
@@ -621,23 +637,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.tfaSendMethod).toEqual('email')
           })
           it('sets phoneValidated to false', async () => {
@@ -669,23 +687,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.phoneValidated).toEqual(false)
           })
         })
@@ -704,7 +724,7 @@ describe('user sets a new phone number', () => {
       })
       describe('database error occurs on upsert', () => {
         it('returns an error message', async () => {
-          const loaderById = userLoaderByKey(query)
+          const loaderById = loadUserByKey({ query })
 
           const mockedQuery = jest
             .fn()
@@ -738,14 +758,14 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: loaderById,
+                loadUserByKey: loaderById,
               },
               notify: {
                 sendTfaTextMsg: mockNotify,
@@ -821,14 +841,14 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               },
               notify: {
                 sendTfaTextMsg: mockNotify,
@@ -846,9 +866,11 @@ describe('user sets a new phone number', () => {
             },
           }
 
-          user = await userLoaderByUserName(query, '1', {}).load(
-            'test.account@istio.actually.exists',
-          )
+          user = await loadUserByUserName({
+            query,
+            userKey: '1',
+            i18n: {},
+          }).load('test.account@istio.actually.exists')
 
           expect(response).toEqual(expectedResult)
           expect(mockNotify).toHaveBeenCalledWith({
@@ -903,14 +925,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -928,9 +950,11 @@ describe('user sets a new phone number', () => {
               },
             }
 
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
@@ -970,23 +994,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.tfaSendMethod).toEqual('none')
           })
           it('sets phoneValidated to false', async () => {
@@ -1018,23 +1044,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.phoneValidated).toEqual(false)
           })
         })
@@ -1080,14 +1108,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1105,9 +1133,11 @@ describe('user sets a new phone number', () => {
               },
             }
 
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
@@ -1147,23 +1177,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.tfaSendMethod).toEqual('email')
           })
           it('sets phoneValidated to false', async () => {
@@ -1195,23 +1227,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.phoneValidated).toEqual(false)
           })
         })
@@ -1257,14 +1291,14 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1282,9 +1316,11 @@ describe('user sets a new phone number', () => {
               },
             }
 
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
 
             expect(response).toEqual(expectedResult)
             expect(mockNotify).toHaveBeenCalledWith({
@@ -1324,23 +1360,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.tfaSendMethod).toEqual('email')
           })
           it('sets phoneValidated to false', async () => {
@@ -1372,23 +1410,25 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
                 },
               },
             )
-            user = await userLoaderByUserName(query, '1', {}).load(
-              'test.account@istio.actually.exists',
-            )
+            user = await loadUserByUserName({
+              query,
+              userKey: '1',
+              i18n: {},
+            }).load('test.account@istio.actually.exists')
             expect(user.phoneValidated).toEqual(false)
           })
         })
@@ -1407,7 +1447,7 @@ describe('user sets a new phone number', () => {
       })
       describe('database error occurs on upsert', () => {
         it('returns an error message', async () => {
-          const loaderById = userLoaderByKey(query)
+          const loaderById = loadUserByKey({ query })
 
           const mockedQuery = jest
             .fn()
@@ -1441,14 +1481,14 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                userLoaderByKey: loaderById,
+                loadUserByKey: loaderById,
               },
               notify: {
                 sendTfaTextMsg: mockNotify,

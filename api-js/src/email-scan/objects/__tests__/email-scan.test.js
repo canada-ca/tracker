@@ -2,12 +2,12 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import { toGlobalId } from 'graphql-relay'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderByKey } from '../../../domain/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
 import {
-  dkimLoaderConnectionsByDomainId,
-  dmarcLoaderConnectionsByDomainId,
-  spfLoaderConnectionsByDomainId,
+  loadDkimConnectionsByDomainId,
+  loadDmarcConnectionsByDomainId,
+  loadSpfConnectionsByDomainId,
 } from '../../loaders'
 import {
   emailScanType,
@@ -149,7 +149,7 @@ describe('given the email gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = emailScanType.getFields()
 
-        const loader = domainLoaderByKey(query, user._key, {})
+        const loader = loadDomainByKey({ query, userKey: user._key, i18n: {} })
 
         const expectedResult = {
           _id: domain._id,
@@ -165,7 +165,7 @@ describe('given the email gql object', () => {
           demoType.domain.resolve(
             { _key: domain._key },
             {},
-            { loaders: { domainLoaderByKey: loader } },
+            { loaders: { loadDomainByKey: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -198,18 +198,18 @@ describe('given the email gql object', () => {
           },
         }
 
-        const loader = dkimLoaderConnectionsByDomainId(
+        const loader = loadDkimConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         await expect(
           demoType.dkim.resolve(
             { _id: domain._id },
             { first: 1 },
-            { loaders: { dkimLoaderConnectionsByDomainId: loader } },
+            { loaders: { loadDkimConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -248,18 +248,18 @@ describe('given the email gql object', () => {
           },
         }
 
-        const loader = dmarcLoaderConnectionsByDomainId(
+        const loader = loadDmarcConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         await expect(
           demoType.dmarc.resolve(
             { _id: domain._id },
             { first: 1 },
-            { loaders: { dmarcLoaderConnectionsByDomainId: loader } },
+            { loaders: { loadDmarcConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -296,18 +296,18 @@ describe('given the email gql object', () => {
           },
         }
 
-        const loader = spfLoaderConnectionsByDomainId(
+        const loader = loadSpfConnectionsByDomainId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         await expect(
           demoType.spf.resolve(
             { _id: domain._id },
             { first: 1 },
-            { loaders: { spfLoaderConnectionsByDomainId: loader } },
+            { loaders: { loadSpfConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

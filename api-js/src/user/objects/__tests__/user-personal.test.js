@@ -10,7 +10,7 @@ import { toGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
-import { affiliationConnectionLoaderByUserId } from '../../../affiliation/loaders'
+import { loadAffiliationConnectionsByUserId } from '../../../affiliation/loaders'
 import { cleanseInput } from '../../../validators'
 import { affiliationConnection } from '../../../affiliation/objects'
 import { userPersonalType } from '../index'
@@ -278,12 +278,12 @@ describe('given the user object', () => {
       it('returns the resolved value', async () => {
         const demoType = userPersonalType.getFields()
 
-        const loader = affiliationConnectionLoaderByUserId(
+        const loader = loadAffiliationConnectionsByUserId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const expectedResult = {
           edges: [
@@ -316,7 +316,7 @@ describe('given the user object', () => {
           demoType.affiliations.resolve(
             { _id: user._id },
             { first: 1 },
-            { loaders: { affiliationConnectionLoaderByUserId: loader } },
+            { loaders: { loadAffiliationConnectionsByUserId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

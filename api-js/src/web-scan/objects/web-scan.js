@@ -13,8 +13,8 @@ export const webScanType = new GraphQLObjectType({
     domain: {
       type: domainType,
       description: `The domain the scan was ran on.`,
-      resolve: async ({ _key }, _, { loaders: { domainLoaderByKey } }) => {
-        const domain = await domainLoaderByKey.load(_key)
+      resolve: async ({ _key }, _, { loaders: { loadDomainByKey } }) => {
+        const domain = await loadDomainByKey.load(_key)
         domain.id = domain._key
         return domain
       },
@@ -40,9 +40,9 @@ export const webScanType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { httpsLoaderConnectionsByDomainId } },
+        { loaders: { loadHttpsConnectionsByDomainId } },
       ) => {
-        const https = await httpsLoaderConnectionsByDomainId({
+        const https = await loadHttpsConnectionsByDomainId({
           domainId: _id,
           ...args,
         })
@@ -70,9 +70,9 @@ export const webScanType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { sslLoaderConnectionsByDomainId } },
+        { loaders: { loadSslConnectionByDomainId } },
       ) => {
-        const ssl = await sslLoaderConnectionsByDomainId({
+        const ssl = await loadSslConnectionByDomainId({
           domainId: _id,
           ...args,
         })

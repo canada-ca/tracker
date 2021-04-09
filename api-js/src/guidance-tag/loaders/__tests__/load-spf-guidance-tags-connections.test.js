@@ -7,7 +7,10 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { spfGuidanceTagConnectionsLoader, spfGuidanceTagLoader } from '../index'
+import {
+  loadSpfGuidanceTagConnectionsByTagId,
+  loadSpfGuidanceTagByTagId,
+} from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -75,16 +78,16 @@ describe('when given the load spf guidance tag connection function', () => {
   describe('given a successful load', () => {
     describe('using after cursor', () => {
       it('returns spf result(s) after a given node id', async () => {
-        const connectionLoader = spfGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const spfGuidanceTags = ['spf1', 'spf2']
 
-        const spfTagLoader = spfGuidanceTagLoader(query)
+        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
         const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
 
         const connectionArgs = {
@@ -120,16 +123,16 @@ describe('when given the load spf guidance tag connection function', () => {
     })
     describe('using before cursor', () => {
       it('returns spf result(s) before a given node id', async () => {
-        const connectionLoader = spfGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const spfGuidanceTags = ['spf1', 'spf2']
 
-        const spfTagLoader = spfGuidanceTagLoader(query)
+        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
         const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
 
         const connectionArgs = {
@@ -165,16 +168,16 @@ describe('when given the load spf guidance tag connection function', () => {
     })
     describe('using first limit', () => {
       it('returns the first n amount of item(s)', async () => {
-        const connectionLoader = spfGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const spfGuidanceTags = ['spf1', 'spf2']
 
-        const spfTagLoader = spfGuidanceTagLoader(query)
+        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
         const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
 
         const connectionArgs = {
@@ -209,16 +212,16 @@ describe('when given the load spf guidance tag connection function', () => {
     })
     describe('using last limit', () => {
       it('returns the last n amount of item(s)', async () => {
-        const connectionLoader = spfGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const spfGuidanceTags = ['spf1', 'spf2']
 
-        const spfTagLoader = spfGuidanceTagLoader(query)
+        const spfTagLoader = loadSpfGuidanceTagByTagId({ query })
         const expectedSpfTags = await spfTagLoader.loadMany(spfGuidanceTags)
 
         const connectionArgs = {
@@ -273,15 +276,15 @@ describe('when given the load spf guidance tag connection function', () => {
       describe('ordering on TAG_ID', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
@@ -318,15 +321,15 @@ describe('when given the load spf guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
@@ -365,15 +368,15 @@ describe('when given the load spf guidance tag connection function', () => {
       describe('ordering on TAG_NAME', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
@@ -410,15 +413,15 @@ describe('when given the load spf guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
@@ -457,15 +460,15 @@ describe('when given the load spf guidance tag connection function', () => {
       describe('ordering on GUIDANCE', () => {
         describe('order is set to ASC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
@@ -502,15 +505,15 @@ describe('when given the load spf guidance tag connection function', () => {
         })
         describe('ordering is set to DESC', () => {
           it('returns guidance tag', async () => {
-            const loader = spfGuidanceTagLoader(query)
+            const loader = loadSpfGuidanceTagByTagId({ query })
             const expectedSpfTag = await loader.load('spf2')
 
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               spfGuidanceTags: ['spf1', 'spf2', 'spf3'],
@@ -550,12 +553,12 @@ describe('when given the load spf guidance tag connection function', () => {
     describe('no spf results are found', () => {
       it('returns an empty structure', async () => {
         await truncate()
-        const connectionLoader = spfGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 5,
@@ -600,12 +603,12 @@ describe('when given the load spf guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfGuidanceTagConnectionsLoader(
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const spfGuidanceTags = ['spf1', 'spf2']
           const connectionArgs = {}
@@ -623,18 +626,18 @@ describe('when given the load spf guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: spfGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadSpfGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfGuidanceTagConnectionsLoader(
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const spfGuidanceTags = ['spf1', 'spf2']
           const connectionArgs = {
@@ -655,19 +658,19 @@ describe('when given the load spf guidance tag connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: spfGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadSpfGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const spfGuidanceTags = ['spf1', 'spf2']
             const connectionArgs = {
@@ -687,18 +690,18 @@ describe('when given the load spf guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: spfGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadSpfGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const spfGuidanceTags = ['spf1', 'spf2']
             const connectionArgs = {
@@ -718,7 +721,7 @@ describe('when given the load spf guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: spfGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadSpfGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -726,12 +729,12 @@ describe('when given the load spf guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const spfGuidanceTags = ['spf1', 'spf2']
             const connectionArgs = {
@@ -751,18 +754,18 @@ describe('when given the load spf guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: spfGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadSpfGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const spfGuidanceTags = ['spf1', 'spf2']
             const connectionArgs = {
@@ -782,7 +785,7 @@ describe('when given the load spf guidance tag connection function', () => {
               )
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: spfGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadSpfGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -793,12 +796,12 @@ describe('when given the load spf guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfGuidanceTagConnectionsLoader(
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const spfGuidanceTags = ['spf1', 'spf2']
               const connectionArgs = {
@@ -820,7 +823,7 @@ describe('when given the load spf guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: spfGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadSpfGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -830,12 +833,12 @@ describe('when given the load spf guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfGuidanceTagConnectionsLoader(
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const spfGuidanceTags = ['spf1', 'spf2']
               const connectionArgs = {
@@ -857,7 +860,7 @@ describe('when given the load spf guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: spfGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadSpfGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -870,12 +873,12 @@ describe('when given the load spf guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = spfGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const spfGuidanceTags = ['spf1', 'spf2']
         const connectionArgs = {
@@ -893,7 +896,7 @@ describe('when given the load spf guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in spfGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadSpfGuidanceTagConnectionsByTagId, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -906,12 +909,12 @@ describe('when given the load spf guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = spfGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const spfGuidanceTags = ['spf1', 'spf2']
         const connectionArgs = {
@@ -929,7 +932,7 @@ describe('when given the load spf guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in spfGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadSpfGuidanceTagConnectionsByTagId, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
@@ -952,12 +955,12 @@ describe('when given the load spf guidance tag connection function', () => {
     describe('given a unsuccessful load', () => {
       describe('both limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfGuidanceTagConnectionsLoader(
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const spfGuidanceTags = ['spf1', 'spf2']
           const connectionArgs = {}
@@ -971,18 +974,18 @@ describe('when given the load spf guidance tag connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: spfGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadSpfGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('both limits are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = spfGuidanceTagConnectionsLoader(
+          const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const spfGuidanceTags = ['spf1', 'spf2']
           const connectionArgs = {
@@ -999,19 +1002,19 @@ describe('when given the load spf guidance tag connection function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: spfGuidanceTagConnectionsLoader.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadSpfGuidanceTagConnectionsByTagId.`,
           ])
         })
       })
       describe('limits are below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const spfGuidanceTags = ['spf1', 'spf2']
             const connectionArgs = {
@@ -1027,18 +1030,18 @@ describe('when given the load spf guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: spfGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadSpfGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const spfGuidanceTags = ['spf1', 'spf2']
             const connectionArgs = {
@@ -1054,7 +1057,7 @@ describe('when given the load spf guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: spfGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadSpfGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -1062,12 +1065,12 @@ describe('when given the load spf guidance tag connection function', () => {
       describe('limits are above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const spfGuidanceTags = ['spf1', 'spf2']
             const connectionArgs = {
@@ -1083,18 +1086,18 @@ describe('when given the load spf guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 1000 for: spfGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: loadSpfGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = spfGuidanceTagConnectionsLoader(
+            const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const spfGuidanceTags = ['spf1', 'spf2']
             const connectionArgs = {
@@ -1110,7 +1113,7 @@ describe('when given the load spf guidance tag connection function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 500 for: spfGuidanceTagConnectionsLoader.`,
+              `User: ${user._key} attempted to have \`last\` set to 500 for: loadSpfGuidanceTagConnectionsByTagId.`,
             ])
           })
         })
@@ -1121,12 +1124,12 @@ describe('when given the load spf guidance tag connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfGuidanceTagConnectionsLoader(
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const spfGuidanceTags = ['spf1', 'spf2']
               const connectionArgs = {
@@ -1144,7 +1147,7 @@ describe('when given the load spf guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: spfGuidanceTagConnectionsLoader.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadSpfGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -1154,12 +1157,12 @@ describe('when given the load spf guidance tag connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = spfGuidanceTagConnectionsLoader(
+              const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const spfGuidanceTags = ['spf1', 'spf2']
               const connectionArgs = {
@@ -1177,7 +1180,7 @@ describe('when given the load spf guidance tag connection function', () => {
               expect(consoleWarnOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: spfGuidanceTagConnectionsLoader.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadSpfGuidanceTagConnectionsByTagId.`,
               ])
             })
           })
@@ -1190,12 +1193,12 @@ describe('when given the load spf guidance tag connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = spfGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const spfGuidanceTags = ['spf1', 'spf2']
         const connectionArgs = {
@@ -1211,7 +1214,7 @@ describe('when given the load spf guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather orgs in spfGuidanceTagConnectionsLoader, error: Error: Database Error Occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadSpfGuidanceTagConnectionsByTagId, error: Error: Database Error Occurred.`,
         ])
       })
     })
@@ -1224,12 +1227,12 @@ describe('when given the load spf guidance tag connection function', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = spfGuidanceTagConnectionsLoader(
+        const connectionLoader = loadSpfGuidanceTagConnectionsByTagId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const spfGuidanceTags = ['spf1', 'spf2']
         const connectionArgs = {
@@ -1245,7 +1248,7 @@ describe('when given the load spf guidance tag connection function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather orgs in spfGuidanceTagConnectionsLoader, error: Error: Cursor Error Occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadSpfGuidanceTagConnectionsByTagId, error: Error: Cursor Error Occurred.`,
         ])
       })
     })

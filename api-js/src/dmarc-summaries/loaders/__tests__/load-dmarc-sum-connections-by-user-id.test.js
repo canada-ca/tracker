@@ -8,13 +8,13 @@ import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import {
-  dmarcSumLoaderConnectionsByUserId,
-  dmarcSumLoaderByKey,
+  loadDmarcSummaryConnectionsByUserId,
+  loadDmarcSummaryByKey,
 } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
+describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
   let query,
     drop,
     truncate,
@@ -165,19 +165,17 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
   describe('given there are dmarc summary connections to be returned', () => {
     describe('using after cursor', () => {
       it('returns a dmarc summary', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
-        const expectedSummaries = await summaryLoader.loadMany([
-          dmarcSummary1._key,
-          dmarcSummary2._key,
-        ])
-
-        const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+        const expectedSummaries = await loadDmarcSummaryByKey({
           query,
-          user._key,
+        }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+        const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+          query,
+          userKey: user._key,
           cleanseInput,
-          {},
-          jest.fn().mockReturnValueOnce('thirtyDays'),
-        )
+          i18n: {},
+          loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
+        })
 
         const connectionArgs = {
           first: 10,
@@ -214,19 +212,17 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
     })
     describe('using before cursor', () => {
       it('returns a dmarc summary', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
-        const expectedSummaries = await summaryLoader.loadMany([
-          dmarcSummary1._key,
-          dmarcSummary2._key,
-        ])
-
-        const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+        const expectedSummaries = await loadDmarcSummaryByKey({
           query,
-          user._key,
+        }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+        const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+          query,
+          userKey: user._key,
           cleanseInput,
-          {},
-          jest.fn().mockReturnValueOnce('thirtyDays'),
-        )
+          i18n: {},
+          loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
+        })
 
         const connectionArgs = {
           first: 10,
@@ -263,19 +259,17 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
     })
     describe('using first limit', () => {
       it('returns a dmarc summary', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
-        const expectedSummaries = await summaryLoader.loadMany([
-          dmarcSummary1._key,
-          dmarcSummary2._key,
-        ])
-
-        const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+        const expectedSummaries = await loadDmarcSummaryByKey({
           query,
-          user._key,
+        }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+        const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+          query,
+          userKey: user._key,
           cleanseInput,
-          {},
-          jest.fn().mockReturnValueOnce('thirtyDays'),
-        )
+          i18n: {},
+          loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
+        })
 
         const connectionArgs = {
           first: 1,
@@ -311,19 +305,17 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
     })
     describe('using last limit', () => {
       it('returns a dmarc summary', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
-        const expectedSummaries = await summaryLoader.loadMany([
-          dmarcSummary1._key,
-          dmarcSummary2._key,
-        ])
-
-        const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+        const expectedSummaries = await loadDmarcSummaryByKey({
           query,
-          user._key,
+        }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+        const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+          query,
+          userKey: user._key,
           cleanseInput,
-          {},
-          jest.fn().mockReturnValueOnce('thirtyDays'),
-        )
+          i18n: {},
+          loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
+        })
 
         const connectionArgs = {
           last: 1,
@@ -362,19 +354,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on FAIL_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -421,19 +413,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -482,19 +474,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -541,19 +533,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -602,19 +594,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_DKIM_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -661,19 +653,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -722,19 +714,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_SPF_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -781,19 +773,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -842,19 +834,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on FAIL_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -901,19 +893,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -962,19 +954,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1021,19 +1013,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1082,19 +1074,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_DKIM_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1141,19 +1133,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1202,19 +1194,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_SPF_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1261,19 +1253,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1322,19 +1314,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on TOTAL_MESSAGES', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1381,19 +1373,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1444,19 +1436,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on FAIL_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1503,19 +1495,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1564,19 +1556,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1623,19 +1615,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1684,19 +1676,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_DKIM_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1743,19 +1735,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1804,19 +1796,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_SPF_COUNT', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1863,19 +1855,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1924,19 +1916,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on FAIL_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -1983,19 +1975,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -2044,19 +2036,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -2103,19 +2095,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -2164,19 +2156,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_DKIM_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -2223,19 +2215,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -2284,19 +2276,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on PASS_SPF_PERCENTAGE', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -2343,19 +2335,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -2404,19 +2396,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
         describe('ordering on TOTAL_MESSAGES', () => {
           describe('order direction is ASC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -2463,19 +2455,19 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns dmarc summaries in order', async () => {
-              const summaryLoader = dmarcSumLoaderByKey(query)
-              const expectedSummaries = await summaryLoader.loadMany([
-                dmarcSummary1._key,
-                dmarcSummary2._key,
-              ])
-
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const expectedSummaries = await loadDmarcSummaryByKey({
                 query,
-                user._key,
+              }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+                query,
+                userKey: user._key,
                 cleanseInput,
-                {},
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                i18n: {},
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: 10,
@@ -2525,19 +2517,17 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
     })
     describe('isSuperAdmin is set to true', () => {
       it('returns dmarc summaries', async () => {
-        const summaryLoader = dmarcSumLoaderByKey(query)
-        const expectedSummaries = await summaryLoader.loadMany([
-          dmarcSummary1._key,
-          dmarcSummary2._key,
-        ])
-
-        const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+        const expectedSummaries = await loadDmarcSummaryByKey({
           query,
-          user._key,
+        }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+        const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+          query,
+          userKey: user._key,
           cleanseInput,
-          {},
-          jest.fn().mockReturnValueOnce('thirtyDays'),
-        )
+          i18n: {},
+          loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
+        })
 
         const connectionArgs = {
           first: 10,
@@ -2581,13 +2571,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
   })
   describe('given there are no dmarc summaries to be returned', () => {
     it('returns no dmarc summary connections', async () => {
-      const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+      await truncate()
+
+      const connectionLoader = loadDmarcSummaryConnectionsByUserId({
         query,
-        user._key,
+        userKey: user._key,
         cleanseInput,
-        {},
-        jest.fn().mockReturnValueOnce('2021-01-01'),
-      )
+        i18n,
+        loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
+      })
 
       const connectionArgs = {
         last: 1,
@@ -2629,13 +2621,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
     describe('given an unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+          const connectionLoader = loadDmarcSummaryConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-            jest.fn().mockReturnValueOnce('thirtyDays'),
-          )
+            loadStartDateFromPeriod: jest
+              .fn()
+              .mockReturnValueOnce('thirtyDays'),
+          })
 
           const connectionArgs = {
             period: 'thirtyDays',
@@ -2654,19 +2648,21 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             )
           }
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcSumLoaderConnectionsByUserId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDmarcSummaryConnectionsByUserId.`,
           ])
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+          const connectionLoader = loadDmarcSummaryConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-            jest.fn().mockReturnValueOnce('thirtyDays'),
-          )
+            loadStartDateFromPeriod: jest
+              .fn()
+              .mockReturnValueOnce('thirtyDays'),
+          })
 
           const connectionArgs = {
             period: 'thirtyDays',
@@ -2687,20 +2683,22 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             )
           }
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dmarcSumLoaderConnectionsByUserId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDmarcSummaryConnectionsByUserId.`,
           ])
         })
       })
       describe('first or last argument exceeds maximum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               period: 'thirtyDays',
@@ -2720,19 +2718,21 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               )
             }
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 101 for: dmarcSumLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`first\` set to 101 for: loadDmarcSummaryConnectionsByUserId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               period: 'thirtyDays',
@@ -2752,7 +2752,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               )
             }
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 101 for: dmarcSumLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`last\` set to 101 for: loadDmarcSummaryConnectionsByUserId.`,
             ])
           })
         })
@@ -2760,13 +2760,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
       describe('first or last argument exceeds minimum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               period: 'thirtyDays',
@@ -2786,19 +2788,21 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               )
             }
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcSumLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDmarcSummaryConnectionsByUserId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               period: 'thirtyDays',
@@ -2818,7 +2822,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               )
             }
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcSumLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDmarcSummaryConnectionsByUserId.`,
             ])
           })
         })
@@ -2829,13 +2833,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -2857,7 +2863,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dmarcSumLoaderConnectionsByUserId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDmarcSummaryConnectionsByUserId.`,
               ])
             })
           })
@@ -2867,13 +2873,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -2895,7 +2903,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dmarcSumLoaderConnectionsByUserId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDmarcSummaryConnectionsByUserId.`,
               ])
             })
           })
@@ -2903,13 +2911,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
       })
       describe('period argument is not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+          const connectionLoader = loadDmarcSummaryConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-            jest.fn().mockReturnValueOnce('thirtyDays'),
-          )
+            loadStartDateFromPeriod: jest
+              .fn()
+              .mockReturnValueOnce('thirtyDays'),
+          })
 
           const connectionArgs = {
             first: 1,
@@ -2928,19 +2938,21 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             )
           }
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have \`period\` argument set for: dmarcSumLoaderConnectionsByUserId.`,
+            `User: ${user._key} did not have \`period\` argument set for: loadDmarcSummaryConnectionsByUserId.`,
           ])
         })
       })
       describe('year argument is not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+          const connectionLoader = loadDmarcSummaryConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-            jest.fn().mockReturnValueOnce('thirtyDays'),
-          )
+            loadStartDateFromPeriod: jest
+              .fn()
+              .mockReturnValueOnce('thirtyDays'),
+          })
 
           const connectionArgs = {
             first: 1,
@@ -2959,7 +2971,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             )
           }
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have \`year\` argument set for: dmarcSumLoaderConnectionsByUserId.`,
+            `User: ${user._key} did not have \`year\` argument set for: loadDmarcSummaryConnectionsByUserId.`,
           ])
         })
       })
@@ -2970,13 +2982,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               .fn()
               .mockRejectedValue(new Error('Database error occurred.'))
 
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               first: 50,
@@ -2996,7 +3010,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: Error: Database error occurred.`,
+              `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in loadDmarcSummaryConnectionsByUserId, error: Error: Database error occurred.`,
             ])
           })
         })
@@ -3011,13 +3025,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             }
             const query = jest.fn().mockReturnValueOnce(cursor)
 
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               first: 50,
@@ -3037,7 +3053,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: Error: Cursor error occurred.`,
+              `Cursor error occurred while user: ${user._key} was trying to gather dmarc summaries in loadDmarcSummaryConnectionsByUserId, error: Error: Cursor error occurred.`,
             ])
           })
         })
@@ -3062,13 +3078,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
     describe('given an unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+          const connectionLoader = loadDmarcSummaryConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-            jest.fn().mockReturnValueOnce('thirtyDays'),
-          )
+            loadStartDateFromPeriod: jest
+              .fn()
+              .mockReturnValueOnce('thirtyDays'),
+          })
 
           const connectionArgs = {
             period: 'thirtyDays',
@@ -3083,19 +3101,21 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcSumLoaderConnectionsByUserId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadDmarcSummaryConnectionsByUserId.`,
           ])
         })
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+          const connectionLoader = loadDmarcSummaryConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-            jest.fn().mockReturnValueOnce('thirtyDays'),
-          )
+            loadStartDateFromPeriod: jest
+              .fn()
+              .mockReturnValueOnce('thirtyDays'),
+          })
 
           const connectionArgs = {
             period: 'thirtyDays',
@@ -3112,20 +3132,22 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: dmarcSumLoaderConnectionsByUserId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadDmarcSummaryConnectionsByUserId.`,
           ])
         })
       })
       describe('first or last argument exceeds maximum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               period: 'thirtyDays',
@@ -3141,19 +3163,21 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 101 for: dmarcSumLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`first\` set to 101 for: loadDmarcSummaryConnectionsByUserId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               period: 'thirtyDays',
@@ -3169,7 +3193,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 101 for: dmarcSumLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`last\` set to 101 for: loadDmarcSummaryConnectionsByUserId.`,
             ])
           })
         })
@@ -3177,13 +3201,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
       describe('first or last argument exceeds minimum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               period: 'thirtyDays',
@@ -3199,19 +3225,21 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcSumLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadDmarcSummaryConnectionsByUserId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               period: 'thirtyDays',
@@ -3227,7 +3255,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               expect(err).toEqual(new Error('todo'))
             }
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcSumLoaderConnectionsByUserId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadDmarcSummaryConnectionsByUserId.`,
             ])
           })
         })
@@ -3238,13 +3266,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -3262,7 +3292,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: dmarcSumLoaderConnectionsByUserId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadDmarcSummaryConnectionsByUserId.`,
               ])
             })
           })
@@ -3272,13 +3302,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+              const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-                jest.fn().mockReturnValueOnce('thirtyDays'),
-              )
+                loadStartDateFromPeriod: jest
+                  .fn()
+                  .mockReturnValueOnce('thirtyDays'),
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -3296,7 +3328,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: dmarcSumLoaderConnectionsByUserId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadDmarcSummaryConnectionsByUserId.`,
               ])
             })
           })
@@ -3304,13 +3336,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
       })
       describe('period argument is not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+          const connectionLoader = loadDmarcSummaryConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-            jest.fn().mockReturnValueOnce('thirtyDays'),
-          )
+            loadStartDateFromPeriod: jest
+              .fn()
+              .mockReturnValueOnce('thirtyDays'),
+          })
 
           const connectionArgs = {
             first: 1,
@@ -3325,19 +3359,21 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have \`period\` argument set for: dmarcSumLoaderConnectionsByUserId.`,
+            `User: ${user._key} did not have \`period\` argument set for: loadDmarcSummaryConnectionsByUserId.`,
           ])
         })
       })
       describe('year argument is not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+          const connectionLoader = loadDmarcSummaryConnectionsByUserId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-            jest.fn().mockReturnValueOnce('thirtyDays'),
-          )
+            loadStartDateFromPeriod: jest
+              .fn()
+              .mockReturnValueOnce('thirtyDays'),
+          })
 
           const connectionArgs = {
             first: 1,
@@ -3352,7 +3388,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             expect(err).toEqual(new Error('todo'))
           }
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have \`year\` argument set for: dmarcSumLoaderConnectionsByUserId.`,
+            `User: ${user._key} did not have \`year\` argument set for: loadDmarcSummaryConnectionsByUserId.`,
           ])
         })
       })
@@ -3363,13 +3399,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
               .fn()
               .mockRejectedValue(new Error('Database error occurred.'))
 
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               first: 50,
@@ -3385,7 +3423,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: Error: Database error occurred.`,
+              `Database error occurred while user: ${user._key} was trying to gather dmarc summaries in loadDmarcSummaryConnectionsByUserId, error: Error: Database error occurred.`,
             ])
           })
         })
@@ -3400,13 +3438,15 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             }
             const query = jest.fn().mockReturnValueOnce(cursor)
 
-            const connectionLoader = dmarcSumLoaderConnectionsByUserId(
+            const connectionLoader = loadDmarcSummaryConnectionsByUserId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-              jest.fn().mockReturnValueOnce('thirtyDays'),
-            )
+              loadStartDateFromPeriod: jest
+                .fn()
+                .mockReturnValueOnce('thirtyDays'),
+            })
 
             const connectionArgs = {
               first: 50,
@@ -3422,7 +3462,7 @@ describe('given the dmarcSumLoaderConnectionsByUserId function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather dmarc summaries in dmarcSumLoaderConnectionsByUserId, error: Error: Cursor error occurred.`,
+              `Cursor error occurred while user: ${user._key} was trying to gather dmarc summaries in loadDmarcSummaryConnectionsByUserId, error: Error: Cursor error occurred.`,
             ])
           })
         })

@@ -5,10 +5,10 @@ import { GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { dkimLoaderByKey } from '../../loaders'
+import { loadDkimByKey } from '../../loaders'
 import { dkimType, dkimResultType } from '../index'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
-import { dkimGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
+import { loadDkimGuidanceTagConnectionsByTagId } from '../../../guidance-tag/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -150,13 +150,13 @@ describe('given the dkim result object', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
 
-        const loader = dkimLoaderByKey(query, '1', {})
+        const loader = loadDkimByKey({ query, userKey: '1', i18n: {} })
 
         expect(
           await demoType.dkim.resolve(
             { dkimId: dkim._id },
             {},
-            { loaders: { dkimLoaderByKey: loader } },
+            { loaders: { loadDkimByKey: loader } },
           ),
         ).toEqual({
           _id: dkim._id,
@@ -210,12 +210,12 @@ describe('given the dkim result object', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
 
-        const loader = dkimGuidanceTagConnectionsLoader(
+        const loader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const guidanceTags = ['dkim1']
 
         const expectedResult = {
@@ -259,7 +259,7 @@ describe('given the dkim result object', () => {
           await demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDkimGuidanceTagConnectionsByTagId: loader } },
           ),
         ).toEqual(expectedResult)
       })
@@ -268,12 +268,12 @@ describe('given the dkim result object', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
 
-        const loader = dkimGuidanceTagConnectionsLoader(
+        const loader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const negativeTags = ['dkim1']
 
         const expectedResult = {
@@ -317,7 +317,7 @@ describe('given the dkim result object', () => {
           await demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDkimGuidanceTagConnectionsByTagId: loader } },
           ),
         ).toEqual(expectedResult)
       })
@@ -326,12 +326,12 @@ describe('given the dkim result object', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
 
-        const loader = dkimGuidanceTagConnectionsLoader(
+        const loader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const neutralTags = ['dkim1']
 
         const expectedResult = {
@@ -375,7 +375,7 @@ describe('given the dkim result object', () => {
           await demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDkimGuidanceTagConnectionsByTagId: loader } },
           ),
         ).toEqual(expectedResult)
       })
@@ -384,12 +384,12 @@ describe('given the dkim result object', () => {
       it('returns the resolved value', async () => {
         const demoType = dkimResultType.getFields()
 
-        const loader = dkimGuidanceTagConnectionsLoader(
+        const loader = loadDkimGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const positiveTags = ['dkim1']
 
         const expectedResult = {
@@ -433,7 +433,7 @@ describe('given the dkim result object', () => {
           await demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { dkimGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadDkimGuidanceTagConnectionsByTagId: loader } },
           ),
         ).toEqual(expectedResult)
       })

@@ -14,9 +14,9 @@ export const dkimType = new GraphQLObjectType({
     domain: {
       type: domainType,
       description: `The domain the scan was ran on.`,
-      resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
+      resolve: async ({ domainId }, _, { loaders: { loadDomainByKey } }) => {
         const domainKey = domainId.split('/')[1]
-        const domain = await domainLoaderByKey.load(domainKey)
+        const domain = await loadDomainByKey.load(domainKey)
         domain.id = domain._key
         return domain
       },
@@ -39,9 +39,9 @@ export const dkimType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { dkimResultsLoaderConnectionByDkimId } },
+        { loaders: { loadDkimResultConnectionsByDkimId } },
       ) => {
-        const dkimResults = await dkimResultsLoaderConnectionByDkimId({
+        const dkimResults = await loadDkimResultConnectionsByDkimId({
           dkimId: _id,
           ...args,
         })

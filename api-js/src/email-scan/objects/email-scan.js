@@ -14,8 +14,8 @@ export const emailScanType = new GraphQLObjectType({
     domain: {
       type: domainType,
       description: `The domain the scan was ran on.`,
-      resolve: async ({ _key }, _, { loaders: { domainLoaderByKey } }) => {
-        const domain = await domainLoaderByKey.load(_key)
+      resolve: async ({ _key }, _, { loaders: { loadDomainByKey } }) => {
+        const domain = await loadDomainByKey.load(_key)
         domain.id = domain._key
         return domain
       },
@@ -41,9 +41,9 @@ export const emailScanType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { dkimLoaderConnectionsByDomainId } },
+        { loaders: { loadDkimConnectionsByDomainId } },
       ) => {
-        const dkim = await dkimLoaderConnectionsByDomainId({
+        const dkim = await loadDkimConnectionsByDomainId({
           domainId: _id,
           ...args,
         })
@@ -71,9 +71,9 @@ export const emailScanType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { dmarcLoaderConnectionsByDomainId } },
+        { loaders: { loadDmarcConnectionsByDomainId } },
       ) => {
-        const dmarc = await dmarcLoaderConnectionsByDomainId({
+        const dmarc = await loadDmarcConnectionsByDomainId({
           domainId: _id,
           ...args,
         })
@@ -101,9 +101,9 @@ export const emailScanType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { spfLoaderConnectionsByDomainId } },
+        { loaders: { loadSpfConnectionsByDomainId } },
       ) => {
-        const spf = await spfLoaderConnectionsByDomainId({
+        const spf = await loadSpfConnectionsByDomainId({
           domainId: _id,
           ...args,
         })

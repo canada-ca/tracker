@@ -5,9 +5,9 @@ import { GraphQLDate, GraphQLJSON } from 'graphql-scalars'
 
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { domainLoaderByKey } from '../../../domain/loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
-import { httpsGuidanceTagConnectionsLoader } from '../../../guidance-tag/loaders'
+import { loadHttpsGuidanceTagConnectionsByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
 import { httpsType } from '../index'
 
@@ -183,7 +183,7 @@ describe('given the https gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
 
-        const loader = domainLoaderByKey(query, user._key, {})
+        const loader = loadDomainByKey({ query, userKey: user._key, i18n: {} })
 
         const expectedResult = {
           _id: domain._id,
@@ -199,7 +199,7 @@ describe('given the https gql object', () => {
           demoType.domain.resolve(
             { domainId: domain._id },
             {},
-            { loaders: { domainLoaderByKey: loader } },
+            { loaders: { loadDomainByKey: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })
@@ -271,12 +271,12 @@ describe('given the https gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
 
-        const loader = httpsGuidanceTagConnectionsLoader(
+        const loader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const guidanceTags = ['https1']
 
         const expectedResult = {
@@ -320,7 +320,7 @@ describe('given the https gql object', () => {
           await demoType.guidanceTags.resolve(
             { guidanceTags },
             { first: 1 },
-            { loaders: { httpsGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadHttpsGuidanceTagConnectionsByTagId: loader } },
           ),
         ).toEqual(expectedResult)
       })
@@ -329,12 +329,12 @@ describe('given the https gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
 
-        const loader = httpsGuidanceTagConnectionsLoader(
+        const loader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const negativeTags = ['https1']
 
         const expectedResult = {
@@ -378,7 +378,7 @@ describe('given the https gql object', () => {
           await demoType.negativeGuidanceTags.resolve(
             { negativeTags },
             { first: 1 },
-            { loaders: { httpsGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadHttpsGuidanceTagConnectionsByTagId: loader } },
           ),
         ).toEqual(expectedResult)
       })
@@ -387,12 +387,12 @@ describe('given the https gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
 
-        const loader = httpsGuidanceTagConnectionsLoader(
+        const loader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const neutralTags = ['https1']
 
         const expectedResult = {
@@ -436,7 +436,7 @@ describe('given the https gql object', () => {
           await demoType.neutralGuidanceTags.resolve(
             { neutralTags },
             { first: 1 },
-            { loaders: { httpsGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadHttpsGuidanceTagConnectionsByTagId: loader } },
           ),
         ).toEqual(expectedResult)
       })
@@ -445,12 +445,12 @@ describe('given the https gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = httpsType.getFields()
 
-        const loader = httpsGuidanceTagConnectionsLoader(
+        const loader = loadHttpsGuidanceTagConnectionsByTagId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
         const positiveTags = ['https1']
 
         const expectedResult = {
@@ -494,7 +494,7 @@ describe('given the https gql object', () => {
           await demoType.positiveGuidanceTags.resolve(
             { positiveTags },
             { first: 1 },
-            { loaders: { httpsGuidanceTagConnectionsLoader: loader } },
+            { loaders: { loadHttpsGuidanceTagConnectionsByTagId: loader } },
           ),
         ).toEqual(expectedResult)
       })

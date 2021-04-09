@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const httpsLoaderByKey = (query, userKey, i18n) =>
+export const loadHttpsByKey = ({ query, userKey, i18n }) =>
   new DataLoader(async (keys) => {
     let cursor
     try {
@@ -13,7 +13,7 @@ export const httpsLoaderByKey = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running httpsLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running loadHttpsByKey: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find HTTPS scan(s). Please try again.`),
@@ -27,7 +27,7 @@ export const httpsLoaderByKey = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running httpsLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadHttpsByKey: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to load HTTPS scan(s). Please try again.`),

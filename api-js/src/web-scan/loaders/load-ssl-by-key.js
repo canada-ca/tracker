@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const sslLoaderByKey = (query, userKey, i18n) =>
+export const loadSslByKey = ({ query, userKey, i18n }) =>
   new DataLoader(async (keys) => {
     let cursor
     try {
@@ -13,7 +13,7 @@ export const sslLoaderByKey = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running sslLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running loadSslByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find SSL scan(s). Please try again.`))
     }
@@ -25,7 +25,7 @@ export const sslLoaderByKey = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running sslLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadSslByKey: ${err}`,
       )
       throw new Error(i18n._(t`Unable to find SSL scan(s). Please try again.`))
     }

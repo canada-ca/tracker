@@ -10,10 +10,10 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
-import { affiliationConnectionLoaderByOrgId } from '../../../affiliation/loaders'
-import { domainLoaderConnectionsByOrgId } from '../../../domain/loaders'
-import { userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderBySlug, orgLoaderByKey } from '../../loaders'
+import { loadAffiliationConnectionsByOrgId } from '../../../affiliation/loaders'
+import { loadDomainConnectionsByOrgId } from '../../../domain/loaders'
+import { loadUserByKey } from '../../../user/loaders'
+import { loadOrgBySlug, loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -144,27 +144,29 @@ describe('given findOrganizationBySlugQuery', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
-                domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
+                loadOrgByKey: loadOrgByKey(query, 'en'),
+                loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
+                loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
                   i18n,
-                ),
-                affiliationConnectionLoaderByOrgId: affiliationConnectionLoaderByOrgId(
-                  query,
-                  user._key,
-                  cleanseInput,
-                  i18n,
+                }),
+                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId(
+                  {
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -222,15 +224,15 @@ describe('given findOrganizationBySlugQuery', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -277,15 +279,15 @@ describe('given findOrganizationBySlugQuery', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -359,27 +361,29 @@ describe('given findOrganizationBySlugQuery', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
-                userLoaderByKey: userLoaderByKey(query),
-                domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
+                loadOrgByKey: loadOrgByKey(query, 'fr'),
+                loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
+                loadUserByKey: loadUserByKey({ query }),
+                loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
                   query,
-                  user._key,
+                  userKey: user._key,
                   cleanseInput,
                   i18n,
-                ),
-                affiliationConnectionLoaderByOrgId: affiliationConnectionLoaderByOrgId(
-                  query,
-                  user._key,
-                  cleanseInput,
-                  i18n,
+                }),
+                loadAffiliationConnectionsByOrgId: loadAffiliationConnectionsByOrgId(
+                  {
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                  },
                 ),
               },
             },
@@ -451,15 +455,15 @@ describe('given findOrganizationBySlugQuery', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -502,15 +506,15 @@ describe('given findOrganizationBySlugQuery', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )

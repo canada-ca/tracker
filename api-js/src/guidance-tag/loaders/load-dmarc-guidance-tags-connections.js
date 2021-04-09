@@ -2,12 +2,12 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const dmarcGuidanceTagConnectionsLoader = (
+export const loadDmarcGuidanceTagConnectionsByTagId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ dmarcGuidanceTags, after, before, first, last, orderBy }) => {
+}) => async ({ dmarcGuidanceTags, after, before, first, last, orderBy }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -79,7 +79,7 @@ export const dmarcGuidanceTagConnectionsLoader = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadDmarcGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(
@@ -88,7 +88,7 @@ export const dmarcGuidanceTagConnectionsLoader = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: dmarcGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadDmarcGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(
@@ -100,7 +100,7 @@ export const dmarcGuidanceTagConnectionsLoader = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: dmarcGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadDmarcGuidanceTagConnectionsByTagId.`,
       )
       throw new Error(
         i18n._(
@@ -111,7 +111,7 @@ export const dmarcGuidanceTagConnectionsLoader = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: dmarcGuidanceTagConnectionsLoader.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadDmarcGuidanceTagConnectionsByTagId.`,
       )
       throw new Error(
         i18n._(
@@ -127,7 +127,7 @@ export const dmarcGuidanceTagConnectionsLoader = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: dmarcGuidanceTagConnectionsLoader.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadDmarcGuidanceTagConnectionsByTagId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -237,7 +237,7 @@ export const dmarcGuidanceTagConnectionsLoader = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather orgs in loadDmarcGuidanceTagConnectionsByTagId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load DMARC guidance tag(s). Please try again.`),
@@ -249,7 +249,7 @@ export const dmarcGuidanceTagConnectionsLoader = (
     dmarcGuidanceTagInfo = await dmarcGuidanceTagInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather orgs in dmarcGuidanceTagConnectionsLoader, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather orgs in loadDmarcGuidanceTagConnectionsByTagId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load DMARC guidance tag(s). Please try again.`),

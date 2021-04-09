@@ -10,8 +10,8 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
-import { userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderByKey } from '../../loaders'
+import { loadUserByKey } from '../../../user/loaders'
+import { loadOrgByKey } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -191,13 +191,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -254,13 +254,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -331,13 +331,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -394,13 +394,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -476,13 +476,13 @@ describe('removing an organization', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -536,13 +536,13 @@ describe('removing an organization', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -645,13 +645,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -707,13 +707,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -784,13 +784,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -846,13 +846,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -928,13 +928,13 @@ describe('removing an organization', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -987,13 +987,13 @@ describe('removing an organization', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1080,13 +1080,13 @@ describe('removing an organization', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1206,13 +1206,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1279,13 +1279,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1386,13 +1386,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1455,13 +1455,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1524,13 +1524,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1598,13 +1598,13 @@ describe('removing an organization', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1724,13 +1724,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1796,13 +1796,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1902,13 +1902,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1967,13 +1967,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2032,13 +2032,13 @@ describe('removing an organization', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: { cleanseInput },
                 loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )

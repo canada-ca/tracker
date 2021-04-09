@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { spfLoaderByKey } from '../index'
+import { loadSpfByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the spfLoaderByKey function', () => {
+describe('given the loadSpfByKey function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -58,7 +58,7 @@ describe('given the spfLoaderByKey function', () => {
     `
       const expectedSpf = await expectedCursor.next()
 
-      const loader = spfLoaderByKey(query, i18n)
+      const loader = loadSpfByKey({ query, i18n })
       const spf = await loader.load(expectedSpf._key)
 
       expect(spf).toEqual(expectedSpf)
@@ -79,7 +79,7 @@ describe('given the spfLoaderByKey function', () => {
         expectedSpfScans.push(tempSpf)
       }
 
-      const loader = spfLoaderByKey(query, i18n)
+      const loader = loadSpfByKey({ query, i18n })
       const dkimScans = await loader.loadMany(spfKeys)
       expect(dkimScans).toEqual(expectedSpfScans)
     })
@@ -104,7 +104,7 @@ describe('given the spfLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = spfLoaderByKey(query, '1234', i18n)
+        const loader = loadSpfByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -115,7 +115,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running spfLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadSpfByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -127,7 +127,7 @@ describe('given the spfLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = spfLoaderByKey(query, '1234', i18n)
+        const loader = loadSpfByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -138,7 +138,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running spfLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadSpfByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -163,7 +163,7 @@ describe('given the spfLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = spfLoaderByKey(query, '1234', i18n)
+        const loader = loadSpfByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -172,7 +172,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running spfLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadSpfByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -184,7 +184,7 @@ describe('given the spfLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = spfLoaderByKey(query, '1234', i18n)
+        const loader = loadSpfByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -193,7 +193,7 @@ describe('given the spfLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running spfLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadSpfByKey: Error: Cursor error occurred.`,
         ])
       })
     })

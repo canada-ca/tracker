@@ -20,9 +20,9 @@ export const dmarcSummaryType = new GraphQLObjectType({
       resolve: async (
         { domainKey },
         _args,
-        { loaders: { domainLoaderByKey } },
+        { loaders: { loadDomainByKey } },
       ) => {
-        const domain = await domainLoaderByKey.load(domainKey)
+        const domain = await loadDomainByKey.load(domainKey)
         return domain
       },
     },
@@ -55,9 +55,9 @@ export const dmarcSummaryType = new GraphQLObjectType({
     categoryPercentages: {
       type: categoryPercentagesType,
       description: 'Category percentages based on the category totals.',
-      resolve: async ({ _id }, _, { loaders: { dmarcSumLoaderByKey } }) => {
+      resolve: async ({ _id }, _, { loaders: { loadDmarcSummaryByKey } }) => {
         const dmarcSummaryKey = _id.split('/')[1]
-        const dmarcSummary = await dmarcSumLoaderByKey.load(dmarcSummaryKey)
+        const dmarcSummary = await loadDmarcSummaryByKey.load(dmarcSummaryKey)
         return {
           totalMessages: dmarcSummary.totalMessages,
           ...dmarcSummary.categoryPercentages,
@@ -67,9 +67,9 @@ export const dmarcSummaryType = new GraphQLObjectType({
     categoryTotals: {
       type: categoryTotalsType,
       description: 'Category totals for quick viewing.',
-      resolve: async ({ _id }, _, { loaders: { dmarcSumLoaderByKey } }) => {
+      resolve: async ({ _id }, _, { loaders: { loadDmarcSummaryByKey } }) => {
         const dmarcSummaryKey = _id.split('/')[1]
-        const dmarcSummary = await dmarcSumLoaderByKey.load(dmarcSummaryKey)
+        const dmarcSummary = await loadDmarcSummaryByKey.load(dmarcSummaryKey)
         return dmarcSummary.categoryTotals
       },
     },

@@ -10,8 +10,8 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
 import { userRequired } from '../../../auth'
-import { userLoaderByKey } from '../../../user/loaders'
-import { orgLoaderBySlug } from '../../loaders'
+import { loadUserByKey } from '../../../user/loaders'
+import { loadOrgBySlug } from '../../loaders'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
@@ -109,12 +109,12 @@ describe('create an organization', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
-              userLoaderByKey: userLoaderByKey(query),
+              loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
+              loadUserByKey: loadUserByKey({ query }),
             },
             validators: {
               cleanseInput,
@@ -209,12 +209,12 @@ describe('create an organization', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                userLoaderByKey: userLoaderByKey(query),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
-              userLoaderByKey: userLoaderByKey(query),
+              loadOrgBySlug: loadOrgBySlug({ query, language: 'fr' }),
+              loadUserByKey: loadUserByKey({ query }),
             },
             validators: {
               cleanseInput,
@@ -358,12 +358,12 @@ describe('create an organization', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: {
                 cleanseInput,
@@ -393,8 +393,8 @@ describe('create an organization', () => {
       describe('transaction error occurs', () => {
         describe('when inserting organization', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderBySlug(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgBySlug({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockedQuery = jest
               .fn()
@@ -456,12 +456,12 @@ describe('create an organization', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoader,
+                    loadUserByKey: userLoader,
                   }),
                 },
                 loaders: {
-                  orgLoaderBySlug: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgBySlug: orgLoader,
+                  loadUserByKey: userLoader,
                 },
                 validators: {
                   cleanseInput,
@@ -484,8 +484,8 @@ describe('create an organization', () => {
         })
         describe('when inserting edge', () => {
           it('returns an error message', async () => {
-            const orgLoader = orgLoaderBySlug(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgBySlug({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockedQuery = jest
               .fn()
@@ -552,12 +552,12 @@ describe('create an organization', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoader,
+                    loadUserByKey: userLoader,
                   }),
                 },
                 loaders: {
-                  orgLoaderBySlug: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgBySlug: orgLoader,
+                  loadUserByKey: userLoader,
                 },
                 validators: {
                   cleanseInput,
@@ -580,8 +580,8 @@ describe('create an organization', () => {
         })
         describe('when committing information to db', () => {
           it('returns an error message', async () => {
-            const orgLoader = orgLoaderBySlug(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgBySlug({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step() {
@@ -652,12 +652,12 @@ describe('create an organization', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 loaders: {
-                  orgLoaderBySlug: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgBySlug: orgLoader,
+                  loadUserByKey: userLoader,
                 },
                 validators: {
                   cleanseInput,
@@ -779,12 +779,12 @@ describe('create an organization', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadOrgBySlug: loadOrgBySlug({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
               validators: {
                 cleanseInput,
@@ -813,8 +813,8 @@ describe('create an organization', () => {
       describe('transaction error occurs', () => {
         describe('when inserting organization', () => {
           it('returns an error', async () => {
-            const orgLoader = orgLoaderBySlug(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgBySlug({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockedQuery = jest
               .fn()
@@ -876,12 +876,12 @@ describe('create an organization', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoader,
+                    loadUserByKey: userLoader,
                   }),
                 },
                 loaders: {
-                  orgLoaderBySlug: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgBySlug: orgLoader,
+                  loadUserByKey: userLoader,
                 },
                 validators: {
                   cleanseInput,
@@ -900,8 +900,8 @@ describe('create an organization', () => {
         })
         describe('when inserting edge', () => {
           it('returns an error message', async () => {
-            const orgLoader = orgLoaderBySlug(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgBySlug({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockedQuery = jest
               .fn()
@@ -968,12 +968,12 @@ describe('create an organization', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoader,
+                    loadUserByKey: userLoader,
                   }),
                 },
                 loaders: {
-                  orgLoaderBySlug: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgBySlug: orgLoader,
+                  loadUserByKey: userLoader,
                 },
                 validators: {
                   cleanseInput,
@@ -992,8 +992,8 @@ describe('create an organization', () => {
         })
         describe('when committing information to db', () => {
           it('returns an error message', async () => {
-            const orgLoader = orgLoaderBySlug(query, 'en')
-            const userLoader = userLoaderByKey(query)
+            const orgLoader = loadOrgBySlug({ query, language: 'en' })
+            const userLoader = loadUserByKey({ query })
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step() {
@@ -1064,12 +1064,12 @@ describe('create an organization', () => {
                 auth: {
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 loaders: {
-                  orgLoaderBySlug: orgLoader,
-                  userLoaderByKey: userLoader,
+                  loadOrgBySlug: orgLoader,
+                  loadUserByKey: userLoader,
                 },
                 validators: {
                   cleanseInput,

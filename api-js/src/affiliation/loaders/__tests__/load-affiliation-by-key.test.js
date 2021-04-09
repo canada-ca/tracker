@@ -1,6 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import { databaseOptions } from '../../../../database-options'
-import { affiliationLoaderByKey } from '..'
+import { loadAffiliationByKey } from '..'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -8,7 +8,7 @@ import frenchMessages from '../../../locale/fr/messages'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given a affiliationLoaderByKey dataloader', () => {
+describe('given a loadAffiliationByKey dataloader', () => {
   let query, drop, truncate, collections, orgOne, orgTwo, affOne, user, i18n
 
   let consoleOutput = []
@@ -114,7 +114,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         `
         const expectedAffiliation = await expectedCursor.next()
 
-        const loader = affiliationLoaderByKey(query, i18n)
+        const loader = loadAffiliationByKey({ query, i18n })
         const affiliation = await loader.load(expectedAffiliation._key)
 
         expect(affiliation).toEqual(expectedAffiliation)
@@ -137,7 +137,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
           expectedAffiliations.push(tempAff)
         }
 
-        const loader = affiliationLoaderByKey(query, i18n)
+        const loader = loadAffiliationByKey({ query, i18n })
         const affiliations = await loader.loadMany(affiliationIds)
         expect(affiliations).toEqual(expectedAffiliations)
       })
@@ -162,18 +162,22 @@ describe('given a affiliationLoaderByKey dataloader', () => {
     describe('database error is raised', () => {
       it('throws an error', async () => {
         const expectedCursor = await query`
-        FOR affiliation IN affiliations
-          FILTER affiliation._id == ${affOne._id}
-          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
-          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
-      `
+          FOR affiliation IN affiliations
+            FILTER affiliation._id == ${affOne._id}
+            LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+            LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+            RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
+        `
         const expectedAffiliation = await expectedCursor.next()
 
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = affiliationLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadAffiliationByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load(expectedAffiliation._key)
@@ -184,19 +188,19 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running affiliationLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadAffiliationByKey: Error: Database error occurred.`,
         ])
       })
     })
     describe('cursor error is raised', () => {
       it('throws an error', async () => {
         const expectedCursor = await query`
-        FOR affiliation IN affiliations
-          FILTER affiliation._id == ${affOne._id}
-          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
-          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
-      `
+          FOR affiliation IN affiliations
+            FILTER affiliation._id == ${affOne._id}
+            LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+            LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+            RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
+        `
         const expectedAffiliation = await expectedCursor.next()
 
         const cursor = {
@@ -205,7 +209,11 @@ describe('given a affiliationLoaderByKey dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = affiliationLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadAffiliationByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load(expectedAffiliation._key)
@@ -216,7 +224,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 running affiliationLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadAffiliationByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -239,18 +247,22 @@ describe('given a affiliationLoaderByKey dataloader', () => {
     describe('database error is raised', () => {
       it('throws an error', async () => {
         const expectedCursor = await query`
-        FOR affiliation IN affiliations
-          FILTER affiliation._id == ${affOne._id}
-          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
-          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
-      `
+          FOR affiliation IN affiliations
+            FILTER affiliation._id == ${affOne._id}
+            LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+            LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+            RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
+        `
         const expectedAffiliation = await expectedCursor.next()
 
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = affiliationLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadAffiliationByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load(expectedAffiliation._key)
@@ -259,19 +271,19 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running affiliationLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadAffiliationByKey: Error: Database error occurred.`,
         ])
       })
     })
     describe('cursor error is raised', () => {
       it('throws an error', async () => {
         const expectedCursor = await query`
-        FOR affiliation IN affiliations
-          FILTER affiliation._id == ${affOne._id}
-          LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
-          LET userKey = PARSE_IDENTIFIER(affiliation._to).key
-          RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
-      `
+          FOR affiliation IN affiliations
+            FILTER affiliation._id == ${affOne._id}
+            LET orgKey = PARSE_IDENTIFIER(affiliation._from).key
+            LET userKey = PARSE_IDENTIFIER(affiliation._to).key
+            RETURN MERGE(affiliation, { id: affiliation._key, orgKey: orgKey, userKey: userKey, _type: "affiliation" })
+        `
         const expectedAffiliation = await expectedCursor.next()
 
         const cursor = {
@@ -280,7 +292,11 @@ describe('given a affiliationLoaderByKey dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = affiliationLoaderByKey(mockedQuery, '1234', i18n)
+        const loader = loadAffiliationByKey({
+          query: mockedQuery,
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load(expectedAffiliation._key)
@@ -289,7 +305,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 running affiliationLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadAffiliationByKey: Error: Cursor error occurred.`,
         ])
       })
     })

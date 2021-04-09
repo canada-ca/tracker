@@ -2,12 +2,12 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const domainLoaderConnectionsByUserId = (
+export const loadDomainConnectionsByUserId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({
+}) => async ({
   after,
   before,
   first,
@@ -124,7 +124,7 @@ export const domainLoaderConnectionsByUserId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadDomainConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -133,7 +133,7 @@ export const domainLoaderConnectionsByUserId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadDomainConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
@@ -145,7 +145,7 @@ export const domainLoaderConnectionsByUserId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: domainLoaderConnectionsByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadDomainConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -156,7 +156,7 @@ export const domainLoaderConnectionsByUserId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: domainLoaderConnectionsByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadDomainConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -172,7 +172,7 @@ export const domainLoaderConnectionsByUserId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: domainLoaderConnectionsByUserId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadDomainConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),

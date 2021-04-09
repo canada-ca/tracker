@@ -41,9 +41,9 @@ export const verifiedDomainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { verifiedOrgLoaderConnectionsByDomainId } },
+        { loaders: { loadVerifiedOrgConnectionsByDomainId } },
       ) => {
-        const orgs = await verifiedOrgLoaderConnectionsByDomainId({
+        const orgs = await loadVerifiedOrgConnectionsByDomainId({
           domainId: _id,
           ...args,
         })

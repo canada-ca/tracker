@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { dmarcLoaderByKey } from '../index'
+import { loadDmarcByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the dmarcLoaderByKey function', () => {
+describe('given the loadDmarcByKey function', () => {
   let query, drop, truncate, collections, i18n
 
   const consoleErrorOutput = []
@@ -57,7 +57,7 @@ describe('given the dmarcLoaderByKey function', () => {
       `
       const expectedDmarc = await expectedCursor.next()
 
-      const loader = await dmarcLoaderByKey(query, i18n)
+      const loader = await loadDmarcByKey({ query, i18n })
       const dmarc = await loader.load(expectedDmarc._key)
 
       expect(dmarc).toEqual(expectedDmarc)
@@ -78,7 +78,7 @@ describe('given the dmarcLoaderByKey function', () => {
         expectedDkimScans.push(tempDmarc)
       }
 
-      const loader = await dmarcLoaderByKey(query, i18n)
+      const loader = await loadDmarcByKey({ query, i18n })
       const dmarcScans = await loader.loadMany(dmarcKeys)
 
       expect(dmarcScans).toEqual(expectedDkimScans)
@@ -104,7 +104,7 @@ describe('given the dmarcLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dmarcLoaderByKey(query, '1234', i18n)
+        const loader = loadDmarcByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -115,7 +115,7 @@ describe('given the dmarcLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dmarcLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDmarcByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -127,7 +127,7 @@ describe('given the dmarcLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dmarcLoaderByKey(query, '1234', i18n)
+        const loader = loadDmarcByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -138,7 +138,7 @@ describe('given the dmarcLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dmarcLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDmarcByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -163,7 +163,7 @@ describe('given the dmarcLoaderByKey function', () => {
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = dmarcLoaderByKey(query, '1234', i18n)
+        const loader = loadDmarcByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -172,7 +172,7 @@ describe('given the dmarcLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Database error occurred when user: 1234 running dmarcLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadDmarcByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -184,7 +184,7 @@ describe('given the dmarcLoaderByKey function', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = dmarcLoaderByKey(query, '1234', i18n)
+        const loader = loadDmarcByKey({ query, userKey: '1234', i18n })
 
         try {
           await loader.load('1')
@@ -193,7 +193,7 @@ describe('given the dmarcLoaderByKey function', () => {
         }
 
         expect(consoleErrorOutput).toEqual([
-          `Cursor error occurred when user: 1234 running dmarcLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 running loadDmarcByKey: Error: Cursor error occurred.`,
         ])
       })
     })

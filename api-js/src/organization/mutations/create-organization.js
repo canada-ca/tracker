@@ -95,7 +95,7 @@ export const createOrganization = new mutationWithClientMutationId({
       query,
       userKey,
       auth: { userRequired },
-      loaders: { orgLoaderBySlug },
+      loaders: { loadOrgBySlug },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -123,7 +123,7 @@ export const createOrganization = new mutationWithClientMutationId({
     const user = await userRequired()
 
     // Check to see if org already exists
-    const [orgEN, orgFR] = await orgLoaderBySlug.loadMany([slugEN, slugFR])
+    const [orgEN, orgFR] = await loadOrgBySlug.loadMany([slugEN, slugFR])
 
     if (typeof orgEN !== 'undefined' || typeof orgFR !== 'undefined') {
       console.warn(

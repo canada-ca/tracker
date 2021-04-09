@@ -10,9 +10,9 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
 import { checkPermission, userRequired } from '../../../auth'
-import { domainLoaderByKey } from '../../loaders'
-import { orgLoaderByKey } from '../../../organization/loaders'
-import { userLoaderByKey } from '../../../user/loaders'
+import { loadDomainByKey } from '../../loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
+import { loadUserByKey } from '../../../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -136,7 +136,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -144,9 +144,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -207,7 +207,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -215,9 +215,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -279,7 +279,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -287,9 +287,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -356,7 +356,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -364,9 +364,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -427,7 +427,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -435,9 +435,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -499,7 +499,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -507,9 +507,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -576,7 +576,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -584,9 +584,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -647,7 +647,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -655,9 +655,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -719,7 +719,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -727,9 +727,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -815,7 +815,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -823,9 +823,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -898,7 +898,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -906,9 +906,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1045,7 +1045,7 @@ describe('updating a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1053,9 +1053,9 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadDomainByKey: loadDomainByKey({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1131,7 +1131,7 @@ describe('updating a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1139,9 +1139,9 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadDomainByKey: loadDomainByKey({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1245,7 +1245,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -1253,9 +1253,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1367,7 +1367,7 @@ describe('updating a domain', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -1375,9 +1375,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1484,7 +1484,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -1492,9 +1492,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1561,7 +1561,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -1569,9 +1569,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1645,7 +1645,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -1653,9 +1653,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1728,7 +1728,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -1736,9 +1736,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -1875,7 +1875,7 @@ describe('updating a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1883,9 +1883,9 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadDomainByKey: loadDomainByKey({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -1960,7 +1960,7 @@ describe('updating a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    userLoaderByKey: userLoaderByKey(query),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
@@ -1968,9 +1968,9 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadDomainByKey: loadDomainByKey({ query }),
+                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
             )
@@ -2073,7 +2073,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -2081,9 +2081,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -2194,7 +2194,7 @@ describe('updating a domain', () => {
                 }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -2202,9 +2202,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -2309,7 +2309,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -2317,9 +2317,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -2384,7 +2384,7 @@ describe('updating a domain', () => {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  userLoaderByKey: userLoaderByKey(query),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
@@ -2392,9 +2392,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderByKey: domainLoaderByKey(query),
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )

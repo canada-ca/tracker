@@ -7,11 +7,11 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
-import { fullPassLoaderConnectionsBySumId } from '../index'
+import { loadFullPassConnectionsBySumId } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given the fullPassLoaderConnectionsBySumId loader', () => {
+describe('given the loadFullPassConnectionsBySumId loader', () => {
   let query,
     drop,
     truncate,
@@ -104,12 +104,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
   describe('given there are full passes to load', () => {
     describe('using after cursor', () => {
       it('returns full pass', async () => {
-        const connectionLoader = fullPassLoaderConnectionsBySumId(
+        const connectionLoader = loadFullPassConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 100,
@@ -143,12 +143,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
     })
     describe('using before cursor', () => {
       it('returns full pass', async () => {
-        const connectionLoader = fullPassLoaderConnectionsBySumId(
+        const connectionLoader = loadFullPassConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 100,
@@ -182,12 +182,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
     })
     describe('using first limit', () => {
       it('returns full pass', async () => {
-        const connectionLoader = fullPassLoaderConnectionsBySumId(
+        const connectionLoader = loadFullPassConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 1,
@@ -220,12 +220,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
     })
     describe('using last limit', () => {
       it('returns full pass', async () => {
-        const connectionLoader = fullPassLoaderConnectionsBySumId(
+        const connectionLoader = loadFullPassConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           last: 1,
@@ -261,12 +261,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
     it('returns no full pass connections', async () => {
       await truncate()
 
-      const connectionLoader = fullPassLoaderConnectionsBySumId(
+      const connectionLoader = loadFullPassConnectionsBySumId({
         query,
-        user._key,
+        userKey: user._key,
         cleanseInput,
         i18n,
-      )
+      })
 
       const connectionArgs = {
         last: 1,
@@ -307,12 +307,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
     describe('given an unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = fullPassLoaderConnectionsBySumId(
+          const connectionLoader = loadFullPassConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             summaryId: '',
@@ -330,18 +330,18 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: fullPassLoaderConnectionsBySumId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadFullPassConnectionsBySumId.`,
           ])
         })
       })
       describe('first and last arguments are both set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = fullPassLoaderConnectionsBySumId(
+          const connectionLoader = loadFullPassConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -361,19 +361,19 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: fullPassLoaderConnectionsBySumId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadFullPassConnectionsBySumId.`,
           ])
         })
       })
       describe('first or last argument exceeds maximum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = fullPassLoaderConnectionsBySumId(
+            const connectionLoader = loadFullPassConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 101,
@@ -392,18 +392,18 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 101 for: fullPassLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set to 101 for: loadFullPassConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = fullPassLoaderConnectionsBySumId(
+            const connectionLoader = loadFullPassConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 101,
@@ -422,7 +422,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 101 for: fullPassLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set to 101 for: loadFullPassConnectionsBySumId.`,
             ])
           })
         })
@@ -430,12 +430,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
       describe('first or last argument exceeds minimum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = fullPassLoaderConnectionsBySumId(
+            const connectionLoader = loadFullPassConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -454,18 +454,18 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: fullPassLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadFullPassConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = fullPassLoaderConnectionsBySumId(
+            const connectionLoader = loadFullPassConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -1,
@@ -484,7 +484,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: fullPassLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadFullPassConnectionsBySumId.`,
             ])
           })
         })
@@ -495,12 +495,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = fullPassLoaderConnectionsBySumId(
+              const connectionLoader = loadFullPassConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -521,7 +521,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: fullPassLoaderConnectionsBySumId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadFullPassConnectionsBySumId.`,
               ])
             })
           })
@@ -531,12 +531,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = fullPassLoaderConnectionsBySumId(
+              const connectionLoader = loadFullPassConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -557,7 +557,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: fullPassLoaderConnectionsBySumId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadFullPassConnectionsBySumId.`,
               ])
             })
           })
@@ -565,12 +565,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
       })
       describe('summaryId is not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = fullPassLoaderConnectionsBySumId(
+          const connectionLoader = loadFullPassConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             last: 1,
@@ -586,7 +586,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `SummaryId was undefined when user: ${user._key} attempted to load full passes in fullPassLoaderConnectionsBySumId.`,
+            `SummaryId was undefined when user: ${user._key} attempted to load full passes in loadFullPassConnectionsBySumId.`,
           ])
         })
       })
@@ -597,12 +597,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        const connectionLoader = fullPassLoaderConnectionsBySumId(
+        const connectionLoader = loadFullPassConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -619,7 +619,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather full passes in fullPassLoaderConnectionsBySumId, error: Error: Database error occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather full passes in loadFullPassConnectionsBySumId, error: Error: Database error occurred.`,
         ])
       })
     })
@@ -632,12 +632,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = fullPassLoaderConnectionsBySumId(
+        const connectionLoader = loadFullPassConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -654,7 +654,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather full passes in fullPassLoaderConnectionsBySumId, error: Error: Cursor error occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather full passes in loadFullPassConnectionsBySumId, error: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -677,12 +677,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
     describe('given an unsuccessful load', () => {
       describe('first and last arguments are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = fullPassLoaderConnectionsBySumId(
+          const connectionLoader = loadFullPassConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             summaryId: '',
@@ -696,18 +696,18 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: fullPassLoaderConnectionsBySumId.`,
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadFullPassConnectionsBySumId.`,
           ])
         })
       })
       describe('first and last arguments are both set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = fullPassLoaderConnectionsBySumId(
+          const connectionLoader = loadFullPassConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             first: 1,
@@ -723,19 +723,19 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: fullPassLoaderConnectionsBySumId.`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadFullPassConnectionsBySumId.`,
           ])
         })
       })
       describe('first or last argument exceeds maximum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = fullPassLoaderConnectionsBySumId(
+            const connectionLoader = loadFullPassConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: 101,
@@ -750,18 +750,18 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set to 101 for: fullPassLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set to 101 for: loadFullPassConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = fullPassLoaderConnectionsBySumId(
+            const connectionLoader = loadFullPassConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: 101,
@@ -776,7 +776,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set to 101 for: fullPassLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set to 101 for: loadFullPassConnectionsBySumId.`,
             ])
           })
         })
@@ -784,12 +784,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
       describe('first or last argument exceeds minimum', () => {
         describe('first argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = fullPassLoaderConnectionsBySumId(
+            const connectionLoader = loadFullPassConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               first: -1,
@@ -804,18 +804,18 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`first\` set below zero for: fullPassLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: loadFullPassConnectionsBySumId.`,
             ])
           })
         })
         describe('last argument is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = fullPassLoaderConnectionsBySumId(
+            const connectionLoader = loadFullPassConnectionsBySumId({
               query,
-              user._key,
+              userKey: user._key,
               cleanseInput,
               i18n,
-            )
+            })
 
             const connectionArgs = {
               last: -1,
@@ -830,7 +830,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to have \`last\` set below zero for: fullPassLoaderConnectionsBySumId.`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: loadFullPassConnectionsBySumId.`,
             ])
           })
         })
@@ -841,12 +841,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = fullPassLoaderConnectionsBySumId(
+              const connectionLoader = loadFullPassConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -863,7 +863,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`first\` set as a ${typeof invalidInput} for: fullPassLoaderConnectionsBySumId.`,
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: loadFullPassConnectionsBySumId.`,
               ])
             })
           })
@@ -873,12 +873,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = fullPassLoaderConnectionsBySumId(
+              const connectionLoader = loadFullPassConnectionsBySumId({
                 query,
-                user._key,
+                userKey: user._key,
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -895,7 +895,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
               expect(consoleOutput).toEqual([
                 `User: ${
                   user._key
-                } attempted to have \`last\` set as a ${typeof invalidInput} for: fullPassLoaderConnectionsBySumId.`,
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: loadFullPassConnectionsBySumId.`,
               ])
             })
           })
@@ -903,12 +903,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
       })
       describe('summaryId is not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = fullPassLoaderConnectionsBySumId(
+          const connectionLoader = loadFullPassConnectionsBySumId({
             query,
-            user._key,
+            userKey: user._key,
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             last: 1,
@@ -922,7 +922,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `SummaryId was undefined when user: ${user._key} attempted to load full passes in fullPassLoaderConnectionsBySumId.`,
+            `SummaryId was undefined when user: ${user._key} attempted to load full passes in loadFullPassConnectionsBySumId.`,
           ])
         })
       })
@@ -933,12 +933,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        const connectionLoader = fullPassLoaderConnectionsBySumId(
+        const connectionLoader = loadFullPassConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -953,7 +953,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather full passes in fullPassLoaderConnectionsBySumId, error: Error: Database error occurred.`,
+          `Database error occurred while user: ${user._key} was trying to gather full passes in loadFullPassConnectionsBySumId, error: Error: Database error occurred.`,
         ])
       })
     })
@@ -966,12 +966,12 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
         }
         const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = fullPassLoaderConnectionsBySumId(
+        const connectionLoader = loadFullPassConnectionsBySumId({
           query,
-          user._key,
+          userKey: user._key,
           cleanseInput,
           i18n,
-        )
+        })
 
         const connectionArgs = {
           first: 50,
@@ -986,7 +986,7 @@ describe('given the fullPassLoaderConnectionsBySumId loader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather full passes in fullPassLoaderConnectionsBySumId, error: Error: Cursor error occurred.`,
+          `Cursor error occurred while user: ${user._key} was trying to gather full passes in loadFullPassConnectionsBySumId, error: Error: Cursor error occurred.`,
         ])
       })
     })

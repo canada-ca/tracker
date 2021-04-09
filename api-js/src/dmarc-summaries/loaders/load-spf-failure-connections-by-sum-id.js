@@ -2,15 +2,15 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const spfFailureLoaderConnectionsBySumId = (
+export const loadSpfFailureConnectionsBySumId = ({
   query,
   userKey,
   cleanseInput,
   i18n,
-) => async ({ after, before, first, last, summaryId }) => {
+}) => async ({ after, before, first, last, summaryId }) => {
   if (typeof summaryId === 'undefined') {
     console.warn(
-      `SummaryId was undefined when user: ${userKey} attempted to load spf failures in spfFailureLoaderConnectionsBySumId.`,
+      `SummaryId was undefined when user: ${userKey} attempted to load spf failures in loadSpfFailureConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(t`Unable to load SPF failure data. Please try again.`),
@@ -32,7 +32,7 @@ export const spfFailureLoaderConnectionsBySumId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: spfFailureLoaderConnectionsBySumId.`,
+      `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadSpfFailureConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(
@@ -41,7 +41,7 @@ export const spfFailureLoaderConnectionsBySumId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: spfFailureLoaderConnectionsBySumId.`,
+      `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadSpfFailureConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(
@@ -53,7 +53,7 @@ export const spfFailureLoaderConnectionsBySumId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: spfFailureLoaderConnectionsBySumId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadSpfFailureConnectionsBySumId.`,
       )
       throw new Error(
         i18n._(
@@ -64,7 +64,7 @@ export const spfFailureLoaderConnectionsBySumId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: spfFailureLoaderConnectionsBySumId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadSpfFailureConnectionsBySumId.`,
       )
       throw new Error(
         i18n._(
@@ -80,7 +80,7 @@ export const spfFailureLoaderConnectionsBySumId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: spfFailureLoaderConnectionsBySumId.`,
+      `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadSpfFailureConnectionsBySumId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -137,7 +137,7 @@ export const spfFailureLoaderConnectionsBySumId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userKey} was trying to gather spf failures in spfFailureLoaderConnectionsBySumId, error: ${err}`,
+      `Database error occurred while user: ${userKey} was trying to gather spf failures in loadSpfFailureConnectionsBySumId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load SPF failure data. Please try again.`),
@@ -149,7 +149,7 @@ export const spfFailureLoaderConnectionsBySumId = (
     spfFailureInfo = await requestedSpfFailureInfo.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userKey} was trying to gather spf failures in spfFailureLoaderConnectionsBySumId, error: ${err}`,
+      `Cursor error occurred while user: ${userKey} was trying to gather spf failures in loadSpfFailureConnectionsBySumId, error: ${err}`,
     )
     throw new Error(
       i18n._(t`Unable to load SPF failure data. Please try again.`),

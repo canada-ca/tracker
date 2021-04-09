@@ -21,7 +21,7 @@ export const findOrganizationBySlug = {
     {
       i18n,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderBySlug },
+      loaders: { loadOrgBySlug },
       validators: { cleanseInput },
     },
   ) => {
@@ -32,7 +32,7 @@ export const findOrganizationBySlug = {
     const user = await userRequired()
 
     // Retrieve organization by slug
-    const org = await orgLoaderBySlug.load(orgSlug)
+    const org = await loadOrgBySlug.load(orgSlug)
 
     if (typeof org === 'undefined') {
       console.warn(`User ${user._key} could not retrieve organization.`)

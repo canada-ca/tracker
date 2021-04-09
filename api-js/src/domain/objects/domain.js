@@ -63,9 +63,9 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { orgLoaderConnectionArgsByDomainId } },
+        { loaders: { loadOrgConnectionsByDomainId } },
       ) => {
-        const orgs = await orgLoaderConnectionArgsByDomainId({
+        const orgs = await loadOrgConnectionsByDomainId({
           domainId: _id,
           ...args,
         })
@@ -105,7 +105,7 @@ export const domainType = new GraphQLObjectType({
         {
           userKey,
           loaders: {
-            dmarcSummaryEdgeLoaderByDomainIdPeriod,
+            loadDmarcSummaryEdgeByDomainIdAndPeriod,
             loadStartDateFromPeriod,
           },
           auth: { checkDomainOwnership, userRequired },
@@ -127,7 +127,7 @@ export const domainType = new GraphQLObjectType({
 
         const startDate = loadStartDateFromPeriod({ period: month, year })
 
-        const dmarcSummaryEdge = await dmarcSummaryEdgeLoaderByDomainIdPeriod({
+        const dmarcSummaryEdge = await loadDmarcSummaryEdgeByDomainIdAndPeriod({
           domainId: _id,
           startDate,
         })
@@ -147,7 +147,7 @@ export const domainType = new GraphQLObjectType({
         __,
         {
           userKey,
-          loaders: { dmarcYearlySumEdgeLoader },
+          loaders: { loadDmarcYearlySumEdge },
           auth: { checkDomainOwnership, userRequired },
         },
       ) => {
@@ -165,7 +165,7 @@ export const domainType = new GraphQLObjectType({
           )
         }
 
-        const dmarcSummaryEdges = await dmarcYearlySumEdgeLoader({
+        const dmarcSummaryEdges = await loadDmarcYearlySumEdge({
           domainId: _id,
         })
 

@@ -4,11 +4,11 @@ import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { databaseOptions } from '../../../../database-options'
-import { orgLoaderByKey } from '../index'
+import { loadOrgByKey } from '../index'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given a orgLoaderByKey dataloader', () => {
+describe('given a loadOrgByKey dataloader', () => {
   let query, drop, truncate, collections, i18n
 
   let consoleOutput = []
@@ -133,7 +133,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         `
         const expectedOrg = await expectedCursor.next()
 
-        const loader = orgLoaderByKey(query, 'en', i18n)
+        const loader = loadOrgByKey({ query, language: 'en', i18n })
         const org = await loader.load(expectedOrg._key)
 
         expect(org).toEqual(expectedOrg)
@@ -155,7 +155,7 @@ describe('given a orgLoaderByKey dataloader', () => {
           expectedOrgs.push(tempOrg)
         }
 
-        const loader = orgLoaderByKey(query, 'en', i18n)
+        const loader = loadOrgByKey({ query, language: 'en', i18n })
         const orgs = await loader.loadMany(orgIds)
         expect(orgs).toEqual(expectedOrgs)
       })
@@ -165,7 +165,12 @@ describe('given a orgLoaderByKey dataloader', () => {
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = orgLoaderByKey(mockedQuery, 'en', '1234', i18n)
+        const loader = loadOrgByKey({
+          query: mockedQuery,
+          language: 'en',
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -176,7 +181,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running orgLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadOrgByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -188,7 +193,12 @@ describe('given a orgLoaderByKey dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = orgLoaderByKey(mockedQuery, 'en', '1234', i18n)
+        const loader = loadOrgByKey({
+          query: mockedQuery,
+          language: 'en',
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -199,7 +209,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 during orgLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 during loadOrgByKey: Error: Cursor error occurred.`,
         ])
       })
     })
@@ -230,7 +240,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         `
         const expectedOrg = await expectedCursor.next()
 
-        const loader = orgLoaderByKey(query, 'fr', i18n)
+        const loader = loadOrgByKey({ query, language: 'fr', i18n })
         const org = await loader.load(expectedOrg._key)
 
         expect(org).toEqual(expectedOrg)
@@ -252,7 +262,7 @@ describe('given a orgLoaderByKey dataloader', () => {
           expectedOrgs.push(tempOrg)
         }
 
-        const loader = orgLoaderByKey(query, 'fr', i18n)
+        const loader = loadOrgByKey({ query, language: 'fr', i18n })
         const orgs = await loader.loadMany(orgIds)
         expect(orgs).toEqual(expectedOrgs)
       })
@@ -262,7 +272,12 @@ describe('given a orgLoaderByKey dataloader', () => {
         const mockedQuery = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = orgLoaderByKey(mockedQuery, 'fr', '1234', i18n)
+        const loader = loadOrgByKey({
+          query: mockedQuery,
+          language: 'fr',
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -271,7 +286,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when user: 1234 running orgLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when user: 1234 running loadOrgByKey: Error: Database error occurred.`,
         ])
       })
     })
@@ -283,7 +298,12 @@ describe('given a orgLoaderByKey dataloader', () => {
           },
         }
         const mockedQuery = jest.fn().mockReturnValue(cursor)
-        const loader = orgLoaderByKey(mockedQuery, 'fr', '1234', i18n)
+        const loader = loadOrgByKey({
+          query: mockedQuery,
+          language: 'fr',
+          userKey: '1234',
+          i18n,
+        })
 
         try {
           await loader.load('1')
@@ -292,7 +312,7 @@ describe('given a orgLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred when user: 1234 during orgLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred when user: 1234 during loadOrgByKey: Error: Cursor error occurred.`,
         ])
       })
     })

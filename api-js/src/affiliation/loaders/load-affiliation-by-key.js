@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
 import { t } from '@lingui/macro'
 
-export const affiliationLoaderByKey = (query, userKey, i18n) =>
+export const loadAffiliationByKey = ({ query, userKey, i18n }) =>
   new DataLoader(async (ids) => {
     let cursor
 
@@ -16,7 +16,7 @@ export const affiliationLoaderByKey = (query, userKey, i18n) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userKey} running affiliationLoaderByKey: ${err}`,
+        `Database error occurred when user: ${userKey} running loadAffiliationByKey: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find user affiliation(s). Please try again.`),
@@ -30,7 +30,7 @@ export const affiliationLoaderByKey = (query, userKey, i18n) =>
       })
     } catch (err) {
       console.error(
-        `Cursor error occurred when user: ${userKey} running affiliationLoaderByKey: ${err}`,
+        `Cursor error occurred when user: ${userKey} running loadAffiliationByKey: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to find user affiliation(s). Please try again.`),

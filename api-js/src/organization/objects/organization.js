@@ -97,9 +97,9 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { domainLoaderConnectionsByOrgId } },
+        { loaders: { loadDomainConnectionsByOrgId } },
       ) => {
-        const connections = await domainLoaderConnectionsByOrgId({
+        const connections = await loadDomainConnectionsByOrgId({
           orgId: _id,
           ...args,
         })
@@ -122,12 +122,12 @@ export const organizationType = new GraphQLObjectType({
         {
           i18n,
           auth: { checkPermission },
-          loaders: { affiliationConnectionLoaderByOrgId },
+          loaders: { loadAffiliationConnectionsByOrgId },
         },
       ) => {
         const permission = await checkPermission({ orgId: _id })
         if (permission === 'admin' || permission === 'super_admin') {
-          const affiliations = await affiliationConnectionLoaderByOrgId({
+          const affiliations = await loadAffiliationConnectionsByOrgId({
             orgId: _id,
             ...args,
           })
