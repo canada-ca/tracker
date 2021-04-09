@@ -165,7 +165,7 @@ export default function Organisations() {
           onlyPagination={false}
           selectedDisplayLimit={orgsPerPage}
           setSelectedDisplayLimit={setOrgsPerPage}
-          displayLimitOptions={[10, 20, 40, 80]}
+          displayLimitOptions={[5, 10, 20, 50, 100]}
           resetToFirstPage={resetToFirstPage}
           hasNextPage={hasNextPage}
           hasPreviousPage={hasPreviousPage}

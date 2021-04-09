@@ -1276,35 +1276,37 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
   query PaginatedDmarcReportSummaryTable(
     $month: PeriodEnums!
     $year: Year!
-    $after: String
     $first: Int
+    $after: String
   ) {
-    findMyDomains(after: $after, first: $first, ownership: true) {
+    findMyDmarcSummaries(
+      month: $month
+      year: $year
+      first: $first
+      after: $after
+    ) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
       edges {
         node {
           id
-          domain
-          dmarcSummaryByPeriod(month: $month, year: $year) {
-            month
-            year
-            domain {
-              domain
-            }
-            categoryPercentages {
-              failPercentage
-              fullPassPercentage
-              passDkimOnlyPercentage
-              passSpfOnlyPercentage
-              totalMessages
-            }
+          month
+          year
+          domain {
+            domain
+          }
+          categoryPercentages {
+            failPercentage
+            fullPassPercentage
+            passDkimOnlyPercentage
+            passSpfOnlyPercentage
+            totalMessages
           }
         }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-        hasPreviousPage
-        startCursor
       }
     }
   }
