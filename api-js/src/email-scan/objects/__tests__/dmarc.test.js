@@ -245,7 +245,7 @@ describe('given the dmarcType object', () => {
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-const loader = loadDmarcGuidanceTagConnectionsByTagId({
+        const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
           userKey: '1',
           cleanseInput,
@@ -303,7 +303,7 @@ const loader = loadDmarcGuidanceTagConnectionsByTagId({
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-const loader = loadDmarcGuidanceTagConnectionsByTagId({
+        const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
           userKey: '1',
           cleanseInput,
@@ -361,7 +361,7 @@ const loader = loadDmarcGuidanceTagConnectionsByTagId({
       it('returns the resolved value', async () => {
         const demoType = dmarcType.getFields()
 
-const loader = loadDmarcGuidanceTagConnectionsByTagId({
+        const loader = loadDmarcGuidanceTagConnectionsByTagId({
           query,
           userKey: '1',
           cleanseInput,

@@ -937,12 +937,12 @@ describe('given the loadDkimFailConnectionsBySumId loader', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-          const connectionLoader = loadDkimFailConnectionsBySumId({
-            query: mockedQuery,
-            userKey: user._key,
-            cleanseInput,
-            i18n,
-          })
+        const connectionLoader = loadDkimFailConnectionsBySumId({
+          query: mockedQuery,
+          userKey: user._key,
+          cleanseInput,
+          i18n,
+        })
 
         const connectionArgs = {
           first: 50,
