@@ -17,6 +17,7 @@ export const loadDmarcSummaryConnectionsByUserId = ({
   year,
   orderBy,
   isSuperAdmin,
+  search,
 }) => {
   const userDBId = `users/${userKey}`
 
@@ -92,6 +93,14 @@ export const loadDmarcSummaryConnectionsByUserId = ({
       } else if (orderBy.field === 'total-messages') {
         documentField = aql`DOCUMENT(dmarcSummaries, ${afterId}).totalMessages`
         summaryField = aql`summary.totalMessages`
+      } else if (orderBy.field === 'domain') {
+        documentField = aql`
+          FIRST(
+            FOR v, e IN 1..1 ANY DOCUMENT(dmarcSummaries, ${afterId})._id domainsToDmarcSummaries
+            RETURN v.domain
+          )
+        `
+        summaryField = aql`domain.domain`
       }
 
       afterTemplate = aql`
@@ -145,6 +154,14 @@ export const loadDmarcSummaryConnectionsByUserId = ({
       } else if (orderBy.field === 'total-messages') {
         documentField = aql`DOCUMENT(dmarcSummaries, ${beforeId}).totalMessages`
         summaryField = aql`summary.totalMessages`
+      } else if (orderBy.field === 'domain') {
+        documentField = aql`
+          FIRST(
+            FOR v, e IN 1..1 ANY DOCUMENT(dmarcSummaries, ${beforeId})._id domainsToDmarcSummaries
+            RETURN v.domain
+          )
+        `
+        summaryField = aql`domain.domain`
       }
 
       beforeTemplate = aql`
@@ -227,65 +244,69 @@ export const loadDmarcSummaryConnectionsByUserId = ({
     }
 
     let hasNextPageDocumentField = aql``
-    let hasNextPageSummaryField = aql``
+    let summaryField = aql``
     let hasPreviousPageDocumentField = aql``
-    let hasPreviousPageSummaryField = aql``
     /* istanbul ignore else */
     if (orderBy.field === 'fail-count') {
       hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.fail`
-      hasNextPageSummaryField = aql`summary.categoryTotals.fail`
+      summaryField = aql`summary.categoryTotals.fail`
       hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.fail`
-      hasPreviousPageSummaryField = aql`summary.categoryTotals.fail`
     } else if (orderBy.field === 'pass-count') {
       hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.pass`
-      hasNextPageSummaryField = aql`summary.categoryTotals.pass`
+      summaryField = aql`summary.categoryTotals.pass`
       hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.pass`
-      hasPreviousPageSummaryField = aql`summary.categoryTotals.pass`
     } else if (orderBy.field === 'pass-dkim-count') {
       hasNextPageDocumentField = aql` DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.passDkimOnly`
-      hasNextPageSummaryField = aql`summary.categoryTotals.passDkimOnly`
+      summaryField = aql`summary.categoryTotals.passDkimOnly`
       hasPreviousPageDocumentField = aql` DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.passDkimOnly`
-      hasPreviousPageSummaryField = aql`summary.categoryTotals.passDkimOnly`
     } else if (orderBy.field === 'pass-spf-count') {
       hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryTotals.passSpfOnly`
-      hasNextPageSummaryField = aql`summary.categoryTotals.passSpfOnly`
+      summaryField = aql`summary.categoryTotals.passSpfOnly`
       hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryTotals.passSpfOnly`
-      hasPreviousPageSummaryField = aql`summary.categoryTotals.passSpfOnly`
     } else if (orderBy.field === 'fail-percentage') {
       hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryPercentages.fail`
-      hasNextPageSummaryField = aql`summary.categoryPercentages.fail`
+      summaryField = aql`summary.categoryPercentages.fail`
       hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.fail`
-      hasPreviousPageSummaryField = aql`summary.categoryPercentages.fail`
     } else if (orderBy.field === 'pass-percentage') {
       hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryPercentages.pass`
-      hasNextPageSummaryField = aql`summary.categoryTotals.pass`
+      summaryField = aql`summary.categoryTotals.pass`
       hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.pass`
-      hasPreviousPageSummaryField = aql`summary.categoryTotals.pass`
     } else if (orderBy.field === 'pass-dkim-percentage') {
       hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryPercentages.passDkimOnly`
-      hasNextPageSummaryField = aql`summary.categoryPercentages.passDkimOnly`
+      summaryField = aql`summary.categoryPercentages.passDkimOnly`
       hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.passDkimOnly`
-      hasPreviousPageSummaryField = aql`summary.categoryPercentages.passDkimOnly`
     } else if (orderBy.field === 'pass-spf-percentage') {
       hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).categoryPercentages.passSpfOnly`
-      hasNextPageSummaryField = aql`summary.categoryPercentages.passSpfOnly`
+      summaryField = aql`summary.categoryPercentages.passSpfOnly`
       hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).categoryPercentages.passSpfOnly`
-      hasPreviousPageSummaryField = aql`summary.categoryPercentages.passSpfOnly`
     } else if (orderBy.field === 'total-messages') {
       hasNextPageDocumentField = aql`DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key).totalMessages`
-      hasNextPageSummaryField = aql`summary.totalMessages`
+      summaryField = aql`summary.totalMessages`
       hasPreviousPageDocumentField = aql`DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key).totalMessages`
-      hasPreviousPageSummaryField = aql`summary.totalMessages`
+    } else if (orderBy.field === 'domain') {
+      summaryField = aql`domain.domain`
+      hasNextPageDocumentField = aql`
+        FIRST(
+          FOR v, e IN 1..1 ANY DOCUMENT(dmarcSummaries, LAST(retrievedSummaries)._key)._id domainsToDmarcSummaries
+          RETURN v.domain
+        )
+      `
+      hasPreviousPageDocumentField = aql`
+        FIRST(
+          FOR v, e IN 1..1 ANY DOCUMENT(dmarcSummaries, FIRST(retrievedSummaries)._key)._id domainsToDmarcSummaries
+          RETURN v.domain
+        )
+      `
     }
 
     hasNextPageFilter = aql`
-      FILTER ${hasNextPageSummaryField} ${hasNextPageDirection} ${hasNextPageDocumentField}
-      OR (${hasNextPageSummaryField} == ${hasNextPageDocumentField}
+      FILTER ${summaryField} ${hasNextPageDirection} ${hasNextPageDocumentField}
+      OR (${summaryField} == ${hasNextPageDocumentField}
       AND TO_NUMBER(summary._key) > TO_NUMBER(LAST(retrievedSummaries)._key))
     `
     hasPreviousPageFilter = aql`
-      FILTER ${hasPreviousPageSummaryField} ${hasPreviousPageDirection} ${hasPreviousPageDocumentField}
-      OR (${hasPreviousPageSummaryField} == ${hasPreviousPageDocumentField}
+      FILTER ${summaryField} ${hasPreviousPageDirection} ${hasPreviousPageDocumentField}
+      OR (${summaryField} == ${hasPreviousPageDocumentField}
       AND TO_NUMBER(summary._key) < TO_NUMBER(FIRST(retrievedSummaries)._key))
     `
   }
@@ -311,6 +332,8 @@ export const loadDmarcSummaryConnectionsByUserId = ({
       sortByField = aql`summary.categoryPercentages.passSpfOnly ${orderBy.direction},`
     } else if (orderBy.field === 'total-messages') {
       sortByField = aql`summary.totalMessages ${orderBy.direction},`
+    } else if (orderBy.field === 'domain') {
+      sortByField = aql`domain.domain ${orderBy.direction},`
     }
   }
 
@@ -321,10 +344,26 @@ export const loadDmarcSummaryConnectionsByUserId = ({
     sortString = aql`ASC`
   }
 
+  let domainQuery = aql``
+  let searchDomainFilter = aql``
+  if (typeof search !== 'undefined') {
+    search = cleanseInput(search)
+    domainQuery = aql`
+      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
+      LET searchedDomains = (
+        FOR token IN tokenArr
+          FOR domain IN domainSearch
+            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
+            RETURN domain._id
+      )
+    `
+    searchDomainFilter = aql`FILTER domainId IN searchedDomains`
+  }
+
   let domainIdQueries
   if (isSuperAdmin) {
     domainIdQueries = aql`
-      WITH dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership
+      WITH dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, domainSearch
       LET domainIds = UNIQUE(FLATTEN(
         LET ids = []
         LET orgIds = (FOR org IN organizations RETURN org._id)
@@ -335,7 +374,7 @@ export const loadDmarcSummaryConnectionsByUserId = ({
     `
   } else {
     domainIdQueries = aql`
-      WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users
+      WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users, domainSearch
       LET domainIds = UNIQUE(FLATTEN(
         LET ids = []
         LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
@@ -351,44 +390,49 @@ export const loadDmarcSummaryConnectionsByUserId = ({
     requestedSummaryInfo = await query`
     ${domainIdQueries}
 
+    ${domainQuery}
+
     LET summaryIds = (
       FOR domainId IN domainIds
+        ${searchDomainFilter}
         FOR v, e IN 1..1 ANY domainId domainsToDmarcSummaries
           FILTER e.startDate == ${startDate}
           RETURN e._to
     )
 
     LET retrievedSummaries = (
-      FOR summaryId IN summaryIds
-        FOR summary IN dmarcSummaries
-          FILTER summary._id == summaryId
-          LET domain = FIRST(
-            FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
-              RETURN v
-          )
-          ${afterTemplate}
-          ${beforeTemplate}
-          
-          SORT
-          ${sortByField}
-          ${limitTemplate}
+      FOR summary IN dmarcSummaries
+        FILTER summary._id IN summaryIds
+        LET domain = FIRST(
+          FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+            RETURN v
+        )
+        ${afterTemplate}
+        ${beforeTemplate}
+        SORT
+        ${sortByField}
+        ${limitTemplate}
 
-          RETURN {
-            _id: summary._id,
-            _key: summary._key,
-            _rev: summary._rev,
-            _type: "dmarcSummary",
-            id: summary._key,
-            domainKey: domain._key,
-            categoryTotals: summary.categoryTotals,
-            categoryPercentages: summary.categoryPercentages,
-            totalMessages: summary.totalMessages
-          }
+        RETURN {
+          _id: summary._id,
+          _key: summary._key,
+          _rev: summary._rev,
+          _type: "dmarcSummary",
+          id: summary._key,
+          domainKey: domain._key,
+          categoryTotals: summary.categoryTotals,
+          categoryPercentages: summary.categoryPercentages,
+          totalMessages: summary.totalMessages
+        }
     )
 
     LET hasNextPage = (LENGTH(
       FOR summary IN dmarcSummaries
         FILTER summary._id IN summaryIds
+        LET domain = FIRST(
+          FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+            RETURN v
+        )
         ${hasNextPageFilter}
         SORT ${sortByField} summary._key ${sortString} LIMIT 1
         RETURN summary
@@ -397,6 +441,10 @@ export const loadDmarcSummaryConnectionsByUserId = ({
     LET hasPreviousPage = (LENGTH(
       FOR summary IN dmarcSummaries
         FILTER summary._id IN summaryIds
+        LET domain = FIRST(
+          FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
+            RETURN v
+        )
         ${hasPreviousPageFilter}
         SORT ${sortByField} summary._key ${sortString} LIMIT 1
         RETURN summary
