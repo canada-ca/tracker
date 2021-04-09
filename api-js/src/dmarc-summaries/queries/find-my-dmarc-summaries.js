@@ -1,4 +1,4 @@
-import { GraphQLNonNull } from 'graphql'
+import { GraphQLNonNull, GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
 import { dmarcSummaryOrder } from '../inputs'
@@ -21,6 +21,11 @@ export const findMyDmarcSummaries = {
     year: {
       type: GraphQLNonNull(Year),
       description: 'The year in which the returned data is relevant to.',
+    },
+    search: {
+      type: GraphQLString,
+      description:
+        'An optional string used to filter the results based on domains.',
     },
     ...connectionArgs,
   },
