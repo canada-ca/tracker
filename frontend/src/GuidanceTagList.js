@@ -8,10 +8,10 @@ import {
   Stack,
   Text,
   Collapse,
-  Button,
 } from '@chakra-ui/core'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 import { Trans } from '@lingui/macro'
+import { TrackerButton } from './TrackerButton'
 
 export function GuidanceTagList({
   negativeTags,
@@ -31,56 +31,40 @@ export function GuidanceTagList({
       {selector}
     </Heading>
   )
-  const negativeTagList =
-    negativeTags?.length > 0 &&
-    negativeTags.map((guidanceTag, index) => {
-      return (
-        <Box key={guidanceTag + index} bg="weakMuted" pb="1">
-          <GuidanceTagDetails
-            guidanceTag={guidanceTag.node}
-            tagType="negative"
-          />
-          {
-            // Add divider if next entry exists
-            negativeTags[index + 1] && <Divider borderColor="gray.700" />
-          }
-        </Box>
-      )
-    })
 
-  const positiveTagList =
-    positiveTags?.length > 0 &&
-    positiveTags.map((guidanceTag, index) => {
-      return (
-        <Box key={guidanceTag + index} bg="strongMuted" pb="1">
-          <GuidanceTagDetails
-            guidanceTag={guidanceTag.node}
-            tagType="positive"
-          />
-          {
-            // Add divider if next entry exists
-            positiveTags[index + 1] && <Divider borderColor="gray.700" />
-          }
-        </Box>
-      )
-    })
+  const setTagList = (tagList, tagType) => {
+    if (tagList?.length > 0) {
+      const tagTypeList = tagList.map((guidanceTag, index) => {
+        return (
+          <Box
+            key={guidanceTag + index}
+            bg={
+              tagType === 'negative'
+                ? 'weakMuted'
+                : tagType === 'positive'
+                ? 'strongMuted'
+                : 'infoMuted'
+            }
+            pb="1"
+          >
+            <GuidanceTagDetails
+              guidanceTag={guidanceTag.node}
+              tagType={tagType}
+            />
+            {
+              // Add divider if next entry exists
+              tagList[index + 1] && <Divider borderColor="gray.700" />
+            }
+          </Box>
+        )
+      })
+      return tagTypeList
+    }
+  }
 
-  const neutralTagList =
-    neutralTags?.length > 0 &&
-    neutralTags.map((guidanceTag, index) => {
-      return (
-        <Box key={guidanceTag + index} bg="infoMuted" pb="1">
-          <GuidanceTagDetails
-            guidanceTag={guidanceTag.node}
-            tagType="neutral"
-          />
-          {
-            // Add divider if next entry exists
-            neutralTags[index + 1] && <Divider borderColor="gray.700" />
-          }
-        </Box>
-      )
-    })
+  const negativeTagList = setTagList(negativeTags, 'negative')
+  const positiveTagList = setTagList(positiveTags, 'positive')
+  const neutralTagList = setTagList(neutralTags, 'neutral')
 
   const smallDevice = window.matchMedia('(max-width: 500px)').matches
   const noTags = (
@@ -120,53 +104,50 @@ export function GuidanceTagList({
   return (
     <Box my="2">
       {selectorHeading}
-      {positiveTagList.length && (
+      {positiveTagList?.length && (
         <Box>
-          <Button
+          <TrackerButton
             mb="2"
             onClick={handleShowPosi}
-            bg="strong"
-            color="white"
+            variant="strong"
             w="100%"
           >
             <Trans>Positive Tags</Trans>
-          </Button>
+          </TrackerButton>
           <Collapse isOpen={showPosi}>{positiveTagList}</Collapse>
         </Box>
       )}
       <Divider borderColor="gray.50" />
-      {neutralTagList.length && (
+      {neutralTagList?.length && (
         <Box>
-          <Button
+          <TrackerButton
             mb="2"
             onClick={handleShowNeut}
-            bg="info"
-            color="white"
+            variant="info"
             w="100%"
           >
             <Trans>Neutral Tags</Trans>
-          </Button>
+          </TrackerButton>
           <Collapse isOpen={showNeut}>{neutralTagList}</Collapse>
         </Box>
       )}
       <Divider borderColor="gray.50" />
-      {negativeTagList.length && (
+      {negativeTagList?.length && (
         <Box>
-          <Button
+          <TrackerButton
             mb="2"
             onClick={handleShowNega}
-            bg="weak"
-            color="white"
+            variant="weak"
             w="100%"
           >
             <Trans>Negative Tags</Trans>
-          </Button>
+          </TrackerButton>
           <Collapse isOpen={showNega}>{negativeTagList}</Collapse>
         </Box>
       )}
-      {!positiveTagList.length &&
-        !neutralTagList.length &&
-        !negativeTagList.length &&
+      {!positiveTagList?.length &&
+        !neutralTagList?.length &&
+        !negativeTagList?.length &&
         noTags}
     </Box>
   )

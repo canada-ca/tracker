@@ -31,7 +31,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
 
   return (
     <Box pb="2">
-      <TrackerButton variant="primary" onClick={handleShow} w="25%">
+      <TrackerButton variant="primary" onClick={handleShow} w={['100%', '25%']}>
         <Heading as="h2" size="md">
           {categoryName.toUpperCase()}
         </Heading>

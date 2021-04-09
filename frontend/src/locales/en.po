@@ -2275,3 +2275,15 @@ msgstr "{orgName}"
 #: src/useDocumentTitle.js:6
 msgid "{title} - Tracker"
 msgstr "{title} - Tracker"
+
+#: src/GuidanceTagList.js:132
+msgid "Positive Tags"
+msgstr "Positive Tags"
+
+#: src/GuidanceTagList.js:147
+msgid "Neutral Tags"
+msgstr "Neutral Tags"
+
+#: src/GuidanceTagList.js:162
+msgid "Negative Tags"
+msgstr "Negative Tags"
