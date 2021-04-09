@@ -6,7 +6,7 @@ import { cleanseInput } from '../../../validators'
 import { loadDomainByKey } from '../../../domain/loaders'
 import { domainType } from '../../../domain/objects'
 import {
-  httpsLoaderConnectionsByDomainId,
+  loadHttpsConnectionsByDomainId,
   sslLoaderConnectionsByDomainId,
 } from '../../loaders'
 
@@ -114,12 +114,12 @@ describe('given the web scan gql object', () => {
       it('returns the resolved value', async () => {
         const demoType = webScanType.getFields()
 
-        const loader = httpsLoaderConnectionsByDomainId(
+        const loader = loadHttpsConnectionsByDomainId({
           query,
-          '1',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const expectedResult = {
           edges: [
@@ -155,7 +155,7 @@ describe('given the web scan gql object', () => {
           demoType.https.resolve(
             { _id: domain._id },
             { first: 1 },
-            { loaders: { httpsLoaderConnectionsByDomainId: loader } },
+            { loaders: { loadHttpsConnectionsByDomainId: loader } },
           ),
         ).resolves.toEqual(expectedResult)
       })

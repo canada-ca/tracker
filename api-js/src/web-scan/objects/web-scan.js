@@ -40,9 +40,9 @@ export const webScanType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { httpsLoaderConnectionsByDomainId } },
+        { loaders: { loadHttpsConnectionsByDomainId } },
       ) => {
-        const https = await httpsLoaderConnectionsByDomainId({
+        const https = await loadHttpsConnectionsByDomainId({
           domainId: _id,
           ...args,
         })
