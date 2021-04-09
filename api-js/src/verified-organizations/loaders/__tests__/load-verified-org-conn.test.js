@@ -167,12 +167,12 @@ describe('given the load organizations connection function', () => {
     describe('given a successful load', () => {
       describe('using after cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
           const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
@@ -220,12 +220,12 @@ describe('given the load organizations connection function', () => {
       })
       describe('using before cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
           const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
@@ -273,12 +273,12 @@ describe('given the load organizations connection function', () => {
       })
       describe('using first limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
           const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
@@ -325,12 +325,12 @@ describe('given the load organizations connection function', () => {
       })
       describe('using last limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
           const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
@@ -430,12 +430,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -486,12 +486,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -544,12 +544,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -600,12 +600,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -658,12 +658,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -714,12 +714,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -772,12 +772,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -828,12 +828,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -886,12 +886,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -942,12 +942,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1000,12 +1000,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1056,12 +1056,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1114,12 +1114,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1170,12 +1170,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1228,12 +1228,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1284,12 +1284,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1342,12 +1342,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1398,12 +1398,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1456,12 +1456,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1512,12 +1512,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1570,12 +1570,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1626,12 +1626,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1684,12 +1684,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1740,12 +1740,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'en' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -1796,12 +1796,12 @@ describe('given the load organizations connection function', () => {
       describe('no organizations are found', () => {
         it('returns empty structure', async () => {
           await truncate()
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             last: 1,
@@ -1829,12 +1829,12 @@ describe('given the load organizations connection function', () => {
     describe('given an unsuccessful load', () => {
       describe('limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
           try {
             const connectionArgs = {}
@@ -1854,12 +1854,12 @@ describe('given the load organizations connection function', () => {
       })
       describe('user has first and last arguments set at the same time', () => {
         it('returns an error message', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
           try {
             const connectionArgs = {
@@ -1883,12 +1883,12 @@ describe('given the load organizations connection function', () => {
       describe('limits are set below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = loadVerifiedOrgConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'en',
+              language: 'en',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {
@@ -1912,12 +1912,12 @@ describe('given the load organizations connection function', () => {
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = loadVerifiedOrgConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'en',
+              language: 'en',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {
@@ -1943,12 +1943,12 @@ describe('given the load organizations connection function', () => {
       describe('limits are set above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = loadVerifiedOrgConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'en',
+              language: 'en',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {
@@ -1972,12 +1972,12 @@ describe('given the load organizations connection function', () => {
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = loadVerifiedOrgConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'en',
+              language: 'en',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {
@@ -2006,12 +2006,12 @@ describe('given the load organizations connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -2039,12 +2039,12 @@ describe('given the load organizations connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'en',
+                language: 'en',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -2076,12 +2076,12 @@ describe('given the load organizations connection function', () => {
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'en',
+            language: 'en',
             cleanseInput,
             i18n,
-          )
+          })
 
           try {
             const connectionArgs = {
@@ -2111,12 +2111,12 @@ describe('given the load organizations connection function', () => {
             }
             const query = jest.fn().mockReturnValueOnce(cursor)
 
-            const connectionLoader = loadVerifiedOrgConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'en',
+              language: 'en',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {
@@ -2159,12 +2159,12 @@ describe('given the load organizations connection function', () => {
     describe('given a successful load', () => {
       describe('using after cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
           const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
@@ -2212,12 +2212,12 @@ describe('given the load organizations connection function', () => {
       })
       describe('using before cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
           const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
@@ -2265,12 +2265,12 @@ describe('given the load organizations connection function', () => {
       })
       describe('using first limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
           const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
@@ -2317,12 +2317,12 @@ describe('given the load organizations connection function', () => {
       })
       describe('using last limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
           const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
@@ -2422,12 +2422,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2478,12 +2478,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2536,12 +2536,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2592,12 +2592,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2650,12 +2650,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2706,12 +2706,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2764,12 +2764,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2820,12 +2820,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2878,12 +2878,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2934,12 +2934,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -2992,12 +2992,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3048,12 +3048,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3106,12 +3106,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3162,12 +3162,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3220,12 +3220,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3276,12 +3276,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3334,12 +3334,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3390,12 +3390,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3448,12 +3448,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3504,12 +3504,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3562,12 +3562,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3618,12 +3618,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3676,12 +3676,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3732,12 +3732,12 @@ describe('given the load organizations connection function', () => {
               const orgLoader = loadVerifiedOrgByKey({ query, language: 'fr' })
               const expectedOrg = await orgLoader.load(orgThree._key)
 
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: 5,
@@ -3788,12 +3788,12 @@ describe('given the load organizations connection function', () => {
       describe('no organizations are found', () => {
         it('returns empty structure', async () => {
           await truncate()
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
           const connectionArgs = {
             last: 1,
@@ -3820,12 +3820,12 @@ describe('given the load organizations connection function', () => {
     describe('given an unsuccessful load', () => {
       describe('limits are not set', () => {
         it('returns an error message', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
           try {
             const connectionArgs = {}
@@ -3841,12 +3841,12 @@ describe('given the load organizations connection function', () => {
       })
       describe('user has first and last arguments set at the same time', () => {
         it('returns an error message', async () => {
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
           try {
             const connectionArgs = {
@@ -3866,12 +3866,12 @@ describe('given the load organizations connection function', () => {
       describe('limits are set below minimum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = loadVerifiedOrgConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'fr',
+              language: 'fr',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {
@@ -3891,12 +3891,12 @@ describe('given the load organizations connection function', () => {
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = loadVerifiedOrgConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'fr',
+              language: 'fr',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {
@@ -3918,12 +3918,12 @@ describe('given the load organizations connection function', () => {
       describe('limits are set above maximum', () => {
         describe('first is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = loadVerifiedOrgConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'fr',
+              language: 'fr',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {
@@ -3943,12 +3943,12 @@ describe('given the load organizations connection function', () => {
         })
         describe('last is set', () => {
           it('returns an error message', async () => {
-            const connectionLoader = loadVerifiedOrgConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'fr',
+              language: 'fr',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {
@@ -3973,12 +3973,12 @@ describe('given the load organizations connection function', () => {
             it(`returns an error when first set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 first: invalidInput,
@@ -4002,12 +4002,12 @@ describe('given the load organizations connection function', () => {
             it(`returns an error when last set to ${stringify(
               invalidInput,
             )}`, async () => {
-              const connectionLoader = loadVerifiedOrgConnections(
+              const connectionLoader = loadVerifiedOrgConnections({
                 query,
-                'fr',
+                language: 'fr',
                 cleanseInput,
                 i18n,
-              )
+              })
 
               const connectionArgs = {
                 last: invalidInput,
@@ -4035,12 +4035,12 @@ describe('given the load organizations connection function', () => {
             .fn()
             .mockRejectedValue(new Error('Database error occurred.'))
 
-          const connectionLoader = loadVerifiedOrgConnections(
+          const connectionLoader = loadVerifiedOrgConnections({
             query,
-            'fr',
+            language: 'fr',
             cleanseInput,
             i18n,
-          )
+          })
 
           try {
             const connectionArgs = {
@@ -4066,12 +4066,12 @@ describe('given the load organizations connection function', () => {
             }
             const query = jest.fn().mockReturnValueOnce(cursor)
 
-            const connectionLoader = loadVerifiedOrgConnections(
+            const connectionLoader = loadVerifiedOrgConnections({
               query,
-              'fr',
+              language: 'fr',
               cleanseInput,
               i18n,
-            )
+            })
 
             try {
               const connectionArgs = {

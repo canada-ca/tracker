@@ -174,7 +174,11 @@ export const createContext = ({ context, req: request, res: response }) => {
         userKey,
         cleanseInput,
         i18n,
-        loadStartDateFromPeriod: loadStartDateFromPeriod(moment, userKey, i18n),
+        loadStartDateFromPeriod: loadStartDateFromPeriod({
+          moment,
+          userKey,
+          i18n,
+        }),
       }),
       loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod(
         {
@@ -377,7 +381,11 @@ export const createContext = ({ context, req: request, res: response }) => {
           i18n,
         },
       ),
-      loadVerifiedOrgByKey: loadVerifiedOrgByKey(query, request.language, i18n),
+      loadVerifiedOrgByKey: loadVerifiedOrgByKey({
+        query,
+        language: request.language,
+        i18n,
+      }),
       loadVerifiedOrgBySlug: loadVerifiedOrgBySlug({
         query,
         language: request.language,

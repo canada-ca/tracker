@@ -179,13 +179,13 @@ describe('given the verified domains object', () => {
       it('returns the resolved value', async () => {
         const demoType = verifiedDomainType.getFields()
 
-        const loader = loadVerifiedOrgConnectionsByDomainId(
+        const loader = loadVerifiedOrgConnectionsByDomainId({
           query,
-          'en',
-          '1',
+          language: 'en',
+          userKey: '1',
           cleanseInput,
-          {},
-        )
+          i18n: {},
+        })
 
         const expectedResult = {
           edges: [

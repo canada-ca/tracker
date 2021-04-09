@@ -146,17 +146,17 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                loadVerifiedOrgConnections: loadVerifiedOrgConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections({
                   query,
-                  'en',
+                  language: 'en',
                   cleanseInput,
                   i18n,
-                ),
-                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId({
                   query,
                   cleanseInput,
                   i18n,
-                ),
+                }),
               },
             },
           )
@@ -219,17 +219,17 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                loadVerifiedOrgConnections: loadVerifiedOrgConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections({
                   query,
-                  'en',
+                  language: 'en',
                   cleanseInput,
                   i18n,
-                ),
-                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId({
                   query,
                   cleanseInput,
                   i18n,
-                ),
+                }),
               },
             },
           )
@@ -296,17 +296,17 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                loadVerifiedOrgConnections: loadVerifiedOrgConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections({
                   query,
-                  'fr',
+                  language: 'fr',
                   cleanseInput,
                   i18n,
-                ),
-                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId({
                   query,
                   cleanseInput,
                   i18n,
-                ),
+                }),
               },
             },
           )
@@ -369,17 +369,17 @@ describe('given findVerifiedOrganizations', () => {
             {
               i18n,
               loaders: {
-                loadVerifiedOrgConnections: loadVerifiedOrgConnections(
+                loadVerifiedOrgConnections: loadVerifiedOrgConnections({
                   query,
-                  'fr',
+                  language: 'fr',
                   cleanseInput,
                   i18n,
-                ),
-                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId(
+                }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId({
                   query,
                   cleanseInput,
                   i18n,
-                ),
+                }),
               },
             },
           )
