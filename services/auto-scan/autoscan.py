@@ -22,7 +22,7 @@ QUEUE_URL = os.getenv("SCAN_QUEUE_URL", "http://scan-queue.scanners.svc.cluster.
 
 
 def dispatch_https(domain, client):
-    """ This function dispatches a scan request to the HTTPS scanner
+    """This function dispatches a scan request to the HTTPS scanner
 
     :param domain: A domain obtained from the DB's domains collection
     :type domain: dict
@@ -38,7 +38,7 @@ def dispatch_https(domain, client):
 
 
 def dispatch_ssl(domain, client):
-    """ This function dispatches a scan request to the SSL scanner
+    """This function dispatches a scan request to the SSL scanner
 
     :param domain: A domain obtained from the DB's domains collection
     :type domain: dict
@@ -54,7 +54,7 @@ def dispatch_ssl(domain, client):
 
 
 def dispatch_dns(domain, client):
-    """ This function dispatches a scan request to the DNS scanner
+    """This function dispatches a scan request to the DNS scanner
 
     :param domain: A domain obtained from the DB's domains collection
     :type domain: dict
@@ -73,7 +73,7 @@ def dispatch_dns(domain, client):
 def scan(db_host, db_port, db_name, user_name, password, http_client=requests):
     """Uses credentials provided to queue scans for all domains in the Tracker DB
 
-    :param db_host: DB host name. 
+    :param db_host: DB host name.
     :type db_host: str
     :param db_port: DB TCP port.
     :type db_port: int
@@ -108,7 +108,9 @@ def scan(db_host, db_port, db_name, user_name, password, http_client=requests):
             logging.info(f"Requesting scan for {domain['domain']}")
 
             # Update the 'lastRan' timestamp on the domain being scanned
-            db.collection("domains").update_match({"_key": domain["_key"]}, {"lastRan": scan_time})
+            db.collection("domains").update_match(
+                {"_key": domain["_key"]}, {"lastRan": scan_time}
+            )
 
             dispatch_https(domain, http_client)
             dispatch_ssl(domain, http_client)
@@ -118,9 +120,10 @@ def scan(db_host, db_port, db_name, user_name, password, http_client=requests):
         logging.error(
             f"An unexpected error occurred while initiating scheduled scan: {str(e)}\n\nFull traceback: {traceback.format_exc()}"
         )
-        return count-1
+        return count - 1
     logging.info("Domains have been dispatched for scanning.")
     return count
+
 
 if __name__ == "__main__":
     dispatched_count = scan(DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS)
