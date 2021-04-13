@@ -1,9 +1,9 @@
-import { connectionArgs } from 'graphql-relay'
 import { t } from '@lingui/macro'
+import { GraphQLBoolean, GraphQLString } from 'graphql'
+import { connectionArgs } from 'graphql-relay'
 
 import { organizationOrder } from '../inputs'
 import { organizationConnection } from '../objects'
-import { GraphQLString } from 'graphql'
 
 export const findMyOrganizations = {
   type: organizationConnection.connectionType,
@@ -16,6 +16,10 @@ export const findMyOrganizations = {
     search: {
       type: GraphQLString,
       description: 'String argument used to search for organizations.',
+    },
+    isAdmin: {
+      type: GraphQLBoolean,
+      description: 'Filter orgs based off of the user being an admin of them.',
     },
     ...connectionArgs,
   },
