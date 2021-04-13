@@ -277,7 +277,7 @@ metadata:
     app.kubernetes.io/name: kube-arangodb-crd
     helm.sh/chart: kube-arangodb-crd-1.1.6
     release: crd
-  name: arangomembmers.database.arangodb.com
+  name: arangomembers.database.arangodb.com
 spec:
   group: database.arangodb.com
   names:
