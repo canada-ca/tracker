@@ -240,7 +240,7 @@ describe('given findMyDomainsQuery', () => {
     describe('given an error thrown during retrieving domains', () => {
       describe('user queries for their domains', () => {
         it('returns domains', async () => {
-          const mockedLoader = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred'))
 
@@ -277,18 +277,23 @@ describe('given findMyDomainsQuery', () => {
                 userRequired: jest.fn(),
               },
               loaders: {
-                loadDomainConnectionsByUserId: mockedLoader,
+                loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
+                  query: mockedQuery,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                }),
               },
             },
           )
 
           const error = [
-            new GraphQLError(`Unable to load domains. Please try again.`),
+            new GraphQLError(`Unable to query domain(s). Please try again.`),
           ]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: 1 was trying to gather domain connections in findMyDomains.`,
+            `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser, error: Error: Database error occurred`,
           ])
         })
       })
@@ -312,7 +317,7 @@ describe('given findMyDomainsQuery', () => {
     describe('given an error thrown during retrieving domains', () => {
       describe('user queries for their domains', () => {
         it('returns domains', async () => {
-          const mockedLoader = jest
+          const mockedQuery = jest
             .fn()
             .mockRejectedValue(new Error('Database error occurred'))
 
@@ -349,7 +354,12 @@ describe('given findMyDomainsQuery', () => {
                 userRequired: jest.fn(),
               },
               loaders: {
-                loadDomainConnectionsByUserId: mockedLoader,
+                loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
+                  query: mockedQuery,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                }),
               },
             },
           )
@@ -358,7 +368,7 @@ describe('given findMyDomainsQuery', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: 1 was trying to gather domain connections in findMyDomains.`,
+            `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser, error: Error: Database error occurred`,
           ])
         })
       })
