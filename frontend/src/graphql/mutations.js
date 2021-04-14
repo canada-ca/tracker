@@ -329,4 +329,28 @@ export const VERIFY_PHONE_NUMBER = gql`
   }
 `
 
+export const SEND_EMAIL_VERIFICATION = gql`
+  mutation SendEmailVerification($userName: EmailAddress!) {
+    sendEmailVerification(input: { userName: $userName }) {
+      status
+    }
+  }
+`
+
+export const VERIFY_ACCOUNT = gql`
+  mutation VerifyAccount($verifyToken: String!) {
+    verifyAccount(input: { verifyTokenString: $verifyToken }) {
+      result {
+        ... on VerifyAccountResult {
+          status
+        }
+        ... on VerifyAccountError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''

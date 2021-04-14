@@ -2275,3 +2275,15 @@ msgstr ""
 #: src/useDocumentTitle.js:6
 msgid "{title} - Tracker"
 msgstr "{title} - Suivi"
+
+#: src/EmailValidationPage.js:76
+msgid "Your account email was successfully verified"
+msgstr "L'email de votre compte a été vérifié avec succès"
+
+#: src/EmailValidationPage.js:86
+msgid "Your account email could not be verified at this time. Please try again."
+msgstr "L'email de votre compte n'a pas pu être vérifié pour le moment. Veuillez réessayer."
+
+#: src/EmailValidationPage.js:96
+msgid "Email Validation Page"
+msgstr "Page de validation des e-mails"
