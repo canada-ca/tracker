@@ -34,10 +34,12 @@ def publish_results(results, scan_type, uuid):
 
 def process_https(results, domain_key, uuid, db):
     timestamp = str(datetime.datetime.utcnow())
-    tags = {"neutralTags": [], "negativeTags": [], "positiveTags": []}
+    neutral_tags = []
+    positive_tags = []
+    negative_tags = []
 
     if results.get("missing", None) is not None:
-        tags["negativeTags"].append("https2")
+        negative_tags.append("https2")
     else:
         # Implementation
         implementation = results.get("implementation", None)
@@ -47,11 +49,11 @@ def process_https(results, domain_key, uuid, db):
                 implementation = implementation.lower()
 
             if implementation == "downgrades https":
-                tags["negativeTags"].append("https3")
+                negative_tags.append("https3")
             elif implementation == "bad chain":
-                tags["negativeTags"].append("https4")
+                negative_tags.append("https4")
             elif implementation == "bad hostname":
-                tags["negativeTags"].append("https5")
+                negative_tags.append("https5")
 
         # Enforced
         enforced = results.get("enforced", None)
@@ -61,11 +63,11 @@ def process_https(results, domain_key, uuid, db):
                 enforced = enforced.lower()
 
             if enforced == "moderate":
-                tags["negativeTags"].append("https8")
+                negative_tags.append("https8")
             elif enforced == "weak":
-                tags["negativeTags"].append("https7")
+                negative_tags.append("https7")
             elif enforced == "not enforced":
-                tags["negativeTags"].append("https6")
+                negative_tags.append("https6")
 
         # HSTS
         hsts = results.get("hsts", None)
@@ -108,7 +110,7 @@ def process_https(results, domain_key, uuid, db):
         expired_cert = results.get("expired_cert", False)
 
         if expired_cert is True:
-            tags["negativeTags"].append("https13")
+            negative_tags.append("https13")
 
         # Self Signed Cert
         self_signed_cert = results.get("https", {}).get("self_signed_cert", False)
@@ -170,7 +172,7 @@ def process_https(results, domain_key, uuid, db):
         logging.info("HTTPS Scan published to redis")
 
 
-def process_ssl(results, guidance, domain_key, db):
+def process_ssl(results, guidance, domain_key, uuid, db):
     timestamp = str(datetime.datetime.utcnow())
     neutral_tags = []
     positive_tags = []
@@ -290,7 +292,7 @@ def process_ssl(results, guidance, domain_key, db):
         logging.info("SSL Scan published to redis")
 
 
-def process_dns(results, domain_key, db):
+def process_dns(results, domain_key, uuid, db):
     timestamp = str(datetime.datetime.utcnow())
     tags = {"dmarc": [], "dkim": {}, "spf": []}
 
