@@ -8,7 +8,16 @@ export const loadOrgConnectionsByUserId = ({
   cleanseInput,
   language,
   i18n,
-}) => async ({ after, before, first, last, orderBy, isSuperAdmin, search }) => {
+}) => async ({
+  after,
+  before,
+  first,
+  last,
+  orderBy,
+  isSuperAdmin,
+  search,
+  isAdmin,
+}) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -363,6 +372,17 @@ export const loadOrgConnectionsByUserId = ({
     orgKeysQuery = aql`
       WITH claims, domains, organizations
       LET orgKeys = (FOR org IN organizations RETURN org._key)
+    `
+  } else if (isAdmin) {
+    orgKeysQuery = aql`
+      WITH affiliations, claims, domains, organizations, users
+      LET orgKeys = (
+        FOR v, e IN 1..1 
+        INBOUND ${userDBId} affiliations 
+        FILTER e.permission == "admin" 
+        OR e.permission == "super_admin" 
+        RETURN v._key
+      )
     `
   } else {
     orgKeysQuery = aql`
