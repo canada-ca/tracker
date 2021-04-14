@@ -2,7 +2,7 @@ import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { GraphQLList } from 'graphql'
 
 import { makeMigrations } from '../../../../migrations'
-import { loadSslGuidanceTagByTagId } from '../../../guidance-tag/loaders
+import { loadSslGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { sslSubType } from '../index'
 
