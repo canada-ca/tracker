@@ -765,21 +765,6 @@ def process_dns(results, domain_key, uuid, db):
                                 "dkim10"
                             )
 
-                dkimResultsEntry = db.collection("dkimResults").insert(
-                    {
-                        "record": results["dkim"][selector].get("txt_record", None),
-                        "keyLength": results["dkim"][selector].get("key_size", None),
-                        "keyModulus": keyModulus,
-                        "rawJson": results["dkim"][selector],
-                        "neutralTags": guidance_tags["dkim"][selector]["neutralTags"],
-                        "positiveTags": guidance_tags["dkim"][selector]["positiveTags"],
-                        "negativeTags": guidance_tags["dkim"][selector]["negativeTags"],
-                    }
-                )
-                db.collection("dkimToDkimResults").insert(
-                    {"_from": dkimEntry["_id"], "_to": dkimResultsEntry["_id"]}
-                )
-
             dkimResults.update(
                 {
                     selector:
