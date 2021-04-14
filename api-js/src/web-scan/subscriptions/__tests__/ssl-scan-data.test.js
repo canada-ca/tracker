@@ -14,7 +14,7 @@ import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { makeMigrations } from '../../../../migrations'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
-import { sslGuidanceTagLoader } from '../../../guidance-tag/loaders'
+import { loadSslGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { toGlobalId } from 'graphql-relay'
 
 const {
@@ -183,7 +183,7 @@ describe('given the spfScanData subscription', () => {
       {
         pubsub,
         loaders: {
-          sslGuidanceTagLoader: sslGuidanceTagLoader(query, '1', {}),
+          sslGuidanceTagLoader: loadSslGuidanceTagByTagId(query, '1', {}),
         },
       },
       {},

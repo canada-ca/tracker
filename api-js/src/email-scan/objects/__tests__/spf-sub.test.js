@@ -2,7 +2,7 @@ import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList, GraphQLInt } from 'graphql'
 
 import { makeMigrations } from '../../../../migrations'
-import { spfGuidanceTagLoader } from '../../../guidance-tag/loaders'
+import { loadSpfGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { spfSubType } from '../index'
 
@@ -104,7 +104,7 @@ describe('given the spfSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = spfSubType.getFields()
 
-        const loader = spfGuidanceTagLoader(query, '1', {})
+        const loader = loadSpfGuidanceTagByTagId(query, '1', {})
         const guidanceTags = ['spf1']
 
         expect(

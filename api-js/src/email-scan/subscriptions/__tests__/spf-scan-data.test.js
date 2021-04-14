@@ -15,7 +15,7 @@ import { toGlobalId } from 'graphql-relay'
 import { makeMigrations } from '../../../../migrations'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
-import { spfGuidanceTagLoader } from '../../../guidance-tag/loaders'
+import { loadSpfGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -189,7 +189,7 @@ describe('given the spfScanData subscription', () => {
       {
         pubsub,
         loaders: {
-          spfGuidanceTagLoader: spfGuidanceTagLoader(query, '1', {}),
+          spfGuidanceTagLoader: loadSpfGuidanceTagByTagId(query, '1', {}),
         },
       },
       {},

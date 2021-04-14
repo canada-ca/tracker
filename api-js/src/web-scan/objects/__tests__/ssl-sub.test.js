@@ -2,7 +2,7 @@ import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { GraphQLList } from 'graphql'
 
 import { makeMigrations } from '../../../../migrations'
-import { sslGuidanceTagLoader } from '../../../guidance-tag/loaders'
+import { loadSslGuidanceTagByTagId } from '../../../guidance-tag/loaders
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { sslSubType } from '../index'
 
@@ -61,7 +61,7 @@ describe('given the sslSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = sslSubType.getFields()
 
-        const loader = sslGuidanceTagLoader(query, '1', {})
+        const loader = loadSslGuidanceTagByTagId(query, '1', {})
         const guidanceTags = ['ssl1']
 
         expect(

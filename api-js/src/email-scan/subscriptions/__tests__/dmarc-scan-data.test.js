@@ -15,7 +15,7 @@ import { toGlobalId } from 'graphql-relay'
 import { makeMigrations } from '../../../../migrations'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
-import { dmarcGuidanceTagLoader } from '../../../guidance-tag/loaders'
+import { loadDmarcGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -193,7 +193,7 @@ describe('given the dmarcScanData subscription', () => {
       {
         pubsub,
         loaders: {
-          dmarcGuidanceTagLoader: dmarcGuidanceTagLoader(query, '1', {}),
+          dmarcGuidanceTagLoader: loadDmarcGuidanceTagByTagId(query, '1', {}),
         },
       },
       {},

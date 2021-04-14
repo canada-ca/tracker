@@ -2,7 +2,7 @@ import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList, GraphQLInt } from 'graphql'
 
 import { makeMigrations } from '../../../../migrations'
-import { dmarcGuidanceTagLoader } from '../../../guidance-tag/loaders'
+import { loadDmarcGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { dmarcSubType } from '../index'
 
@@ -132,7 +132,7 @@ describe('given the dmarcSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = dmarcSubType.getFields()
 
-        const loader = dmarcGuidanceTagLoader(query, 1, {})
+        const loader = loadDmarcGuidanceTagByTagId(query, 1, {})
         const guidanceTags = ['dmarc1']
 
         expect(

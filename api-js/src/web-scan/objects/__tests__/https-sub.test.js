@@ -2,7 +2,7 @@ import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList } from 'graphql'
 
 import { makeMigrations } from '../../../../migrations'
-import { httpsGuidanceTagLoader } from '../../../guidance-tag/loaders'
+import { loadHttpsGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { httpsSubType } from '../index'
 
@@ -134,7 +134,7 @@ describe('given the httpsSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = httpsSubType.getFields()
 
-        const loader = httpsGuidanceTagLoader(query, '1', {})
+        const loader = loadHttpsGuidanceTagByTagId(query, '1', {})
         const guidanceTags = ['https1']
 
         expect(

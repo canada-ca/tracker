@@ -15,7 +15,7 @@ import { toGlobalId } from 'graphql-relay'
 import { makeMigrations } from '../../../../migrations'
 import { createQuerySchema } from '../../../query'
 import { createSubscriptionSchema } from '../../../subscription'
-import { httpsGuidanceTagLoader } from '../../../guidance-tag/loaders'
+import { loadHttpsGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 
 const {
   REDIS_PORT_NUMBER,
@@ -193,7 +193,7 @@ describe('given the httpsScanData subscription', () => {
       {
         pubsub,
         loaders: {
-          httpsGuidanceTagLoader: httpsGuidanceTagLoader(query, '1', {}),
+          httpsGuidanceTagLoader: loadHttpsGuidanceTagByTagId(query, '1', {}),
         },
       },
       {},
