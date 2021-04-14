@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { GraphQLBoolean, GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
@@ -27,31 +26,19 @@ export const findMyOrganizations = {
     _,
     args,
     {
-      i18n,
       userKey,
       auth: { checkSuperAdmin, userRequired },
       loaders: { loadOrgConnectionsByUserId },
     },
   ) => {
-    let orgConnections
-
     await userRequired()
 
     const isSuperAdmin = await checkSuperAdmin()
 
-    try {
-      orgConnections = await loadOrgConnectionsByUserId({
-        isSuperAdmin,
-        ...args,
-      })
-    } catch (err) {
-      console.error(
-        `Database error occurred while user: ${userKey} was trying to gather organization connections in findMyOrganizations.`,
-      )
-      throw new Error(
-        i18n._(t`Unable to load organizations. Please try again.`),
-      )
-    }
+    const orgConnections = await loadOrgConnectionsByUserId({
+      isSuperAdmin,
+      ...args,
+    })
 
     console.info(`User ${userKey} successfully retrieved their organizations.`)
 
