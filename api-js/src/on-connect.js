@@ -1,10 +1,10 @@
-export const customOnConnect = (
+export const customOnConnect = ({
   context,
   createI18n,
   verifyToken,
   userRequired,
-  userLoaderByKey,
-) => async (connectionParams, webSocket) => {
+  loadUserByKey,
+}) => async ({ connectionParams, webSocket }) => {
   const enLangPos = String(
     webSocket.upgradeReq.headers['accept-language'],
   ).indexOf('en')
@@ -31,11 +31,11 @@ export const customOnConnect = (
   if (token !== '') {
     userKey = verify({ token }).userKey
   }
-  
+
   await userRequired({
     i18n,
     userKey,
-    userLoaderByKey: userLoaderByKey(context.query),
+    loadUserByKey: loadUserByKey(context.query),
   })()
 
   console.info(`User: ${userKey}, connected to subscription.`)

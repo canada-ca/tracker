@@ -13,7 +13,7 @@ import { createMutationSchema } from './mutation'
 import { createSubscriptionSchema } from './subscription'
 import { createI18n } from './create-i18n'
 import { verifyToken, userRequired } from './auth'
-import { userLoaderByKey } from './user/loaders'
+import { loadUserByKey } from './user/loaders'
 import { customOnConnect } from './on-connect'
 
 const createSchema = () =>
@@ -75,13 +75,13 @@ export const Server = ({
     schema: createSchema(),
     context: createContext(context),
     subscriptions: {
-      onConnect: customOnConnect(
+      onConnect: customOnConnect({
         context,
         createI18n,
         verifyToken,
         userRequired,
-        userLoaderByKey,
-      ),
+        loadUserByKey,
+      }),
     },
     validationRules: createValidationRules(
       maxDepth,

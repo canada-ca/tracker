@@ -4,7 +4,6 @@ import { makeMigrations } from '../../migrations'
 import { customOnConnect } from '../on-connect'
 import { verifyToken, tokenize, userRequired } from '../auth'
 import { createI18n } from '../create-i18n'
-import { userLoaderByKey } from '../user/loaders'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -41,13 +40,13 @@ describe('given the customOnConnect function', () => {
           authorization: token,
         }
 
-        const onConnect = await customOnConnect(
-          {},
+        const onConnect = await customOnConnect({
+          context: {},
           createI18n,
           verifyToken,
-          mockedUserRequired,
-          userLoaderByKey,
-        )(connectionParams, webSocket)
+          userRequired: mockedUserRequired,
+          loadUserByKey: jest.fn(),
+        })({ connectionParams, webSocket })
 
         expect(onConnect.language).toEqual('en')
         expect(consoleOutput).toEqual([
@@ -71,13 +70,13 @@ describe('given the customOnConnect function', () => {
           authorization: token,
         }
 
-        const onConnect = await customOnConnect(
-          {},
+        const onConnect = await customOnConnect({
+          context: {},
           createI18n,
           verifyToken,
-          mockedUserRequired,
-          userLoaderByKey,
-        )(connectionParams, webSocket)
+          userRequired: mockedUserRequired,
+          loadUserByKey: jest.fn(),
+        })({ connectionParams, webSocket })
 
         expect(onConnect.language).toEqual('fr')
         expect(consoleOutput).toEqual([
@@ -102,13 +101,13 @@ describe('given the customOnConnect function', () => {
         authorization: token,
       }
 
-      const onConnect = await customOnConnect(
-        {},
+      const onConnect = await customOnConnect({
+        context: {},
         createI18n,
         verifyToken,
-        mockedUserRequired,
-        userLoaderByKey,
-      )(connectionParams, webSocket)
+        userRequired: mockedUserRequired,
+        loadUserByKey: jest.fn(),
+      })({ connectionParams, webSocket })
 
       expect(onConnect.authorization).toEqual(token)
       expect(consoleOutput).toEqual(['User: 1234, connected to subscription.'])
@@ -146,17 +145,46 @@ describe('given the customOnConnect function', () => {
         const connectionParams = {}
 
         try {
-          await customOnConnect(
-            { query },
+          await customOnConnect({
+            context: { query },
             createI18n,
             verifyToken,
             userRequired,
-            userLoaderByKey,
-          )(connectionParams, webSocket)
+            loadUserByKey: jest.fn(),
+          })({ connectionParams, webSocket })
         } catch (err) {
           expect(err).toEqual(
             new Error('Authentication error. Please sign in.'),
           )
+        }
+        expect(consoleOutput).toEqual([
+          'User attempted to access controlled content, but userKey was undefined.',
+        ])
+      })
+    })
+    describe('language is set to french', () => {
+      it('throws an error', async () => {
+        const headers = {}
+        headers['accept-language'] = 'fr'
+
+        const webSocket = {
+          upgradeReq: {
+            headers,
+          },
+        }
+
+        const connectionParams = {}
+
+        try {
+          await customOnConnect({
+            context: { query },
+            createI18n,
+            verifyToken,
+            userRequired,
+            loadUserByKey: jest.fn(),
+          })({ connectionParams, webSocket })
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
         }
         expect(consoleOutput).toEqual([
           'User attempted to access controlled content, but userKey was undefined.',
