@@ -81,6 +81,11 @@ export const databaseOptions = ({ rootPass }) => [
     options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
+    type: 'documentcollection',
+    name: 'aggregateGuidanceTags',
+    options: { replicationFactor: 2,  writeConcern: 1 },
+  },
+  {
     type: 'edgecollection',
     name: 'affiliations',
     options: { replicationFactor: 2,  writeConcern: 1 },
