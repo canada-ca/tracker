@@ -1,14 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useUserState } from './UserState'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from './graphql/queries'
-import { Box, Heading, Select, Stack, Text } from '@chakra-ui/core'
+import {
+  Box,
+  Flex,
+  Heading,
+  Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Select,
+  Spinner,
+  Stack,
+  Text,
+} from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
-import { LoadingMessage } from './LoadingMessage'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { toConstantCase } from './helpers/toConstantCase'
@@ -30,6 +41,7 @@ export default function DmarcByDomainPage() {
     field: 'TOTAL_MESSAGES',
     direction: 'DESC',
   })
+  const [searchTerm, setSearchTerm] = useState('')
 
   const {
     loading,
@@ -48,98 +60,85 @@ export default function DmarcByDomainPage() {
     variables: {
       month: selectedPeriod,
       year: selectedYear,
+      search: searchTerm,
       orderBy: orderBy,
     },
     relayRoot: 'findMyDmarcSummaries',
   })
 
   const updateOrderBy = useCallback((sortBy) => {
-    let newOrderBy = null
+    let newOrderBy = {
+      field: 'TOTAL_MESSAGES',
+      direction: 'DESC',
+    }
     if (sortBy.length) {
       newOrderBy = {}
       newOrderBy.field = toConstantCase(sortBy[0].id)
       newOrderBy.direction = sortBy[0].desc === true ? 'DESC' : 'ASC'
     }
+    resetToFirstPage()
     setOrderBy(newOrderBy)
   }, [])
 
-  useEffect(() => {
-    console.log(orderBy)
-  }, [orderBy])
-
-  if (error) return <ErrorFallbackMessage error={error} />
-
-  // DMARC Summary Table setup
-  let tableDisplay
-
-  // Display loading message
-  if (loading) {
-    tableDisplay = (
-      <LoadingMessage>
-        <Trans>Domains Table</Trans>
-      </LoadingMessage>
-    )
-  }
-  // If not loading and data exists, show table
-  else if (nodes.length > 0) {
-    const formattedData = []
+  const formattedData = useMemo(() => {
+    const curData = []
     nodes.forEach((node) => {
       const domain = node.domain.domain
       const percentages = { ...node.categoryPercentages }
       Object.entries(percentages).forEach(([key, value]) => {
         if (typeof value === 'number') percentages[key] = Math.round(value)
       })
-      formattedData.push({ domain, ...percentages })
+      curData.push({ domain, ...percentages })
     })
+    return curData
+  }, [nodes])
 
-    // Initial sorting category for detail tables
-    const initialSort = [{ id: 'totalMessages', desc: true }]
+  const [
+    domain,
+    totalMessages,
+    fullPassPercentage,
+    passSpfOnlyPercentage,
+    passDkimOnlyPercentage,
+    failPercentage,
+  ] = [
+    {
+      Header: i18n._(t`Domain`),
+      accessor: 'domain',
+    },
+    {
+      Header: i18n._(t`Total Messages`),
+      accessor: 'totalMessages',
+      Cell: ({ value }) => value.toLocaleString(i18n.locale),
+      style: { textAlign: 'right' },
+    },
+    {
+      Header: i18n._(t`Full Pass %`),
+      accessor: 'fullPassPercentage',
+      Cell: ({ value }) => `${value}%`,
+      style: { textAlign: 'right' },
+    },
+    {
+      Header: i18n._(t`Fail DKIM %`),
+      accessor: 'passSpfOnlyPercentage',
+      Cell: ({ value }) => `${value}%`,
+      style: { textAlign: 'right' },
+    },
+    {
+      Header: i18n._(t`Fail SPF %`),
+      accessor: 'passDkimOnlyPercentage',
+      Cell: ({ value }) => `${value}%`,
+      style: { textAlign: 'right' },
+    },
+    {
+      Header: i18n._(t`Full Fail %`),
+      accessor: 'failPercentage',
+      Cell: ({ value }) => `${value}%`,
+      style: { textAlign: 'right' },
+    },
+  ]
 
-    const [
-      domain,
-      totalMessages,
-      fullPassPercentage,
-      passSpfOnlyPercentage,
-      passDkimOnlyPercentage,
-      failPercentage,
-    ] = [
-      {
-        Header: i18n._(t`Domain`),
-        accessor: 'domain',
-      },
-      {
-        Header: i18n._(t`Total Messages`),
-        accessor: 'totalMessages',
-        Cell: ({ value }) => value.toLocaleString(i18n.locale),
-        style: { textAlign: 'right' },
-      },
-      {
-        Header: i18n._(t`Full Pass %`),
-        accessor: 'fullPassPercentage',
-        Cell: ({ value }) => `${value}%`,
-        style: { textAlign: 'right' },
-      },
-      {
-        Header: i18n._(t`Fail DKIM %`),
-        accessor: 'passSpfOnlyPercentage',
-        Cell: ({ value }) => `${value}%`,
-        style: { textAlign: 'right' },
-      },
-      {
-        Header: i18n._(t`Fail SPF %`),
-        accessor: 'passDkimOnlyPercentage',
-        Cell: ({ value }) => `${value}%`,
-        style: { textAlign: 'right' },
-      },
-      {
-        Header: i18n._(t`Full Fail %`),
-        accessor: 'failPercentage',
-        Cell: ({ value }) => `${value}%`,
-        style: { textAlign: 'right' },
-      },
-    ]
-
-    const percentageColumns = [
+  const percentageColumns = useMemo(
+    () => [
       {
         Header: i18n._(t`DMARC Messages`),
         hidden: true,
@@ -152,8 +151,20 @@ export default function DmarcByDomainPage() {
           failPercentage,
         ],
       },
-    ]
+    ],
+    [],
+  )
 
+  // DMARC Summary Table setup
+  let tableDisplay
+
+  // Initial sorting category for detail tables
+  const initialSort = [{ id: 'totalMessages', desc: true }]
+
+  // Display error if exists
+  if (error) {
+    tableDisplay = <ErrorFallbackMessage error={error} />
+  } else
     tableDisplay = (
       <DmarcReportTable
         data={formattedData}
@@ -168,22 +179,10 @@ export default function DmarcByDomainPage() {
         frontendPagination={false}
         selectedDisplayLimit={selectedTableDisplayLimit}
         manualSort={true}
+        manualFilters={true}
         onSort={updateOrderBy}
       />
     )
-  }
-  // Display error if exists
-  else if (error) {
-    tableDisplay = <ErrorFallbackMessage error={error} />
-  }
-  // If not loading, no error, and no data, no data exists. Show message
-  else {
-    tableDisplay = (
-      <Heading as="h3" size="lg">
-        * <Trans>No data for the DMARC summary table</Trans> *
-      </Heading>
-    )
-  }
 
   const handleChange = (e) => {
     setSelectedDate(e.target.value)
@@ -251,6 +250,46 @@ export default function DmarcByDomainPage() {
           {options}
         </Select>
       </Stack>
+      <Flex
+        direction={{ base: 'column', md: 'row' }}
+        alignItems={{ base: 'stretch', md: 'center' }}
+        mb={{ base: '8px', md: '8px' }}
+      >
+        <InputGroup
+          w={{ base: '100%', md: '50%' }}
+          mb={{ base: '8px', md: '0' }}
+        >
+          <InputLeftElement>
+            <Icon name="search" color="gray.300" />
+          </InputLeftElement>
+          <Input
+            type="text"
+            placeholder={t`Search for a domain`}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              resetToFirstPage()
+            }}
+          />
+        </InputGroup>
+        {loading && (
+          <Stack
+            isInline
+            justifyContent="center"
+            w={{ base: '100%', md: '50%' }}
+          >
+            <Text fontWeight="bold" ml={{ md: 'auto' }} mr="1.5em">
+              <Trans>Loading Data...</Trans>
+            </Text>
+            <Spinner
+              size="md"
+              speed="0.6s"
+              color="primary"
+              emptyColor="accent"
+              thickness="0.175em"
+            />
+          </Stack>
+        )}
+      </Flex>
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
       </ErrorBoundary>

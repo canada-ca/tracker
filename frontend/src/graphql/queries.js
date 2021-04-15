@@ -1278,16 +1278,16 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
     $year: Year!
     $first: Int
     $after: String
-    #    $orderByField: DmarcSummaryOrderField
-    #    $orderByDirection: OrderDirection
     $orderBy: DmarcSummaryOrder
+    $search: String
   ) {
     findMyDmarcSummaries(
       month: $month
       year: $year
       first: $first
       after: $after
-      orderBy: $orderBy #      orderBy: { field: $orderByField, direction: $orderByDirection }
+      orderBy: $orderBy
+      search: $search
     ) {
       pageInfo {
         hasNextPage

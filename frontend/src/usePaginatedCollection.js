@@ -8,6 +8,7 @@ export function usePaginatedCollection({
   fetchHeaders = {},
   variables,
   relayRoot,
+  ...rest
 }) {
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -16,6 +17,7 @@ export function usePaginatedCollection({
     context: {
       headers: fetchHeaders,
     },
+    ...rest,
   })
 
   const [isLoadingMore, setIsLoadingMore] = useState(false)

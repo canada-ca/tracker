@@ -594,7 +594,7 @@ type DmarcSummaryConnection {
   # Information to aid in pagination.
   pageInfo: PageInfo!
   # A list of edges.
-  edges: [DmarcSummaryEdge] @listLength(min: 0, max: 5)
+  edges: [DmarcSummaryEdge] @listLength(min: 5, max: 10)
   # The total amount of dmarc summaries the user has access to.
   totalCount: Int @fake(
     type: number
