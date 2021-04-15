@@ -4,7 +4,6 @@ export const useDebounce = (toCall, delay, params) => {
   const [timeoutID, setTimeoutID] = useState()
 
   useEffect(() => {
-    console.log(params)
     if (timeoutID) {
       clearTimeout(timeoutID)
       setTimeoutID(undefined)
