@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useUserState } from './UserState'
 import { PAGINATED_DMARC_REPORT_SUMMARY_TABLE as FORWARD } from './graphql/queries'
 import {
@@ -66,19 +66,22 @@ export default function DmarcByDomainPage() {
     relayRoot: 'findMyDmarcSummaries',
   })
 
-  const updateOrderBy = useCallback((sortBy) => {
-    let newOrderBy = {
-      field: 'TOTAL_MESSAGES',
-      direction: 'DESC',
-    }
-    if (sortBy.length) {
-      newOrderBy = {}
-      newOrderBy.field = toConstantCase(sortBy[0].id)
-      newOrderBy.direction = sortBy[0].desc === true ? 'DESC' : 'ASC'
-    }
-    resetToFirstPage()
-    setOrderBy(newOrderBy)
-  }, [])
+  const updateOrderBy = useCallback(
+    (sortBy) => {
+      let newOrderBy = {
+        field: 'TOTAL_MESSAGES',
+        direction: 'DESC',
+      }
+      if (sortBy.length) {
+        newOrderBy = {}
+        newOrderBy.field = toConstantCase(sortBy[0].id)
+        newOrderBy.direction = sortBy[0].desc === true ? 'DESC' : 'ASC'
+      }
+      resetToFirstPage()
+      setOrderBy(newOrderBy)
+    },
+    [resetToFirstPage],
+  )
 
   const formattedData = useMemo(() => {
     const curData = []
@@ -152,7 +155,14 @@ export default function DmarcByDomainPage() {
         ],
       },
     ],
-    [],
+    [
+      domain,
+      totalMessages,
+      fullPassPercentage,
+      passSpfOnlyPercentage,
+      passDkimOnlyPercentage,
+      failPercentage,
+    ],
   )
 
   // DMARC Summary Table setup

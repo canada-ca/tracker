@@ -427,6 +427,7 @@ DmarcReportTable.propTypes = {
   selectedDisplayLimit: number,
   onSort: func,
   manualSort: bool,
+  manualFilters: bool,
 }
 
 DmarcReportTable.defaultProps = {
