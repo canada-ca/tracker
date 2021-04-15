@@ -7,6 +7,6 @@ spec:
     spec:
       containers:
       - name: scan
-        image: gcr.io/track-compliance/services/autoscan:master-05b22b2-1615242767 # {"$imagepolicy": "flux-system:autoscan"}
+        image: gcr.io/track-compliance/services/autoscan:master-05b22b2-1615242767
       restartPolicy: Never
   backoffLimit: 4
