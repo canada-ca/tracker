@@ -68,7 +68,11 @@ export default function DmarcByDomainPage() {
     relayRoot: 'findMyDmarcSummaries',
   })
 
-  useDebounce(setDbSearchTerm, 500, searchTerm)
+  const memoizedSearchTerm = useMemo(() => {
+    return [searchTerm]
+  }, [searchTerm])
+
+  useDebounce(setDbSearchTerm, 500, memoizedSearchTerm)
 
   const updateOrderBy = useCallback(
     (sortBy) => {
