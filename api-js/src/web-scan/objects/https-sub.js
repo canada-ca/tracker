@@ -37,9 +37,11 @@ export const httpsSubType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         _args,
-        { loaders: { httpsGuidanceTagLoader } },
+        { loaders: { loadHttpsGuidanceTagByTagId } },
       ) => {
-        const httpsTags = await httpsGuidanceTagLoader.loadMany(guidanceTags)
+        const httpsTags = await loadHttpsGuidanceTagByTagId.loadMany(
+          guidanceTags,
+        )
         return httpsTags
       },
     },

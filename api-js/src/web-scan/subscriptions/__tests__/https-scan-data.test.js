@@ -193,7 +193,11 @@ describe('given the httpsScanData subscription', () => {
       {
         pubsub,
         loaders: {
-          httpsGuidanceTagLoader: loadHttpsGuidanceTagByTagId(query, '1', {}),
+          loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
+            query,
+            userKey: '1',
+            i18n: {},
+          }),
         },
       },
       {},

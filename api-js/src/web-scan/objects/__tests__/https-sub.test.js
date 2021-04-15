@@ -134,14 +134,18 @@ describe('given the httpsSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = httpsSubType.getFields()
 
-        const loader = loadHttpsGuidanceTagByTagId(query, '1', {})
+        const loader = loadHttpsGuidanceTagByTagId({
+          query,
+          userKey: '1',
+          i18n: {},
+        })
         const guidanceTags = ['https1']
 
         expect(
           await demoType.guidanceTags.resolve(
             { guidanceTags },
             {},
-            { loaders: { httpsGuidanceTagLoader: loader } },
+            { loaders: { loadHttpsGuidanceTagByTagId: loader } },
           ),
         ).toEqual([
           {

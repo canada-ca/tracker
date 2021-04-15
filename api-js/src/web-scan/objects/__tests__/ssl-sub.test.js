@@ -61,14 +61,18 @@ describe('given the sslSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = sslSubType.getFields()
 
-        const loader = loadSslGuidanceTagByTagId(query, '1', {})
+        const loader = loadSslGuidanceTagByTagId({
+          query,
+          userKey: '1',
+          i18n: {},
+        })
         const guidanceTags = ['ssl1']
 
         expect(
           await demoType.guidanceTags.resolve(
             { guidanceTags },
             {},
-            { loaders: { sslGuidanceTagLoader: loader } },
+            { loaders: { loadSslGuidanceTagByTagId: loader } },
           ),
         ).toEqual([
           {

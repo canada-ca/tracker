@@ -12,9 +12,9 @@ export const sslSubType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         _args,
-        { loaders: { sslGuidanceTagLoader } },
+        { loaders: { loadSslGuidanceTagByTagId } },
       ) => {
-        const sslTags = await sslGuidanceTagLoader.loadMany(guidanceTags)
+        const sslTags = await loadSslGuidanceTagByTagId.loadMany(guidanceTags)
         return sslTags
       },
     },

@@ -183,7 +183,11 @@ describe('given the spfScanData subscription', () => {
       {
         pubsub,
         loaders: {
-          sslGuidanceTagLoader: loadSslGuidanceTagByTagId(query, '1', {}),
+          loadSslGuidanceTagByTagId: loadSslGuidanceTagByTagId({
+            query,
+            userKey: '1',
+            i18n: {},
+          }),
         },
       },
       {},
