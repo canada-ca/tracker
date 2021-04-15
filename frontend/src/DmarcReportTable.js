@@ -172,7 +172,8 @@ function DmarcReportTable({ ...props }) {
       data,
       manualSortBy: manualSort,
       manualFilters: manualFilters,
-      disableMultiSort: true,
+      disableMultiSort: manualSort,
+      disableSortRemove: manualSort,
       initialState: {
         sortBy: initialSort,
         pageSize: selectedDisplayLimit,

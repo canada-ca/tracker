@@ -115,36 +115,42 @@ export default function DmarcByDomainPage() {
     {
       Header: i18n._(t`Domain`),
       accessor: 'domain',
+      sortDescFirst: true,
     },
     {
       Header: i18n._(t`Total Messages`),
       accessor: 'totalMessages',
       Cell: ({ value }) => value.toLocaleString(i18n.locale),
       style: { textAlign: 'right' },
+      sortDescFirst: true,
     },
     {
       Header: i18n._(t`Full Pass %`),
       accessor: 'fullPassPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
+      sortDescFirst: true,
     },
     {
       Header: i18n._(t`Fail DKIM %`),
       accessor: 'passSpfOnlyPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
+      sortDescFirst: true,
     },
     {
       Header: i18n._(t`Fail SPF %`),
       accessor: 'passDkimOnlyPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
+      sortDescFirst: true,
     },
     {
       Header: i18n._(t`Full Fail %`),
       accessor: 'failPercentage',
       Cell: ({ value }) => `${value}%`,
       style: { textAlign: 'right' },
+      sortDescFirst: true,
     },
   ]
 
