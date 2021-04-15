@@ -44,9 +44,11 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
       resolve: async (
         { guidanceTags },
         _args,
-        { loaders: { dmarcGuidanceTagLoader } },
+        { loaders: { loadDmarcGuidanceTagByTagId } },
       ) => {
-        const dmarcTags = await dmarcGuidanceTagLoader.loadMany(guidanceTags)
+        const dmarcTags = await loadDmarcGuidanceTagByTagId.loadMany(
+          guidanceTags,
+        )
         return dmarcTags
       },
     },

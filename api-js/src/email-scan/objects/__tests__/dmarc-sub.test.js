@@ -132,14 +132,18 @@ describe('given the dmarcSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = dmarcSubType.getFields()
 
-        const loader = loadDmarcGuidanceTagByTagId(query, 1, {})
+        const loader = loadDmarcGuidanceTagByTagId({
+          query,
+          userKey: 1,
+          i18n: {},
+        })
         const guidanceTags = ['dmarc1']
 
         expect(
           await demoType.guidanceTags.resolve(
             { guidanceTags },
             {},
-            { loaders: { dmarcGuidanceTagLoader: loader } },
+            { loaders: { loadDmarcGuidanceTagByTagId: loader } },
           ),
         ).toEqual([
           {

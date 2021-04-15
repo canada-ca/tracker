@@ -104,14 +104,18 @@ describe('given the spfSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = spfSubType.getFields()
 
-        const loader = loadSpfGuidanceTagByTagId(query, '1', {})
+        const loader = loadSpfGuidanceTagByTagId({
+          query,
+          userKey: '1',
+          i18n: {},
+        })
         const guidanceTags = ['spf1']
 
         expect(
           await demoType.guidanceTags.resolve(
             { guidanceTags },
             {},
-            { loaders: { spfGuidanceTagLoader: loader } },
+            { loaders: { loadSpfGuidanceTagByTagId: loader } },
           ),
         ).toEqual([
           {

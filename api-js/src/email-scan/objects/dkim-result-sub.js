@@ -26,9 +26,9 @@ export const dkimResultSubType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         _args,
-        { loaders: { dkimGuidanceTagLoader } },
+        { loaders: { loadDkimGuidanceTagById } },
       ) => {
-        const dkimTags = await dkimGuidanceTagLoader.loadMany(guidanceTags)
+        const dkimTags = await loadDkimGuidanceTagById.loadMany(guidanceTags)
         return dkimTags
       },
     },

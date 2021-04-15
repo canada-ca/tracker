@@ -193,7 +193,11 @@ describe('given the dmarcScanData subscription', () => {
       {
         pubsub,
         loaders: {
-          dmarcGuidanceTagLoader: loadDmarcGuidanceTagByTagId(query, '1', {}),
+          loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
+            query,
+            userKey: '1',
+            i18n: {},
+          }),
         },
       },
       {},

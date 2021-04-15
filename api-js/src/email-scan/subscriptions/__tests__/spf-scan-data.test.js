@@ -189,7 +189,11 @@ describe('given the spfScanData subscription', () => {
       {
         pubsub,
         loaders: {
-          spfGuidanceTagLoader: loadSpfGuidanceTagByTagId(query, '1', {}),
+          loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
+            query,
+            userKey: '1',
+            i18n: {},
+          }),
         },
       },
       {},

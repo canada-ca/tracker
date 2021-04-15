@@ -2,7 +2,7 @@ import { ArangoTools, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList } from 'graphql'
 
 import { makeMigrations } from '../../../../migrations'
-import { dkimGuidanceTagLoader } from '../../../guidance-tag/loaders'
+import { loadDkimGuidanceTagById } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { dkimResultSubType } from '../index'
 
@@ -106,14 +106,18 @@ describe('Given The dkimResultSubType object', () => {
       it('returns the parsed value', async () => {
         const demoType = dkimResultSubType.getFields()
 
-        const loader = dkimGuidanceTagLoader(query, '1', {})
+        const loader = loadDkimGuidanceTagById({
+          query,
+          userKey: '1',
+          i18n: {},
+        })
         const guidanceTags = ['dkim1']
 
         expect(
           await demoType.guidanceTags.resolve(
             { guidanceTags },
             {},
-            { loaders: { dkimGuidanceTagLoader: loader } },
+            { loaders: { loadDkimGuidanceTagById: loader } },
           ),
         ).toEqual([
           {

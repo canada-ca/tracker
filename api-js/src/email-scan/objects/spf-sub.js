@@ -32,9 +32,9 @@ export const spfSubType = new GraphQLObjectType({
       resolve: async (
         { guidanceTags },
         _args,
-        { loaders: { spfGuidanceTagLoader } },
+        { loaders: { loadSpfGuidanceTagByTagId } },
       ) => {
-        const spfTags = await spfGuidanceTagLoader.loadMany(guidanceTags)
+        const spfTags = await loadSpfGuidanceTagByTagId.loadMany(guidanceTags)
         return spfTags
       },
     },
