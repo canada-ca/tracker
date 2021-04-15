@@ -1,0 +1,12 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: core-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: scan
+        image: gcr.io/track-compliance/services/core
+      restartPolicy: Never
+  backoffLimit: 4
