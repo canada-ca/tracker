@@ -1,0 +1,17 @@
+kind: ArangoDeployment
+apiVersion: database.arangodb.com/v1alpha
+metadata:
+  name: arangodb
+  namespace: db
+spec:
+  agents:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: slow-retain
+        persistentVolumeReclaimPolicy: Retain
+  dbservers:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: fast-retain
+        persistentVolumeReclaimPolicy: Retain
+
