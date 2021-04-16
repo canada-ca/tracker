@@ -35,6 +35,15 @@ export function createCache() {
           fullPass: relayStylePagination(),
         },
       },
+      Domain: {
+        fields: {
+          status: {
+            merge(existing, incoming, { mergeObjects }) {
+              return mergeObjects(existing, incoming)
+            },
+          },
+        },
+      },
     },
   })
 }
@@ -43,7 +52,7 @@ export const cache = createCache()
 
 export const client = new ApolloClient({
   link: new HttpLink({
-    uri: '/graphql',
+    uri: 'https://tracker.alpha.canada.ca/graphql',
   }),
   cache,
 })
