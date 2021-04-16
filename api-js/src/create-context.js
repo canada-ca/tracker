@@ -59,6 +59,8 @@ import {
   loadSpfConnectionsByDomainId,
 } from './email-scan/loaders'
 import {
+  loadAggregateGuidanceTagById,
+  loadAggregateGuidanceTagConnectionsByTagId,
   loadDkimGuidanceTagById,
   loadDkimGuidanceTagConnectionsByTagId,
   loadDmarcGuidanceTagByTagId,
@@ -157,6 +159,14 @@ export const createContext = ({ context, req: request, res: response }) => {
     },
     loaders: {
       loadChartSummaryByKey: loadChartSummaryByKey({ query, userKey, i18n }),
+      loadAggregateGuidanceTagById: loadAggregateGuidanceTagById({
+        query,
+        userKey,
+        i18n,
+      }),
+      loadAggregateGuidanceTagConnectionsByTagId: loadAggregateGuidanceTagConnectionsByTagId(
+        { query, userKey, i18n, cleanseInput },
+      ),
       loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
         query,
         userKey,
