@@ -132,19 +132,19 @@ msgstr "An email was sent with a link to reset your password"
 msgid "An error has occurred."
 msgstr "An error has occurred."
 
-#: src/EditableUserTFAMethod.js:41
+#: src/EditableUserTFAMethod.js:38
 msgid "An error occurred while updating your TFA send method."
 msgstr "An error occurred while updating your TFA send method."
 
-#: src/EditableUserDisplayName.js:50
+#: src/EditableUserDisplayName.js:47
 msgid "An error occurred while updating your display name."
 msgstr "An error occurred while updating your display name."
 
-#: src/EditableUserEmail.js:48
+#: src/EditableUserEmail.js:47
 msgid "An error occurred while updating your email address."
 msgstr "An error occurred while updating your email address."
 
-#: src/EditableUserLanguage.js:30
+#: src/EditableUserLanguage.js:29
 msgid "An error occurred while updating your language."
 msgstr "An error occurred while updating your language."
 
@@ -236,6 +236,7 @@ msgstr "CCCS added to Forensic sender list"
 msgid "CNAME-DMARC"
 msgstr "CNAME-DMARC"
 
+#: src/LandingPage.js:24
 #: src/WelcomeMessage.js:19
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for email and web services. Track how government sites are becoming more secure."
@@ -253,19 +254,19 @@ msgstr "Certificate chain signed using SHA-256/SHA-384/AEAD"
 msgid "Change Password"
 msgstr "Change Password"
 
-#: src/EditableUserTFAMethod.js:52
+#: src/EditableUserTFAMethod.js:49
 msgid "Changed TFA Send Method"
 msgstr "Changed TFA Send Method"
 
-#: src/EditableUserDisplayName.js:61
+#: src/EditableUserDisplayName.js:58
 msgid "Changed User Display Name"
 msgstr "Changed User Display Name"
 
-#: src/EditableUserEmail.js:59
+#: src/EditableUserEmail.js:58
 msgid "Changed User Email"
 msgstr "Changed User Email"
 
-#: src/EditableUserLanguage.js:41
+#: src/EditableUserLanguage.js:40
 msgid "Changed User Language"
 msgstr "Changed User Language"
 
@@ -295,8 +296,8 @@ msgstr "Compliant TLS"
 
 #: src/AdminDomains.js:433
 #: src/AdminDomains.js:476
-#: src/EditableUserDisplayName.js:177
-#: src/EditableUserEmail.js:175
+#: src/EditableUserDisplayName.js:174
+#: src/EditableUserEmail.js:174
 #: src/EditableUserPassword.js:198
 #: src/EditableUserPhoneNumber.js:201
 #: src/EditableUserPhoneNumber.js:259
@@ -336,7 +337,7 @@ msgstr "Create an Account"
 msgid "Create an account by entering an email and password."
 msgstr "Create an account by entering an email and password."
 
-#: src/EditableUserDisplayName.js:157
+#: src/EditableUserDisplayName.js:154
 msgid "Current Display Name:"
 msgstr "Current Display Name:"
 
@@ -344,7 +345,7 @@ msgstr "Current Display Name:"
 msgid "Current Domain URL:"
 msgstr "Current Domain URL:"
 
-#: src/EditableUserEmail.js:155
+#: src/EditableUserEmail.js:154
 msgid "Current Email:"
 msgstr "Current Email:"
 
@@ -446,8 +447,8 @@ msgstr "DMARC Implementation Phase: {0}"
 #~ msgid "DMARC Implementation Phase: {status}"
 #~ msgstr "DMARC Implementation Phase: {status}"
 
-#: src/DmarcByDomainPage.js:121
-#: src/DmarcByDomainPage.js:226
+#: src/DmarcByDomainPage.js:160
+#: src/DmarcByDomainPage.js:262
 msgid "DMARC Messages"
 msgstr "DMARC Messages"
 
@@ -503,7 +504,7 @@ msgid "Display Name"
 msgstr "Display Name"
 
 #: src/DisplayNameField.js:24
-#: src/EditableUserDisplayName.js:104
+#: src/EditableUserDisplayName.js:101
 msgid "Display Name:"
 msgstr "Display Name:"
 
@@ -515,7 +516,7 @@ msgstr "Display name cannot be empty"
 msgid "Disposition"
 msgstr "Disposition"
 
-#: src/DmarcByDomainPage.js:84
+#: src/DmarcByDomainPage.js:116
 #: src/DomainsPage.js:141
 msgid "Domain"
 msgstr "Domain"
@@ -600,18 +601,18 @@ msgid "Domains"
 msgstr "Domains"
 
 #: src/DmarcByDomainPage.js:56
-msgid "Domains Table"
-msgstr "Domains Table"
+#~ msgid "Domains Table"
+#~ msgstr "Domains Table"
 
-#: src/EditableUserDisplayName.js:117
-#: src/EditableUserEmail.js:115
+#: src/EditableUserDisplayName.js:114
+#: src/EditableUserEmail.js:114
 #: src/EditableUserPassword.js:129
 #: src/EditableUserPhoneNumber.js:171
 #: src/EditableUserPhoneNumber.js:310
 msgid "Edit"
 msgstr "Edit"
 
-#: src/EditableUserDisplayName.js:151
+#: src/EditableUserDisplayName.js:148
 msgid "Edit Display Name"
 msgstr "Edit Display Name"
 
@@ -619,11 +620,11 @@ msgstr "Edit Display Name"
 msgid "Edit Domain Details"
 msgstr "Edit Domain Details"
 
-#: src/EditableUserEmail.js:149
+#: src/EditableUserEmail.js:148
 msgid "Edit Email"
 msgstr "Edit Email"
 
-#: src/EditableUserTFAMethod.js:136
+#: src/EditableUserTFAMethod.js:133
 #: src/EmailField.js:43
 msgid "Email"
 msgstr "Email"
@@ -641,7 +642,7 @@ msgstr "Email Scan Results"
 msgid "Email Sent"
 msgstr "Email Sent"
 
-#: src/EditableUserTFAMethod.js:99
+#: src/EditableUserTFAMethod.js:96
 msgid "Email Validated"
 msgstr "Email Validated"
 
@@ -658,7 +659,7 @@ msgstr "Email invitation sent to {addedUserName}"
 msgid "Email security settings summary"
 msgstr "Email security settings summary"
 
-#: src/EditableUserEmail.js:102
+#: src/EditableUserEmail.js:101
 #: src/EmailField.js:26
 msgid "Email:"
 msgstr "Email:"
@@ -688,11 +689,11 @@ msgstr "Envelope From"
 msgid "Fail"
 msgstr "Fail"
 
-#: src/DmarcByDomainPage.js:100
+#: src/DmarcByDomainPage.js:135
 msgid "Fail DKIM %"
 msgstr "Fail DKIM %"
 
-#: src/DmarcByDomainPage.js:106
+#: src/DmarcByDomainPage.js:142
 msgid "Fail SPF %"
 msgstr "Fail SPF %"
 
@@ -734,11 +735,11 @@ msgstr "Forgot Password"
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
-#: src/DmarcByDomainPage.js:112
+#: src/DmarcByDomainPage.js:149
 msgid "Full Fail %"
 msgstr "Full Fail %"
 
-#: src/DmarcByDomainPage.js:94
+#: src/DmarcByDomainPage.js:128
 msgid "Full Pass %"
 msgstr "Full Pass %"
 
@@ -751,7 +752,7 @@ msgstr "Fully Aligned Table"
 msgid "Fully Aligned by IP Address"
 msgstr "Fully Aligned by IP Address"
 
-#: src/DmarcReportTable.js:287
+#: src/DmarcReportTable.js:296
 #: src/SummaryTable.js:178
 msgid "Go to page:"
 msgstr "Go to page:"
@@ -931,13 +932,13 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/AdminDomains.js:175
 #: src/AdminDomains.js:227
 #: src/CreateUserPage.js:92
-#: src/EditableUserDisplayName.js:82
-#: src/EditableUserEmail.js:80
-#: src/EditableUserLanguage.js:61
+#: src/EditableUserDisplayName.js:79
+#: src/EditableUserEmail.js:79
+#: src/EditableUserLanguage.js:60
 #: src/EditableUserPassword.js:82
 #: src/EditableUserPhoneNumber.js:73
 #: src/EditableUserPhoneNumber.js:129
-#: src/EditableUserTFAMethod.js:72
+#: src/EditableUserTFAMethod.js:69
 #: src/ResetPasswordPage.js:60
 #: src/SignInPage.js:98
 #: src/TwoFactorAuthenticatePage.js:80
@@ -966,10 +967,10 @@ msgstr "Incorrect updateDomain.result typename."
 msgid "Incorrect updateUserPassword.result typename."
 msgstr "Incorrect updateUserPassword.result typename."
 
-#: src/EditableUserDisplayName.js:83
-#: src/EditableUserEmail.js:81
-#: src/EditableUserLanguage.js:62
-#: src/EditableUserTFAMethod.js:73
+#: src/EditableUserDisplayName.js:80
+#: src/EditableUserEmail.js:80
+#: src/EditableUserLanguage.js:61
+#: src/EditableUserTFAMethod.js:70
 msgid "Incorrect updateUserProfile.result typename."
 msgstr "Incorrect updateUserProfile.result typename."
 
@@ -1030,12 +1031,12 @@ msgstr "June"
 msgid "L-30-D"
 msgstr "L-30-D"
 
-#: src/EditableUserLanguage.js:83
+#: src/EditableUserLanguage.js:82
 #: src/LanguageSelect.js:19
 msgid "Language:"
 msgstr "Language:"
 
-#: src/DmarcByDomainPage.js:187
+#: src/DmarcByDomainPage.js:223
 #: src/DmarcReportPage.js:141
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
@@ -1053,7 +1054,11 @@ msgstr "Last scanned:"
 #~ msgid "Level of Enforcment:"
 #~ msgstr "Level of Enforcment:"
 
-#: src/LoadingMessage.js:12
+#: src/DmarcByDomainPage.js:305
+msgid "Loading Data..."
+msgstr "Loading Data..."
+
+#: src/LoadingMessage.js:18
 msgid "Loading {children}..."
 msgstr "Loading {children}..."
 
@@ -1152,7 +1157,7 @@ msgstr "More than 10 lookups - Follow implementation guide"
 msgid "Name"
 msgstr "Name"
 
-#: src/EditableUserDisplayName.js:164
+#: src/EditableUserDisplayName.js:161
 msgid "New Display Name:"
 msgstr "New Display Name:"
 
@@ -1164,7 +1169,7 @@ msgstr "New Domain Url"
 msgid "New Domain Url:"
 msgstr "New Domain Url:"
 
-#: src/EditableUserEmail.js:162
+#: src/EditableUserEmail.js:161
 msgid "New Email Address:"
 msgstr "New Email Address:"
 
@@ -1223,8 +1228,8 @@ msgid "No data for the DMARC Failures by IP Address table"
 msgstr "No data for the DMARC Failures by IP Address table"
 
 #: src/DmarcByDomainPage.js:170
-msgid "No data for the DMARC summary table"
-msgstr "No data for the DMARC summary table"
+#~ msgid "No data for the DMARC summary table"
+#~ msgstr "No data for the DMARC summary table"
 
 #: src/DmarcReportPage.js:259
 msgid "No data for the DMARC yearly report graph"
@@ -1258,7 +1263,7 @@ msgstr "No users in this organization"
 msgid "Non-compliant TLS"
 msgstr "Non-compliant TLS"
 
-#: src/EditableUserTFAMethod.js:135
+#: src/EditableUserTFAMethod.js:132
 msgid "None"
 msgstr "None"
 
@@ -1387,7 +1392,7 @@ msgstr "Page"
 #~ msgid "Page Size:"
 #~ msgstr "Page Size:"
 
-#: src/DmarcReportTable.js:300
+#: src/DmarcReportTable.js:309
 msgid "Page {0} of {1}"
 msgstr "Page {0} of {1}"
 
@@ -1406,7 +1411,7 @@ msgstr "Pass Only DKIM"
 msgid "Pass Only SPF"
 msgstr "Pass Only SPF"
 
-#: src/DmarcByDomainPage.js:148
+#: src/DmarcByDomainPage.js:196
 msgid "Pass/Fail Ratios by Domain"
 msgstr "Pass/Fail Ratios by Domain"
 
@@ -1445,7 +1450,7 @@ msgstr "Password:"
 msgid "Passwords must match"
 msgstr "Passwords must match"
 
-#: src/EditableUserTFAMethod.js:137
+#: src/EditableUserTFAMethod.js:134
 msgid "Phone"
 msgstr "Phone"
 
@@ -1458,7 +1463,7 @@ msgstr "Phone Number"
 msgid "Phone Number:"
 msgstr "Phone Number:"
 
-#: src/EditableUserTFAMethod.js:110
+#: src/EditableUserTFAMethod.js:107
 msgid "Phone Validated"
 msgstr "Phone Validated"
 
@@ -1715,11 +1720,11 @@ msgstr "SSL-rc4"
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
-#: src/EditableUserLanguage.js:116
+#: src/EditableUserLanguage.js:115
 msgid "Save Language"
 msgstr "Save Language"
 
-#: src/EditableUserTFAMethod.js:144
+#: src/EditableUserTFAMethod.js:141
 msgid "Save TFA Method"
 msgstr "Save TFA Method"
 
@@ -1747,6 +1752,7 @@ msgstr "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgid "Search"
 msgstr "Search"
 
+#: src/DmarcByDomainPage.js:291
 #: src/DomainsPage.js:119
 msgid "Search for a domain"
 msgstr "Search for a domain"
@@ -1791,11 +1797,11 @@ msgstr "Services"
 msgid "Services: {domainCount}"
 msgstr "Services: {domainCount}"
 
-#: src/DmarcReportTable.js:316
+#: src/DmarcReportTable.js:325
 msgid "Show {pageSize}"
 msgstr "Show {pageSize}"
 
-#: src/DmarcByDomainPage.js:231
+#: src/DmarcByDomainPage.js:267
 #: src/DmarcReportPage.js:628
 msgid "Showing data for period:"
 msgstr "Showing data for period:"
@@ -1856,7 +1862,7 @@ msgstr "T-enabled"
 msgid "TBD"
 msgstr "TBD"
 
-#: src/EditableUserTFAMethod.js:88
+#: src/EditableUserTFAMethod.js:85
 msgid "TFA Method:"
 msgstr "TFA Method:"
 
@@ -1901,7 +1907,7 @@ msgstr "This could be due to improper configuration, or could be the result of a
 msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
 
-#: src/DmarcByDomainPage.js:88
+#: src/DmarcByDomainPage.js:121
 #: src/DmarcReportPage.js:283
 msgid "Total Messages"
 msgstr "Total Messages"
@@ -1910,6 +1916,7 @@ msgstr "Total Messages"
 msgid "Total users"
 msgstr "Total users"
 
+#: src/LandingPage.js:20
 #: src/WelcomeMessage.js:15
 msgid "Track Digital Security"
 msgstr "Track Digital Security"
@@ -1982,11 +1989,11 @@ msgstr "Unable to update domain."
 msgid "Unable to update password"
 msgstr "Unable to update password"
 
-#: src/EditableUserTFAMethod.js:63
+#: src/EditableUserTFAMethod.js:60
 msgid "Unable to update to your TFA send method, please try again."
 msgstr "Unable to update to your TFA send method, please try again."
 
-#: src/EditableUserDisplayName.js:73
+#: src/EditableUserDisplayName.js:70
 msgid "Unable to update to your display name, please try again."
 msgstr "Unable to update to your display name, please try again."
 
@@ -1994,11 +2001,11 @@ msgstr "Unable to update to your display name, please try again."
 #~ msgid "Unable to update to your phone number, please try again."
 #~ msgstr "Unable to update to your phone number, please try again."
 
-#: src/EditableUserLanguage.js:52
+#: src/EditableUserLanguage.js:51
 msgid "Unable to update to your preferred language, please try again."
 msgstr "Unable to update to your preferred language, please try again."
 
-#: src/EditableUserEmail.js:71
+#: src/EditableUserEmail.js:70
 msgid "Unable to update to your username, please try again."
 msgstr "Unable to update to your username, please try again."
 
@@ -2140,15 +2147,15 @@ msgstr "You have not enabled Two Factor Authentication. To maximize your account
 msgid "You have successfully been signed out."
 msgstr "You have successfully been signed out."
 
-#: src/EditableUserTFAMethod.js:53
+#: src/EditableUserTFAMethod.js:50
 msgid "You have successfully updated your TFA send method."
 msgstr "You have successfully updated your TFA send method."
 
-#: src/EditableUserDisplayName.js:62
+#: src/EditableUserDisplayName.js:59
 msgid "You have successfully updated your display name."
 msgstr "You have successfully updated your display name."
 
-#: src/EditableUserEmail.js:60
+#: src/EditableUserEmail.js:59
 msgid "You have successfully updated your email."
 msgstr "You have successfully updated your email."
 
@@ -2160,7 +2167,7 @@ msgstr "You have successfully updated your password."
 msgid "You have successfully updated your phone number."
 msgstr "You have successfully updated your phone number."
 
-#: src/EditableUserLanguage.js:42
+#: src/EditableUserLanguage.js:41
 msgid "You have successfully updated your preferred language."
 msgstr "You have successfully updated your preferred language."
 
