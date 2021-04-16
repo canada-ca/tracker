@@ -324,6 +324,8 @@
       'Unable to invite user. Please try again.',
     'Unable to invite yourself to an org.':
       'Unable to invite yourself to an org.',
+    'Unable to load Aggregate guidance tag(s). Please try again.':
+      'Unable to load Aggregate guidance tag(s). Please try again.',
     'Unable to load DKIM failure data. Please try again.':
       'Unable to load DKIM failure data. Please try again.',
     'Unable to load DKIM guidance tag(s). Please try again.':

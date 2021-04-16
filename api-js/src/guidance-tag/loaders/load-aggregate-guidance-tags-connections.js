@@ -141,14 +141,11 @@ export const loadAggregateGuidanceTagConnectionsByTagId = ({
   let hasPreviousPageFilter = aql`FILTER TO_NUMBER(REGEX_SPLIT(tag._key, "[a-z]+")[1]) < TO_NUMBER(REGEX_SPLIT(FIRST(retrievedAggregateGuidanceTags)._key, "[a-z]+")[1])`
 
   if (typeof orderBy !== 'undefined') {
-    let hasNextPageDirection
-    let hasPreviousPageDirection
+    let hasNextPageDirection = aql`<`
+    let hasPreviousPageDirection = aql`>`
     if (orderBy.direction === 'ASC') {
       hasNextPageDirection = aql`>`
       hasPreviousPageDirection = aql`<`
-    } else {
-      hasNextPageDirection = aql`<`
-      hasPreviousPageDirection = aql`>`
     }
 
     let tagField, hasNextPageDocument, hasPreviousPageDocument
@@ -260,7 +257,7 @@ export const loadAggregateGuidanceTagConnectionsByTagId = ({
     )
   }
 
-  if (aggregateGuidanceTagInfo.dkimGuidanceTags.length === 0) {
+  if (aggregateGuidanceTagInfo.aggregateGuidanceTags.length === 0) {
     return {
       edges: [],
       totalCount: 0,
@@ -273,7 +270,7 @@ export const loadAggregateGuidanceTagConnectionsByTagId = ({
     }
   }
 
-  const edges = aggregateGuidanceTagInfo.dkimGuidanceTags.map((tag) => ({
+  const edges = aggregateGuidanceTagInfo.aggregateGuidanceTags.map((tag) => ({
     cursor: toGlobalId('guidanceTags', tag._key),
     node: tag,
   }))

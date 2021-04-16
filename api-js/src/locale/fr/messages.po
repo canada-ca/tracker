@@ -110,6 +110,7 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
 msgstr "todo"
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:98
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:95
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:95
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:95
@@ -282,6 +283,7 @@ msgstr "todo"
 msgid "Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:121
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:118
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:118
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:118
@@ -534,6 +536,11 @@ msgstr "todo"
 
 #: src/affiliation/mutations/invite-user-to-org.js:70
 msgid "Unable to invite yourself to an org."
+msgstr "todo"
+
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:244
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:256
+msgid "Unable to load Aggregate guidance tag(s). Please try again."
 msgstr "todo"
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:16
@@ -961,6 +968,7 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
 msgstr "todo"
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:89
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:86
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:86
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:86
@@ -1035,6 +1043,7 @@ msgstr "todo"
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:133
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:183
 #: src/email-scan/loaders/load-spf-connections-by-domain-id.js:176
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:136
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:133
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:133
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:133
@@ -1075,6 +1084,7 @@ msgstr "todo"
 msgid "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
 msgstr "todo"
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:110
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:107
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:107
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:107

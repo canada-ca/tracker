@@ -110,6 +110,7 @@ msgstr "Passing both `first` and `last` to paginate the `DmarcFailureTable` conn
 msgid "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:98
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:95
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:95
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:95
@@ -282,6 +283,7 @@ msgstr "Requesting `{amount}` records on the `DmarcFailureTable` connection exce
 msgid "Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records."
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:121
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:118
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:118
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:118
@@ -535,6 +537,11 @@ msgstr "Unable to invite user. Please try again."
 #: src/affiliation/mutations/invite-user-to-org.js:70
 msgid "Unable to invite yourself to an org."
 msgstr "Unable to invite yourself to an org."
+
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:244
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:256
+msgid "Unable to load Aggregate guidance tag(s). Please try again."
+msgstr "Unable to load Aggregate guidance tag(s). Please try again."
 
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:16
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:144
@@ -961,6 +968,7 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Dma
 msgid "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:89
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:86
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:86
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:86
@@ -1035,6 +1043,7 @@ msgstr "You must provide a `year` value to access the `dmarcSummaries` connectio
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:133
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:183
 #: src/email-scan/loaders/load-spf-connections-by-domain-id.js:176
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:136
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:133
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:133
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:133
@@ -1075,6 +1084,7 @@ msgstr "`{argSet}` on the `DmarcFailureTable` connection cannot be less than zer
 msgid "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
 msgstr "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:110
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:107
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:107
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:107
