@@ -5,6 +5,6 @@ metadata:
   name: ssl-scanner
   namespace: flux-system
 spec:
-  image: gcr.io/track-compliance/scanners/ssl
+  image: gcr.io/track-compliance/services/scanners/ssl
   interval: 1m0s
 

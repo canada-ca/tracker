@@ -3,106 +3,137 @@ export const databaseOptions = ({ rootPass }) => [
   {
     type: 'documentcollection',
     name: 'users',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'organizations',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'domains',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'dkim',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'dkimResults',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'dmarc',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'spf',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'https',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'ssl',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'dkimGuidanceTags',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'dmarcGuidanceTags',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'spfGuidanceTags',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'httpsGuidanceTags',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'sslGuidanceTags',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'chartSummaries',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'documentcollection',
     name: 'dmarcSummaries',
+    options: { replicationFactor: 2,  writeConcern: 1 },
+  },
+  {
+    type: 'documentcollection',
+    name: 'aggregateGuidanceTags',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'edgecollection',
     name: 'affiliations',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'edgecollection',
     name: 'claims',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'edgecollection',
     name: 'domainsDKIM',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'edgecollection',
     name: 'dkimToDkimResults',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'edgecollection',
     name: 'domainsDMARC',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'edgecollection',
     name: 'domainsSPF',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'edgecollection',
     name: 'domainsHTTPS',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'edgecollection',
     name: 'domainsSSL',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'edgecollection',
     name: 'ownership',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'edgecollection',
     name: 'domainsToDmarcSummaries',
+    options: { replicationFactor: 2,  writeConcern: 1 },
   },
   {
     type: 'delimiteranalyzer',

@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/instance: crd
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb-crd
-    helm.sh/chart: kube-arangodb-crd-1.1.5
+    helm.sh/chart: kube-arangodb-crd-1.1.6
     release: crd
   name: arangobackuppolicies.backup.arangodb.com
 spec:
@@ -74,7 +74,7 @@ metadata:
     app.kubernetes.io/instance: crd
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb-crd
-    helm.sh/chart: kube-arangodb-crd-1.1.5
+    helm.sh/chart: kube-arangodb-crd-1.1.6
     release: crd
   name: arangobackups.backup.arangodb.com
 spec:
@@ -184,7 +184,7 @@ metadata:
     app.kubernetes.io/instance: crd
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb-crd
-    helm.sh/chart: kube-arangodb-crd-1.1.5
+    helm.sh/chart: kube-arangodb-crd-1.1.6
     release: crd
   name: arangodeploymentreplications.replication.database.arangodb.com
 spec:
@@ -229,7 +229,7 @@ metadata:
     app.kubernetes.io/instance: crd
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb-crd
-    helm.sh/chart: kube-arangodb-crd-1.1.5
+    helm.sh/chart: kube-arangodb-crd-1.1.6
     release: crd
   name: arangodeployments.database.arangodb.com
 spec:
@@ -268,6 +268,46 @@ spec:
     subresources:
       status: {}
 ---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    app.kubernetes.io/instance: crd
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: kube-arangodb-crd
+    helm.sh/chart: kube-arangodb-crd-1.1.6
+    release: crd
+  name: arangomembers.database.arangodb.com
+spec:
+  group: database.arangodb.com
+  names:
+    kind: ArangoMember
+    listKind: ArangoMemberList
+    plural: arangomembers
+    shortNames:
+    - arangomembers
+    singular: arangomember
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}
+  - name: v2alpha1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: false
+    subresources:
+      status: {}
+---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
@@ -275,7 +315,7 @@ metadata:
     app.kubernetes.io/instance: storage
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: storage
   name: arangolocalstorages.storage.arangodb.com
 spec:
@@ -297,7 +337,7 @@ metadata:
     app.kubernetes.io/instance: deployment
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment
   name: arango-deployment-operator
   namespace: db
@@ -309,7 +349,7 @@ metadata:
     app.kubernetes.io/instance: deployment-replication
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment-replication
   name: arango-deployment-replication-operator
   namespace: db
@@ -321,7 +361,7 @@ metadata:
     app.kubernetes.io/instance: storage
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: storage
   name: arango-storage-operator
   namespace: db
@@ -333,7 +373,7 @@ metadata:
     app.kubernetes.io/instance: deployment
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment
   name: arango-deployment-operator-rbac-default
   namespace: db
@@ -352,7 +392,7 @@ metadata:
     app.kubernetes.io/instance: deployment
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment
   name: arango-deployment-operator-rbac-deployment
   namespace: db
@@ -362,6 +402,8 @@ rules:
   resources:
   - arangodeployments
   - arangodeployments/status
+  - arangomembers
+  - arangomembers/status
   verbs:
   - '*'
 - apiGroups:
@@ -418,7 +460,7 @@ metadata:
     app.kubernetes.io/instance: deployment-replication
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment-replication
   name: arango-deployment-replication-operator-rbac-deployment-replication
   namespace: db
@@ -462,7 +504,7 @@ metadata:
     app.kubernetes.io/instance: storage
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: storage
   name: arango-storage-operator-rbac-storage
   namespace: db
@@ -501,7 +543,7 @@ metadata:
     app.kubernetes.io/instance: deployment
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment
   name: arango-deployment-operator-rbac-deployment
 rules:
@@ -530,7 +572,7 @@ metadata:
     app.kubernetes.io/instance: deployment-replication
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment-replication
   name: arango-deployment-replication-operator-rbac-deployment-replication
 rules:
@@ -558,7 +600,7 @@ metadata:
     app.kubernetes.io/instance: storage
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: storage
   name: arango-storage-operator-rbac-storage
 rules:
@@ -608,7 +650,7 @@ metadata:
     app.kubernetes.io/instance: deployment
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment
   name: arango-deployment-operator-rbac-default
   namespace: db
@@ -628,7 +670,7 @@ metadata:
     app.kubernetes.io/instance: deployment
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment
   name: arango-deployment-operator-rbac-deployment
   namespace: db
@@ -648,7 +690,7 @@ metadata:
     app.kubernetes.io/instance: deployment-replication
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment-replication
   name: arango-deployment-replication-operator-rbac-deployment-replication
   namespace: db
@@ -668,7 +710,7 @@ metadata:
     app.kubernetes.io/instance: storage
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: storage
   name: arango-storage-operator-rbac-storage
   namespace: db
@@ -688,7 +730,7 @@ metadata:
     app.kubernetes.io/instance: deployment
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment
   name: arango-deployment-operator-rbac-deployment
 roleRef:
@@ -707,7 +749,7 @@ metadata:
     app.kubernetes.io/instance: deployment-replication
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment-replication
   name: arango-deployment-replication-operator-rbac-deployment-replication
 roleRef:
@@ -726,7 +768,7 @@ metadata:
     app.kubernetes.io/instance: storage
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: storage
   name: arango-storage-operator-rbac-storage
 roleRef:
@@ -745,7 +787,7 @@ metadata:
     app.kubernetes.io/instance: deployment
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment
   name: arango-deployment-operator
   namespace: db
@@ -770,7 +812,7 @@ metadata:
     app.kubernetes.io/instance: deployment-replication
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment-replication
   name: arango-deployment-replication-operator
   namespace: db
@@ -795,7 +837,7 @@ metadata:
     app.kubernetes.io/instance: storage
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: storage
   name: arango-storage-operator
   namespace: db
@@ -820,7 +862,7 @@ metadata:
     app.kubernetes.io/instance: deployment
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment
   name: arango-deployment-operator
   namespace: db
@@ -840,7 +882,7 @@ spec:
         app.kubernetes.io/instance: deployment
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.1.5
+        helm.sh/chart: kube-arangodb-1.1.6
         release: deployment
     spec:
       affinity:
@@ -891,7 +933,7 @@ spec:
           value: arangodb/arangodb-exporter:0.1.7
         - name: RELATED_IMAGE_DATABASE
           value: arangodb/arangodb:latest
-        image: arangodb/kube-arangodb:1.1.5
+        image: arangodb/kube-arangodb:1.1.6
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -942,7 +984,7 @@ metadata:
     app.kubernetes.io/instance: deployment-replication
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: deployment-replication
   name: arango-deployment-replication-operator
   namespace: db
@@ -962,7 +1004,7 @@ spec:
         app.kubernetes.io/instance: deployment-replication
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.1.5
+        helm.sh/chart: kube-arangodb-1.1.6
         release: deployment-replication
     spec:
       affinity:
@@ -1013,7 +1055,7 @@ spec:
           value: arangodb/arangodb-exporter:0.1.7
         - name: RELATED_IMAGE_DATABASE
           value: arangodb/arangodb:latest
-        image: arangodb/kube-arangodb:1.1.5
+        image: arangodb/kube-arangodb:1.1.6
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -1064,7 +1106,7 @@ metadata:
     app.kubernetes.io/instance: storage
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.1.5
+    helm.sh/chart: kube-arangodb-1.1.6
     release: storage
   name: arango-storage-operator
   namespace: db
@@ -1084,7 +1126,7 @@ spec:
         app.kubernetes.io/instance: storage
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.1.5
+        helm.sh/chart: kube-arangodb-1.1.6
         release: storage
     spec:
       affinity:
@@ -1135,7 +1177,7 @@ spec:
           value: arangodb/arangodb-exporter:0.1.7
         - name: RELATED_IMAGE_DATABASE
           value: arangodb/arangodb:latest
-        image: arangodb/kube-arangodb:1.1.5
+        image: arangodb/kube-arangodb:1.1.6
         imagePullPolicy: Always
         livenessProbe:
           httpGet:

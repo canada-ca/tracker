@@ -21,7 +21,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: https-scanner
-          image: gcr.io/track-compliance/scanners/https:master-36359cc # {"$imagepolicy": "flux-system:https-scanner"}
+          image: gcr.io/track-compliance/services/scanners/https:master-cbfd007-1617737130 # {"$imagepolicy": "flux-system:https-scanner"}
 
 ---
 
@@ -48,7 +48,7 @@ spec:
       containerConcurrency: 1
       containers:
         - name: result-processor
-          image: gcr.io/track-compliance/scanners/results:master-bd31de0 # {"$imagepolicy": "flux-system:result-processor"}
+          image: gcr.io/track-compliance/services/scanners/results:master-cbfd007-1617737145 # {"$imagepolicy": "flux-system:result-processor"}
           env:
             - name: DB_USER
               valueFrom:
@@ -109,7 +109,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: ssl-scanner
-          image: gcr.io/track-compliance/scanners/ssl:master-36359cc # {"$imagepolicy": "flux-system:ssl-scanner"}
+          image: gcr.io/track-compliance/services/scanners/ssl:master-cbfd007-1617737121 # {"$imagepolicy": "flux-system:ssl-scanner"}
 
 ---
 
@@ -136,7 +136,7 @@ spec:
       containerConcurrency: 8
       containers:
         - name: dns-scanner
-          image: gcr.io/track-compliance/scanners/dns:master-36359cc # {"$imagepolicy": "flux-system:dns-scanner"}
+          image: gcr.io/track-compliance/services/scanners/dns:master-9c662ba-1618317412 # {"$imagepolicy": "flux-system:dns-scanner"}
 
 ---
 

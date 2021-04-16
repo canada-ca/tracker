@@ -253,7 +253,7 @@ describe('given findMyOrganizationsQuery', () => {
     })
     describe('database error occurs', () => {
       it('returns an error message', async () => {
-        const mockedOrgLoaderConnectionsByUserId = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValueOnce(new Error('Database error occurred.'))
 
@@ -294,18 +294,24 @@ describe('given findMyOrganizationsQuery', () => {
               userRequired: jest.fn(),
             },
             loaders: {
-              loadOrgConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
+              loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
+                query: mockedQuery,
+                userKey: user._key,
+                cleanseInput,
+                language: 'en',
+                i18n,
+              }),
             },
           },
         )
 
         const error = [
-          new GraphQLError('Unable to load organizations. Please try again.'),
+          new GraphQLError('Unable to load organization(s). Please try again.'),
         ]
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather organization connections in findMyOrganizations.`,
+          `Database error occurred while user: ${user._key} was trying to query organizations in loadOrgConnectionsByUserId, error: Error: Database error occurred.`,
         ])
       })
     })
@@ -454,7 +460,7 @@ describe('given findMyOrganizationsQuery', () => {
     })
     describe('database error occurs', () => {
       it('returns an error message', async () => {
-        const mockedOrgLoaderConnectionsByUserId = jest
+        const mockedQuery = jest
           .fn()
           .mockRejectedValueOnce(new Error('Database error occurred.'))
 
@@ -495,7 +501,13 @@ describe('given findMyOrganizationsQuery', () => {
               userRequired: jest.fn(),
             },
             loaders: {
-              loadOrgConnectionsByUserId: mockedOrgLoaderConnectionsByUserId,
+              loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
+                query: mockedQuery,
+                userKey: user._key,
+                cleanseInput,
+                language: 'en',
+                i18n,
+              }),
             },
           },
         )
@@ -504,7 +516,7 @@ describe('given findMyOrganizationsQuery', () => {
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather organization connections in findMyOrganizations.`,
+          `Database error occurred while user: ${user._key} was trying to query organizations in loadOrgConnectionsByUserId, error: Error: Database error occurred.`,
         ])
       })
     })

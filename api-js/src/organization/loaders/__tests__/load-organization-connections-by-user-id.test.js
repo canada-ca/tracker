@@ -129,7 +129,7 @@ describe('given the load organization connections by user id function', () => {
     await collections.affiliations.save({
       _from: orgTwo._id,
       _to: user._id,
-      permission: 'user',
+      permission: 'admin',
     })
     domain = await collections.domains.save({
       domain: 'test.domain.gc.ca',
@@ -2125,6 +2125,49 @@ describe('given the load organization connections by user id function', () => {
                 hasNextPage: false,
                 hasPreviousPage: false,
                 startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+              },
+            }
+
+            expect(orgs).toEqual(expectedStructure)
+          })
+        })
+        describe('isAdmin is set to true', () => {
+          it('returns an organization', async () => {
+            const connectionLoader = loadOrgConnectionsByUserId({
+              query,
+              userKey: user._key,
+              cleanseInput,
+              language: 'en',
+              i18n,
+            })
+
+            const orgLoader = loadOrgByKey({ query, language: 'en' })
+            const expectedOrgs = await orgLoader.loadMany([
+              orgOne._key,
+              orgTwo._key,
+            ])
+
+            const connectionArgs = {
+              first: 5,
+              isAdmin: true,
+            }
+            const orgs = await connectionLoader({ ...connectionArgs })
+
+            const expectedStructure = {
+              edges: [
+                {
+                  cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                  node: {
+                    ...expectedOrgs[1],
+                  },
+                },
+              ],
+              totalCount: 1,
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false,
+                startCursor: toGlobalId('organizations', expectedOrgs[1]._key),
                 endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
               },
             }
