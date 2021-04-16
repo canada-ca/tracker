@@ -11,7 +11,6 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Stack,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
