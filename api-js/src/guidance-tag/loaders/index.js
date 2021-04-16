@@ -1,3 +1,5 @@
+export * from './load-aggregate-guidance-tags'
+export * from './load-aggregate-guidance-tags-connections'
 export * from './load-dkim-guidance-tags'
 export * from './load-dkim-guidance-tags-connections'
 export * from './load-dmarc-guidance-tags'
