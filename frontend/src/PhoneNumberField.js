@@ -35,14 +35,6 @@ const PhoneNumberField = WithPseudoBox(function PhoneNumberField({
       ''
     )
 
-  const phoneNumberMatchIcon =
-    meta.error === i18n._(fieldRequirements.phoneNumber.matches.message) ||
-    field.value === '' ? (
-      <Icon name="warning" color="red.500" />
-    ) : (
-      <Icon name="check-circle" color="green.400" />
-    )
-
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <FormLabel htmlFor="phoneNumber" fontWeight="bold">
@@ -62,12 +54,9 @@ const PhoneNumberField = WithPseudoBox(function PhoneNumberField({
         />
       </InputGroup>
 
-      <Stack isInline align="center" mt="0.5rem">
-        {phoneNumberMatchIcon}
-        <FormHelperText mt="0">
-          {i18n._(fieldRequirements.phoneNumber.matches.message)}
-        </FormHelperText>
-      </Stack>
+      <FormHelperText>
+        {i18n._(fieldRequirements.phoneNumber.matches.message)}
+      </FormHelperText>
 
       {errorText}
     </FormControl>
