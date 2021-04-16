@@ -213,6 +213,7 @@ export default function DmarcByDomainPage() {
     const [newPeriod, newYear] = e.target.value.split(', ')
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
+    resetToFirstPage()
   }
 
   const options = [

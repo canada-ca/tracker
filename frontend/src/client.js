@@ -12,6 +12,8 @@ export function createCache() {
             'first',
             'orderBy',
             'search',
+            'month',
+            'year',
           ]),
           findMyOrganizations: relayStylePagination([
             'first',
