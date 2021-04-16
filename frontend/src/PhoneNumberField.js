@@ -5,6 +5,7 @@ import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Icon,
   Input,
@@ -13,6 +14,7 @@ import {
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
+import { fieldRequirements } from './fieldRequirements'
 
 const PhoneNumberField = WithPseudoBox(function PhoneNumberField({
   name,
@@ -24,6 +26,13 @@ const PhoneNumberField = WithPseudoBox(function PhoneNumberField({
   const { i18n } = useLingui()
 
   const labelText = label === undefined ? <Trans>Phone Number:</Trans> : label
+
+  const errorText =
+    meta.error !== i18n._(fieldRequirements.phoneNumber.matches.message) ? (
+      <FormErrorMessage>{meta.error}</FormErrorMessage>
+    ) : (
+      ''
+    )
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
@@ -44,7 +53,11 @@ const PhoneNumberField = WithPseudoBox(function PhoneNumberField({
         />
       </InputGroup>
 
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
+      <FormHelperText>
+        {i18n._(fieldRequirements.phoneNumber.matches.message)}
+      </FormHelperText>
+
+      {errorText}
     </FormControl>
   )
 })
