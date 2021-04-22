@@ -57,7 +57,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: generate-image-name
   entrypoint: 'bash'
-  dir: api-js
+  dir: services/super-admin
   args:
     - '-c'
     - |
@@ -66,7 +66,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: build-if-master
   entrypoint: 'bash'
-  dir: frontend
+  dir: services/super-admin
   args:
   - '-c'
   - |
@@ -81,6 +81,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: push-if-master
   entrypoint: 'bash'
+  dir: services/super-admin
   args:
   - '-c'
   - |
