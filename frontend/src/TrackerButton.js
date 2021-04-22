@@ -24,6 +24,18 @@ export const TrackerButton = React.forwardRef(
       color = 'gray.50'
       bg = 'red.700'
       hoverColor = 'red.600'
+    } else if (variant === 'strong') {
+      color = 'white'
+      bg = 'strong'
+      hoverColor = 'green.400'
+    } else if (variant === 'info') {
+      color = 'white'
+      bg = 'info'
+      hoverColor = 'blue.300'
+    } else if (variant === 'weak') {
+      color = 'white'
+      bg = 'weak'
+      hoverColor = 'red.400'
     }
 
     return (

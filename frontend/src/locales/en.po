@@ -1191,9 +1191,9 @@ msgstr "Next"
 msgid "No Domains"
 msgstr "No Domains"
 
-#: src/GuidanceTagList.js:80
-#~ msgid "No Guidance tags were found for this scan category"
-#~ msgstr "No Guidance tags were found for this scan category"
+#: src/GuidanceTagList.js:96
+msgid "No guidance tags were found for this scan category"
+msgstr "No guidance tags were found for this scan category"
 
 #: src/Organizations.js:74
 msgid "No Organizations"
@@ -1242,10 +1242,6 @@ msgstr "No data for the SPF Failures by IP Address table"
 #: src/DomainList.js:12
 msgid "No domains scanned yet."
 msgstr "No domains scanned yet."
-
-#: src/GuidanceTagList.js:80
-msgid "No guidance tags were found for this scan category"
-msgstr "No guidance tags were found for this scan category"
 
 #: src/Doughnut.js:63
 msgid "No scan data for this organization."
@@ -2293,3 +2289,15 @@ msgstr "{orgName}"
 #: src/useDocumentTitle.js:6
 msgid "{title} - Tracker"
 msgstr "{title} - Tracker"
+
+#: src/GuidanceTagList.js:132
+msgid "Positive Tags"
+msgstr "Positive Tags"
+
+#: src/GuidanceTagList.js:147
+msgid "Neutral Tags"
+msgstr "Neutral Tags"
+
+#: src/GuidanceTagList.js:162
+msgid "Negative Tags"
+msgstr "Negative Tags"
