@@ -22,10 +22,10 @@
   },
   "dependencies": {
     "@lingui/core": "^3.8.9",
-    "apollo-server": "^2.21.1",
+    "apollo-server": "^2.23.0",
     "apollo-server-express": "^2.21.1",
     "arango-tools": "^0.4.1",
-    "arangojs": "^7.3.0",
+    "arangojs": "^7.5.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
