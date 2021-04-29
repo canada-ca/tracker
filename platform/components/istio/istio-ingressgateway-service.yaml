@@ -7,11 +7,15 @@ spec:
   ports:
   - name: status-port
     $patch: delete
-  - name: tls
-    $patch: delete
   - name: http2
     port: 80
+    protocol: TCP
     targetPort: 8080
   - name: https
     port: 443
+    protocol: TCP
     targetPort: 8443
+  - name: tcp-istiod
+    $patch: delete
+  - name: tls
+    $patch: delete
