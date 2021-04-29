@@ -24,6 +24,13 @@ else
 		kustomize build app/creds/dev | kubectl apply -f -
 endif
 
+.PHONY: update-istio
+update-istio:
+		istioctl manifest generate --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.accessLogEncoding=JSON --set values.pilot.traceSampling=100.00 > platform/components/istio/istio.yaml
+
+.PHONY: print-ingress
+print-ingress:
+		kustomize build platform/gke | yq -y '. | select(.kind == "Service" and .metadata.name == "istio-ingressgateway")'
 
 .PHONY: platform
 platform:
