@@ -36,6 +36,15 @@ print-ingress:
 platform:
 		kustomize build platform/$(env) | kubectl apply -f -
 
+.PHONY: deploy
+deploy:
+ifeq ("$(env)", "gke")
+		kustomize build deploy/creds/readwrite | kubectl apply -f -
+		kustomize build deploy/$(env) | kubectl apply -f -
+else
+		kustomize build deploy/$(env) | kubectl apply -f -
+endif
+
 .PHONY: app
 app:
 		kustomize build app/$(env) | kubectl apply -f -
