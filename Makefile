@@ -6,6 +6,7 @@ project = track-compliance
 name = test
 region = northamerica-northeast1
 mode = dev
+env = test
 
 define scanners =
 endef
@@ -30,7 +31,11 @@ update-istio:
 
 .PHONY: print-ingress
 print-ingress:
-		kustomize build platform/gke | yq -y '. | select(.kind == "Service" and .metadata.name == "istio-ingressgateway")'
+		kustomize build platform/$(env) | yq -y '. | select(.kind == "Service" and .metadata.name == "istio-ingressgateway")'
+
+.PHONY: print-arango-deployment
+print-arango-deployment:
+		kustomize build app/$(env) | yq -y '. | select(.kind == "ArangoDeployment" and .metadata.name == "arangodb")'
 
 .PHONY: platform
 platform:
