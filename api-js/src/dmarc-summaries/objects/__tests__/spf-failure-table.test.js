@@ -1,3 +1,4 @@
+import { ensure, dbNameFromFile } from 'arango-tools'
 import {
   GraphQLID,
   GraphQLInt,
@@ -8,6 +9,11 @@ import {
 import { toGlobalId } from 'graphql-relay'
 
 import { spfFailureTableType } from '../spf-failure-table'
+import { loadAggregateGuidanceTagById } from '../../../guidance-tag/loaders'
+import { guidanceTagType } from '../../../guidance-tag/objects'
+import { databaseOptions } from '../../../../database-options'
+
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given spfFailureTable gql object', () => {
   describe('testing field definitions', () => {
@@ -34,6 +40,12 @@ describe('given spfFailureTable gql object', () => {
 
       expect(demoType).toHaveProperty('guidance')
       expect(demoType.guidance.type).toMatchObject(GraphQLString)
+    })
+    it('has a guidanceTag field', () => {
+      const demoType = spfFailureTableType.getFields()
+
+      expect(demoType).toHaveProperty('guidanceTag')
+      expect(demoType.guidanceTag.type).toMatchObject(guidanceTagType)
     })
     it('has a headerFrom field', () => {
       const demoType = spfFailureTableType.getFields()
@@ -82,7 +94,7 @@ describe('given spfFailureTable gql object', () => {
         )
       })
     })
-    describe('testing the dnsHost field', () => {
+    describe('testing the dnsHost resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -91,7 +103,7 @@ describe('given spfFailureTable gql object', () => {
         )
       })
     })
-    describe('testing the envelopeFrom field', () => {
+    describe('testing the envelopeFrom resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -100,7 +112,7 @@ describe('given spfFailureTable gql object', () => {
         ).toEqual('envelopeFrom')
       })
     })
-    describe('testing the guidance field', () => {
+    describe('testing the guidance resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -109,7 +121,80 @@ describe('given spfFailureTable gql object', () => {
         )
       })
     })
-    describe('testing the headerFrom field', () => {
+    describe('testing the guidanceTag resolver', () => {
+      let query, drop, truncate, collections, aggGT
+      beforeAll(async () => {
+        ;({ query, drop, truncate, collections } = await ensure({
+          type: 'database',
+          name: dbNameFromFile(__filename),
+          url,
+          rootPassword: rootPass,
+          options: databaseOptions({ rootPass }),
+        }))
+      })
+      beforeEach(async () => {
+        aggGT = await collections.aggregateGuidanceTags.save({
+          _key: 'agg1',
+          tagName: 'cool-tag-name',
+          guidance: 'cool guidance for issue',
+          refLinksGuide: [
+            {
+              description: 'Link Description',
+              ref_link: 'www.link.ca',
+            },
+          ],
+          refLinksTechnical: [
+            {
+              description: 'Tech link description',
+              tech_link: 'www.tech.link.ca',
+            },
+          ],
+        })
+      })
+      afterEach(async () => {
+        await truncate()
+      })
+      afterAll(async () => {
+        await drop()
+      })
+      it('returns resolved value', async () => {
+        const demoType = spfFailureTableType.getFields()
+
+        expect(
+          await demoType.guidanceTag.resolve(
+            { guidance: 'agg1' },
+            {},
+            {
+              loaders: {
+                loadAggregateGuidanceTagById: loadAggregateGuidanceTagById({
+                  query,
+                  userKey: '1',
+                }),
+              },
+            },
+          ),
+        ).toEqual({
+          _id: 'aggregateGuidanceTags/agg1',
+          _key: 'agg1',
+          _rev: aggGT._rev,
+          _type: 'guidanceTag',
+          guidance: 'cool guidance for issue',
+          id: 'agg1',
+          refLinksGuide: [
+            { description: 'Link Description', ref_link: 'www.link.ca' },
+          ],
+          refLinksTechnical: [
+            {
+              description: 'Tech link description',
+              tech_link: 'www.tech.link.ca',
+            },
+          ],
+          tagId: 'agg1',
+          tagName: 'cool-tag-name',
+        })
+      })
+    })
+    describe('testing the headerFrom resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -118,7 +203,7 @@ describe('given spfFailureTable gql object', () => {
         ).toEqual('headerFrom')
       })
     })
-    describe('testing the sourceIpAddress field', () => {
+    describe('testing the sourceIpAddress resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -136,7 +221,7 @@ describe('given spfFailureTable gql object', () => {
         expect(demoType.spfAligned.resolve({ spfAligned: true })).toEqual(true)
       })
     })
-    describe('testing the spfDomains field', () => {
+    describe('testing the spfDomains resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -145,7 +230,7 @@ describe('given spfFailureTable gql object', () => {
         ).toEqual('spfDomains')
       })
     })
-    describe('testing the spfResults field', () => {
+    describe('testing the spfResults resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -154,7 +239,7 @@ describe('given spfFailureTable gql object', () => {
         ).toEqual('spfResults')
       })
     })
-    describe('testing the totalMessages field', () => {
+    describe('testing the totalMessages resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 

@@ -151,7 +151,7 @@ export const updateDomain = new mutationWithClientMutationId({
 
     // Update domain
     const domainToInsert = {
-      domain: updatedDomain || domain.domain,
+      domain: updatedDomain.toLowerCase() || domain.domain.toLowerCase(),
       lastRan: domain.lastRan,
       selectors: selectors || domain.selectors,
     }

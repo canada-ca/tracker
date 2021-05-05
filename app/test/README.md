@@ -10,21 +10,18 @@ Since testing usually involves trying stuff that isn't commited to master yet, t
 Currently we are just creating the cluster with the following command.
 
 ```sh
-gcloud beta container --project "track-compliance" clusters create "testing" \
- --region "northamerica-northeast1" --no-enable-basic-auth \
- --cluster-version "1.18.9-gke.801" --release-channel "rapid" \
- --machine-type "e2-standard-2" --image-type "COS_CONTAINERD" \
- --disk-type "pd-standard" --disk-size "100" \
- --metadata disable-legacy-endpoints=true \
- --service-account "gke-node-service-account@track-compliance.iam.gserviceaccount.com" \
- --num-nodes "2" --enable-stackdriver-kubernetes --enable-ip-alias \
- --network "projects/track-compliance/global/networks/default" \
- --subnetwork "projects/track-compliance/regions/northamerica-northeast1/subnetworks/default" \
- --default-max-pods-per-node "110" --no-enable-master-authorized-networks \
- --addons HorizontalPodAutoscaling,HttpLoadBalancing,CloudRun --enable-autoupgrade \
- --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 \
- --workload-pool "track-compliance.svc.id.goog" \
- --enable-shielded-nodes --shielded-secure-boot
+gcloud beta container --project "track-compliance" clusters create "tracker" \
+  --region "northamerica-northeast1" --no-enable-basic-auth --release-channel "regular" \
+  --machine-type "e2-highcpu-4" --image-type "COS_CONTAINERD" --disk-type "pd-standard" \
+  --disk-size "50" --metadata disable-legacy-endpoints=true \
+  --service-account "gke-node-service-account@track-compliance.iam.gserviceaccount.com" \
+  --num-nodes "2" --enable-stackdriver-kubernetes --enable-ip-alias \
+  --network "projects/track-compliance/global/networks/default" \
+  --subnetwork "projects/track-compliance/regions/northamerica-northeast1/subnetworks/default" \
+  --no-enable-master-authorized-networks \
+  --addons HorizontalPodAutoscaling,HttpLoadBalancing,CloudRun \
+  --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 \
+  --workload-pool "track-compliance.svc.id.goog" --enable-shielded-nodes --shielded-secure-boot
 ```
 
 With the cluster up and running, you will need to provide the env files as

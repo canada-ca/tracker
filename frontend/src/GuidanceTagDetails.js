@@ -7,7 +7,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
   const cccsGuidance =
     guidanceTag.refLinks[0]?.description !== null &&
     guidanceTag.refLinks.length !== 0 ? (
-      <Stack isInline>
+      <Stack isInline={guidanceTag.refLinks.length <= 1}>
         <Text fontWeight="bold">
           <Trans>For in-depth CCCS implementation guidance:</Trans>
         </Text>
@@ -32,7 +32,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
   const technicalGuidance =
     guidanceTag.refLinksTech.length !== 0 &&
     guidanceTag.refLinksTech[0]?.description !== null ? (
-      <Stack isInline>
+      <Stack isInline={guidanceTag.refLinksTech.length <= 1}>
         <Text fontWeight="bold">
           <Trans>For technical implementation guidance:</Trans>
         </Text>
