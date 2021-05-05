@@ -13,6 +13,7 @@ import { LoadingMessage } from './LoadingMessage'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import EditableUserTFAMethod from './EditableUserTFAMethod'
 import EditableUserPhoneNumber from './EditableUserPhoneNumber'
+import AccountValidationButtons from './AccountValidationButtons'
 
 export default function UserPage() {
   const { currentUser } = useUserState()
@@ -78,6 +79,15 @@ export default function UserPage() {
           currentTFAMethod={tfaSendMethod}
           emailValidated={emailValidated}
           phoneValidated={phoneValidated}
+        />
+
+        <Divider />
+
+        <AccountValidationButtons
+          userName={userName}
+          phoneNumber={phoneNumber}
+          phoneValidated={phoneValidated}
+          emailValidated={emailValidated}
         />
       </Stack>
     </SimpleGrid>

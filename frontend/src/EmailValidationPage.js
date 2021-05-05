@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Trans, t } from '@lingui/macro'
-import { Heading, Box, useToast, Text, Stack, Icon } from '@chakra-ui/core'
+import { Heading, useToast, Text, Stack, Icon, Divider } from '@chakra-ui/core'
 import { useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { VERIFY_ACCOUNT } from './graphql/mutations'
@@ -10,7 +10,6 @@ export default function EmailValidationPage() {
   const toast = useToast()
   const { verifyToken } = useParams()
   const [success, setSuccess] = useState(false)
-  const [firstRender, setFirstRender] = useState(true)
 
   const [verifyAccount, { loading }] = useMutation(VERIFY_ACCOUNT, {
     onError(error) {
@@ -22,7 +21,6 @@ export default function EmailValidationPage() {
         isClosable: true,
         position: 'top-left',
       })
-      setSuccess(false)
     },
     onCompleted({ verifyAccount }) {
       if (verifyAccount.result.__typename === 'VerifyAccountResult') {
@@ -44,7 +42,6 @@ export default function EmailValidationPage() {
           isClosable: true,
           position: 'top-left',
         })
-        setSuccess(false)
       } else {
         toast({
           title: t`Incorrect send method received.`,
@@ -54,25 +51,21 @@ export default function EmailValidationPage() {
           isClosable: true,
           position: 'top-left',
         })
-        setSuccess(false)
         console.log('Incorrect verifyAccount.result typename.')
       }
     },
   })
 
   useEffect(() => {
-    if (firstRender) {
-      verifyAccount({ variables: { verifyToken: verifyToken } })
-      setFirstRender(false)
-    }
-  }, [firstRender, verifyAccount, verifyToken])
+    verifyAccount({ variables: { verifyToken: verifyToken } })
+  }, [verifyAccount, verifyToken])
 
   const verifyMessage = () => {
     if (success) {
       return (
         <Stack isInline align="center">
           <Icon name="check-circle" color="strong" />
-          <Text textAlign="center">
+          <Text fontSize="xl">
             <Trans>Your account email was successfully verified</Trans>
           </Text>
         </Stack>
@@ -81,7 +74,7 @@ export default function EmailValidationPage() {
       return (
         <Stack isInline align="center">
           <Icon name="warning" color="weak" />
-          <Text textAlign="center">
+          <Text fontSize="xl">
             <Trans>
               Your account email could not be verified at this time. Please try
               again.
@@ -93,11 +86,12 @@ export default function EmailValidationPage() {
   }
 
   return (
-    <Box px="8" mx="auto" overflow="hidden">
-      <Heading textAlign="center">
+    <Stack px="8" mx="auto" overflow="hidden" align="center">
+      <Heading>
         <Trans>Email Validation Page</Trans>
       </Heading>
+      <Divider />
       {loading ? <LoadingMessage /> : verifyMessage()}
-    </Box>
+    </Stack>
   )
 }
