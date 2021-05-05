@@ -6,6 +6,8 @@ import {
 } from 'graphql'
 import { globalIdField } from 'graphql-relay'
 
+import { guidanceTagType } from '../../guidance-tag/objects'
+
 export const spfFailureTableType = new GraphQLObjectType({
   name: 'SpfFailureTable',
   description:
@@ -26,6 +28,17 @@ export const spfFailureTableType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Guidance for any issues that were found from the report.',
       resolve: ({ guidance }) => guidance,
+      deprecationReason:
+        'This has been turned into the `guidanceTag` field providing detailed information to act upon if a given tag is present.',
+    },
+    guidanceTag: {
+      type: guidanceTagType,
+      description: 'Guidance for any issues that were found from the report.',
+      resolve: async (
+        { guidance },
+        _args,
+        { loaders: { loadAggregateGuidanceTagById } },
+      ) => await loadAggregateGuidanceTagById.load(guidance),
     },
     headerFrom: {
       type: GraphQLString,
