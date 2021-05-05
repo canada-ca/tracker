@@ -164,7 +164,7 @@ describe('given the dkimFailureTable gql object', () => {
         )
       })
     })
-    describe('testing the guidance resolver', () => {
+    describe('testing the guidanceTag resolver', () => {
       let query, drop, truncate, collections, aggGT
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({

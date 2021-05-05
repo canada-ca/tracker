@@ -94,7 +94,7 @@ describe('given spfFailureTable gql object', () => {
         )
       })
     })
-    describe('testing the dnsHost field', () => {
+    describe('testing the dnsHost resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -103,7 +103,7 @@ describe('given spfFailureTable gql object', () => {
         )
       })
     })
-    describe('testing the envelopeFrom field', () => {
+    describe('testing the envelopeFrom resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -112,7 +112,7 @@ describe('given spfFailureTable gql object', () => {
         ).toEqual('envelopeFrom')
       })
     })
-    describe('testing the guidance field', () => {
+    describe('testing the guidance resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -121,7 +121,7 @@ describe('given spfFailureTable gql object', () => {
         )
       })
     })
-    describe('testing the guidance resolver', () => {
+    describe('testing the guidanceTag resolver', () => {
       let query, drop, truncate, collections, aggGT
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({
@@ -194,7 +194,7 @@ describe('given spfFailureTable gql object', () => {
         })
       })
     })
-    describe('testing the headerFrom field', () => {
+    describe('testing the headerFrom resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -203,7 +203,7 @@ describe('given spfFailureTable gql object', () => {
         ).toEqual('headerFrom')
       })
     })
-    describe('testing the sourceIpAddress field', () => {
+    describe('testing the sourceIpAddress resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -221,7 +221,7 @@ describe('given spfFailureTable gql object', () => {
         expect(demoType.spfAligned.resolve({ spfAligned: true })).toEqual(true)
       })
     })
-    describe('testing the spfDomains field', () => {
+    describe('testing the spfDomains resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -230,7 +230,7 @@ describe('given spfFailureTable gql object', () => {
         ).toEqual('spfDomains')
       })
     })
-    describe('testing the spfResults field', () => {
+    describe('testing the spfResults resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
@@ -239,7 +239,7 @@ describe('given spfFailureTable gql object', () => {
         ).toEqual('spfResults')
       })
     })
-    describe('testing the totalMessages field', () => {
+    describe('testing the totalMessages resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
