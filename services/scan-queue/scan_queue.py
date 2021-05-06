@@ -37,7 +37,7 @@ def Server(process_name, queues=default_queues):
 
     Routes are /https, /ssl and /dns.
 
-    Needs a Redis server to function and RQ workers must be started for scans to be dispatched,
+    Needs a Redis server to function and RQ workers must be started for scans to be dispatched.
 
     :param str process_name: process name to run flask app as.
     :param dict queues: dict with RQ Queues for each scanner.
