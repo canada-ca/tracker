@@ -131,6 +131,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
       status: i18n._(
         t`Successfully verified organization: ${currentOrg.slug}.`,
       ),
+      organization: currentOrg,
     }
   },
 })
