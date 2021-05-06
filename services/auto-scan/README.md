@@ -4,6 +4,8 @@ This directory contains a Python script and Dockerfile that make up Tracker's Au
 
 The purpose of this script is to orchestrate the scanning of all domains monitored by Tracker. The container built from the contents of this folder is run as a CronJob on our Kubernetes deployment so that scans are performed regularly. The manifest for this resource can be found [here](https://github.com/canada-ca/tracker/tree/master/app/bases/knative/config/autoscan.yaml).
 
+If you need to run scans outside of the regularly scheduled intervals, check [here.](https://github.com/canada-ca/tracker/tree/master/app/jobs)
+
 ## Installing Dependencies
 
 To install dependencies, you can use pip or pipenv. Pipenv is recommended for development.
