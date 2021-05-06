@@ -71,6 +71,7 @@ export default function SignInPage() {
           status: 'success',
           duration: 9000,
           isClosable: true,
+          position: 'top-left',
         })
       }
       // 2FA enabled
