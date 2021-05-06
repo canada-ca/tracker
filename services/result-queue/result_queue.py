@@ -1,3 +1,4 @@
+"""A WSGI app that receives JSON scan results via HTTP and enqueues them to be dispatched to the results processor"""
 import os
 import sys
 import time
@@ -26,12 +27,27 @@ default_queues = {"https": https_queue, "ssl": ssl_queue, "dns": dns_queue}
 
 
 def Server(process_name, queues=default_queues):
+    """Flask app that adds incoming JSON scan results to Redis queues to be dispatched later.
 
+    Routes are /https, /ssl and /dns.
+
+    Needs a Redis server to function and RQ workers must be started for results to be dispatched.
+
+    :param str process_name: process name to run flask app as.
+    :param dict queues: dict with RQ Queues for each scanner.
+    :return: This Flask app.
+    :rtype: Flask
+    """
     flask_app = Flask(process_name)
     flask_app.config["queues"] = queues
 
     @flask_app.route("/https", methods=["POST"])
     def enqueue_https():
+        """Enqueues a result processing request received at /https to the HTTPS Redis Queue.
+
+        :return: a message indicating whether the result processing request was enqueued successfully.
+        :rtype: str
+        """
         logging.info("HTTPS result processing request received.")
         try:
             payload = request.get_json(force=True)
@@ -53,6 +69,11 @@ def Server(process_name, queues=default_queues):
 
     @flask_app.route("/ssl", methods=["POST"])
     def enqueue_ssl():
+        """Enqueues a result processing request received at /ssl to the SSL Redis Queue.
+
+        :return: a message indicating whether the result processing request was enqueued successfully.
+        :rtype: str
+        """
         logging.info("SSL result processing request received.")
         try:
             payload = request.get_json(force=True)
@@ -74,6 +95,11 @@ def Server(process_name, queues=default_queues):
 
     @flask_app.route("/dns", methods=["POST"])
     def enqueue_dns():
+        """Enqueues a result processing request received at /dns to the DNS Redis Queue.
+
+        :return: a message indicating whether the result processing request was enqueued successfully.
+        :rtype: str
+        """
         logging.info("DNS result processing request received.")
         try:
             payload = request.get_json(force=True)
@@ -100,6 +126,14 @@ app = Server(__name__)
 
 
 def dispatch_https(payload):
+    """Dispatches an HTTPS result processing request to the result processor.
+
+    Enqueued alongside the request to be executed by an RQ worker.
+
+    :param dict payload: JSON HTTPS scan results for a domain from a scanner.
+    :return: A message indicating whether the request was dispatched successfully.
+    :rtype: str
+    """
     logging.info("Dispatching HTTPS result processing request")
     try:
         requests.post(PROCESSOR_URL, json=payload)
@@ -112,6 +146,14 @@ def dispatch_https(payload):
 
 
 def dispatch_ssl(payload):
+    """Dispatches an SSL result processing request to the result processor.
+
+    Enqueued alongside the request to be executed by an RQ worker.
+
+    :param dict payload: JSON SSL scan results for a domain from a scanner.
+    :return: A message indicating whether the request was dispatched successfully.
+    :rtype: str
+    """
     logging.info("Dispatching SSL result processing request")
     try:
         requests.post(PROCESSOR_URL, json=payload)
@@ -124,6 +166,14 @@ def dispatch_ssl(payload):
 
 
 def dispatch_dns(payload):
+    """Dispatches a DNS result processing request to the result processor.
+
+    Enqueued alongside the request to be executed by an RQ worker.
+
+    :param dict payload: JSON DNS scan results for a domain from a scanner.
+    :return: A message indicating whether the request was dispatched successfully.
+    :rtype: str
+    """
     logging.info("Dispatching DNS result processing request")
     try:
         requests.post(PROCESSOR_URL, json=payload)
