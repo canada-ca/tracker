@@ -60,6 +60,14 @@ const mocks = {
       totalMessages: faker.datatype.number({ min: 0, max: 15000 }),
     }
   },
+  Domain: () => ({
+    lastRan: () => {
+      // generate fake date in ISO format, replace unwanted 'T'
+      return new Date(faker.date.between('2019-01-01', '2022-01-01'))
+        .toISOString()
+        .replace('T', ' ')
+    },
+  }),
   DomainConnection: () => {
     const numberOfEdges = faker.datatype.number({ min: 0, max: 500 })
     return {
