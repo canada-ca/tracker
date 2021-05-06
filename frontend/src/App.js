@@ -197,19 +197,9 @@ export default function App() {
                 <UserPage username={currentUser.userName} />
               </PrivatePage>
 
-              {/* <PrivatePage
-                path="/two-factor-code"
-                title={t`Authentication QR Code`}
-              >
-                <QRcodePage userName={currentUser.userName} />
-              </PrivatePage> */}
-
-              <PrivatePage
-                path="/validate/:verifyToken"
-                title={t`Email Verification`}
-              >
+              <Page path="/validate/:verifyToken" title={t`Email Verification`}>
                 <EmailValidationPage />
-              </PrivatePage>
+              </Page>
 
               <Page component={PageNotFound} title="404" />
             </Switch>
