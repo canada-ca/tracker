@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Trans } from '@lingui/macro'
-import { Heading, Text, Stack, Icon, Divider } from '@chakra-ui/core'
-import { useParams } from 'react-router-dom'
+import { Heading, Text, Stack, Icon, Divider, Button } from '@chakra-ui/core'
+import { useParams, Link as RouteLink } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { VERIFY_ACCOUNT } from './graphql/mutations'
 import { LoadingMessage } from './LoadingMessage'
@@ -51,7 +51,7 @@ export default function EmailValidationPage() {
             </Text>
           </Stack>
           <Text fontSize="xl" textAlign="center">
-            {errorMessage} Error Message
+            {errorMessage}
           </Text>
         </Stack>
       )
@@ -65,6 +65,18 @@ export default function EmailValidationPage() {
       </Heading>
       <Divider />
       {loading ? <LoadingMessage /> : verifyMessage()}
+      <Divider />
+      <Button
+        as={RouteLink}
+        to="/"
+        color="primary"
+        bg="transparent"
+        borderColor="primary"
+        borderWidth="1px"
+        rightIcon="arrow-forward"
+      >
+        <Trans>Continue</Trans>
+      </Button>
     </Stack>
   )
 }
