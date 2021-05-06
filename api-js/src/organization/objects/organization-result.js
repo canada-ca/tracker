@@ -1,5 +1,7 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql'
 
+import { organizationType } from './organization'
+
 export const organizationResultType = new GraphQLObjectType({
   name: 'OrganizationResult',
   description:
@@ -10,6 +12,11 @@ export const organizationResultType = new GraphQLObjectType({
       description:
         'Informs the user if the organization mutation was successful.',
       resolve: ({ status }) => status,
+    },
+    organization: {
+      type: organizationType,
+      description: 'The organization that was being affected by the mutation.',
+      resolve: ({ organization }) => organization,
     },
   }),
 })
