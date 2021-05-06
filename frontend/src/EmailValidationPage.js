@@ -53,18 +53,6 @@ export default function EmailValidationPage() {
           <Text fontSize="xl" textAlign="center">
             {errorMessage}
           </Text>
-          <Divider />
-          <Button
-            as={RouteLink}
-            to="/"
-            color="primary"
-            bg="transparent"
-            borderColor="primary"
-            borderWidth="1px"
-            rightIcon="arrow-forward"
-          >
-            <Trans>Continue</Trans>
-          </Button>
         </Stack>
       )
     }
@@ -77,6 +65,20 @@ export default function EmailValidationPage() {
       </Heading>
       <Divider />
       {loading ? <LoadingMessage /> : verifyMessage()}
+      <Divider />
+      {!loading && (
+        <Button
+          as={RouteLink}
+          to="/"
+          color="primary"
+          bg="transparent"
+          borderColor="primary"
+          borderWidth="1px"
+          rightIcon="arrow-forward"
+        >
+          <Trans>Continue</Trans>
+        </Button>
+      )}
     </Stack>
   )
 }
