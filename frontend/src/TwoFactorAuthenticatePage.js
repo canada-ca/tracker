@@ -12,6 +12,8 @@ import AuthenticateField from './AuthenticateField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
 import { activate } from './i18n.config'
+import { LoadingMessage } from './LoadingMessage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function TwoFactorAuthenticatePage() {
   const { login } = useUserState()
@@ -90,13 +92,8 @@ export default function TwoFactorAuthenticatePage() {
     },
   })
 
-  if (loading)
-    return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
-    )
-  if (error) return <p>{String(error)}</p>
+  if (loading) return <LoadingMessage />
+  if (error) return <ErrorFallbackMessage error={error} />
 
   return (
     <Box w="100%">
