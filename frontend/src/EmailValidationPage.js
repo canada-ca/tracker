@@ -33,7 +33,7 @@ export default function EmailValidationPage() {
       return (
         <Stack isInline align="center">
           <Icon name="check-circle" color="strong" />
-          <Text fontSize="xl">
+          <Text fontSize="xl" textAlign="center">
             <Trans>Your account email was successfully verified</Trans>
           </Text>
         </Stack>
@@ -43,7 +43,7 @@ export default function EmailValidationPage() {
         <Stack>
           <Stack isInline align="center">
             <Icon name="warning" color="weak" />
-            <Text fontSize="xl">
+            <Text fontSize="xl" textAlign="center">
               <Trans>
                 Your account email could not be verified at this time. Please
                 try again.
