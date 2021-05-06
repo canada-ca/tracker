@@ -202,6 +202,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -256,6 +260,10 @@ describe('removing a user from an organization', () => {
                 removeUserFromOrg: {
                   result: {
                     status: 'Successfully removed user from organization.',
+                    user: {
+                      id: toGlobalId('users', user._key),
+                      userName: 'test.account@istio.actually.exists',
+                    },
                   },
                 },
               },
@@ -280,6 +288,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -365,6 +377,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -419,6 +435,10 @@ describe('removing a user from an organization', () => {
                 removeUserFromOrg: {
                   result: {
                     status: 'Successfully removed user from organization.',
+                    user: {
+                      id: toGlobalId('users', user._key),
+                      userName: 'test.account@istio.actually.exists',
+                    },
                   },
                 },
               },
@@ -443,6 +463,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -535,6 +559,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -589,6 +617,10 @@ describe('removing a user from an organization', () => {
                 removeUserFromOrg: {
                   result: {
                     status: 'Successfully removed user from organization.',
+                    user: {
+                      id: toGlobalId('users', user._key),
+                      userName: 'test.account@istio.actually.exists',
+                    },
                   },
                 },
               },
@@ -613,6 +645,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -701,6 +737,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -795,6 +835,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -889,6 +933,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -983,6 +1031,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -1077,6 +1129,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -1171,6 +1227,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -1272,6 +1332,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -1370,6 +1434,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -1456,6 +1524,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -1565,6 +1637,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -1619,6 +1695,10 @@ describe('removing a user from an organization', () => {
                 removeUserFromOrg: {
                   result: {
                     status: 'todo',
+                    user: {
+                      id: toGlobalId('users', user._key),
+                      userName: 'test.account@istio.actually.exists',
+                    },
                   },
                 },
               },
@@ -1643,6 +1723,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -1728,6 +1812,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -1782,6 +1870,10 @@ describe('removing a user from an organization', () => {
                 removeUserFromOrg: {
                   result: {
                     status: 'todo',
+                    user: {
+                      id: toGlobalId('users', user._key),
+                      userName: 'test.account@istio.actually.exists',
+                    },
                   },
                 },
               },
@@ -1806,6 +1898,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -1898,6 +1994,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -1952,6 +2052,10 @@ describe('removing a user from an organization', () => {
                 removeUserFromOrg: {
                   result: {
                     status: 'todo',
+                    user: {
+                      id: toGlobalId('users', user._key),
+                      userName: 'test.account@istio.actually.exists',
+                    },
                   },
                 },
               },
@@ -1976,6 +2080,10 @@ describe('removing a user from an organization', () => {
                     result {
                       ... on RemoveUserFromOrgResult {
                         status
+                        user {
+                          id
+                          userName
+                        }
                       }
                       ... on AffiliationError {
                         code
@@ -2064,6 +2172,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -2157,6 +2269,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -2250,6 +2366,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -2343,6 +2463,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -2436,6 +2560,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -2530,6 +2658,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -2630,6 +2762,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -2724,6 +2860,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
@@ -2806,6 +2946,10 @@ describe('removing a user from an organization', () => {
                   result {
                     ... on RemoveUserFromOrgResult {
                       status
+                      user {
+                        id
+                        userName
+                      }
                     }
                     ... on AffiliationError {
                       code
