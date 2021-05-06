@@ -90,9 +90,6 @@ describe('<EmailValidationPage />', () => {
       )
 
       await waitFor(() =>
-        // This should work exactly like the password field above, but it
-        // doesn't! The message is displayed but we can only get partial
-        // match for some reason.
         expect(
           queryByText(
             /Your account email could not be verified at this time. Please try again./,

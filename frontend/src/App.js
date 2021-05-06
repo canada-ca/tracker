@@ -20,7 +20,6 @@ import { Page } from './Page'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
-// const QRcodePage = lazy(() => import('./QRcodePage'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
 const UserPage = lazy(() => import('./UserPage'))
 const SignInPage = lazy(() => import('./SignInPage'))

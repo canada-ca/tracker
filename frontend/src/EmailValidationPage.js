@@ -1,58 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import { Trans, t } from '@lingui/macro'
-import { Heading, useToast, Text, Stack, Icon, Divider } from '@chakra-ui/core'
+import { Trans } from '@lingui/macro'
+import { Heading, Text, Stack, Icon, Divider } from '@chakra-ui/core'
 import { useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { VERIFY_ACCOUNT } from './graphql/mutations'
 import { LoadingMessage } from './LoadingMessage'
 
 export default function EmailValidationPage() {
-  const toast = useToast()
   const { verifyToken } = useParams()
   const [success, setSuccess] = useState(false)
+  let errorMessage = ''
 
   const [verifyAccount, { loading }] = useMutation(VERIFY_ACCOUNT, {
     onError(error) {
-      toast({
-        title: error.message,
-        description: t`Unable to validate email`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
+      errorMessage = error.message
     },
     onCompleted({ verifyAccount }) {
-      if (verifyAccount.result.__typename === 'VerifyAccountResult') {
-        toast({
-          title: t`Account verified`,
-          description: t`Your account email is now validated`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
+      if (verifyAccount.result.__typename === 'VerifyAccountResult')
         setSuccess(true)
-      } else if (verifyAccount.result.__typename === 'VerifyAccountError') {
-        toast({
-          title: t`Unable to verify your account email, please try again.`,
-          description: verifyAccount.result.description,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      } else {
-        toast({
-          title: t`Incorrect send method received.`,
-          description: t`Incorrect verifyAccount.result typename.`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        console.log('Incorrect verifyAccount.result typename.')
-      }
+      else if (verifyAccount.result.__typename === 'VerifyAccountError')
+        errorMessage = verifyAccount.result.description
+      else console.log('Incorrect verifyAccount.result typename.')
     },
   })
 
@@ -72,13 +40,18 @@ export default function EmailValidationPage() {
       )
     } else {
       return (
-        <Stack isInline align="center">
-          <Icon name="warning" color="weak" />
-          <Text fontSize="xl">
-            <Trans>
-              Your account email could not be verified at this time. Please try
-              again.
-            </Trans>
+        <Stack>
+          <Stack isInline align="center">
+            <Icon name="warning" color="weak" />
+            <Text fontSize="xl">
+              <Trans>
+                Your account email could not be verified at this time. Please
+                try again.
+              </Trans>
+            </Text>
+          </Stack>
+          <Text fontSize="xl" textAlign="center">
+            {errorMessage} Error Message
           </Text>
         </Stack>
       )

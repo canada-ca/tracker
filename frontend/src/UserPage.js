@@ -110,8 +110,6 @@ export default function UserPage() {
           phoneValidated={phoneValidated}
         />
 
-        <Divider />
-
         {!emailValidated && (
           <TrackerButton
             variant="primary"
