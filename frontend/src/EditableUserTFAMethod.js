@@ -82,7 +82,7 @@ function EditableUserTFAMethod({
   return (
     <Stack spacing="4">
       <Heading as="h3" size="md">
-        <Trans>TFA Method:</Trans>
+        <Trans>Two-Factor Authentication:</Trans>
       </Heading>
       <Stack isInline>
         <Box p="1">
@@ -138,7 +138,7 @@ function EditableUserTFAMethod({
                 isLoading={isSubmitting}
                 variant="primary"
               >
-                <Trans>Save TFA Method</Trans>
+                <Trans>Save</Trans>
               </TrackerButton>
             </Stack>
           </form>

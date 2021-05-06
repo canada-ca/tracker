@@ -7,7 +7,7 @@ parameters:
   type: pd-standard
 reclaimPolicy: Retain
 allowVolumeExpansion: true
-
+volumeBindingMode: WaitForFirstConsumer
 ---
 
 apiVersion: storage.k8s.io/v1
@@ -19,6 +19,8 @@ parameters:
   type: pd-ssd
 reclaimPolicy: Retain
 allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+
 ---
 
 apiVersion: storage.k8s.io/v1
@@ -30,6 +32,7 @@ parameters:
   type: pd-standard
 reclaimPolicy: Delete
 allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
 
 ---
 
@@ -42,3 +45,4 @@ parameters:
   type: pd-ssd
 reclaimPolicy: Delete
 allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer

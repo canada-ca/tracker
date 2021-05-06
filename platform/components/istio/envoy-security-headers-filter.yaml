@@ -22,7 +22,7 @@ spec:
       value:
        name: envoy.lua
        typed_config:
-         "@type": "type.googleapis.com/envoy.config.filter.http.lua.v2.Lua"
+         "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
          inlineCode: |
             function envoy_on_response(response_handle)
               if not response_handle:headers():get("X-Frame-Options") then
