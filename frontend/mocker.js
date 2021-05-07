@@ -75,8 +75,8 @@ const mocks = {
       totalCount: numberOfEdges,
     }
   },
-  EmailAddress: () => faker.internet.email(),
   DomainScalar: () => faker.internet.domainName(),
+  EmailAddress: () => faker.internet.email(),
   PersonalUser: () => ({ displayName: faker.name.findName() }),
   PhoneNumber: () => faker.phone.phoneNumber('+1##########'),
   SignInError: () => ({
@@ -94,36 +94,36 @@ const mocks = {
   ...mockOverrides,
 }
 
+const getConnectionObject = (store, args, resolveInfo) => {
+  // use key of calling object to ensure consistency
+  const allEdges = store.get(
+    resolveInfo.returnType.toString(),
+    resolveInfo.path.key,
+    'edges',
+  )
+
+  // we only need the nodes since connectionFromArray will generate the proper cursors
+  // extract all nodes and place into new array
+  const allNodes = allEdges.map((edge) => {
+    return store.get(edge.$ref.typeName, edge.$ref.key, 'node')
+  })
+
+  const requestedConnection = connectionFromArray(allNodes, args)
+
+  return {
+    totalCount: allNodes.length,
+    ...requestedConnection,
+  }
+}
+
 // Create a new schema with mocks and resolvers
 const schemaWithMocks = addMocksToSchema({
   schema,
   mocks,
   resolvers: (store) => ({
     Query: {
-      findMyDomains: (_, args) => {
-        // give key to always get the same connection object
-        const allDomainEdges = store.get(
-          'DomainConnection',
-          'domainRefKey',
-          'edges',
-        )
-
-        // We only need the nodes as connectionFromArray will generate proper cursors
-        // extract all nodes and place into new array
-        const allDomainNodes = []
-        allDomainEdges.forEach((edge) => {
-          const node = store.get('DomainEdge', edge.$ref.key, 'node')
-          if (node) {
-            allDomainNodes.push(node)
-          }
-        })
-
-        const requestedDomains = connectionFromArray(allDomainNodes, args)
-
-        return {
-          totalCount: allDomainNodes.length,
-          ...requestedDomains,
-        }
+      findMyDomains: (_, args, __, resolveInfo) => {
+        return getConnectionObject(store, args, resolveInfo)
       },
     },
     Mutation: {},
