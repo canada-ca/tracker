@@ -61,6 +61,13 @@ const mocks = {
       totalMessages: faker.datatype.number({ min: 0, max: 15000 }),
     }
   },
+  DmarcSummaryConnection: () => {
+    const numberOfEdges = faker.datatype.number({ min: 0, max: 500 })
+    return {
+      edges: [...new Array(numberOfEdges)],
+      totalCount: numberOfEdges,
+    }
+  },
   Domain: () => ({
     lastRan: () => {
       // generate fake date in ISO format, replace unwanted 'T'
@@ -202,6 +209,9 @@ const schemaWithMocks = addMocksToSchema({
   mocks,
   resolvers: (store) => ({
     Query: {
+      findMyDmarcSummaries: (_, args, __, resolveInfo) => {
+        return getConnectionObject(store, args, resolveInfo)
+      },
       findMyDomains: (_, args, __, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
