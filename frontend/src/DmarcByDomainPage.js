@@ -212,7 +212,7 @@ export default function DmarcByDomainPage() {
   }
 
   return (
-    <Box width="100%">
+    <Box width="100%" px="2">
       <Heading as="h1" textAlign="center" size="lg" mb="4px">
         <Trans>DMARC Messages</Trans>
       </Heading>
@@ -233,17 +233,17 @@ export default function DmarcByDomainPage() {
         {tableDisplay}
       </ErrorBoundary>
       <RelayPaginationControls
-          onlyPagination={false}
-          selectedDisplayLimit={selectedTableDisplayLimit}
-          setSelectedDisplayLimit={setSelectedTableDisplayLimit}
-          displayLimitOptions={displayLimitOptions}
-          resetToFirstPage={resetToFirstPage}
-          hasNextPage={hasNextPage}
-          hasPreviousPage={hasPreviousPage}
-          next={next}
-          previous={previous}
-          isLoadingMore={isLoadingMore}
-        />
+        onlyPagination={false}
+        selectedDisplayLimit={selectedTableDisplayLimit}
+        setSelectedDisplayLimit={setSelectedTableDisplayLimit}
+        displayLimitOptions={displayLimitOptions}
+        resetToFirstPage={resetToFirstPage}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+        isLoadingMore={isLoadingMore}
+      />
     </Box>
   )
 }
