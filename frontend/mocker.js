@@ -9,7 +9,8 @@ const schemaString = getTypeNames()
 
 const schema = makeExecutableSchema({ typeDefs: schemaString })
 
-// Add custom mocks here to override default mocks
+// Add custom mocks here to override default mocks, useful for forcing environments
+// e.g. SignInUnion: () => ({ __typename: 'AuthResult' })  for correct password and no 2FA
 const mockOverrides = {
   SignInUnion: () => ({ __typename: 'AuthResult' }),
 }
@@ -62,6 +63,7 @@ const mocks = {
     }
   },
   Date: () => {
+    // gives date in format "2020-12-31 15:30:20.262Z"
     return new Date(faker.date.between('2019-01-01', '2022-01-01'))
       .toISOString()
       .replace('T', ' ')
@@ -74,13 +76,14 @@ const mocks = {
     }
   },
   Domain: () => {
+    // gives date in format "2020-12-31 15:30:20.262Z"
     const lastRan = new Date(faker.date.between('2019-01-01', '2022-01-01'))
       .toISOString()
       .replace('T', ' ')
-    const currentDate = new Date()
-    const yearlyDmarcSummaries = []
-    for (let i = 13; i > 0; i--) {
-      currentDate.setMonth(currentDate.getMonth() - 1)
+    const curDate = new Date()
+
+    // generate an object matching DmarcSummary
+    const generateFakeSummary = (currentDate, month, year) => {
       const totalMessageCount = faker.datatype.number({ min: 0, max: 10000 })
       const fullPassCount = faker.datatype.number({
         min: 0,
@@ -104,11 +107,13 @@ const mocks = {
       const passDkimOnlyPercent = passDkimOnlyCount / totalMessageCount
       const failPercent = failCount / totalMessageCount
 
-      yearlyDmarcSummaries.push({
-        month: currentDate
-          .toLocaleString('default', { month: 'long' })
-          .toUpperCase(),
-        year: currentDate.getFullYear(),
+      return {
+        month:
+          month ||
+          currentDate
+            .toLocaleString('default', { month: 'long' })
+            .toUpperCase(),
+        year: year || currentDate.getFullYear(),
         categoryTotals: {
           fullPass: fullPassCount,
           passSpfOnly: passSpfOnlyCount,
@@ -122,7 +127,13 @@ const mocks = {
           failPercentage: failPercent,
           totalMessages: totalMessageCount,
         },
-      })
+      }
+    }
+    const yearlyDmarcSummaries = [generateFakeSummary(curDate, 'LAST30DAYS')]
+    // create list of summaries for the past 12 months
+    for (let i = 12; i > 0; i--) {
+      curDate.setMonth(curDate.getMonth() - 1)
+      yearlyDmarcSummaries.push(generateFakeSummary(curDate))
     }
 
     return {
@@ -224,8 +235,8 @@ const mocks = {
     description: 'Mocked sign in error description',
   }),
   TFASignInResult: () => ({
-    authenticateToken: () => faker.datatype.uuid(),
-    sendMethod: () => faker.random.arrayElement(['email', 'phone']),
+    authenticateToken: faker.datatype.uuid(),
+    sendMethod: faker.random.arrayElement(['email', 'phone']),
   }),
   Year: () =>
     faker.datatype.number({
