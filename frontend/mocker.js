@@ -9,6 +9,7 @@ const schemaString = getTypeNames()
 
 const schema = makeExecutableSchema({ typeDefs: schemaString })
 
+// Add custom mocks here to override default mocks
 const mockOverrides = {
   SignInUnion: () => ({ __typename: 'AuthResult' }),
 }
@@ -77,7 +78,79 @@ const mocks = {
   },
   DomainScalar: () => faker.internet.domainName(),
   EmailAddress: () => faker.internet.email(),
-  PersonalUser: () => ({ displayName: faker.name.findName() }),
+  Organization: () => {
+    const name = faker.company.companyName()
+    const slug = faker.helpers.slugify(name)
+    const domainCount = faker.datatype.number({ min: 0, max: 500 })
+
+    const webPassCount = faker.datatype.number({ min: 0, max: domainCount })
+    const webFailCount = domainCount - webPassCount
+    const webPassPercentage = (webPassCount / domainCount) * 100
+    const webFailPercentage = 100 - webPassPercentage
+    const web = {
+      total: domainCount,
+      categories: [
+        {
+          name: 'pass',
+          count: webPassCount,
+          percentage: webPassPercentage,
+        },
+        {
+          name: 'fail',
+          count: webFailCount,
+          percentage: webFailPercentage,
+        },
+      ],
+    }
+
+    const mailPassCount = faker.datatype.number({ min: 0, max: domainCount })
+    const mailFailCount = domainCount - mailPassCount
+    const mailPassPercentage = (mailPassCount / domainCount) * 100
+    const mailFailPercentage = 100 - mailPassPercentage
+    const mail = {
+      total: domainCount,
+      categories: [
+        {
+          name: 'pass',
+          count: mailPassCount,
+          percentage: mailPassPercentage,
+        },
+        {
+          name: 'fail',
+          count: mailFailCount,
+          percentage: mailFailPercentage,
+        },
+      ],
+    }
+
+    return {
+      name,
+      slug,
+      domainCount,
+      domains: {
+        edges: [...new Array(domainCount)],
+        totalCount: domainCount,
+      },
+      summaries: { web, mail },
+    }
+  },
+  OrganizationConnection: () => {
+    const numberOfEdges = faker.datatype.number({ min: 0, max: 500 })
+    return {
+      edges: [...new Array(numberOfEdges)],
+      totalCount: numberOfEdges,
+    }
+  },
+  PersonalUser: () => {
+    const affiliationCount = faker.datatype.number({ min: 0, max: 200 })
+
+    return {
+      affiliations: {
+        edges: [...new Array(affiliationCount)],
+        totalCount: affiliationCount,
+      },
+    }
+  },
   PhoneNumber: () => faker.phone.phoneNumber('+1##########'),
   SignInError: () => ({
     description: 'Mocked sign in error description',
@@ -123,6 +196,9 @@ const schemaWithMocks = addMocksToSchema({
   resolvers: (store) => ({
     Query: {
       findMyDomains: (_, args, __, resolveInfo) => {
+        return getConnectionObject(store, args, resolveInfo)
+      },
+      findMyOrganizations: (_, args, __, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
     },
