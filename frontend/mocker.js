@@ -61,6 +61,11 @@ const mocks = {
       totalMessages: faker.datatype.number({ min: 0, max: 15000 }),
     }
   },
+  Date: () => {
+    return new Date(faker.date.between('2019-01-01', '2022-01-01'))
+      .toISOString()
+      .replace('T', ' ')
+  },
   DmarcSummaryConnection: () => {
     const numberOfEdges = faker.datatype.number({ min: 0, max: 500 })
     return {
@@ -68,14 +73,63 @@ const mocks = {
       totalCount: numberOfEdges,
     }
   },
-  Domain: () => ({
-    lastRan: () => {
-      // generate fake date in ISO format, replace unwanted 'T'
-      return new Date(faker.date.between('2019-01-01', '2022-01-01'))
-        .toISOString()
-        .replace('T', ' ')
-    },
-  }),
+  Domain: () => {
+    const lastRan = new Date(faker.date.between('2019-01-01', '2022-01-01'))
+      .toISOString()
+      .replace('T', ' ')
+    const currentDate = new Date()
+    const yearlyDmarcSummaries = []
+    for (let i = 13; i > 0; i--) {
+      currentDate.setMonth(currentDate.getMonth() - 1)
+      const totalMessageCount = faker.datatype.number({ min: 0, max: 10000 })
+      const fullPassCount = faker.datatype.number({
+        min: 0,
+        max: totalMessageCount,
+      })
+      const passSpfOnlyCount = faker.datatype.number({
+        min: 0,
+        max: fullPassCount,
+      })
+      const passDkimOnlyCount = faker.datatype.number({
+        min: 0,
+        max: passSpfOnlyCount,
+      })
+      const failCount = faker.datatype.number({
+        min: 0,
+        max: passDkimOnlyCount,
+      })
+
+      const fullPassPercent = fullPassCount / totalMessageCount
+      const passSpfOnlyPercent = passSpfOnlyCount / totalMessageCount
+      const passDkimOnlyPercent = passDkimOnlyCount / totalMessageCount
+      const failPercent = failCount / totalMessageCount
+
+      yearlyDmarcSummaries.push({
+        month: currentDate
+          .toLocaleString('default', { month: 'long' })
+          .toUpperCase(),
+        year: currentDate.getFullYear(),
+        categoryTotals: {
+          fullPass: fullPassCount,
+          passSpfOnly: passSpfOnlyCount,
+          passDkimOnly: passDkimOnlyCount,
+          fail: failCount,
+        },
+        categoryPercentages: {
+          fullPassPercentage: fullPassPercent,
+          passSpfOnlyPercentage: passSpfOnlyPercent,
+          passDkimOnlyPercentage: passDkimOnlyPercent,
+          failPercentage: failPercent,
+          totalMessages: totalMessageCount,
+        },
+      })
+    }
+
+    return {
+      lastRan,
+      yearlyDmarcSummaries,
+    }
+  },
   DomainConnection: () => {
     const numberOfEdges = faker.datatype.number({ min: 0, max: 500 })
     return {
