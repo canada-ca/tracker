@@ -1580,6 +1580,8 @@ union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
 type RemoveUserFromOrgResult {
   # Informs the user if the user was successfully removed.
   status: String
+  # Removed user
+  user: SharedUser
 }
 
 input RemoveUserFromOrgInput {
