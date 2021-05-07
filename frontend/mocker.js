@@ -151,6 +151,7 @@ const mocks = {
     const affiliationCount = faker.datatype.number({ min: 0, max: 200 })
 
     return {
+      displayName: faker.name.findName(),
       affiliations: {
         edges: [...new Array(affiliationCount)],
         totalCount: affiliationCount,
