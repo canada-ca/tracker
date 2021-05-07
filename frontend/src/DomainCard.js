@@ -41,14 +41,22 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
           alignItems="center"
           width="100%"
         >
-          <Box flexShrink="0" w={['100%', '40%']} textAlign="left">
+          <Box
+            flexShrink="0"
+            w={['100%', '40%']}
+            textAlign={['center', 'left']}
+          >
             <Text fontWeight="semibold">
               <Trans>Domain:</Trans>
             </Text>
             <Text isTruncated>{url}</Text>
           </Box>
           <Divider orientation={['horizontal', 'vertical']} />
-          <Box flexShrink="0" w={['100%', '15%']} textAlign="left">
+          <Box
+            flexShrink="0"
+            w={['100%', '15%']}
+            textAlign={['center', 'left']}
+          >
             {lastRan ? (
               <Box>
                 <Text fontWeight="bold">

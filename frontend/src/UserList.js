@@ -131,9 +131,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             isClosable: true,
             position: 'top-left',
           })
-        } else if (
-          inviteUserToOrg.result.__typename === 'AffiliationError'
-        ) {
+        } else if (inviteUserToOrg.result.__typename === 'AffiliationError') {
           toast({
             title: t`Unable to invite user.`,
             description: inviteUserToOrg.result.description,
