@@ -129,11 +129,11 @@ const mocks = {
         },
       }
     }
-    const yearlyDmarcSummaries = [generateFakeSummary(curDate, 'LAST30DAYS')]
-    // create list of summaries for the past 12 months
-    for (let i = 12; i > 0; i--) {
-      curDate.setMonth(curDate.getMonth() - 1)
+    const yearlyDmarcSummaries = []
+    // create list of summaries for the past 13 months
+    for (let i = 13; i > 0; i--) {
       yearlyDmarcSummaries.push(generateFakeSummary(curDate))
+      curDate.setMonth(curDate.getMonth() - 1)
     }
 
     return {
