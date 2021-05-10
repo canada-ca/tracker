@@ -199,6 +199,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -239,6 +242,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -263,6 +269,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -320,6 +329,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -422,6 +434,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -462,6 +477,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -486,6 +504,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -543,6 +564,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -622,6 +646,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -662,6 +689,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -686,6 +716,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -743,6 +776,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -814,6 +850,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -854,6 +893,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -878,6 +920,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -935,6 +980,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -1108,6 +1156,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -1148,6 +1199,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -1172,6 +1226,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -1229,6 +1286,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -1302,6 +1362,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -1342,6 +1405,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -1366,6 +1432,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -1423,6 +1492,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -1498,6 +1570,9 @@ describe('removing a domain', () => {
                   result {
                     ... on DomainResult {
                       status
+                      domain {
+                        domain
+                      }
                     }
                     ... on DomainError {
                       code
@@ -1569,6 +1644,9 @@ describe('removing a domain', () => {
                   result {
                     ... on DomainResult {
                       status
+                      domain {
+                        domain
+                      }
                     }
                     ... on DomainError {
                       code
@@ -1679,6 +1757,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -1754,6 +1835,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -1822,6 +1906,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -1936,6 +2023,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -2004,6 +2094,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -2135,6 +2228,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -2256,6 +2352,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -2340,6 +2439,9 @@ describe('removing a domain', () => {
                       result {
                         ... on DomainResult {
                           status
+                          domain {
+                            domain
+                          }
                         }
                         ... on DomainError {
                           code
@@ -2418,6 +2520,9 @@ describe('removing a domain', () => {
                       result {
                         ... on DomainResult {
                           status
+                          domain {
+                            domain
+                          }
                         }
                         ... on DomainError {
                           code
@@ -2492,6 +2597,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -2684,6 +2792,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -2724,6 +2835,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `todo`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -2748,6 +2862,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -2805,6 +2922,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -2908,6 +3028,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -2948,6 +3071,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `todo`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -2972,6 +3098,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3029,6 +3158,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3108,6 +3240,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3148,6 +3283,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `todo`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -3172,6 +3310,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3229,6 +3370,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3300,6 +3444,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3340,6 +3487,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `todo`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -3364,6 +3514,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3421,6 +3574,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3594,6 +3750,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3634,6 +3793,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `todo`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -3658,6 +3820,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3715,6 +3880,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3788,6 +3956,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3828,6 +3999,9 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status: `todo`,
+                      domain: {
+                        domain: 'test.gc.ca',
+                      },
                     },
                   },
                 },
@@ -3852,6 +4026,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3909,6 +4086,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -3984,6 +4164,9 @@ describe('removing a domain', () => {
                   result {
                     ... on DomainResult {
                       status
+                      domain {
+                        domain
+                      }
                     }
                     ... on DomainError {
                       code
@@ -4055,6 +4238,9 @@ describe('removing a domain', () => {
                   result {
                     ... on DomainResult {
                       status
+                      domain {
+                        domain
+                      }
                     }
                     ... on DomainError {
                       code
@@ -4164,6 +4350,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -4238,6 +4427,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -4305,6 +4497,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -4418,6 +4613,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -4485,6 +4683,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -4609,6 +4810,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -4720,6 +4924,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code
@@ -4802,6 +5009,9 @@ describe('removing a domain', () => {
                       result {
                         ... on DomainResult {
                           status
+                          domain {
+                            domain
+                          }
                         }
                         ... on DomainError {
                           code
@@ -4878,6 +5088,9 @@ describe('removing a domain', () => {
                       result {
                         ... on DomainResult {
                           status
+                          domain {
+                            domain
+                          }
                         }
                         ... on DomainError {
                           code
@@ -4950,6 +5163,9 @@ describe('removing a domain', () => {
                     result {
                       ... on DomainResult {
                         status
+                        domain {
+                          domain
+                        }
                       }
                       ... on DomainError {
                         code

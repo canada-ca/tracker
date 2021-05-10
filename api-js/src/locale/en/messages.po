@@ -110,6 +110,7 @@ msgstr "Passing both `first` and `last` to paginate the `DmarcFailureTable` conn
 msgid "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `FullPassTable` connection is not supported."
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:98
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:95
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:95
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:95
@@ -123,7 +124,7 @@ msgid "Passing both `first` and `last` to paginate the `HTTPS` connection is not
 msgstr "Passing both `first` and `last` to paginate the `HTTPS` connection is not supported."
 
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:179
-#: src/organization/loaders/load-organization-connections-by-user-id.js:179
+#: src/organization/loaders/load-organization-connections-by-user-id.js:188
 msgid "Passing both `first` and `last` to paginate the `Organization` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `Organization` connection is not supported."
 
@@ -154,7 +155,7 @@ msgstr "Passing both `first` and `last` to paginate the `VerifiedOrganization` c
 msgid "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 msgstr "Passing both `first` and `last` to paginate the `affiliation` is not supported."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:174
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:191
 msgid "Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `dmarcSummaries` connection is not supported."
 
@@ -282,6 +283,7 @@ msgstr "Requesting `{amount}` records on the `DmarcFailureTable` connection exce
 msgid "Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `FullPassTable` connection exceeds the `{argSet}` limit of 100 records."
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:121
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:118
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:118
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:118
@@ -291,7 +293,7 @@ msgid "Requesting `{amount}` records on the `GuidanceTag` connection exceeds the
 msgstr "Requesting `{amount}` records on the `GuidanceTag` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:202
-#: src/organization/loaders/load-organization-connections-by-user-id.js:202
+#: src/organization/loaders/load-organization-connections-by-user-id.js:211
 msgid "Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `Organization` connection exceeds the `{argSet}` limit of 100 records."
 
@@ -314,7 +316,7 @@ msgstr "Requesting `{amount}` records on the `VerifiedOrganization` connection e
 msgid "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:197
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:214
 msgid "Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `dmarcSummaries` connection exceeds the `{argSet}` limit of 100 records."
 
@@ -444,6 +446,11 @@ msgstr "Unable to create organization. Please try again."
 msgid "Unable to dispatch one time scan. Please try again."
 msgstr "Unable to dispatch one time scan. Please try again."
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags.js:19
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags.js:33
+msgid "Unable to find Aggregate guidance tag(s). Please try again."
+msgstr "Unable to find Aggregate guidance tag(s). Please try again."
+
 #: src/guidance-tag/loaders/load-dkim-guidance-tags.js:19
 #: src/guidance-tag/loaders/load-dkim-guidance-tags.js:33
 msgid "Unable to find DKIM guidance tag(s). Please try again."
@@ -531,6 +538,11 @@ msgstr "Unable to invite user. Please try again."
 msgid "Unable to invite yourself to an org."
 msgstr "Unable to invite yourself to an org."
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:244
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:256
+msgid "Unable to load Aggregate guidance tag(s). Please try again."
+msgstr "Unable to load Aggregate guidance tag(s). Please try again."
+
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:16
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:144
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:156
@@ -568,8 +580,8 @@ msgstr "Unable to load DMARC guidance tag(s). Please try again."
 msgid "Unable to load DMARC scan(s). Please try again."
 msgstr "Unable to load DMARC scan(s). Please try again."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:419
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:431
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:467
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:479
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:22
 #: src/dmarc-summaries/loaders/load-dmarc-sum-edge-by-domain-id-period.js:34
 #: src/dmarc-summaries/loaders/load-yearly-dmarc-sum-edges.js:20
@@ -619,9 +631,9 @@ msgstr "Unable to load SSL scan(s). Please try again."
 msgid "Unable to load affiliation(s). Please try again."
 msgstr "Unable to load affiliation(s). Please try again."
 
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:344
-#: src/domain/loaders/load-domain-connections-by-organizations-id.js:354
-#: src/domain/loaders/load-domain-connections-by-user-id.js:370
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:345
+#: src/domain/loaders/load-domain-connections-by-organizations-id.js:355
+#: src/domain/loaders/load-domain-connections-by-user-id.js:371
 msgid "Unable to load domain(s). Please try again."
 msgstr "Unable to load domain(s). Please try again."
 
@@ -631,10 +643,6 @@ msgstr "Unable to load domain(s). Please try again."
 #: src/domain/loaders/load-domain-by-key.js:31
 msgid "Unable to load domain. Please try again."
 msgstr "Unable to load domain. Please try again."
-
-#: src/domain/queries/find-my-domains.js:52
-msgid "Unable to load domains. Please try again."
-msgstr "Unable to load domains. Please try again."
 
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:15
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:140
@@ -652,14 +660,10 @@ msgstr "Unable to load mail summary. Please try again."
 #: src/organization/loaders/load-organization-by-slug.js:48
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:467
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:479
-#: src/organization/loaders/load-organization-connections-by-user-id.js:471
-#: src/organization/loaders/load-organization-connections-by-user-id.js:483
+#: src/organization/loaders/load-organization-connections-by-user-id.js:491
+#: src/organization/loaders/load-organization-connections-by-user-id.js:503
 msgid "Unable to load organization(s). Please try again."
 msgstr "Unable to load organization(s). Please try again."
-
-#: src/organization/queries/find-my-organizations.js:48
-msgid "Unable to load organizations. Please try again."
-msgstr "Unable to load organizations. Please try again."
 
 #: src/summaries/loaders/load-chart-summary-by-key.js:19
 #: src/summaries/loaders/load-chart-summary-by-key.js:31
@@ -700,7 +704,7 @@ msgstr "Unable to load web summary. Please try again."
 msgid "Unable to query affiliation(s). Please try again."
 msgstr "Unable to query affiliation(s). Please try again."
 
-#: src/domain/loaders/load-domain-connections-by-user-id.js:360
+#: src/domain/loaders/load-domain-connections-by-user-id.js:361
 msgid "Unable to query domain(s). Please try again."
 msgstr "Unable to query domain(s). Please try again."
 
@@ -964,6 +968,7 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Dma
 msgid "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `FullPassTable` connection."
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:89
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:86
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:86
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:86
@@ -977,7 +982,7 @@ msgid "You must provide a `first` or `last` value to properly paginate the `HTTP
 msgstr "You must provide a `first` or `last` value to properly paginate the `HTTPS` connection."
 
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:170
-#: src/organization/loaders/load-organization-connections-by-user-id.js:170
+#: src/organization/loaders/load-organization-connections-by-user-id.js:179
 msgid "You must provide a `first` or `last` value to properly paginate the `Organization` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `Organization` connection."
 
@@ -1008,7 +1013,7 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `Ver
 msgid "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 msgstr "You must provide a `first` or `last` value to properly paginate the `affiliation`."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:165
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:182
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `dmarcSummaries` connection."
 
@@ -1017,11 +1022,11 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `dma
 msgid "You must provide a `first` or `last` value to properly paginate the `domain` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `domain` connection."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:29
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:30
 msgid "You must provide a `period` value to access the `dmarcSummaries` connection."
 msgstr "You must provide a `period` value to access the `dmarcSummaries` connection."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:41
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:42
 msgid "You must provide a `year` value to access the `dmarcSummaries` connection."
 msgstr "You must provide a `year` value to access the `dmarcSummaries` connection."
 
@@ -1029,7 +1034,7 @@ msgstr "You must provide a `year` value to access the `dmarcSummaries` connectio
 #: src/affiliation/loaders/load-affiliation-connections-by-user-id.js:212
 #: src/dmarc-summaries/loaders/load-dkim-failure-connections-by-sum-id.js:86
 #: src/dmarc-summaries/loaders/load-dmarc-failure-connections-by-sum-id.js:86
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:212
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:229
 #: src/dmarc-summaries/loaders/load-full-pass-connections-by-sum-id.js:84
 #: src/dmarc-summaries/loaders/load-spf-failure-connections-by-sum-id.js:86
 #: src/domain/loaders/load-domain-connections-by-organizations-id.js:178
@@ -1038,13 +1043,14 @@ msgstr "You must provide a `year` value to access the `dmarcSummaries` connectio
 #: src/email-scan/loaders/load-dkim-results-connections-by-dkim-id.js:133
 #: src/email-scan/loaders/load-dmarc-connections-by-domain-id.js:183
 #: src/email-scan/loaders/load-spf-connections-by-domain-id.js:176
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:136
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:133
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:133
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:133
 #: src/guidance-tag/loaders/load-spf-guidance-tags-connections.js:133
 #: src/guidance-tag/loaders/load-ssl-guidance-tags-connections.js:133
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:217
-#: src/organization/loaders/load-organization-connections-by-user-id.js:217
+#: src/organization/loaders/load-organization-connections-by-user-id.js:226
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:159
 #: src/verified-domains/loaders/load-verified-domain-connections.js:159
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:213
@@ -1078,6 +1084,7 @@ msgstr "`{argSet}` on the `DmarcFailureTable` connection cannot be less than zer
 msgid "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
 msgstr "`{argSet}` on the `FullPassTable` connection cannot be less than zero."
 
+#: src/guidance-tag/loaders/load-aggregate-guidance-tags-connections.js:110
 #: src/guidance-tag/loaders/load-dkim-guidance-tags-connections.js:107
 #: src/guidance-tag/loaders/load-dmarc-guidance-tags-connections.js:107
 #: src/guidance-tag/loaders/load-https-guidance-tags-connections.js:107
@@ -1091,7 +1098,7 @@ msgid "`{argSet}` on the `HTTPS` connection cannot be less than zero."
 msgstr "`{argSet}` on the `HTTPS` connection cannot be less than zero."
 
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:191
-#: src/organization/loaders/load-organization-connections-by-user-id.js:191
+#: src/organization/loaders/load-organization-connections-by-user-id.js:200
 msgid "`{argSet}` on the `Organization` connection cannot be less than zero."
 msgstr "`{argSet}` on the `Organization` connection cannot be less than zero."
 
@@ -1122,7 +1129,7 @@ msgstr "`{argSet}` on the `VerifiedOrganization` connection cannot be less than 
 msgid "`{argSet}` on the `affiliations` cannot be less than zero."
 msgstr "`{argSet}` on the `affiliations` cannot be less than zero."
 
-#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:186
+#: src/dmarc-summaries/loaders/load-dmarc-sum-connections-by-user-id.js:203
 msgid "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
 msgstr "`{argSet}` on the `dmarcSummaries` connection cannot be less than zero."
 

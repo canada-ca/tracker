@@ -299,7 +299,8 @@ export const loadDomainConnectionsByUserId = ({
     domainQuery = aql`
       LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
       LET searchedDomains = (
-        FOR token in tokenArr
+        FOR tokenItem in tokenArr
+          LET token = LOWER(tokenItem)
           FOR domain IN domainSearch
             SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
             FILTER domain._key IN domainKeys

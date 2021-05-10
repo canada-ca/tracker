@@ -96,7 +96,7 @@ export const createDomain = new mutationWithClientMutationId({
     }
 
     const insertDomain = {
-      domain: domain,
+      domain: domain.toLowerCase(),
       lastRan: null,
       selectors: selectors,
       status: {

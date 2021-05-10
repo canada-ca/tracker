@@ -182,6 +182,10 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       return {
         _type: 'regular',
         status: i18n._(t`Successfully removed user from organization.`),
+        user: {
+          id: requestedUser.id,
+          userName: requestedUser.userName,
+        },
       }
     } else {
       console.warn(

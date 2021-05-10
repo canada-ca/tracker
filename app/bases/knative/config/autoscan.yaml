@@ -15,7 +15,7 @@ spec:
         spec:
           containers:
           - name: autoscan
-            image: gcr.io/track-compliance/services/autoscan:master-05b22b2-1615242767 # {"$imagepolicy": "flux-system:autoscan"}
+            image: gcr.io/track-compliance/services/autoscan:master-1644020-1620328161 # {"$imagepolicy": "flux-system:autoscan"}
             env:
             - name: DB_USER
               valueFrom:

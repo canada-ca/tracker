@@ -286,6 +286,8 @@
       'Unable to create organization. Please try again.',
     'Unable to dispatch one time scan. Please try again.':
       'Unable to dispatch one time scan. Please try again.',
+    'Unable to find Aggregate guidance tag(s). Please try again.':
+      'Unable to find Aggregate guidance tag(s). Please try again.',
     'Unable to find DKIM guidance tag(s). Please try again.':
       'Unable to find DKIM guidance tag(s). Please try again.',
     'Unable to find DKIM result(s). Please try again.':
@@ -322,6 +324,8 @@
       'Unable to invite user. Please try again.',
     'Unable to invite yourself to an org.':
       'Unable to invite yourself to an org.',
+    'Unable to load Aggregate guidance tag(s). Please try again.':
+      'Unable to load Aggregate guidance tag(s). Please try again.',
     'Unable to load DKIM failure data. Please try again.':
       'Unable to load DKIM failure data. Please try again.',
     'Unable to load DKIM guidance tag(s). Please try again.':
@@ -358,16 +362,12 @@
       'Unable to load domain(s). Please try again.',
     'Unable to load domain. Please try again.':
       'Unable to load domain. Please try again.',
-    'Unable to load domains. Please try again.':
-      'Unable to load domains. Please try again.',
     'Unable to load full pass data. Please try again.':
       'Unable to load full pass data. Please try again.',
     'Unable to load mail summary. Please try again.':
       'Unable to load mail summary. Please try again.',
     'Unable to load organization(s). Please try again.':
       'Unable to load organization(s). Please try again.',
-    'Unable to load organizations. Please try again.':
-      'Unable to load organizations. Please try again.',
     'Unable to load summary. Please try again.':
       'Unable to load summary. Please try again.',
     'Unable to load user(s). Please try again.':

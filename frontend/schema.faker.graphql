@@ -291,19 +291,19 @@ type DkimFailureTable {
   # Is DKIM aligned.
   dkimAligned: Boolean @examples(values: [true, false])
   # Domains used for DKIM validation
-  dkimDomains: String @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
+  dkimDomains: [DomainScalar] @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
   # The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error.
   dkimResults: String @examples(values: ["", "fail", "permerror"])
   # Pointer to a DKIM public key record in DNS.
-  dkimSelectors: String @examples(values: ["selector1", "selector2", "selector3"])
+  dkimSelectors: [DomainScalar] @examples(values: ["selector1", "selector2", "selector3"])
   # Host from reverse DNS of source IP address.
-  dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
+  dnsHost: DomainScalar @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
   # Domain from SMTP banner message.
-  envelopeFrom: String @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
+  envelopeFrom: DomainScalar @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
   # Guidance for any issues that were found from the report.
   guidance: String @examples(values: ["agg-dkim-failed", "agg-dkim-strict", "agg-dkim-unsigned"])
   # The address/domain used in the "From" field.
-  headerFrom: String @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
+  headerFrom: DomainScalar @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
   # IP address of sending server.
   sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
   # Total messages from this sender.
@@ -531,21 +531,21 @@ type DmarcFailureTable {
   # The ID of the object
   id: ID
   # Domains used for DKIM validation
-  dkimDomains: String @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
+  dkimDomains: [DomainScalar] @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
   # Pointer to a DKIM public key record in DNS.
-  dkimSelectors: String @examples(values: ["selector1", "selector2", "selector3"])
+  dkimSelectors: [DomainScalar] @examples(values: ["selector1", "selector2", "selector3"])
   # The DMARC enforcement action that the receiver took, either none, quarantine, or reject.
   disposition: String @examples(values: ["none", "quarantine", "reject"])
   # Host from reverse DNS of source IP address.
-  dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
+  dnsHost: DomainScalar @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
   # Domain from SMTP banner message.
-  envelopeFrom: String @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
+  envelopeFrom: DomainScalar @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
   # The address/domain used in the "From" field.
-  headerFrom: String @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
+  headerFrom: DomainScalar @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
   # IP address of sending server.
   sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
   # Domains used for SPF validation.
-  spfDomains: String @examples(values: ["test.spf.gc.ca", "test.spf.canada.ca"])
+  spfDomains: [DomainScalar] @examples(values: ["test.spf.gc.ca", "test.spf.canada.ca"])
   # Total messages from this sender.
   totalMessages: Int @examples(values: [1247, 5687])
 }
@@ -822,19 +822,19 @@ type FullPassTable {
   # The ID of the object
   id: ID
   # Domains used for DKIM validation
-  dkimDomains: String @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
+  dkimDomains: [DomainScalar] @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
   # Pointer to a DKIM public key record in DNS.
-  dkimSelectors: String @examples(values: ["selector1", "selector2", "selector3"])
+  dkimSelectors: [DomainScalar] @examples(values: ["selector1", "selector2", "selector3"])
   # Host from reverse DNS of source IP address.
-  dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
+  dnsHost: DomainScalar @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
   # Domain from SMTP banner message.
-  envelopeFrom: String @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
+  envelopeFrom: DomainScalar @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
   # The address/domain used in the "From" field.
-  headerFrom: String @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
+  headerFrom: DomainScalar @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
   # IP address of sending server.
   sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
   # Domains used for SPF validation.
-  spfDomains: String @examples(values: ["test.spf.gc.ca", "test.spf.canada.ca"])
+  spfDomains: [DomainScalar] @examples(values: ["test.spf.gc.ca", "test.spf.canada.ca"])
   # Total messages from this sender.
   totalMessages: Int @examples(values: [1247, 5687])
 }
@@ -1506,6 +1506,8 @@ union RemoveDomainUnion = DomainError | DomainResult
 type DomainResult {
   # Informs the user if the domain removal was successful.
   status: String
+  # Removed Domain
+  domain: Domain
 }
 
 input RemoveDomainInput {
@@ -1531,6 +1533,8 @@ union RemoveOrganizationUnion = OrganizationError | OrganizationResult
 type OrganizationResult {
   # Informs the user if the organization mutation was successful.
   status: String
+  # Removed Organization
+  organization: Organization
 }
 
 input RemoveOrganizationInput {
@@ -1580,6 +1584,8 @@ union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
 type RemoveUserFromOrgResult {
   # Informs the user if the user was successfully removed.
   status: String
+  # Removed user
+  user: SharedUser
 }
 
 input RemoveUserFromOrgInput {
@@ -1890,19 +1896,19 @@ type SpfFailureTable {
   # The ID of the object
   id: ID
   # Host from reverse DNS of source IP address.
-  dnsHost: String @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
+  dnsHost: DomainScalar @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
   # Domain from SMTP banner message.
-  envelopeFrom: String @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
+  envelopeFrom: DomainScalar @examples(values: ["test.envelope.gc.ca", "test.envelope.canada.ca"])
   # Guidance for any issues that were found from the report.
   guidance: String @examples(values: ["agg-spf-no-record", "agg-spf-failed", "agg-spf-strict", "agg-spf-invalid"])
   # The address/domain used in the "From" field.
-  headerFrom: String @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
+  headerFrom: DomainScalar @examples(values: ["test.header.gc.ca", "test.header.canada.ca"])
   # IP address of sending server.
   sourceIpAddress: String @examples(values: ["123.456.78.91", "987.654.32.19"])
   # Is SPF aligned.
   spfAligned: Boolean @examples(values: [true, false])
   # Domains used for SPF validation.
-  spfDomains: String @examples(values: ["test.spf.gc.ca", "test.spf.canada.ca"])
+  spfDomains: [DomainScalar] @examples(values: ["test.spf.gc.ca", "test.spf.canada.ca"])
   # The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error.
   spfResults: String
   # Total messages from this sender.
@@ -1934,12 +1940,30 @@ type SpfFailureTableEdge {
 type SSL implements Node {
   # The ID of an object
   id: ID!
+  # List of ciphers in use by the server deemed to be "acceptable".
+  acceptableCiphers: [String]
+  # List of curves in use by the server deemed to be "acceptable".
+  acceptableCurves: [String]
+  # Denotes vulnerability to OpenSSL CCS Injection.
+  ccsInjectionVulnerable: Boolean
   # The domain the scan was ran on.
   domain: Domain
-  # The time when the scan was initiated.
-  timestamp: Date @fake(type: pastDate)
+  # Denotes vulnerability to "Heartbleed" exploit.
+  heartbleedVulnerable: Boolean
   # Raw scan result.
   rawJson: JSON
+  # List of ciphers in use by the server deemed to be "strong".
+  strongCiphers: [String]
+  # List of curves in use by the server deemed to be "strong".
+  strongCurves: [String]
+  # Denotes support for elliptic curve key pairs.
+  supportsEcdhKeyExchange: Boolean
+  # The time when the scan was initiated.
+  timestamp: Date
+  # List of ciphers in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
+  weakCiphers: [String]
+  # List of curves in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
+  weakCurves: [String]
   # Guidance tags found during scan.
   guidanceTags(
     # Ordering options for guidance tag connections
