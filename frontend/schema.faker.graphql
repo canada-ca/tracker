@@ -1506,6 +1506,8 @@ union RemoveDomainUnion = DomainError | DomainResult
 type DomainResult {
   # Informs the user if the domain removal was successful.
   status: String
+  # Removed Domain
+  domain: Domain
 }
 
 input RemoveDomainInput {
