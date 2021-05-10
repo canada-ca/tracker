@@ -1,12 +1,5 @@
-import {
-  GraphQLInt,
-  GraphQLList,
-  GraphQLObjectType,
-  GraphQLString,
-} from 'graphql'
+import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
 import { globalIdField } from 'graphql-relay'
-
-import { Domain } from '../../scalars'
 
 export const dmarcFailureTableType = new GraphQLObjectType({
   name: 'DmarcFailureTable',
@@ -15,14 +8,14 @@ export const dmarcFailureTableType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('dmarcFail'),
     dkimDomains: {
-      type: GraphQLList(Domain),
+      type: GraphQLString,
       description: 'Domains used for DKIM validation',
-      resolve: ({ dkimDomains }) => dkimDomains.split(','),
+      resolve: ({ dkimDomains }) => dkimDomains,
     },
     dkimSelectors: {
-      type: GraphQLList(Domain),
+      type: GraphQLString,
       description: 'Pointer to a DKIM public key record in DNS.',
-      resolve: ({ dkimSelectors }) => dkimSelectors.split(','),
+      resolve: ({ dkimSelectors }) => dkimSelectors,
     },
     disposition: {
       type: GraphQLString,
@@ -31,17 +24,17 @@ export const dmarcFailureTableType = new GraphQLObjectType({
       resolve: ({ disposition }) => disposition,
     },
     dnsHost: {
-      type: Domain,
+      type: GraphQLString,
       description: 'Host from reverse DNS of source IP address.',
       resolve: ({ dnsHost }) => dnsHost,
     },
     envelopeFrom: {
-      type: Domain,
+      type: GraphQLString,
       description: 'Domain from SMTP banner message.',
       resolve: ({ envelopeFrom }) => envelopeFrom,
     },
     headerFrom: {
-      type: Domain,
+      type: GraphQLString,
       description: 'The address/domain used in the "From" field.',
       resolve: ({ headerFrom }) => headerFrom,
     },
@@ -51,9 +44,9 @@ export const dmarcFailureTableType = new GraphQLObjectType({
       resolve: ({ sourceIpAddress }) => sourceIpAddress,
     },
     spfDomains: {
-      type: GraphQLList(Domain),
+      type: GraphQLString,
       description: 'Domains used for SPF validation.',
-      resolve: ({ spfDomains }) => spfDomains.split(','),
+      resolve: ({ spfDomains }) => spfDomains,
     },
     totalMessages: {
       type: GraphQLInt,
