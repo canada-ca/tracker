@@ -1,7 +1,8 @@
-import { GraphQLID, GraphQLInt, GraphQLString, GraphQLNonNull } from 'graphql'
+import { GraphQLID, GraphQLInt, GraphQLString, GraphQLNonNull, GraphQLList } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { fullPassTableType } from '../full-pass-table'
+import { Domain } from '../../../scalars'
 
 describe('given the fullPassTable gql object', () => {
   describe('testing the field definitions', () => {
@@ -15,31 +16,31 @@ describe('given the fullPassTable gql object', () => {
       const demoType = fullPassTableType.getFields()
 
       expect(demoType).toHaveProperty('dkimDomains')
-      expect(demoType.dkimDomains.type).toMatchObject(GraphQLString)
+      expect(demoType.dkimDomains.type).toMatchObject(GraphQLList(Domain))
     })
     it('has a dkimSelectors field', () => {
       const demoType = fullPassTableType.getFields()
 
       expect(demoType).toHaveProperty('dkimSelectors')
-      expect(demoType.dkimSelectors.type).toMatchObject(GraphQLString)
+      expect(demoType.dkimSelectors.type).toMatchObject(GraphQLList(Domain))
     })
     it('has a dnsHost field', () => {
       const demoType = fullPassTableType.getFields()
 
       expect(demoType).toHaveProperty('dnsHost')
-      expect(demoType.dnsHost.type).toMatchObject(GraphQLString)
+      expect(demoType.dnsHost.type).toMatchObject(Domain)
     })
     it('has an envelopeFrom field', () => {
       const demoType = fullPassTableType.getFields()
 
       expect(demoType).toHaveProperty('envelopeFrom')
-      expect(demoType.envelopeFrom.type).toMatchObject(GraphQLString)
+      expect(demoType.envelopeFrom.type).toMatchObject(Domain)
     })
     it('has a headerFrom field', () => {
       const demoType = fullPassTableType.getFields()
 
       expect(demoType).toHaveProperty('headerFrom')
-      expect(demoType.headerFrom.type).toMatchObject(GraphQLString)
+      expect(demoType.headerFrom.type).toMatchObject(Domain)
     })
     it('has a sourceIpAddress field', () => {
       const demoType = fullPassTableType.getFields()
@@ -51,7 +52,7 @@ describe('given the fullPassTable gql object', () => {
       const demoType = fullPassTableType.getFields()
 
       expect(demoType).toHaveProperty('spfDomains')
-      expect(demoType.spfDomains.type).toMatchObject(GraphQLString)
+      expect(demoType.spfDomains.type).toMatchObject(GraphQLList(Domain))
     })
     it('has a totalMessages field', () => {
       const demoType = fullPassTableType.getFields()
@@ -77,7 +78,7 @@ describe('given the fullPassTable gql object', () => {
 
         expect(
           demoType.dkimDomains.resolve({ dkimDomains: 'dkimDomains' }),
-        ).toEqual('dkimDomains')
+        ).toEqual(['dkimDomains'])
       })
     })
     describe('testing the dkimSelectors resolvers', () => {
@@ -86,7 +87,7 @@ describe('given the fullPassTable gql object', () => {
 
         expect(
           demoType.dkimSelectors.resolve({ dkimSelectors: 'dkimSelectors' }),
-        ).toEqual('dkimSelectors')
+        ).toEqual(['dkimSelectors'])
       })
     })
     describe('testing the dnsHost resolver', () => {
@@ -133,7 +134,7 @@ describe('given the fullPassTable gql object', () => {
 
         expect(
           demoType.spfDomains.resolve({ spfDomains: 'spfDomains' }),
-        ).toEqual('spfDomains')
+        ).toEqual(['spfDomains'])
       })
     })
     describe('testing the totalMessages resolver', () => {
