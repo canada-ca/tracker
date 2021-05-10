@@ -68,6 +68,13 @@ const mocks = {
       .toISOString()
       .replace('T', ' ')
   },
+  DmarcFailureTableConnection: () => {
+    const numberOfEdges = faker.datatype.number({ min: 0, max: 500 })
+    return {
+      edges: [...new Array(numberOfEdges)],
+      totalCount: numberOfEdges,
+    }
+  },
   DmarcSummaryConnection: () => {
     const numberOfEdges = faker.datatype.number({ min: 0, max: 500 })
     return {
