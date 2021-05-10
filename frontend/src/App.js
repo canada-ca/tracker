@@ -17,6 +17,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { FloatingMenu } from './FloatingMenu'
 import PrivatePage from './PrivatePage'
 import { Page } from './Page'
+import { LoadingMessage } from './LoadingMessage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -119,7 +120,7 @@ export default function App() {
 
         {/* {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />} */}
         <Main>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingMessage />}>
             <Switch>
               <Page exact path="/" title={t`Home`}>
                 <LandingPage />

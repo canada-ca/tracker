@@ -10,7 +10,6 @@ import {
 import { array, bool, number, string } from 'prop-types'
 import {
   Box,
-  Button,
   Collapse,
   Icon,
   IconButton,
@@ -24,6 +23,7 @@ import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import WithPseudoBox from './withPseudoBox'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
+import { TrackerButton } from './TrackerButton'
 
 const Table = styled.table`
 width: calc(100% - 2px);
@@ -199,9 +199,9 @@ function DmarcReportTable({ ...props }) {
   const wrapperRef = useRef(null)
 
   const titleButtonElement = !hideTitleButton ? (
-    <Button bg="primary" color="white" onClick={handleShow} width="100%">
-      {title}
-    </Button>
+    <TrackerButton variant="primary" onClick={handleShow} width="100%">
+      <Text>{title}</Text>
+    </TrackerButton>
   ) : (
     ''
   )
@@ -315,7 +315,9 @@ function DmarcReportTable({ ...props }) {
         </Stack>
       </Stack>
     </Box>
-  ) : ("")
+  ) : (
+    ''
+  )
 
   return (
     <Box ref={wrapperRef}>
