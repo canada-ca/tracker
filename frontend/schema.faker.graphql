@@ -1531,6 +1531,8 @@ union RemoveOrganizationUnion = OrganizationError | OrganizationResult
 type OrganizationResult {
   # Informs the user if the organization mutation was successful.
   status: String
+  # Removed Organization
+  organization: Organization
 }
 
 input RemoveOrganizationInput {
