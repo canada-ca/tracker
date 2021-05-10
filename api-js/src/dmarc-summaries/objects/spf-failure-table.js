@@ -3,11 +3,9 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLBoolean,
-  GraphQLList,
 } from 'graphql'
 import { globalIdField } from 'graphql-relay'
 
-import { Domain } from '../../scalars'
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const spfFailureTableType = new GraphQLObjectType({
@@ -17,12 +15,12 @@ export const spfFailureTableType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('spfFail'),
     dnsHost: {
-      type: Domain,
+      type: GraphQLString,
       description: 'Host from reverse DNS of source IP address.',
       resolve: ({ dnsHost }) => dnsHost,
     },
     envelopeFrom: {
-      type: Domain,
+      type: GraphQLString,
       description: 'Domain from SMTP banner message.',
       resolve: ({ envelopeFrom }) => envelopeFrom,
     },
@@ -43,7 +41,7 @@ export const spfFailureTableType = new GraphQLObjectType({
       ) => await loadAggregateGuidanceTagById.load(guidance),
     },
     headerFrom: {
-      type: Domain,
+      type: GraphQLString,
       description: 'The address/domain used in the "From" field.',
       resolve: ({ headerFrom }) => headerFrom,
     },
@@ -58,9 +56,9 @@ export const spfFailureTableType = new GraphQLObjectType({
       resolve: ({ spfAligned }) => spfAligned,
     },
     spfDomains: {
-      type: GraphQLList(Domain),
+      type: GraphQLString,
       description: 'Domains used for SPF validation.',
-      resolve: ({ spfDomains }) => spfDomains.split(','),
+      resolve: ({ spfDomains }) => spfDomains,
     },
     spfResults: {
       type: GraphQLString,
