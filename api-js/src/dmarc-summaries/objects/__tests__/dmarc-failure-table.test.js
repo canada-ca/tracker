@@ -28,7 +28,7 @@ describe('given the dmarcFailureTable gql object', () => {
       const demoType = dmarcFailureTableType.getFields()
 
       expect(demoType).toHaveProperty('dkimSelectors')
-      expect(demoType.dkimSelectors.type).toMatchObject(GraphQLList(Domain))
+      expect(demoType.dkimSelectors.type).toMatchObject(GraphQLString)
     })
     it('has a disposition field', () => {
       const demoType = dmarcFailureTableType.getFields()
@@ -99,7 +99,7 @@ describe('given the dmarcFailureTable gql object', () => {
 
         expect(
           demoType.dkimSelectors.resolve({ dkimSelectors: 'dkimSelectors' }),
-        ).toEqual(['dkimSelectors'])
+        ).toEqual('dkimSelectors')
       })
     })
     describe('testing the disposition resolver', () => {

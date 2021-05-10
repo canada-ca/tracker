@@ -22,7 +22,7 @@ describe('given the fullPassTable gql object', () => {
       const demoType = fullPassTableType.getFields()
 
       expect(demoType).toHaveProperty('dkimSelectors')
-      expect(demoType.dkimSelectors.type).toMatchObject(GraphQLList(Domain))
+      expect(demoType.dkimSelectors.type).toMatchObject(GraphQLString)
     })
     it('has a dnsHost field', () => {
       const demoType = fullPassTableType.getFields()
@@ -87,7 +87,7 @@ describe('given the fullPassTable gql object', () => {
 
         expect(
           demoType.dkimSelectors.resolve({ dkimSelectors: 'dkimSelectors' }),
-        ).toEqual(['dkimSelectors'])
+        ).toEqual('dkimSelectors')
       })
     })
     describe('testing the dnsHost resolver', () => {

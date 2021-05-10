@@ -20,9 +20,9 @@ export const fullPassTableType = new GraphQLObjectType({
       resolve: ({ dkimDomains }) => dkimDomains.split(','),
     },
     dkimSelectors: {
-      type: GraphQLList(Domain),
+      type: GraphQLString,
       description: 'Pointer to a DKIM public key record in DNS.',
-      resolve: ({ dkimSelectors }) => dkimSelectors.split(','),
+      resolve: ({ dkimSelectors }) => dkimSelectors,
     },
     dnsHost: {
       type: Domain,

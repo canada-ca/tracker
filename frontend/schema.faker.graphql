@@ -295,7 +295,7 @@ type DkimFailureTable {
   # The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error.
   dkimResults: String @examples(values: ["", "fail", "permerror"])
   # Pointer to a DKIM public key record in DNS.
-  dkimSelectors: [DomainScalar] @examples(values: ["selector1", "selector2", "selector3"])
+  dkimSelectors: String @examples(values: ["selector1", "selector2", "selector3"])
   # Host from reverse DNS of source IP address.
   dnsHost: DomainScalar @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
   # Domain from SMTP banner message.

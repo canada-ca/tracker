@@ -47,9 +47,7 @@ describe('given the dkimFailureTable gql object', () => {
       const demoType = dkimFailureTableType.getFields()
 
       expect(demoType).toHaveProperty('dkimSelectors')
-      expect(demoType.dkimSelectors.type).toMatchObject(
-        GraphQLList(Domain),
-      )
+      expect(demoType.dkimSelectors.type).toMatchObject(GraphQLString)
     })
     it('has a dnsHost field', () => {
       const demoType = dkimFailureTableType.getFields()
@@ -138,7 +136,7 @@ describe('given the dkimFailureTable gql object', () => {
 
         expect(
           demoType.dkimSelectors.resolve({ dkimSelectors: 'dkimSelectors' }),
-        ).toEqual(['dkimSelectors'])
+        ).toEqual('dkimSelectors')
       })
     })
     describe('testing the dnsHost resolver', () => {

@@ -33,9 +33,9 @@ export const dkimFailureTableType = new GraphQLObjectType({
       resolve: ({ dkimResults }) => dkimResults,
     },
     dkimSelectors: {
-      type: GraphQLList(Domain),
+      type: GraphQLString,
       description: 'Pointer to a DKIM public key record in DNS.',
-      resolve: ({ dkimSelectors }) => dkimSelectors.split(','),
+      resolve: ({ dkimSelectors }) => dkimSelectors,
     },
     dnsHost: {
       type: Domain,
