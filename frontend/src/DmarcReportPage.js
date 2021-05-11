@@ -600,7 +600,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   )
 
   return (
-    <Box width="100%" px="2" mx="auto" overflow="hidden" pb="2">
+    <Box width="100%" px="2" mx="auto" overflow="hidden" pb="4">
       <PseudoBox d={{ md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr 1fr' }}>
         <Box />
         <Heading as="h1" textAlign="center">

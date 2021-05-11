@@ -52,8 +52,8 @@ export default function UserPage() {
   } = queryUserData?.userPage
 
   return (
-    <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
-      <Stack p={25} spacing={4}>
+    <SimpleGrid columns={{ md: 1, lg: 2 }} width="100%">
+      <Stack py={25} px="4">
         <EditableUserDisplayName detailValue={displayName} />
 
         <Divider />

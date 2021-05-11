@@ -12,6 +12,7 @@ import {
 import { useRouteMatch, useHistory } from 'react-router-dom'
 import { string, number, bool, object } from 'prop-types'
 import { Trans } from '@lingui/macro'
+import { TrackerButton } from './TrackerButton'
 
 export function OrganizationCard({
   name,
@@ -24,6 +25,7 @@ export function OrganizationCard({
 }) {
   const { path, _url } = useRouteMatch()
   const history = useHistory()
+  const smallDevice = window.matchMedia('(max-width: 500px)').matches
   let webValue = 0
   let mailValue = 0
   const webSummary = summaries.web.categories.filter((cat) => {
@@ -54,12 +56,12 @@ export function OrganizationCard({
         display={{ md: 'flex' }}
         alignItems="center"
         onClick={() => {
-          history.push(`${path}/${slug}`)
+          !smallDevice && history.push(`${path}/${slug}`)
         }}
-        _hover={{ bg: 'gray.100' }}
-        p="8"
+        _hover={!smallDevice && { bg: 'gray.100' }}
+        p="4"
         mx="auto"
-        as="button"
+        as={!smallDevice ? 'button' : ''}
       >
         <Box flexShrink="0" minW="50%" maxW={['100%', '50%']} mb={['2', '0']}>
           <Stack isInline align="center">
@@ -117,6 +119,19 @@ export function OrganizationCard({
           <Text>{mailValue}%</Text>
           <Progress value={mailValue} bg="gray.300" />
         </Box>
+        {smallDevice && (
+          <TrackerButton
+            variant="primary"
+            mt="4"
+            fontSize="lg"
+            w="100%"
+            onClick={() => {
+              history.push(`${path}/${slug}`)
+            }}
+          >
+            <Trans>View Organization</Trans>
+          </TrackerButton>
+        )}
       </PseudoBox>
     </ListItem>
   )

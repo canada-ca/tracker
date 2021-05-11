@@ -2293,3 +2293,11 @@ msgstr "Étiquettes neutres"
 #: src/GuidanceTagList.js:162
 msgid "Negative Tags"
 msgstr "Étiquettes négatives"
+
+#: src/OrganizationCard.js:132
+msgid "View Organization"
+msgstr "Voir l'organisation"
+
+#: src/DomainCard.js:142
+msgid "DMARC Guidance"
+msgstr "Conseils sur le DMARC"

@@ -2301,3 +2301,11 @@ msgstr "Neutral Tags"
 #: src/GuidanceTagList.js:162
 msgid "Negative Tags"
 msgstr "Negative Tags"
+
+#: src/OrganizationCard.js:132
+msgid "View Organization"
+msgstr "View Organization"
+
+#: src/DomainCard.js:142
+msgid "DMARC Guidance"
+msgstr "DMARC Guidance"
