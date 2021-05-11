@@ -215,6 +215,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       status: i18n._(
         t`Successfully removed organization: ${organization.slug}.`,
       ),
+      organization,
     }
   },
 })

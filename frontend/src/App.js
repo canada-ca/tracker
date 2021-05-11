@@ -21,7 +21,6 @@ import { LoadingMessage } from './LoadingMessage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
-const QRcodePage = lazy(() => import('./QRcodePage'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
 const UserPage = lazy(() => import('./UserPage'))
 const SignInPage = lazy(() => import('./SignInPage'))
@@ -36,6 +35,7 @@ const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
 const TwoFactorAuthenticatePage = lazy(() =>
   import('./TwoFactorAuthenticatePage'),
 )
+const EmailValidationPage = lazy(() => import('./EmailValidationPage'))
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -199,12 +199,9 @@ export default function App() {
                 <UserPage username={currentUser.userName} />
               </PrivatePage>
 
-              <PrivatePage
-                path="/two-factor-code"
-                title={t`Authentication QR Code`}
-              >
-                <QRcodePage userName={currentUser.userName} />
-              </PrivatePage>
+              <Page path="/validate/:verifyToken" title={t`Email Verification`}>
+                <EmailValidationPage />
+              </Page>
 
               <Page component={PageNotFound} title="404" />
             </Switch>

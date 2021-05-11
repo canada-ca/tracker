@@ -2282,6 +2282,34 @@ msgstr ""
 msgid "{title} - Tracker"
 msgstr "{title} - Suivi"
 
+#: src/EmailValidationPage.js:76
+msgid "Your account email was successfully verified"
+msgstr "L'email de votre compte a été vérifié avec succès"
+
+#: src/EmailValidationPage.js:86
+msgid "Your account email could not be verified at this time. Please try again."
+msgstr "L'email de votre compte n'a pas pu être vérifié pour le moment. Veuillez réessayer."
+
+#: src/EmailValidationPage.js:96
+msgid "Email Validation Page"
+msgstr "Page de validation des e-mails"
+
+#: src/UserPage.js:29
+msgid "Unable to send verification email"
+msgstr "Impossible d'envoyer l'e-mail de vérification"
+
+#: src/UserPage.js:38
+msgid "Email successfully sent"
+msgstr "Courriel envoyé avec succès"
+
+#: src/UserPage.js:39
+msgid "Check your associated Tracker email for the verification link"
+msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
+
+#: src/UserPage.js:124
+msgid "Verify Email"
+msgstr "Vérifier l'e-mail"
+
 #: src/GuidanceTagList.js:132
 msgid "Positive Tags"
 msgstr "Étiquettes positives"

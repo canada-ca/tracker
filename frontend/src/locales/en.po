@@ -2290,6 +2290,34 @@ msgstr "{orgName}"
 msgid "{title} - Tracker"
 msgstr "{title} - Tracker"
 
+#: src/EmailValidationPage.js:76
+msgid "Your account email was successfully verified"
+msgstr "Your account email was successfully verified"
+
+#: src/EmailValidationPage.js:86
+msgid "Your account email could not be verified at this time. Please try again."
+msgstr "Your account email could not be verified at this time. Please try again."
+
+#: src/EmailValidationPage.js:96
+msgid "Email Validation Page"
+msgstr "Email Validation Page"
+
+#: src/UserPage.js:29
+msgid "Unable to send verification email"
+msgstr "Unable to send verification email"
+
+#: src/UserPage.js:38
+msgid "Email successfully sent"
+msgstr "Email successfully sent"
+
+#: src/UserPage.js:39
+msgid "Check your associated Tracker email for the verification link"
+msgstr "Check your associated Tracker email for the verification link"
+
+#: src/UserPage.js:124
+msgid "Verify Email"
+msgstr "Verify Email"
+
 #: src/GuidanceTagList.js:132
 msgid "Positive Tags"
 msgstr "Positive Tags"

@@ -61,7 +61,7 @@ def process_results(results):
 
         # Is HTTPS enforced?
 
-        if https == ("Downgrades HTTPS" or "Bad Hostname"):
+        if https in ["Downgrades HTTPS", "Bad Hostname"]:
             behavior = "Not Enforced"  # N/A
 
         else:
