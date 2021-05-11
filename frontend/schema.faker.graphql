@@ -594,7 +594,7 @@ type DmarcSummaryConnection {
   # Information to aid in pagination.
   pageInfo: PageInfo!
   # A list of edges.
-  edges: [DmarcSummaryEdge] @listLength(min: 0, max: 5)
+  edges: [DmarcSummaryEdge] @listLength(min: 5, max: 10)
   # The total amount of dmarc summaries the user has access to.
   totalCount: Int @fake(
     type: number
@@ -1506,6 +1506,8 @@ union RemoveDomainUnion = DomainError | DomainResult
 type DomainResult {
   # Informs the user if the domain removal was successful.
   status: String
+  # Removed Domain
+  domain: Domain
 }
 
 input RemoveDomainInput {
@@ -1531,6 +1533,8 @@ union RemoveOrganizationUnion = OrganizationError | OrganizationResult
 type OrganizationResult {
   # Informs the user if the organization mutation was successful.
   status: String
+  # Removed Organization
+  organization: Organization
 }
 
 input RemoveOrganizationInput {
@@ -1580,6 +1584,8 @@ union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
 type RemoveUserFromOrgResult {
   # Informs the user if the user was successfully removed.
   status: String
+  # Removed user
+  user: SharedUser
 }
 
 input RemoveUserFromOrgInput {

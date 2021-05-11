@@ -1293,12 +1293,16 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
     $year: Year!
     $first: Int
     $after: String
+    $orderBy: DmarcSummaryOrder
+    $search: String
   ) {
     findMyDmarcSummaries(
       month: $month
       year: $year
       first: $first
       after: $after
+      orderBy: $orderBy
+      search: $search
     ) {
       pageInfo {
         hasNextPage
@@ -1335,6 +1339,7 @@ export const USER_AFFILIATIONS = gql`
     $last: Int
   ) {
     findMe {
+      id
       affiliations(after: $after, first: $first, before: $before, last: $last) {
         edges {
           node {

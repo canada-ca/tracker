@@ -8,8 +8,18 @@ export function createCache() {
       Query: {
         fields: {
           findMyDomains: relayStylePagination(['first', 'orderBy', 'search']),
-          findMyDmarcSummaries: relayStylePagination(['first']),
-          findMyOrganizations: relayStylePagination(['first', 'orderBy', 'search']),
+          findMyDmarcSummaries: relayStylePagination([
+            'first',
+            'orderBy',
+            'search',
+            'month',
+            'year',
+          ]),
+          findMyOrganizations: relayStylePagination([
+            'first',
+            'orderBy',
+            'search',
+          ]),
         },
       },
       Organization: {

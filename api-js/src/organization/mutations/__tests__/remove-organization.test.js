@@ -168,6 +168,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -208,6 +211,9 @@ describe('removing an organization', () => {
                   result: {
                     status:
                       'Successfully removed organization: treasury-board-secretariat.',
+                      organization: {
+                        name: 'Treasury Board of Canada Secretariat',
+                      },
                   },
                 },
               },
@@ -231,6 +237,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -308,6 +317,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -348,6 +360,9 @@ describe('removing an organization', () => {
                   result: {
                     status:
                       'Successfully removed organization: treasury-board-secretariat.',
+                      organization: {
+                        name: 'Treasury Board of Canada Secretariat',
+                      },
                   },
                 },
               },
@@ -371,6 +386,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -456,6 +474,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -493,6 +514,9 @@ describe('removing an organization', () => {
                 result: {
                   status:
                     'Successfully removed organization: treasury-board-secretariat.',
+                    organization: {
+                      name: 'Treasury Board of Canada Secretariat',
+                    },
                 },
               },
             },
@@ -516,6 +540,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -622,6 +649,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -661,6 +691,9 @@ describe('removing an organization', () => {
                 removeOrganization: {
                   result: {
                     status: 'todo',
+                    organization: {
+                      name: 'Secrétariat du Conseil Trésor du Canada',
+                    },
                   },
                 },
               },
@@ -684,6 +717,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -761,6 +797,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -800,6 +839,9 @@ describe('removing an organization', () => {
                 removeOrganization: {
                   result: {
                     status: 'todo',
+                    organization: {
+                      name: 'Secrétariat du Conseil Trésor du Canada',
+                    },
                   },
                 },
               },
@@ -823,6 +865,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -908,6 +953,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -944,6 +992,9 @@ describe('removing an organization', () => {
               removeOrganization: {
                 result: {
                   status: 'todo',
+                  organization: {
+                    name: 'Secrétariat du Conseil Trésor du Canada',
+                  },
                 },
               },
             },
@@ -967,6 +1018,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -1060,6 +1114,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -1183,6 +1240,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1256,6 +1316,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1363,6 +1426,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1432,6 +1498,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1501,6 +1570,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1578,6 +1650,9 @@ describe('removing an organization', () => {
                   result {
                     ... on OrganizationResult {
                       status
+                      organization {
+                        name
+                      }
                     }
                     ... on OrganizationError {
                       code
@@ -1701,6 +1776,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1773,6 +1851,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1879,6 +1960,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -1944,6 +2028,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
@@ -2009,6 +2096,9 @@ describe('removing an organization', () => {
                     result {
                       ... on OrganizationResult {
                         status
+                        organization {
+                          name
+                        }
                       }
                       ... on OrganizationError {
                         code
