@@ -1,5 +1,3 @@
-import { upperCase } from 'lodash'
-
 export const toConstantCase = (str) => {
-  return upperCase(str).replace(/ /g, '_')
+  return str.toUpperCase().replace(/ /g, '_')
 }
