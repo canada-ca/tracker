@@ -1334,6 +1334,7 @@ export const USER_AFFILIATIONS = gql`
     $last: Int
   ) {
     findMe {
+      id
       affiliations(after: $after, first: $first, before: $before, last: $last) {
         edges {
           node {
