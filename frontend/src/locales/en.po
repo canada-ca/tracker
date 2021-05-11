@@ -92,7 +92,7 @@ msgstr "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18
 
 #: src/App.js:84
 #: src/FloatingMenu.js:129
-#: src/UserPage.js:35
+#: src/UserPage.js:65
 msgid "Account Settings"
 msgstr "Account Settings"
 
@@ -191,8 +191,8 @@ msgid "Authenticate"
 msgstr "Authenticate"
 
 #: src/App.js:202
-msgid "Authentication QR Code"
-msgstr "Authentication QR Code"
+#~ msgid "Authentication QR Code"
+#~ msgstr "Authentication QR Code"
 
 #: src/guidanceTagConstants.js:37
 msgid "B.1.1 SPF Records"
@@ -282,6 +282,10 @@ msgstr "Changed User Phone Number"
 msgid "Changes Required for ITPIN Compliance"
 msgstr "Changes Required for ITPIN Compliance"
 
+#: src/UserPage.js:39
+msgid "Check your associated Tracker email for the verification link"
+msgstr "Check your associated Tracker email for the verification link"
+
 #: src/FloatingMenu.js:214
 msgid "Close"
 msgstr "Close"
@@ -323,6 +327,10 @@ msgstr "Confirm removal of domain:"
 #: src/guidanceTagConstants.js:204
 msgid "Contact 3rd party"
 msgstr "Contact 3rd party"
+
+#: src/EmailValidationPage.js:79
+msgid "Continue"
+msgstr "Continue"
 
 #: src/CreateUserPage.js:164
 #: src/SignInPage.js:164
@@ -439,7 +447,7 @@ msgstr "DMARC Failure Table"
 msgid "DMARC Failures by IP Address"
 msgstr "DMARC Failures by IP Address"
 
-#: src/ScanCard.js:48
+#: src/ScanCard.js:51
 msgid "DMARC Implementation Phase: {0}"
 msgstr "DMARC Implementation Phase: {0}"
 
@@ -447,8 +455,8 @@ msgstr "DMARC Implementation Phase: {0}"
 #~ msgid "DMARC Implementation Phase: {status}"
 #~ msgstr "DMARC Implementation Phase: {status}"
 
-#: src/DmarcByDomainPage.js:124
-#: src/DmarcByDomainPage.js:217
+#: src/DmarcByDomainPage.js:160
+#: src/DmarcByDomainPage.js:263
 msgid "DMARC Messages"
 msgstr "DMARC Messages"
 
@@ -516,7 +524,7 @@ msgstr "Display name cannot be empty"
 msgid "Disposition"
 msgstr "Disposition"
 
-#: src/DmarcByDomainPage.js:87
+#: src/DmarcByDomainPage.js:116
 #: src/DomainsPage.js:141
 msgid "Domain"
 msgstr "Domain"
@@ -601,8 +609,8 @@ msgid "Domains"
 msgstr "Domains"
 
 #: src/DmarcByDomainPage.js:59
-msgid "Domains Table"
-msgstr "Domains Table"
+#~ msgid "Domains Table"
+#~ msgstr "Domains Table"
 
 #: src/EditableUserDisplayName.js:114
 #: src/EditableUserEmail.js:114
@@ -646,6 +654,14 @@ msgstr "Email Sent"
 msgid "Email Validated"
 msgstr "Email Validated"
 
+#: src/EmailValidationPage.js:64
+msgid "Email Validation Page"
+msgstr "Email Validation Page"
+
+#: src/App.js:200
+msgid "Email Verification"
+msgstr "Email Verification"
+
 #: src/ForgotPasswordPage.js:18
 #: src/fieldRequirements.js:6
 msgid "Email cannot be empty"
@@ -658,6 +674,10 @@ msgstr "Email invitation sent to {addedUserName}"
 #: src/SummaryGroup.js:37
 msgid "Email security settings summary"
 msgstr "Email security settings summary"
+
+#: src/UserPage.js:38
+msgid "Email successfully sent"
+msgstr "Email successfully sent"
 
 #: src/EditableUserEmail.js:101
 #: src/EmailField.js:26
@@ -689,11 +709,11 @@ msgstr "Envelope From"
 msgid "Fail"
 msgstr "Fail"
 
-#: src/DmarcByDomainPage.js:103
+#: src/DmarcByDomainPage.js:135
 msgid "Fail DKIM %"
 msgstr "Fail DKIM %"
 
-#: src/DmarcByDomainPage.js:109
+#: src/DmarcByDomainPage.js:142
 msgid "Fail SPF %"
 msgstr "Fail SPF %"
 
@@ -735,11 +755,11 @@ msgstr "Forgot Password"
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
-#: src/DmarcByDomainPage.js:115
+#: src/DmarcByDomainPage.js:149
 msgid "Full Fail %"
 msgstr "Full Fail %"
 
-#: src/DmarcByDomainPage.js:97
+#: src/DmarcByDomainPage.js:128
 msgid "Full Pass %"
 msgstr "Full Pass %"
 
@@ -752,7 +772,7 @@ msgstr "Fully Aligned Table"
 msgid "Fully Aligned by IP Address"
 msgstr "Fully Aligned by IP Address"
 
-#: src/DmarcReportTable.js:282
+#: src/DmarcReportTable.js:296
 #: src/SummaryTable.js:178
 msgid "Go to page:"
 msgstr "Go to page:"
@@ -1036,7 +1056,7 @@ msgstr "L-30-D"
 msgid "Language:"
 msgstr "Language:"
 
-#: src/DmarcByDomainPage.js:178
+#: src/DmarcByDomainPage.js:224
 #: src/DmarcReportPage.js:141
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
@@ -1054,7 +1074,11 @@ msgstr "Last scanned:"
 #~ msgid "Level of Enforcment:"
 #~ msgstr "Level of Enforcment:"
 
-#: src/LoadingMessage.js:12
+#: src/DmarcByDomainPage.js:306
+msgid "Loading Data..."
+msgstr "Loading Data..."
+
+#: src/LoadingMessage.js:18
 msgid "Loading {children}..."
 msgstr "Loading {children}..."
 
@@ -1153,6 +1177,14 @@ msgstr "More than 10 lookups - Follow implementation guide"
 msgid "Name"
 msgstr "Name"
 
+#: src/GuidanceTagList.js:143
+msgid "Negative Tags"
+msgstr "Negative Tags"
+
+#: src/GuidanceTagList.js:129
+msgid "Neutral Tags"
+msgstr "Neutral Tags"
+
 #: src/EditableUserDisplayName.js:161
 msgid "New Display Name:"
 msgstr "New Display Name:"
@@ -1191,10 +1223,6 @@ msgstr "Next"
 msgid "No Domains"
 msgstr "No Domains"
 
-#: src/GuidanceTagList.js:96
-msgid "No guidance tags were found for this scan category"
-msgstr "No guidance tags were found for this scan category"
-
 #: src/Organizations.js:74
 msgid "No Organizations"
 msgstr "No Organizations"
@@ -1224,8 +1252,8 @@ msgid "No data for the DMARC Failures by IP Address table"
 msgstr "No data for the DMARC Failures by IP Address table"
 
 #: src/DmarcByDomainPage.js:161
-msgid "No data for the DMARC summary table"
-msgstr "No data for the DMARC summary table"
+#~ msgid "No data for the DMARC summary table"
+#~ msgstr "No data for the DMARC summary table"
 
 #: src/DmarcReportPage.js:259
 msgid "No data for the DMARC yearly report graph"
@@ -1242,6 +1270,10 @@ msgstr "No data for the SPF Failures by IP Address table"
 #: src/DomainList.js:12
 msgid "No domains scanned yet."
 msgstr "No domains scanned yet."
+
+#: src/GuidanceTagList.js:80
+msgid "No guidance tags were found for this scan category"
+msgstr "No guidance tags were found for this scan category"
 
 #: src/Doughnut.js:63
 msgid "No scan data for this organization."
@@ -1384,7 +1416,7 @@ msgstr "Page"
 #~ msgid "Page Size:"
 #~ msgstr "Page Size:"
 
-#: src/DmarcReportTable.js:295
+#: src/DmarcReportTable.js:309
 msgid "Page {0} of {1}"
 msgstr "Page {0} of {1}"
 
@@ -1403,7 +1435,7 @@ msgstr "Pass Only DKIM"
 msgid "Pass Only SPF"
 msgstr "Pass Only SPF"
 
-#: src/DmarcByDomainPage.js:141
+#: src/DmarcByDomainPage.js:196
 msgid "Pass/Fail Ratios by Domain"
 msgstr "Pass/Fail Ratios by Domain"
 
@@ -1495,6 +1527,10 @@ msgstr "Policy applies to no part of mailflow - irregular config"
 msgid "Policy applies to percentage of mailflow"
 msgstr "Policy applies to percentage of mailflow"
 
+#: src/GuidanceTagList.js:115
+msgid "Positive Tags"
+msgstr "Positive Tags"
+
 #: src/App.js:53
 msgid "Pre-Alpha"
 msgstr "Pre-Alpha"
@@ -1507,7 +1543,7 @@ msgstr "Pre-Alpha"
 msgid "Previous"
 msgstr "Previous"
 
-#: src/App.js:221
+#: src/App.js:218
 #: src/FloatingMenu.js:175
 msgid "Privacy"
 msgstr "Privacy"
@@ -1584,7 +1620,7 @@ msgstr "RUF-none"
 msgid "Remove Domain"
 msgstr "Remove Domain"
 
-#: src/App.js:239
+#: src/App.js:236
 msgid "Report an Issue"
 msgstr "Report an Issue"
 
@@ -1748,6 +1784,7 @@ msgstr "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgid "Search"
 msgstr "Search"
 
+#: src/DmarcByDomainPage.js:292
 #: src/DomainsPage.js:119
 msgid "Search for a domain"
 msgstr "Search for a domain"
@@ -1792,11 +1829,11 @@ msgstr "Services"
 msgid "Services: {domainCount}"
 msgstr "Services: {domainCount}"
 
-#: src/DmarcReportTable.js:311
+#: src/DmarcReportTable.js:325
 msgid "Show {pageSize}"
 msgstr "Show {pageSize}"
 
-#: src/DmarcByDomainPage.js:222
+#: src/DmarcByDomainPage.js:268
 #: src/DmarcReportPage.js:628
 msgid "Showing data for period:"
 msgstr "Showing data for period:"
@@ -1869,7 +1906,7 @@ msgstr "TXT-DMARC-enabled"
 msgid "TXT-DMARC-missing"
 msgstr "TXT-DMARC-missing"
 
-#: src/App.js:232
+#: src/App.js:229
 #: src/FloatingMenu.js:185
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
@@ -1902,7 +1939,7 @@ msgstr "This could be due to improper configuration, or could be the result of a
 msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
 
-#: src/DmarcByDomainPage.js:91
+#: src/DmarcByDomainPage.js:121
 #: src/DmarcReportPage.js:283
 msgid "Total Messages"
 msgstr "Total Messages"
@@ -1972,6 +2009,10 @@ msgstr "Unable to reset your password, please try again."
 #: src/ForgotPasswordPage.js:28
 msgid "Unable to send password reset link to email."
 msgstr "Unable to send password reset link to email."
+
+#: src/UserPage.js:29
+msgid "Unable to send verification email"
+msgstr "Unable to send verification email"
 
 #: src/SignInPage.js:48
 #: src/SignInPage.js:89
@@ -2074,6 +2115,10 @@ msgstr "Verified"
 #: src/EditableUserPhoneNumber.js:238
 msgid "Verify"
 msgstr "Verify"
+
+#: src/UserPage.js:122
+msgid "Verify Email"
+msgstr "Verify Email"
 
 #: src/guidanceTagConstants.js:471
 msgid "Vulnerability-ccs-injection"
@@ -2182,6 +2227,14 @@ msgstr "Your 2FA app will then have a valid code that you can use when you sign 
 msgid "Your Account"
 msgstr "Your Account"
 
+#: src/EmailValidationPage.js:47
+msgid "Your account email could not be verified at this time. Please try again."
+msgstr "Your account email could not be verified at this time. Please try again."
+
+#: src/EmailValidationPage.js:37
+msgid "Your account email was successfully verified"
+msgstr "Your account email was successfully verified"
+
 #: src/guidanceTagConstants.js:6
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
 msgstr "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
@@ -2289,44 +2342,3 @@ msgstr "{orgName}"
 #: src/useDocumentTitle.js:6
 msgid "{title} - Tracker"
 msgstr "{title} - Tracker"
-
-#: src/EmailValidationPage.js:76
-msgid "Your account email was successfully verified"
-msgstr "Your account email was successfully verified"
-
-#: src/EmailValidationPage.js:86
-msgid "Your account email could not be verified at this time. Please try again."
-msgstr "Your account email could not be verified at this time. Please try again."
-
-#: src/EmailValidationPage.js:96
-msgid "Email Validation Page"
-msgstr "Email Validation Page"
-
-#: src/UserPage.js:29
-msgid "Unable to send verification email"
-msgstr "Unable to send verification email"
-
-#: src/UserPage.js:38
-msgid "Email successfully sent"
-msgstr "Email successfully sent"
-
-#: src/UserPage.js:39
-msgid "Check your associated Tracker email for the verification link"
-msgstr "Check your associated Tracker email for the verification link"
-
-#: src/UserPage.js:124
-msgid "Verify Email"
-msgstr "Verify Email"
-
-#: src/GuidanceTagList.js:132
-msgid "Positive Tags"
-msgstr "Positive Tags"
-
-#: src/GuidanceTagList.js:147
-msgid "Neutral Tags"
-msgstr "Neutral Tags"
-
-#: src/GuidanceTagList.js:162
-msgid "Negative Tags"
-msgstr "Negative Tags"
-
