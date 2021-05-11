@@ -19,7 +19,7 @@ export const rawSpfFailureData = {
                   headerFrom: 'test.header',
                   sourceIpAddress: '123.123.123.123',
                   spfAligned: false,
-                  spfDomains: ['test.spf.ca'],
+                  spfDomains: 'test.spf.ca',
                   spfResults: 'pass',
                   totalMessages: 112,
                   __typename: 'SpfFailureTable',

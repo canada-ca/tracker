@@ -3,11 +3,9 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLBoolean,
-  GraphQLList,
 } from 'graphql'
 import { globalIdField } from 'graphql-relay'
 
-import { Domain } from '../../scalars'
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const dkimFailureTableType = new GraphQLObjectType({
@@ -22,9 +20,9 @@ export const dkimFailureTableType = new GraphQLObjectType({
       resolve: ({ dkimAligned }) => dkimAligned,
     },
     dkimDomains: {
-      type: GraphQLList(Domain),
+      type: GraphQLString,
       description: 'Domains used for DKIM validation',
-      resolve: ({ dkimDomains }) => dkimDomains.split(','),
+      resolve: ({ dkimDomains }) => dkimDomains,
     },
     dkimResults: {
       type: GraphQLString,
@@ -33,17 +31,17 @@ export const dkimFailureTableType = new GraphQLObjectType({
       resolve: ({ dkimResults }) => dkimResults,
     },
     dkimSelectors: {
-      type: GraphQLList(GraphQLString),
+      type: GraphQLString,
       description: 'Pointer to a DKIM public key record in DNS.',
-      resolve: ({ dkimSelectors }) => dkimSelectors.split(','),
+      resolve: ({ dkimSelectors }) => dkimSelectors,
     },
     dnsHost: {
-      type: Domain,
+      type: GraphQLString,
       description: 'Host from reverse DNS of source IP address.',
       resolve: ({ dnsHost }) => dnsHost,
     },
     envelopeFrom: {
-      type: Domain,
+      type: GraphQLString,
       description: 'Domain from SMTP banner message.',
       resolve: ({ envelopeFrom }) => envelopeFrom,
     },
@@ -64,7 +62,7 @@ export const dkimFailureTableType = new GraphQLObjectType({
       ) => await loadAggregateGuidanceTagById.load(guidance),
     },
     headerFrom: {
-      type: Domain,
+      type: GraphQLString,
       description: 'The address/domain used in the "From" field.',
       resolve: ({ headerFrom }) => headerFrom,
     },
