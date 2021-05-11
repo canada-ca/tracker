@@ -1626,7 +1626,6 @@ msgstr "RUF-none"
 msgid "Remove Domain"
 msgstr "Remove Domain"
 
-#: src/App.js:236
 #: src/UserList.js:391
 msgid "Remove User"
 msgstr "Remove User"
@@ -1635,7 +1634,7 @@ msgstr "Remove User"
 #~ msgid "Remove user \"{0}\" from \"{orgSlug}\" ?"
 #~ msgstr "Remove user \"{0}\" from \"{orgSlug}\" ?"
 
-#: src/App.js:239
+#: src/App.js:236
 msgid "Report an Issue"
 msgstr "Report an Issue"
 

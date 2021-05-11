@@ -1622,7 +1622,6 @@ msgstr ""
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
-#: src/App.js:236
 #: src/UserList.js:391
 msgid "Remove User"
 msgstr "Supprimer l'utilisateur"
@@ -1631,7 +1630,7 @@ msgstr "Supprimer l'utilisateur"
 #~ msgid "Remove user \"{0}\" from \"{orgSlug}\" ?"
 #~ msgstr "Supprimer l'utilisateur \"{0}\" de \"{orgSlug}\" ?"
 
-#: src/App.js:239
+#: src/App.js:236
 msgid "Report an Issue"
 msgstr "Signaler un problème"
 
