@@ -394,8 +394,9 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
               <ModalBody>
                 <Stack spacing={4} p={25}>
                   <Text>
-                    <Trans>{`Remove user "${selectedRemoveUser.userName}" from "${orgSlug}" ?`}</Trans>
+                    <Trans>Confirm removal of user:</Trans>
                   </Text>
+                  <Text fontWeight="bold">{selectedRemoveUser.userName}</Text>
                 </Stack>
               </ModalBody>
 

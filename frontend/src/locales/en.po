@@ -302,7 +302,7 @@ msgstr "Compliant TLS"
 #: src/EditableUserPassword.js:198
 #: src/EditableUserPhoneNumber.js:201
 #: src/EditableUserPhoneNumber.js:259
-#: src/UserList.js:416
+#: src/UserList.js:417
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -321,6 +321,10 @@ msgstr "Confirm password"
 #: src/AdminDomains.js:456
 msgid "Confirm removal of domain:"
 msgstr "Confirm removal of domain:"
+
+#: src/UserList.js:397
+msgid "Confirm removal of user:"
+msgstr "Confirm removal of user:"
 
 #: src/guidanceTagConstants.js:204
 msgid "Contact 3rd party"
@@ -1603,8 +1607,8 @@ msgid "Remove User"
 msgstr "Remove User"
 
 #: src/UserList.js:397
-msgid "Remove user \"{0}\" from \"{orgSlug}\" ?"
-msgstr "Remove user \"{0}\" from \"{orgSlug}\" ?"
+#~ msgid "Remove user \"{0}\" from \"{orgSlug}\" ?"
+#~ msgstr "Remove user \"{0}\" from \"{orgSlug}\" ?"
 
 #: src/App.js:239
 msgid "Report an Issue"
