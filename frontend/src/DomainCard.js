@@ -26,10 +26,9 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
         p="4"
         display={{ md: 'flex' }}
         pl={{ md: '8' }}
-        textAlign="center"
         alignItems="center"
       >
-        <Box flexShrink="0" w={['100%', '25%']} textAlign={['center', 'left']}>
+        <Box flexShrink="0" w={['100%', '25%']} textAlign="left">
           <Text fontWeight="semibold">
             <Trans>Domain:</Trans>
           </Text>
@@ -39,7 +38,7 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
         <Box
           flexShrink="0"
           w={['100%', '25%']}
-          textAlign={['center', 'left']}
+          textAlign="left"
           mr={['0', '4']}
         >
           {lastRan ? (

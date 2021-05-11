@@ -2295,8 +2295,8 @@ msgid "Negative Tags"
 msgstr "Étiquettes négatives"
 
 #: src/OrganizationCard.js:132
-msgid "View Organization"
-msgstr "Voir l'organisation"
+msgid "View Details"
+msgstr "Voir les détails"
 
 #: src/DomainCard.js:142
 msgid "DMARC Guidance"

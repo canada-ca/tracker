@@ -129,7 +129,7 @@ export function OrganizationCard({
               history.push(`${path}/${slug}`)
             }}
           >
-            <Trans>View Organization</Trans>
+            <Trans>View Details</Trans>
           </TrackerButton>
         )}
       </PseudoBox>
