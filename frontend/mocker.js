@@ -9,9 +9,21 @@ const schemaString = getTypeNames()
 
 const schema = makeExecutableSchema({ typeDefs: schemaString })
 
-// Add custom mocks here to override default mocks, useful for forcing environments
+// Add custom mocks here to override or customize default mocks, useful for forcing environments
 // e.g. SignInUnion: () => ({ __typename: 'AuthResult' })  for correct password and no 2FA
 const mockOverrides = {
+  PersonalUser: () => {
+    const affiliationCount = faker.datatype.number({ min: 0, max: 200 })
+
+    return {
+      displayName: faker.name.findName(),
+      affiliations: {
+        edges: [...new Array(affiliationCount)],
+        totalCount: affiliationCount,
+      },
+      preferredLang: 'ENGLISH',
+    }
+  },
   SignInUnion: () => ({ __typename: 'AuthResult' }),
 }
 
