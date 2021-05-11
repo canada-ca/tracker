@@ -295,7 +295,7 @@ type DkimFailureTable {
   # The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error.
   dkimResults: String @examples(values: ["", "fail", "permerror"])
   # Pointer to a DKIM public key record in DNS.
-  dkimSelectors: [DomainScalar] @examples(values: ["selector1", "selector2", "selector3"])
+  dkimSelectors: [String] @examples(values: ["selector1", "selector2", "selector3"])
   # Host from reverse DNS of source IP address.
   dnsHost: DomainScalar @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
   # Domain from SMTP banner message.
@@ -533,7 +533,7 @@ type DmarcFailureTable {
   # Domains used for DKIM validation
   dkimDomains: [DomainScalar] @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
   # Pointer to a DKIM public key record in DNS.
-  dkimSelectors: [DomainScalar] @examples(values: ["selector1", "selector2", "selector3"])
+  dkimSelectors: [String] @examples(values: ["selector1", "selector2", "selector3"])
   # The DMARC enforcement action that the receiver took, either none, quarantine, or reject.
   disposition: String @examples(values: ["none", "quarantine", "reject"])
   # Host from reverse DNS of source IP address.
@@ -824,7 +824,7 @@ type FullPassTable {
   # Domains used for DKIM validation
   dkimDomains: [DomainScalar] @examples(values: ["test.dkim.gc.ca", "test.dkim.canada.ca"])
   # Pointer to a DKIM public key record in DNS.
-  dkimSelectors: [DomainScalar] @examples(values: ["selector1", "selector2", "selector3"])
+  dkimSelectors: [String] @examples(values: ["selector1", "selector2", "selector3"])
   # Host from reverse DNS of source IP address.
   dnsHost: DomainScalar @examples(values: ["test.dns.gc.ca", "test.dns.canada.ca"])
   # Domain from SMTP banner message.
