@@ -274,12 +274,12 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const dkimDomains = {
     Header: i18n._(t`DKIM Domains`),
     accessor: 'dkimDomains',
-    Cell: ({ value }) => value.toString(),
+    Cell: ({ value }) => value.join(', '),
   }
   const dkimSelectors = {
     Header: i18n._(t`DKIM Selectors`),
     accessor: 'dkimSelectors',
-    Cell: ({ value }) => value.toString(),
+    Cell: ({ value }) => value.join(', '),
   }
   const totalMessages = {
     Header: i18n._(t`Total Messages`),
@@ -291,7 +291,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const spfDomains = {
     Header: i18n._(t`SPF Domains`),
     accessor: 'spfDomains',
-    Cell: ({ value }) => value.toString(),
+    Cell: ({ value }) => value.join(', '),
   }
   const headerFrom = {
     Header: i18n._(t`Header From`),
