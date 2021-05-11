@@ -1506,6 +1506,8 @@ union RemoveDomainUnion = DomainError | DomainResult
 type DomainResult {
   # Informs the user if the domain removal was successful.
   status: String
+  # Removed Domain
+  domain: Domain
 }
 
 input RemoveDomainInput {
@@ -1531,6 +1533,8 @@ union RemoveOrganizationUnion = OrganizationError | OrganizationResult
 type OrganizationResult {
   # Informs the user if the organization mutation was successful.
   status: String
+  # Removed Organization
+  organization: Organization
 }
 
 input RemoveOrganizationInput {
@@ -1580,6 +1584,8 @@ union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
 type RemoveUserFromOrgResult {
   # Informs the user if the user was successfully removed.
   status: String
+  # Removed user
+  user: SharedUser
 }
 
 input RemoveUserFromOrgInput {
@@ -1934,12 +1940,30 @@ type SpfFailureTableEdge {
 type SSL implements Node {
   # The ID of an object
   id: ID!
+  # List of ciphers in use by the server deemed to be "acceptable".
+  acceptableCiphers: [String]
+  # List of curves in use by the server deemed to be "acceptable".
+  acceptableCurves: [String]
+  # Denotes vulnerability to OpenSSL CCS Injection.
+  ccsInjectionVulnerable: Boolean
   # The domain the scan was ran on.
   domain: Domain
-  # The time when the scan was initiated.
-  timestamp: Date @fake(type: pastDate)
+  # Denotes vulnerability to "Heartbleed" exploit.
+  heartbleedVulnerable: Boolean
   # Raw scan result.
   rawJson: JSON
+  # List of ciphers in use by the server deemed to be "strong".
+  strongCiphers: [String]
+  # List of curves in use by the server deemed to be "strong".
+  strongCurves: [String]
+  # Denotes support for elliptic curve key pairs.
+  supportsEcdhKeyExchange: Boolean
+  # The time when the scan was initiated.
+  timestamp: Date
+  # List of ciphers in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
+  weakCiphers: [String]
+  # List of curves in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
+  weakCurves: [String]
   # Guidance tags found during scan.
   guidanceTags(
     # Ordering options for guidance tag connections

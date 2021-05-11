@@ -7,6 +7,7 @@ reclaimPolicy: Retain
 parameters:
   storageaccounttype: Premium_LRS
   kind: Managed
+volumeBindingMode: WaitForFirstConsumer
 
 ---
 
@@ -19,6 +20,7 @@ reclaimPolicy: Retain
 parameters:
   storageaccounttype: Standard_LRS
   kind: Managed
+volumeBindingMode: WaitForFirstConsumer
 
 ---
 
@@ -31,6 +33,7 @@ reclaimPolicy: Delete
 parameters:
   storageaccounttype: Premium_LRS
   kind: Managed
+volumeBindingMode: WaitForFirstConsumer
 
 ---
 
@@ -43,4 +46,5 @@ reclaimPolicy: Delete
 parameters:
   storageaccounttype: Standard_LRS
   kind: Managed
+volumeBindingMode: WaitForFirstConsumer
 ---

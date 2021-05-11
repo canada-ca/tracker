@@ -39,8 +39,6 @@ describe('<EditableUserTFAMethod />', () => {
         </MockedProvider>
       </UserStateProvider>,
     )
-    await waitFor(() =>
-      expect(getByText(/Save TFA Method/i)).toBeInTheDocument(),
-    )
+    await waitFor(() => expect(getByText(/Save/i)).toBeInTheDocument())
   })
 })

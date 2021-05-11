@@ -59,6 +59,35 @@ docker run -d -p=8529:8529 --env-file arangodb.env --name=arango arangodb
 npm test
 ```
 
+With ArangoDB running you will need to create a `test.env` file, with values to be used during the test run.
+
+```
+[mike@ouroboros super-admin]$ cat test.env
+DB_PASS=test
+DB_URL=http://localhost:8529
+DB_NAME=track_dmarc
+SA_USER_DISPLAY_NAME=mike
+SA_USER_USERNAME=mike@korora.ca
+SA_USER_PASSWORD=test
+SA_USER_LANG=en
+SA_ORG_EN_SLUG=sa
+SA_ORG_EN_ACRONYM=SA
+SA_ORG_EN_NAME=Super Admin
+SA_ORG_EN_ZONE=FED
+SA_ORG_EN_SECTOR=TBS
+SA_ORG_EN_COUNTRY=Canadana
+SA_ORG_EN_PROVINCE=Ontario
+SA_ORG_EN_CITY=Ottawa
+SA_ORG_FR_SLUG=sa
+SA_ORG_FR_ACRONYM=SA
+SA_ORG_FR_NAME=Super Admin
+SA_ORG_FR_ZONE=FED
+SA_ORG_FR_SECTOR=TBS
+SA_ORG_FR_COUNTRY=Canada
+SA_ORG_FR_PROVINCE=Ontario
+SA_ORG_FR_CITY=Ottawa
+```
+
 ### Cloudbuild
 
 Cloudbuild is used for CI, and one of the reasons for that is that it has great tooling for running jobs locally which is very helpful for debugging. To see how this will behave in CI you can run something like the following to run the tests with cloud-build-local.

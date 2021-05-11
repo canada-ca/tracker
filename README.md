@@ -35,3 +35,7 @@ The scripts folder is a dumping ground for various utility scripts and codemods 
 In accordance with TBS policy stating developers should ["Validate your API design by consuming it"](https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=32604#claB.2.2.4) and ["Use microservices built around business capabilities"](https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=32602#claA.2.3.10.2), the application is designed as an API/consumer pair resulting in a minimalist microservices architecture.
 
 Further details can be found in the README files contained in their respective folders.
+
+## Running it
+
+Running Tracker locally takes a few commands and a lot of RAM. See the instructions in the [app folder](app/README.md)
