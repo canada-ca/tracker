@@ -5,6 +5,7 @@ import {
   GraphQLString,
   GraphQLBoolean,
   GraphQLNonNull,
+  GraphQLList,
 } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
@@ -12,6 +13,7 @@ import { spfFailureTableType } from '../spf-failure-table'
 import { loadAggregateGuidanceTagById } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { databaseOptions } from '../../../../database-options'
+import { Domain } from '../../../scalars'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -27,13 +29,13 @@ describe('given spfFailureTable gql object', () => {
       const demoType = spfFailureTableType.getFields()
 
       expect(demoType).toHaveProperty('dnsHost')
-      expect(demoType.dnsHost.type).toMatchObject(GraphQLString)
+      expect(demoType.dnsHost.type).toMatchObject(Domain)
     })
     it('has a envelopeFrom field', () => {
       const demoType = spfFailureTableType.getFields()
 
       expect(demoType).toHaveProperty('envelopeFrom')
-      expect(demoType.envelopeFrom.type).toMatchObject(GraphQLString)
+      expect(demoType.envelopeFrom.type).toMatchObject(Domain)
     })
     it('has a guidance field', () => {
       const demoType = spfFailureTableType.getFields()
@@ -51,7 +53,7 @@ describe('given spfFailureTable gql object', () => {
       const demoType = spfFailureTableType.getFields()
 
       expect(demoType).toHaveProperty('headerFrom')
-      expect(demoType.headerFrom.type).toMatchObject(GraphQLString)
+      expect(demoType.headerFrom.type).toMatchObject(Domain)
     })
     it('has a sourceIpAddress field', () => {
       const demoType = spfFailureTableType.getFields()
@@ -69,7 +71,7 @@ describe('given spfFailureTable gql object', () => {
       const demoType = spfFailureTableType.getFields()
 
       expect(demoType).toHaveProperty('spfDomains')
-      expect(demoType.spfDomains.type).toMatchObject(GraphQLString)
+      expect(demoType.spfDomains.type).toMatchObject(GraphQLList(Domain))
     })
     it('has a spfResults field', () => {
       const demoType = spfFailureTableType.getFields()
@@ -84,6 +86,7 @@ describe('given spfFailureTable gql object', () => {
       expect(demoType.totalMessages.type).toMatchObject(GraphQLInt)
     })
   })
+
   describe('testing field resolvers', () => {
     describe('testing the id resolver', () => {
       it('returns the resolved value', () => {
@@ -227,7 +230,7 @@ describe('given spfFailureTable gql object', () => {
 
         expect(
           demoType.spfDomains.resolve({ spfDomains: 'spfDomains' }),
-        ).toEqual('spfDomains')
+        ).toEqual(['spfDomains'])
       })
     })
     describe('testing the spfResults resolver', () => {

@@ -1,5 +1,12 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql'
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLList,
+} from 'graphql'
 import { globalIdField } from 'graphql-relay'
+
+import { Domain } from '../../scalars'
 
 export const fullPassTableType = new GraphQLObjectType({
   name: 'FullPassTable',
@@ -8,27 +15,27 @@ export const fullPassTableType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('fullPass'),
     dkimDomains: {
-      type: GraphQLString,
+      type: GraphQLList(Domain),
       description: 'Domains used for DKIM validation',
-      resolve: ({ dkimDomains }) => dkimDomains,
+      resolve: ({ dkimDomains }) => dkimDomains.split(','),
     },
     dkimSelectors: {
-      type: GraphQLString,
+      type: GraphQLList(GraphQLString),
       description: 'Pointer to a DKIM public key record in DNS.',
-      resolve: ({ dkimSelectors }) => dkimSelectors,
+      resolve: ({ dkimSelectors }) => dkimSelectors.split(','),
     },
     dnsHost: {
-      type: GraphQLString,
+      type: Domain,
       description: 'Host from reverse DNS of source IP address.',
       resolve: ({ dnsHost }) => dnsHost,
     },
     envelopeFrom: {
-      type: GraphQLString,
+      type: Domain,
       description: 'Domain from SMTP banner message.',
       resolve: ({ envelopeFrom }) => envelopeFrom,
     },
     headerFrom: {
-      type: GraphQLString,
+      type: Domain,
       description: 'The address/domain used in the "From" field.',
       resolve: ({ headerFrom }) => headerFrom,
     },
@@ -38,9 +45,9 @@ export const fullPassTableType = new GraphQLObjectType({
       resolve: ({ sourceIpAddress }) => sourceIpAddress,
     },
     spfDomains: {
-      type: GraphQLString,
+      type: GraphQLList(Domain),
       description: 'Domains used for SPF validation.',
-      resolve: ({ spfDomains }) => spfDomains,
+      resolve: ({ spfDomains }) => spfDomains.split(','),
     },
     totalMessages: {
       type: GraphQLInt,

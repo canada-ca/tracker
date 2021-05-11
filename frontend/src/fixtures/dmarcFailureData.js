@@ -13,14 +13,14 @@ export const rawDmarcFailureData = {
             edges: [
               {
                 node: {
-                  dkimDomains: '',
-                  dkimSelectors: '',
+                  dkimDomains: ['domain1.ca', 'domain2.ca'],
+                  dkimSelectors: ['selector1'],
                   disposition: 'none',
                   dnsHost: 'test.dns.ca',
                   envelopeFrom: null,
                   headerFrom: 'test.header.ca',
                   sourceIpAddress: '123.123.123.123',
-                  spfDomains: 'test.spf.ca',
+                  spfDomains: ['test.spf.ca'],
                   totalMessages: 112,
                   __typename: 'DmarcFailureTable',
                 },
