@@ -7,7 +7,7 @@ import {
   useSortBy,
   useTable,
 } from 'react-table'
-import { array, bool, number, string } from 'prop-types'
+import { array, bool, func, number, string } from 'prop-types'
 import {
   Box,
   Collapse,
@@ -131,6 +131,10 @@ function DmarcReportTable({ ...props }) {
       .matches
       ? 5
       : 10,
+    onSort,
+    manualSort,
+    manualFilters,
+    ...rest
   } = props
   const [show, setShow] = React.useState(true)
   const [firstRender, setFirstRender] = React.useState(true)
@@ -158,7 +162,7 @@ function DmarcReportTable({ ...props }) {
     previousPage,
     setPageSize,
     flatHeaders,
-    state: { pageIndex, pageSize },
+    state: { pageIndex, pageSize, sortBy },
     preGlobalFilteredRows,
     setGlobalFilter,
     state,
@@ -166,6 +170,10 @@ function DmarcReportTable({ ...props }) {
     {
       columns,
       data,
+      manualSortBy: manualSort,
+      manualFilters: manualFilters,
+      disableMultiSort: manualSort,
+      disableSortRemove: manualSort,
       initialState: {
         sortBy: initialSort,
         pageSize: selectedDisplayLimit,
@@ -176,6 +184,12 @@ function DmarcReportTable({ ...props }) {
     useSortBy,
     usePagination,
   )
+
+  useEffect(() => {
+    if (onSort && !firstRender) {
+      onSort(sortBy)
+    }
+  }, [sortBy])
 
   const [goToPageValue, setGoToPageNumber] = useState(pageIndex + 1)
 
@@ -323,73 +337,78 @@ function DmarcReportTable({ ...props }) {
     <Box ref={wrapperRef}>
       {titleButtonElement}
       <Collapse isOpen={show}>
-        <ReactTableGlobalFilter
-          preGlobalFilteredRows={preGlobalFilteredRows}
-          globalFilter={state.globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          mt="4px"
-          mb="4px"
-        />
-        <Table {...getTableProps()} flatHeaders={flatHeaders}>
-          <thead>
-            {headerGroups.map((headerGroup, index) => {
-              return (
-                <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => {
-                    // Using column.Header since column.id _sometimes_ has appended numbers
-                    const key =
-                      column.depth === 0
-                        ? `${title}:${column.Header}`
-                        : `${column.parent.Header}:${column.Header}`
-                    return (
-                      <th
-                        key={key}
-                        className={column.hidden ? 'visually-hidden' : ''}
-                        {...column.getHeaderProps(
-                          column.getSortByToggleProps(),
-                        )}
-                        style={{ textAlign: 'center' }}
-                      >
-                        {column.render('Header')}
-                        <span>
-                          {column.isSorted ? (
-                            column.isSortedDesc ? (
-                              <Icon name="chevron-down" />
-                            ) : (
-                              <Icon name="chevron-up" />
-                            )
-                          ) : (
-                            ''
+        {!manualFilters && (
+          <ReactTableGlobalFilter
+            preGlobalFilteredRows={preGlobalFilteredRows}
+            globalFilter={state.globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            mt="4px"
+            mb="4px"
+          />
+        )}
+
+        <Box {...rest}>
+          <Table {...getTableProps()} flatHeaders={flatHeaders}>
+            <thead>
+              {headerGroups.map((headerGroup, index) => {
+                return (
+                  <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => {
+                      // Using column.Header since column.id _sometimes_ has appended numbers
+                      const key =
+                        column.depth === 0
+                          ? `${title}:${column.Header}`
+                          : `${column.parent.Header}:${column.Header}`
+                      return (
+                        <th
+                          key={key}
+                          className={column.hidden ? 'visually-hidden' : ''}
+                          {...column.getHeaderProps(
+                            column.getSortByToggleProps(),
                           )}
-                        </span>
-                      </th>
-                    )
-                  })}
-                </tr>
-              )
-            })}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row, rowIndex) => {
-              prepareRow(row)
-              return (
-                <tr key={`${title}:${rowIndex}`} {...row.getRowProps()}>
-                  {row.cells.map((cell, cellIndex) => {
-                    return (
-                      <td
-                        key={`${title}:${rowIndex}:${cellIndex}`}
-                        {...cell.getCellProps()}
-                        style={cell.column.style}
-                      >
-                        {renderLinkableCell(cell)}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )
-            })}
-          </tbody>
-        </Table>
+                          style={{ textAlign: 'center' }}
+                        >
+                          {column.render('Header')}
+                          <span>
+                            {column.isSorted ? (
+                              column.isSortedDesc ? (
+                                <Icon name="chevron-down" />
+                              ) : (
+                                <Icon name="chevron-up" />
+                              )
+                            ) : (
+                              ''
+                            )}
+                          </span>
+                        </th>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {page.map((row, rowIndex) => {
+                prepareRow(row)
+                return (
+                  <tr key={`${title}:${rowIndex}`} {...row.getRowProps()}>
+                    {row.cells.map((cell, cellIndex) => {
+                      return (
+                        <td
+                          key={`${title}:${rowIndex}:${cellIndex}`}
+                          {...cell.getCellProps()}
+                          style={cell.column.style}
+                        >
+                          {renderLinkableCell(cell)}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        </Box>
         {paginationControls}
       </Collapse>
     </Box>
@@ -407,6 +426,9 @@ DmarcReportTable.propTypes = {
   appendLink: string,
   frontendPagination: bool,
   selectedDisplayLimit: number,
+  onSort: func,
+  manualSort: bool,
+  manualFilters: bool,
 }
 
 DmarcReportTable.defaultProps = {
