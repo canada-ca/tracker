@@ -194,7 +194,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           removeOnClose()
           toast({
             title: t`User removed.`,
-            description: t`Successfully removed user.`,
+            description: t`Successfully removed user ${removeUserFromOrg.result.user.userName}.`,
             status: 'info',
             duration: 9000,
             isClosable: true,

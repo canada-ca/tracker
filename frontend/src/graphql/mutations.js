@@ -243,6 +243,9 @@ export const REMOVE_USER_FROM_ORG = gql`
         }
         ... on RemoveUserFromOrgResult {
           status
+          user {
+            userName
+          }
         }
       }
     }
