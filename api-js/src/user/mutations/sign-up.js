@@ -51,9 +51,11 @@ export const signUp = new mutationWithClientMutationId({
     {
       i18n,
       collections,
+      request,
       transaction,
       auth: { bcrypt, tokenize, verifyToken },
       loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
+      notify: { sendVerificationEmail },
       validators: { cleanseInput },
     },
   ) => {
@@ -200,10 +202,16 @@ export const signUp = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
+    const returnUser = await loadUserByKey.load(insertedUser._key)
+
     // Generate JWT
     const token = tokenize({ parameters: { userKey: insertedUser._key } })
 
-    const returnUser = await loadUserByKey.load(insertedUser._key)
+    const verifyUrl = `${request.protocol}://${request.get(
+      'host',
+    )}/validate/${token}`
+
+    await sendVerificationEmail({ returnUser, verifyUrl })
 
     console.info(`User: ${userName} successfully created a new account.`)
 
