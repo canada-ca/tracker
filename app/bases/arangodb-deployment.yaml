@@ -33,14 +33,14 @@ spec:
     count: 3
     volumeClaimTemplate:
       spec:
-        storageClassName: fast-retain
+        storageClassName: fast-delete
         accessModes:
         - ReadWriteOnce
         resources:
           requests:
             storage: 80Gi
         volumeMode: Filesystem
-        persistentVolumeReclaimPolicy: Retain
+        persistentVolumeReclaimPolicy: Delete
   coordinators:
     count: 3
   single:
