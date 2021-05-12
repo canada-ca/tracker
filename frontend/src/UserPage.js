@@ -114,9 +114,9 @@ export default function UserPage() {
           <TrackerButton
             variant="primary"
             onClick={() => {
-              if (!emailSent)
-                sendEmailVerification({ variables: { userName: userName } })
+              sendEmailVerification({ variables: { userName: userName } })
             }}
+            disabled={emailSent}
           >
             <Icon name="email" />
             <Trans>Verify Email</Trans>

@@ -56,6 +56,7 @@ export const TrackerButton = React.forwardRef(
         _focus={{
           boxShadow: 'outline',
         }}
+        _disabled={{ opacity: 0.6 }}
         borderColor={borderColor}
         borderWidth={borderWidth}
         ref={ref}

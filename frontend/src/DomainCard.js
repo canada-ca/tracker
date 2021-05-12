@@ -1,12 +1,11 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Text, ListItem, Box, Icon, Stack, Divider } from '@chakra-ui/core'
-import { useHistory } from 'react-router-dom'
+import { Link as RouteLink } from 'react-router-dom'
 import { object, string } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
 
 export function DomainCard({ url, lastRan, status, ...rest }) {
-  const history = useHistory()
   const generateStatusIcon = (status) => {
     let statusIcon
     if (status === 'PASS') {
@@ -121,11 +120,8 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
         <Stack ml={{ md: '10%' }} fontSize="sm">
           <TrackerButton
             variant="primary"
-            onClick={() => {
-              history.push(
-                `/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`,
-              )
-            }}
+            as={RouteLink}
+            to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
           >
             <Text whiteSpace="noWrap">
               <Trans>DMARC Report</Trans>
@@ -133,9 +129,8 @@ export function DomainCard({ url, lastRan, status, ...rest }) {
           </TrackerButton>
           <TrackerButton
             variant="primary"
-            onClick={() => {
-              history.push(`/domains/${url}`)
-            }}
+            as={RouteLink}
+            to={`/domains/${url}`}
           >
             <Text whiteSpace="noWrap">
               <Trans>DMARC Guidance</Trans>

@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
 import { useUserState } from './UserState'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, Link as RouteLink } from 'react-router-dom'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
@@ -29,7 +29,6 @@ export default function OrganizationDetails() {
   const { orgSlug } = useParams()
   const { currentUser } = useUserState()
   const toast = useToast()
-  const history = useHistory()
 
   useDocumentTitle(`${orgSlug}`)
 
@@ -71,7 +70,8 @@ export default function OrganizationDetails() {
       <Stack isInline align="center" mb="4">
         <IconButton
           icon="arrow-left"
-          onClick={history.goBack}
+          as={RouteLink}
+          to={'/organizations'}
           color="gray.900"
           fontSize="2xl"
           aria-label="back to organizations"
