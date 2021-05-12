@@ -46,6 +46,7 @@ describe('parse server', () => {
             scalarCost,
             objectCost,
             listFactor,
+            tracing: false,
             context: {
               query: jest.fn(),
               collections: jest.fn(),
