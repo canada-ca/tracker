@@ -82,6 +82,13 @@ describe('authenticate user account', () => {
         loaders: {
           loadUserByUserName: loadUserByUserName({ query }),
         },
+        notify: {
+          sendVerificationEmail: jest.fn(),
+        },
+        request: {
+          protocol: 'https',
+          get: (text) => text,
+        },
       },
     )
     const userCursor = await query`

@@ -83,6 +83,13 @@ describe('removing an organization', () => {
         loaders: {
           loadUserByUserName: loadUserByUserName({ query }),
         },
+        notify: {
+          sendVerificationEmail: jest.fn(),
+        },
+        request: {
+          protocol: 'https',
+          get: (text) => text,
+        },
       },
     )
     consoleOutput = []
