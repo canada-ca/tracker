@@ -21,5 +21,5 @@ const { superAdminService } = require('./src')
     options: databaseOptions({ rootPass }),
   })
 
-  await superAdminService({ query, collections, transaction, bcrypt })
+  await superAdminService({ query, collections, transaction, bcrypt, log: console.log() })
 })()
