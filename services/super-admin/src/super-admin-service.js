@@ -13,7 +13,7 @@ const superAdminService = async ({
   collections,
   transaction,
   bcrypt,
-  log = console.log,
+  log,
 }) => {
   log('Checking for super admin account.')
 
