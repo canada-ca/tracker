@@ -184,6 +184,11 @@ spec:
             secretKeyRef:
               name: api
               key: NOTIFICATION_VERIFICATION_EMAIL_FR
+        - name: TRACING_ENABLED
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: TRACING_ENABLED
         resources:
           limits:
             cpu: 300m
