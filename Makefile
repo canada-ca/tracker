@@ -25,6 +25,14 @@ else
 		kustomize build app/creds/dev | kubectl apply -f -
 endif
 
+.PHONY: backup
+backup:
+		arangodump --include-system-collections true --server.database track_dmarc --output-directory ~/tracker-backup-$(date --iso-8601)
+
+.PHONY: restore
+restore:
+		arangorestore --server.database track_dmarc --create-collection false --include-system-collections true --input-directory $(from)
+
 .PHONY: update-istio
 update-istio:
 		istioctl manifest generate --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.accessLogEncoding=JSON --set values.pilot.traceSampling=100.00 > platform/components/istio/istio.yaml
