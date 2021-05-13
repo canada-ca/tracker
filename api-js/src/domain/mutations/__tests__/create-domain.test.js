@@ -84,6 +84,13 @@ describe('create a domain', () => {
         loaders: {
           loadUserByUserName: loadUserByUserName({ query }),
         },
+        notify: {
+          sendVerificationEmail: jest.fn(),
+        },
+        request: {
+          protocol: 'https',
+          get: (text) => text,
+        },
       },
     )
     org = await collections.organizations.save({
