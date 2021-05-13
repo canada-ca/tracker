@@ -117,8 +117,7 @@ const mocks = {
   DmarcFailureTable: () => {
     const dkimDomains = getStringOfDomains(0, 2)
     const dkimSelectors = getDkimSelectors()
-    const disposition =
-      faker.datatype.number({ min: 0, max: 1 }) === 0 ? 'none' : 'quarantine'
+    const disposition = faker.helpers.randomize(['none', 'quarantine'])
     const dnsHost = faker.internet.domainName()
     const envelopeFrom = faker.internet.domainName()
     const headerFrom = faker.internet.domainName()

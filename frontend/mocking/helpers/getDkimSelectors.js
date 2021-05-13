@@ -5,9 +5,7 @@ export const getDkimSelectors = () => {
   const numberOfSelectors = faker.datatype.number({ min: 0, max: 2 })
   if (numberOfSelectors === 0) {
     // sometimes return 'none' in place of empty string when no selectors exist
-    if (faker.datatype.number({ min: 0, max: 1 }) === 0) {
-      selectors = 'none'
-    }
+    selectors = selectors + faker.helpers.randomize(['none', ''])
     return selectors
   }
 
