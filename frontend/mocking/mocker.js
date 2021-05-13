@@ -227,6 +227,63 @@ const mocks = {
   },
   DomainScalar: () => faker.internet.domainName(),
   EmailAddress: () => faker.internet.email(),
+
+  FullPassTable: () => {
+    const dkimDomains = getStringOfDomains(0, 2)
+    const dkimSelectors = getDkimSelectors()
+    const dnsHost = faker.internet.domainName()
+    const envelopeFrom = faker.internet.domainName()
+    const headerFrom = faker.internet.domainName()
+    const sourceIpAddress = faker.internet.ip()
+    const spfDomains = getStringOfDomains(0, 2)
+    const totalMessages = faker.datatype.number({ min: 1, max: 10000 })
+
+    return {
+      dkimDomains,
+      dkimSelectors,
+      dnsHost,
+      envelopeFrom,
+      headerFrom,
+      sourceIpAddress,
+      spfDomains,
+      totalMessages,
+    }
+  },
+  FullPassTableConnection: () => {
+    const numberOfEdges = 50
+
+    return {
+      edges: [...new Array(numberOfEdges)],
+      totalCount: numberOfEdges,
+    }
+  },
+  GuidanceTag: () => {
+    const tagId = 'tag' + faker.datatype.number({ min: 1, max: 14 })
+    const tagName =
+      'TAG-' +
+      faker.helpers.randomize([
+        'missing',
+        'downgraded',
+        'bad-chain',
+        'short-age',
+        'certificate-expired',
+      ])
+    const guidance = faker.lorem.sentence()
+
+    return {
+      tagId,
+      tagName,
+      guidance,
+    }
+  },
+  HTTPSConnection: () => {
+    const numberOfEdges = 10
+
+    return {
+      edges: [...new Array(numberOfEdges)],
+      totalCount: numberOfEdges,
+    }
+  },
   Organization: () => {
     const name = faker.company.companyName()
     const slug = faker.helpers.slugify(name)
@@ -289,35 +346,6 @@ const mocks = {
       summaries: { web, mail },
     }
   },
-  FullPassTable: () => {
-    const dkimDomains = getStringOfDomains(0, 2)
-    const dkimSelectors = getDkimSelectors()
-    const dnsHost = faker.internet.domainName()
-    const envelopeFrom = faker.internet.domainName()
-    const headerFrom = faker.internet.domainName()
-    const sourceIpAddress = faker.internet.ip()
-    const spfDomains = getStringOfDomains(0, 2)
-    const totalMessages = faker.datatype.number({ min: 1, max: 10000 })
-
-    return {
-      dkimDomains,
-      dkimSelectors,
-      dnsHost,
-      envelopeFrom,
-      headerFrom,
-      sourceIpAddress,
-      spfDomains,
-      totalMessages,
-    }
-  },
-  FullPassTableConnection: () => {
-    const numberOfEdges = 50
-
-    return {
-      edges: [...new Array(numberOfEdges)],
-      totalCount: numberOfEdges,
-    }
-  },
   OrganizationConnection: () => {
     const numberOfEdges = faker.datatype.number({ min: 0, max: 500 })
     return {
@@ -337,6 +365,15 @@ const mocks = {
     }
   },
   PhoneNumber: () => faker.phone.phoneNumber('+1##########'),
+  RefLinks: () => {
+    const description = faker.lorem.sentence()
+    const refLink = faker.internet.url()
+
+    return {
+      description,
+      refLink,
+    }
+  },
   SignInError: () => ({
     description: 'Mocked sign in error description',
   }),
@@ -363,6 +400,14 @@ const mocks = {
   },
   SpfFailureTableConnection: () => {
     const numberOfEdges = 50
+
+    return {
+      edges: [...new Array(numberOfEdges)],
+      totalCount: numberOfEdges,
+    }
+  },
+  SSLConnection: () => {
+    const numberOfEdges = 10
 
     return {
       edges: [...new Array(numberOfEdges)],
@@ -430,6 +475,14 @@ const schemaWithMocks = addMocksToSchema({
         return getConnectionObject(store, args, resolveInfo)
       },
       spfFailure: (_, args, __, resolveInfo) => {
+        return getConnectionObject(store, args, resolveInfo)
+      },
+    },
+    WebScan: {
+      https: (_, args, __, resolveInfo) => {
+        return getConnectionObject(store, args, resolveInfo)
+      },
+      ssl: (_, args, __, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
       },
     },
