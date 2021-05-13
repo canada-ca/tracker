@@ -92,7 +92,7 @@ export const databaseOptions = ({ rootPass }) => [
   },
   {
     type: 'documentcollection',
-    name: 'chartsummarycriteria',
+    name: 'chartSummaryCriteria',
     options: { replicationfactor: 3, writeconcern: 1, numberofshards: 6 },
   },
   {
