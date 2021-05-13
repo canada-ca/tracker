@@ -290,6 +290,27 @@ const mocks = {
       summaries: { web, mail },
     }
   },
+  FullPassTable: () => {
+    const dkimDomains = getStringOfDomains(0, 2)
+    const dkimSelectors = getDkimSelectors()
+    const dnsHost = faker.internet.domainName()
+    const envelopeFrom = faker.internet.domainName()
+    const headerFrom = faker.internet.domainName()
+    const sourceIpAddress = faker.internet.ip()
+    const spfDomains = getStringOfDomains(0, 2)
+    const totalMessages = faker.datatype.number({ min: 1, max: 10000 })
+
+    return {
+      dkimDomains,
+      dkimSelectors,
+      dnsHost,
+      envelopeFrom,
+      headerFrom,
+      sourceIpAddress,
+      spfDomains,
+      totalMessages,
+    }
+  },
   FullPassTableConnection: () => {
     const numberOfEdges = 50
 
