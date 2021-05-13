@@ -114,6 +114,30 @@ const mocks = {
       totalCount: numberOfEdges,
     }
   },
+  DmarcFailureTable: () => {
+    const dkimDomains = getStringOfDomains(0, 2)
+    const dkimSelectors = getDkimSelectors()
+    const disposition =
+      faker.datatype.number({ min: 0, max: 1 }) === 0 ? 'none' : 'quarantine'
+    const dnsHost = faker.internet.domainName()
+    const envelopeFrom = faker.internet.domainName()
+    const headerFrom = faker.internet.domainName()
+    const sourceIpAddress = faker.internet.ip()
+    const spfDomains = getStringOfDomains(0, 2)
+    const totalMessages = faker.datatype.number({ min: 1, max: 10000 })
+
+    return {
+      dkimDomains,
+      dkimSelectors,
+      disposition,
+      dnsHost,
+      envelopeFrom,
+      headerFrom,
+      sourceIpAddress,
+      spfDomains,
+      totalMessages,
+    }
+  },
   DmarcFailureTableConnection: () => {
     const numberOfEdges = 50
 
