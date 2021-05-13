@@ -341,6 +341,27 @@ const mocks = {
   SignInError: () => ({
     description: 'Mocked sign in error description',
   }),
+  SpfFailureTable: () => {
+    const dnsHost = faker.internet.domainName()
+    const envelopeFrom = faker.internet.domainName()
+    const guidance = 'guidance' + faker.datatype.number({ min: 0, max: 8 })
+    const headerFrom = faker.internet.domainName()
+    const sourceIpAddress = faker.internet.ip()
+    const spfDomains = getStringOfDomains(0, 2)
+    const spfResults = getDmarcTableResults()
+    const totalMessages = faker.datatype.number({ min: 1, max: 10000 })
+
+    return {
+      dnsHost,
+      envelopeFrom,
+      guidance,
+      headerFrom,
+      sourceIpAddress,
+      spfDomains,
+      spfResults,
+      totalMessages,
+    }
+  },
   SpfFailureTableConnection: () => {
     const numberOfEdges = 50
 
