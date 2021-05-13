@@ -11,7 +11,7 @@
     "dbg": "node --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
     "extract": "lingui extract",
     "compile": "lingui compile",
-    "mocker": "nodemon --watch mocking/mocker.js --watch mocking/faked_schema.js --exec 'babel mocking/mocker.js mocking/faked_schema.js -d ./dist/mocking && node dist/mocking/mocker.js'"
+    "mocker": "nodemon --watch mocking/ --exec 'babel mocking/ -d ./dist/mocking && node dist/mocking/mocker.js'"
   },
   "dependencies": {
     "@apollo/client": "^3.3.13",

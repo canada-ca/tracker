@@ -20,7 +20,7 @@ services:
       - ./:/app
     expose:
       - "3000"
-  mocked-api: # available at localhost:3000/graphql
+  mocked_api: # available at localhost:3000/graphql
     image: node:alpine
     working_dir: /app
     command: npm run mocker
