@@ -33,6 +33,10 @@ backup:
 restore:
 		arangorestore --server.database track_dmarc --create-collection false --include-system-collections true --input-directory $(from)
 
+.PHONY: update-flux
+update-flux:
+		flux install --components=source-controller,kustomize-controller,notification-controller,image-reflector-controller,image-automation-controller --export > deploy/bases/flux.yaml
+
 .PHONY: update-istio
 update-istio:
 		istioctl manifest generate --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.accessLogEncoding=JSON --set tag=1.9.5-distroless --set values.pilot.traceSampling=100.00 > platform/components/istio/istio.yaml
