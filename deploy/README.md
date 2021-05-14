@@ -15,25 +15,28 @@ See the readme in the app folder for instructions on how to create those app cre
 ### Testing in Minikube
 
 ```bash
-kustomize build platform/creds/dev | kubectl apply -f -
-kustomize build app/creds/dev | kubectl apply -f -
-kustomize build deploy/minikube | kubectl apply -f -
+make secrets env=minikube
+make platform env=minikube
+make app env=minikube
+make deploy env=minikube
 ```
 
 ### Testing on GKE
 
 ```bash
-kustomize build platform/creds/dev | kubectl apply -f -
-kustomize build app/creds/dev | kubectl apply -f -
-kustomize build deploy/test | kubectl apply -f -
+make secrets env=test
+make platform env=test
+make app env=test
+make deploy env=test
 ```
 
 ### Testing on AKS
 
 ```bash
-kustomize build platform/creds/dev | kubectl apply -f -
-kustomize build app/creds/dev | kubectl apply -f -
-kustomize build deploy/aks | kubectl apply -f -
+make secrets env=aks
+make platform env=aks
+make app env=aks
+make deploy env=aks
 ```
 
 ## Deploying to Prod
@@ -51,9 +54,9 @@ ssh-keyscan github.com > ./deploy/creds/readwrite/known_hosts
 After that it's basically the same:
 
 ```bash
-kustomize build platform/creds/prod | kubectl apply -f -
-kustomize build app/creds/prod | kubectl apply -f -
-kustomize build deploy/creds/readwrite | kubectl apply -f -
-kustomize build deploy/gke | kubectl apply -f -
+make secrets env=gke
+make platform env=gke
+make app env=gke
+make deploy env=gke
 ```
 
