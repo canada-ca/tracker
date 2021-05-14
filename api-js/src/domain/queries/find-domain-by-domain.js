@@ -52,7 +52,7 @@ export const findDomainByDomain = {
     console.info(
       `User ${user._key} successfully retrieved domain ${domain._key}.`,
     )
-    domain.id = domain._key
+    
     return domain
   },
 }
