@@ -1663,6 +1663,10 @@ msgstr "Rôle mis à jour"
 msgid "Role:"
 msgstr "Fonction:"
 
+#: src/UserList.js:380
+msgid "User:"
+msgstr "Utilisateur:"
+
 #: src/guidanceTagConstants.js:218
 #: src/guidanceTagConstants.js:226
 #: src/guidanceTagConstants.js:234
@@ -2088,6 +2092,9 @@ msgid "Use DKIM to validate outbound email sent from your custom domain"
 msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé depuis votre domaine personnalisé"
 
 #: src/AdminPage.js:42
+msgid "Admin Affiliations"
+msgstr "Affiliations administratives"
+
 #: src/OrganizationAffiliations.js:39
 msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
@@ -2408,3 +2415,11 @@ msgstr "Voir les détails"
 #: src/DomainCard.js:142
 msgid "DMARC Guidance"
 msgstr "Conseils sur le DMARC"
+
+#: src/UserList.js:261
+msgid "New user email"
+msgstr "Courriel du nouvel utilisateur"
+
+#: src/UserList.js:261
+msgid "Edit Role"
+msgstr "Rôle d'édition"

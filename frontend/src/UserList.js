@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   FormLabel,
   Stack,
@@ -11,6 +11,7 @@ import {
   Select,
   Box,
   useDisclosure,
+  SlideIn,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -18,7 +19,7 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  SlideIn,
+  Divider,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { i18n } from '@lingui/core'
@@ -53,6 +54,14 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     onClose: removeOnClose,
   } = useDisclosure()
 
+  const [editingUserRole, setEditingUserRole] = useState()
+  const [editingUserName, setEditingUserName] = useState()
+  const {
+    isOpen: updateIsOpen,
+    onOpen: updateOnOpen,
+    onClose: updateOnClose,
+  } = useDisclosure()
+  const initialFocusRef = useRef()
   const addUserValidationSchema = object().shape({
     userName: yupString()
       .required(i18n._(fieldRequirements.email.required.message))
@@ -222,16 +231,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     )
   if (error) return <ErrorFallbackMessage error={error} />
 
-  const handleClick = (role, userName) => {
-    updateUserRole({
-      variables: {
-        orgId: orgId,
-        role: role,
-        userName: userName,
-      },
-    })
-  }
-
   const showErrorToast = (error) =>
     toast({
       title: t`An error occurred.`,
@@ -244,10 +243,6 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   return (
     <Stack mb="6" w="100%">
-      <Text fontSize="2xl" fontWeight="bold">
-        <Trans>User List</Trans>
-      </Text>
-
       <Formik
         validationSchema={addUserValidationSchema}
         initialValues={{ userName: '', roleSelect: 'USER' }}
@@ -266,48 +261,56 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         {({ handleSubmit, values, errors }) => (
           <form id="form" onSubmit={handleSubmit} noValidate>
             <Stack
-              mb="8px"
               alignItems="center"
-              w={permission ? '100%' : ['100%', '50%']}
-              isInline
+              w="100%"
+              flexDirection={['column', 'row']}
             >
-              <InputGroup flexGrow={1}>
-                <InputLeftElement>
-                  <Icon name="add" color="gray.300" />
-                </InputLeftElement>
-                <Input
-                  as={Field}
-                  type="email"
-                  name="userName"
-                  placeholder={t`Invite a user`}
-                  isDisabled={addUserLoading}
-                />
-              </InputGroup>
-
-              <Field
-                as={Select}
-                flexBasis="7rem"
-                flexShrink={0}
-                id="roleSelect"
-                name="roleSelect"
+              <Stack
+                isInline
+                w="100%"
+                align="center"
+                mb={['4', '0']}
+                mr={['0', '4']}
               >
-                <option value="USER">{t`USER`}</option>
-                <option value="ADMIN">{t`ADMIN`}</option>
-              </Field>
-            </Stack>
+                <InputGroup flexGrow={1} w="50%">
+                  <InputLeftElement>
+                    <Icon name="email" color="gray.300" />
+                  </InputLeftElement>
+                  <Input
+                    as={Field}
+                    type="email"
+                    name="userName"
+                    placeholder={t`New user email`}
+                    isDisabled={addUserLoading}
+                  />
+                </InputGroup>
 
-            <TrackerButton
-              w={permission ? '100%' : ['100%', '50%']}
-              variant="primary"
-              type="submit"
-              onClick={() => {
-                setAddedUserName(values.userName)
-                if (errors.userName) showErrorToast(errors.userName)
-              }}
-            >
-              <Icon name="add" />
-              <Trans>Invite User</Trans>
-            </TrackerButton>
+                <Field
+                  w="25%"
+                  as={Select}
+                  flexBasis="7rem"
+                  flexShrink={0}
+                  id="roleSelect"
+                  name="roleSelect"
+                >
+                  <option value="USER">{t`USER`}</option>
+                  <option value="ADMIN">{t`ADMIN`}</option>
+                </Field>
+              </Stack>
+
+              <TrackerButton
+                w={['100%', '25%']}
+                variant="primary"
+                type="submit"
+                onClick={() => {
+                  setAddedUserName(values.userName)
+                  if (errors.userName) showErrorToast(errors.userName)
+                }}
+              >
+                <Icon name="add" />
+                <Trans>Invite User</Trans>
+              </TrackerButton>
+            </Stack>
           </form>
         )}
       </Formik>
@@ -318,57 +321,37 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         </Text>
       ) : (
         nodes.map((node) => {
-          let userRole = node.permission
+          const userRole = node.permission
           return (
             <Box key={`${node.user.userName}:${node.id}`}>
               <Stack isInline align="center">
-                <TrackerButton
-                  variant="danger"
-                  onClick={() => {
-                    setSelectedRemoveUser(node.user)
-                    removeOnOpen()
-                  }}
-                  px="2"
-                  fontSize="xs"
-                >
-                  <Icon name="minus" />
-                </TrackerButton>
+                <Stack>
+                  <TrackerButton
+                    variant="primary"
+                    px="2"
+                    onClick={() => {
+                      setEditingUserRole(userRole)
+                      setEditingUserName(node.user.userName)
+                      updateOnOpen()
+                    }}
+                  >
+                    <Icon name="edit" />
+                  </TrackerButton>
+                  <TrackerButton
+                    variant="danger"
+                    onClick={() => {
+                      setSelectedRemoveUser(node.user)
+                      removeOnOpen()
+                    }}
+                    px="2"
+                    fontSize="xs"
+                  >
+                    <Icon name="minus" />
+                  </TrackerButton>
+                </Stack>
                 <UserCard userName={node.user.userName} role={userRole} />
               </Stack>
-              <Stack isInline justifyContent="flex-end" align="center">
-                <FormLabel htmlFor="role_select" fontWeight="bold">
-                  <Trans>Role:</Trans>
-                </FormLabel>
-                <Select
-                  w="35%"
-                  id="role_select"
-                  size="sm"
-                  name="role"
-                  defaultValue={userRole}
-                  onChange={(e) => (userRole = e.target.value)}
-                >
-                  {/* TODO: Implement this conditional rendering in a cleaner way */}
-                  {(userRole === 'USER' ||
-                    (permission === 'SUPER_ADMIN' && userRole === 'ADMIN')) && (
-                    <option value="USER">{t`USER`}</option>
-                  )}
-                  {(userRole === 'USER' || userRole === 'ADMIN') && (
-                    <option value="ADMIN">{t`ADMIN`}</option>
-                  )}
-                  {(userRole === 'SUPER_ADMIN' ||
-                    permission === 'SUPER_ADMIN') && (
-                    <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
-                  )}
-                </Select>
-                <TrackerButton
-                  onClick={() => handleClick(userRole, node.user.userName)}
-                  variant="primary"
-                  fontSize="sm"
-                  px="3"
-                >
-                  <Trans>Apply</Trans>
-                </TrackerButton>
-              </Stack>
+              <Divider borderColor="gray.900" />
             </Box>
           )
         })
@@ -417,6 +400,96 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                   <Trans>Confirm</Trans>
                 </TrackerButton>
               </ModalFooter>
+            </ModalContent>
+          </Modal>
+        )}
+      </SlideIn>
+
+      <SlideIn in={updateIsOpen}>
+        {(styles) => (
+          <Modal
+            isOpen={true}
+            onClose={updateOnClose}
+            initialFocusRef={initialFocusRef}
+          >
+            <ModalOverlay opacity={styles.opacity} />
+            <ModalContent pb={4} {...styles}>
+              <Formik
+                validateOnBlur={false}
+                initialValues={{
+                  role: editingUserRole,
+                  userName: editingUserRole,
+                }}
+                onSubmit={async (values) => {
+                  // Submit update role mutation
+                  await updateUserRole({
+                    variables: {
+                      orgId: orgId,
+                      role: values.role,
+                      userName: values.userName,
+                    },
+                  })
+                }}
+              >
+                {({ handleSubmit, isSubmitting }) => (
+                  <form id="form" onSubmit={handleSubmit}>
+                    <ModalHeader>
+                      <Stack isInline align="center">
+                        <Trans>Edit Role</Trans>
+                      </Stack>
+                    </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                      <Stack isInline align="center">
+                        <Text fontWeight="bold">
+                          <Trans>User:</Trans>
+                        </Text>
+                        <Text>{editingUserName}</Text>
+                      </Stack>
+
+                      <Divider />
+                      <Stack isInline align="center">
+                        <FormLabel htmlFor="role_select" fontWeight="bold">
+                          <Trans>Role:</Trans>
+                        </FormLabel>
+                        <Select
+                          w="35%"
+                          id="role_select"
+                          size="sm"
+                          name="role"
+                          defaultValue={editingUserRole}
+                          onChange={(e) => setEditingUserRole(e.target.value)}
+                        >
+                          {(editingUserRole === 'USER' ||
+                            (permission === 'SUPER_ADMIN' &&
+                              editingUserRole === 'ADMIN')) && (
+                            <option value="USER">{t`USER`}</option>
+                          )}
+                          {(editingUserRole === 'USER' ||
+                            editingUserRole === 'ADMIN') && (
+                            <option value="ADMIN">{t`ADMIN`}</option>
+                          )}
+                          {(editingUserRole === 'SUPER_ADMIN' ||
+                            permission === 'SUPER_ADMIN') && (
+                            <option value="SUPER_ADMIN">{t`SUPER_ADMIN`}</option>
+                          )}
+                        </Select>
+                      </Stack>
+                    </ModalBody>
+
+                    <ModalFooter>
+                      <TrackerButton
+                        variant="primary"
+                        isLoading={isSubmitting}
+                        type="submit"
+                        mr="4"
+                      >
+                        <Trans>Confirm</Trans>
+                      </TrackerButton>
+                    </ModalFooter>
+                  </form>
+                )}
+              </Formik>
             </ModalContent>
           </Modal>
         )}

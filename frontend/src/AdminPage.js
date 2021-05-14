@@ -39,7 +39,7 @@ export default function AdminPage() {
   if (loading) {
     return (
       <LoadingMessage>
-        <Trans>User Affiliations</Trans>
+        <Trans>Admin Affiliations</Trans>
       </LoadingMessage>
     )
   }
@@ -121,7 +121,7 @@ export default function AdminPage() {
     )
   } else {
     return (
-      <Text fontSize="3xl" fontWeight="bold">
+      <Text fontSize="3xl" fontWeight="bold" textAlign="center">
         <Trans>You do not have admin permissions in any organization</Trans>
       </Text>
     )
