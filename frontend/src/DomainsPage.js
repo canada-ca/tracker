@@ -68,7 +68,15 @@ export default function DomainsPage() {
       <Trans>Domains</Trans>
     </LoadingMessage>
   ) : (
-    <ListOf elements={nodes} ifEmpty={() => <Trans>No Domains</Trans>} mb="4">
+    <ListOf
+      elements={nodes}
+      ifEmpty={() => (
+        <Text textAlign="center" fontSize="3xl" fontWeight="bold">
+          <Trans>No Domains</Trans>
+        </Text>
+      )}
+      mb="4"
+    >
       {({ id, domain, lastRan, status }, index) => (
         <ErrorBoundary
           key={`${id}:${index}`}

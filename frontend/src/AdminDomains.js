@@ -295,49 +295,45 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         <Trans>Add Domain</Trans>
       </TrackerButton>
 
-      <Stack spacing={10} shouldWrapChildren width="100%">
-        <Stack direction="row" spacing={4}>
-          <Stack spacing={4} flexWrap="wrap">
-            <ListOf
-              elements={nodes}
-              ifEmpty={() => (
-                <Text fontSize="lg" fontWeight="bold">
-                  <Trans>No Domains</Trans>
-                </Text>
-              )}
-            >
-              {({ id: domainId, domain, lastRan }, index) => (
-                <Stack key={'admindomain' + index} isInline align="center">
-                  <TrackerButton
-                    onClick={() => {
-                      setSelectedRemoveDomainUrl(domain)
-                      setSelectedRemoveDomainId(domainId)
-                      removeOnOpen()
-                    }}
-                    variant="danger"
-                    px="2"
-                    fontSize="xs"
-                  >
-                    <Icon name="minus" />
-                  </TrackerButton>
-                  <TrackerButton
-                    variant="primary"
-                    px="2"
-                    fontSize="xs"
-                    onClick={() => {
-                      setEditingDomainUrl(domain)
-                      setEditingDomainId(domainId)
-                      updateOnOpen()
-                    }}
-                  >
-                    <Icon name="edit" />
-                  </TrackerButton>
-                  <Domain url={domain} lastRan={lastRan} />
-                </Stack>
-              )}
-            </ListOf>
-          </Stack>
-        </Stack>
+      <Stack flexWrap="wrap" spacing={4} shouldWrapChildren>
+        <ListOf
+          elements={nodes}
+          ifEmpty={() => (
+            <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+              <Trans>No Domains</Trans>
+            </Text>
+          )}
+        >
+          {({ id: domainId, domain, lastRan }, index) => (
+            <Stack key={'admindomain' + index} isInline align="center">
+              <TrackerButton
+                onClick={() => {
+                  setSelectedRemoveDomainUrl(domain)
+                  setSelectedRemoveDomainId(domainId)
+                  removeOnOpen()
+                }}
+                variant="danger"
+                px="2"
+                fontSize="xs"
+              >
+                <Icon name="minus" />
+              </TrackerButton>
+              <TrackerButton
+                variant="primary"
+                px="2"
+                fontSize="xs"
+                onClick={() => {
+                  setEditingDomainUrl(domain)
+                  setEditingDomainId(domainId)
+                  updateOnOpen()
+                }}
+              >
+                <Icon name="edit" />
+              </TrackerButton>
+              <Domain url={domain} lastRan={lastRan} />
+            </Stack>
+          )}
+        </ListOf>
       </Stack>
 
       <RelayPaginationControls

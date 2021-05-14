@@ -258,7 +258,7 @@ export default function DmarcByDomainPage() {
   }
 
   return (
-    <Box width="100%">
+    <Box width="100%" px="2">
       <Heading as="h1" textAlign="center" size="lg" mb="4px">
         <Trans>DMARC Messages</Trans>
       </Heading>

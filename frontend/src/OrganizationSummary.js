@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Text, Stack, Box } from '@chakra-ui/core'
+import { Text, Stack } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
 import { number, object, string } from 'prop-types'
 
@@ -14,7 +14,7 @@ export function OrganizationSummary({
 }) {
   return (
     <Layout>
-      <Box fontSize="xl">
+      <Stack fontSize="xl" align={['center', 'flex-start']}>
         <Stack isInline align="center">
           <Text>
             <Trans>Based in:</Trans>
@@ -37,7 +37,7 @@ export function OrganizationSummary({
             <Trans>Total users</Trans>
           </Text>
         </Stack>
-      </Box>
+      </Stack>
       <SummaryGroup web={summaries.web} mail={summaries.mail} />
     </Layout>
   )

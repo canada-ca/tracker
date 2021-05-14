@@ -17,6 +17,7 @@ import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { FloatingMenu } from './FloatingMenu'
 import PrivatePage from './PrivatePage'
 import { Page } from './Page'
+import { LoadingMessage } from './LoadingMessage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -41,6 +42,7 @@ export default function App() {
   const { i18n } = useLingui()
   const toast = useToast()
   const { currentUser, isLoggedIn, logout } = useUserState()
+  const smallDevice = window.matchMedia('(max-width: 500px)').matches
 
   return (
     <>
@@ -118,7 +120,7 @@ export default function App() {
 
         {/* {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />} */}
         <Main>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingMessage />}>
             <Switch>
               <Page exact path="/" title={t`Home`}>
                 <LandingPage />
@@ -206,35 +208,40 @@ export default function App() {
           </Suspense>
         </Main>
         <FloatingMenu />
+
         <Footer>
-          <Link
-            isExternal={true}
-            href={
-              i18n.locale === 'en'
-                ? 'https://www.canada.ca/en/transparency/privacy.html'
-                : 'https://www.canada.ca/fr/transparence/confidentialite.html'
-            }
-          >
-            <Trans>Privacy</Trans>
-          </Link>
-          <Link
-            ml={4}
-            isExternal={true}
-            href={
-              i18n.locale === 'en'
-                ? 'https://www.canada.ca/en/transparency/terms.html'
-                : 'https://www.canada.ca/fr/transparence/avis.html'
-            }
-          >
-            <Trans>Terms & conditions</Trans>
-          </Link>
-          <Link
-            ml={4}
-            href={'https://github.com/canada-ca/tracker/issues'}
-            isExternal={true}
-          >
-            <Trans>Report an Issue</Trans>
-          </Link>
+          {!smallDevice && (
+            <div>
+              <Link
+                isExternal={true}
+                href={
+                  i18n.locale === 'en'
+                    ? 'https://www.canada.ca/en/transparency/privacy.html'
+                    : 'https://www.canada.ca/fr/transparence/confidentialite.html'
+                }
+              >
+                <Trans>Privacy</Trans>
+              </Link>
+              <Link
+                ml={4}
+                isExternal={true}
+                href={
+                  i18n.locale === 'en'
+                    ? 'https://www.canada.ca/en/transparency/terms.html'
+                    : 'https://www.canada.ca/fr/transparence/avis.html'
+                }
+              >
+                <Trans>Terms & conditions</Trans>
+              </Link>
+              <Link
+                ml={4}
+                href={'https://github.com/canada-ca/tracker/issues'}
+                isExternal={true}
+              >
+                <Trans>Report an Issue</Trans>
+              </Link>
+            </div>
+          )}
         </Footer>
       </Flex>
     </>

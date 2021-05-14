@@ -71,7 +71,11 @@ export default function Organisations() {
     orgList = (
       <ListOf
         elements={nodes}
-        ifEmpty={() => <Trans>No Organizations</Trans>}
+        ifEmpty={() => (
+          <Text textAlign="center" fontSize="3xl" fontWeight="bold">
+            <Trans>No Organizations</Trans>
+          </Text>
+        )}
         mb="4"
       >
         {({ name, slug, acronym, domainCount, verified, summaries }, index) => (

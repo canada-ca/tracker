@@ -4,8 +4,8 @@ import { Trans } from '@lingui/macro'
 
 export default function PageNotFound() {
   return (
-    <Box>
-      <Stack isInline align="center">
+    <Box px="2">
+      <Stack isInline align="center" justifyContent={['center', 'start']}>
         <Icon name="warning-2" size="icons.xl" />
         <Heading as="h1">
           <Trans>404 - Page Not Found</Trans>

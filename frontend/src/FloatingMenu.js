@@ -185,6 +185,12 @@ export const FloatingMenu = () => {
                     text={t`Terms & conditions`}
                     isExternal
                   />
+
+                  <FloatingMenuLink
+                    to={'https://github.com/canada-ca/tracker/issues'}
+                    text={t`Report an Issue`}
+                    isExternal
+                  />
                 </Stack>
               </DrawerBody>
 
