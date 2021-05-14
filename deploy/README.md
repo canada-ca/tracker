@@ -16,8 +16,6 @@ See the readme in the app folder for instructions on how to create those app cre
 
 ```bash
 make secrets env=minikube
-make platform env=minikube
-make app env=minikube
 make deploy env=minikube
 ```
 
@@ -25,8 +23,6 @@ make deploy env=minikube
 
 ```bash
 make secrets env=test
-make platform env=test
-make app env=test
 make deploy env=test
 ```
 
@@ -34,8 +30,6 @@ make deploy env=test
 
 ```bash
 make secrets env=aks
-make platform env=aks
-make app env=aks
 make deploy env=aks
 ```
 
@@ -55,8 +49,9 @@ After that it's basically the same:
 
 ```bash
 make secrets env=gke
-make platform env=gke
-make app env=gke
 make deploy env=gke
 ```
 
+## Updating Flux
+
+Update Flux [as you would normally](https://fluxcd.io/docs/installation/), and then run `make update-flux`, to update the config.
