@@ -109,6 +109,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           isClosable: true,
           position: 'top-left',
         })
+        updateOnClose()
       } else if (updateUserRole.result.__typename === 'AffiliationError') {
         toast({
           title: t`Unable to update user role.`,
@@ -155,7 +156,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           toast({
             title: t`User invited`,
             description: t`Email invitation sent to ${addedUserName}`,
-            status: 'info',
+            status: 'success',
             duration: 9000,
             isClosable: true,
             position: 'top-left',
@@ -204,7 +205,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           toast({
             title: t`User removed.`,
             description: t`Successfully removed user ${removeUserFromOrg.result.user.userName}.`,
-            status: 'info',
+            status: 'success',
             duration: 9000,
             isClosable: true,
             position: 'top-left',
@@ -327,6 +328,7 @@ export default function UserList({ permission, orgSlug, usersPerPage, orgId }) {
               <Stack isInline align="center">
                 <Stack>
                   <TrackerButton
+                    aria-label="userEditButton"
                     variant="primary"
                     px="2"
                     onClick={() => {

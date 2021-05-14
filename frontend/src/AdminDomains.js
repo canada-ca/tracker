@@ -102,7 +102,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         toast({
           title: t`Domain added`,
           description: t`${createDomain.domain.domain} was added to ${orgSlug}`,
-          status: 'info',
+          status: 'success',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
@@ -156,7 +156,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           toast({
             title: t`Domain removed`,
             description: t`Domain removed from ${orgSlug}`,
-            status: 'info',
+            status: 'success',
             duration: 9000,
             isClosable: true,
             position: 'top-left',
@@ -207,7 +207,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         toast({
           title: t`Domain updated`,
           description: t`${editingDomainUrl} from ${orgSlug} successfully updated to ${updateDomain.result.domain}`,
-          status: 'info',
+          status: 'success',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
