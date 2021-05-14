@@ -7,6 +7,7 @@ import { connectionFromArray } from 'graphql-relay/lib/connection/arrayconnectio
 import { getStringOfDomains } from './helpers/getStringOfDomains'
 import { getDmarcTableResults } from './helpers/getDmarcTableResults'
 import { getDkimSelectors } from './helpers/getDkimSelectors'
+import { getCanadianLocation } from './helpers/getCanadianLocation'
 
 const schemaString = getTypeNames()
 
@@ -269,11 +270,15 @@ const mocks = {
         'certificate-expired',
       ])
     const guidance = faker.lorem.sentence()
+    const refLinks = [...new Array(1)]
+    const refLinksTech = [...new Array(1)]
 
     return {
+      guidance,
+      refLinks,
+      refLinksTech,
       tagId,
       tagName,
-      guidance,
     }
   },
   HTTPSConnection: () => {
@@ -288,6 +293,9 @@ const mocks = {
     const name = faker.company.companyName()
     const slug = faker.helpers.slugify(name)
     const domainCount = faker.datatype.number({ min: 0, max: 500 })
+    const location = getCanadianLocation()
+    const city = location.city
+    const province = location.province
 
     const webPassCount = faker.datatype.number({ min: 0, max: domainCount })
     const webFailCount = domainCount - webPassCount
@@ -336,12 +344,14 @@ const mocks = {
         edges: [...new Array(affiliationCount)],
         totalCount: affiliationCount,
       },
+      city,
       domainCount,
       domains: {
         edges: [...new Array(domainCount)],
         totalCount: domainCount,
       },
       name,
+      province,
       slug,
       summaries: { web, mail },
     }
