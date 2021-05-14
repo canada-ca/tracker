@@ -1,4 +1,3 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
 import {
   GraphQLID,
   GraphQLBoolean,
@@ -9,11 +8,7 @@ import {
 import { toGlobalId } from 'graphql-relay'
 
 import { dkimFailureTableType } from '../dkim-failure-table'
-import { loadAggregateGuidanceTagById } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
-import { databaseOptions } from '../../../../database-options'
-
-const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the dkimFailureTable gql object', () => {
   describe('testing the field definitions', () => {
@@ -90,7 +85,6 @@ describe('given the dkimFailureTable gql object', () => {
       expect(demoType.totalMessages.type).toMatchObject(GraphQLInt)
     })
   })
-
   describe('testing field resolvers', () => {
     describe('testing the id resolver', () => {
       it('returns resolved value', () => {
@@ -165,61 +159,13 @@ describe('given the dkimFailureTable gql object', () => {
       })
     })
     describe('testing the guidanceTag resolver', () => {
-      let query, drop, truncate, collections, aggGT
-      beforeAll(async () => {
-        ;({ query, drop, truncate, collections } = await ensure({
-          type: 'database',
-          name: dbNameFromFile(__filename),
-          url,
-          rootPassword: rootPass,
-          options: databaseOptions({ rootPass }),
-        }))
-      })
-      beforeEach(async () => {
-        aggGT = await collections.aggregateGuidanceTags.save({
-          _key: 'agg1',
-          tagName: 'cool-tag-name',
-          guidance: 'cool guidance for issue',
-          refLinksGuide: [
-            {
-              description: 'Link Description',
-              ref_link: 'www.link.ca',
-            },
-          ],
-          refLinksTechnical: [
-            {
-              description: 'Tech link description',
-              tech_link: 'www.tech.link.ca',
-            },
-          ],
-        })
-      })
-      afterEach(async () => {
-        await truncate()
-      })
-      afterAll(async () => {
-        await drop()
-      })
       it('returns resolved value', async () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(
-          await demoType.guidanceTag.resolve(
-            { guidance: 'agg1' },
-            {},
-            {
-              loaders: {
-                loadAggregateGuidanceTagById: loadAggregateGuidanceTagById({
-                  query,
-                  userKey: '1',
-                }),
-              },
-            },
-          ),
-        ).toEqual({
+        const expectedResults = {
           _id: 'aggregateGuidanceTags/agg1',
           _key: 'agg1',
-          _rev: aggGT._rev,
+          _rev: 'rev',
           _type: 'guidanceTag',
           guidance: 'cool guidance for issue',
           id: 'agg1',
@@ -234,7 +180,21 @@ describe('given the dkimFailureTable gql object', () => {
           ],
           tagId: 'agg1',
           tagName: 'cool-tag-name',
-        })
+        }
+
+        expect(
+          await demoType.guidanceTag.resolve(
+            { guidance: 'agg1' },
+            {},
+            {
+              loaders: {
+                loadAggregateGuidanceTagById: {
+                  load: jest.fn().mockReturnValue(expectedResults),
+                },
+              },
+            },
+          ),
+        ).toEqual(expectedResults)
       })
     })
     describe('testing the headerFrom resolver', () => {
